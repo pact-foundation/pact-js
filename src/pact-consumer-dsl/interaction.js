@@ -12,6 +12,7 @@ export default class Interaction {
     if (providerState) {
       this.state['state'] = providerState
     }
+    return this
   }
 
   uponReceiving (description) {
