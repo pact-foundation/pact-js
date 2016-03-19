@@ -1,0 +1,6 @@
+--bail
+--require ./test/specHelper.js
+--reporter spec
+--colors
+--recursive
+--compilers js:babel-register

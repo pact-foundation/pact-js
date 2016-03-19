@@ -1,0 +1,9 @@
+path: "src"
+languages:
+  - javascript
+exclude:
+  - "dist/**/*"
+  - "node_modules/**/*"
+  - "config/**/*"
+  - "test/**/*"
+reporter: json
