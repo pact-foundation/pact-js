@@ -34,3 +34,6 @@ node_modules
 
 # JSCPD
 jscpd.json
+
+# Distribution
+dist
