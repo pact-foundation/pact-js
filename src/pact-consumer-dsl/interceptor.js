@@ -7,21 +7,23 @@ import request from 'superagent-bluebird-promise'
 
 export default class Interceptor {
 
-  constructor (targetHost, proxyHost) {
+  constructor (targetHost, targetPort = 80, proxyHost) {
     if (isNil(targetHost) || isNil(proxyHost)) {
       throw new Error('Please provide a target host and a proxy host to route the request to.')
     }
 
     this.mitm = Mitm()
     this.targetHost = targetHost
+    this.targetPort = targetPort
     this.proxyHost = proxyHost
     this.requestHeaders = {}
   }
 
   interceptRequests () {
     const targetHost = this.targetHost
+    const targetPort = this.targetPort
     this.mitm.on('connect', function (socket, opts) {
-      if (opts.host !== targetHost) {
+      if (opts.host !== targetHost && opts.port !== targetPort) {
         socket.bypass()
       }
     })
