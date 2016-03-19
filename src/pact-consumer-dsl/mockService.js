@@ -1,5 +1,6 @@
 'use strict'
 
+import isNil from 'lodash.isnil'
 import request from 'superagent-bluebird-promise'
 
 const MOCK_HEADERS = {
@@ -12,11 +13,11 @@ function handleError (err) { throw err }
 export default class MockService {
 
   constructor (consumer, provider, port, host = '127.0.0.1') {
-    if (!consumer || !provider) {
+    if (isNil(consumer) || isNil(provider)) {
       throw new Error('Please provide the names of the provider and consumer for this Pact.')
     }
 
-    if (!port) {
+    if (isNil(port)) {
       throw new Error('Please provide the port to connect to the Pact Mock Server.')
     }
 

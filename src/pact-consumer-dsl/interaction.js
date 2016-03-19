@@ -16,7 +16,7 @@ export default class Interaction {
   }
 
   uponReceiving (description) {
-    if (!description) {
+    if (isNil(description)) {
       throw new Error('You must provide a description for the interaction.')
     }
     this.state['description'] = description
@@ -24,7 +24,7 @@ export default class Interaction {
   }
 
   withRequest (method, path, ...other) {
-    if (!method) {
+    if (isNil(method)) {
       throw new Error('You must provide a HTTP method.')
     }
 
@@ -32,7 +32,7 @@ export default class Interaction {
       throw new Error('You must provide a valid HTTP method.')
     }
 
-    if (!path) {
+    if (isNil(path)) {
       throw new Error('You must provide a path.')
     }
 
@@ -47,7 +47,7 @@ export default class Interaction {
   }
 
   willRespondWith (status, ...other) {
-    if (!status) {
+    if (isNil(status) || status.toString().trim().length === 0) {
       throw new Error('You must provide a status code.')
     }
 

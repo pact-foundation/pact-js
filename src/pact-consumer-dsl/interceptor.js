@@ -1,13 +1,14 @@
 'use strict'
 
 import Mitm from 'mitm'
+import isNil from 'lodash.isnil'
 import cloneDeep from 'lodash.clonedeep'
 import request from 'superagent-bluebird-promise'
 
 export default class Interceptor {
 
   constructor (targetHost, proxyHost) {
-    if (!targetHost || !proxyHost) {
+    if (isNil(targetHost) || isNil(proxyHost)) {
       throw new Error('Please provide a target host and a proxy host to route the request to.')
     }
 
