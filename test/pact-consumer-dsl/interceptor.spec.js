@@ -32,7 +32,7 @@ describe('Interceptor', () => {
       })
 
       it('is listening on "connect"', () => {
-        expect(interceptor.mitm.on).to.have.been.calledWith('connection')
+        expect(interceptor.mitm.on).to.have.been.calledWith('connect')
       })
 
       it('is listening on "request"', () => {
@@ -41,7 +41,7 @@ describe('Interceptor', () => {
     })
   })
 
-  xdescribe('when host is supposed to be intercepted', () => {
+  describe('when host is supposed to be intercepted', () => {
     var interceptorSpy
     const interceptor = new Interceptor('www.google.com.au', 'http://proxy:1234')
 
