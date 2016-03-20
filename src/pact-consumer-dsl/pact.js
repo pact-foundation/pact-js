@@ -6,8 +6,7 @@ import Interceptor from './interceptor'
 
 export default ({targetHost, targetPort, consumer, provider, port}) => {
   const mockService = new MockService(consumer, provider, port)
-  
-  const interceptor = new Interceptor(targetHost, targetPort, mockService._baseURL)
+  const interceptor = new Interceptor(targetHost, mockService._baseURL, targetPort)
   interceptor.interceptRequests()
 
   return {

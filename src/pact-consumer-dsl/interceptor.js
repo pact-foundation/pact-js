@@ -7,7 +7,7 @@ import request from 'superagent-bluebird-promise'
 
 export default class Interceptor {
 
-  constructor (targetHost, targetPort = 80, proxyHost) {
+  constructor (targetHost, proxyHost, targetPort = 80) {
     if (isNil(targetHost) || isNil(proxyHost)) {
       throw new Error('Please provide a target host and a proxy host to route the request to.')
     }

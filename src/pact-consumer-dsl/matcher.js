@@ -6,7 +6,7 @@ import isUndefined from 'lodash.isundefined'
 
 export function term ({ generate, matcher }) {
   if (isNil(generate) || isNil(matcher)) {
-    throw new Error('Error creating a Pact Term. Please provide an object containing \'generate\' and \'matcher\' properties');
+    throw new Error('Error creating a Pact Term. Please provide an object containing "generate" and "matcher" properties')
   }
 
   return {
@@ -23,12 +23,12 @@ export function term ({ generate, matcher }) {
 }
 
 export function eachLike (content, opts) {
-  if(isUndefined(content)) {
-    throw new Error('Error creating a Pact eachLike. Please provide a content argument');
+  if (isUndefined(content)) {
+    throw new Error('Error creating a Pact eachLike. Please provide a content argument')
   }
 
-  if(opts && (isNil(opts.min) || opts.min < 1)) {
-    throw new Error('Error creating a Pact eachLike. Please provide opts.min that is > 1');
+  if (opts && (isNil(opts.min) || opts.min < 1)) {
+    throw new Error('Error creating a Pact eachLike. Please provide opts.min that is > 1')
   }
 
   return {
@@ -40,11 +40,11 @@ export function eachLike (content, opts) {
 
 export function somethingLike (value) {
   if (isNil(value) || isFunction(value)) {
-    throw new Error('Error creating a Pact somethingLike Match. Value cannot be a function or undefined');
+    throw new Error('Error creating a Pact somethingLike Match. Value cannot be a function or undefined')
   }
 
   return {
     'json_class': 'Pact::SomethingLike',
-    'contents' : value
+    'contents': value
   }
 }
