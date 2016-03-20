@@ -1,6 +1,8 @@
 # Pact JS
 Pact for all things Javascript.
 
+#WIP - DO NOT USE
+
 Implementation of the consumer driven contract library [pact](https://github.com/pact-foundation/pact-specification).
 
 From the [Pact website](http://docs.pact.io/):
@@ -20,3 +22,6 @@ how to get going.
 
 * Twitter: [@pact_up](https://twitter.com/pact_up)
 * Google users group: https://groups.google.com/forum/#!forum/pact-support
+
+## How to use it
+Check the examples folder under `pact-consumer-dsl/examples`. This is an example of the API, not of the usage in a test case.
