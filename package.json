@@ -75,6 +75,7 @@
     "bluebird": "3.3.4",
     "lodash.clone": "4.3.1",
     "lodash.clonedeep": "4.3.0",
+    "lodash.find": "4.2.0",
     "lodash.isfunction": "3.0.8",
     "lodash.isnil": "4.0.0",
     "lodash.isundefined": "3.0.1",

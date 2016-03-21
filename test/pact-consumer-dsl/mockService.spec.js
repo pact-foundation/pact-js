@@ -13,9 +13,10 @@ describe('MockService', () => {
       expect(mock._baseURL).to.eql('http://127.0.0.1:1234')
     })
 
-    it('does not create a MockService when port is not informed', () => {
-      expect(() => { new MockService('consumer', 'provider') })
-        .to.throw(Error, 'Please provide the port to connect to the Pact Mock Server.')
+    it('creates a MockService when port is not informed', () => {
+      const mock = new MockService('consumer', 'provider')
+      expect(mock).to.not.be.undefined
+      expect(mock._baseURL).to.eql('http://127.0.0.1:1234')
     })
 
     it('does not create a MockService when consumer is not informed', () => {

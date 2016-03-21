@@ -1,5 +1,6 @@
 'use strict'
 
+import clone from 'lodash.clone'
 import isNil from 'lodash.isnil'
 import request from 'superagent-bluebird-promise'
 
@@ -12,7 +13,7 @@ function handleError (err) { throw err }
 
 export default class MockService {
 
-  constructor (consumer, provider, port, host = '127.0.0.1') {
+  constructor (consumer, provider, port = 1234, host = '127.0.0.1') {
     if (isNil(consumer) || isNil(provider)) {
       throw new Error('Please provide the names of the provider and consumer for this Pact.')
     }
@@ -33,6 +34,15 @@ export default class MockService {
       .set(MOCK_HEADERS)
       .send(JSON.stringify(interaction))
       .then((res) => 'Interaction added.')
+      .catch(handleError)
+  }
+
+  putInteractions (interactions) {
+    const clonedInteractions = interactions.map((interaction) => clone(interaction).json())
+    return request.put(`${this._baseURL}/interactions`)
+      .set(MOCK_HEADERS)
+      .send(JSON.stringify({interactions: clonedInteractions}))
+      .then((res) => 'Interactions added.')
       .catch(handleError)
   }
 

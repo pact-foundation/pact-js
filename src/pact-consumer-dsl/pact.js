@@ -1,27 +1,46 @@
 'use strict'
 
-import clone from 'lodash.clone'
 import MockService from './mockService'
 import Interceptor from './interceptor'
+import Interaction from './interaction'
 
-export default ({targetHost, targetPort, consumer, provider, port}) => {
-  const mockService = new MockService(consumer, provider, port)
-  const interceptor = new Interceptor(targetHost, mockService._baseURL, targetPort)
-  interceptor.interceptRequests()
+export default ({consumer, provider}) => {
+  const mockService = new MockService(consumer, provider)
+  const interceptor = new Interceptor(mockService._baseURL)
+
+  let interactions = []
 
   return {
-    addInteraction: (interaction) => {
-      const interactionState = clone(interaction.json())
-      mockService.addInteraction(interactionState)
-      interceptor.addRequestHeaders(interactionState.request.headers)
+    intercept: (interceptedUrl) => {
+      interceptor.interceptRequestsOn(interceptedUrl)
     },
-    clearInteractions: () => {
-      mockService.removeInteractions()
+    interaction: () => {
+      const interaction = new Interaction()
+      interactions.push(interaction)
+      return interaction
     },
-    verify: (done) => {
-      mockService.verifyAndWrite()
-        .then(() => mockService.removeInteractions())
-        .catch((err) => { throw err })
+    verify: (integrationFn, done) => {
+      if (interceptor.disabled) {
+        interceptor.interceptRequestsOn()
+      }
+
+      return mockService.putInteractions(interactions)
+        .then(integrationFn)
+        .then((res) => {
+          const parsedBody = JSON.parse(res.text)
+          console.log(res.text)
+          if (parsedBody.error) {
+            return Promise.reject(new Error(parsedBody.body.message, parsedBody.body.interaction_diffs))
+          }
+          return Promise.resolve()
+        })
+        .then(() => mockService.verify())
+        .then(() => mockService.writePact())
+        .then(() => {
+          interactions = []
+          return mockService.removeInteractions()
+        })
+        .catch((err) => { console.log(err) })
         .finally(done)
     }
   }

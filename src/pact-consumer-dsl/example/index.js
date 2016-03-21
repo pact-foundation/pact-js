@@ -2,16 +2,13 @@
 
 import request from 'superagent-bluebird-promise'
 
+import Pact from '../pact'
 import server from './provider'
-import Pact from '../src/pact-consumer-dsl/pact'
-import Interaction from '../src/pact-consumer-dsl/interaction'
 
 server.listen(9980, () => {
   const pact = Pact({
     consumer: 'Test DSL',
-    provider: 'Projects',
-    targetHost: 'localhost',
-    targetPort: 9980
+    provider: 'Projects'
   })
 
   const body = [{
@@ -26,17 +23,19 @@ server.listen(9980, () => {
     ]
   }]
 
-  pact.addInteraction(
-    new Interaction()
-      .uponReceiving('a request for projects')
-      .withRequest('get', '/projects')
-      .willRespondWith(200, { 'Content-Type': 'application/json' }, body)
-  )
+  pact.intercept('http://localhost:9980')
 
-  request
-    .get('http://localhost:9980/projects')
-    .then((res) => {
-      pact.verify(() => { console.log('Pact written.') })
-    })
-    .catch((err) => { console.error(err) })
+  pact.interaction()
+    .given('i have a list of projects')
+    .uponReceiving('a request for projects')
+    .withRequest('get', '/projects/1', null, { 'Accept': 'application/json' })
+    .willRespondWith(404, { 'Content-Type': 'application/json' }, [])
+
+  pact.verify((res) => {
+    return request.get('http://localhost:9980/projects/1')
+      .set({ 'Accept': 'application/json' })
+      .promise()
+  }, () => {
+    console.log('Pact verification complete.')
+  })
 })
