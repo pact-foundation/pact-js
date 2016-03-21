@@ -1,48 +1,66 @@
 'use strict'
 
 import Mitm from 'mitm'
+import { parse as parseUrl } from 'url'
 import isNil from 'lodash.isnil'
-import cloneDeep from 'lodash.clonedeep'
-import request from 'superagent-bluebird-promise'
+import find from 'lodash.find'
+import request from 'superagent'
 
 export default class Interceptor {
 
-  constructor (targetHost, proxyHost, targetPort = 80) {
-    if (isNil(targetHost) || isNil(proxyHost)) {
-      throw new Error('Please provide a target host and a proxy host to route the request to.')
+  constructor (proxyHost) {
+    if (isNil(proxyHost)) {
+      throw new Error('Please provide a proxy to route the request to.')
     }
 
+    this.whitelist = [ parseUrl(proxyHost) ]
     this.mitm = Mitm()
-    this.targetHost = targetHost
-    this.targetPort = targetPort
+    this.mitm.disable()
+    this.disabled = true
     this.proxyHost = proxyHost
-    this.requestHeaders = {}
   }
 
-  interceptRequests () {
-    const targetHost = this.targetHost
-    const targetPort = this.targetPort
+  interceptRequestsOn (url) {
+    const blacklist = []
+
+    if (isNil(url)) {
+      console.log('!!!! Intercepting all requests !!!!')
+    } else {
+      blacklist.push(parseUrl(url))
+    }
+
+    this.mitm.enable()
+    this.disabled = false
+
+    const whitelist = this.whitelist
     this.mitm.on('connect', function (socket, opts) {
-      if (opts.host !== targetHost && opts.port !== targetPort) {
+      const port = opts.port || null
+
+      const foundBypass = !!find(whitelist, { hostname: opts.host, port })
+      const shouldIntercept = !!find(blacklist, { hostname: opts.host, port })
+      if (foundBypass || !shouldIntercept) {
         socket.bypass()
       }
     })
 
     const proxyHost = this.proxyHost
-    const headers = this.requestHeaders
     this.mitm.on('request', (req, res) => {
       request[req.method.toLowerCase()](`${proxyHost}${req.url}`)
-        .set(headers)
-        .then(() => { res.end('all good') })
-        .catch((err) => { throw err })
+        .set(req.headers || {})
+        .then((resp) => { res.end(JSON.stringify(resp.body)) })
+        .catch((err) => {
+          const errorMsg = {
+            error: true,
+            body: err.body
+          }
+          res.end(JSON.stringify(errorMsg))
+        })
     })
-  }
-
-  addRequestHeaders (headers) {
-    this.requestHeaders = cloneDeep(headers) || {}
   }
 
   disable () {
     this.mitm.disable()
+    this.disabled = true
   }
+
 }

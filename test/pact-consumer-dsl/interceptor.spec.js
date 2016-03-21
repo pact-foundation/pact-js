@@ -9,21 +9,21 @@ describe('Interceptor', () => {
 
   describe('#constructor', () => {
     it('creates Interceptor for targetHost', () => {
-      const interceptor = new Interceptor('www.google.com.au', 'http://proxy:1234')
+      const interceptor = new Interceptor('http://proxy:1234')
       expect(interceptor).to.not.be.undefined
-      interceptor.disable()
+      expect(interceptor.disabled).to.eql(true)
     })
 
-    it('does not create Interceptor when params are missing', () => {
-      expect(() => new Interceptor()).to.throw(Error, 'Please provide a target host and a proxy host to route the request to.')
+    it('does not create Interceptor when proxy is missing', () => {
+      expect(() => new Interceptor()).to.throw(Error, 'Please provide a proxy to route the request to.')
     })
 
     describe('mitm interceptor', () => {
-      const interceptor = new Interceptor('www.google.com.au', 'http://proxy:1234')
+      const interceptor = new Interceptor('http://proxy:1234')
 
       before(() => {
         sinon.spy(interceptor.mitm, 'on')
-        interceptor.interceptRequests()
+        interceptor.interceptRequestsOn('www.google.com.au')
       })
 
       after(() => {
@@ -41,17 +41,15 @@ describe('Interceptor', () => {
     })
   })
 
-  describe('when host is supposed to be intercepted', () => {
+  xdescribe('when host is supposed to be intercepted', () => {
     var interceptorSpy
-    const interceptor = new Interceptor('www.google.com.au', 'http://proxy:1234')
+    const interceptor = new Interceptor('http://proxy:1234')
 
     after(() => {
       interceptor.disable()
     })
 
     it('intercepts the request going to "www.google.com.au"', (done) => {
-      nock('http://proxy:1234').get('/search?q=test').reply(200)
-
       sinon.stub(interceptor.mitm, 'on', function (type, fn) {
         interceptorSpy = sinon.spy(fn)
         if (type === 'connect') {
@@ -61,7 +59,8 @@ describe('Interceptor', () => {
         }
       })
 
-      interceptor.interceptRequests()
+      nock('http://proxy:1234').get('/search?q=test').reply(200)
+      interceptor.interceptRequestsOn('http://www.google.com.au')
 
       request.get('http://www.google.com.au/search?q=test')
         .then(() => {
@@ -98,20 +97,6 @@ describe('Interceptor', () => {
           expect(interceptorSpy).to.not.have.been.called
           done()
         })
-    })
-  })
-
-  describe('#addRequestHeaders', () => {
-    const interceptor = new Interceptor('www.google.com.au', 'http://proxy:1234')
-
-    it('clone headers', () => {
-      interceptor.addRequestHeaders({ Header1: 'Value 1', Header2: 'Value 2' })
-      expect(interceptor.requestHeaders).to.eql({ Header1: 'Value 1', Header2: 'Value 2' })
-    })
-
-    it('has empty headers when headers not passed in', () => {
-      interceptor.addRequestHeaders()
-      expect(interceptor.requestHeaders).to.eql({})
     })
   })
 })
