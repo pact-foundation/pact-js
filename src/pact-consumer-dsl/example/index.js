@@ -29,7 +29,7 @@ server.listen(9980, () => {
     .given('i have a list of projects')
     .uponReceiving('a request for projects')
     .withRequest('get', '/projects/1', null, { 'Accept': 'application/json' })
-    .willRespondWith(404, { 'Content-Type': 'application/json' }, [])
+    .willRespondWith(200, { 'Content-Type': 'application/json' }, body)
 
   pact.verify((res) => {
     return request.get('http://localhost:9980/projects/1')
