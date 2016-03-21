@@ -2,25 +2,25 @@ import { expect } from 'chai'
 import Interaction from '../../src/pact-consumer-dsl/interaction'
 
 describe('Interaction', () => {
-  describe('#constructor', () => {
+  describe('#given', () => {
     it('creates Interaction with provider state', () => {
-      const actual = new Interaction('provider state').json()
-      expect(actual).to.eql({ state: 'provider state' })
+      const actual = new Interaction().given('provider state').json()
+      expect(actual).to.eql({ provider_state: 'provider state' })
     })
 
     describe('without provider state', () => {
       it('creates Interaction when undefined', () => {
-        const actual = new Interaction(undefined).json()
+        const actual = new Interaction().given(undefined).json()
         expect(actual).to.eql({ })
       })
 
       it('creates Interaction when blank', () => {
-        const actual = new Interaction('').json()
+        const actual = new Interaction().given('').json()
         expect(actual).to.eql({ })
       })
 
       it('creates Interaction when nothing is passed', () => {
-        const actual = new Interaction().json()
+        const actual = new Interaction().given().json()
         expect(actual).to.eql({ })
       })
     })
@@ -95,7 +95,9 @@ describe('Interaction', () => {
     })
 
     describe('with only mandatory params', () => {
-      const actual = new Interaction().willRespondWith(200).json()
+      const interaction = new Interaction()
+      interaction.willRespondWith(200)
+      const actual = interaction.json()
 
       it('has a state compacted with only present keys', () => {
         expect(actual).to.have.keys('response')
@@ -108,11 +110,14 @@ describe('Interaction', () => {
     })
 
     describe('with all other parameters', () => {
-      const actual = new Interaction().willRespondWith(
+      const interaction = new Interaction()
+      interaction.willRespondWith(
         404,
         { 'Content-Type': 'application/json' },
         { id: 1, name: 'Test', due: 'tomorrow' }
-      ).json()
+      )
+
+      const actual = interaction.json()
 
       it('has a full state all available keys', () => {
         expect(actual).to.have.keys('response')

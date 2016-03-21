@@ -9,8 +9,12 @@ export default class Interaction {
 
   constructor (providerState) {
     this.state = {}
+    return this
+  }
+
+  given (providerState) {
     if (providerState) {
-      this.state['state'] = providerState
+      this.state['provider_state'] = providerState
     }
     return this
   }
@@ -56,7 +60,6 @@ export default class Interaction {
       headers: other[0] || undefined,
       body: other[1] || undefined
     }, isNil)
-    return this
   }
 
   json () {
