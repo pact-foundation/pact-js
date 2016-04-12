@@ -1,6 +1,9 @@
 # Pact JS
 Pact for all things Javascript.
 
+[![Dependency Status](https://david-dm.org/tarciosaraiva/pact-js.svg)](https://david-dm.org/tarciosaraiva/pact-js)
+[![devDependency Status](https://david-dm.org/tarciosaraiva/pact-js/dev-status.svg)](https://david-dm.org/tarciosaraiva/pact-js#info=devDependencies)
+
 #WIP - DO NOT USE
 
 Implementation of the consumer driven contract library [pact](https://github.com/pact-foundation/pact-specification).
