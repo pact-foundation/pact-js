@@ -73,8 +73,8 @@
   },
   "dependencies": {
     "bluebird": "3.3.5",
-    "lodash.clone": "4.3.1",
-    "lodash.clonedeep": "4.3.0",
+    "lodash.clone": "4.3.2",
+    "lodash.clonedeep": "4.3.2",
     "lodash.find": "4.3.0",
     "lodash.isfunction": "3.0.8",
     "lodash.isnil": "4.0.0",
