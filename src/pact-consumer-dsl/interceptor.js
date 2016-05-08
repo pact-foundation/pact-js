@@ -4,7 +4,7 @@ import Mitm from 'mitm'
 import { parse as parseUrl } from 'url'
 import isNil from 'lodash.isnil'
 import find from 'lodash.find'
-import request from 'superagent'
+import request from 'superagent-bluebird-promise'
 
 export default class Interceptor {
 
@@ -45,15 +45,14 @@ export default class Interceptor {
 
     const proxyHost = this.proxyHost
     this.mitm.on('request', (req, res) => {
+      console.log(`triggering call to "${proxyHost}${req.url}"`)
       request[req.method.toLowerCase()](`${proxyHost}${req.url}`)
         .set(req.headers || {})
-        .then((resp) => { res.end(JSON.stringify(resp.body)) })
+        .then((resp) => {
+          res.end(JSON.stringify(resp.body))
+        })
         .catch((err) => {
-          const errorMsg = {
-            error: true,
-            body: err.body
-          }
-          res.end(JSON.stringify(errorMsg))
+          res.end(JSON.stringify(err.body))
         })
     })
   }

@@ -1,9 +1,17 @@
 'use strict'
 
+import Promise from 'bluebird'
 import request from 'superagent-bluebird-promise'
 
 import Pact from '../pact'
 import server from './provider'
+
+function requestProjects () {
+  return Promise.all([
+    request.get('http://localhost:9980/projects').set({ 'Accept': 'application/json' }),
+    request.get('http://localhost:9980/projects/2').set({ 'Accept': 'application/json' })
+  ])
+}
 
 server.listen(9980, () => {
   const pact = Pact({
@@ -28,14 +36,24 @@ server.listen(9980, () => {
   pact.interaction()
     .given('i have a list of projects')
     .uponReceiving('a request for projects')
-    .withRequest('get', '/projects/1', null, { 'Accept': 'application/json' })
+    .withRequest('get', '/projects', null, { 'Accept': 'application/json' })
     .willRespondWith(200, { 'Content-Type': 'application/json' }, body)
 
-  pact.verify((res) => {
-    return request.get('http://localhost:9980/projects/1')
-      .set({ 'Accept': 'application/json' })
-      .promise()
-  }, () => {
-    console.log('Pact verification complete.')
+  pact.interaction()
+    .given('i have a list of projects')
+    .uponReceiving('a request for a project that does not exist')
+    .withRequest('get', '/projects/2', null, { 'Accept': 'application/json' })
+    .willRespondWith(404, { 'Content-Type': 'application/json' })
+
+  pact.verify(() => requestProjects(), (err, data) => {
+    if (err) {
+      console.error('failed miserably')
+      console.error(err)
+      process.exit(1)
+      return
+    }
+    console.log('Pact verification completed.')
+    console.error(data)
+    process.exit(0)
   })
 })
