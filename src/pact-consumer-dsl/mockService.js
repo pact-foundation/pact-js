@@ -3,6 +3,7 @@
 import clone from 'lodash.clone'
 import isNil from 'lodash.isnil'
 import request from 'superagent-bluebird-promise'
+import { logger } from './logger'
 
 const MOCK_HEADERS = {
   'Content-Type': 'application/json',
@@ -30,45 +31,48 @@ export default class MockService {
   }
 
   addInteraction (interaction) {
+    const stringifiedInteraction = JSON.stringify(interaction)
     return request.post(`${this._baseURL}/interactions`)
       .set(MOCK_HEADERS)
-      .send(JSON.stringify(interaction))
-      .then((res) => 'Interaction added.')
+      .send(stringifiedInteraction)
+      .then((res) => logger.info(`Interaction added: "${stringifiedInteraction}"`))
       .catch(handleError)
   }
 
   putInteractions (interactions) {
     const clonedInteractions = interactions.map((interaction) => clone(interaction).json())
+    const stringifiedInteractions = JSON.stringify({interactions: clonedInteractions})
     return request.put(`${this._baseURL}/interactions`)
       .set(MOCK_HEADERS)
-      .send(JSON.stringify({interactions: clonedInteractions}))
-      .then((res) => 'Interactions added.')
+      .send(stringifiedInteractions)
+      .then((res) => logger.info(`Set of interactions added: "${stringifiedInteractions}"`))
       .catch(handleError)
   }
 
   removeInteractions () {
     return request.del(`${this._baseURL}/interactions`)
       .set(MOCK_HEADERS)
-      .then((res) => 'Interactions removed.')
+      .then((res) => logger.info('All interactions removed.'))
       .catch(handleError)
   }
 
   verify () {
     return request.get(`${this._baseURL}/interactions/verification`)
       .set(MOCK_HEADERS)
-      .then((res) => 'Verification successful.')
+      .then((res) => logger.info('Verification successful.'))
       .catch(handleError)
   }
 
   writePact () {
+    const stringifiedPactDetails = JSON.stringify(this._pactDetails)
     return request.post(`${this._baseURL}/pact`)
       .set(MOCK_HEADERS)
-      .send(JSON.stringify(this._pactDetails))
-      .then((res) => 'Pact written.')
+      .send(stringifiedPactDetails)
+      .then((res) => logger.info(`Pact successfully written with: ${stringifiedPactDetails}`))
       .catch(handleError)
   }
 
   verifyAndWrite () {
-    return this.verify().then(() => this.writePact()).then(() => 'Matchers verified and Pact written.')
+    return this.verify().then(() => this.writePact()).then(() => logger.info('Matchers verified and Pact written.'))
   }
 }

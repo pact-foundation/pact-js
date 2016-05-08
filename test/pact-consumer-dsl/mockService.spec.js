@@ -40,7 +40,7 @@ describe('MockService', () => {
 
     it('when Interaction added successfully', (done) => {
       nock(mock._baseURL).post(/interactions$/).reply(200)
-      expect(mock.addInteraction(interaction)).to.eventually.eql('Interaction added.').notify(done)
+      expect(mock.addInteraction(interaction)).to.eventually.notify(done)
     })
 
     it('when Interaction fails to be added', (done) => {
@@ -54,7 +54,7 @@ describe('MockService', () => {
 
     it('when interactions are removed successfully', (done) => {
       nock(mock._baseURL).delete(/interactions$/).reply(200)
-      expect(mock.removeInteractions()).to.eventually.eql('Interactions removed.').notify(done)
+      expect(mock.removeInteractions()).to.eventually.notify(done)
     })
 
     it('when interactions fail to be removed', (done) => {
@@ -68,7 +68,7 @@ describe('MockService', () => {
 
     it('when verification is successful', (done) => {
       nock(mock._baseURL).get(/interactions\/verification$/).reply(200)
-      expect(mock.verify()).to.eventually.eql('Verification successful.').notify(done)
+      expect(mock.verify()).to.eventually.notify(done)
     })
 
     it('when verification fails', (done) => {
@@ -82,7 +82,7 @@ describe('MockService', () => {
 
     it('when writing is successful', (done) => {
       nock(mock._baseURL).post(/pact$/).reply(200)
-      expect(mock.writePact()).to.eventually.eql('Pact written.').notify(done)
+      expect(mock.writePact()).to.eventually.notify(done)
     })
 
     it('when writing fails', (done) => {
@@ -98,7 +98,7 @@ describe('MockService', () => {
       nock(mock._baseURL).get(/interactions\/verification$/).reply(200)
       nock(mock._baseURL).post(/pact$/).reply(200)
 
-      expect(mock.verifyAndWrite()).to.eventually.eql('Matchers verified and Pact written.').notify(done)
+      expect(mock.verifyAndWrite()).to.eventually.notify(done)
     })
 
     it('when verification succeeds and writing fails', (done) => {

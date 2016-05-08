@@ -82,7 +82,8 @@
     "lodash.omitby": "4.3.0",
     "mitm": "1.2.1",
     "superagent": "1.8.3",
-    "superagent-bluebird-promise": "3.0.0"
+    "superagent-bluebird-promise": "3.0.0",
+    "winston": "2.2.0"
   },
   "devDependencies": {
     "babel-cli": "6.8.0",

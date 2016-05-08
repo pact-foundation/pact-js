@@ -47,13 +47,11 @@ server.listen(9980, () => {
 
   pact.verify(() => requestProjects(), (err, data) => {
     if (err) {
-      console.error('failed miserably')
-      console.error(err)
+      console.log('Pact verification failed.')
+      console.log(err)
       process.exit(1)
-      return
     }
-    console.log('Pact verification completed.')
-    console.error(data)
+    console.log('Pact verification completed. Make sure to do your own assertions.')
     process.exit(0)
   })
 })

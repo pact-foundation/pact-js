@@ -4,7 +4,11 @@ import MockService from './mockService'
 import Interceptor from './interceptor'
 import Interaction from './interaction'
 
+import { logger } from './logger'
+
 export default ({consumer, provider}) => {
+  logger.info(`Setting up Pact with Consumer "${consumer}" and Provider "${provider}"`)
+
   const mockService = new MockService(consumer, provider)
   const interceptor = new Interceptor(mockService._baseURL)
 
@@ -21,8 +25,11 @@ export default ({consumer, provider}) => {
     },
     verify: (integrationFn, done) => {
       if (interceptor.disabled) {
+        logger.info('Interceptor is disabled. You should have told the interceptor which URLs to intercept. This test will most likely fail!')
         interceptor.interceptRequestsOn()
       }
+
+      let integrationFnResult
 
       return mockService.putInteractions(interactions)
         .then(integrationFn)
@@ -41,17 +48,14 @@ export default ({consumer, provider}) => {
             return Promise.resolve(res.text)
           }
         })
-        .then((res) => {
-          done(null, res)
-          return Promise.resolve()
-        })
+        .then((res) => { integrationFnResult = res })
         .then(() => mockService.verify())
         .then(() => mockService.writePact())
-        .then(() => {
-          interactions = []
-          return mockService.removeInteractions()
-        })
+        .then(() => mockService.removeInteractions())
+        .then(() => { interactions = [] })
+        .then(() => done(null, integrationFnResult))
         .catch(done)
+        .finally(() => interceptor.stopIntercepting())
     }
   }
 }

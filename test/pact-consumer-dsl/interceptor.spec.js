@@ -28,7 +28,7 @@ describe('Interceptor', () => {
 
       after(() => {
         interceptor.mitm.on.restore()
-        interceptor.disable()
+        interceptor.stopIntercepting()
       })
 
       it('is listening on "connect"', () => {
@@ -46,7 +46,7 @@ describe('Interceptor', () => {
     const interceptor = new Interceptor('http://proxy:1234')
 
     after(() => {
-      interceptor.disable()
+      interceptor.stopIntercepting()
     })
 
     it('intercepts the request going to "www.google.com.au"', (done) => {
@@ -75,7 +75,7 @@ describe('Interceptor', () => {
     const interceptor = new Interceptor('www.google.com.au', 'http://proxy:1234')
 
     after(() => {
-      interceptor.disable()
+      interceptor.stopIntercepting()
     })
 
     xit('request goes through to "au.search.yahoo.com"', (done) => {
