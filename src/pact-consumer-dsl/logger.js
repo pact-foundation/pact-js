@@ -3,7 +3,7 @@
 import path from 'path'
 import winston from 'winston'
 
-const LOG_FILE = path.resolve(__dirname, 'log', 'pact.log')
+const LOG_FILE = path.resolve(process.cwd(), 'logs', 'pact-consumer.log')
 
 export const logger = new winston.Logger({
   level: 'info',

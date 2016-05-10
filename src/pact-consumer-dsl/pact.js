@@ -23,7 +23,7 @@ export default ({consumer, provider}) => {
       interactions.push(interaction)
       return interaction
     },
-    verify: (integrationFn, done) => {
+    verify: (integrationFn) => {
       if (interceptor.disabled) {
         logger.info('Interceptor is disabled. You should have told the interceptor which URLs to intercept. This test will most likely fail!')
         interceptor.interceptRequestsOn()
@@ -32,7 +32,7 @@ export default ({consumer, provider}) => {
       let integrationFnResult
 
       return mockService.putInteractions(interactions)
-        .then(integrationFn)
+        .then(() => integrationFn())
         .then((res) => {
           if (Array.isArray(res)) {
             res.forEach((it) => {
@@ -53,9 +53,8 @@ export default ({consumer, provider}) => {
         .then(() => mockService.writePact())
         .then(() => mockService.removeInteractions())
         .then(() => { interactions = [] })
-        .then(() => done(null, integrationFnResult))
-        .catch(done)
         .finally(() => interceptor.stopIntercepting())
+        .then(() => integrationFnResult)
     }
   }
 }
