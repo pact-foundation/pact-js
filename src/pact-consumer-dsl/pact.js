@@ -36,14 +36,14 @@ export default ({consumer, provider}) => {
         .then((res) => {
           if (Array.isArray(res)) {
             res.forEach((it) => {
-              if (it.text.includes('interaction_diffs')) {
-                throw new Error(it.text)
+              if (it.text.includes('interaction_diffs') || it.text.includes('Unexpected requests')) {
+                return Promise.reject(it.text)
               }
             })
             return Promise.resolve(res.map((it) => it.text))
           } else {
-            if (res.text.includes('interaction_diffs')) {
-              throw new Error(res.text)
+            if (res.text.includes('interaction_diffs') || res.text.includes('Unexpected requests')) {
+              return Promise.reject(res.text)
             }
             return Promise.resolve(res.text)
           }

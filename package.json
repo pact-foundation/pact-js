@@ -8,7 +8,9 @@
     "jscpd": "jscpd -o jscpd.json",
     "dist": "rollup -c ./config/rollup.config.js",
     "predist": "npm t",
-    "test": "mocha"
+    "test": "npm run test:dsl && npm run test:pact",
+    "test:dsl": "mocha ./test/pact-consumer-dsl",
+    "test:pact": "mocha --require ./src/pact-mocha-interface/pact-ui.js --ui pact ./test/pact-mocha-interface"
   },
   "os": [
     "darwin",

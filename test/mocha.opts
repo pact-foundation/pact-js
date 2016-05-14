@@ -1,5 +1,6 @@
 --bail
 --require ./test/specHelper.js
+--check-leaks
 --reporter spec
 --colors
 --recursive

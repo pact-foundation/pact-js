@@ -123,10 +123,7 @@ describe('Pact', () => {
         .willRespondWith(200, { 'Content-Type': 'application/json' }, EXPECTED_BODY)
 
       pact.verify(requestProjects).catch((err) => {
-        const jsonErr = JSON.parse(err.message)
-
-        expect(jsonErr.message).to.eql('No interaction found for DELETE /projects/2')
-        expect(jsonErr.interaction_diffs).to.eql([])
+        expect(err.res.text).to.contain('Actual interactions do not match expected interactions for mock MockService')
         done()
       })
     })

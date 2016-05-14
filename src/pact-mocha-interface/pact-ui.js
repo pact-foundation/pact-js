@@ -1,54 +1,79 @@
 'use strict'
 
+import path from 'path'
 import Mocha from 'mocha'
 import Test from 'mocha/lib/test'
 import Suite from 'mocha/lib/suite'
-import CommonInterface from 'mocha/lib/interfaces/common'
 
-export default Mocha.interfaces['pact-ui'] = (suite) => {
+const wrapper = require('@pact-foundation/pact-node')
+
+import Pact from '../pact-consumer-dsl/pact'
+
+module.exports = Mocha.interfaces['pact'] = (suite) => {
+  const suites = [suite]
+
   suite.on('pre-require', (context, file, mocha) => {
-    const common = CommonInterface([suite], context)
-
+    var common = require('mocha/lib/interfaces/common')(suites, context)
     context.run = mocha.options.delay && common.runWithSuite(suite)
 
-    context.Pact.Consumer = (consumer, provider, fn) => {
-      var suite = Suite.create(suite, `Pact ${consumer} <=> ${provider}`)
-      suite.file = file
+    const mockServer = wrapper.create({
+      port: 1234,
+      log: path.resolve(process.cwd(), 'logs', 'mockserver.log'),
+      dir: path.resolve(process.cwd(), 'pacts'),
+      spec: 2
+    })
 
-      suite.pactConsumer = consumer
-      suite.pactProvider = provider
+    context.Pact = (consumer, provider, providerURL, fn) => {
+      const pactSuite = Suite.create(suites[0], `Pact ${consumer} <=> ${provider}`)
+      pactSuite.file = file
 
-      fn.call(suite, {})
-      return suite
+      pactSuite.pactConsumer = consumer
+      pactSuite.pactProvider = provider
+
+      pactSuite.pact = Pact({ consumer, provider })
+      pactSuite.pact.intercept(providerURL)
+
+      suites.unshift(pactSuite)
+      fn.call(pactSuite, {})
+      suites.shift()
+
+      return pactSuite
     }
 
-    context.xPact.Consumer = (consumer, provider, fn) => {
-      var suite = Suite.create(suite, `Pact ${consumer} <=> ${provider}`)
-      suite.pending = true
-      fn.call(suite, {})
+    context.xPact = (consumer, provider, fn) => {
+      const pactSuite = Suite.create(suites[0], `Pact ${consumer} <=> ${provider}`)
+      pactSuite.pending = true
+      suites.unshift(pactSuite)
+      fn.call(pactSuite, {})
+      suites.shift()
     }
 
-    context.setup = (opts, fn) => {
-      // suite.pact = Pact({
-      //   consumer: suite.consumer,
-      //   provider: suite.provider,
-      //   port: opts.port || 1234,
-      //   targetHost: opts.targetHost,
-      //   targetPort: opts.targetPort
-      // })
+    context.add = (fn) => {
+      const pactSuite = suites[0]
+      fn.call(pactSuite, pactSuite.pact.interaction())
     }
 
-    context.verify = (title, fn) => {
-      if (suite.pending) {
+    context.verify = (title, pactFn, fn) => {
+      const pactSuite = suites[0]
+
+      if (pactSuite.pending) {
         fn = null
       }
-      var test = new Test(title, fn)
+
+      const test = new Test(title, (done) => {
+        mockServer.start()
+          .then(() => pactSuite.pact.verify(pactFn))
+          .then((data) => { fn(data, done) })
+          .catch((err) => { done(err) })
+          .finally(() => { mockServer.stop() })
+      })
+
       test.file = file
-      suite.addTest(test)
+      pactSuite.addTest(test)
       return test
     }
 
-    context.xverify = context.it.skip = (title, fn) => {
+    context.xverify = context.verify.skip = (title, fn) => {
       context.verify(title)
     }
   })
