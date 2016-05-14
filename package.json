@@ -9,7 +9,7 @@
     "dist": "rollup -c ./config/rollup.config.js",
     "predist": "npm t",
     "test": "npm run test:dsl && npm run test:pact",
-    "test:dsl": "mocha ./test/pact-consumer-dsl",
+    "test:dsl": "./node_modules/.bin/babel-node ./node_modules/.bin/isparta cover ./node_modules/.bin/_mocha -- ./test/pact-consumer-dsl",
     "test:pact": "mocha --require ./src/pact-mocha-interface/pact-ui.js --ui pact ./test/pact-mocha-interface"
   },
   "os": [
@@ -99,6 +99,7 @@
     "chai-as-promised": "5.3.0",
     "cors": "2.7.1",
     "express": "4.13.4",
+    "isparta": "4.0.0",
     "jscpd": "0.6.1",
     "mocha": "2.4.5",
     "nock": "8.0.0",
