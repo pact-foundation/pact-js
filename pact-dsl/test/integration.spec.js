@@ -2,11 +2,12 @@ import { expect } from 'chai'
 import Promise from 'bluebird'
 import path from 'path'
 import request from 'superagent-bluebird-promise'
+import Interceptor from 'pact-interceptor'
 
 var wrapper = require('@pact-foundation/pact-node')
 
-import Pact from '../../src/pact-consumer-dsl/pact'
-import server from '../utils/provider'
+import Pact from '../src/pact'
+import server from './provider'
 
 describe('Pact', () => {
 
@@ -18,6 +19,7 @@ describe('Pact', () => {
     dir: path.resolve(process.cwd(), 'pacts'),
     spec: 2
   })
+  const interceptor = new Interceptor('http://localhost:1234')
   const EXPECTED_BODY = [{
     id: 1,
     name: 'Project 1',
@@ -41,13 +43,16 @@ describe('Pact', () => {
 
   beforeEach((done) => {
     mockServer.start().then(() => {
-      pact.intercept(PROVIDER_URL)
+      interceptor.interceptRequestsOn(PROVIDER_URL)
       done()
     })
   })
 
   afterEach((done) => {
-    mockServer.stop().then(() => { done() })
+    mockServer.stop().then(() => {
+      interceptor.stopIntercepting()
+      done()
+    })
   })
 
   context('with a single request', () => {

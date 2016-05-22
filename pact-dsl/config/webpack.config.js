@@ -3,27 +3,25 @@ var path    = require('path');
 var webpack = require('webpack');
 
 var DIST = path.resolve(__dirname, '../dist');
-var DSL  = path.resolve(__dirname, '../src/pact-consumer-dsl');
-var MUI  = path.resolve(__dirname, '../src/pact-mocha-interface');
+var APP  = path.resolve(__dirname, '../src');
 
 module.exports = {
   entry: [
-    path.resolve(DSL, 'pact.js')
+    path.resolve(APP, 'pact.js')
   ],
   output: {
     path: DIST,
     library: 'Pact',
     libraryTarget: 'umd',
     umdNamedDefine: true,
-    filename: 'pact-consumer-js-dsl.js'
+    filename: 'pact-dsl.js'
   },
   target: 'web',
-  debug: true,
   module: {
     loaders: [
       {
         loader: 'babel-loader',
-        test: DSL,
+        test: APP,
         exclude: /node_modules/,
         query: { presets: ['es2015'] }
       }

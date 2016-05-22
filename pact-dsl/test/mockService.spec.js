@@ -2,8 +2,8 @@ import nock from 'nock'
 import sinon from 'sinon'
 import { expect } from 'chai'
 
-import MockService from '../../src/pact-consumer-dsl/mockService'
-import Interaction from '../../src/pact-consumer-dsl/interaction'
+import MockService from '../src/mockService'
+import Interaction from '../src/interaction'
 
 describe('MockService', () => {
   describe('#constructor', () => {

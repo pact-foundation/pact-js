@@ -1,0 +1,76 @@
+{
+  "consumer": {
+    "name": "Test DSL"
+  },
+  "provider": {
+    "name": "Projects"
+  },
+  "interactions": [
+    {
+      "description": "a request for a project that does not exist",
+      "provider_state": "i have a list of projects",
+      "request": {
+        "method": "GET",
+        "path": "/projects/2",
+        "headers": {
+          "Accept": "application/json"
+        }
+      },
+      "response": {
+        "status": 404,
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "description": "a request for projects",
+      "provider_state": "i have a list of projects",
+      "request": {
+        "method": "GET",
+        "path": "/projects",
+        "headers": {
+          "Accept": "application/json"
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": [
+          {
+            "id": 1,
+            "name": "Project 1",
+            "due": "2016-02-11T09:46:56.023Z",
+            "tasks": [
+              {
+                "id": 1,
+                "name": "Do the laundry",
+                "done": true
+              },
+              {
+                "id": 2,
+                "name": "Do the dishes",
+                "done": false
+              },
+              {
+                "id": 3,
+                "name": "Do the backyard",
+                "done": false
+              },
+              {
+                "id": 4,
+                "name": "Do nothing",
+                "done": false
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecificationVersion": "2.0.0"
+  }
+}

@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import Interaction from '../../src/pact-consumer-dsl/interaction'
+import Interaction from '../src/interaction'
 
 describe('Interaction', () => {
   describe('#given', () => {

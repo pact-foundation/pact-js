@@ -1,5 +1,5 @@
 --bail
---require ./test/specHelper.js
+--require ./test/helper.js
 --check-leaks
 --reporter spec
 --colors
