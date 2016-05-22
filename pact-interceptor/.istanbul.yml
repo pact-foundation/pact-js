@@ -1,0 +1,15 @@
+instrumentation:
+  root: src
+check:
+  global:
+    statements: 80
+    lines: 80
+    branches: 80
+    functions: 80
+    excludes: []
+  each:
+    statements: 80
+    lines: 80
+    branches: 80
+    functions: 80
+    excludes: []
