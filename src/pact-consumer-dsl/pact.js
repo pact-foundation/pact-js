@@ -1,34 +1,24 @@
 'use strict'
 
 import MockService from './mockService'
-import Interceptor from './interceptor'
 import Interaction from './interaction'
 
 import { logger } from './logger'
 
-export default ({consumer, provider}) => {
+module.exports = ({consumer, provider}) => {
   logger.info(`Setting up Pact with Consumer "${consumer}" and Provider "${provider}"`)
 
   const mockService = new MockService(consumer, provider)
-  const interceptor = new Interceptor(mockService._baseURL)
 
   let interactions = []
 
   return {
-    intercept: (interceptedUrl) => {
-      interceptor.interceptRequestsOn(interceptedUrl)
-    },
     interaction: () => {
       const interaction = new Interaction()
       interactions.push(interaction)
       return interaction
     },
     verify: (integrationFn) => {
-      if (interceptor.disabled) {
-        logger.info('Interceptor is disabled. You should have told the interceptor which URLs to intercept. This test will most likely fail!')
-        interceptor.interceptRequestsOn()
-      }
-
       let integrationFnResult
 
       return mockService.putInteractions(interactions)
@@ -53,7 +43,6 @@ export default ({consumer, provider}) => {
         .then(() => mockService.writePact())
         .then(() => mockService.removeInteractions())
         .then(() => { interactions = [] })
-        .finally(() => interceptor.stopIntercepting())
         .then(() => integrationFnResult)
     }
   }
