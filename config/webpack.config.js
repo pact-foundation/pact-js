@@ -13,11 +13,11 @@ module.exports = {
   output: {
     path: DIST,
     library: 'Pact',
+    libraryTarget: 'umd',
+    umdNamedDefine: true,
     filename: 'pact-consumer-js-dsl.js'
   },
-  externals: [
-    { 'mitm': true }
-  ],
+  target: 'web',
   debug: true,
   module: {
     loaders: [
