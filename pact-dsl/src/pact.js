@@ -1,10 +1,11 @@
 'use strict'
 
+import { Promise } from 'es6-promise'
+
+import { logger } from './logger'
 import MockService from './mockService'
 import Interaction from './interaction'
 import { term, eachLike, somethingLike } from './matcher'
-
-import { logger } from './logger'
 
 module.exports = ({consumer, provider}) => {
   logger.info(`Setting up Pact with Consumer "${consumer}" and Provider "${provider}"`)
@@ -15,14 +16,14 @@ module.exports = ({consumer, provider}) => {
 
   function processResponse (response) {
     if (Array.isArray(response)) {
-      response.forEach((it) => {
-        if (it.text.includes('interaction_diffs') || it.text.includes('Unexpected requests')) {
-          return Promise.reject(it.text)
-        }
-      })
-      return Promise.resolve(response.map((it) => it.text))
+      const hasErrors = response.filter((it) => it.text.includes('interaction_diffs')).map((it) => it.text)
+      if (hasErrors.length) {
+        return Promise.reject(hasErrors)
+      } else {
+        return Promise.resolve(response.map((it) => it.text))
+      }
     } else {
-      if (response.text.includes('interaction_diffs') || response.text.includes('Unexpected requests')) {
+      if (response.text.includes('interaction_diffs')) {
         return Promise.reject(response.text)
       }
       return Promise.resolve(response.text)

@@ -12,11 +12,10 @@ module.exports = {
   output: {
     path: DIST,
     library: 'Pact',
-    libraryTarget: 'umd',
-    umdNamedDefine: true,
+    libraryTarget: 'commonjs2',
     filename: 'pact-dsl.js'
   },
-  target: 'web',
+  target: 'node',
   module: {
     loaders: [
       {
@@ -24,11 +23,16 @@ module.exports = {
         test: APP,
         exclude: /node_modules/,
         query: { presets: ['es2015'] }
+      },
+      {
+        loader: 'json-loader',
+        test: /\.json$/
       }
     ]
   },
   plugins: [
+    new webpack.DefinePlugin({ 'global.GENTLY': false }),
+    new webpack.IgnorePlugin(/vertx/),
     new webpack.NoErrorsPlugin()
-  ],
-  devtool: 'source-map'
+  ]
 }

@@ -2,11 +2,14 @@
   "name": "pact-dsl",
   "version": "0.0.1",
   "description": "Pact DSL for all things Javascript",
+  "main": "./dist/pact-dsl.js",
   "scripts": {
     "pretest": "npm run lint && npm run jscpd",
     "lint": "standard",
     "jscpd": "jscpd -p src -r json -o jscpd.json",
-    "dist": "webpack --config ./config/webpack.config.js",
+    "dist": "npm run dist:web && npm run dist:node",
+    "dist:web": "webpack --config ./config/webpack.web.config.js",
+    "dist:node": "webpack --config ./config/webpack.node.config.js",
     "predist": "npm t",
     "test": "./node_modules/.bin/babel-node ./node_modules/.bin/isparta cover ./node_modules/.bin/_mocha -- ./test"
   },
@@ -74,14 +77,13 @@
     ]
   },
   "dependencies": {
-    "bluebird": "3.4.0",
+    "es6-promise": "3.2.1",
     "lodash.clone": "4.3.2",
     "lodash.isfunction": "3.0.8",
     "lodash.isnil": "4.0.0",
     "lodash.isundefined": "3.0.1",
     "lodash.omitby": "4.4.0",
-    "superagent": "1.8.3",
-    "superagent-bluebird-promise": "3.0.0"
+    "superagent": "1.8.3"
   },
   "devDependencies": {
     "@pact-foundation/pact-node": "2.0.1",
@@ -90,20 +92,24 @@
     "babel-loader": "6.2.4",
     "babel-preset-es2015": "6.9.0",
     "babel-register": "6.9.0",
+    "bluebird": "3.4.0",
     "body-parser": "1.15.1",
     "chai": "3.5.0",
     "chai-as-promised": "5.3.0",
     "cors": "2.7.1",
     "express": "4.13.4",
+    "imports-loader": "0.6.5",
     "isparta": "4.0.0",
     "istanbul": "0.4.3",
     "jscpd": "0.6.1",
+    "json-loader": "0.5.4",
     "mocha": "2.4.5",
     "nock": "8.0.0",
     "pact-interceptor": "file:../pact-interceptor",
     "sinon": "1.17.4",
     "sinon-chai": "2.8.0",
     "standard": "7.1.0",
+    "superagent-bluebird-promise": "3.0.0",
     "webpack": "1.13.1"
   }
 }

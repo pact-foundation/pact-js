@@ -2,15 +2,14 @@
 
 import clone from 'lodash.clone'
 import isNil from 'lodash.isnil'
-import request from 'superagent-bluebird-promise'
+import request from 'superagent'
+import { Promise } from 'es6-promise'
 import { logger } from './logger'
 
 const MOCK_HEADERS = {
   'Content-Type': 'application/json',
   'X-Pact-Mock-Service': 'true'
 }
-
-function handleError (err) { throw err }
 
 export default class MockService {
 
@@ -32,44 +31,84 @@ export default class MockService {
 
   addInteraction (interaction) {
     const stringifiedInteraction = JSON.stringify(interaction)
-    return request.post(`${this._baseURL}/interactions`)
-      .set(MOCK_HEADERS)
-      .send(stringifiedInteraction)
-      .then((res) => logger.info(`Interaction added: "${stringifiedInteraction}"`))
-      .catch(handleError)
+    return new Promise((resolve, reject) => {
+      request.post(`${this._baseURL}/interactions`)
+        .set(MOCK_HEADERS)
+        .send(stringifiedInteraction)
+        .end((err, data) => {
+          if (err) {
+            reject(err)
+            return
+          }
+          logger.info(`Interaction added: "${stringifiedInteraction}"`)
+          resolve()
+        })
+    })
   }
 
   putInteractions (interactions) {
     const clonedInteractions = interactions.map((interaction) => clone(interaction).json())
     const stringifiedInteractions = JSON.stringify({interactions: clonedInteractions})
-    return request.put(`${this._baseURL}/interactions`)
-      .set(MOCK_HEADERS)
-      .send(stringifiedInteractions)
-      .then((res) => logger.info(`Set of interactions added: "${stringifiedInteractions}"`))
-      .catch(handleError)
+    return new Promise((resolve, reject) => {
+      request.put(`${this._baseURL}/interactions`)
+        .set(MOCK_HEADERS)
+        .send(stringifiedInteractions)
+        .end((err, data) => {
+          if (err) {
+            reject(err)
+            return
+          }
+          logger.info(`Set of interactions added: "${stringifiedInteractions}"`)
+          resolve()
+        })
+    })
   }
 
   removeInteractions () {
-    return request.del(`${this._baseURL}/interactions`)
-      .set(MOCK_HEADERS)
-      .then((res) => logger.info('All interactions removed.'))
-      .catch(handleError)
+    return new Promise((resolve, reject) => {
+      request.del(`${this._baseURL}/interactions`)
+        .set(MOCK_HEADERS)
+        .end((err, data) => {
+          if (err) {
+            reject(err)
+            return
+          }
+          logger.info('All interactions removed.')
+          resolve()
+        })
+    })
   }
 
   verify () {
-    return request.get(`${this._baseURL}/interactions/verification`)
-      .set(MOCK_HEADERS)
-      .then((res) => logger.info('Verification successful.'))
-      .catch(handleError)
+    return new Promise((resolve, reject) => {
+      request.get(`${this._baseURL}/interactions/verification`)
+        .set(MOCK_HEADERS)
+        .end((err, data) => {
+          if (err) {
+            reject(err)
+            return
+          }
+          logger.info('Verification successful.')
+          resolve()
+        })
+    })
   }
 
   writePact () {
     const stringifiedPactDetails = JSON.stringify(this._pactDetails)
-    return request.post(`${this._baseURL}/pact`)
-      .set(MOCK_HEADERS)
-      .send(stringifiedPactDetails)
-      .then((res) => logger.info(`Pact successfully written with: ${stringifiedPactDetails}`))
-      .catch(handleError)
+    return new Promise((resolve, reject) => {
+      request.post(`${this._baseURL}/pact`)
+        .set(MOCK_HEADERS)
+        .send(stringifiedPactDetails)
+        .end((err, data) => {
+          if (err) {
+            reject(err)
+            return
+          }
+          logger.info(`Pact successfully written with: ${stringifiedPactDetails}`)
+          resolve()
+        })
+    })
   }
 
   verifyAndWrite () {

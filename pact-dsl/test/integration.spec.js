@@ -56,7 +56,6 @@ describe('Pact', () => {
   })
 
   context('with a single request', () => {
-
     it('successfully verifies', (done) => {
       function requestProjects () {
         return request.get(`${PROVIDER_URL}/projects`).set({ 'Accept': 'application/json' })
@@ -101,9 +100,9 @@ describe('Pact', () => {
           .willRespondWith(404, { 'Content-Type': 'application/json' })
 
       pact.verify(requestProjects)
-        .spread((successResp, notFoundResp) => {
-          expect(JSON.parse(successResp)).to.eql(EXPECTED_BODY)
-          expect(JSON.parse(notFoundResp)).to.eql('')
+        .then((responses) => {
+          expect(JSON.parse(responses[0])).to.eql(EXPECTED_BODY)
+          expect(JSON.parse(responses[1])).to.eql('')
           done()
         })
         .catch((err) => {
@@ -127,10 +126,11 @@ describe('Pact', () => {
         .withRequest('get', '/projects', null, { 'Accept': 'application/json' })
         .willRespondWith(200, { 'Content-Type': 'application/json' }, EXPECTED_BODY)
 
-      pact.verify(requestProjects).catch((err) => {
-        expect(err.res.text).to.contain('Actual interactions do not match expected interactions for mock MockService')
-        done()
-      })
+      pact.verify(requestProjects)
+        .catch((err) => {
+          expect(err.shift()).to.contain('No interaction found for DELETE /projects/2')
+          done()
+        })
     })
   })
 
