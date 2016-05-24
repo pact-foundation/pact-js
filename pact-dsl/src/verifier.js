@@ -5,7 +5,6 @@ import { Promise } from 'es6-promise'
 import { logger } from './logger'
 import MockService from './mockService'
 import Interaction from './interaction'
-import { term, eachLike, somethingLike } from './matcher'
 
 module.exports = ({consumer, provider}) => {
   logger.info(`Setting up Pact with Consumer "${consumer}" and Provider "${provider}"`)
@@ -16,22 +15,30 @@ module.exports = ({consumer, provider}) => {
 
   function processResponse (response) {
     if (Array.isArray(response)) {
-      const hasErrors = response.filter((it) => it.text.includes('interaction_diffs')).map((it) => it.text)
+      const hasErrors = response
+        .filter((it) => {
+          const resp = it.text || it.responseText
+          return resp.includes('interaction_diffs')
+        })
+        .map((it) => {
+          const resp = it.text || it.responseText
+          return resp
+        })
       if (hasErrors.length) {
         return Promise.reject(hasErrors)
       } else {
-        return Promise.resolve(response.map((it) => it.text))
+        return Promise.resolve(response.map((it) => it.text || it.responseText))
       }
     } else {
-      if (response.text.includes('interaction_diffs')) {
-        return Promise.reject(response.text)
+      const resp = response.text || response.responseText
+      if (resp.includes('interaction_diffs')) {
+        return Promise.reject(resp)
       }
-      return Promise.resolve(response.text)
+      return Promise.resolve(resp)
     }
   }
 
   return {
-    Match: { term, eachLike, somethingLike },
     interaction: () => {
       const interaction = new Interaction()
       interactions.push(interaction)

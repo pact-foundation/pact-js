@@ -7,7 +7,7 @@ var APP  = path.resolve(__dirname, '../src');
 
 module.exports = {
   entry: [
-    path.resolve(APP, 'pact.js')
+    path.resolve(APP, 'index.js')
   ],
   output: {
     path: DIST,

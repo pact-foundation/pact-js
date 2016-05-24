@@ -6,7 +6,7 @@ import Interceptor from 'pact-interceptor'
 
 var wrapper = require('@pact-foundation/pact-node')
 
-import Pact from '../src/pact'
+import Pact from '../src/verifier'
 import server from './provider'
 
 describe('Pact', () => {

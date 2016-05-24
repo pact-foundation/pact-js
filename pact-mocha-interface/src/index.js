@@ -31,7 +31,7 @@ module.exports = Mocha.interfaces['pact'] = function (suite) {
       pactSuite.pactConsumer = consumer
       pactSuite.pactProvider = provider
 
-      pactSuite.pact = Pact({ consumer: consumer, provider: provider })
+      pactSuite.pact = Pact.Verifier({ consumer: consumer, provider: provider })
 
       suites.unshift(pactSuite)
       fn.call(pactSuite, {})
