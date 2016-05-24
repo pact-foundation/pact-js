@@ -1,38 +1,37 @@
 'use strict'
 
-import path from 'path'
-import Mocha from 'mocha'
-import Test from 'mocha/lib/test'
-import Suite from 'mocha/lib/suite'
-import Pact from 'pact-dsl'
+var path = require('path')
+var Mocha = require('mocha')
+var Test = require('mocha/lib/test')
+var Suite = require('mocha/lib/suite')
+var Pact = require('pact-dsl')
+var wrapper = require('@pact-foundation/pact-node')
 
-const wrapper = require('@pact-foundation/pact-node')
+module.exports = Mocha.interfaces['pact'] = function (suite) {
+  var suites = [suite]
 
-module.exports = Mocha.interfaces['pact'] = (suite) => {
-  const suites = [suite]
-
-  suite.on('pre-require', (context, file, mocha) => {
+  suite.on('pre-require', function (context, file, mocha) {
     var common = require('mocha/lib/interfaces/common')(suites, context)
 
     context.beforeEach = common.beforeEach
     context.afterEach = common.afterEach
     context.run = mocha.options.delay && common.runWithSuite(suite)
 
-    const mockServer = wrapper.create({
+    var mockServer = wrapper.create({
       port: 1234,
       log: path.resolve(process.cwd(), 'logs', 'mockserver.log'),
       dir: path.resolve(process.cwd(), 'pacts'),
       spec: 2
     })
 
-    context.Pact = (consumer, provider, providerURL, fn) => {
-      const pactSuite = Suite.create(suites[0], `Pact ${consumer} <=> ${provider}`)
+    context.Pact = function (consumer, provider, providerURL, fn) {
+      var pactSuite = Suite.create(suites[0], `Pact ${consumer} <=> ${provider}`)
       pactSuite.file = file
 
       pactSuite.pactConsumer = consumer
       pactSuite.pactProvider = provider
 
-      pactSuite.pact = Pact({ consumer, provider })
+      pactSuite.pact = Pact({ consumer: consumer, provider: provider })
 
       suites.unshift(pactSuite)
       fn.call(pactSuite, {})
@@ -41,32 +40,36 @@ module.exports = Mocha.interfaces['pact'] = (suite) => {
       return pactSuite
     }
 
-    context.xPact = (consumer, provider, fn) => {
-      const pactSuite = Suite.create(suites[0], `Pact ${consumer} <=> ${provider}`)
+    context.xPact = function (consumer, provider, fn) {
+      var pactSuite = Suite.create(suites[0], `Pact ${consumer} <=> ${provider}`)
       pactSuite.pending = true
       suites.unshift(pactSuite)
       fn.call(pactSuite, {})
       suites.shift()
     }
 
-    context.add = (fn) => {
-      const pactSuite = suites[0]
+    context.add = function (fn) {
+      var pactSuite = suites[0]
       fn.call(pactSuite, pactSuite.pact.interaction())
     }
 
-    context.verify = (title, pactFn, fn) => {
-      const pactSuite = suites[0]
+    context.verify = function (title, pactFn, fn) {
+      var pactSuite = suites[0]
 
       if (pactSuite.pending) {
         fn = null
       }
 
-      const test = new Test(title, (done) => {
+      var test = new Test(title, function (done) {
         mockServer.start()
-          .then(() => pactSuite.pact.verify(pactFn))
-          .then((data) => { fn(data, done) })
-          .catch((err) => { done(err) })
-          .finally(() => { mockServer.stop() })
+          .then(function () {
+            return pactSuite.pact.verify(pactFn)
+          })
+          .then(function (data) {
+            fn(data, done)
+          })
+          .catch(function (err) { done(err) })
+          .finally(function () { mockServer.stop() })
       })
 
       test.file = file
@@ -74,7 +77,7 @@ module.exports = Mocha.interfaces['pact'] = (suite) => {
       return test
     }
 
-    context.xverify = context.verify.skip = (title, fn) => {
+    context.xverify = context.verify.skip = function (title, fn) {
       context.verify(title)
     }
   })
