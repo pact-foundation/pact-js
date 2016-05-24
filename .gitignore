@@ -36,6 +36,3 @@ jscpd.json
 
 # Distribution
 dist
-
-# Pact files
-pacts/*.json
