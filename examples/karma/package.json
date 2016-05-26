@@ -1,0 +1,12 @@
+{
+  "name": "pact-consumer-js-dsl-example",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "script/test.sh"
+  },
+  "devDependencies": {
+    "karma": "^0.12.24",
+    "karma-chrome-launcher": "^0.1.5",
+    "karma-jasmine": "~0.2.3"
+  }
+}
