@@ -1,0 +1,29 @@
+{
+  "name": "pact-js",
+  "version": "0.0.1",
+  "description": "All things PAct",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tarciosaraiva/pact-js.git"
+  },
+  "keywords": [
+    "pact"
+  ],
+  "author": "Tarcio Saraiva <tarcio@gmail.com> (http://twitter.com/tarciosaraiva)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tarciosaraiva/pact-js/issues"
+  },
+  "homepage": "https://github.com/tarciosaraiva/pact-js#readme",
+  "dependencies": {
+    "pact-dsl": "file:./pact-dsl",
+    "pact-interceptor": "file:./pact-interceptor"
+  }
+}

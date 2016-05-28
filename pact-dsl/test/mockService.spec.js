@@ -45,7 +45,8 @@ describe('MockService', () => {
 
     it('when Interaction fails to be added', (done) => {
       nock(mock._baseURL).post(/interactions$/).reply(500)
-      expect(mock.addInteraction(interaction)).to.eventually.be.rejectedWith(Error).notify(done)
+      expect(mock.addInteraction(interaction)).to.eventually.be.rejected
+      done()
     })
   })
 
@@ -59,7 +60,8 @@ describe('MockService', () => {
 
     it('when interactions fail to be removed', (done) => {
       nock(mock._baseURL).delete(/interactions$/).reply(500)
-      expect(mock.removeInteractions()).to.eventually.be.rejectedWith(Error).notify(done)
+      expect(mock.removeInteractions()).to.eventually.be.rejected
+      done()
     })
   })
 
@@ -73,7 +75,8 @@ describe('MockService', () => {
 
     it('when verification fails', (done) => {
       nock(mock._baseURL).get(/interactions\/verification$/).reply(500)
-      expect(mock.verify()).to.eventually.be.rejectedWith(Error).notify(done)
+      expect(mock.verify()).to.eventually.be.rejected
+      done()
     })
   })
 
@@ -87,7 +90,8 @@ describe('MockService', () => {
 
     it('when writing fails', (done) => {
       nock(mock._baseURL).post(/pact$/).reply(500)
-      expect(mock.writePact()).to.eventually.be.rejectedWith(Error).notify(done)
+      expect(mock.writePact()).to.eventually.be.rejected
+      done()
     })
   })
 
@@ -104,12 +108,14 @@ describe('MockService', () => {
     it('when verification succeeds and writing fails', (done) => {
       nock(mock._baseURL).get(/interactions\/verification$/).reply(200)
       nock(mock._baseURL).post(/pact$/).reply(500)
-      expect(mock.verifyAndWrite()).to.eventually.be.rejectedWith(Error).notify(done)
+      expect(mock.verifyAndWrite()).to.eventually.be.rejected
+      done()
     })
 
     it('when verification fails', (done) => {
       nock(mock._baseURL).get(/interactions\/verification$/).reply(500)
-      expect(mock.verifyAndWrite()).to.eventually.be.rejectedWith(Error).notify(done)
+      expect(mock.verifyAndWrite()).to.eventually.be.rejected
+      done()
     })
   })
 })

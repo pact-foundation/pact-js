@@ -31,6 +31,5 @@ module.exports = {
     new webpack.DefinePlugin({ 'global.GENTLY': false }),
     new webpack.IgnorePlugin(/vertx/),
     new webpack.NoErrorsPlugin()
-  ],
-  devtool: 'source-map'
+  ]
 }

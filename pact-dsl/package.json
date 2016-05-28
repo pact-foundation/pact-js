@@ -82,8 +82,7 @@
     "lodash.isfunction": "3.0.8",
     "lodash.isnil": "4.0.0",
     "lodash.isundefined": "3.0.1",
-    "lodash.omitby": "4.4.0",
-    "superagent": "1.8.3"
+    "lodash.omitby": "4.4.0"
   },
   "devDependencies": {
     "@pact-foundation/pact-node": "2.0.1",

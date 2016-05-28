@@ -32,17 +32,17 @@ describe('Pact', () => {
     ]
   }]
 
-  var pact
+  var pact, counter = 1
 
   before((done) => {
     server.listen(PORT, () => {
-      pact = Pact({ consumer: 'Test DSL', provider: 'Projects' })
       done()
     })
   })
 
   beforeEach((done) => {
     mockServer.start().then(() => {
+      pact = Pact({ consumer: `Test DSL ${counter}`, provider: `Projects ${counter}` })
       interceptor.interceptRequestsOn(PROVIDER_URL)
       done()
     })
@@ -51,6 +51,7 @@ describe('Pact', () => {
   afterEach((done) => {
     mockServer.stop().then(() => {
       interceptor.stopIntercepting()
+      counter++
       done()
     })
   })
