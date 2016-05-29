@@ -1,6 +1,10 @@
 # Pact JS
 Pact for all things Javascript.
 
+[![Build Status](https://travis-ci.org/tarciosaraiva/pact-js.svg?branch=master)](https://travis-ci.org/tarciosaraiva/pact-js)
+[![Code Climate](https://codeclimate.com/github/tarciosaraiva/pact-js/badges/gpa.svg)](https://codeclimate.com/github/tarciosaraiva/pact-js)
+[![Test Coverage](https://codeclimate.com/github/tarciosaraiva/pact-js/badges/coverage.svg)](https://codeclimate.com/github/tarciosaraiva/pact-js/coverage)
+[![Issue Count](https://codeclimate.com/github/tarciosaraiva/pact-js/badges/issue_count.svg)](https://codeclimate.com/github/tarciosaraiva/pact-js)
 [![Dependency Status](https://david-dm.org/tarciosaraiva/pact-js.svg)](https://david-dm.org/tarciosaraiva/pact-js)
 [![devDependency Status](https://david-dm.org/tarciosaraiva/pact-js/dev-status.svg)](https://david-dm.org/tarciosaraiva/pact-js#info=devDependencies)
 
