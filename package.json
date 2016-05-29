@@ -93,7 +93,9 @@
     "lodash.isfunction": "3.0.8",
     "lodash.isnil": "4.0.0",
     "lodash.isundefined": "3.0.1",
-    "lodash.omitby": "4.4.0"
+    "lodash.omitby": "4.4.0",
+    "mocha": "2.5.3",
+    "standard": "7.1.1"
   },
   "devDependencies": {
     "babel-cli": "6.9.0",
