@@ -6,6 +6,7 @@ var Test = require('mocha/lib/test')
 var Suite = require('mocha/lib/suite')
 var escapeRe = require('escape-string-regexp')
 var wrapper = require('@pact-foundation/pact-node')
+var Common = require('mocha/lib/interfaces/common')
 
 var PactDSL = require('../dsl')
 
@@ -44,7 +45,7 @@ module.exports = Mocha.interfaces['bdd'] = function (suite) {
   var suites = [suite]
 
   suite.on('pre-require', function (context, file, mocha) {
-    var common = require('mocha/lib/interfaces/common')(suites, context)
+    var common = Common(suites, context)
 
     context.before = common.before
     context.after = common.after

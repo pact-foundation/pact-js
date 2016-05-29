@@ -1,9 +1,11 @@
 'use strict'
 
+var dsl = require('./dsl')
+var mochaUI = require('./mocha')
 import Interceptor from './interceptor'
 
 module.exports = {
-  DSL: require('./dsl'),
+  DSL: dsl,
   Interceptor: Interceptor,
-  MochaUI: require('./mocha')
+  MochaUI: mochaUI
 }
