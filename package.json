@@ -82,6 +82,7 @@
   },
   "peerDependencies": {
     "@pact-foundation/pact-node": "4.1.0",
+    "minimatch": "3.0.0",
     "mitm": "1.2.1"
   },
   "dependencies": {
