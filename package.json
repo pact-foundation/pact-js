@@ -13,15 +13,6 @@
     "postdist": "npm t",
     "test": "./node_modules/.bin/babel-node ./node_modules/.bin/isparta cover ./node_modules/.bin/_mocha -- ./test"
   },
-  "os": [
-    "darwin",
-    "linux",
-    "win32"
-  ],
-  "cpu": [
-    "x64",
-    "ia32"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tarciosaraiva/pact-js.git"
@@ -93,9 +84,7 @@
     "lodash.isfunction": "3.0.8",
     "lodash.isnil": "4.0.0",
     "lodash.isundefined": "3.0.1",
-    "lodash.omitby": "4.4.0",
-    "mocha": "2.5.3",
-    "standard": "7.1.1"
+    "lodash.omitby": "4.4.0"
   },
   "devDependencies": {
     "babel-cli": "6.9.0",
@@ -119,7 +108,7 @@
     "nock": "8.0.0",
     "sinon": "1.17.4",
     "sinon-chai": "2.8.0",
-    "standard": "7.1.0",
+    "standard": "7.1.1",
     "superagent": "1.8.3",
     "superagent-bluebird-promise": "3.0.0",
     "webpack": "1.13.1"
