@@ -1,4 +1,3 @@
-import nock from 'nock'
 import sinon from 'sinon'
 import { expect } from 'chai'
 import request from 'superagent-bluebird-promise'
@@ -6,10 +5,6 @@ import request from 'superagent-bluebird-promise'
 import Interceptor from '../../src/interceptor'
 
 describe('Interceptor', () => {
-
-  after(() => {
-    nock.restore()
-  });
 
   describe('#constructor', () => {
     it('creates Interceptor for targetHost', () => {
@@ -46,59 +41,26 @@ describe('Interceptor', () => {
   })
 
   xdescribe('when host is supposed to be intercepted', () => {
-    var interceptorSpy
-    const interceptor = new Interceptor('http://proxy:1234')
+    const interceptor = new Interceptor('http://localhost:1234')
 
-    after(() => {
+    beforeEach(() => {
+      interceptor.interceptRequestsOn('http://docs.pact.io')
+    });
+
+    afterEach(() => {
       interceptor.stopIntercepting()
     })
 
     it('intercepts the request going to "www.google.com.au"', (done) => {
-      sinon.stub(interceptor.mitm, 'on', function (type, fn) {
-        interceptorSpy = sinon.spy(fn)
-        if (type === 'connect') {
-          interceptorSpy(sinon.stub(), { host: 'www.google.com.au' })
-        } else {
-          interceptorSpy({ method: 'GET', url: '/search?q=test' }, { end: () => {} })
-        }
-      })
+      const nock = require('nock')
+      nock('http://localhost:1234')
+        .get('/documentation/javascript.html')
+        .reply(200, { data: 'successfully intercepted' })
 
-      nock('http://proxy:1234').get('/search?q=test').reply(200)
-      interceptor.interceptRequestsOn('http://www.google.com.au')
-
-      request.get('http://www.google.com.au/search?q=test')
-        .then(() => {
-          expect(interceptorSpy).to.have.been.calledOnce
-          done()
-        })
-    })
-  })
-
-  xdescribe('when host is not supposed to be intercepted', () => {
-    var interceptorSpy
-    const interceptor = new Interceptor('www.google.com.au', 'http://proxy:1234')
-
-    after(() => {
-      interceptor.stopIntercepting()
-    })
-
-    xit('request goes through to "au.search.yahoo.com"', (done) => {
-      nock('http://proxy:1234').get('/search?q=test').reply(200)
-
-      sinon.stub(interceptor.mitm, 'on', function (type, fn) {
-        interceptorSpy = sinon.spy(fn)
-        if (type === 'connect') {
-          interceptorSpy(sinon.stub(), { host: 'www.google.com.au' })
-        } else {
-          interceptorSpy({ method: 'GET', url: '/search?q=test' }, { end: () => {} })
-        }
-      })
-
-      interceptor.interceptRequests()
-
-      request.get('https://au.search.yahoo.com/search?p=test')
-        .then(() => {
-          expect(interceptorSpy).to.not.have.been.called
+      request.get('http://docs.pact.io/documentation/javascript.html')
+        .then((response) => {
+          expect(JSON.parse(response.text)).to.eql({ data: 'successfully intercepted' })
+          nock.restore()
           done()
         })
     })

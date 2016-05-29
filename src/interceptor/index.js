@@ -29,7 +29,11 @@ export default class Interceptor {
       logger.info('!!!! INTERCEPTING ALL REQUESTS !!!!')
     } else {
       logger.info(`Intercepting URL "${url}"`)
-      blacklist.push(parseUrl(url))
+      const parsedUrl = parseUrl(url)
+      if (parsedUrl.port === null) {
+        parsedUrl.port = parsedUrl.protocol === 'http:' ? 80 : 443
+      }
+      blacklist.push(parsedUrl)
     }
 
     logger.info('Enabling interceptor.')
