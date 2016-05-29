@@ -13,7 +13,7 @@ describe('Pact', () => {
   const PROVIDER_URL = `http://localhost:${PORT}`
   const mockServer = wrapper.createServer({
     port: 1234,
-    log: path.resolve(process.cwd(), 'logs', 'mockserver.log'),
+    log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
     dir: path.resolve(process.cwd(), 'pacts'),
     spec: 2
   })
@@ -51,7 +51,7 @@ describe('Pact', () => {
   })
 
   afterEach((done) => {
-    mockServer.stop().then(() => {
+    mockServer.delete().then(() => {
       interceptor.stopIntercepting()
       counter++
       done()

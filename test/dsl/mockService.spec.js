@@ -6,6 +6,11 @@ import MockService from '../../src/dsl/mockService'
 import Interaction from '../../src/dsl/interaction'
 
 describe('MockService', () => {
+
+  after(() => {
+    nock.restore()
+  })
+
   describe('#constructor', () => {
     it('creates a MockService when all mandatory parameters are in', () => {
       const mock = new MockService('consumer', 'provider', 1234)

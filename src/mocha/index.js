@@ -170,7 +170,7 @@ module.exports = Mocha.interfaces['bdd'] = function (suite) {
       var test = new Test(title, function (done) {
         var mockServer = wrapper.createServer({
           port: 1234,
-          log: path.resolve(process.cwd(), 'logs', 'mockserver.log'),
+          log: path.resolve(process.cwd(), 'logs', 'mockserver-ui.log'),
           dir: path.resolve(process.cwd(), 'pacts'),
           spec: 2
         })
@@ -184,8 +184,9 @@ module.exports = Mocha.interfaces['bdd'] = function (suite) {
           })
           .catch(function (err) { done(err) })
           .finally(function () {
-            mockServer.stop()
-            wrapper.removeAllServers()
+            mockServer.delete().then(() => {
+              wrapper.removeAllServers()
+            })
           })
       })
 
