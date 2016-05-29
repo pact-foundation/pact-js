@@ -10,6 +10,7 @@ ratings:
    paths:
    - "src/**/*"
 exclude_paths:
+- "config/**/*"
 - "dist/**.js"
 - "examples/**/*"
 - "test/**/*"
