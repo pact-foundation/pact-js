@@ -11,7 +11,7 @@
     "jscpd": "jscpd -p src -r json -o jscpd.json",
     "predist": "npm run lint && npm run jscpd",
     "postdist": "npm t",
-    "test": "mocha ./test"
+    "test": "./node_modules/.bin/babel-node ./node_modules/.bin/isparta cover ./node_modules/.bin/_mocha -- ./test"
   },
   "os": [
     "darwin",
@@ -81,7 +81,6 @@
     ]
   },
   "peerDependencies": {
-    "mocha": "2.4.5",
     "@pact-foundation/pact-node": "4.1.0",
     "mitm": "1.2.1"
   },

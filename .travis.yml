@@ -14,6 +14,9 @@ addons:
       - g++-4.8
   code_climate:
     repo_token: CODE_CLIMATE_TOKEN
+before_install:
+  - npm install @pact-foundation/pact-node
+  - npm install mitm
 install: npm install
 script: npm run dist
 after_success: codeclimate-test-reporter < ./coverage/lcov.info
