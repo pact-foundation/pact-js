@@ -1,0 +1,7 @@
+FROM node:5
+
+COPY . /pact
+WORKDIR /pact
+
+RUN npm install
+RUN npm run dist
