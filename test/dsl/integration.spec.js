@@ -5,7 +5,7 @@ import request from 'superagent-bluebird-promise'
 import wrapper from '@pact-foundation/pact-node'
 
 import server from '../provider'
-import { DSL, Interceptor } from '../../dist/pact'
+import { Verifier, Interceptor } from '../../dist/pact'
 
 describe('Pact', () => {
 
@@ -44,7 +44,7 @@ describe('Pact', () => {
 
   beforeEach((done) => {
     mockServer.start().then(() => {
-      pact = DSL.Verifier({ consumer: `Test DSL ${counter}`, provider: `Projects ${counter}` })
+      pact = Verifier({ consumer: `Test DSL ${counter}`, provider: `Projects ${counter}` })
       interceptor.interceptRequestsOn(PROVIDER_URL)
       done()
     })

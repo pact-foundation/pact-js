@@ -16,12 +16,7 @@ module.exports = {
     filename: 'pact.js'
   },
   target: 'node',
-  externals: [
-    'mitm',
-    'mocha',
-    'minimatch',
-    '@pact-foundation/pact-node'
-  ],
+  externals: [ 'mitm' ],
   module: {
     loaders: [
       {
@@ -37,7 +32,7 @@ module.exports = {
     ]
   },
   plugins: [
-    new webpack.DefinePlugin({ 'global.GENTLY': false, 'LOGGING': process.env.LOGGING || 'false' }),
+    new webpack.DefinePlugin({ 'global.GENTLY': false }),
     new webpack.IgnorePlugin(/vertx/),
     new webpack.NoErrorsPlugin()
   ]

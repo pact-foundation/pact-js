@@ -3,11 +3,11 @@ var path    = require('path');
 var webpack = require('webpack');
 
 var DIST = path.resolve(__dirname, '../dist');
-var APP  = path.resolve(__dirname, '../src/dsl');
+var APP  = path.resolve(__dirname, '../src');
 
 module.exports = {
   entry: [
-    path.resolve(APP, 'index.js')
+    path.resolve(APP, 'pact.js')
   ],
   output: {
     path: DIST,
@@ -17,6 +17,7 @@ module.exports = {
     filename: 'pact.web.js'
   },
   target: 'web',
+  externals: [ 'mitm' ],
   module: {
     loaders: [
       {
@@ -28,7 +29,7 @@ module.exports = {
     ]
   },
   plugins: [
-    new webpack.DefinePlugin({ 'global.GENTLY': false, 'LOGGING': 'true' }),
+    new webpack.DefinePlugin({ 'global.GENTLY': false }),
     new webpack.IgnorePlugin(/vertx/),
     new webpack.NoErrorsPlugin()
   ]

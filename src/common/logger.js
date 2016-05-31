@@ -1,8 +1,10 @@
 'use strict'
 
+import config from './config'
+
 module.exports = {
   info: (msg) => {
-    if (LOGGING === 'true') {
+    if (config.logging) {
       console.log(msg)
     }
   }

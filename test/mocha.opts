@@ -1,6 +1,5 @@
 --bail
 --require ./test/helper.js
---require ./src/mocha/index.js
 --check-leaks
 --reporter spec
 --colors
