@@ -2,6 +2,3 @@ FROM node:latest
 
 COPY . /pact
 WORKDIR /pact
-
-RUN npm install
-RUN npm run dist
