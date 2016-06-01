@@ -1,0 +1,22 @@
+language: node_js
+node_js:
+- '5'
+- '4'
+- '0.12'
+env:
+  global:
+  - secure: MMfikdf4Mc70heBgKkZAlNX+zSm4NWXkKg64wAFwmdeyJujuYkqym4Ap0m0GQDF4NNuk8tIXBFUK1hiK7YfyYH4ztIXZZKex4cHpiABK/IC8md6G4zyPxP74TrqRQDkVLH2Qlf30mR7Wz25LOjA4eF1xJs4cF8GQIAyy6zlNa8hwy3GIk4IF0TbCmfqO5QHyHOxCULS0BxApWMLSQHz3XhSNe5cN9ip2hdWw6w2Fx8+lExCw8Vg7bqNz9TytXj88QViL6JmA6GP0/yj93W5uWWaVRmr0Ibyui6ChR/8XzcvMgV4uu6vQwBLuybo3CnuMi8qv8ch+ri6rSJD0tRn6TCMc2QTRp+jgTKqnnVLdxzOZxDBKERJciBDOEXs8edN50U/qB/Sy3pbarxpLeLdrF0bN/XdioEbh9/0LWyIwuLijyI4MRrUGZ/JFHQquAAhlTleZfSM25+tTq2Bt6A1iAyyLFFFLYp/uvjSku1LdDXGC8tO+tLhhGjrKOYaFaqYEaaf5Ysic6LD7eTh9ltSc6laqVcu8ySBdjGa14ASd5D/NK6Xg/gYnblNtUFhtvAKnfnXi8EVtq6GKiROcbrTFxjIRiay2rfLqaV3zkwxmUtFFkYQvIZtmJ/oK/lmaR1YCsqQ9Ku82injwnyMggW1TLGUhfQgJLIjce/0IHk0QVgU=
+  matrix:
+  - CXX=g++-4.8
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - g++-4.8
+before_install:
+- npm install mitm
+install: npm install
+script: npm run dist
+after_success:
+- codeclimate-test-reporter < ./coverage/lcov.info

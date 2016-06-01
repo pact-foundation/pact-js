@@ -1,4 +1,0 @@
-FROM node:4
-
-COPY . /pact
-WORKDIR /pact

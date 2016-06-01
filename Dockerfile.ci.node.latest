@@ -1,4 +1,0 @@
-FROM node:latest
-
-COPY . /pact
-WORKDIR /pact
