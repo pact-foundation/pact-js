@@ -17,6 +17,9 @@
     "type": "git",
     "url": "git+https://github.com/tarciosaraiva/pact-js.git"
   },
+  "engines": {
+    "node" : ">=0.12"
+  },
   "keywords": [
     "pact",
     "pact-js",

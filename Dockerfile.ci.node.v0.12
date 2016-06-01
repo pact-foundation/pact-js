@@ -1,4 +1,4 @@
-FROM node:v0.12
+FROM node:0.12
 
 COPY . /pact
 WORKDIR /pact
