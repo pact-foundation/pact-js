@@ -18,7 +18,7 @@ module.exports = ({consumer, provider}) => {
       const hasErrors = response
         .filter((it) => {
           const resp = it.text || it.responseText || ''
-          return resp.includes('interaction_diffs')
+          return resp.indexOf('interaction_diffs') > -1
         })
         .map((it) => {
           const resp = it.text || it.responseText || ''
@@ -31,7 +31,7 @@ module.exports = ({consumer, provider}) => {
       }
     } else {
       const resp = response.text || response.responseText
-      if (resp.includes('interaction_diffs')) {
+      if (resp.indexOf('interaction_diffs') > -1) {
         return Promise.reject(resp)
       }
       return Promise.resolve(resp)
