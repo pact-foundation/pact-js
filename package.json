@@ -106,6 +106,7 @@
     "json-loader": "0.5.4",
     "mocha": "2.4.5",
     "nock": "8.0.0",
+    "rewire": "2.5.1",
     "sinon": "1.17.4",
     "sinon-chai": "2.8.0",
     "standard": "7.1.1",

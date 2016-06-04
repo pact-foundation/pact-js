@@ -1,6 +1,6 @@
 'use strict'
 
-import config from './config'
+var config = require('./config')
 
 module.exports = {
   info: (msg) => {
