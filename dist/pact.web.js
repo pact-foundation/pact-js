@@ -4838,15 +4838,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _config = __webpack_require__(18);
-
-	var _config2 = _interopRequireDefault(_config);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	var config = __webpack_require__(18);
 
 	module.exports = {
 	  info: function info(msg) {
-	    if (_config2.default.logging) {
+	    if (config.logging) {
 	      console.log(msg);
 	    }
 	  }
