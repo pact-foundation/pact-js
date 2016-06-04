@@ -4,6 +4,7 @@
   "description": "Pact for all things Javascript",
   "main": "./dist/pact.js",
   "scripts": {
+    "coverage": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "dist": "npm run dist:node && npm run dist:web",
     "dist:web": "webpack --config ./config/webpack.web.config.js",
     "dist:node": "webpack --config ./config/webpack.node.config.js",
@@ -18,7 +19,7 @@
     "url": "git+https://github.com/tarciosaraiva/pact-js.git"
   },
   "engines": {
-    "node" : ">=0.12"
+    "node": ">=0.12"
   },
   "keywords": [
     "pact",
@@ -92,8 +93,8 @@
     "body-parser": "1.15.1",
     "chai": "3.5.0",
     "chai-as-promised": "5.3.0",
-    "codeclimate-test-reporter": "0.3.1",
     "cors": "2.7.1",
+    "coveralls": "2.11.9",
     "express": "4.13.4",
     "imports-loader": "0.6.5",
     "isparta": "4.0.0",
