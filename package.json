@@ -1,10 +1,11 @@
 {
   "name": "pact",
-  "version": "0.0.1",
+  "version": "1.0.0-alpha",
   "description": "Pact for all things Javascript",
   "main": "./dist/pact.js",
   "scripts": {
     "coverage": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "docs": "./node_modules/.bin/jsdoc -r ./src --readme ./README.md -P ./package.json -d ./docs",
     "dist": "npm run dist:node && npm run dist:web",
     "dist:web": "webpack --config ./config/webpack.web.config.js",
     "dist:node": "webpack --config ./config/webpack.node.config.js",
@@ -69,7 +70,8 @@
     "ignore": [
       "config/**",
       "test/**",
-      "dist/**"
+      "dist/**",
+      "docs/**"
     ]
   },
   "dependencies": {
@@ -100,6 +102,7 @@
     "isparta": "4.0.0",
     "istanbul": "0.4.3",
     "jscpd": "0.6.1",
+    "jsdoc": "3.4.0",
     "json-loader": "0.5.4",
     "mocha": "2.4.5",
     "nock": "8.0.0",
