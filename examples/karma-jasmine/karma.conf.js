@@ -15,7 +15,7 @@ module.exports = function (config) {
     files: [
       // if you are using this example to setup your own project load pact from the node_modules directory
       // i.e. node_modules/pact-consumer-js-dsl/dist/pact-consumer-js-dsl.js
-      '../../dist/pact.web.js',
+      './node_modules/pact/dist/pact.web.js',
       'client.js',
       'client-spec.js'
     ],
@@ -58,6 +58,6 @@ module.exports = function (config) {
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: false
+    singleRun: true
   })
 }
