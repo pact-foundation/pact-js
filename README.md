@@ -22,11 +22,6 @@ From the [Pact website](http://docs.pact.io/):
 Read [Getting started with Pact](http://dius.com.au/2016/02/03/microservices-pact/) for more information on
 how to get going.
 
-## Contact
-
-* Twitter: [@pact_up](https://twitter.com/pact_up)
-* Google users group: https://groups.google.com/forum/#!forum/pact-support
-
 ## How to use it
 This package is not yet published to [NPM](https://www.npmjs.com/) so you will need to install it manually by modifying your `package.json`.
 
@@ -162,3 +157,18 @@ describe('Pact', () => {
   })
 })
 ```
+## Contributing
+1. Fork it
+2. Create your feature branch (git checkout -b my-new-feature)
+3. Commit your changes (git commit -am 'Add some feature')
+4. Push to the branch (git push origin my-new-feature)
+5. Create new Pull Request
+
+If you would like to implement `Pact` in another language, please check out the [Pact specification](https://github.com/bethesque/pact-specification) and have a chat to one of us on the [pact-dev Google group](https://groups.google.com/forum/#!forum/pact-support).
+
+The vision is to have a compatible `Pact` implementation in all the commonly used languages, your help would be greatly appreciated!
+
+## Contact
+
+* Twitter: [@pact_up](https://twitter.com/pact_up)
+* Google users group: https://groups.google.com/forum/#!forum/pact-support
