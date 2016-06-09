@@ -85,7 +85,7 @@
     "mitm": "1.2.1"
   },
   "devDependencies": {
-    "@pact-foundation/pact-node": "4.1.1",
+    "@pact-foundation/pact-node": "4.3.2",
     "babel-cli": "6.9.0",
     "babel-eslint": "6.0.4",
     "babel-loader": "6.2.4",
@@ -104,12 +104,12 @@
     "jscpd": "0.6.1",
     "jsdoc": "3.4.0",
     "json-loader": "0.5.4",
-    "mocha": "2.4.5",
+    "mocha": "2.5.3",
     "nock": "8.0.0",
     "rewire": "2.5.1",
     "sinon": "1.17.4",
     "sinon-chai": "2.8.0",
-    "standard": "7.1.1",
+    "standard": "7.1.2",
     "superagent": "1.8.3",
     "superagent-bluebird-promise": "3.0.0",
     "webpack": "1.13.1"
