@@ -5,7 +5,6 @@ import logger from '../../src/common/logger'
 
 describe('Request', () => {
 
-  const consoleLogSpy = sinon.spy(logger, 'info')
   var request
 
   before(() => {
@@ -28,7 +27,9 @@ describe('Request', () => {
 
   it('should have "XMLHttpRequest" _request', function () {
     expect(request._request).to.not.be.null
-    expect(consoleLogSpy).to.have.been.calledWith('Using browser "XMLHttpRequest" module')
+    expect(request._request.open).to.be.a('function')
+    expect(request._request.setRequestHeader).to.be.a('function')
+    expect(request._request.send).to.be.a('function')
   })
 
   context('#send', () => {
@@ -70,7 +71,6 @@ describe('Request', () => {
 
       it('should resolve the promise', function () {
         expect(request.send('GET', 'http://localhost:8888', {})).to.have.been.fulfilled
-        expect(consoleLogSpy).to.have.been.calledWith('Resolving promise with: it works')
       })
     })
 
@@ -89,7 +89,6 @@ describe('Request', () => {
 
       it('should reject the promise', function () {
         expect(request.send('GET', 'http://localhost:8888', {})).to.have.been.rejected
-        expect(consoleLogSpy).to.have.been.calledWith('Rejecting promise with: it does not work')
       })
     })
   })
