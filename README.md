@@ -22,24 +22,29 @@ From the [Pact website](http://docs.pact.io/):
 Read [Getting started with Pact](http://dius.com.au/2016/02/03/microservices-pact/) for more information on
 how to get going.
 
-## How to use it
+**NOTE: we are currently in the process of replacing [Pact Consumer JS DSL](https://github.com/DiUS/pact-consumer-js-dsl) with this library. Please bare with us whilst we transition. If you want to use Pact with JS and are new to Pact, start here.**
+
+## Installation
+
 This package is not yet published to [NPM](https://www.npmjs.com/) so you will need to install it manually by modifying your `package.json`.
 
-#### Installation
 It's easy, simply add the line below to your `devDependencies` group...
 ```
 "pact": "pact-foundation/pact-js"
 ```
 ... then run `npm install` and you are good to go.
 
-#### Usage
-The library provides a Verifer, Matchers and an interceptor:
+### Using Pact JS
 
->**Verifier** is the Pact Consumer DSL to create and verify interactions with the Provider as well as writing Pact files.
+#### Consumer Side Testing
+
+The library provides a Verifier Service, Matchers and an API Interceptor:
+
+>**Verifier** Sets up a test double (Verifier Provider API) with expected interactions. It's also responsible for generating Pact files.
 >
->**Matchers** are little techniques that allow to partially verify some data on the interaction.
+>**Matchers** are functions you can use to increase the expressiveness of your tests, and reduce brittle test cases. See the [matching](http://docs.pact.io/documentation/matching.html) docs for more information.
 >
->**Interceptor** is a utility that can be used to intercept requests to provider in case it's complicated for you to change your underlying implementation to talk to different servers.
+>**Interceptor** is a utility that can be used to intercept requests to the Provider, where it's not simple for you to change your API endpoint.
 
 To use the library on your tests, do as you would normally with any other dependency:
 
@@ -54,14 +59,14 @@ const interceptor = new Interceptor()
 // ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
 // ES5
 var Pact = require('pact-js')
-var verifier = Pact.Verifier
+var Verifier = Pact.Verifier
 var matchers = Pact.Matcher
 
 // you have to new the Interceptor
 var Interceptor = new Pact.Interceptor()
 ```
 
-Then to write a test that will generate a Pact file, here's an example below - it uses [Mocha](https://mochajs.org). There's a bit going on in there as we are spinning up the Pact Mock Service Provider to mock a real server on the provider server. This is needed because that's where we will record our interactions.
+Then to write a test that will generate a Pact file, here's an example below - it uses [Mocha](https://mochajs.org). There's a bit going on in there as we are spinning up the Pact Verifier Service Provider to mock a real server on the provider server. This is needed because that's where we will record our interactions.
 
 More questions about what's involved in Pact? [Read more about it](http://docs.pact.io/documentation/how_does_pact_work.html).
 
@@ -75,7 +80,7 @@ import Promise from 'bluebird'
 import { Verifier } from 'pact-js'
 import request from 'superagent-bluebird-promise'
 
-// great library to spin up the Pact Mock Server
+// great library to spin up the Pact Verifier Server
 // that will record interactions and eventually validate your pacts
 import wrapper from '@pact-foundation/pact-node'
 
@@ -111,7 +116,7 @@ describe('Pact', () => {
 
   beforeEach((done) => {
     mockServer.start().then(() => {
-      // in order to use the verifier, simply pass an object like below
+      // in order to use the Verifier, simply pass an object like below
       // it should contain the names of the consumer and provider in normal language
       pact = Verifier({ consumer: 'My Consumer', provider: 'My Provider' })
       done()
@@ -136,7 +141,8 @@ describe('Pact', () => {
       }
 
       // This is how you create an interaction
-      pact.interaction()
+      pact
+        .interaction()
         .given('i have a list of projects')
         .uponReceiving('a request for projects')
         .withRequest('get', '/projects', null, { 'Accept': 'application/json' })
@@ -157,6 +163,59 @@ describe('Pact', () => {
   })
 })
 ```
+
+#### Provider API Testing
+
+Once you have created Pacts for your Consumer, you need to validate those Pacts against your Provider.
+
+First, install [Pact Node](https://github.com/pact-foundation/pact-node):
+
+```
+npm install @pact-foundation/pact-node --save
+```
+
+Then run the Provider side verification step:
+
+```js
+var pact = require('@pact-foundation/pact-node');
+var opts = {
+	providerBaseUrl: <String>,       // Running API provider host endpoint. Required.
+	pactUrls: <Array>,               // Array of local Pact file paths or Pact Broker URLs (http based). Required.
+	providerStatesUrl: <String>,     // URL to fetch the provider states for the given provider API. Optional.
+	providerStatesSetupUrl <String>, // URL to send PUT requests to setup a given provider state. Optional.
+	pactBrokerUsername: <String>,    // Username for Pact Broker basic authentication. Optional
+	pactBrokerPassword: <String>,    // Password for Pact Broker basic authentication. Optional
+};
+
+pact.verifyPacts(opts)).then(function () {
+	// do something
+});
+```
+
+That's it! Read more about [Verifying Pacts](http://docs.pact.io/documentation/verifying_pacts.html).
+
+### Publishing Pacts to a Broker
+
+Sharing is caring - to simplify sharing Pacts between Consumers and Providers, checkout [sharing pacts](http://docs.pact.io/documentation/sharings_pacts.html).
+
+```js
+var pact = require('@pact-foundation/pact-node');
+var opts = {
+	pactUrls: <Array>,               // Array of local Pact files or directories containing them. Required.
+	pactBroker: <String>,            // URL to fetch the provider states for the given provider API. Optional.
+	pactBrokerUsername: <String>,    // Username for Pact Broker basic authentication. Optional
+	pactBrokerPassword: <String>     // Password for Pact Broker basic authentication. Optional
+};
+
+pact.publishPacts(opts)).then(function () {
+	// do something
+});
+```
+
+#### Using Mocha?
+
+Check out [Pact JS Mocha](https://github.com/pact-foundation/pact-js-mocha).
+
 ## Contributing
 1. Fork it
 2. Create your feature branch (git checkout -b my-new-feature)

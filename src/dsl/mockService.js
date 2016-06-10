@@ -7,6 +7,7 @@ import logger from '../common/logger'
 
 /**
  * A Mock Service is the interaction mechanism through which pacts get written and verified.
+ * This should be transparent to the end user.
  */
 export default class MockService {
 
