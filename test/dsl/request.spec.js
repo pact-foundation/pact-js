@@ -1,0 +1,96 @@
+import sinon from 'sinon'
+import { expect } from 'chai'
+import Request from '../../src/dsl/request'
+import logger from '../../src/common/logger'
+
+describe('Request', () => {
+
+  const consoleLogSpy = sinon.spy(logger, 'info')
+  var request
+
+  before(() => {
+    global.window = {
+      XMLHttpRequest: () => {
+        return {
+          open: function() {},
+          setRequestHeader: function() {},
+          send: function() {}
+        }
+      }
+    }
+
+    request = new Request()
+  });
+
+  after(() => {
+    global.window = undefined
+  });
+
+  it('should have "XMLHttpRequest" _request', function () {
+    expect(request._request).to.not.be.null
+    expect(consoleLogSpy).to.have.been.calledWith('Using browser "XMLHttpRequest" module')
+  })
+
+  context('#send', () => {
+    describe('asserting invocations are in place', () => {
+      var _requestMock
+
+      beforeEach(() => {
+        _requestMock = sinon.mock(request._request)
+
+        _requestMock.expects('open').withArgs('GET', 'http://localhost:8888', true)
+        _requestMock.expects('setRequestHeader').withArgs('X-Pact-Mock-Service', 'true')
+        _requestMock.expects('setRequestHeader').withArgs('Content-Type', 'application/json')
+        _requestMock.expects('send').withArgs({})
+      })
+
+      afterEach(() => {
+        _requestMock.restore()
+      })
+
+      it('should have sent headers and body to the correct URL', function (done) {
+        request.send('GET', 'http://localhost:8888', {})
+        _requestMock.verify()
+        done()
+      })
+    })
+
+    describe('with a successful request', () => {
+      beforeEach(() => {
+        sinon.stub(request._request, 'send', () => {
+          request._request.status = 200
+          request._request.responseText = 'it works'
+          request._request.onload()
+        })
+      })
+
+      afterEach(() => {
+        request._request.send.restore()
+      })
+
+      it('should resolve the promise', function () {
+        expect(request.send('GET', 'http://localhost:8888', {})).to.have.been.fulfilled
+        expect(consoleLogSpy).to.have.been.calledWith('Resolving promise with: it works')
+      })
+    })
+
+    describe('with an unsuccessful request', () => {
+      beforeEach(() => {
+        sinon.stub(request._request, 'send', () => {
+          request._request.status = 404
+          request._request.responseText = 'it does not work'
+          request._request.onload()
+        })
+      })
+
+      afterEach(() => {
+        request._request.send.restore()
+      })
+
+      it('should reject the promise', function () {
+        expect(request.send('GET', 'http://localhost:8888', {})).to.have.been.rejected
+        expect(consoleLogSpy).to.have.been.calledWith('Rejecting promise with: it does not work')
+      })
+    })
+  })
+})
