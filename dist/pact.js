@@ -101,7 +101,9 @@ module.exports =
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	/**
-	 * Verification module of Pact.
+	 * Verification module of Pact. This is the thing (test double) that pretends to
+	 * be a Provider. It verifies that the Mock Interactions (expectations) that were
+	 * setup were in fact called and fails if they weren't.
 	 *
 	 * @module Verifier
 	 * @param {String} consumer - the name of the consumer
@@ -1202,6 +1204,7 @@ module.exports =
 	
 	/**
 	 * A Mock Service is the interaction mechanism through which pacts get written and verified.
+	 * This should be transparent to the end user.
 	 */
 	
 	var MockService = function () {

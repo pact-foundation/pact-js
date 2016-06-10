@@ -110,7 +110,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	/**
-	 * Verification module of Pact.
+	 * Verification module of Pact. This is the thing (test double) that pretends to
+	 * be a Provider. It verifies that the Mock Interactions (expectations) that were
+	 * setup were in fact called and fails if they weren't.
 	 *
 	 * @module Verifier
 	 * @param {String} consumer - the name of the consumer
@@ -1161,6 +1163,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	// shim for using process in browser
 	
 	var process = module.exports = {};
+	
+	// cached from whatever global is present so that test runners that stub it don't break things.
+	var cachedSetTimeout = setTimeout;
+	var cachedClearTimeout = clearTimeout;
+	
 	var queue = [];
 	var draining = false;
 	var currentQueue;
@@ -1185,7 +1192,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (draining) {
 	        return;
 	    }
-	    var timeout = setTimeout(cleanUpNextTick);
+	    var timeout = cachedSetTimeout(cleanUpNextTick);
 	    draining = true;
 	
 	    var len = queue.length;
@@ -1202,7 +1209,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	    currentQueue = null;
 	    draining = false;
-	    clearTimeout(timeout);
+	    cachedClearTimeout(timeout);
 	}
 	
 	process.nextTick = function (fun) {
@@ -1214,7 +1221,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	    queue.push(new Item(fun, args));
 	    if (queue.length === 1 && !draining) {
-	        setTimeout(drainQueue, 0);
+	        cachedSetTimeout(drainQueue, 0);
 	    }
 	};
 	
@@ -1311,6 +1318,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/**
 	 * A Mock Service is the interaction mechanism through which pacts get written and verified.
+	 * This should be transparent to the end user.
 	 */
 	
 	var MockService = function () {

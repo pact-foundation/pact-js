@@ -7,7 +7,9 @@ import Interaction from './interaction'
 import logger from '../common/logger'
 
 /**
- * Verification module of Pact.
+ * Verification module of Pact. This is the thing (test double) that pretends to
+ * be a Provider. It verifies that the Mock Interactions (expectations) that were
+ * setup were in fact called and fails if they weren't.
  *
  * @module Verifier
  * @param {String} consumer - the name of the consumer
