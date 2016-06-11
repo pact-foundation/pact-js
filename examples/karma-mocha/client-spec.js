@@ -3,18 +3,18 @@
 
   describe("Client", function() {
 
-    var client, helloProvider;
+    var client, pact;
 
     // ugly but works... guess would be good to bring jasmine-beforeAll
     beforeEach(function() {
       client = example.createClient('http://localhost:1234');
-      helloProvider = Pact.Verifier({ consumer: 'Test DSL', provider: 'Projects' })
+      pact = Pact({ consumer: 'Test DSL', provider: 'Projects' })
     });
 
     describe("sayHello", function () {
       it("should say hello", function(done) {
 
-        helloProvider
+        pact
           .interaction()
           .uponReceiving("a request for hello")
           .withRequest("get", "/sayHello")
@@ -25,7 +25,7 @@
           });
 
         //Run the tests
-        helloProvider.verify(client.sayHello)
+        pact.verify(client.sayHello)
           .then((data) => {
             expect(JSON.parse(data)).to.eql({ reply: "Hello" });
             done()
@@ -40,7 +40,7 @@
 
       it("should return some friends", function(done) {
         //Add interaction
-        helloProvider
+        pact
           .interaction()
           .uponReceiving("a request friends")
           .withRequest('get', '/friends', {
@@ -60,7 +60,7 @@
         }
 
         //Run the tests
-        helloProvider.verify(runFn)
+        pact.verify(runFn)
           .then((data) => {
             expect(JSON.parse(data)).to.eql({friends: [{ name: 'Sue' }]});
             done()
@@ -75,7 +75,7 @@
 
       it("should unfriend me", function(done) {
         //Add interaction
-        helloProvider
+        pact
           .interaction()
           .given("I am friends with Fred")
           .uponReceiving("a request to unfriend")
@@ -83,7 +83,7 @@
           .willRespondWith(200, { "Content-Type": "application/json" }, { reply: "Bye" });
 
         //Run the tests
-        helloProvider.verify(client.unfriendMe)
+        pact.verify(client.unfriendMe)
           .then((data) => {
             expect(JSON.parse(data)).to.eql({ reply: "Bye" });
             done()
@@ -96,7 +96,7 @@
       describe("when there are no friends", function () {
         it("returns an error message", function (done) {
           //Add interaction
-          helloProvider
+          pact
             .interaction()
             .given("I have no friends")
             .uponReceiving("a request to unfriend")
@@ -104,7 +104,7 @@
             .willRespondWith(404);
 
           //Run the tests
-          helloProvider.verify(client.unfriendMe)
+          pact.verify(client.unfriendMe)
             .catch((err) => {
               expect(err).to.eql('No friends :(');
               done()
