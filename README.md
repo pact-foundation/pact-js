@@ -50,7 +50,7 @@ To use the library on your tests, do as you would normally with any other depend
 
 ```javascript
 // ES6
-import { Verifier, Matchers, Interceptor } from 'pact-js'
+import { default as Pact, Matchers, Interceptor } from 'pact-js'
 
 // you have to new the Interceptor
 // the others are just plain objects
@@ -59,8 +59,7 @@ const interceptor = new Interceptor()
 // ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
 // ES5
 var Pact = require('pact-js')
-var Verifier = Pact.Verifier
-var matchers = Pact.Matcher
+var matchers = Pact.Matchers
 
 // you have to new the Interceptor
 var Interceptor = new Pact.Interceptor()
@@ -77,7 +76,7 @@ import { expect } from 'chai'
 import Promise from 'bluebird'
 
 // import the Verifier so you write your pacts
-import { Verifier } from 'pact-js'
+import { default as Pact } from 'pact-js'
 import request from 'superagent-bluebird-promise'
 
 // great library to spin up the Pact Verifier Server
@@ -118,7 +117,7 @@ describe('Pact', () => {
     mockServer.start().then(() => {
       // in order to use the Verifier, simply pass an object like below
       // it should contain the names of the consumer and provider in normal language
-      pact = Verifier({ consumer: 'My Consumer', provider: 'My Provider' })
+      pact = Pact({ consumer: 'My Consumer', provider: 'My Provider' })
       done()
     })
   })
@@ -212,15 +211,15 @@ pact.publishPacts(opts)).then(function () {
 });
 ```
 
-#### Using Mocha?
+### Using Mocha?
 
 Check out [Pact JS Mocha](https://github.com/pact-foundation/pact-js-mocha).
 
 ## Contributing
 1. Fork it
-2. Create your feature branch (git checkout -b my-new-feature)
-3. Commit your changes (git commit -am 'Add some feature')
-4. Push to the branch (git push origin my-new-feature)
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
 
 If you would like to implement `Pact` in another language, please check out the [Pact specification](https://github.com/bethesque/pact-specification) and have a chat to one of us on the [pact-dev Google group](https://groups.google.com/forum/#!forum/pact-support).
