@@ -2,7 +2,7 @@
 
 import clone from 'lodash.clone'
 import isNil from 'lodash.isnil'
-import Request from './request'
+import Request from '../common/request'
 import logger from '../common/logger'
 
 /**

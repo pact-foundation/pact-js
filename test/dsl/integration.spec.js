@@ -1,11 +1,10 @@
+import path from 'path'
 import { expect } from 'chai'
 import Promise from 'bluebird'
-import path from 'path'
 import request from 'superagent-bluebird-promise'
 import wrapper from '@pact-foundation/pact-node'
 
-import server from '../provider'
-import { Verifier, Interceptor } from '../../dist/pact'
+import { default as Pact, Interceptor } from '../../dist/pact'
 
 describe('Pact', () => {
 
@@ -32,19 +31,13 @@ describe('Pact', () => {
 
   var pact, counter = 1
 
-  before((done) => {
-    server.listen(PORT, () => {
-      done()
-    })
-  })
-
   after(() => {
     wrapper.removeAllServers()
-  });
+  })
 
   beforeEach((done) => {
     mockServer.start().then(() => {
-      pact = Verifier({ consumer: `Test DSL ${counter}`, provider: `Projects ${counter}` })
+      pact = Pact({ consumer: `Test DSL ${counter}`, provider: `Projects ${counter}` })
       interceptor.interceptRequestsOn(PROVIDER_URL)
       done()
     })

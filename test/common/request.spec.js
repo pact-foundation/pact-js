@@ -1,6 +1,6 @@
 import sinon from 'sinon'
 import { expect } from 'chai'
-import Request from '../../src/dsl/request'
+import Request from '../../src/common/request'
 import logger from '../../src/common/logger'
 
 describe('Request', () => {

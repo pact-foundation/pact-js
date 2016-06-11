@@ -1,4 +1,4 @@
-/** @module matcher */
+/** @module matchers */
 'use strict'
 
 import isNil from 'lodash.isnil'

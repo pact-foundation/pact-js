@@ -1,7 +1,7 @@
 'use strict'
 
 import { expect } from 'chai'
-import { term, somethingLike, eachLike } from '../../src/dsl/matcher'
+import { term, somethingLike, eachLike } from '../../src/dsl/matchers'
 
 describe('Matcher', function() {
 
