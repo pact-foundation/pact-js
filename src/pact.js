@@ -33,17 +33,18 @@ module.exports = ({consumer, provider}) => {
           const resp = it.text || it.responseText || ''
           return resp.indexOf('interaction_diffs') > -1
         })
-        .map((it) => {
-          const resp = it.text || it.responseText || ''
-          return resp
-        })
+        .map((it) => it.text || it.responseText || '')
+
       if (hasErrors.length) {
         return Promise.reject(hasErrors)
       } else {
         return Promise.resolve(response.map((it) => it.text || it.responseText || ''))
       }
     } else {
-      const resp = response.text || response.responseText
+      let resp = response.text || response.responseText
+      if (typeof response === 'string' && (typeof resp === 'undefined')) {
+        resp = response
+      }
       if (resp.indexOf('interaction_diffs') > -1) {
         return Promise.reject(resp)
       }

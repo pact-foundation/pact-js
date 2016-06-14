@@ -112,9 +112,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var resp = it.text || it.responseText || '';
 	        return resp.indexOf('interaction_diffs') > -1;
 	      }).map(function (it) {
-	        var resp = it.text || it.responseText || '';
-	        return resp;
+	        return it.text || it.responseText || '';
 	      });
+	
 	      if (hasErrors.length) {
 	        return _es6Promise.Promise.reject(hasErrors);
 	      } else {
@@ -124,6 +124,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    } else {
 	      var resp = response.text || response.responseText;
+	      if (typeof response === 'string' && typeof resp === 'undefined') {
+	        resp = response;
+	      }
 	      if (resp.indexOf('interaction_diffs') > -1) {
 	        return _es6Promise.Promise.reject(resp);
 	      }
