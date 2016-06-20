@@ -106,27 +106,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  var interactions = [];
 	
+	  function getResponseText(response) {
+	    var responseText = response.text || response.responseText;
+	    if (typeof response === 'string' && typeof responseText === 'undefined') {
+	      responseText = response;
+	    }
+	    return responseText || '';
+	  }
+	
 	  function processResponse(response) {
 	    if (Array.isArray(response)) {
 	      var hasErrors = response.filter(function (it) {
-	        var resp = it.text || it.responseText || '';
-	        return resp.indexOf('interaction_diffs') > -1;
+	        return getResponseText(it).indexOf('interaction_diffs') > -1;
 	      }).map(function (it) {
-	        return it.text || it.responseText || '';
+	        return getResponseText(it);
 	      });
 	
 	      if (hasErrors.length) {
 	        return _es6Promise.Promise.reject(hasErrors);
 	      } else {
 	        return _es6Promise.Promise.resolve(response.map(function (it) {
-	          return it.text || it.responseText || '';
+	          return getResponseText(it);
 	        }));
 	      }
 	    } else {
-	      var resp = response.text || response.responseText;
-	      if (typeof response === 'string' && typeof resp === 'undefined') {
-	        resp = response;
-	      }
+	      var resp = getResponseText(response);
 	      if (resp.indexOf('interaction_diffs') > -1) {
 	        return _es6Promise.Promise.reject(resp);
 	      }
@@ -1148,10 +1152,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var process = module.exports = {};
 	
-	// cached from whatever global is present so that test runners that stub it don't break things.
-	var cachedSetTimeout = setTimeout;
-	var cachedClearTimeout = clearTimeout;
+	// cached from whatever global is present so that test runners that stub it
+	// don't break things.  But we need to wrap it in a try catch in case it is
+	// wrapped in strict mode code which doesn't define any globals.  It's inside a
+	// function because try/catches deoptimize in certain engines.
 	
+	var cachedSetTimeout;
+	var cachedClearTimeout;
+	
+	(function () {
+	  try {
+	    cachedSetTimeout = setTimeout;
+	  } catch (e) {
+	    cachedSetTimeout = function () {
+	      throw new Error('setTimeout is not defined');
+	    }
+	  }
+	  try {
+	    cachedClearTimeout = clearTimeout;
+	  } catch (e) {
+	    cachedClearTimeout = function () {
+	      throw new Error('clearTimeout is not defined');
+	    }
+	  }
+	} ())
 	var queue = [];
 	var draining = false;
 	var currentQueue;

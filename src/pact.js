@@ -26,25 +26,27 @@ module.exports = ({consumer, provider}) => {
 
   let interactions = []
 
+  function getResponseText (response) {
+    let responseText = response.text || response.responseText
+    if (typeof response === 'string' && (typeof responseText === 'undefined')) {
+      responseText = response
+    }
+    return responseText || ''
+  }
+
   function processResponse (response) {
     if (Array.isArray(response)) {
       const hasErrors = response
-        .filter((it) => {
-          const resp = it.text || it.responseText || ''
-          return resp.indexOf('interaction_diffs') > -1
-        })
-        .map((it) => it.text || it.responseText || '')
+        .filter((it) => getResponseText(it).indexOf('interaction_diffs') > -1)
+        .map((it) => getResponseText(it))
 
       if (hasErrors.length) {
         return Promise.reject(hasErrors)
       } else {
-        return Promise.resolve(response.map((it) => it.text || it.responseText || ''))
+        return Promise.resolve(response.map((it) => getResponseText(it)))
       }
     } else {
-      let resp = response.text || response.responseText
-      if (typeof response === 'string' && (typeof resp === 'undefined')) {
-        resp = response
-      }
+      let resp = getResponseText(response)
       if (resp.indexOf('interaction_diffs') > -1) {
         return Promise.reject(resp)
       }

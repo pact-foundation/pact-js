@@ -97,27 +97,31 @@ module.exports =
 	
 	  var interactions = [];
 	
+	  function getResponseText(response) {
+	    var responseText = response.text || response.responseText;
+	    if (typeof response === 'string' && typeof responseText === 'undefined') {
+	      responseText = response;
+	    }
+	    return responseText || '';
+	  }
+	
 	  function processResponse(response) {
 	    if (Array.isArray(response)) {
 	      var hasErrors = response.filter(function (it) {
-	        var resp = it.text || it.responseText || '';
-	        return resp.indexOf('interaction_diffs') > -1;
+	        return getResponseText(it).indexOf('interaction_diffs') > -1;
 	      }).map(function (it) {
-	        return it.text || it.responseText || '';
+	        return getResponseText(it);
 	      });
 	
 	      if (hasErrors.length) {
 	        return _es6Promise.Promise.reject(hasErrors);
 	      } else {
 	        return _es6Promise.Promise.resolve(response.map(function (it) {
-	          return it.text || it.responseText || '';
+	          return getResponseText(it);
 	        }));
 	      }
 	    } else {
-	      var resp = response.text || response.responseText;
-	      if (typeof response === 'string' && typeof resp === 'undefined') {
-	        resp = response;
-	      }
+	      var resp = getResponseText(response);
 	      if (resp.indexOf('interaction_diffs') > -1) {
 	        return _es6Promise.Promise.reject(resp);
 	      }
