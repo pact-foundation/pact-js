@@ -85,7 +85,7 @@ module.exports =
 	 * @module Pact
 	 * @param {String} consumer - the name of the consumer
 	 * @param {String} provider - the name of the provider
-	 * @param {number} mock service port - port of the  mock service, defaults to 1234
+	 * @param {number} port - port of the mock service, defaults to 1234
 	 * @returns {Object} Pact - returns an {@link Interceptor}, a {@link Matcher#term}, a {@link Matcher#eachLike}, a {@link Matcher#somethingLike} and an {@link Interaction}.
 	 */
 	module.exports = function (_ref) {
