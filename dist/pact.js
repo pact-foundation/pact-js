@@ -90,10 +90,12 @@ module.exports =
 	module.exports = function (_ref) {
 	  var consumer = _ref.consumer;
 	  var provider = _ref.provider;
+	  var _ref$port = _ref.port;
+	  var port = _ref$port === undefined ? 1234 : _ref$port;
 	
-	  _logger2.default.info('Setting up Pact with Consumer "' + consumer + '" and Provider "' + provider + '"');
+	  _logger2.default.info('Setting up Pact with Consumer "' + consumer + '" and Provider "' + provider + '" on  Port "' + port + '"');
 	
-	  var mockService = new _mockService2.default(consumer, provider);
+	  var mockService = new _mockService2.default(consumer, provider, port);
 	
 	  var interactions = [];
 	

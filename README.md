@@ -30,7 +30,7 @@ This package is not yet published to [NPM](https://www.npmjs.com/) so you will n
 
 It's easy, simply add the line below to your `devDependencies` group...
 ```
-"pact": "pact-foundation/pact-js"
+"pact-js": "pact-foundation/pact-js"
 ```
 ... then run `npm install` and you are good to go.
 
