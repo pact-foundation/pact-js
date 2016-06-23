@@ -6,7 +6,7 @@ import wrapper from '@pact-foundation/pact-node'
 
 import { default as Pact, Interceptor } from '../../dist/pact'
 
-describe('Pact random Mock Port`', () => {
+describe('Pact random mock port', () => {
 
   const MOCK_PORT = Math.floor(Math.random() * 999) + 9000
   const PORT = Math.floor(Math.random() * 999) + 9000
