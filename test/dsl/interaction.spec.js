@@ -43,19 +43,19 @@ describe('Interaction', () => {
     const interaction = new Interaction()
 
     it('throws error when method is not informed', () => {
-      expect(interaction.withRequest).to.throw(Error, 'You must provide a HTTP method.')
+      expect(interaction.withRequest.bind(interaction, {})).to.throw(Error, 'You must provide a HTTP method.')
     })
 
     it('throws error when method is not valid', () => {
-      expect(interaction.withRequest.bind(interaction, 'MET')).to.throw(Error, 'You must provide a valid HTTP method.')
+      expect(interaction.withRequest.bind(interaction, { method: 'MET' })).to.throw(Error, 'You must provide a valid HTTP method.')
     })
 
     it('throws error when path is not informed', () => {
-      expect(interaction.withRequest.bind(interaction, 'GET')).to.throw(Error, 'You must provide a path.')
+      expect(interaction.withRequest.bind(interaction, { method: 'GET' })).to.throw(Error, 'You must provide a path.')
     })
 
     describe('with only mandatory params', () => {
-      const actual = new Interaction().withRequest('GET', '/search').json()
+      const actual = new Interaction().withRequest({method: 'GET', path: '/search'}).json()
 
       it('has a state compacted with only present keys', () => {
         expect(actual).to.have.keys('request')
@@ -68,13 +68,13 @@ describe('Interaction', () => {
     })
 
     describe('with all other parameters', () => {
-      const actual = new Interaction().withRequest(
-        'GET',
-        '/search',
-        'q=test',
-        { 'Content-Type': 'application/json' },
-        { id: 1, name: 'Test', due: 'tomorrow' }
-      ).json()
+      const actual = new Interaction().withRequest({
+        method: 'GET',
+        path: '/search',
+        query: 'q=test',
+        headers: { 'Content-Type': 'application/json' },
+        body: { id: 1, name: 'Test', due: 'tomorrow' }
+      }).json()
 
       it('has a full state all available keys', () => {
         expect(actual).to.have.keys('request')
@@ -87,16 +87,16 @@ describe('Interaction', () => {
     const interaction = new Interaction()
 
     it('throws error when status is not informed', () => {
-      expect(interaction.willRespondWith).to.throw(Error, 'You must provide a status code.')
+      expect(interaction.willRespondWith.bind(interaction, {})).to.throw(Error, 'You must provide a status code.')
     })
 
     it('throws error when status is blank', () => {
-      expect(interaction.willRespondWith.bind(interaction, '')).to.throw(Error, 'You must provide a status code.')
+      expect(interaction.willRespondWith.bind(interaction, { status: '' })).to.throw(Error, 'You must provide a status code.')
     })
 
     describe('with only mandatory params', () => {
       const interaction = new Interaction()
-      interaction.willRespondWith(200)
+      interaction.willRespondWith({ status: 200 })
       const actual = interaction.json()
 
       it('has a state compacted with only present keys', () => {
@@ -111,11 +111,11 @@ describe('Interaction', () => {
 
     describe('with all other parameters', () => {
       const interaction = new Interaction()
-      interaction.willRespondWith(
-        404,
-        { 'Content-Type': 'application/json' },
-        { id: 1, name: 'Test', due: 'tomorrow' }
-      )
+      interaction.willRespondWith({
+        status: 404,
+        headers: { 'Content-Type': 'application/json' },
+        body: { id: 1, name: 'Test', due: 'tomorrow' }
+      })
 
       const actual = interaction.json()
 

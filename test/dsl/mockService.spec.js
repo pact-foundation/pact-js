@@ -38,7 +38,7 @@ describe('MockService', () => {
     const mock = new MockService('consumer', 'provider', 1234)
 
     const interaction = new Interaction()
-    interaction.uponReceiving('duh').withRequest('get', '/search').willRespondWith(200)
+    interaction.uponReceiving('duh').withRequest({ method: 'get', path: '/search' }).willRespondWith({ status: 200 })
 
     it('when Interaction added successfully', (done) => {
       nock(mock._baseURL).post(/interactions$/).reply(200)
@@ -63,29 +63,6 @@ describe('MockService', () => {
     it('when interactions fail to be removed', (done) => {
       nock(mock._baseURL).delete(/interactions$/).reply(500)
       expect(mock.removeInteractions()).to.eventually.be.rejected
-      done()
-    })
-  })
-
-  describe('#putInteractions', () => {
-    const mock = new MockService('consumer', 'provider', 1234)
-
-    const interactions = [
-      new Interaction().uponReceiving('duh').withRequest('get', '/search'),
-      new Interaction().uponReceiving('dah').withRequest('POST', '/search'),
-      new Interaction().uponReceiving('doh').withRequest('DELETE', '/search')
-    ]
-
-    interactions.forEach((i) => i.willRespondWith(200))
-
-    it('when Interactions added successfully', (done) => {
-      nock(mock._baseURL).put(/interactions$/).reply(200)
-      expect(mock.putInteractions(interactions)).to.eventually.notify(done)
-    })
-
-    it('when Interactions fails to be added', (done) => {
-      nock(mock._baseURL).put(/interactions$/).reply(500)
-      expect(mock.putInteractions(interactions)).to.eventually.be.rejected
       done()
     })
   })
@@ -120,27 +97,4 @@ describe('MockService', () => {
     })
   })
 
-  describe('#verifyAndWrite', () => {
-    const mock = new MockService('consumer', 'provider', 1234)
-
-    it('when verification and writing are successful', (done) => {
-      nock(mock._baseURL).get(/interactions\/verification$/).reply(200)
-      nock(mock._baseURL).post(/pact$/).reply(200)
-
-      expect(mock.verifyAndWrite()).to.eventually.notify(done)
-    })
-
-    it('when verification succeeds and writing fails', (done) => {
-      nock(mock._baseURL).get(/interactions\/verification$/).reply(200)
-      nock(mock._baseURL).post(/pact$/).reply(500)
-      expect(mock.verifyAndWrite()).to.eventually.be.rejected
-      done()
-    })
-
-    it('when verification fails', (done) => {
-      nock(mock._baseURL).get(/interactions\/verification$/).reply(500)
-      expect(mock.verifyAndWrite()).to.eventually.be.rejected
-      done()
-    })
-  })
 })

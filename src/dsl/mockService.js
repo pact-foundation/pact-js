@@ -1,9 +1,7 @@
 'use strict'
 
-import clone from 'lodash.clone'
 import isNil from 'lodash.isnil'
 import Request from '../common/request'
-import logger from '../common/logger'
 
 /**
  * A Mock Service is the interaction mechanism through which pacts get written and verified.
@@ -40,19 +38,8 @@ export default class MockService {
    * @returns {Promise}
    */
   addInteraction (interaction) {
-    const stringifiedInteraction = JSON.stringify(interaction)
+    const stringifiedInteraction = JSON.stringify(interaction.json())
     return this._request.send('POST', `${this._baseURL}/interactions`, stringifiedInteraction)
-  }
-
-  /**
-   * Adds a collection of interactions
-   * @param {Interaction[]} interactions
-   * @returns {Promise}
-   */
-  putInteractions (interactions) {
-    const clonedInteractions = interactions.map((interaction) => clone(interaction).json())
-    const stringifiedInteractions = JSON.stringify({interactions: clonedInteractions})
-    return this._request.send('PUT', `${this._baseURL}/interactions`, stringifiedInteractions)
   }
 
   /**
@@ -80,13 +67,4 @@ export default class MockService {
     return this._request.send('POST', `${this._baseURL}/pact`, stringifiedPactDetails)
   }
 
-  /**
-   * Combination of verification and writing of a Pact.
-   * @see {@link MockService#verify}
-   * @see {@link MockService#writePact}
-   * @returns {Promise}
-   */
-  verifyAndWrite () {
-    return this.verify().then(() => this.writePact()).then(() => logger.info('Matchers verified and Pact written.'))
-  }
 }

@@ -42,7 +42,8 @@ var example = example || {};
           if (xmlhttp.status === 200) {
             resolve(xmlhttp)
           } else if (xmlhttp.status === 404) {
-            reject("No friends :(");
+            xmlhttp.text = "No friends :("
+            reject(xmlhttp);
           } else {
             reject(xmlhttp);
           }

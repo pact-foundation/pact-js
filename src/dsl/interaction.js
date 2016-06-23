@@ -47,12 +47,12 @@ export default class Interaction {
    * The request that represents this interaction triggered by the consumer.
    * @param {string} method - The HTTP method
    * @param {string} path - The path of the URL
-   * @param {string} queryString
+   * @param {string} qs
    * @param {string} headers
    * @param {string} body
    * @returns {Interaction}
    */
-  withRequest (method, path, ...other) {
+  withRequest ({ method, path, query, headers, body }) {
     if (isNil(method)) {
       throw new Error('You must provide a HTTP method.')
     }
@@ -68,9 +68,9 @@ export default class Interaction {
     this.state['request'] = omitBy({
       method: method.toUpperCase(),
       path: path,
-      query: other[0] || undefined,
-      headers: other[1] || undefined,
-      body: other[2] || undefined
+      query: query,
+      headers: headers,
+      body: body
     }, isNil)
     return this
   }
@@ -81,15 +81,15 @@ export default class Interaction {
   * @param {string} headers
   * @param {string} body
    */
-  willRespondWith (status, ...other) {
+  willRespondWith ({ status, headers, body }) {
     if (isNil(status) || status.toString().trim().length === 0) {
       throw new Error('You must provide a status code.')
     }
 
     this.state['response'] = omitBy({
       status: status,
-      headers: other[0] || undefined,
-      body: other[1] || undefined
+      headers: headers || undefined,
+      body: body || undefined
     }, isNil)
   }
 
