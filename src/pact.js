@@ -17,12 +17,13 @@ import { term, eachLike, somethingLike } from './dsl/matchers'
  * @module Pact
  * @param {String} consumer - the name of the consumer
  * @param {String} provider - the name of the provider
+ * @param {number} port - port of the mock service, defaults to 1234
  * @returns {Object} Pact - returns an {@link Interceptor}, a {@link Matcher#term}, a {@link Matcher#eachLike}, a {@link Matcher#somethingLike} and an {@link Interaction}.
  */
-module.exports = ({consumer, provider}) => {
-  logger.info(`Setting up Pact with Consumer "${consumer}" and Provider "${provider}"`)
+module.exports = ({consumer, provider, port = 1234}) => {
+  logger.info(`Setting up Pact with Consumer "${consumer}" and Provider "${provider}" using mock service on Port: "${port}"`)
 
-  const mockService = new MockService(consumer, provider)
+  const mockService = new MockService(consumer, provider, port)
 
   let interactions = []
 

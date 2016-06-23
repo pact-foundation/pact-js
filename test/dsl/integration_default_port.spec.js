@@ -6,9 +6,9 @@ import wrapper from '@pact-foundation/pact-node'
 
 import { default as Pact, Interceptor } from '../../dist/pact'
 
-describe('Pact random mock port', () => {
+describe('Pact default Port', () => {
 
-  const MOCK_PORT = Math.floor(Math.random() * 999) + 9000
+  const MOCK_PORT = 1234
   const PORT = Math.floor(Math.random() * 999) + 9000
   const PROVIDER_URL = `http://localhost:${PORT}`
   const mockServer = wrapper.createServer({
@@ -38,7 +38,7 @@ describe('Pact random mock port', () => {
 
   beforeEach((done) => {
     mockServer.start().then(() => {
-      pact = Pact({ consumer: `Test DSL ${counter}`, provider: `Projects ${counter}`, port: MOCK_PORT })
+      pact = Pact({ consumer: `Test DSL ${counter}`, provider: `Projects ${counter}` })
       interceptor.interceptRequestsOn(PROVIDER_URL)
       done()
     })
