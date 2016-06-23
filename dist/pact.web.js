@@ -94,6 +94,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @module Pact
 	 * @param {String} consumer - the name of the consumer
 	 * @param {String} provider - the name of the provider
+	 * @param {number} mock service port - port of the  mock service, defaults to 1234
 	 * @returns {Object} Pact - returns an {@link Interceptor}, a {@link Matcher#term}, a {@link Matcher#eachLike}, a {@link Matcher#somethingLike} and an {@link Interaction}.
 	 */
 	module.exports = function (_ref) {
@@ -102,7 +103,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var _ref$port = _ref.port;
 	  var port = _ref$port === undefined ? 1234 : _ref$port;
 	
-	  _logger2.default.info('Setting up Pact with Consumer "' + consumer + '" and Provider "' + provider + '" on  Port "' + port + '"');
+	  _logger2.default.info('Setting up Pact with Consumer "' + consumer + '" and Provider "' + provider + '" using mock service on Port: "' + port + '"');
 	
 	  var mockService = new _mockService2.default(consumer, provider, port);
 	
