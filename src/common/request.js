@@ -1,8 +1,7 @@
 'use strict'
 
 import { parse } from 'url'
-import { Promise } from 'es6-promise'
-import logger from '../common/logger'
+import logger from './logger'
 
 export default class Request {
 

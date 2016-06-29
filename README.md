@@ -1,6 +1,4 @@
 # Pact JS
-Pact for all things Javascript.
-
 [![Build Status](https://travis-ci.org/pact-foundation/pact-js.svg?branch=master)](https://travis-ci.org/pact-foundation/pact-js)
 [![Code Climate](https://codeclimate.com/github/pact-foundation/pact-js/badges/gpa.svg)](https://codeclimate.com/github/pact-foundation/pact-js)
 [![Coverage Status](https://coveralls.io/repos/github/pact-foundation/pact-js/badge.svg?branch=master)](https://coveralls.io/github/pact-foundation/pact-js?branch=master)
@@ -60,6 +58,9 @@ const interceptor = new Interceptor()
 // ES5
 var Pact = require('pact-js')
 var matchers = Pact.Matchers
+matchers.term()
+matchers.somethingLike()
+matchers.eachLike()
 
 // you have to new the Interceptor
 var Interceptor = new Pact.Interceptor()
@@ -69,15 +70,16 @@ Then to write a test that will generate a Pact file, here's an example below - i
 
 More questions about what's involved in Pact? [Read more about it](http://docs.pact.io/documentation/how_does_pact_work.html).
 
-Check the `examples` folder for other examples.
+Check the `examples` folder for examples with Karma Jasmine / Mocha. The example below is taken from the [integration spec](https://github.com/pact-foundation/pact-js/blob/master/test/dsl/integration.spec.js).
 
 ```javascript
+import path from 'path'
 import { expect } from 'chai'
 import Promise from 'bluebird'
+import request from 'superagent'
+import wrapper from '@pact-foundation/pact-node'
 
-// import the Verifier so you write your pacts
-import { default as Pact } from 'pact-js'
-import request from 'superagent-bluebird-promise'
+import { default as Pact } from 'pact'
 
 // great library to spin up the Pact Verifier Server
 // that will record interactions and eventually validate your pacts
@@ -107,7 +109,7 @@ describe('Pact', () => {
     ]
   }]
 
-  var pact
+  var provider
 
   after(() => {
     wrapper.removeAllServers()
@@ -117,7 +119,8 @@ describe('Pact', () => {
     mockServer.start().then(() => {
       // in order to use the Verifier, simply pass an object like below
       // it should contain the names of the consumer and provider in normal language
-      pact = Pact({ consumer: 'My Consumer', provider: 'My Provider' })
+      // you can also use a different port if you have multiple providers
+      provider = Pact({ consumer: 'My Consumer', provider: 'My Provider', port: 1234 })
       done()
     })
   })
@@ -131,6 +134,29 @@ describe('Pact', () => {
   context('with a single request', () => {
     it('successfully writes Pact file', (done) => {
 
+      // add interactions, as many as needed
+      beforeEach((done) => {
+        provider.addInteraction({
+          state: 'i have a list of projects',
+          uponReceiving: 'a request for projects',
+          withRequest: {
+            method: 'get',
+            path: '/projects',
+            headers: { 'Accept': 'application/json' }
+          },
+          willRespondWith: {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+            body: EXPECTED_BODY
+          }
+        }).then(() => done())
+      })
+
+      // once test is run, write pact and remove interactions
+      afterEach((done) => {
+        provider.finalize().then(() => done())
+      })
+
       // the Verifier is Promise-based so make sure the function that is used
       // to invoke the endpoint returns a Promise
       // essentially this would be your client library in your source code
@@ -139,25 +165,17 @@ describe('Pact', () => {
         return request.get('http://localhost:1234/projects').set({ 'Accept': 'application/json' })
       }
 
-      // This is how you create an interaction
-      pact
-        .interaction()
-        .given('i have a list of projects')
-        .uponReceiving('a request for projects')
-        .withRequest('get', '/projects', null, { 'Accept': 'application/json' })
-        .willRespondWith(200, { 'Content-Type': 'application/json' }, EXPECTED_BODY)
-
       // and this is how the verification process invokes your request
       // and writes the Pact file if all is well, returning you the data of the request
       // so you can do your assertions
-      pact.verify(requestProjects)
-        .then((data) => {
-          expect(JSON.parse(data)).to.eql(EXPECTED_BODY)
-          done()
-        })
-        .catch((err) => {
-          done(err)
-        })
+      it('successfully verifies', (done) => {
+        const verificationPromise = request
+          .get('http://localhost:1234/projects')
+          .set({ 'Accept': 'application/json' })
+          .then(provider.verify)
+
+        expect(verificationPromise).to.eventually.eql(JSON.stringify(EXPECTED_BODY)).notify(done)
+      })
     })
   })
 })

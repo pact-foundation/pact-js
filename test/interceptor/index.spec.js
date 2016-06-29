@@ -1,6 +1,6 @@
 import sinon from 'sinon'
 import { expect } from 'chai'
-import request from 'superagent-bluebird-promise'
+import request from 'superagent'
 
 import Interceptor from '../../src/interceptor'
 

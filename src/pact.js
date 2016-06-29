@@ -1,12 +1,13 @@
 'use strict'
 
-import { Promise } from 'es6-promise'
+var isNil = require('lodash.isnil')
+var logger = require('./common/logger')
+var MockService = require('./dsl/mockService').default
+var Interaction = require('./dsl/interaction').default
+var responseParser = require('./common/responseParser').default
 
-import logger from './common/logger'
-import Interceptor from './interceptor'
-import MockService from './dsl/mockService'
-import Interaction from './dsl/interaction'
-import { term, eachLike, somethingLike } from './dsl/matchers'
+var Interceptor = require('./interceptor').default
+var Matchers = require('./dsl/matchers')
 
 /**
  * Entry point for the Pact library and Verification module of Pact.
@@ -21,70 +22,59 @@ import { term, eachLike, somethingLike } from './dsl/matchers'
  * @returns {Object} Pact - returns an {@link Interceptor}, a {@link Matcher#term}, a {@link Matcher#eachLike}, a {@link Matcher#somethingLike} and an {@link Interaction}.
  */
 module.exports = ({consumer, provider, port = 1234}) => {
+  if (isNil(consumer)) {
+    throw new Error('You must inform a Consumer for this Pact.')
+  }
+
+  if (isNil(provider)) {
+    throw new Error('You must inform a Provider for this Pact.')
+  }
+
   logger.info(`Setting up Pact with Consumer "${consumer}" and Provider "${provider}" using mock service on Port: "${port}"`)
 
   const mockService = new MockService(consumer, provider, port)
 
-  let interactions = []
-
-  function getResponseText (response) {
-    let responseText = response.text || response.responseText
-    if (typeof response === 'string' && (typeof responseText === 'undefined')) {
-      responseText = response
-    }
-    return responseText || ''
-  }
-
-  function processResponse (response) {
-    if (Array.isArray(response)) {
-      const hasErrors = response
-        .filter((it) => getResponseText(it).indexOf('interaction_diffs') > -1)
-        .map((it) => getResponseText(it))
-
-      if (hasErrors.length) {
-        return Promise.reject(hasErrors)
-      } else {
-        return Promise.resolve(response.map((it) => getResponseText(it)))
-      }
-    } else {
-      let resp = getResponseText(response)
-      if (resp.indexOf('interaction_diffs') > -1) {
-        return Promise.reject(resp)
-      }
-      return Promise.resolve(resp)
-    }
-  }
-
   return {
     /**
-     * Creates an {@link Interaction}, adds to its internal collection and returns that {@link Interaction}.
-     * @returns {@link Interaction}
+     * Creates and adds a new {@link Interaction} to the Pact Mock Server.
+     * @returns {Promise}
      */
-    interaction: () => {
-      const interaction = new Interaction()
-      interactions.push(interaction)
-      return interaction
+    addInteraction: (interactionObj) => {
+      let interaction = new Interaction()
+
+      if (interactionObj.state) {
+        interaction.given(interactionObj.state)
+      }
+
+      interaction
+        .uponReceiving(interactionObj.uponReceiving)
+        .withRequest(interactionObj.withRequest)
+        .willRespondWith(interactionObj.willRespondWith)
+
+      return mockService.addInteraction(interaction)
     },
     /**
      * Executes a promise chain that will eventually write the Pact file if successful.
-     * @param {Function} integrationFn - the function that triggers a HTTP request to the provider
+     * @param {Response|Response[]} response - the response object or an Array of response objects of the Request(s) issued
      * @returns {Promise}
      */
-    verify: (integrationFn) => {
+    verify: (response) => {
       let integrationFnResult
 
-      return mockService.putInteractions(interactions)
-        .then(() => integrationFn())
-        .then(processResponse)
+      return responseParser(response)
         .then((res) => { integrationFnResult = res })
         .then(() => mockService.verify())
-        .then(() => mockService.writePact())
-        .then(() => mockService.removeInteractions())
-        .then(() => { interactions = [] })
         .then(() => integrationFnResult)
+    },
+    /**
+     * Writes the Pact and clears any interactions left behind.
+     * @returns {Promise}
+     */
+    finalize: () => {
+      return mockService.writePact().then(() => mockService.removeInteractions())
     }
   }
 }
 
+module.exports.Matchers = Matchers
 module.exports.Interceptor = Interceptor
-module.exports.Matcher = { term, eachLike, somethingLike }

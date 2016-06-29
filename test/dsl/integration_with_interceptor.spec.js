@@ -1,21 +1,24 @@
 import path from 'path'
 import { expect } from 'chai'
-import Promise from 'bluebird'
 import request from 'superagent'
 import wrapper from '@pact-foundation/pact-node'
 
 import Pact from '../../src/pact'
+import Interceptor from '../../src/interceptor'
 
-describe('Pact random mock port', () => {
+describe('Pact with Interceptor', () => {
 
   const MOCK_PORT = Math.floor(Math.random() * 999) + 9000
-  const PROVIDER_URL = `http://localhost:${MOCK_PORT}`
+  const PROVIDER_PORT = Math.floor(Math.random() * 999) + 9000
+  const PROVIDER_URL = `http://localhost:${PROVIDER_PORT}`
   const mockServer = wrapper.createServer({
     port: MOCK_PORT,
     log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
     dir: path.resolve(process.cwd(), 'pacts'),
     spec: 2
   })
+
+  const interceptor = new Interceptor(`http://localhost:${MOCK_PORT}`)
 
   const EXPECTED_BODY = [{
     id: 1,
@@ -29,24 +32,31 @@ describe('Pact random mock port', () => {
     ]
   }]
 
-  var provider, counter = 1
+  var provider
 
   after(() => {
     wrapper.removeAllServers()
   })
 
-  beforeEach((done) => {
+  before((done) => {
     mockServer.start().then(() => {
-      provider = Pact({ consumer: `Consumer ${counter}`, provider: `Provider ${counter}`, port: MOCK_PORT })
+      provider = Pact({
+        consumer: 'Consumer Interceptor',
+        provider: 'Provider Interceptor',
+        port: MOCK_PORT
+      })
+      interceptor.interceptRequestsOn(PROVIDER_URL)
       done()
     })
   })
 
-  afterEach((done) => {
-    mockServer.delete().then(() => {
-      counter++
-      done()
-    })
+  after((done) => {
+    provider.finalize()
+      .then(() => mockServer.delete())
+      .then(() => {
+        interceptor.stopIntercepting()
+        done()
+      })
   })
 
   context('with a single request', () => {
@@ -69,11 +79,6 @@ describe('Pact random mock port', () => {
       }).then(() => done())
     })
 
-    // once test is run, write pact and remove interactions
-    afterEach((done) => {
-      provider.finalize().then(() => done())
-    })
-
     // execute your assertions
     it('successfully verifies', (done) => {
       const verificationPromise = request
@@ -88,21 +93,6 @@ describe('Pact random mock port', () => {
   context('with two requests', () => {
 
     beforeEach((done) => {
-      let interaction1 = provider.addInteraction({
-        state: 'i have a list of projects',
-        uponReceiving: 'a request for projects',
-        withRequest: {
-          method: 'get',
-          path: '/projects',
-          headers: { 'Accept': 'application/json' }
-        },
-        willRespondWith: {
-          status: 200,
-          headers: { 'Content-Type': 'application/json' },
-          body: EXPECTED_BODY
-        }
-      })
-
       let interaction2 = provider.addInteraction({
         state: 'i have a list of projects',
         uponReceiving: 'a request for a project that does not exist',
@@ -115,14 +105,7 @@ describe('Pact random mock port', () => {
           status: 404,
           headers: { 'Content-Type': 'application/json' }
         }
-      })
-
-      Promise.all([interaction1, interaction2]).then(() => done())
-    })
-
-    // once test is run, write pact and remove interactions
-    afterEach((done) => {
-      provider.finalize().then(() => done())
+      }).then(() => done())
     })
 
     it('successfully verifies', (done) => {
@@ -143,29 +126,6 @@ describe('Pact random mock port', () => {
   })
 
   context('with an unexpected interaction', () => {
-    // add interactions, as many as needed
-    beforeEach((done) => {
-      provider.addInteraction({
-        state: 'i have a list of projects',
-        uponReceiving: 'a request for projects',
-        withRequest: {
-          method: 'get',
-          path: '/projects',
-          headers: { 'Accept': 'application/json' }
-        },
-        willRespondWith: {
-          status: 200,
-          headers: { 'Content-Type': 'application/json' },
-          body: EXPECTED_BODY
-        }
-      }).then(() => done())
-    })
-
-    // once test is run, write pact and remove interactions
-    afterEach((done) => {
-      provider.finalize().then(() => done())
-    })
-
     it('fails verification', (done) => {
       let promiseResults = []
 

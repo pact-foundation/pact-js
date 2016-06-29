@@ -55,34 +55,34 @@ export default class Interceptor {
     })
 
     const proxyHost = this.proxyHost
-    this.mitm.on('request', (req, res) => {
-      logger.info(`Request intercepted. Triggering call to Mock Server on "${proxyHost}${req.url}"`)
+    this.mitm.on('request', (interceptedRequest, res) => {
+      logger.info(`Request intercepted. Triggering call to Mock Server on "${proxyHost}${interceptedRequest.url}"`)
 
-      const opts = parseUrl(`${proxyHost}${req.url}`)
-      opts.method = req.method.toLowerCase()
-      opts.headers = req.headers || {}
+      const opts = parseUrl(`${proxyHost}${interceptedRequest.url}`)
+      opts.method = interceptedRequest.method.toLowerCase()
+      opts.headers = interceptedRequest.headers || {}
 
-      const _request = request(opts, (response) => {
-        let responseBody = ''
-        response.setEncoding('utf8')
-        response.on('data', (data) => { responseBody += data })
-        response.on('end', () => {
-          logger.info(`HTTP ${response.statusCode} on ${req.url}`)
-          res.end(responseBody)
+      const proxyRequest = request(opts, (interceptedResponse) => {
+        let interceptedResponseBody = ''
+        interceptedResponse.setEncoding('utf8')
+        interceptedResponse.on('data', (data) => { interceptedResponseBody += data })
+        interceptedResponse.on('end', () => {
+          logger.info(`HTTP ${interceptedResponse.statusCode} on ${interceptedRequest.url}`)
+
+          if (interceptedResponse.statusCode > 400) {
+            res.statusCode = interceptedResponse.statusCode
+          }
+
+          res.end(interceptedResponseBody)
         })
       })
 
-      _request.on('error', (err) => {
-        logger.info(`HTTP ${err.statusCode} on ${req.url}`)
+      proxyRequest.on('error', (err) => {
+        console.log(`HTTP ${err.statusCode} on ${interceptedRequest.url}`)
         res.end(err)
       })
 
-      // TODO not sure what to do here
-      // if (req.body) {
-      //   req.write(req.body)
-      // }
-
-      _request.end()
+      proxyRequest.end()
     })
   }
 

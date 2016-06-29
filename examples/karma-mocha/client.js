@@ -40,7 +40,7 @@ var example = example || {};
       xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState === 4) {
           if (xmlhttp.status === 200) {
-            resolve(xmlhttp)
+            resolve(xmlhttp);
           } else if (xmlhttp.status === 404) {
             reject("No friends :(");
           } else {
