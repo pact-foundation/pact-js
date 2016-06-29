@@ -1,6 +1,9 @@
 'use strict'
 
 function getResponseText (response) {
+  if (typeof response === 'string') {
+    return response
+  }
   return response.text || response.responseText || ''
 }
 

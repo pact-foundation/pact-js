@@ -36,6 +36,11 @@ describe('Response Parser', () => {
       expect(parse(response)).to.eventually.eql(response.responseText).notify(done)
     })
 
+    it('resolves Promise when response is a string', (done) => {
+      let response = '{ "json": "string" }'
+      expect(parse(response)).to.eventually.eql(response).notify(done)
+    })
+
     const bodyArr = [ '', undefined, null ]
     bodyArr.forEach((body) => {
       it(`resolves Promise when body is "${body}"`, (done) => {
