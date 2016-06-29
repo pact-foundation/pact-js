@@ -157,14 +157,6 @@ describe('Pact', () => {
         provider.finalize().then(() => done())
       })
 
-      // the Verifier is Promise-based so make sure the function that is used
-      // to invoke the endpoint returns a Promise
-      // essentially this would be your client library in your source code
-      // e.g.: client.requestProjects()
-      function requestProjects () {
-        return request.get('http://localhost:1234/projects').set({ 'Accept': 'application/json' })
-      }
-
       // and this is how the verification process invokes your request
       // and writes the Pact file if all is well, returning you the data of the request
       // so you can do your assertions
