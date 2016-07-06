@@ -4,7 +4,7 @@ import Promise from 'bluebird'
 import request from 'superagent'
 import wrapper from '@pact-foundation/pact-node'
 
-import Pact from '../../src/pact'
+import { default as Pact, Matchers } from '../../src/pact'
 
 describe('Pact random mock port', () => {
 
@@ -82,6 +82,56 @@ describe('Pact random mock port', () => {
         .then(provider.verify)
 
       expect(verificationPromise).to.eventually.eql(JSON.stringify(EXPECTED_BODY)).notify(done)
+    })
+  })
+
+  context('with a single request and matchers', () => {
+
+    // add interactions, as many as needed
+    beforeEach((done) => {
+      provider.addInteraction({
+        state: 'i have a list of projects but I dont know how many',
+        uponReceiving: 'a request for such projects',
+        withRequest: {
+          method: 'get',
+          path: '/projects',
+          headers: { 'Accept': 'application/json' }
+        },
+        willRespondWith: {
+          status: 200,
+          headers: { 'Content-Type': Matchers.term({ generate: 'application/json', matcher: 'application\/json' }) },
+          body: [{
+            id: 1,
+            name: 'Project 1',
+            due: '2016-02-11T09:46:56.023Z',
+            tasks: Matchers.eachLike({
+              id: Matchers.somethingLike(1),
+              name: Matchers.somethingLike('Do the laundry'),
+              'done': Matchers.somethingLike(true)
+            }, { min: 4 })
+          }]
+        }
+      }).then(() => done())
+    })
+
+    // once test is run, write pact and remove interactions
+    afterEach((done) => {
+      provider.finalize().then(() => done())
+    })
+
+    // execute your assertions
+    it('successfully verifies', (done) => {
+      const verificationPromise = request
+        .get(`${PROVIDER_URL}/projects`)
+        .set({ 'Accept': 'application/json' })
+        .then(provider.verify)
+
+      verificationPromise.then((data) => {
+        let jsonData = JSON.parse(data)[0]
+        expect(jsonData).to.have.property('tasks')
+        expect(jsonData.tasks).to.have.lengthOf(4)
+        done()
+      })
     })
   })
 
