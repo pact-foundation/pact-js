@@ -1,7 +1,10 @@
 language: node_js
 node_js:
 - '4'
+- '5'
 - '6'
+matrix:
+  fast_finish: true
 env:
   matrix:
   - CXX=g++-4.8
@@ -15,7 +18,25 @@ addons:
     - g++-4.8
 before_install:
 - npm install mitm
-install: npm install
 script: npm run dist
 after_success:
-  - npm run coverage
+- npm run coverage
+before_deploy:
+- tar -czvf pactjs.tar.gz config dist src package.json README.md LICENSE
+deploy:
+- provider: releases
+  api_key:
+    secure: gPWLWI14nYnPT9VoEQPXkrsYrMl0ai/nB5Ys6OaUay4WD/xqFZq9tEszrSqFfrZZpRFNpgyAO3Q2gAVkfpVVIxsDBYXUh4dfQLbab76Ev7XSaHUWdqZdJHq2T/sXMMA8qop1HBjtylJor23/aPHXGEEumk776duPILQ3gEunAEGQjbHvnhREnDkwJNvKVqeefym4oYA2kwSHzUEuf+Y1XUJZgJ6eoAXaZ2+wg4LlPVBEq/bm0G/73m/Ll4q1JPNPREOffMOZQ2HawuFO3IRb4T8B6ZHre1MBCsnLGh3ruP8ZJiUtMA9xddru40QaZsu43Bi8HX9fMH+06mOSvAmqVUDInyGqZjjQYzFTLuaBtWK9wkuqT+uoCjX7pkGFdpHUPhRqpGBI2CiApA67M2K9A9HGUOCQCmN2mgFpeAe6tN04AeoIfv4mcTMImdWMav2/N7XHaraTb6oP9B7IiE9jOYGJ+HIlanp6eTjsghD/ZxCRefHdi0fUAjOuRs6BrIDSJjU5iTzghbWRPTyZso+PPUhLIko0Z9v2IhKMAqJzpXpoxLxVufmrn5sFs8rKHWE2rkBsjofXsmdVC7eC2LrdhWRUvKsnWgprnkJ8afxUdCC/cqS/cdIp6NHdmMaHFR4FT00pdMim3S+XGeoXLDXS2yVhP7NEdr3QIJa3wVTot9I=
+  file: pactjs.tar.gz
+  skip_cleanup: true
+  on:
+    tags: true
+    node: '6'
+- provider: npm
+  email: "tarcio@gmail.com"
+  api_key:
+    secure: KgY7CzHE8ZoMh0aYCG/bIw2W2PWn9gnprbah7fRYq5Iia0EyH2ZGkQCcJNrUetODuDPV5r4Yr+v6FaNmd4TvQZfSoUFXJMW2k98lN3riFVuph6o7XksB6FSqxyf7oZ19RUjs9SmzADJTmLjQIHkQB0lmrf4yiR2OhuEsKsJQB4pGCv0+q/2DBloqapByu1vijPskMtvYdbyvV7k06LzLTmf7Kh6zSBJtL4Ip5LL2hjiAHVU36lYzmd+BeEbhUlPLAjfAHQtwRiQrmAYMGYoppmhiCfrP7EyBJ9XS9p8j+EEON/K9vKoqD5Mhxff57Ou+YNXaIJXAOLpFzJc2OgiKsNTPQZmuZlObuUMA0ah71cWfr7UyHgHq7OXIP+mxBo6onGCETYhZwcj3T8cHOmX8yv6WQueT5ccbuY8Lo413SAVapQcGwWVS1T2Ibe+F0wPi/RWhrLHVS8/hbHl7VT2EGoIKrZCicuKjsv6kciUM9W/MsUj256NVOAIw+Gt8/JbzxrMVUs2miWRLCGaFr8X2ML71IJY2XBpBalA6ej3ZEVEhCzdBIivCvZ06Td8LEEVoZtcxrXODNnt3LM1vDWyNhZMZOzK4BoCIDE5JPubMfpGjL/urEBZzONdOyL/07uKRMMdTHtz+dj5FjSC7OSK9YNe5JBFzO1aTXbNXftAwAzs=
+  skip_cleanup: true
+  on:
+    tags: true
+    node: '6'

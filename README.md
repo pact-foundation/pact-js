@@ -24,13 +24,10 @@ how to get going.
 
 ## Installation
 
-This package is not yet published to [NPM](https://www.npmjs.com/) so you will need to install it manually by modifying your `package.json`.
-
-It's easy, simply add the line below to your `devDependencies` group...
+It's easy, simply run the below:
 ```
-"pact-js": "pact-foundation/pact-js"
+npm install --save-dev pact
 ```
-... then run `npm install` and you are good to go.
 
 ### Using Pact JS
 
