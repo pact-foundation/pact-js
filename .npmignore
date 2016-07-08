@@ -1,0 +1,15 @@
+# folders
+
+config/
+coverage/
+docs/
+karma/
+logs/
+pacts/
+test/
+
+# files
+.codeclimate.yml
+.editorconfig
+.istanbul.yml
+.travis.yml
