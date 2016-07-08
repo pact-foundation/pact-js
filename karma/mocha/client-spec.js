@@ -5,11 +5,17 @@
 
     var client, projectsProvider;
 
-    // ugly but works... guess would be good to bring jasmine-beforeAll
-    beforeEach(function() {
+    before(function(done) {
       client = example.createClient('http://localhost:1234');
       projectsProvider = Pact({ consumer: 'Karma Mocha', provider: 'Hello' })
-    });
+      // required for slower Travis CI environment
+      setTimeout(function () { done() }, 1000)
+    })
+
+    after(function (done) {
+      projectsProvider.finalize()
+        .then(function () { done() }, function (err) { done(err) })
+    })
 
     describe("sayHello", function () {
       beforeEach(function (done) {
@@ -24,11 +30,8 @@
             headers: { "Content-Type": "application/json" },
             body: { reply: "Hello" }
           }
-        }).then(function () { done() })
-      })
-
-      afterEach(function (done) {
-        projectsProvider.finalize().then(function () { done() })
+        })
+        .then(function () { done() }, function (err) { done(err) })
       })
 
       it("should say hello", function(done) {
@@ -69,12 +72,9 @@
                 }, { min: 1 })
               }
             }
-          }).then(function () { done() })
+          })
+          .then(function () { done() }, function (err) { done(err) })
       })
-
-      afterEach(function (done) {
-        projectsProvider.finalize().then(function () { done() })
-      });
 
       it("should return some friends", function(done) {
         //Run the tests
@@ -106,12 +106,9 @@
             headers: { "Content-Type": "application/json" },
             body: { reply: "Bye" }
           }
-        }).then(function () { done() })
+        })
+        .then(function () { done() }, function (err) { done(err) })
       })
-
-      afterEach(function (done) {
-        projectsProvider.finalize().then(function () { done() })
-      });
 
       it("should unfriend me", function(done) {
         //Run the tests
@@ -139,7 +136,8 @@
             willRespondWith: {
               status: 404
             }
-          }).then(function () { done() })
+          })
+          .then(function () { done() }, function (err) { done(err) })
         })
 
         it("returns an error message", function (done) {

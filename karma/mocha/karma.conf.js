@@ -11,13 +11,9 @@ module.exports = function (config) {
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
     frameworks: ['mocha', 'chai', 'pact'],
 
-    // pact config
-    pact: {},
-
     // list of files / patterns to load in the browser
     files: [
       // if you are using this example to setup your own project load pact from the node_modules directory
-      // i.e. node_modules/pact-consumer-js-dsl/dist/pact-consumer-js-dsl.js
       '../../dist/pact.web.js',
       'client.js',
       'client-spec.js'
@@ -55,7 +51,7 @@ module.exports = function (config) {
     customLaunchers: {
       PhantomJS_without_security: {
         base: 'PhantomJS',
-        flags: ['--web-security=false']
+        flags: ['--web-security=no']
       }
     },
 

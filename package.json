@@ -15,7 +15,8 @@
     "postdist": "npm t",
     "test": "./node_modules/.bin/babel-node ./node_modules/.bin/isparta cover ./node_modules/.bin/_mocha -- ./test",
     "test:karma:jasmine": "./node_modules/.bin/karma start ./karma/jasmine/karma.conf.js",
-    "test:karma:mocha": "./node_modules/.bin/karma start ./karma/mocha/karma.conf.js"
+    "test:karma:mocha": "./node_modules/.bin/karma start ./karma/mocha/karma.conf.js",
+    "posttest": "npm run test:karma:jasmine && npm run test:karma:mocha"
   },
   "repository": {
     "type": "git",
@@ -105,10 +106,9 @@
     "json-loader": "0.5.4",
     "karma": "1.1.0",
     "karma-chai": "0.1.0",
-    "karma-chrome-launcher": "1.0.1",
     "karma-jasmine": "1.0.2",
     "karma-mocha": "1.1.1",
-    "karma-pact": "0.0.3",
+    "karma-pact": "0.0.5",
     "karma-phantomjs-launcher": "1.0.1",
     "mocha": "2.5.3",
     "nock": "8.0.0",
