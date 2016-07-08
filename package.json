@@ -78,6 +78,7 @@
     ]
   },
   "dependencies": {
+    "es6-promise": "3.2.1",
     "lodash.find": "4.4.0",
     "lodash.isfunction": "3.0.8",
     "lodash.isnil": "4.0.0",
@@ -86,7 +87,7 @@
     "mitm": "1.2.1"
   },
   "devDependencies": {
-    "@pact-foundation/pact-node": "4.5.0",
+    "@pact-foundation/pact-node": "4.5.1",
     "babel-cli": "6.10.1",
     "babel-eslint": "6.1.0",
     "babel-loader": "6.2.4",
@@ -108,7 +109,8 @@
     "karma-chrome-launcher": "1.0.1",
     "karma-jasmine": "1.0.2",
     "karma-mocha": "1.1.1",
-    "karma-pact": "0.0.1",
+    "karma-pact": "0.0.2",
+    "karma-phantomjs-launcher": "1.0.1",
     "mocha": "2.5.3",
     "nock": "8.0.0",
     "proxyquire": "1.7.10",

@@ -18,6 +18,7 @@ module.exports = function (config) {
     files: [
       // if you are using this example to setup your own project load pact from the node_modules directory
       // i.e. node_modules/pact-consumer-js-dsl/dist/pact-consumer-js-dsl.js
+      './node_modules/es6-promise/dist/es6-promise.js',
       '../../dist/pact.web.js',
       'client.js',
       'client-spec.js'
@@ -50,12 +51,12 @@ module.exports = function (config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome_without_security'],
+    browsers: ['PhantomJS_without_security'],
 
     customLaunchers: {
-      Chrome_without_security: {
-        base: 'Chrome',
-        flags: ['--disable-web-security']
+      PhantomJS_without_security: {
+        base: 'PhantomJS',
+        flags: ['--web-security=false']
       }
     },
 

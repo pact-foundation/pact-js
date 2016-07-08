@@ -24,22 +24,22 @@
             headers: { "Content-Type": "application/json" },
             body: { reply: "Hello" }
           }
-        }).then(() => done())
+        }).then(function () { done() })
       })
 
       afterEach(function (done) {
-        projectsProvider.finalize().then(() => done())
+        projectsProvider.finalize().then(function () { done() })
       })
 
       it("should say hello", function(done) {
         //Run the tests
         client.sayHello()
           .then(projectsProvider.verify)
-          .then((data) => {
+          .then(function (data) {
             expect(JSON.parse(data)).to.eql({ reply: "Hello" });
             done()
           })
-          .catch((err) => {
+          .catch(function (err) {
             done(err)
           })
       });
@@ -69,22 +69,22 @@
                 }, { min: 1 })
               }
             }
-          }).then(() => done())
+          }).then(function () { done() })
       })
 
       afterEach(function (done) {
-        projectsProvider.finalize().then(() => done())
+        projectsProvider.finalize().then(function () { done() })
       });
 
       it("should return some friends", function(done) {
         //Run the tests
         client.findFriendsByAgeAndChildren('33', ['Mary Jane', 'James'])
           .then(projectsProvider.verify)
-          .then((data) => {
+          .then(function (data) {
             expect(JSON.parse(data)).to.eql({friends: [{ name: 'Sue' }]});
             done()
           })
-          .catch((err) => {
+          .catch(function (err) {
             done(err)
           })
       });
@@ -106,22 +106,22 @@
             headers: { "Content-Type": "application/json" },
             body: { reply: "Bye" }
           }
-        }).then(() => done())
+        }).then(function () { done() })
       })
 
       afterEach(function (done) {
-        projectsProvider.finalize().then(() => done())
+        projectsProvider.finalize().then(function () { done() })
       });
 
       it("should unfriend me", function(done) {
         //Run the tests
         client.unfriendMe()
           .then(projectsProvider.verify)
-          .then((data) => {
+          .then(function (data) {
             expect(JSON.parse(data)).to.eql({ reply: "Bye" })
             done()
           })
-          .catch((err) => {
+          .catch(function (err) {
             done(err)
           })
       });
@@ -139,14 +139,14 @@
             willRespondWith: {
               status: 404
             }
-          }).then(() => done())
+          }).then(function () { done() })
         })
 
         it("returns an error message", function (done) {
           //Run the tests
           client.unfriendMe()
             .catch(projectsProvider.verify)
-            .then((data) => {
+            .then(function (data) {
               expect(data).to.eql('No friends :(')
               done()
             })

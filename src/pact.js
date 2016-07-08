@@ -1,5 +1,7 @@
 'use strict'
 
+require('es6-promise').polyfill()
+
 var isNil = require('lodash.isnil')
 var logger = require('./common/logger')
 var MockService = require('./dsl/mockService').default
