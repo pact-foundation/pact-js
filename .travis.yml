@@ -33,6 +33,7 @@ deploy:
     tags: true
     node: '6'
 - provider: npm
+  email: "tarcio@gmail.com"
   api_key:
     secure: KgY7CzHE8ZoMh0aYCG/bIw2W2PWn9gnprbah7fRYq5Iia0EyH2ZGkQCcJNrUetODuDPV5r4Yr+v6FaNmd4TvQZfSoUFXJMW2k98lN3riFVuph6o7XksB6FSqxyf7oZ19RUjs9SmzADJTmLjQIHkQB0lmrf4yiR2OhuEsKsJQB4pGCv0+q/2DBloqapByu1vijPskMtvYdbyvV7k06LzLTmf7Kh6zSBJtL4Ip5LL2hjiAHVU36lYzmd+BeEbhUlPLAjfAHQtwRiQrmAYMGYoppmhiCfrP7EyBJ9XS9p8j+EEON/K9vKoqD5Mhxff57Ou+YNXaIJXAOLpFzJc2OgiKsNTPQZmuZlObuUMA0ah71cWfr7UyHgHq7OXIP+mxBo6onGCETYhZwcj3T8cHOmX8yv6WQueT5ccbuY8Lo413SAVapQcGwWVS1T2Ibe+F0wPi/RWhrLHVS8/hbHl7VT2EGoIKrZCicuKjsv6kciUM9W/MsUj256NVOAIw+Gt8/JbzxrMVUs2miWRLCGaFr8X2ML71IJY2XBpBalA6ej3ZEVEhCzdBIivCvZ06Td8LEEVoZtcxrXODNnt3LM1vDWyNhZMZOzK4BoCIDE5JPubMfpGjL/urEBZzONdOyL/07uKRMMdTHtz+dj5FjSC7OSK9YNe5JBFzO1aTXbNXftAwAzs=
   skip_cleanup: true
