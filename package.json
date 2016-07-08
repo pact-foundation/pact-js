@@ -15,8 +15,7 @@
     "postdist": "npm t",
     "test": "./node_modules/.bin/babel-node ./node_modules/.bin/isparta cover ./node_modules/.bin/_mocha -- ./test",
     "test:karma:jasmine": "./node_modules/.bin/karma start ./karma/jasmine/karma.conf.js",
-    "test:karma:mocha": "./node_modules/.bin/karma start ./karma/mocha/karma.conf.js",
-    "posttest": "npm run test:karma:jasmine && npm run test:karma:mocha"
+    "test:karma:mocha": "./node_modules/.bin/karma start ./karma/mocha/karma.conf.js"
   },
   "repository": {
     "type": "git",
