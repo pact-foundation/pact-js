@@ -8,7 +8,11 @@
     // ugly but works... guess would be good to bring jasmine-beforeAll
     beforeEach(function() {
       client = example.createClient('http://localhost:1234');
-      projectsProvider = Pact({ consumer: 'Test DSL', provider: 'Projects' })
+      projectsProvider = Pact({ consumer: 'Karma Jasmine', provider: 'Hello' })
+    });
+
+    afterEach(function (done) {
+      projectsProvider.finalize().then(function () { done() })
     });
 
     describe("sayHello", function () {
@@ -24,22 +28,18 @@
             headers: { "Content-Type": "application/json" },
             body: { reply: "Hello" }
           }
-        }).then(() => done())
-      })
-
-      afterEach(function (done) {
-        projectsProvider.finalize().then(() => done())
+        }).then(function () { done() });
       })
 
       it("should say hello", function(done) {
         //Run the tests
         client.sayHello()
           .then(projectsProvider.verify)
-          .then((data) => {
-            expect(JSON.parse(data)).to.eql({ reply: "Hello" });
+          .then(function (data) {
+            expect(JSON.parse(data)).toEqual({ reply: "Hello" });
             done()
           })
-          .catch((err) => {
+          .catch(function (err) {
             done(err)
           })
       });
@@ -48,6 +48,7 @@
     describe("findFriendsByAgeAndChildren", function () {
 
       beforeEach(function (done) {
+        //Add interaction
         projectsProvider
           .addInteraction({
             uponReceiving: 'a request friends',
@@ -69,22 +70,18 @@
                 }, { min: 1 })
               }
             }
-          }).then(() => done())
+          }).then(function () { done() });
       })
-
-      afterEach(function (done) {
-        projectsProvider.finalize().then(() => done())
-      });
 
       it("should return some friends", function(done) {
         //Run the tests
         client.findFriendsByAgeAndChildren('33', ['Mary Jane', 'James'])
           .then(projectsProvider.verify)
-          .then((data) => {
-            expect(JSON.parse(data)).to.eql({friends: [{ name: 'Sue' }]});
+          .then(function (data) {
+            expect(JSON.parse(data)).toEqual({friends: [{ name: 'Sue' }]});
             done()
           })
-          .catch((err) => {
+          .catch(function (err) {
             done(err)
           })
       });
@@ -106,29 +103,24 @@
             headers: { "Content-Type": "application/json" },
             body: { reply: "Bye" }
           }
-        }).then(() => done())
+        }).then(function () { done() });
       })
-
-      afterEach(function (done) {
-        projectsProvider.finalize().then(() => done())
-      });
 
       it("should unfriend me", function(done) {
         //Run the tests
         client.unfriendMe()
           .then(projectsProvider.verify)
-          .then((data) => {
-            expect(JSON.parse(data)).to.eql({ reply: "Bye" })
+          .then(function (data) {
+            expect(JSON.parse(data)).toEqual({ reply: "Bye" });
             done()
           })
-          .catch((err) => {
+          .catch(function (err) {
             done(err)
           })
       });
 
       xdescribe("when there are no friends", function () {
         beforeEach(function (done) {
-          //Add interaction
           projectsProvider.addInteraction({
             state: 'I have no friends',
             uponReceiving: 'a request to unfriend',
@@ -139,20 +131,22 @@
             willRespondWith: {
               status: 404
             }
-          }).then(() => done())
+          }).then(function () { done() })
         })
 
         it("returns an error message", function (done) {
           //Run the tests
           client.unfriendMe()
             .catch(projectsProvider.verify)
-            .then((data) => {
-              expect(data).to.eql('No friends :(')
+            .then(function (data) {
+              expect(data).toEqual('No friends :(');
               done()
+            })
+            .catch(function (err) {
+              done.fail(err)
             })
         });
       });
     });
-
   });
 })();
