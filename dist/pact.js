@@ -128,6 +128,20 @@ module.exports =
 	      return mockService.writePact().then(function () {
 	        return mockService.removeInteractions();
 	      });
+	    },
+	    /**
+	     * Writes the Pact file but leave interactions in.
+	     * @returns {Promise}
+	     */
+	    writePact: function writePact() {
+	      return mockService.writePact();
+	    },
+	    /**
+	     * Clear up any interactions in the Provider Mock Server.
+	     * @returns {Promise}
+	     */
+	    removeInteractions: function removeInteractions() {
+	      return mockService.removeInteractions();
 	    }
 	  };
 	};

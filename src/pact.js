@@ -74,6 +74,20 @@ module.exports = ({consumer, provider, port = 1234}) => {
      */
     finalize: () => {
       return mockService.writePact().then(() => mockService.removeInteractions())
+    },
+    /**
+     * Writes the Pact file but leave interactions in.
+     * @returns {Promise}
+     */
+    writePact: () => {
+      return mockService.writePact()
+    },
+    /**
+     * Clear up any interactions in the Provider Mock Server.
+     * @returns {Promise}
+     */
+    removeInteractions: () => {
+      return mockService.removeInteractions()
     }
   }
 }
