@@ -8,7 +8,8 @@ export default class Request {
   constructor () {
     if (typeof window === 'undefined') {
       logger.info('Using Node "HTTP" module')
-      this._request = require('http')
+      this._httpRequest = require('http')
+      this._httpsRequest = require('https')
     } else {
       logger.info('Using browser "XMLHttpRequest" module')
       this._request = new window.XMLHttpRequest()
@@ -16,7 +17,6 @@ export default class Request {
   }
 
   send (method, url, body) {
-    const req = this._request
     return new Promise((resolve, reject) => {
       if (typeof window === 'undefined') {
         const opts = parse(url)
@@ -28,6 +28,7 @@ export default class Request {
 
         logger.info(`Sending request with opts: ${JSON.stringify(opts)}`)
 
+        const req = opts.protocol === 'https:' ? this._httpsRequest : this._httpRequest;
         const request = req.request(opts, (response) => {
           let responseBody = ''
           response.setEncoding('utf8')
@@ -54,6 +55,7 @@ export default class Request {
 
         request.end()
       } else {
+        const req = this._request
         req.onload = () => {
           if (req.status >= 200 && req.status < 400) {
             logger.info(`Resolving promise with: ${req.responseText}`)

@@ -6,14 +6,17 @@ import wrapper from '@pact-foundation/pact-node'
 
 import { default as Pact, Matchers } from '../../src/pact'
 
-describe('Pact random mock port', () => {
+['http', 'https'].forEach((PROTOCOL) => {
+
+describe(`Pact random mock port, protocol: ${PROTOCOL}`, (protocol) => {
 
   const MOCK_PORT = Math.floor(Math.random() * 999) + 9000
-  const PROVIDER_URL = `http://localhost:${MOCK_PORT}`
+  const PROVIDER_URL = `${PROTOCOL}://localhost:${MOCK_PORT}`
   const mockServer = wrapper.createServer({
     port: MOCK_PORT,
     log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
     dir: path.resolve(process.cwd(), 'pacts'),
+    ssl: PROTOCOL === 'https' ? true : false,
     spec: 2
   })
 
@@ -37,7 +40,11 @@ describe('Pact random mock port', () => {
 
   beforeEach((done) => {
     mockServer.start().then(() => {
-      provider = Pact({ consumer: `Consumer ${counter}`, provider: `Provider ${counter}`, port: MOCK_PORT })
+      provider = Pact({ consumer: `Consumer ${counter}`,
+                        provider: `Provider ${counter}`,
+                        port: MOCK_PORT,
+                        ssl: PROTOCOL === 'https' ? true : false
+                      })
       done()
     })
   })
@@ -232,5 +239,7 @@ describe('Pact random mock port', () => {
       expect(verificationPromise).to.be.rejectedWith('No interaction found for DELETE /projects/2').notify(done)
     })
   })
+
+})
 
 })
