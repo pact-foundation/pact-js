@@ -15,17 +15,16 @@ export default class MockService {
    * @param {number} port - the mock service port, defaults to 1234
    * @param {string} host - the mock service host, defaults to 127.0.0.1
    */
-  constructor (consumer, provider, port = 1234, host = '127.0.0.1') {
+  constructor (consumer, provider, port = 1234, host = '127.0.0.1', ssl = false) {
     if (isNil(consumer) || isNil(provider)) {
       throw new Error('Please provide the names of the provider and consumer for this Pact.')
     }
-
     if (isNil(port)) {
       throw new Error('Please provide the port to connect to the Pact Mock Server.')
     }
 
     this._request = new Request()
-    this._baseURL = `http://${host}:${port}`
+    this._baseURL = `${ssl ? 'https' : 'http'}://${host}:${port}`
     this._pactDetails = {
       consumer: { name: consumer },
       provider: { name: provider }

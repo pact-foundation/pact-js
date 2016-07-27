@@ -17,6 +17,12 @@ describe('MockService', () => {
       expect(mock._baseURL).to.eql('http://127.0.0.1:1234')
     })
 
+    it('creates a MockService when all mandatory parameters are in', () => {
+      const mock = new MockService('consumer', 'provider', 4443, '127.0.0.1', true)
+      expect(mock).to.not.be.undefined
+      expect(mock._baseURL).to.eql('https://127.0.0.1:4443')
+    })
+
     it('creates a MockService when port is not informed', () => {
       const mock = new MockService('consumer', 'provider')
       expect(mock).to.not.be.undefined
