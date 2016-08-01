@@ -7,7 +7,7 @@
 		exports["Pact"] = factory(require("mitm"));
 	else
 		root["Pact"] = factory(root["mitm"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_52__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_53__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -60,12 +60,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var isNil = __webpack_require__(5);
 	var logger = __webpack_require__(6);
-	var MockService = __webpack_require__(44).default;
-	var Interaction = __webpack_require__(45).default;
-	var responseParser = __webpack_require__(43).default;
+	var MockService = __webpack_require__(45).default;
+	var Interaction = __webpack_require__(46).default;
+	var responseParser = __webpack_require__(44).default;
 	
-	var Interceptor = __webpack_require__(51).default;
-	var Matchers = __webpack_require__(57);
+	var Interceptor = __webpack_require__(52).default;
+	var Matchers = __webpack_require__(58);
 	
 	/**
 	 * Entry point for the Pact library and Verification module of Pact.
@@ -84,6 +84,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var provider = _ref.provider;
 	  var _ref$port = _ref.port;
 	  var port = _ref$port === undefined ? 1234 : _ref$port;
+	  var _ref$ssl = _ref.ssl;
+	  var ssl = _ref$ssl === undefined ? false : _ref$ssl;
 	
 	  if (isNil(consumer)) {
 	    throw new Error('You must inform a Consumer for this Pact.');
@@ -95,7 +97,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  logger.info('Setting up Pact with Consumer "' + consumer + '" and Provider "' + provider + '" using mock service on Port: "' + port + '"');
 	
-	  var mockService = new MockService(consumer, provider, port);
+	  var mockService = new MockService(consumer, provider, port, '127.0.0.1', ssl);
 	
 	  return {
 	    /**
@@ -1180,7 +1182,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (draining) {
 	        return;
 	    }
-	    var timeout = cachedSetTimeout(cleanUpNextTick);
+	    var timeout = cachedSetTimeout.call(null, cleanUpNextTick);
 	    draining = true;
 	
 	    var len = queue.length;
@@ -1197,7 +1199,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	    currentQueue = null;
 	    draining = false;
-	    cachedClearTimeout(timeout);
+	    cachedClearTimeout.call(null, timeout);
 	}
 	
 	process.nextTick = function (fun) {
@@ -1209,7 +1211,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	    queue.push(new Item(fun, args));
 	    if (queue.length === 1 && !draining) {
-	        cachedSetTimeout(drainQueue, 0);
+	        cachedSetTimeout.call(null, drainQueue, 0);
 	    }
 	};
 	
@@ -1593,8 +1595,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		"./logger.js": 6,
 		"./request": 10,
 		"./request.js": 10,
-		"./responseParser": 43,
-		"./responseParser.js": 43
+		"./responseParser": 44,
+		"./responseParser.js": 44
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -1638,7 +1640,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    if (typeof window === 'undefined') {
 	      _logger2.default.info('Using Node "HTTP" module');
-	      this._request = __webpack_require__(16);
+	      this._httpRequest = __webpack_require__(16);
+	      this._httpsRequest = __webpack_require__(43);
 	    } else {
 	      _logger2.default.info('Using browser "XMLHttpRequest" module');
 	      this._request = new window.XMLHttpRequest();
@@ -1648,7 +1651,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(Request, [{
 	    key: 'send',
 	    value: function send(method, url, body) {
-	      var req = this._request;
+	      var _this = this;
+	
 	      return new Promise(function (resolve, reject) {
 	        if (typeof window === 'undefined') {
 	          var opts = (0, _url.parse)(url);
@@ -1660,6 +1664,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	          _logger2.default.info('Sending request with opts: ' + JSON.stringify(opts));
 	
+	          var req = opts.protocol === 'https:' ? _this._httpsRequest : _this._httpRequest;
 	          var request = req.request(opts, function (response) {
 	            var responseBody = '';
 	            response.setEncoding('utf8');
@@ -1688,25 +1693,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	          request.end();
 	        } else {
-	          req.onload = function () {
-	            if (req.status >= 200 && req.status < 400) {
-	              _logger2.default.info('Resolving promise with: ' + req.responseText);
-	              resolve(req.responseText);
-	            } else {
-	              _logger2.default.info('Rejecting promise with: ' + req.responseText);
-	              reject(req.responseText);
-	            }
-	          };
+	          (function () {
+	            var req = _this._request;
+	            req.onload = function () {
+	              if (req.status >= 200 && req.status < 400) {
+	                _logger2.default.info('Resolving promise with: ' + req.responseText);
+	                resolve(req.responseText);
+	              } else {
+	                _logger2.default.info('Rejecting promise with: ' + req.responseText);
+	                reject(req.responseText);
+	              }
+	            };
 	
-	          req.onerror = function (err) {
-	            _logger2.default.info('Rejecting promise with: ' + err);
-	            reject(err);
-	          };
+	            req.onerror = function (err) {
+	              _logger2.default.info('Rejecting promise with: ' + err);
+	              reject(err);
+	            };
 	
-	          req.open(method, url, true);
-	          req.setRequestHeader('X-Pact-Mock-Service', 'true');
-	          req.setRequestHeader('Content-Type', 'application/json');
-	          req.send(body);
+	            req.open(method, url, true);
+	            req.setRequestHeader('X-Pact-Mock-Service', 'true');
+	            req.setRequestHeader('Content-Type', 'application/json');
+	            req.send(body);
+	          })();
 	        }
 	      });
 	    }
@@ -8756,6 +8764,25 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 43 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var http = __webpack_require__(16);
+	
+	var https = module.exports;
+	
+	for (var key in http) {
+	    if (http.hasOwnProperty(key)) https[key] = http[key];
+	};
+	
+	https.request = function (params, cb) {
+	    if (!params) params = {};
+	    params.scheme = 'https';
+	    return http.request.call(this, params, cb);
+	}
+
+
+/***/ },
+/* 44 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -8803,7 +8830,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8830,7 +8857,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * A Mock Service is the interaction mechanism through which pacts get written and verified.
 	 * This should be transparent to the end user.
 	 */
-	
 	var MockService = function () {
 	
 	  /**
@@ -8839,23 +8865,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @param {number} port - the mock service port, defaults to 1234
 	   * @param {string} host - the mock service host, defaults to 127.0.0.1
 	   */
-	
 	  function MockService(consumer, provider) {
 	    var port = arguments.length <= 2 || arguments[2] === undefined ? 1234 : arguments[2];
 	    var host = arguments.length <= 3 || arguments[3] === undefined ? '127.0.0.1' : arguments[3];
+	    var ssl = arguments.length <= 4 || arguments[4] === undefined ? false : arguments[4];
 	
 	    _classCallCheck(this, MockService);
 	
 	    if ((0, _lodash2.default)(consumer) || (0, _lodash2.default)(provider)) {
 	      throw new Error('Please provide the names of the provider and consumer for this Pact.');
 	    }
-	
 	    if ((0, _lodash2.default)(port)) {
 	      throw new Error('Please provide the port to connect to the Pact Mock Server.');
 	    }
 	
 	    this._request = new _request2.default();
-	    this._baseURL = 'http://' + host + ':' + port;
+	    this._baseURL = (ssl ? 'https' : 'http') + '://' + host + ':' + port;
 	    this._pactDetails = {
 	      consumer: { name: consumer },
 	      provider: { name: provider }
@@ -8917,7 +8942,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = MockService;
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8928,7 +8953,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _lodash = __webpack_require__(46);
+	var _lodash = __webpack_require__(47);
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
@@ -8951,7 +8976,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  /**
 	   * Creates a new Interaction.
 	   */
-	
 	  function Interaction() {
 	    _classCallCheck(this, Interaction);
 	
@@ -9075,7 +9099,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Interaction;
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -9086,8 +9110,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
 	 * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 */
-	var baseIteratee = __webpack_require__(47),
-	    keysIn = __webpack_require__(50);
+	var baseIteratee = __webpack_require__(48),
+	    keysIn = __webpack_require__(51);
 	
 	/**
 	 * Appends the elements of `values` to `array`.
@@ -9274,7 +9298,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 47 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module, global) {/**
@@ -9285,7 +9309,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
 	 * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 */
-	var stringToPath = __webpack_require__(48);
+	var stringToPath = __webpack_require__(49);
 	
 	/** Used as the size to enable large array optimizations. */
 	var LARGE_ARRAY_SIZE = 200;
@@ -11441,7 +11465,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)(module), (function() { return this; }())))
 
 /***/ },
-/* 48 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module, global) {/**
@@ -11452,7 +11476,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
 	 * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 */
-	var baseToString = __webpack_require__(49);
+	var baseToString = __webpack_require__(50);
 	
 	/** Used as the `TypeError` message for "Functions" methods. */
 	var FUNC_ERROR_TEXT = 'Expected a function';
@@ -12190,7 +12214,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)(module), (function() { return this; }())))
 
 /***/ },
-/* 49 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module, global) {/**
@@ -12350,10 +12374,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)(module), (function() { return this; }())))
 
 /***/ },
-/* 50 */
-/***/ function(module, exports, __webpack_require__) {
+/* 51 */
+/***/ function(module, exports) {
 
-	/* WEBPACK VAR INJECTION */(function(module, global) {/**
+	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * lodash (Custom Build) <https://lodash.com/>
 	 * Build: `lodash modularize exports="npm" -o ./`
 	 * Copyright jQuery Foundation and other contributors <https://jquery.org/>
@@ -12374,43 +12398,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	/** Used to detect unsigned integer values. */
 	var reIsUint = /^(?:0|[1-9]\d*)$/;
 	
-	/** Used to determine if values are of the language type `Object`. */
-	var objectTypes = {
-	  'function': true,
-	  'object': true
-	};
-	
-	/** Detect free variable `exports`. */
-	var freeExports = (objectTypes[typeof exports] && exports && !exports.nodeType)
-	  ? exports
-	  : undefined;
-	
-	/** Detect free variable `module`. */
-	var freeModule = (objectTypes[typeof module] && module && !module.nodeType)
-	  ? module
-	  : undefined;
-	
 	/** Detect free variable `global` from Node.js. */
-	var freeGlobal = checkGlobal(freeExports && freeModule && typeof global == 'object' && global);
+	var freeGlobal = typeof global == 'object' && global && global.Object === Object && global;
 	
 	/** Detect free variable `self`. */
-	var freeSelf = checkGlobal(objectTypes[typeof self] && self);
+	var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
 	
-	/** Detect free variable `window`. */
-	var freeWindow = checkGlobal(objectTypes[typeof window] && window);
-	
-	/** Detect `this` as the global object. */
-	var thisGlobal = checkGlobal(objectTypes[typeof this] && this);
+	/** Used as a reference to the global object. */
+	var root = freeGlobal || freeSelf || Function('return this')();
 	
 	/**
-	 * Used as a reference to the global object.
+	 * The base implementation of `_.property` without support for deep paths.
 	 *
-	 * The `this` value is used if it's the global object to avoid Greasemonkey's
-	 * restricted `window` object, otherwise the `window` object is used.
+	 * @private
+	 * @param {string} key The key of the property to get.
+	 * @returns {Function} Returns the new accessor function.
 	 */
-	var root = freeGlobal ||
-	  ((freeWindow !== (thisGlobal && thisGlobal.window)) && freeWindow) ||
-	    freeSelf || thisGlobal || Function('return this')();
+	function baseProperty(key) {
+	  return function(object) {
+	    return object == null ? undefined : object[key];
+	  };
+	}
 	
 	/**
 	 * The base implementation of `_.times` without support for iteratee shorthands
@@ -12429,17 +12437,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    result[index] = iteratee(index);
 	  }
 	  return result;
-	}
-	
-	/**
-	 * Checks if `value` is a global object.
-	 *
-	 * @private
-	 * @param {*} value The value to check.
-	 * @returns {null|Object} Returns `value` if it's a global object, else `null`.
-	 */
-	function checkGlobal(value) {
-	  return (value && value.Object === Object) ? value : null;
 	}
 	
 	/**
@@ -12499,19 +12496,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	if (enumerate && !propertyIsEnumerable.call({ 'valueOf': 1 }, 'valueOf')) {
 	  baseKeysIn = function(object) {
 	    return iteratorToArray(enumerate(object));
-	  };
-	}
-	
-	/**
-	 * The base implementation of `_.property` without support for deep paths.
-	 *
-	 * @private
-	 * @param {string} key The key of the property to get.
-	 * @returns {Function} Returns the new accessor function.
-	 */
-	function baseProperty(key) {
-	  return function(object) {
-	    return object == null ? undefined : object[key];
 	  };
 	}
 	
@@ -12582,7 +12566,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @since 0.1.0
 	 * @category Lang
 	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is correctly classified,
+	 * @returns {boolean} Returns `true` if `value` is an `arguments` object,
 	 *  else `false`.
 	 * @example
 	 *
@@ -12604,11 +12588,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @static
 	 * @memberOf _
 	 * @since 0.1.0
-	 * @type {Function}
 	 * @category Lang
 	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is correctly classified,
-	 *  else `false`.
+	 * @returns {boolean} Returns `true` if `value` is an array, else `false`.
 	 * @example
 	 *
 	 * _.isArray([1, 2, 3]);
@@ -12691,8 +12673,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @since 0.1.0
 	 * @category Lang
 	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is correctly classified,
-	 *  else `false`.
+	 * @returns {boolean} Returns `true` if `value` is a function, else `false`.
 	 * @example
 	 *
 	 * _.isFunction(_);
@@ -12807,8 +12788,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @memberOf _
 	 * @category Lang
 	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is correctly classified,
-	 *  else `false`.
+	 * @returns {boolean} Returns `true` if `value` is a string, else `false`.
 	 * @example
 	 *
 	 * _.isString('abc');
@@ -12867,10 +12847,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	module.exports = keysIn;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 51 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12881,13 +12861,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _mitm = __webpack_require__(52);
+	var _mitm = __webpack_require__(53);
 	
 	var _mitm2 = _interopRequireDefault(_mitm);
 	
 	var _http = __webpack_require__(16);
 	
-	var _lodash = __webpack_require__(53);
+	var _lodash = __webpack_require__(54);
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
@@ -13002,13 +12982,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Interceptor;
 
 /***/ },
-/* 52 */
+/* 53 */
 /***/ function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_52__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_53__;
 
 /***/ },
-/* 53 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -13019,10 +12999,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
 	 * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 */
-	var baseEach = __webpack_require__(54),
-	    baseFind = __webpack_require__(55),
-	    baseFindIndex = __webpack_require__(56),
-	    baseIteratee = __webpack_require__(47);
+	var baseEach = __webpack_require__(55),
+	    baseFind = __webpack_require__(56),
+	    baseFindIndex = __webpack_require__(57),
+	    baseIteratee = __webpack_require__(48);
 	
 	/**
 	 * Iterates over elements of `collection`, returning the first element
@@ -13100,7 +13080,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 54 */
+/* 55 */
 /***/ function(module, exports) {
 
 	/**
@@ -13662,7 +13642,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 55 */
+/* 56 */
 /***/ function(module, exports) {
 
 	/**
@@ -13702,7 +13682,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 56 */
+/* 57 */
 /***/ function(module, exports) {
 
 	/**
@@ -13740,7 +13720,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 57 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @module matchers */
@@ -13757,11 +13737,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
-	var _lodash3 = __webpack_require__(58);
+	var _lodash3 = __webpack_require__(59);
 	
 	var _lodash4 = _interopRequireDefault(_lodash3);
 	
-	var _lodash5 = __webpack_require__(59);
+	var _lodash5 = __webpack_require__(60);
 	
 	var _lodash6 = _interopRequireDefault(_lodash5);
 	
@@ -13829,7 +13809,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 58 */
+/* 59 */
 /***/ function(module, exports) {
 
 	/**
@@ -13910,7 +13890,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 59 */
+/* 60 */
 /***/ function(module, exports) {
 
 	/**
