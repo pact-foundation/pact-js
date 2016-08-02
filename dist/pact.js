@@ -75,6 +75,8 @@ module.exports =
 	  var provider = _ref.provider;
 	  var _ref$port = _ref.port;
 	  var port = _ref$port === undefined ? 1234 : _ref$port;
+	  var _ref$host = _ref.host;
+	  var host = _ref$host === undefined ? '127.0.0.1' : _ref$host;
 	  var _ref$ssl = _ref.ssl;
 	  var ssl = _ref$ssl === undefined ? false : _ref$ssl;
 	
@@ -88,7 +90,7 @@ module.exports =
 	
 	  logger.info('Setting up Pact with Consumer "' + consumer + '" and Provider "' + provider + '" using mock service on Port: "' + port + '"');
 	
-	  var mockService = new MockService(consumer, provider, port, '127.0.0.1', ssl);
+	  var mockService = new MockService(consumer, provider, port, host, ssl);
 	
 	  return {
 	    /**

@@ -84,6 +84,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var provider = _ref.provider;
 	  var _ref$port = _ref.port;
 	  var port = _ref$port === undefined ? 1234 : _ref$port;
+	  var _ref$host = _ref.host;
+	  var host = _ref$host === undefined ? '127.0.0.1' : _ref$host;
 	  var _ref$ssl = _ref.ssl;
 	  var ssl = _ref$ssl === undefined ? false : _ref$ssl;
 	
@@ -97,7 +99,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  logger.info('Setting up Pact with Consumer "' + consumer + '" and Provider "' + provider + '" using mock service on Port: "' + port + '"');
 	
-	  var mockService = new MockService(consumer, provider, port, '127.0.0.1', ssl);
+	  var mockService = new MockService(consumer, provider, port, host, ssl);
 	
 	  return {
 	    /**
@@ -1131,7 +1133,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports) {
 
 	// shim for using process in browser
-	
 	var process = module.exports = {};
 	
 	// cached from whatever global is present so that test runners that stub it
@@ -1143,21 +1144,35 @@ return /******/ (function(modules) { // webpackBootstrap
 	var cachedClearTimeout;
 	
 	(function () {
-	  try {
-	    cachedSetTimeout = setTimeout;
-	  } catch (e) {
-	    cachedSetTimeout = function () {
-	      throw new Error('setTimeout is not defined');
+	    try {
+	        cachedSetTimeout = setTimeout;
+	    } catch (e) {
+	        cachedSetTimeout = function () {
+	            throw new Error('setTimeout is not defined');
+	        }
 	    }
-	  }
-	  try {
-	    cachedClearTimeout = clearTimeout;
-	  } catch (e) {
-	    cachedClearTimeout = function () {
-	      throw new Error('clearTimeout is not defined');
+	    try {
+	        cachedClearTimeout = clearTimeout;
+	    } catch (e) {
+	        cachedClearTimeout = function () {
+	            throw new Error('clearTimeout is not defined');
+	        }
 	    }
-	  }
 	} ())
+	function runTimeout(fun) {
+	    if (cachedSetTimeout === setTimeout) {
+	        return setTimeout(fun, 0);
+	    } else {
+	        return cachedSetTimeout.call(null, fun, 0);
+	    }
+	}
+	function runClearTimeout(marker) {
+	    if (cachedClearTimeout === clearTimeout) {
+	        clearTimeout(marker);
+	    } else {
+	        cachedClearTimeout.call(null, marker);
+	    }
+	}
 	var queue = [];
 	var draining = false;
 	var currentQueue;
@@ -1182,7 +1197,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (draining) {
 	        return;
 	    }
-	    var timeout = cachedSetTimeout.call(null, cleanUpNextTick);
+	    var timeout = runTimeout(cleanUpNextTick);
 	    draining = true;
 	
 	    var len = queue.length;
@@ -1199,7 +1214,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	    currentQueue = null;
 	    draining = false;
-	    cachedClearTimeout.call(null, timeout);
+	    runClearTimeout(timeout);
 	}
 	
 	process.nextTick = function (fun) {
@@ -1211,7 +1226,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	    queue.push(new Item(fun, args));
 	    if (queue.length === 1 && !draining) {
-	        cachedSetTimeout.call(null, drainQueue, 0);
+	        runTimeout(drainQueue);
 	    }
 	};
 	
