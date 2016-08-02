@@ -33,6 +33,15 @@ describe('Pact', () => {
       done()
     })
 
+    it('creates mockSerive with custom ip and port', (done) => {
+      let pact = Pact({ consumer: 'A', provider: 'B', host: '192.168.10.1', port: 8443, ssl: true })
+      expect(pact).to.have.property('addInteraction')
+      expect(pact).to.have.property('verify')
+      expect(pact).to.have.property('finalize')
+      expect(mockServiceSpy).to.have.been.calledWith('A', 'B', 8443, '192.168.10.1', true)
+      done()
+    })
+
   })
 
   describe('#addInteraction', ()  => {

@@ -23,7 +23,7 @@ var Matchers = require('./dsl/matchers')
  * @param {number} port - port of the mock service, defaults to 1234
  * @returns {Object} Pact - returns an {@link Interceptor}, a {@link Matcher#term}, a {@link Matcher#eachLike}, a {@link Matcher#somethingLike} and an {@link Interaction}.
  */
-module.exports = ({consumer, provider, port = 1234, ssl = false}) => {
+module.exports = ({consumer, provider, port = 1234, host = '127.0.0.1', ssl = false}) => {
   if (isNil(consumer)) {
     throw new Error('You must inform a Consumer for this Pact.')
   }
@@ -34,7 +34,7 @@ module.exports = ({consumer, provider, port = 1234, ssl = false}) => {
 
   logger.info(`Setting up Pact with Consumer "${consumer}" and Provider "${provider}" using mock service on Port: "${port}"`)
 
-  const mockService = new MockService(consumer, provider, port, '127.0.0.1', ssl)
+  const mockService = new MockService(consumer, provider, port, host, ssl)
 
   return {
     /**
