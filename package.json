@@ -1,6 +1,6 @@
 {
   "name": "pact",
-  "version": "1.0.0-rc.3",
+  "version": "1.0.0-rc.4",
   "description": "Pact for all things Javascript",
   "main": "./dist/pact.js",
   "scripts": {
