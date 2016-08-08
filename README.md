@@ -70,17 +70,14 @@ More questions about what's involved in Pact? [Read more about it](http://docs.p
 Check the `examples` folder for examples with Karma Jasmine / Mocha. The example below is taken from the [integration spec](https://github.com/pact-foundation/pact-js/blob/master/test/dsl/integration.spec.js).
 
 ```javascript
-import path from 'path'
-import { expect } from 'chai'
-import Promise from 'bluebird'
-import request from 'superagent'
-import wrapper from '@pact-foundation/pact-node'
-
-import { default as Pact } from 'pact'
-
-// great library to spin up the Pact Verifier Server
-// that will record interactions and eventually validate your pacts
-import wrapper from '@pact-foundation/pact-node'
+var path = require('path')
+var chai = require("chai")
+var expect = chai.expect
+var chaiAsPromised = require("chai-as-promised")
+var request = require ('superagent')
+var wrapper = require('@pact-foundation/pact-node')
+var Pact = require('pact')
+chai.use(chaiAsPromised);
 
 describe('Pact', () => {
 
@@ -129,7 +126,7 @@ describe('Pact', () => {
   })
 
   context('with a single request', () => {
-    it('successfully writes Pact file', (done) => {
+    describe('successfully writes Pact file', () => {
 
       // add interactions, as many as needed
       beforeEach((done) => {
@@ -137,7 +134,7 @@ describe('Pact', () => {
           state: 'i have a list of projects',
           uponReceiving: 'a request for projects',
           withRequest: {
-            method: 'get',
+            method: 'GET',
             path: '/projects',
             headers: { 'Accept': 'application/json' }
           },
@@ -162,7 +159,6 @@ describe('Pact', () => {
           .get('http://localhost:1234/projects')
           .set({ 'Accept': 'application/json' })
           .then(provider.verify)
-
         expect(verificationPromise).to.eventually.eql(JSON.stringify(EXPECTED_BODY)).notify(done)
       })
     })
