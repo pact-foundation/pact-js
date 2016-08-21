@@ -1,7 +1,10 @@
 'use strict'
 
-import { expect } from 'chai'
-import { term, somethingLike, eachLike } from '../../src/dsl/matchers'
+var expect = require('chai').expect
+var Matchers = require('../../src/dsl/matchers')
+var term = Matchers.term
+var somethingLike = Matchers.somethingLike
+var eachLike = Matchers.eachLike
 
 describe('Matcher', function() {
 

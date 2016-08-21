@@ -1,8 +1,8 @@
-import nock from 'nock'
-import { expect } from 'chai'
+var nock = require('nock')
+var expect = require('chai').expect
 
-import MockService from '../../src/dsl/mockService'
-import Interaction from '../../src/dsl/interaction'
+var MockService = require('../../src/dsl/mockService')
+var Interaction = require('../../src/dsl/interaction')
 
 describe('MockService', () => {
 

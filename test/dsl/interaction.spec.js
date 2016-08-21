@@ -1,5 +1,5 @@
-import { expect } from 'chai'
-import Interaction from '../../src/dsl/interaction'
+var expect = require('chai').expect
+var Interaction = require('../../src/dsl/interaction')
 
 describe('Interaction', () => {
   describe('#given', () => {

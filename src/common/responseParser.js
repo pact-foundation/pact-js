@@ -16,7 +16,7 @@ function processResponse (response) {
   return { action: 'resolve', content: responseText }
 }
 
-export default function parse (response) {
+module.exports.parse = (response) => {
   if (Array.isArray(response)) {
     let processedResponses = response.map(processResponse)
     let erroredResponses = processedResponses

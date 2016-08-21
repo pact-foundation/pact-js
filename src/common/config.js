@@ -1,6 +1,6 @@
 'use strict'
 
-import { resolve } from 'path'
+const resolve = require('path').resolve
 
 const PACT_CONFIG_FILE = resolve(process.cwd(), 'config', 'pact.config.js')
 const PACT_CONFIG = {

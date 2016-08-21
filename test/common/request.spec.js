@@ -1,6 +1,6 @@
-import sinon from 'sinon'
-import { expect } from 'chai'
-import Request from '../../src/common/request'
+var sinon = require('sinon')
+var expect = require('chai').expect
+var Request = require('../../src/common/request')
 
 describe('Request', () => {
 
@@ -8,7 +8,7 @@ describe('Request', () => {
 
   before(() => {
     global.window = {
-      XMLHttpRequest: () => {
+      XMLHttpRequest: function () {
         return {
           open: function() {},
           setRequestHeader: function() {},

@@ -1,9 +1,9 @@
 'use strict'
 
-import { parse } from 'url'
-import logger from './logger'
+const parse = require('url').parse
+const logger = require('./logger')
 
-export default class Request {
+module.exports = class Request {
 
   constructor () {
     if (typeof window === 'undefined') {

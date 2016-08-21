@@ -1,14 +1,14 @@
 'use strict'
 
-import omitBy from 'lodash.omitby'
-import isNil from 'lodash.isnil'
+const omitBy = require('lodash.omitby')
+const isNil = require('lodash.isnil')
 
 const VALID_METHODS = [ 'GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS' ]
 
 /**
  * An Interaction is where you define the state of your interaction with a Provider.
  */
-export default class Interaction {
+module.exports = class Interaction {
 
   /**
    * Creates a new Interaction.
@@ -52,7 +52,13 @@ export default class Interaction {
    * @param {string} body
    * @returns {Interaction}
    */
-  withRequest ({ method, path, query, headers, body }) {
+  withRequest (requestOpts) {
+    var method = requestOpts.method
+    var path = requestOpts.path
+    var query = requestOpts.query
+    var headers = requestOpts.headers
+    var body = requestOpts.body
+
     if (isNil(method)) {
       throw new Error('You must provide a HTTP method.')
     }
@@ -81,7 +87,11 @@ export default class Interaction {
   * @param {string} headers
   * @param {string} body
    */
-  willRespondWith ({ status, headers, body }) {
+  willRespondWith (responseOpts) {
+    var status = responseOpts.status
+    var headers = responseOpts.headers
+    var body = responseOpts.body
+
     if (isNil(status) || status.toString().trim().length === 0) {
       throw new Error('You must provide a status code.')
     }

@@ -4,10 +4,9 @@ require('es6-promise').polyfill()
 
 var isNil = require('lodash.isnil')
 var logger = require('./common/logger')
-var MockService = require('./dsl/mockService').default
-var Interaction = require('./dsl/interaction').default
-var responseParser = require('./common/responseParser').default
-
+var MockService = require('./dsl/mockService')
+var Interaction = require('./dsl/interaction')
+var responseParser = require('./common/responseParser').parse
 var Matchers = require('./dsl/matchers')
 
 /**
@@ -22,7 +21,10 @@ var Matchers = require('./dsl/matchers')
  * @param {number} port - port of the mock service, defaults to 1234
  * @returns {Object} Pact - returns a {@link Matcher#term}, a {@link Matcher#eachLike}, a {@link Matcher#somethingLike} and an {@link Interaction}.
  */
-module.exports = ({consumer, provider, port = 1234, host = '127.0.0.1', ssl = false}) => {
+module.exports = (opts) => {
+  var consumer = opts.consumer
+  var provider = opts.provider
+
   if (isNil(consumer)) {
     throw new Error('You must inform a Consumer for this Pact.')
   }
@@ -30,6 +32,10 @@ module.exports = ({consumer, provider, port = 1234, host = '127.0.0.1', ssl = fa
   if (isNil(provider)) {
     throw new Error('You must inform a Provider for this Pact.')
   }
+
+  var port = opts.port || 1234
+  var host = opts.host || '127.0.0.1'
+  var ssl = opts.ssl || false
 
   logger.info(`Setting up Pact with Consumer "${consumer}" and Provider "${provider}" using mock service on Port: "${port}"`)
 

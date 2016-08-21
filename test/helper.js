@@ -1,9 +1,9 @@
 'use strict'
 
-import chai from 'chai'
-import sinonChai from 'sinon-chai'
-import chaiAsPromised from 'chai-as-promised'
-import wrapper from '@pact-foundation/pact-node'
+var chai = require('chai')
+var sinonChai = require('sinon-chai')
+var chaiAsPromised = require('chai-as-promised')
+var wrapper = require('@pact-foundation/pact-node')
 
 chai.use(sinonChai)
 chai.use(chaiAsPromised)

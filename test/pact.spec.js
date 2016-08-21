@@ -1,6 +1,8 @@
-import sinon from 'sinon'
-import { expect } from 'chai'
-import proxyquire from 'proxyquire'
+'use strict'
+
+var sinon = require('sinon')
+var expect = require('chai').expect
+var proxyquire = require('proxyquire')
 
 describe('Pact', () => {
 
@@ -9,7 +11,7 @@ describe('Pact', () => {
 
     beforeEach(() => {
       mockServiceSpy = sinon.spy()
-      Pact = proxyquire('../src/pact', { './dsl/mockService': { default: mockServiceSpy } })
+      Pact = proxyquire('../src/pact', { './dsl/mockService': mockServiceSpy })
     })
 
     afterEach(() => {
@@ -29,7 +31,8 @@ describe('Pact', () => {
       expect(pact).to.have.property('addInteraction')
       expect(pact).to.have.property('verify')
       expect(pact).to.have.property('finalize')
-      expect(mockServiceSpy).to.have.been.calledWith('A', 'B', 1234)
+      expect(mockServiceSpy).to.have.been.calledWithNew
+      expect(mockServiceSpy).to.have.been.calledWith('A', 'B', 1234, '127.0.0.1', false)
       done()
     })
 
@@ -38,6 +41,7 @@ describe('Pact', () => {
       expect(pact).to.have.property('addInteraction')
       expect(pact).to.have.property('verify')
       expect(pact).to.have.property('finalize')
+      expect(mockServiceSpy).to.have.been.calledWithNew
       expect(mockServiceSpy).to.have.been.calledWith('A', 'B', 8443, '192.168.10.1', true)
       done()
     })
@@ -48,9 +52,11 @@ describe('Pact', () => {
     let pact, Pact
 
     beforeEach(() => {
-      Pact = proxyquire('../src/pact', { './dsl/mockService': { default: () => {
-        return { addInteraction: (int) => Promise.resolve(int.json()) }
-      } } })
+      Pact = proxyquire('../src/pact', {
+        './dsl/mockService': function () {
+          return { addInteraction: (int) => Promise.resolve(int.json()) }
+        }
+      })
       pact = Pact({ consumer: 'A', provider: 'B' })
     })
 

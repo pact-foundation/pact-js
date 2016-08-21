@@ -1,6 +1,8 @@
-import { expect } from 'chai'
-import request from 'superagent'
-import parse from '../../src/common/responseParser'
+'use strict'
+
+var expect = require('chai').expect
+var request = require('superagent')
+var parse = require('../../src/common/responseParser').parse
 
 describe('Response Parser', () => {
 

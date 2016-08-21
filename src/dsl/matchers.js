@@ -1,15 +1,18 @@
 /** @module matchers */
 'use strict'
 
-import isNil from 'lodash.isnil'
-import isFunction from 'lodash.isfunction'
-import isUndefined from 'lodash.isundefined'
+const isNil = require('lodash.isnil')
+const isFunction = require('lodash.isfunction')
+const isUndefined = require('lodash.isundefined')
 
 /**
  * The term matcher
  * @param {Object} object - should have generate and matcher
  */
-export function term ({ generate, matcher }) {
+module.exports.term = (opts) => {
+  var generate = opts.generate
+  var matcher = opts.matcher
+
   if (isNil(generate) || isNil(matcher)) {
     throw new Error('Error creating a Pact Term. Please provide an object containing "generate" and "matcher" properties')
   }
@@ -32,7 +35,7 @@ export function term ({ generate, matcher }) {
  * @param {string} content
  * @param {Object} opts
  */
-export function eachLike (content, opts) {
+module.exports.eachLike = (content, opts) => {
   if (isUndefined(content)) {
     throw new Error('Error creating a Pact eachLike. Please provide a content argument')
   }
@@ -52,7 +55,7 @@ export function eachLike (content, opts) {
  * The somethingLike matcher
  * @param {string} value - the value to be somethingLike
  */
-export function somethingLike (value) {
+module.exports.somethingLike = (value) => {
   if (isNil(value) || isFunction(value)) {
     throw new Error('Error creating a Pact somethingLike Match. Value cannot be a function or undefined')
   }

@@ -1,13 +1,13 @@
 'use strict'
 
-import isNil from 'lodash.isnil'
-import Request from '../common/request'
+const isNil = require('lodash.isnil')
+const Request = require('../common/request')
 
 /**
  * A Mock Service is the interaction mechanism through which pacts get written and verified.
  * This should be transparent to the end user.
  */
-export default class MockService {
+module.exports = class MockService {
 
   /**
    * @param {string} consumer - the consumer name
@@ -15,13 +15,14 @@ export default class MockService {
    * @param {number} port - the mock service port, defaults to 1234
    * @param {string} host - the mock service host, defaults to 127.0.0.1
    */
-  constructor (consumer, provider, port = 1234, host = '127.0.0.1', ssl = false) {
+  constructor (consumer, provider, port, host, ssl) {
     if (isNil(consumer) || isNil(provider)) {
       throw new Error('Please provide the names of the provider and consumer for this Pact.')
     }
-    if (isNil(port)) {
-      throw new Error('Please provide the port to connect to the Pact Mock Server.')
-    }
+
+    port = port || 1234
+    host = host || '127.0.0.1'
+    ssl = ssl || false
 
     this._request = new Request()
     this._baseURL = `${ssl ? 'https' : 'http'}://${host}:${port}`

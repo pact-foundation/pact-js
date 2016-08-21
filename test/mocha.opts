@@ -3,4 +3,3 @@
 --reporter spec
 --colors
 --recursive
---compilers js:babel-register
