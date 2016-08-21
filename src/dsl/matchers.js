@@ -1,4 +1,5 @@
-/** @module matchers */
+/** @module Matchers */
+
 'use strict'
 
 const isNil = require('lodash.isnil')
@@ -6,8 +7,10 @@ const isFunction = require('lodash.isfunction')
 const isUndefined = require('lodash.isundefined')
 
 /**
- * The term matcher
- * @param {Object} object - should have generate and matcher
+ * The term matcher.
+ * @param {Object} opts
+ * @param {string} opts.generate - a value to represent the matched String
+ * @param {string} opts.matcher - a Regex representing the value
  */
 module.exports.term = (opts) => {
   var generate = opts.generate
@@ -34,6 +37,7 @@ module.exports.term = (opts) => {
  * The eachLike matcher
  * @param {string} content
  * @param {Object} opts
+ * @param {Number} opts.min
  */
 module.exports.eachLike = (content, opts) => {
   if (isUndefined(content)) {

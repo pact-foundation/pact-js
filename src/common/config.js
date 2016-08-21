@@ -1,3 +1,9 @@
+/**
+ * Configuration module.
+ * @module config
+ * @private
+ */
+
 'use strict'
 
 const resolve = require('path').resolve

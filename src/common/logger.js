@@ -1,3 +1,9 @@
+/**
+ * Logger module.
+ * @module logger
+ * @private
+ */
+
 'use strict'
 
 var config = require('./config')

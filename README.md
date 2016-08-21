@@ -44,23 +44,11 @@ The library provides a Verifier Service, Matchers and an API Interceptor:
 To use the library on your tests, do as you would normally with any other dependency:
 
 ```javascript
-// ES6
-import { default as Pact, Matchers, Interceptor } from 'pact-js'
-
-// you have to new the Interceptor
-// the others are just plain objects
-const interceptor = new Interceptor()
-
-// ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
-// ES5
-var Pact = require('pact-js')
+var Pact = require('pact')
 var matchers = Pact.Matchers
 matchers.term()
 matchers.somethingLike()
 matchers.eachLike()
-
-// you have to new the Interceptor
-var Interceptor = new Pact.Interceptor()
 ```
 
 Then to write a test that will generate a Pact file, here's an example below - it uses [Mocha](https://mochajs.org). There's a bit going on in there as we are spinning up the Pact Verifier Service Provider to mock a real server on the provider server. This is needed because that's where we will record our interactions.
@@ -71,12 +59,14 @@ Check the `examples` folder for examples with Karma Jasmine / Mocha. The example
 
 ```javascript
 var path = require('path')
-var chai = require("chai")
-var expect = chai.expect
-var chaiAsPromised = require("chai-as-promised")
-var request = require ('superagent')
-var wrapper = require('@pact-foundation/pact-node')
+var chai = require('chai')
 var Pact = require('pact')
+var request = require ('superagent')
+var chaiAsPromised = require('chai-as-promised')
+var wrapper = require('@pact-foundation/pact-node')
+
+var expect = chai.expect
+
 chai.use(chaiAsPromised);
 
 describe('Pact', () => {

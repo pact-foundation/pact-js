@@ -4,9 +4,9 @@
   "description": "Pact for all things Javascript",
   "main": "./src/pact.js",
   "scripts": {
-    "clean": "rimraf dist coverage logs pacts jscpd.json",
+    "clean": "rimraf docs dist coverage logs pacts jscpd.json",
     "coverage": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
-    "docs": "./node_modules/.bin/jsdoc -r ./src --readme ./README.md -P ./package.json -d ./docs",
+    "docs": "documentation build -o docs -f html -g --name 'Pact' src/pact.js",
     "dist": "webpack --config ./config/webpack.web.config.js",
     "lint": "standard",
     "jscpd": "jscpd -p src -r json -o jscpd.json",
@@ -15,7 +15,7 @@
     "test": "isparta cover ./node_modules/.bin/_mocha -- ./test",
     "test:karma:jasmine": "karma start ./karma/jasmine/karma.conf.js",
     "test:karma:mocha": "karma start ./karma/mocha/karma.conf.js",
-    "posttest": "npm run test:karma:jasmine && npm run test:karma:mocha"
+    "posttest": "npm run test:karma:jasmine && npm run test:karma:mocha && npm run docs"
   },
   "repository": {
     "type": "git",
@@ -93,12 +93,12 @@
     "chai": "3.5.0",
     "chai-as-promised": "5.3.0",
     "coveralls": "2.11.12",
+    "documentation": "^4.0.0-beta9",
     "imports-loader": "0.6.5",
     "isparta": "4.0.0",
     "istanbul": "0.4.4",
     "jasmine-core": "2.4.1",
     "jscpd": "0.6.3",
-    "jsdoc": "3.4.0",
     "json-loader": "0.5.4",
     "karma": "1.2.0",
     "karma-chai": "0.1.0",

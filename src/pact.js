@@ -1,25 +1,31 @@
+/**
+ * Pact module.
+ * @module Pact
+ */
+
 'use strict'
 
 require('es6-promise').polyfill()
 
 var isNil = require('lodash.isnil')
 var logger = require('./common/logger')
+var Matchers = require('./dsl/matchers')
 var MockService = require('./dsl/mockService')
 var Interaction = require('./dsl/interaction')
 var responseParser = require('./common/responseParser').parse
-var Matchers = require('./dsl/matchers')
 
 /**
- * Entry point for the Pact library and Verification module of Pact.
- * This is the thing (test double) that pretends to be a Provider.
- * It verifies that the Mock Interactions (expectations) that were
- * setup were in fact called and fails if they weren't.
- *
- * @module Pact
- * @param {String} consumer - the name of the consumer
- * @param {String} provider - the name of the provider
- * @param {number} port - port of the mock service, defaults to 1234
- * @returns {Object} Pact - returns a {@link Matcher#term}, a {@link Matcher#eachLike}, a {@link Matcher#somethingLike} and an {@link Interaction}.
+ * Creates a new {@link PactProvider}.
+ * @memberof Pact
+ * @name create
+ * @param {Object} opts
+ * @param {string} opts.consumer - the name of the consumer
+ * @param {string} opts.provider - the name of the provider
+ * @param {number} opts.port - port of the mock service, defaults to 1234
+ * @param {string} opts.host - host address of the mock service, defaults to 127.0.0.1
+ * @param {boolean} opts.ssl - SSL flag to identify the protocol to be used (default false, HTTP)
+ * @return {@link PactProvider}
+ * @static
  */
 module.exports = (opts) => {
   var consumer = opts.consumer
@@ -41,9 +47,13 @@ module.exports = (opts) => {
 
   const mockService = new MockService(consumer, provider, port, host, ssl)
 
+  /** @namespace PactProvider */
   return {
     /**
-     * Creates and adds a new {@link Interaction} to the Pact Mock Server.
+     * Add an interaction to the {@link MockService}.
+     * @memberof PactProvider
+     * @instance
+     * @param {Interaction} interactionObj
      * @returns {Promise}
      */
     addInteraction: (interactionObj) => {
@@ -62,6 +72,8 @@ module.exports = (opts) => {
     },
     /**
      * Executes a promise chain that will eventually write the Pact file if successful.
+     * @memberof PactProvider
+     * @instance
      * @param {Response|Response[]} response - the response object or an Array of response objects of the Request(s) issued
      * @returns {Promise}
      */
@@ -75,6 +87,8 @@ module.exports = (opts) => {
     },
     /**
      * Writes the Pact and clears any interactions left behind.
+     * @memberof PactProvider
+     * @instance
      * @returns {Promise}
      */
     finalize: () => {
@@ -82,6 +96,8 @@ module.exports = (opts) => {
     },
     /**
      * Writes the Pact file but leave interactions in.
+     * @memberof PactProvider
+     * @instance
      * @returns {Promise}
      */
     writePact: () => {
@@ -89,6 +105,8 @@ module.exports = (opts) => {
     },
     /**
      * Clear up any interactions in the Provider Mock Server.
+     * @memberof PactProvider
+     * @instance
      * @returns {Promise}
      */
     removeInteractions: () => {
@@ -97,4 +115,9 @@ module.exports = (opts) => {
   }
 }
 
+/**
+ * Exposes {@link Matchers#term}
+ * @memberof Pact
+ * @static
+ */
 module.exports.Matchers = Matchers

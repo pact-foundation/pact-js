@@ -1,12 +1,14 @@
+/**
+ * A Mock Service is the interaction mechanism through which pacts get written and verified.
+ * This should be transparent to the end user.
+ * @module MockService
+ */
+ 
 'use strict'
 
 const isNil = require('lodash.isnil')
 const Request = require('../common/request')
 
-/**
- * A Mock Service is the interaction mechanism through which pacts get written and verified.
- * This should be transparent to the end user.
- */
 module.exports = class MockService {
 
   /**
@@ -14,6 +16,7 @@ module.exports = class MockService {
    * @param {string} provider - the provider name
    * @param {number} port - the mock service port, defaults to 1234
    * @param {string} host - the mock service host, defaults to 127.0.0.1
+   * @param {boolean} ssl - which protocol to use, defaults to false (HTTP)
    */
   constructor (consumer, provider, port, host, ssl) {
     if (isNil(consumer) || isNil(provider)) {

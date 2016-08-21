@@ -1,3 +1,8 @@
+/**
+ * An Interaction is where you define the state of your interaction with a Provider.
+ * @module Interaction
+ */
+
 'use strict'
 
 const omitBy = require('lodash.omitby')
@@ -5,13 +10,11 @@ const isNil = require('lodash.isnil')
 
 const VALID_METHODS = [ 'GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS' ]
 
-/**
- * An Interaction is where you define the state of your interaction with a Provider.
- */
 module.exports = class Interaction {
 
   /**
    * Creates a new Interaction.
+   * @returns {Interaction} interaction
    */
   constructor () {
     this.state = {}
@@ -21,7 +24,7 @@ module.exports = class Interaction {
   /**
    * Gives a state the provider should be in for this interaction.
    * @param {string} providerState - The state of the provider.
-   * @returns {Interaction}
+   * @returns {Interaction} interaction
    */
   given (providerState) {
     if (providerState) {
@@ -33,7 +36,7 @@ module.exports = class Interaction {
   /**
    * A free style description of the interaction.
    * @param {string} description - A description of the interaction.
-   * @returns {Interaction}
+   * @returns {Interaction} interaction
    */
   uponReceiving (description) {
     if (isNil(description)) {
@@ -45,12 +48,13 @@ module.exports = class Interaction {
 
   /**
    * The request that represents this interaction triggered by the consumer.
-   * @param {string} method - The HTTP method
-   * @param {string} path - The path of the URL
-   * @param {string} qs
-   * @param {string} headers
-   * @param {string} body
-   * @returns {Interaction}
+   * @param {Object} requestOpts
+   * @param {string} requestOpts.method - The HTTP method
+   * @param {string} requestOpts.path - The path of the URL
+   * @param {string} requestOpts.query - Any query string in the interaction
+   * @param {Object} requestOpts.headers - A key-value pair oject of headers
+   * @param {Object} requestOpts.body - The body, in {@link String} format or {@link Object} format
+   * @returns {Interaction} interaction
    */
   withRequest (requestOpts) {
     var method = requestOpts.method
@@ -83,9 +87,10 @@ module.exports = class Interaction {
 
   /**
   * The response expected by the consumer.
-  * @param {string} status - The HTTP status
-  * @param {string} headers
-  * @param {string} body
+  * @param {Object} responseOpts
+  * @param {string} responseOpts.status - The HTTP status
+  * @param {string} responseOpts.headers
+  * @param {Object} responseOpts.body
    */
   willRespondWith (responseOpts) {
     var status = responseOpts.status
