@@ -9,7 +9,10 @@ pacts/
 test/
 
 # files
+.babelrc
 .codeclimate.yml
 .editorconfig
 .istanbul.yml
 .travis.yml
+jscpd.json
+ROADMAP.md
