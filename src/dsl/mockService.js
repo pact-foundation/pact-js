@@ -3,7 +3,7 @@
  * This should be transparent to the end user.
  * @module MockService
  */
- 
+
 'use strict'
 
 const isNil = require('lodash.isnil')
