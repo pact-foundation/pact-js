@@ -97,6 +97,43 @@ describe('Integration', () => {
       })
     })
 
+    context('with a single request with query string parameters', () => {
+
+      // add interactions, as many as needed
+      beforeEach((done) => {
+        provider.addInteraction({
+          state: 'i have a list of projects',
+          uponReceiving: 'a request for projects',
+          withRequest: {
+            method: 'get',
+            path: '/projects',
+            query: { from: 'today' },
+            headers: { 'Accept': 'application/json' }
+          },
+          willRespondWith: {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+            body: EXPECTED_BODY
+          }
+        }).then(() => done())
+      })
+
+      // once test is run, write pact and remove interactions
+      afterEach((done) => {
+        provider.finalize().then(() => done())
+      })
+
+      // execute your assertions
+      it('successfully verifies', (done) => {
+        const verificationPromise = request
+          .get(`${PROVIDER_URL}/projects?from=today`)
+          .set({ 'Accept': 'application/json' })
+          .then(provider.verify)
+
+        expect(verificationPromise).to.eventually.eql(JSON.stringify(EXPECTED_BODY)).notify(done)
+      })
+    })
+
     context('with a single request and matchers', () => {
 
       // add interactions, as many as needed
