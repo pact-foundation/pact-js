@@ -105,7 +105,7 @@
     "karma-chai": "0.1.x",
     "karma-jasmine": "1.x",
     "karma-mocha": "1.x",
-    "karma-pact": "0.0.6",
+    "karma-pact": "0.0.7",
     "karma-phantomjs-launcher": "1.x",
     "mocha": "3.x",
     "nock": "8.x",
