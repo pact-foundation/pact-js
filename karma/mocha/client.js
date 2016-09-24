@@ -11,7 +11,6 @@ var example = example || {};
   };
 
   this.sayHello = function() {
-    debugger
     //Makes a synchronous request
     var xhr = new XMLHttpRequest();
     xhr.open('GET', localBaseUrl + '/sayHello', false);
