@@ -31,6 +31,19 @@ It's easy, simply run the below:
 npm install --save-dev pact
 ```
 
+### Examples
+
+[Pact with Jest (Node env)](https://github.com/pact-foundation/pact-js/tree/master/examples/jest)
+
+[Pact with Mocha](https://github.com/pact-foundation/pact-js/tree/master/examples/mocha)
+
+[Pact with Karma + Jasmine](https://github.com/pact-foundation/pact-js/tree/master/karma/jasmine)
+
+[Pact with Karma + Mocha](https://github.com/pact-foundation/pact-js/tree/master/karma/mocha)
+
+#### Note on Jest
+Jest uses JSDOM under the hood which may cause weird issues with libraries making HTTP request. Check [this issue](https://github.com/pact-foundation/pact-js/issues/10) and more explicitly [this comment](https://github.com/pact-foundation/pact-js/issues/10#issuecomment-249356066) about that.
+
 ### Using Pact JS
 
 #### Consumer Side Testing
