@@ -75,7 +75,8 @@
       "config/**",
       "test/**",
       "dist/**",
-      "docs/**"
+      "docs/**",
+      "examples/**"
     ]
   },
   "dependencies": {
