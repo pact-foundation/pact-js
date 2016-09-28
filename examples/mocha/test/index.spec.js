@@ -68,6 +68,7 @@ describe('The Dog API', () => {
           expect(response).to.eql(JSON.stringify(EXPECTED_BODY))
           done()
         })
+        .catch(done)
     })
   })
 })
