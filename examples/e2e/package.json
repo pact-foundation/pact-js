@@ -1,0 +1,21 @@
+{
+  "name": "e2e",
+  "version": "1.0.0",
+  "description": "Pact JS E2E Example",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "consumer": "node ./consumerService.js",
+    "provider": "node ./providerService.js"
+  },
+  "author": "matt.fellows@onegeek.com.au",
+  "license": "MIT",
+  "devDependencies": {
+    "@pact-foundation/pact-node": "^4.6.0",
+    "@pact-foundation/pact-provider-verifier": "^0.1.1"
+  },
+  "dependencies": {
+    "express": "^4.14.0",
+    "pact": "^1.0.0-rc.5",
+    "superagent-bluebird-promise": "^4.1.0"
+  }
+}
