@@ -3,6 +3,8 @@ const request = require('superagent-bluebird-promise');
 const server = express();
 const API_HOST = process.env.API_HOST || 'http://localhost:8081';
 
+// Fetch animals who are currently 'available' from the
+// Animal Service
 const availableAnimals = () => {
   return request
     .get(`${API_HOST}/animals/available`)
@@ -10,8 +12,17 @@ const availableAnimals = () => {
       () => []);
 };
 
+// Find animals by their ID from the Animal Service
+const getAnimalById = (id) => {
+  return request
+    .get(`${API_HOST}/animals/${id}`)
+    .then(res => res.body,
+      () => null);
+};
+
 // Suggestions function:
-// Given availability and sex etc. find available suitors.
+// Given availability and sex etc. find available suitors,
+// and give them a 'score'
 const suggestion = mate => {
   const predicates = [
     ((candidate, animal) => candidate.id !== animal.id),
@@ -41,14 +52,7 @@ const suggestion = mate => {
   });
 };
 
-const getAnimalById = (id) => {
-  return request
-    .get(`${API_HOST}/animals/${id}`)
-    .then(res => res.body,
-      () => null);
-};
-
-// API
+// Suggestions API
 server.get('/suggestions/:animalId', (req, res) => {
   if (!req.params.animalId) {
     res.writeHead(400);

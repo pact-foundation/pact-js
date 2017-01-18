@@ -14,8 +14,9 @@ server.use((req, res, next) => {
   next();
 });
 
-// Load data into a repository
 const animalRepository = new Repository();
+
+// Load default data into a repository
 const importData = () => {
   const data = require('./data/animalData.json');
   data.reduce((a, v) => {
@@ -25,8 +26,7 @@ const importData = () => {
   }, 0);
 };
 
-// Suggestions function:
-// Given availability and sex, find available suitors...
+// List all animals with 'available' eligibility
 const availableAnimals = () => {
   return animalRepository.fetchAll().filter(a => {
     return a.eligibility.available;
@@ -38,7 +38,7 @@ server.get('/animals', (req, res) => {
   res.json(animalRepository.fetchAll());
 });
 
-// Get all animals
+// Get all available animals
 server.get('/animals/available', (req, res) => {
   res.json(availableAnimals());
 });
