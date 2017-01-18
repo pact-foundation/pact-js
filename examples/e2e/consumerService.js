@@ -1,8 +1,8 @@
-var server = require('./consumer.js');
+let { server } = require('./consumer.js');
 
-var server = server.listen(8080, function () {
-    var host = server.address().address;
-    var port = server.address().port;
+server = server.listen(8080, () => {
+  const host = server.address().address;
+  const port = server.address().port;
 
-    console.log("Animal Matching Service listening on http://%s:%s", host, port)
-})
+  console.log(`Animal Matching Service listening on http://${host}:${port}`);
+});

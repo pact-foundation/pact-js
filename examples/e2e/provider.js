@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const Repository = require('./repository');
-	
+
 const server = express();
 server.use(cors());
 server.use(bodyParser.json());
@@ -50,15 +50,15 @@ server.get('/animals/:id', (req, res) => {
 // Register a new Animal for the service
 server.post('/animals', (req, res) => {
 	const animal = req.body;
-	
+
 	// Really basic validation
 	if (!animal || !animal.first_name) {
 		res.writeHead(400);
 		res.end();
-				
+
 		return;
 	}
-	
+
 	animal.id = animalRepository.fetchAll().length;;
 	animalRepository.insert(animal);
 

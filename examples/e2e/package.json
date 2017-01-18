@@ -3,18 +3,20 @@
   "version": "1.0.0",
   "description": "Pact JS E2E Example",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "./node_modules/.bin/mocha test/consumer.spec.js",
     "consumer": "node ./consumerService.js",
     "provider": "node ./providerService.js"
   },
   "author": "matt.fellows@onegeek.com.au",
   "license": "MIT",
   "devDependencies": {
-    "@pact-foundation/pact-node": "^4.6.0",
-    "@pact-foundation/pact-provider-verifier": "^0.1.1"
+    "@pact-foundation/pact-node": "^4.6.0"
   },
   "dependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
     "express": "^4.14.0",
+    "mocha": "^3.2.0",
     "pact": "^1.0.0-rc.5",
     "superagent-bluebird-promise": "^4.1.0"
   }
