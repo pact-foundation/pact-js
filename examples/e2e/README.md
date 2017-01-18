@@ -22,13 +22,19 @@ Provides Animal profile information, including interests, zoo location and other
 
 Given an animal profile, recommends a suitable partner based on similar interests.
 
-## Running
+## Running the tests
 
 1. `npm install`
 1. `npm test:consumer` - Run consumer tests
 1. `npm test:publish` - Publish contracts to the broker
 1. `npm test:provider` - Run provider tests
 
+# Running the API
+
+If you want to experiment with the API to get an understanding:
+
+1. `npm run provider` - Runs the provider API (animal service)
+1. `npm run consumer` - Runs the consumer API (matching service)
 
 ## Viewing contracts with the Pact Broker
 
