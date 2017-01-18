@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Pact JS E2E Example",
   "scripts": {
-    "test": "./node_modules/.bin/mocha test/consumer.spec.js",
+    "test:consumer": "./node_modules/.bin/mocha test/consumer.spec.js",
+    "test:publish": "node test/publish.js",
+    "test:provider": "node test/provider.spec.js",
     "consumer": "node ./consumerService.js",
     "provider": "node ./providerService.js"
   },

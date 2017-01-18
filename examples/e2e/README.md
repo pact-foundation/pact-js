@@ -25,9 +25,9 @@ Given an animal profile, recommends a suitable partner based on similar interest
 ## Running
 
 1. `npm install`
-1. `npm test:consumer`
-1. `npm test:publish`
-1. `npm test:provider`
+1. `npm test:consumer` - Run consumer tests
+1. `npm test:publish` - Publish contracts to the broker
+1. `npm test:provider` - Run provider tests
 
 
 ## Viewing contracts with the Pact Broker

@@ -6,16 +6,22 @@ const Repository = require('./repository');
 const server = express();
 server.use(cors());
 server.use(bodyParser.json());
-server.use(bodyParser.urlencoded({extended: true}));
+server.use(bodyParser.urlencoded({ extended: true }));
+server.use((req, res, next) => {
+  res.header('Content-Type', 'application/json; charset=utf-8');
+  next();
+});
 
 // Load data into a repository
 const animalRepository = new Repository();
-const data = require('./data/animalData.json');
-data.reduce( (a, v) => {
-	v.id = a + 1;
-	animalRepository.insert(v);
-	return a + 1;
-}, 0);
+const importData = () => {
+	const data = require('./data/animalData.json');
+	data.reduce( (a, v) => {
+		v.id = a + 1;
+		animalRepository.insert(v);
+		return a + 1;
+	}, 0);
+}
 
 // Suggestions function:
 // Given availability and sex, find available suitors...
@@ -39,7 +45,6 @@ server.get('/animals/available', (req, res) => {
 server.get('/animals/:id', (req, res) => {
 	const response = animalRepository.getById(req.params.id);
 	if (response) {
-		res.writeHead(200, {'Content-Type': 'application/json'});
 		res.end(JSON.stringify(response));
 	} else {
 		res.writeHead(404);
@@ -66,4 +71,8 @@ server.post('/animals', (req, res) => {
 	res.end();
 });
 
-module.exports = server;
+module.exports = {
+	server,
+	importData,
+	animalRepository
+};

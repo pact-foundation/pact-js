@@ -26,17 +26,26 @@ const availableAnimals = () => {
     return availableAnimals().then(available => {
       const eligible = available.filter(a => !predicates.map(p => p(a, mate)).includes(false));
 
-      return eligible.map(candidate => {
-        const score = weights.reduce((acc, weight) => {
-          return acc - weight(candidate, mate);
-        }, 100);
+      return {
+        suggestions: eligible.map(candidate => {
+          const score = weights.reduce((acc, weight) => {
+            return acc - weight(candidate, mate);
+          }, 100);
 
-        return {
-          'score': score,
-          'animal': candidate
-        };
-      });
+          return {
+            score,
+            'animal': candidate
+          };
+        })
+      };
     });
+  };
+
+const getAnimalById = (id) => {
+  return request
+  .get(`${API_HOST}/animals/${id}`)
+  .then(res => res.body,
+    err => null);
   };
 
   // API
@@ -64,5 +73,6 @@ const availableAnimals = () => {
   module.exports = {
     server,
     availableAnimals,
-    suggestion
+    suggestion,
+    getAnimalById
   };

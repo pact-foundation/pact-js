@@ -1,4 +1,5 @@
-let server = require('./provider.js');
+let { server, importData } = require('./provider.js');
+importData();
 
 server = server.listen(8081, () => {
   const host = server.address().address;
