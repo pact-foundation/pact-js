@@ -6,15 +6,20 @@
     "test:consumer": "./node_modules/.bin/mocha test/consumer.spec.js",
     "test:publish": "node test/publish.js",
     "test:provider": "node test/provider.spec.js",
+    "api": "concurrently 'npm run provider' 'npm run consumer'",
     "consumer": "node ./consumerService.js",
     "provider": "node ./providerService.js"
   },
   "author": "matt.fellows@onegeek.com.au",
   "license": "MIT",
   "devDependencies": {
-    "@pact-foundation/pact-node": "^4.6.0"
+    "@pact-foundation/pact-node": "^4.6.0",
+    "concurrently": "^3.1.0",
+    "eslint": "^3.13.1",
+    "eslint-config-google": "^0.7.1"
   },
   "dependencies": {
+    "bluebird": "^3.4.7",
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
     "express": "^4.14.0",
