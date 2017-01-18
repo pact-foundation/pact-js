@@ -122,5 +122,6 @@ A test [Pact Boker](https://github.com/bethesque/pact_broker) is running at http
 
 Or use the API:
 
-```curl -v -u 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M:O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1' https://test.pact.dius.com.au
+```
+curl -v -u 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M:O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1' https://test.pact.dius.com.au
 ```
