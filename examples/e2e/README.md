@@ -61,7 +61,7 @@ or individually :
 ### Animal Profile API
 
 The APIs are described below, including a bunch of cURL statements to invoke them.
-There is also a [Postman Collection](./pact-js-e2e.postman_collection).
+There is also a [Postman Collection](https://raw.githubusercontent.com/pact-foundation/pact-js/master/examples/e2e/pact-js-e2e.postman_collection).
 
 #### GET /animals
 
