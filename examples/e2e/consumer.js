@@ -1,5 +1,5 @@
 const express = require('express');
-const request = require('superagent-bluebird-promise');
+const request = require('superagent');
 const server = express();
 const API_HOST = process.env.API_HOST || 'http://localhost:8081';
 

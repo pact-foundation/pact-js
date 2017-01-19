@@ -19,12 +19,11 @@
     "eslint-config-google": "^0.7.1"
   },
   "dependencies": {
-    "bluebird": "^3.4.7",
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
     "express": "^4.14.0",
     "mocha": "^3.2.0",
     "pact": "^1.0.0-rc.5",
-    "superagent-bluebird-promise": "^4.1.0"
+    "superagent": "^3.3.2"
   }
 }
