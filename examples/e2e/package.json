@@ -1,0 +1,29 @@
+{
+  "name": "e2e",
+  "version": "1.0.0",
+  "description": "Pact JS E2E Example",
+  "scripts": {
+    "test:consumer": "./node_modules/.bin/mocha test/consumer.spec.js",
+    "test:publish": "node test/publish.js",
+    "test:provider": "node test/provider.spec.js",
+    "api": "concurrently 'npm run provider' 'npm run consumer'",
+    "consumer": "node ./consumerService.js",
+    "provider": "node ./providerService.js"
+  },
+  "author": "matt.fellows@onegeek.com.au",
+  "license": "MIT",
+  "devDependencies": {
+    "@pact-foundation/pact-node": "^4.6.0",
+    "concurrently": "^3.1.0",
+    "eslint": "^3.13.1",
+    "eslint-config-google": "^0.7.1"
+  },
+  "dependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "express": "^4.14.0",
+    "mocha": "^3.2.0",
+    "pact": "^1.0.0-rc.5",
+    "superagent": "^3.3.2"
+  }
+}
