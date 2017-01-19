@@ -1,5 +1,8 @@
 const pact = require('@pact-foundation/pact-node');
 const path = require('path');
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+const expect = chai.expect;
 const {
   server,
   importData,
@@ -27,24 +30,36 @@ server.post('/setup', (req, res) => {
 
   res.end();
 });
+
 server.listen(8081, () => {
   console.log('Animal Profile Service listening on http://localhost:8081');
 });
 
-let opts = {
-  providerBaseUrl: 'http://localhost:8081',
-  providerStatesUrl: 'http://localhost:8081/states',
-  providerStatesSetupUrl: 'http://localhost:8081/setup',
-  pactUrls: ['https://test.pact.dius.com.au/pacts/provider/Animal%20Profile%20Service/consumer/Matching%20Service/latest'],
-  pactBrokerUsername: 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
-  pactBrokerPassword: 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1'
-};
+// Verify that the provider meets all consumer expectations
+describe('Pact Verification', () => {
+  it('should validate the expectations of Matching Service', function(done) { // lexical binding required here
+    this.timeout(10000);
 
-pact.verifyPacts(opts).then((res) => {
-  console.log('Pact Verification Complete!');
-  console.log(res);
-  process.exit(0);
-}).catch((error) => {
-  console.log('Pact Verification Failed: ', error);
-  process.exit(1);
+    let opts = {
+      providerBaseUrl: 'http://localhost:8081',
+      providerStatesUrl: 'http://localhost:8081/states',
+      providerStatesSetupUrl: 'http://localhost:8081/setup',
+      pactUrls: ['https://test.pact.dius.com.au/pacts/provider/Animal%20Profile%20Service/consumer/Matching%20Service/latest'],
+      pactBrokerUsername: 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
+      pactBrokerPassword: 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1'
+    };
+
+    const verifyPromise = pact.verifyPacts(opts)
+    expect(verifyPromise).to.be.fulfilled;
+
+    verifyPromise
+      .then(output => {
+        console.log('Pact Verification Complete!');
+        console.log(output);
+        done();
+      }).catch(e => {
+        console.log('Pact Verification Failed: ', e);
+        done();
+      });
+  });
 });
