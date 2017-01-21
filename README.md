@@ -22,7 +22,7 @@ From the [Pact website](http://docs.pact.io/):
 Read [Getting started with Pact](http://dius.com.au/2016/02/03/microservices-pact/) for more information on
 how to get going.
 
-**NOTE: we are currently in the process of replacing [Pact Consumer JS DSL](https://github.com/DiUS/pact-consumer-js-dsl) with this library. Please bare with us whilst we transition. If you want to use Pact with JS and are new to Pact, start here.**
+**NOTE: This project supersedes [Pact Consumer JS DSL](https://github.com/DiUS/pact-consumer-js-dsl).**
 
 ## Installation
 
