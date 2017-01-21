@@ -40,7 +40,8 @@ npm install --save-dev pact
 * [Pact with Karma + Mocha](https://github.com/pact-foundation/pact-js/tree/master/karma/mocha)
 
 #### Note on Jest
-Jest uses JSDOM under the hood which may cause weird issues with libraries making HTTP request. Check [this issue](https://github.com/pact-foundation/pact-js/issues/10) and more explicitly [this comment](https://github.com/pact-foundation/pact-js/issues/10#issuecomment-249356066) about that.
+Jest uses JSDOM under the hood which may cause issues with libraries making HTTP request. See [this issue](https://github.com/pact-foundation/pact-js/issues/10) for background,
+and the  Jest [example](https://github.com/pact-foundation/pact-js/blob/master/examples/jest/package.json#L10-L12) for a working solution.
 
 ### Using Pact JS
 
