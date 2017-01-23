@@ -2,8 +2,7 @@ const path = require('path');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const expect = chai.expect;
-const pact = require('pact');
-const mockservice = require('@pact-foundation/pact-node');
+const pact = require('../../../src/pact.js');
 const MOCK_SERVER_PORT = 1234;
 const LOG_LEVEL = process.env.LOG_LEVEL || 'WARN';
 
@@ -16,15 +15,6 @@ describe('Pact', () => {
   const term = pact.Matchers.term;
   const like = pact.Matchers.somethingLike;
   const eachLike = pact.Matchers.eachLike;
-
-  // Configure mock server
-  const mockServer = mockservice.createServer({
-    port: MOCK_SERVER_PORT,
-    log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
-    dir: path.resolve(process.cwd(), 'pacts'),
-    spec: 2
-  });
-  mockservice.logLevel(LOG_LEVEL);
 
   // Animal we want to match :)
   const suitor = {
@@ -52,10 +42,10 @@ describe('Pact', () => {
   const MIN_ANIMALS = 2;
 
   // Define animal payload, with flexible matchers
-  // 
+  //
   // This makes the test much more resilient to changes in actual data.
   // Here we specify the 'shape' of the object that we care about.
-  // It is also import here to not put in expectations for parts of the 
+  // It is also import here to not put in expectations for parts of the
   // API we don't care about
   const animalBodyExpectation = {
     'id': like(1),
@@ -89,16 +79,20 @@ describe('Pact', () => {
   // We call addInteraction() to configure the Mock Service to act like the Provider
   // It also sets up expectations for what requests are to come, and will fail
   // if the calls are not seen.
-  before(done => {
-    mockServer.start()
-      .then(() => {
-        provider = pact({
-          consumer: 'Matching Service',
-          provider: 'Animal Profile Service',
-          port: MOCK_SERVER_PORT
-        });
+  before(() => {
+    provider = pact({
+      consumer: 'Matching Service',
+      provider: 'Animal Profile Service',
+      port: MOCK_SERVER_PORT,
+      log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
+      dir: path.resolve(process.cwd(), 'pacts'),
+      logLevel: LOG_LEVEL,
+      spec: 2
+    });
 
-        return provider.addInteraction({
+    return provider.setup()
+      .then(() => {
+        provider.addInteraction({
           state: 'Has some animals',
           uponReceiving: 'a request for all animals',
           withRequest: {
@@ -112,10 +106,10 @@ describe('Pact', () => {
             },
             body: animalListExpectation
           }
-        });
+        })
       })
       .then(() => {
-        return provider.addInteraction({
+        provider.addInteraction({
           state: 'Has no animals',
           uponReceiving: 'a request for an animal with ID 100',
           withRequest: {
@@ -125,10 +119,10 @@ describe('Pact', () => {
           willRespondWith: {
             status: 404
           }
-        });
+        })
       })
       .then(() => {
-        return provider.addInteraction({
+        provider.addInteraction({
           state: 'Has an animal with ID 1',
           uponReceiving: 'a request for an animal with ID 1',
           withRequest: {
@@ -142,12 +136,10 @@ describe('Pact', () => {
             },
             body: animalBodyExpectation
           }
-        });
+        })
       })
-      .then(() => done())
-      .catch(e => {
+      .catch(e =>{
         console.log('ERROR: ', e);
-        done();
       });
   });
 
@@ -161,8 +153,8 @@ describe('Pact', () => {
 
   // Verify service client works as expected.
   //
-  // Note that we don't call the consumer API endpoints directly, but 
-  // use unit-style tests that test the collaborating function behaviour - 
+  // Note that we don't call the consumer API endpoints directly, but
+  // use unit-style tests that test the collaborating function behaviour -
   // we want to test the function that is calling the external service.
   describe('when a call to list all animals from the Animal Service is made', () => {
     describe('and there are animals in the database', () => {
@@ -190,11 +182,16 @@ describe('Pact', () => {
       });
     });
   });
+  describe('when interacting with Animal Service', () => {
+    it('should validate the interactions and create a contract', () => {
+      // uncomment below to test a failed verify
+      // return getAnimalById(1123).then(provider.verify)
+      return provider.verify
+    });
+  });
 
   // Write pact files
   after(() => {
-    provider.finalize().then(() => {
-      mockservice.removeAllServers();
-    });
+    provider.finalize();
   });
 });

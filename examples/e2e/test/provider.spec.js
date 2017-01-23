@@ -1,8 +1,9 @@
-const pact = require('@pact-foundation/pact-node');
+const verifier = require('../../../src/pact.js').Verifier;
 const path = require('path');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const expect = chai.expect;
+chai.use(chaiAsPromised);
 const {
   server,
   importData,
@@ -44,15 +45,15 @@ describe('Pact Verification', () => {
       providerBaseUrl: 'http://localhost:8081',
       providerStatesUrl: 'http://localhost:8081/states',
       providerStatesSetupUrl: 'http://localhost:8081/setup',
-      pactUrls: ['https://test.pact.dius.com.au/pacts/provider/Animal%20Profile%20Service/consumer/Matching%20Service/latest'],
+      // Remote pacts
+      // pactUrls: ['https://test.pact.dius.com.au/pacts/provider/Animal%20Profile%20Service/consumer/Matching%20Service/latest'],
+      // Local pacts
+      pactUrls: [path.resolve(process.cwd(), './pacts/matching_service-animal_profile_service.json')],
       pactBrokerUsername: 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
       pactBrokerPassword: 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1'
     };
 
-    const verifyPromise = pact.verifyPacts(opts)
-    expect(verifyPromise).to.be.fulfilled;
-
-    verifyPromise
+    verifier.verifyProvider(opts)
       .then(output => {
         console.log('Pact Verification Complete!');
         console.log(output);

@@ -100,6 +100,7 @@
     "bluebird": "3.x",
     "chai": "3.x",
     "chai-as-promised": "5.x",
+    "cli-color": "^1.1.0",
     "coveralls": "2.x",
     "documentation": "4.0.0-beta9",
     "imports-loader": "0.x",

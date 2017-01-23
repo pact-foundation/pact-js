@@ -7,7 +7,7 @@
 [![Issue Count](https://codeclimate.com/github/pact-foundation/pact-js/badges/issue_count.svg)](https://codeclimate.com/github/pact-foundation/pact-js)
 [![npm](https://img.shields.io/github/license/pact-foundation/pact-js.svg?maxAge=2592000)](https://github.com/pact-foundation/pact-js/blob/master/LICENSE)
 
-Implementation of the consumer driven contract library [pact](https://github.com/pact-foundation/pact-specification) for Javascript.
+Implementation of the consumer driven contract library [Pact](https://github.com/pact-foundation/pact-specification) for Javascript.
 
 From the [Pact website](http://docs.pact.io/):
 
@@ -31,63 +31,59 @@ It's easy, simply run the below:
 npm install --save-dev pact
 ```
 
-### Examples
+## Using Pact JS
 
-* [Complete Example (Node env)](https://github.com/pact-foundation/pact-js/tree/master/examples/e2e)
-* [Pact with Jest (Node env)](https://github.com/pact-foundation/pact-js/tree/master/examples/jest)
-* [Pact with Mocha](https://github.com/pact-foundation/pact-js/tree/master/examples/mocha)
-* [Pact with Karma + Jasmine](https://github.com/pact-foundation/pact-js/tree/master/karma/jasmine)
-* [Pact with Karma + Mocha](https://github.com/pact-foundation/pact-js/tree/master/karma/mocha)
+### Using Mocha?
 
-#### Note on Jest
-Jest uses JSDOM under the hood which may cause issues with libraries making HTTP request. See [this issue](https://github.com/pact-foundation/pact-js/issues/10) for background,
-and the  Jest [example](https://github.com/pact-foundation/pact-js/blob/master/examples/jest/package.json#L10-L12) for a working solution.
+Check out [Pact JS Mocha](https://github.com/pact-foundation/pact-js-mocha).
 
-### Using Pact JS
+### Consumer Side Testing
 
-#### Consumer Side Testing
+The library provides a Provider Mock Service, Matchers and an API Interceptor:
 
-The library provides a Verifier Service, Matchers and an API Interceptor:
-
->**Verifier** Sets up a test double (Verifier Provider API) with expected interactions. It's also responsible for generating Pact files.
+>**Provider Mock Service** is a test double for your Provider API(s), allowing you to specify the expected request/response interactions.
 >
 >**Matchers** are functions you can use to increase the expressiveness of your tests, and reduce brittle test cases. See the [matching](http://docs.pact.io/documentation/matching.html) docs for more information.
 >
->**Interceptor** is a utility that can be used to intercept requests to the Provider, where it's not simple for you to change your API endpoint.
+>**Interceptor** is a utility that can be used to intercept requests to the Provider Mock Service, where it's not simple for you to change the API endpoint in your _consumer_. As a general rule, you probably won't need to use this.
 
-To use the library on your tests, do as you would normally with any other dependency:
+
+To use the library on your tests, add the pact dependency:
 
 ```javascript
-var Pact = require('pact')
-var matchers = Pact.Matchers
-matchers.term()
-matchers.somethingLike()
-matchers.eachLike()
+let Pact = require('pact')
 ```
+
+The `Pact` interface provides the following high-level APIS:
+
+|API                    |Options     |Description                                       |
+|-----------------------|------------|--------------------------------------------------|
+|`Pact(options)`        |See [Pact Node documentation](https://github.com/pact-foundation/pact-node#create-pact-mock-server) for options        |Creates a Mock Server test double of your Provider API. If you need multiple Providers for a scenario, you can create as many as these as you need.|
+|`addInteraction()`     |`object`    |Register an expectation on the Mock Server. You can add multiple interactions per server, per test. These will be validated and written to a pact if successful.
+|`verify()`             |n/a         |Verifies that all interactions specified          |
+|`finalize()`           |n/a         |Records the interactions registered to the double into the pact file and shuts down the Mock Server.|
 
 Then to write a test that will generate a Pact file, here's an example below - it uses [Mocha](https://mochajs.org). There's a bit going on in there as we are spinning up the Pact Verifier Service Provider to mock a real server on the provider server. This is needed because that's where we will record our interactions.
 
-More questions about what's involved in Pact? [Read more about it](http://docs.pact.io/documentation/how_does_pact_work.html).
-
-Check the `examples` folder for examples with Karma Jasmine / Mocha. The example below is taken from the [integration spec](https://github.com/pact-foundation/pact-js/blob/master/test/dsl/integration.spec.js).
+Check out the `examples` folder for examples with Karma Jasmine, Mocha and Jest. The example below is taken from the [integration spec](https://github.com/pact-foundation/pact-js/blob/master/test/dsl/integration.spec.js).
 
 ```javascript
-var path = require('path')
-var chai = require('chai')
-var Pact = require('pact')
-var request = require ('superagent')
-var chaiAsPromised = require('chai-as-promised')
-var wrapper = require('@pact-foundation/pact-node')
+let path = require('path')
+let chai = require('chai')
+let Pact = require('pact')
+let request = require ('superagent')
+let chaiAsPromised = require('chai-as-promised')
+let factory = require('@pact-foundation/pact-node')
 
-var expect = chai.expect
+let expect = chai.expect
 
 chai.use(chaiAsPromised);
 
 describe('Pact', () => {
 
-  // when using the wrapper, you will need to tell it where to store the logs
+  // when creating a Mock Server, you will need to tell it where to store the logs and output the pacts
   // make sure you the folders created before hand
-  const mockServer = wrapper.createServer({
+  const mockServer = factory.createServer({
     port: 1234,
     log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
     dir: path.resolve(process.cwd(), 'pacts'),
@@ -107,10 +103,10 @@ describe('Pact', () => {
     ]
   }]
 
-  var provider
+  let pact
 
   after(() => {
-    wrapper.removeAllServers()
+    factory.removeAllServers()
   });
 
   beforeEach((done) => {
@@ -118,7 +114,7 @@ describe('Pact', () => {
       // in order to use the Verifier, simply pass an object like below
       // it should contain the names of the consumer and provider in normal language
       // you can also use a different port if you have multiple providers
-      provider = Pact({ consumer: 'My Consumer', provider: 'My Provider', port: 1234 })
+      pact = Pact({ consumer: 'My Consumer', provider: 'My Provider', port: 1234 })
       done()
     })
   })
@@ -134,7 +130,7 @@ describe('Pact', () => {
 
       // add interactions, as many as needed
       beforeEach((done) => {
-        provider.addInteraction({
+        pact.addInteraction({
           state: 'i have a list of projects',
           uponReceiving: 'a request for projects',
           withRequest: {
@@ -152,7 +148,7 @@ describe('Pact', () => {
 
       // once test is run, write pact and remove interactions
       afterEach((done) => {
-        provider.finalize().then(() => done())
+        pact.finalize().then(() => done())
       })
 
       // and this is how the verification process invokes your request
@@ -162,7 +158,7 @@ describe('Pact', () => {
         const verificationPromise = request
           .get('http://localhost:1234/projects')
           .set({ 'Accept': 'application/json' })
-          .then(provider.verify)
+          .then(pact.verify)
         expect(verificationPromise).to.eventually.eql(JSON.stringify(EXPECTED_BODY)).notify(done)
       })
     })
@@ -183,8 +179,8 @@ npm install @pact-foundation/pact-node --save
 Then run the Provider side verification step:
 
 ```js
-var pact = require('@pact-foundation/pact-node');
-var opts = {
+let pact = require('@pact-foundation/pact-node');
+let opts = {
 	providerBaseUrl: <String>,       // Running API provider host endpoint. Required.
 	pactUrls: <Array>,               // Array of local Pact file paths or Pact Broker URLs (http based). Required.
 	providerStatesUrl: <String>,     // URL to fetch the provider states for the given provider API. Optional.
@@ -202,11 +198,11 @@ That's it! Read more about [Verifying Pacts](http://docs.pact.io/documentation/v
 
 ### Publishing Pacts to a Broker
 
-Sharing is caring - to simplify sharing Pacts between Consumers and Providers, checkout [sharing pacts](http://docs.pact.io/documentation/sharings_pacts.html).
+Sharing is caring - to simplify sharing Pacts between Consumers and Providers, chec kout [sharing pacts](http://docs.pact.io/documentation/sharings_pacts.html) using the [Pact Broker](https://github.com/bethesque/pact_broker).
 
 ```js
-var pact = require('@pact-foundation/pact-node');
-var opts = {
+let pact = require('@pact-foundation/pact-node');
+let opts = {
 	pactUrls: <Array>,               // Array of local Pact files or directories containing them. Required.
 	pactBroker: <String>,            // URL to fetch the provider states for the given provider API. Optional.
 	pactBrokerUsername: <String>,    // Username for Pact Broker basic authentication. Optional
@@ -219,9 +215,17 @@ pact.publishPacts(opts)).then(function () {
 });
 ```
 
-### Using Mocha?
+### Examples
 
-Check out [Pact JS Mocha](https://github.com/pact-foundation/pact-js-mocha).
+* [Complete Example (Node env)](https://github.com/pact-foundation/pact-js/tree/master/examples/e2e)
+* [Pact with Jest (Node env)](https://github.com/pact-foundation/pact-js/tree/master/examples/jest)
+* [Pact with Mocha](https://github.com/pact-foundation/pact-js/tree/master/examples/mocha)
+* [Pact with Karma + Jasmine](https://github.com/pact-foundation/pact-js/tree/master/karma/jasmine)
+* [Pact with Karma + Mocha](https://github.com/pact-foundation/pact-js/tree/master/karma/mocha)
+
+#### Note on Jest
+Jest uses JSDOM under the hood which may cause issues with libraries making HTTP request. See [this issue](https://github.com/pact-foundation/pact-js/issues/10) for background,
+and the  Jest [example](https://github.com/pact-foundation/pact-js/blob/master/examples/jest/package.json#L10-L12) for a working solution.
 
 ## Contributing
 1. Fork it

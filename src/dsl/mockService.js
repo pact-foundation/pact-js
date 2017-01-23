@@ -1,6 +1,7 @@
 /**
- * A Mock Service is the interaction mechanism through which pacts get written and verified.
- * This should be transparent to the end user.
+ * Mock Service is the HTTP interface to setup the Pact Mock Service.
+ * See https://github.com/bethesque/pact-mock_service and
+ * https://gist.github.com/bethesque/9d81f21d6f77650811f4.
  * @module MockService
  */
 

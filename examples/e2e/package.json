@@ -14,6 +14,7 @@
   "license": "MIT",
   "devDependencies": {
     "@pact-foundation/pact-node": "^4.6.0",
+    "cli-color": "^1.1.0",
     "concurrently": "^3.1.0",
     "eslint": "^3.13.1",
     "eslint-config-google": "^0.7.1"
