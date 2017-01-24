@@ -160,7 +160,7 @@ describe('Pact', () => {
 Once you have created Pacts for your Consumer, you need to validate those Pacts against your Provider. The Verifier object provides the following API for you to do so:
 
 |API                    |Options     |Returns|Description                                       |
-|-----------------------|:------------:|--------------------------------------------------|
+|-----------------------|:------------:|----------------------------------------------|----|
 |`verifyProvider()`              |n/a         |`Promise`|Start the Mock Server                             |
 
 1. Start your local Provider service.
