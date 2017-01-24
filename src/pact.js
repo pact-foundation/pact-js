@@ -113,13 +113,14 @@ module.exports = (opts) => {
         })
     },
     /**
-     * Writes the Pact and clears any interactions left behind.
+     * Writes the Pact and clears any interactions left behind and shutdown the
+     * mock server
      * @memberof PactProvider
      * @instance
      * @returns {Promise}
      */
     finalize: () => {
-      return mockService.writePact().then(() => mockService.removeInteractions())
+      return mockService.writePact().then(() => mockService.delete())
     },
     /**
      * Writes the pact file out to file. Should be called when all tests have been performed for a

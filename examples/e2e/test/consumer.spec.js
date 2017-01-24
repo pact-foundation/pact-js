@@ -9,7 +9,15 @@ const LOG_LEVEL = process.env.LOG_LEVEL || 'WARN';
 chai.use(chaiAsPromised);
 
 describe('Pact', () => {
-  let provider;
+  const provider = pact({
+    consumer: 'Matching Service',
+    provider: 'Animal Profile Service',
+    port: MOCK_SERVER_PORT,
+    log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
+    dir: path.resolve(process.cwd(), 'pacts'),
+    logLevel: LOG_LEVEL,
+    spec: 2
+  });
 
   // Alias flexible matchers for simplicity
   const term = pact.Matchers.term;
@@ -80,16 +88,6 @@ describe('Pact', () => {
   // It also sets up expectations for what requests are to come, and will fail
   // if the calls are not seen.
   before(() => {
-    provider = pact({
-      consumer: 'Matching Service',
-      provider: 'Animal Profile Service',
-      port: MOCK_SERVER_PORT,
-      log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
-      dir: path.resolve(process.cwd(), 'pacts'),
-      logLevel: LOG_LEVEL,
-      spec: 2
-    });
-
     return provider.setup()
       .then(() => {
         provider.addInteraction({
