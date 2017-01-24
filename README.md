@@ -49,7 +49,7 @@ The `Pact` interface provides the following high-level APIs, they are listed in 
 
 #### API
 |API                    |Options     |Returns|Description                                       |
-|-----------------------|:------------:|--------------------------------------------------|
+|-----------------------|------------|------------------------------------------------------|---|
 |`pact(options)`        |See [Pact Node documentation](https://github.com/pact-foundation/pact-node#create-pact-mock-server) for options                              |`Object` |Creates a Mock Server test double of your Provider API. If you need multiple Providers for a scenario, you can create as many as these as you need.                  |
 |`setup()`              |n/a         |`Promise`|Start the Mock Server                             |
 |`addInteraction()`     |`Object`    |`Promise`|Register an expectation on the Mock Server, which must be called by your test case(s). You can add multiple interactions per server. These will be validated and written to a pact if successful.
