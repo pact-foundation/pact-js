@@ -4,26 +4,29 @@ var path = require('path')
 var expect = require('chai').expect
 var Promise = require('bluebird')
 var request = require('superagent')
-var wrapper = require('@pact-foundation/pact-node')
 
 var Pact = require('../../src/pact')
 var Matchers = Pact.Matchers
 
 describe('Integration', () => {
 
-  ['http', 'https'].forEach((PROTOCOL) => {
+  ['http'].forEach((PROTOCOL) => {
+  // ['http', 'https'].forEach((PROTOCOL) => {
 
     describe(`Pact on ${PROTOCOL} protocol`, (protocol) => {
 
     const MOCK_PORT = Math.floor(Math.random() * 999) + 9000
     const PROVIDER_URL = `${PROTOCOL}://localhost:${MOCK_PORT}`
-    const mockServer = wrapper.createServer({
+    const provider = Pact({
+      consumer: 'Matching Service',
+      provider: 'Animal Profile Service',
       port: MOCK_PORT,
       log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
       dir: path.resolve(process.cwd(), 'pacts'),
+      logLevel: 'INFO',
       ssl: PROTOCOL === 'https' ? true : false,
       spec: 2
-    })
+    });
 
     const EXPECTED_BODY = [{
       id: 1,
@@ -37,63 +40,48 @@ describe('Integration', () => {
       ]
     }]
 
-    var provider, counter = 1
+    let counter = 1
 
-    after(() => {
-      wrapper.removeAllServers()
-    })
+    context.only('with a single request', () => {
 
-    beforeEach((done) => {
-      mockServer.start().then(() => {
-        provider = Pact({ consumer: `Consumer ${counter}`,
-                          provider: `Provider ${counter}`,
-                          port: MOCK_PORT,
-                          ssl: PROTOCOL === 'https' ? true : false
-                        })
-        done()
+      // once test is run, write pact and remove interactions
+      after((done) => {
+        console.log('DONE!!!')
+        provider.finalize().then(() => done())
       })
-    })
-
-    afterEach((done) => {
-      mockServer.delete().then(() => {
-        counter++
-        done()
-      })
-    })
-
-    context('with a single request', () => {
 
       // add interactions, as many as needed
       beforeEach((done) => {
-        provider.addInteraction({
-          state: 'i have a list of projects',
-          uponReceiving: 'a request for projects',
-          withRequest: {
-            method: 'get',
-            path: '/projects',
-            headers: { 'Accept': 'application/json' }
-          },
-          willRespondWith: {
-            status: 200,
-            headers: { 'Content-Type': 'application/json' },
-            body: EXPECTED_BODY
-          }
-        }).then(() => done())
-      })
-
-      // once test is run, write pact and remove interactions
-      afterEach((done) => {
-        provider.finalize().then(() => done())
+        console.log('BEFORE!!!')
+        provider.setup()
+        .then(() => {
+          provider.addInteraction({
+            state: 'i have a list of projects',
+            uponReceiving: 'a request for projects',
+            withRequest: {
+              method: 'get',
+              path: '/projects',
+              headers: { 'Accept': 'application/json' }
+            },
+            willRespondWith: {
+              status: 200,
+              headers: { 'Content-Type': 'application/json' },
+              body: EXPECTED_BODY
+            }
+          }).then(() => done())
+        })
       })
 
       // execute your assertions
       it('successfully verifies', (done) => {
         const verificationPromise = request
           .get(`${PROVIDER_URL}/projects`)
-          .set({ 'Accept': 'application/json' })
-          .then(provider.verify)
-
-        expect(verificationPromise).to.eventually.eql(JSON.stringify(EXPECTED_BODY)).notify(done)
+          .set({ 'Accept': 'application/json' }).then((res) => {
+            expect(res.text).to.eql(JSON.stringify(EXPECTED_BODY))
+            provider.verify().then(done).catch(e => {
+              console.log("ERROR: ", e)
+            })
+          })
       })
     })
 

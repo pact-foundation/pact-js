@@ -101,8 +101,10 @@ module.exports = (opts) => {
      * @returns {Promise}
      */
     verify: () => {
+      console.log('verify()')
       return mockService.verify()
-        .then(() => mockService.removeInteractions())
+        // .then(mockService.removeInteractions)
+        .then(() => { mockService.removeInteractions() })
         .catch(e => {
           // Properly format the error
           console.error('')
@@ -120,7 +122,7 @@ module.exports = (opts) => {
      * @returns {Promise}
      */
     finalize: () => {
-      return mockService.writePact().then(() => mockService.delete())
+      return mockService.writePact().then(() => server.delete())
     },
     /**
      * Writes the pact file out to file. Should be called when all tests have been performed for a

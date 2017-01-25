@@ -150,7 +150,7 @@ describe('Pact', () => {
   // and shutdown the associated mock server.
   // You should do this only _once_ per Provider you are testing.
   after(() => {
-    provider.finalize();
+    provider.finalize()
   });  
 })
 ```
