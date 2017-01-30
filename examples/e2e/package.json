@@ -23,7 +23,7 @@
     "chai-as-promised": "^6.0.0",
     "express": "^4.14.0",
     "mocha": "^3.2.0",
-    "pact": "^1.0.0-rc.5",
+    "pact": "^1.0.0",
     "superagent": "^3.3.2"
   }
 }
