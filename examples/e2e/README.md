@@ -25,6 +25,7 @@ This comprises a complete E2E example that can be used as a basis for projects.
 	- [Matching service](#matching-service)
 		- [GET /suggestions/:id](#get-suggestionsid)
 - [Viewing contracts with the Pact Broker](#viewing-contracts-with-the-pact-broker)
+- [Running with Vagrant](#running-with-vagrant)
 
 <!-- /TOC -->
 
