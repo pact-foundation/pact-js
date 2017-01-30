@@ -68,6 +68,7 @@ Vagrant.configure("2") do |config|
     sudo apt-get update
     sudo apt-get install -y build-essential curl
     curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+    sudo apt-get install -y nodejs
     sudo -E npm i -g mocha
   SHELL
 end
