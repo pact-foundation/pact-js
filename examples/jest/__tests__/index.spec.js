@@ -1,13 +1,13 @@
 'use strict'
 
 const path = require('path')
-const Pact = require('../../../src/pact.js');
+const Pact = require('../../../src/pact.js')
 const getMeDogs = require('../index').getMeDogs
 
 describe("Dog's API", () => {
   let url = 'http://localhost'
 
-  const port = 8989;
+  const port = 8989
   const provider = Pact({
     port: port,
     log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
@@ -46,10 +46,10 @@ describe("Dog's API", () => {
     it('returns a sucessful body', done => {
       return getMeDogs({ url, port })
         .then(response => {
-          expect(response.headers['content-type']).toEqual('application/json');
-          expect(response.data).toEqual(EXPECTED_BODY);
-          expect(response.status).toEqual(200);
-          done();
+          expect(response.headers['content-type']).toEqual('application/json')
+          expect(response.data).toEqual(EXPECTED_BODY)
+          expect(response.status).toEqual(200)
+          done()
         })
     })
 

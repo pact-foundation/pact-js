@@ -2,7 +2,7 @@
 
 const expect = require('chai').expect
 const path = require('path')
-const Pact = require('../../../src/pact.js');
+const Pact = require('../../../src/pact.js')
 const getMeDogs = require('../index').getMeDogs
 
 describe('The Dog API', () => {

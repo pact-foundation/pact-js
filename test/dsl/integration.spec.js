@@ -24,7 +24,7 @@ describe('Integration', () => {
         logLevel: 'INFO',
         ssl: (PROTOCOL === 'https'),
         spec: 2
-      });
+      })
 
       const EXPECTED_BODY = [{
         id: 1,

@@ -70,7 +70,6 @@ module.exports = (opts) => {
     },
     /**
      * Checks with the Mock Service if the expected interactions have been exercised.
-     * TODO: Should this finalise and write pact also?
      * @memberof PactProvider
      * @instance
      * @returns {Promise}

@@ -1,12 +1,12 @@
-const path = require('path');
-const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
-const expect = chai.expect;
-const pact = require('../../../src/pact.js');
-const MOCK_SERVER_PORT = 1234;
-const LOG_LEVEL = process.env.LOG_LEVEL || 'WARN';
+const path = require('path')
+const chai = require('chai')
+const chaiAsPromised = require('chai-as-promised')
+const expect = chai.expect
+const pact = require('../../../src/pact.js')
+const MOCK_SERVER_PORT = 1234
+const LOG_LEVEL = process.env.LOG_LEVEL || 'WARN'
 
-chai.use(chaiAsPromised);
+chai.use(chaiAsPromised)
 
 describe('Pact', () => {
   const provider = pact({
@@ -17,12 +17,12 @@ describe('Pact', () => {
     dir: path.resolve(process.cwd(), 'pacts'),
     logLevel: LOG_LEVEL,
     spec: 2
-  });
+  })
 
   // Alias flexible matchers for simplicity
-  const term = pact.Matchers.term;
-  const like = pact.Matchers.somethingLike;
-  const eachLike = pact.Matchers.eachLike;
+  const term = pact.Matchers.term
+  const like = pact.Matchers.somethingLike
+  const eachLike = pact.Matchers.eachLike
 
   // Animal we want to match :)
   const suitor = {
@@ -45,9 +45,9 @@ describe('Pact', () => {
       'walks in the garden/meadow',
       'parkour'
     ]
-  };
+  }
 
-  const MIN_ANIMALS = 2;
+  const MIN_ANIMALS = 2
 
   // Define animal payload, with flexible matchers
   //
@@ -75,12 +75,12 @@ describe('Pact', () => {
       'previously_married': like(false)
     },
     'interests': eachLike('walks in the garden/meadow')
-  };
+  }
 
   // Define animal list payload, reusing existing object matcher
   const animalListExpectation = eachLike(animalBodyExpectation, {
     min: MIN_ANIMALS
-  });
+  })
 
   // Setup a Mock Server before unit tests run.
   // This server acts as a Test Double for the real Provider API.
@@ -100,7 +100,7 @@ describe('Pact', () => {
           willRespondWith: {
             status: 200,
             headers: {
-              'Content-Type': 'application/json; charset=utf-8'
+              'Content-Type': 'application/json charset=utf-8'
             },
             body: animalListExpectation
           }
@@ -130,24 +130,24 @@ describe('Pact', () => {
           willRespondWith: {
             status: 200,
             headers: {
-              'Content-Type': 'application/json; charset=utf-8'
+              'Content-Type': 'application/json charset=utf-8'
             },
             body: animalBodyExpectation
           }
         })
       })
       .catch(e =>{
-        console.log('ERROR: ', e);
-      });
-  });
+        console.log('ERROR: ', e)
+      })
+  })
 
   // Configure and import consumer API
   // Note that we update the API endpoint to point at the Mock Service
-  process.env.API_HOST = `http://localhost:${MOCK_SERVER_PORT}`;
+  process.env.API_HOST = `http://localhost:${MOCK_SERVER_PORT}`
   const {
     suggestion,
     getAnimalById
-  } = require('../consumer');
+  } = require('../consumer')
 
   // Verify service client works as expected.
   //
@@ -157,39 +157,39 @@ describe('Pact', () => {
   describe('when a call to list all animals from the Animal Service is made', () => {
     describe('and there are animals in the database', () => {
       it('returns a list of animals', done => {
-        const suggestedMates = suggestion(suitor);
+        const suggestedMates = suggestion(suitor)
 
-        expect(suggestedMates).to.eventually.have.deep.property('suggestions[0].score', 94);
-        expect(suggestedMates).to.eventually.have.property('suggestions').with.lengthOf(MIN_ANIMALS).notify(done);
-      });
-    });
-  });
+        expect(suggestedMates).to.eventually.have.deep.property('suggestions[0].score', 94)
+        expect(suggestedMates).to.eventually.have.property('suggestions').with.lengthOf(MIN_ANIMALS).notify(done)
+      })
+    })
+  })
   describe('when a call to the Animal Service is made to retreive a single animal by ID', () => {
     describe('and there is an animal in the DB with ID 1', () => {
       it('returns the animal', done => {
-        const suggestedMates = getAnimalById(1);
+        const suggestedMates = getAnimalById(1)
 
-        expect(suggestedMates).to.eventually.have.deep.property('id', 1).notify(done);
-      });
-    });
+        expect(suggestedMates).to.eventually.have.deep.property('id', 1).notify(done)
+      })
+    })
     describe('and there no animals in the database', () => {
       it('returns a 404', done => {
-        const suggestedMates = getAnimalById(100);
+        const suggestedMates = getAnimalById(100)
 
-        expect(suggestedMates).to.eventually.be.a('null').notify(done);
-      });
-    });
-  });
+        expect(suggestedMates).to.eventually.be.a('null').notify(done)
+      })
+    })
+  })
   describe('when interacting with Animal Service', () => {
     it('should validate the interactions and create a contract', () => {
       // uncomment below to test a failed verify
       // return getAnimalById(1123).then(provider.verify)
       return provider.verify
-    });
-  });
+    })
+  })
 
   // Write pact files
   after(() => {
-    return provider.finalize();
-  });
-});
+    return provider.finalize()
+  })
+})
