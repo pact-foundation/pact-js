@@ -1,16 +1,14 @@
 'use strict'
 
 const path = require('path')
-const Pact = require('pact')
-const wrapper = require('@pact-foundation/pact-node')
+const Pact = require('../../../src/pact.js');
 const getMeDogs = require('../index').getMeDogs
 
 describe("Dog's API", () => {
   let url = 'http://localhost'
-  let provider
 
   const port = 8989;
-  const server = wrapper.createServer({
+  const provider = Pact({
     port: port,
     log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
     dir: path.resolve(process.cwd(), 'pacts'),
@@ -21,23 +19,12 @@ describe("Dog's API", () => {
 
   const EXPECTED_BODY = [{dog: 1}]
 
-  afterAll(() => {
-    wrapper.removeAllServers();
-  })
+  beforeAll(() => provider.setup())
 
-  afterEach(done => {
-    server.delete().then(done)
-  });
-
-  beforeEach(done => {
-    server.start().then(() => {
-      provider = Pact({ consumer: 'MyConsumer', provider: 'MyProvider', port: port })
-      done()
-    })
-  });
+  afterAll(() => provider.finalize())
 
   describe("works", () => {
-    beforeEach(done => {
+    beforeAll(done => {
       const interaction = {
         state: 'i have a list of projects',
         uponReceiving: 'a request for projects',
@@ -55,19 +42,18 @@ describe("Dog's API", () => {
       provider.addInteraction(interaction).then(done, done)
     })
 
-    afterEach(done => {
-       return provider.finalize().then(done, done)
-    })
-
-    it('successfully verifies', done => {
+    // add expectations
+    it('returns a sucessful body', done => {
       return getMeDogs({ url, port })
-        .then(provider.verify)
         .then(response => {
           expect(response.headers['content-type']).toEqual('application/json');
           expect(response.data).toEqual(EXPECTED_BODY);
           expect(response.status).toEqual(200);
+          done();
         })
-        .then(done, done)
     })
+
+    // verify with Pact, and reset expectations
+    it('successfully verifies', () => provider.verify())
   })
 })

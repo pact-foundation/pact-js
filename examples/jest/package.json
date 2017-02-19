@@ -11,9 +11,7 @@
     "testEnvironment": "node"
   },
   "devDependencies": {
-    "@pact-foundation/pact-node": "^4.5.3",
     "axios": "^0.14.0",
-    "jest-cli": "^15.1.1",
-    "pact": "^1.0.0-rc.5"
+    "jest-cli": "^15.1.1"
   }
 }
