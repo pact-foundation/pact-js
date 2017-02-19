@@ -17,14 +17,14 @@
     "cli-color": "^1.1.0",
     "concurrently": "^3.1.0",
     "eslint": "^3.13.1",
-    "eslint-config-google": "^0.7.1"
-  },
-  "dependencies": {
+    "eslint-config-google": "^0.7.1",
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
-    "express": "^4.14.0",
     "mocha": "^3.2.0",
-    "pact": "^1.0.0-rc.5",
+    "pact": "^1.0.0"
+  },
+  "dependencies": {
+    "express": "^4.14.0",
     "superagent": "^3.3.2"
   }
 }

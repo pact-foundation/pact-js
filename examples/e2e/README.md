@@ -25,6 +25,7 @@ This comprises a complete E2E example that can be used as a basis for projects.
 	- [Matching service](#matching-service)
 		- [GET /suggestions/:id](#get-suggestionsid)
 - [Viewing contracts with the Pact Broker](#viewing-contracts-with-the-pact-broker)
+- [Running with Vagrant](#running-with-vagrant)
 
 <!-- /TOC -->
 
@@ -124,4 +125,20 @@ Or use the API:
 
 ```
 curl -v -u 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M:O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1' https://test.pact.dius.com.au
+```
+
+## Running with Vagrant
+
+We have created a [Vagrantfile](Vagrantfile) to be able to test out the project 
+in an isolated and repeatable way.
+
+```
+vagrant up
+vagrant ssh
+cd /vagrant
+npm i
+cd examples/e2e
+npm i
+npm run test:consumer
+npm run test:provider
 ```
