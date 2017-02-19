@@ -16,6 +16,8 @@ const Interaction = require('./dsl/interaction')
 const responseParser = require('./common/responseParser').parse
 const serviceFactory = require('@pact-foundation/pact-node')
 const clc = require('cli-color')
+const path = require('path')
+
 /**
  * Creates a new {@link PactProvider}.
  * @memberof Pact
@@ -67,9 +69,7 @@ module.exports = (opts) => {
      * Start the Mock Server.
      * @returns {Promise}
      */
-    setup: () => {
-      return server.start()
-    },
+    setup: () => server.start(),
 
     /**
      * Add an interaction to the {@link MockService}.
@@ -101,9 +101,7 @@ module.exports = (opts) => {
      * @returns {Promise}
      */
     verify: () => {
-      console.log('verify()')
       return mockService.verify()
-        // .then(mockService.removeInteractions)
         .then(() => { mockService.removeInteractions() })
         .catch(e => {
           // Properly format the error
@@ -114,6 +112,7 @@ module.exports = (opts) => {
           throw new Error('Pact verification failed - expected interactions did not match actual.')
         })
     },
+
     /**
      * Writes the Pact and clears any interactions left behind and shutdown the
      * mock server
@@ -121,9 +120,8 @@ module.exports = (opts) => {
      * @instance
      * @returns {Promise}
      */
-    finalize: () => {
-      return mockService.writePact().then(() => server.delete())
-    },
+    finalize: () => mockService.writePact().then(() => server.delete()),
+
     /**
      * Writes the pact file out to file. Should be called when all tests have been performed for a
      * given Consumer <-> Provider pair. It will write out the Pact to the
@@ -132,18 +130,15 @@ module.exports = (opts) => {
      * @instance
      * @returns {Promise}
      */
-    writePact: () => {
-      return mockService.writePact()
-    },
+    writePact: () => mockService.writePact(),
+
     /**
      * Clear up any interactions in the Provider Mock Server.
      * @memberof PactProvider
      * @instance
      * @returns {Promise}
      */
-    removeInteractions: () => {
-      return mockService.removeInteractions()
-    }
+    removeInteractions: () => mockService.removeInteractions()
   }
 }
 
