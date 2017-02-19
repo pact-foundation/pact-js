@@ -55,6 +55,7 @@ The `Pact` interface provides the following high-level APIs, they are listed in 
 |`addInteraction()`     |`Object`    |`Promise`|Register an expectation on the Mock Server, which must be called by your test case(s). You can add multiple interactions per server. These will be validated and written to a pact if successful.
 |`verify()`             |n/a         |`Promise`|Verifies that all interactions specified          |
 |`finalize()`           |n/a         |`Promise`|Records the interactions registered to the Mock Server into the pact file and shuts it down.                                               |
+|`removeInteractions`   |n/a         |`Promise`|In some cases you might want to clear out the expectations of the Mock Service, call this to clear out any expectations for the next test run. _NOTE_: `verify()` will implicitly call this. |
 
 #### Example
 The first step is to create a test for your API Consumer. The example below uses [Mocha](https://mochajs.org), and demonstrates the basic approach:

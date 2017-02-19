@@ -3,10 +3,10 @@
 
   describe("Client", function() {
 
-    var client, provider;
+    var client, provider
 
     before(function(done) {
-      client = example.createClient('http://localhost:1234');
+      client = example.createClient('http://localhost:1234')
       provider = Pact({ consumer: 'Karma Mocha', provider: 'Hello' })
       // required for slower Travis CI environment
       setTimeout(function () { done() }, 1000)
@@ -38,17 +38,17 @@
         //Run the tests
         client.sayHello()
           .then(function (data) {
-            expect(JSON.parse(data.responseText)).to.eql({ reply: "Hello" });
+            expect(JSON.parse(data.responseText)).to.eql({ reply: "Hello" })
             done()
           })
           .catch(function (err) {
             done(err)
           })
-      });
+      })
 
       // verify with Pact, and reset expectations
-      it('successfully verifies', function() { provider.verify() });
-    });
+      it('successfully verifies', function() { provider.verify() })
+    })
 
     describe("findFriendsByAgeAndChildren", function () {
 
@@ -82,17 +82,17 @@
         //Run the tests
         client.findFriendsByAgeAndChildren('33', ['Mary Jane', 'James'])
           .then(function (res) {
-            expect(JSON.parse(res.responseText)).to.eql({friends: [{ name: 'Sue' }]});
+            expect(JSON.parse(res.responseText)).to.eql({friends: [{ name: 'Sue' }]})
             done()
           })
           .catch(function (err) {
             done(err)
           })
-      });
+      })
 
       // verify with Pact, and reset expectations
-      it('successfully verifies', function() { provider.verify() });
-    });
+      it('successfully verifies', function() { provider.verify() })
+    })
 
     describe("unfriendMe", function () {
 
@@ -126,10 +126,10 @@
             .catch(function (err) {
               done(err)
             })
-        });
+        })
 
-        it('successfully verifies', function() { provider.verify() });
-      });
+        it('successfully verifies', function() { provider.verify() })
+      })
 
       // verify with Pact, and reset expectations
       describe("when there are no friends", function () {
@@ -155,14 +155,14 @@
             done(new Error('expected request to /unfriend me to fail'))
           }, function(e) {
             done()
-          });
+          })
 
-        });
+        })
 
         // verify with Pact, and reset expectations
-        it('successfully verifies', function() { provider.verify() });
-      });
-    });
+        it('successfully verifies', function() { provider.verify() })
+      })
+    })
 
-  });
-})();
+  })
+})()
