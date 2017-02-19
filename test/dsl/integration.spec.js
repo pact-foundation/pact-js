@@ -44,9 +44,7 @@ describe('Integration', () => {
       before(provider.setup)
 
       // once all tests are run, write pact and remove interactions
-      after(() => {
-        provider.finalize()
-      })
+      after(() => provider.finalize())
 
       context('with a single request', () => {
 
