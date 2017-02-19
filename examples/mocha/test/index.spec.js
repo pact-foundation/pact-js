@@ -48,7 +48,6 @@ describe('The Dog API', () => {
       const urlAndPort = { url: url, port: port }
       getMeDogs(urlAndPort)
         .then(response => {
-          console.log(response)
           expect(response.data).to.eql(EXPECTED_BODY)
           done()
         })

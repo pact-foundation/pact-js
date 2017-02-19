@@ -43,6 +43,12 @@
                       </a></li>
                     
                       <li><a
+                        href='#Pact.Verifier'
+                        class='regular pre-open'>
+                        .Verifier
+                      </a></li>
+                    
+                      <li><a
                         href='#Pact.Matchers'
                         class='regular pre-open'>
                         .Matchers
@@ -109,6 +115,16 @@
               
                 
                 <li><a
+                  href='#setup'
+                  class="">
+                  setup
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
                   href='#matchers'
                   class=" toggle-sibling">
                   Matchers
@@ -143,6 +159,16 @@
                   
                   
                 </div>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#providerverifier'
+                  class="">
+                  ProviderVerifier
+                  
+                </a>
                 
                 </li>
               
@@ -272,7 +298,7 @@
       Pact
     </h3>
     
-      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/pact-foundation/pact-js/blob/82f203c5355df50798abd239590142715b69b113/src/pact.js#L6-L6'>
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/pact-foundation/pact-js/blob/bc3120d6b7d890e9561709537ff76cfc6df84995/src/pact.js#L6-L6'>
       <span>src/pact.js</span>
       </a>
     
@@ -414,6 +440,51 @@
       </div>
     </div>
   
+    <div class='border-bottom' id='Pact.Verifier'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>Verifier</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Exposes <a href="Verifier">Verifier</a></p>
+
+
+  <div class='pre p1 fill-light mt0'>Verifier</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
     <div class='border-bottom' id='Pact.Matchers'>
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
@@ -479,7 +550,7 @@
       PactProvider
     </h3>
     
-      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/pact-foundation/pact-js/blob/82f203c5355df50798abd239590142715b69b113/src/pact.js#L51-L115'>
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/pact-foundation/pact-js/blob/bc3120d6b7d890e9561709537ff76cfc6df84995/src/pact.js#L66-L142'>
       <span>src/pact.js</span>
       </a>
     
@@ -582,7 +653,7 @@
       <div class="clearfix small pointer toggle-sibling">
         <div class="py1 contain">
             <a class='icon pin-right py1 dark-link caret-right'>▸</a>
-            <span class='code strong strong truncate'>verify(response)</span>
+            <span class='code strong strong truncate'>verify()</span>
         </div>
       </div>
       <div class="clearfix display-none toggle-target">
@@ -590,32 +661,20 @@
 
   
 
-  <p>Executes a promise chain that will eventually write the Pact file if successful.</p>
+  <p>Checks with the Mock Service if the expected interactions have been exercised.
+TODO: Should this finalise and write pact also?</p>
 
 
-  <div class='pre p1 fill-light mt0'>verify(response: (<a href="https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5">Response</a> | <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5">Response</a>&gt;)): <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></div>
+  <div class='pre p1 fill-light mt0'>verify(): <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></div>
 
-  
-
-  
-  
-  
-  
   
 
   
-    <div class='py1 quiet mt1 prose-big'>Parameters</div>
-    <div class='prose'>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>response</span> <code class='quiet'>((<a href="https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5">Response</a> | <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>&lt;<a href="https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5">Response</a>&gt;))</code> the response object or an Array of response objects of the Request(s) issued
+  
+  
+  
+  
 
-          </div>
-          
-        </div>
-      
-    </div>
   
 
   
@@ -655,7 +714,8 @@
 
   
 
-  <p>Writes the Pact and clears any interactions left behind.</p>
+  <p>Writes the Pact and clears any interactions left behind and shutdown the
+mock server</p>
 
 
   <div class='pre p1 fill-light mt0'>finalize(): <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></div>
@@ -707,7 +767,9 @@
 
   
 
-  <p>Writes the Pact file but leave interactions in.</p>
+  <p>Writes the pact file out to file. Should be called when all tests have been performed for a
+given Consumer &lt;-&gt; Provider pair. It will write out the Pact to the
+configured file.</p>
 
 
   <div class='pre p1 fill-light mt0'>writePact(): <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></div>
@@ -813,11 +875,66 @@
 
   
   <div class='clearfix'>
+    <h3 class='fl m0' id='setup'>
+      setup
+    </h3>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/pact-foundation/pact-js/blob/bc3120d6b7d890e9561709537ff76cfc6df84995/src/pact.js#L72-L72'>
+      <span>src/pact.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Start the Mock Server.</p>
+
+
+  <div class='pre p1 fill-light mt0'>setup(): <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></code>:
+        
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
     <h3 class='fl m0' id='matchers'>
       Matchers
     </h3>
     
-      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/pact-foundation/pact-js/blob/82f203c5355df50798abd239590142715b69b113/src/dsl/matchers.js#L3-L3'>
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/pact-foundation/pact-js/blob/bc3120d6b7d890e9561709537ff76cfc6df84995/src/dsl/matchers.js#L3-L3'>
       <span>src/dsl/matchers.js</span>
       </a>
     
@@ -1097,19 +1214,68 @@
 
   
   <div class='clearfix'>
+    <h3 class='fl m0' id='providerverifier'>
+      ProviderVerifier
+    </h3>
+    
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/pact-foundation/pact-js/blob/bc3120d6b7d890e9561709537ff76cfc6df84995/src/dsl/verifier.js#L6-L6'>
+      <span>src/dsl/verifier.js</span>
+      </a>
+    
+  </div>
+  
+
+  <p>Provider Verifier service</p>
+
+
+  <div class='pre p1 fill-light mt0'>ProviderVerifier</div>
+
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+            <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
     <h3 class='fl m0' id='mockservice'>
       MockService
     </h3>
     
-      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/pact-foundation/pact-js/blob/82f203c5355df50798abd239590142715b69b113/src/dsl/mockService.js#L7-L7'>
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/pact-foundation/pact-js/blob/bc3120d6b7d890e9561709537ff76cfc6df84995/src/dsl/mockService.js#L8-L8'>
       <span>src/dsl/mockService.js</span>
       </a>
     
   </div>
   
 
-  <p>A Mock Service is the interaction mechanism through which pacts get written and verified.
-This should be transparent to the end user.</p>
+  <p>Mock Service is the HTTP interface to setup the Pact Mock Service.
+See <a href="https://github.com/bethesque/pact-mock_service">https://github.com/bethesque/pact-mock_service</a> and
+<a href="https://gist.github.com/bethesque/9d81f21d6f77650811f4">https://gist.github.com/bethesque/9d81f21d6f77650811f4</a>.</p>
 
 
   <div class='pre p1 fill-light mt0'>MockService</div>
@@ -1465,7 +1631,7 @@ This should be transparent to the end user.</p>
       Interaction
     </h3>
     
-      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/pact-foundation/pact-js/blob/82f203c5355df50798abd239590142715b69b113/src/dsl/interaction.js#L6-L6'>
+      <a class='fr fill-darken0 round round pad1x quiet h5' href='https://github.com/pact-foundation/pact-js/blob/bc3120d6b7d890e9561709537ff76cfc6df84995/src/dsl/interaction.js#L6-L6'>
       <span>src/dsl/interaction.js</span>
       </a>
     

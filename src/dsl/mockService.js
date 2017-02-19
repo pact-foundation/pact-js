@@ -51,7 +51,6 @@ module.exports = class MockService {
    * @returns {Promise}
    */
   removeInteractions () {
-    console.log('removing interactions')
     return this._request.send('DELETE', `${this._baseURL}/interactions`)
   }
 
