@@ -11,7 +11,6 @@ var Matchers = Pact.Matchers
 describe('Integration', () => {
 
   ['http', 'https'].forEach((PROTOCOL) => {
-
       describe(`Pact on ${PROTOCOL} protocol`, (protocol) => {
 
       const MOCK_PORT = Math.floor(Math.random() * 999) + 9000
@@ -23,7 +22,7 @@ describe('Integration', () => {
         log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
         dir: path.resolve(process.cwd(), 'pacts'),
         logLevel: 'INFO',
-        ssl: PROTOCOL === 'https' ? true : false,
+        ssl: (PROTOCOL === 'https'),
         spec: 2
       });
 

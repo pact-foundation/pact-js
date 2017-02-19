@@ -3,23 +3,23 @@
 
   describe("Client", function() {
 
-    var client, projectsProvider;
+    var client, provider;
 
     before(function(done) {
       client = example.createClient('http://localhost:1234');
-      projectsProvider = Pact({ consumer: 'Karma Mocha', provider: 'Hello' })
+      provider = Pact({ consumer: 'Karma Mocha', provider: 'Hello' })
       // required for slower Travis CI environment
       setTimeout(function () { done() }, 1000)
     })
 
     after(function (done) {
-      projectsProvider.finalize()
+      provider.finalize()
         .then(function () { done() }, function (err) { done(err) })
     })
 
     describe("sayHello", function () {
-      beforeEach(function (done) {
-        projectsProvider.addInteraction({
+      before(function (done) {
+        provider.addInteraction({
           uponReceiving: 'a request for hello',
           withRequest: {
             method: 'get',
@@ -37,7 +37,6 @@
       it("should say hello", function(done) {
         //Run the tests
         client.sayHello()
-          .then(projectsProvider.verify)
           .then(function (data) {
             expect(JSON.parse(data)).to.eql({ reply: "Hello" });
             done()
@@ -46,12 +45,15 @@
             done(err)
           })
       });
+
+      // verify with Pact, and reset expectations
+      it('successfully verifies', () => provider.verify());
     });
 
     describe("findFriendsByAgeAndChildren", function () {
 
-      beforeEach(function (done) {
-        projectsProvider
+      before(function (done) {
+      provider
           .addInteraction({
             uponReceiving: 'a request friends',
             withRequest: {
@@ -79,7 +81,6 @@
       it("should return some friends", function(done) {
         //Run the tests
         client.findFriendsByAgeAndChildren('33', ['Mary Jane', 'James'])
-          .then(projectsProvider.verify)
           .then(function (data) {
             expect(JSON.parse(data)).to.eql({friends: [{ name: 'Sue' }]});
             done()
@@ -88,13 +89,16 @@
             done(err)
           })
       });
+
+      // verify with Pact, and reset expectations
+      it('successfully verifies', () => provider.verify());
     });
 
     describe("unfriendMe", function () {
 
-      beforeEach(function (done) {
+      before(function (done) {
         //Add interaction
-        projectsProvider.addInteraction({
+        provider.addInteraction({
           state: 'I am friends with Fred',
           uponReceiving: 'a request to unfriend',
           withRequest: {
@@ -113,7 +117,6 @@
       it("should unfriend me", function(done) {
         //Run the tests
         client.unfriendMe()
-          .then(projectsProvider.verify)
           .then(function (data) {
             expect(JSON.parse(data)).to.eql({ reply: "Bye" })
             done()
@@ -123,10 +126,13 @@
           })
       });
 
+      // verify with Pact, and reset expectations
+      it('successfully verifies', () => provider.verify());
+
       xdescribe("when there are no friends", function () {
-        beforeEach(function (done) {
+        before(function (done) {
           //Add interaction
-          projectsProvider.addInteraction({
+          provider.addInteraction({
             state: 'I have no friends',
             uponReceiving: 'a request to unfriend',
             withRequest: {
@@ -143,12 +149,14 @@
         it("returns an error message", function (done) {
           //Run the tests
           client.unfriendMe()
-            .catch(projectsProvider.verify)
             .then(function (data) {
               expect(data).to.eql('No friends :(')
               done()
             })
         });
+
+        // verify with Pact, and reset expectations
+        it('successfully verifies', () => provider.verify());
       });
     });
 

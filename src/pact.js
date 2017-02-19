@@ -53,7 +53,8 @@ module.exports = (opts) => {
     port: port,
     log: log,
     dir: dir,
-    spec: spec
+    spec: spec,
+    ssl: ssl
   })
   serviceFactory.logLevel(logLevel)
 
