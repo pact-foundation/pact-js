@@ -190,6 +190,6 @@ describe('Pact', () => {
 
   // Write pact files
   after(() => {
-    provider.finalize();
+    return provider.finalize();
   });
 });
