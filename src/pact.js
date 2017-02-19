@@ -13,7 +13,6 @@ const Matchers = require('./dsl/matchers')
 const Verifier = require('./dsl/verifier')
 const MockService = require('./dsl/mockService')
 const Interaction = require('./dsl/interaction')
-const responseParser = require('./common/responseParser').parse
 const serviceFactory = require('@pact-foundation/pact-node')
 const clc = require('cli-color')
 const path = require('path')
@@ -51,12 +50,12 @@ module.exports = (opts) => {
   const logLevel = opts.logLevel || 'INFO'
   const spec = opts.spec || 2
   const server = serviceFactory.createServer({
-      port: port,
-      log: log,
-      dir: dir,
-      spec: spec
-    });
-  serviceFactory.logLevel(logLevel);
+    port: port,
+    log: log,
+    dir: dir,
+    spec: spec
+  })
+  serviceFactory.logLevel(logLevel)
 
   logger.info(`Setting up Pact with Consumer "${consumer}" and Provider "${provider}" using mock service on Port: "${port}"`)
 
