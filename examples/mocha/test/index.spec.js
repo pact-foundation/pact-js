@@ -2,16 +2,14 @@
 
 const expect = require('chai').expect
 const path = require('path')
-const Pact = require('pact')
-const wrapper = require('@pact-foundation/pact-node')
+const Pact = require('../../../src/pact.js')
 const getMeDogs = require('../index').getMeDogs
 
 describe('The Dog API', () => {
   let url = 'http://localhost'
-  let provider
-
   const port = 8989
-  const server = wrapper.createServer({
+
+  const provider = Pact({
     port: port,
     log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
     dir: path.resolve(process.cwd(), 'pacts'),
@@ -22,23 +20,12 @@ describe('The Dog API', () => {
 
   const EXPECTED_BODY = [{dog: 1}]
 
-  after(() => {
-    wrapper.removeAllServers()
-  })
+  before(() => provider.setup())
 
-  afterEach(done => {
-    server.delete().then(() => { done() })
-  })
-
-  beforeEach(done => {
-    server.start().then(() => {
-      provider = Pact({ consumer: 'MyConsumer', provider: 'MyProvider', port: port })
-      done()
-    })
-  })
+  after(() => provider.finalize())
 
   describe('works', () => {
-    beforeEach(done => {
+    before(done => {
       const interaction = {
         state: 'i have a list of projects',
         uponReceiving: 'a request for projects',
@@ -56,19 +43,18 @@ describe('The Dog API', () => {
       provider.addInteraction(interaction).then(() => { done() })
     })
 
-    afterEach(done => {
-      provider.finalize().then(() => { done() })
-    })
 
-    it('successfully verifies', done => {
+    it('returns the correct response', done => {
       const urlAndPort = { url: url, port: port }
       getMeDogs(urlAndPort)
-        .then(provider.verify)
         .then(response => {
-          expect(response).to.eql(JSON.stringify(EXPECTED_BODY))
+          expect(response.data).to.eql(EXPECTED_BODY)
           done()
         })
         .catch(done)
     })
+
+    // verify with Pact, and reset expectations
+    it('successfully verifies', () => provider.verify())
   })
 })

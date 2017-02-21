@@ -1,22 +1,17 @@
 /**
- * Pact module.
- * @module Pact
+ * Pact module for Karma use.
+ * @module Pact Karma
  */
 
 'use strict'
 
 require('es6-promise').polyfill()
 
-const isNil = require('lodash.isnil')
-const logger = require('./common/logger')
-const Matchers = require('./dsl/matchers')
-const Verifier = require('./dsl/verifier')
-const MockService = require('./dsl/mockService')
-const Interaction = require('./dsl/interaction')
-const serviceFactory = require('@pact-foundation/pact-node')
-const clc = require('cli-color')
-const path = require('path')
-
+var isNil = require('lodash.isnil')
+var logger = require('./common/logger')
+var Matchers = require('./dsl/matchers')
+var MockService = require('./dsl/mockService')
+var Interaction = require('./dsl/interaction')
 /**
  * Creates a new {@link PactProvider}.
  * @memberof Pact
@@ -31,32 +26,20 @@ const path = require('path')
  * @static
  */
 module.exports = (opts) => {
-  const consumer = opts.consumer
-  const provider = opts.provider
+  var consumer = opts.consumer
+  var provider = opts.provider
 
   if (isNil(consumer)) {
-    throw new Error('You must specify a Consumer for this pact.')
+    throw new Error('You must provide a Consumer for this pact.')
   }
 
   if (isNil(provider)) {
-    throw new Error('You must specify a Provider for this pact.')
+    throw new Error('You must provide a Provider for this pact.')
   }
 
-  const port = opts.port || 1234
-  const host = opts.host || '127.0.0.1'
-  const ssl = opts.ssl || false
-  const dir = opts.dir || path.resolve(process.cwd(), 'pacts')
-  const log = opts.log || path.resolve(process.cwd(), 'logs', 'pact.log')
-  const logLevel = opts.logLevel || 'INFO'
-  const spec = opts.spec || 2
-  const server = serviceFactory.createServer({
-    port: port,
-    log: log,
-    dir: dir,
-    spec: spec,
-    ssl: ssl
-  })
-  serviceFactory.logLevel(logLevel)
+  var port = opts.port || 1234
+  var host = opts.host || '127.0.0.1'
+  var ssl = opts.ssl || false
 
   logger.info(`Setting up Pact with Consumer "${consumer}" and Provider "${provider}" using mock service on Port: "${port}"`)
 
@@ -64,13 +47,6 @@ module.exports = (opts) => {
 
   /** @namespace PactProvider */
   return {
-
-    /**
-     * Start the Mock Server.
-     * @returns {Promise}
-     */
-    setup: () => server.start(),
-
     /**
      * Add an interaction to the {@link MockService}.
      * @memberof PactProvider
@@ -92,7 +68,6 @@ module.exports = (opts) => {
 
       return mockService.addInteraction(interaction)
     },
-
     /**
      * Checks with the Mock Service if the expected interactions have been exercised.
      * @memberof PactProvider
@@ -105,48 +80,41 @@ module.exports = (opts) => {
         .catch(e => {
           // Properly format the error
           console.error('')
-          console.error(clc.red('Pact verification failed!'))
-          console.error(clc.red(e))
+          console.error('Pact verification failed!')
+          console.error(e)
 
           throw new Error('Pact verification failed - expected interactions did not match actual.')
         })
     },
-
     /**
-     * Writes the Pact and clears any interactions left behind and shutdown the
-     * mock server
+     * Writes the Pact and clears any interactions left behind.
      * @memberof PactProvider
      * @instance
      * @returns {Promise}
      */
-    finalize: () => mockService.writePact().then(() => server.delete()),
-
+    finalize: () => {
+      return mockService.writePact().then(() => mockService.removeInteractions())
+    },
     /**
-     * Writes the pact file out to file. Should be called when all tests have been performed for a
-     * given Consumer <-> Provider pair. It will write out the Pact to the
-     * configured file.
+     * Writes the Pact file but leave interactions in.
      * @memberof PactProvider
      * @instance
      * @returns {Promise}
      */
-    writePact: () => mockService.writePact(),
-
+    writePact: () => {
+      return mockService.writePact()
+    },
     /**
      * Clear up any interactions in the Provider Mock Server.
      * @memberof PactProvider
      * @instance
      * @returns {Promise}
      */
-    removeInteractions: () => mockService.removeInteractions()
+    removeInteractions: () => {
+      return mockService.removeInteractions()
+    }
   }
 }
-
-/**
- * Exposes {@link Verifier}
- * @memberof Pact
- * @static
- */
-module.exports.Verifier = Verifier
 
 /**
  * Exposes {@link Matchers#term}

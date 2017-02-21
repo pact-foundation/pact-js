@@ -3,26 +3,26 @@
 
   describe("Client", function() {
 
-    var client, projectsProvider;
+    var client, provider
 
     before(function(done) {
-      client = example.createClient('http://localhost:1234');
-      projectsProvider = Pact({ consumer: 'Karma Mocha', provider: 'Hello' })
+      client = example.createClient('http://localhost:1234')
+      provider = Pact({ consumer: 'Karma Mocha', provider: 'Hello' })
       // required for slower Travis CI environment
       setTimeout(function () { done() }, 1000)
     })
 
     after(function (done) {
-      projectsProvider.finalize()
+      provider.finalize()
         .then(function () { done() }, function (err) { done(err) })
     })
 
     describe("sayHello", function () {
-      beforeEach(function (done) {
-        projectsProvider.addInteraction({
+      before(function (done) {
+        provider.addInteraction({
           uponReceiving: 'a request for hello',
           withRequest: {
-            method: 'get',
+            method: 'GET',
             path: '/sayHello'
           },
           willRespondWith: {
@@ -37,25 +37,27 @@
       it("should say hello", function(done) {
         //Run the tests
         client.sayHello()
-          .then(projectsProvider.verify)
           .then(function (data) {
-            expect(JSON.parse(data)).to.eql({ reply: "Hello" });
+            expect(JSON.parse(data.responseText)).to.eql({ reply: "Hello" })
             done()
           })
           .catch(function (err) {
             done(err)
           })
-      });
-    });
+      })
+
+      // verify with Pact, and reset expectations
+      it('successfully verifies', function() { provider.verify() })
+    })
 
     describe("findFriendsByAgeAndChildren", function () {
 
-      beforeEach(function (done) {
-        projectsProvider
+      before(function (done) {
+      provider
           .addInteraction({
             uponReceiving: 'a request friends',
             withRequest: {
-              method: 'get',
+              method: 'GET',
               path: '/friends',
               query: {
                 age: Pact.Matchers.term({generate: '30', matcher: '\\d+'}), //remember query params are always strings
@@ -79,54 +81,61 @@
       it("should return some friends", function(done) {
         //Run the tests
         client.findFriendsByAgeAndChildren('33', ['Mary Jane', 'James'])
-          .then(projectsProvider.verify)
-          .then(function (data) {
-            expect(JSON.parse(data)).to.eql({friends: [{ name: 'Sue' }]});
+          .then(function (res) {
+            expect(JSON.parse(res.responseText)).to.eql({friends: [{ name: 'Sue' }]})
             done()
           })
           .catch(function (err) {
             done(err)
           })
-      });
-    });
+      })
+
+      // verify with Pact, and reset expectations
+      it('successfully verifies', function() { provider.verify() })
+    })
 
     describe("unfriendMe", function () {
 
-      beforeEach(function (done) {
-        //Add interaction
-        projectsProvider.addInteraction({
-          state: 'I am friends with Fred',
-          uponReceiving: 'a request to unfriend',
-          withRequest: {
-            method: 'put',
-            path: '/unfriendMe'
-          },
-          willRespondWith: {
-            status: 200,
-            headers: { "Content-Type": "application/json" },
-            body: { reply: "Bye" }
-          }
+      describe("when I have some friends", function () {
+
+        before(function (done) {
+          //Add interaction
+          provider.addInteraction({
+            state: 'I am friends with Fred',
+            uponReceiving: 'a request to unfriend',
+            withRequest: {
+              method: 'PUT',
+              path: '/unfriendMe'
+            },
+            willRespondWith: {
+              status: 200,
+              headers: { "Content-Type": "application/json" },
+              body: { reply: "Bye" }
+            }
+          })
+          .then(function () { done() }, function (err) { done(err) })
         })
-        .then(function () { done() }, function (err) { done(err) })
+
+        it("should unfriend me", function(done) {
+          //Run the tests
+          client.unfriendMe()
+            .then(function (res) {
+              expect(JSON.parse(res.responseText)).to.eql({ reply: "Bye" })
+              done()
+            })
+            .catch(function (err) {
+              done(err)
+            })
+        })
+
+        it('successfully verifies', function() { provider.verify() })
       })
 
-      it("should unfriend me", function(done) {
-        //Run the tests
-        client.unfriendMe()
-          .then(projectsProvider.verify)
-          .then(function (data) {
-            expect(JSON.parse(data)).to.eql({ reply: "Bye" })
-            done()
-          })
-          .catch(function (err) {
-            done(err)
-          })
-      });
-
-      xdescribe("when there are no friends", function () {
-        beforeEach(function (done) {
+      // verify with Pact, and reset expectations
+      describe("when there are no friends", function () {
+        before(function (done) {
           //Add interaction
-          projectsProvider.addInteraction({
+          provider.addInteraction({
             state: 'I have no friends',
             uponReceiving: 'a request to unfriend',
             withRequest: {
@@ -142,15 +151,18 @@
 
         it("returns an error message", function (done) {
           //Run the tests
-          client.unfriendMe()
-            .catch(projectsProvider.verify)
-            .then(function (data) {
-              expect(data).to.eql('No friends :(')
-              done()
-            })
-        });
-      });
-    });
+          client.unfriendMe().then(function() {
+            done(new Error('expected request to /unfriend me to fail'))
+          }, function(e) {
+            done()
+          })
 
-  });
-})();
+        })
+
+        // verify with Pact, and reset expectations
+        it('successfully verifies', function() { provider.verify() })
+      })
+    })
+
+  })
+})()

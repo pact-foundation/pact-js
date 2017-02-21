@@ -19,11 +19,11 @@ describe('Pact', () => {
     })
 
     it('throws Error when consumer not informed', () => {
-      expect(() => { Pact({}) }).to.throw(Error, 'You must inform a Consumer for this Pact.')
+      expect(() => { Pact({}) }).to.throw(Error, 'You must specify a Consumer for this pact.')
     })
 
-    it('throws Error when provider not informed', () => {
-      expect(() => { Pact({ consumer: 'abc' }) }).to.throw(Error, 'You must inform a Provider for this Pact.')
+    it('throws Error when provider not specified', () => {
+      expect(() => { Pact({ consumer: 'abc' }) }).to.throw(Error, 'You must specify a Provider for this pact.')
     })
 
     it('returns object with three functions to be invoked', (done) => {
@@ -36,7 +36,7 @@ describe('Pact', () => {
       done()
     })
 
-    it('creates mockSerive with custom ip and port', (done) => {
+    it('creates mockService with custom ip and port', (done) => {
       let pact = Pact({ consumer: 'A', provider: 'B', host: '192.168.10.1', port: 8443, ssl: true })
       expect(pact).to.have.property('addInteraction')
       expect(pact).to.have.property('verify')
@@ -50,6 +50,7 @@ describe('Pact', () => {
 
   describe('#addInteraction', ()  => {
     let pact, Pact
+    let port = 4567
 
     beforeEach(() => {
       Pact = proxyquire('../src/pact', {
@@ -57,7 +58,7 @@ describe('Pact', () => {
           return { addInteraction: (int) => Promise.resolve(int.json()) }
         }
       })
-      pact = Pact({ consumer: 'A', provider: 'B' })
+      pact = Pact({ consumer: 'A', provider: 'B', port: port++ })
     })
 
     it('creates interaction with state', (done) => {

@@ -18,11 +18,11 @@ describe('Request', () => {
     }
 
     request = new Request()
-  });
+  })
 
   after(() => {
     global.window = undefined
-  });
+  })
 
   it('should have "XMLHttpRequest" _request', function () {
     expect(request._request).to.not.be.null
