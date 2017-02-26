@@ -89,10 +89,11 @@
     "lodash.isfunction": "3.0.8",
     "lodash.isnil": "4.0.0",
     "lodash.isundefined": "3.0.1",
-    "lodash.omitby": "4.6.0"
+    "lodash.omitby": "4.6.0",
+    "@pact-foundation/pact-node": "4.x",
+    "cli-color": "^1.1.0"
   },
   "devDependencies": {
-    "@pact-foundation/pact-node": "4.x",
     "babel-cli": "6.x",
     "babel-eslint": "6.x",
     "babel-loader": "6.x",
@@ -100,7 +101,6 @@
     "bluebird": "3.x",
     "chai": "3.x",
     "chai-as-promised": "5.x",
-    "cli-color": "^1.1.0",
     "coveralls": "2.x",
     "documentation": "4.0.0-beta9",
     "imports-loader": "0.x",
