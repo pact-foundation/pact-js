@@ -38,7 +38,7 @@ server.listen(8081, () => {
 
 // Verify that the provider meets all consumer expectations
 describe('Pact Verification', () => {
-  it('should validate the expectations of Matching Service', function(done) { // lexical binding required here
+  it('should validate the expectations of Matching Service', function() { // lexical binding required here
     this.timeout(10000)
 
     let opts = {
@@ -53,14 +53,10 @@ describe('Pact Verification', () => {
       pactBrokerPassword: 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1'
     }
 
-    verifier.verifyProvider(opts)
+    return verifier.verifyProvider(opts)
       .then(output => {
         console.log('Pact Verification Complete!')
         console.log(output)
-        done()
-      }).catch(e => {
-        console.log('Pact Verification Failed: ', e)
-        done()
       })
   })
 })

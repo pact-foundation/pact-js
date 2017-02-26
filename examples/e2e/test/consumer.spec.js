@@ -100,7 +100,7 @@ describe('Pact', () => {
           willRespondWith: {
             status: 200,
             headers: {
-              'Content-Type': 'application/json charset=utf-8'
+              'Content-Type': 'application/json; charset=utf-8'
             },
             body: animalListExpectation
           }
@@ -130,7 +130,7 @@ describe('Pact', () => {
           willRespondWith: {
             status: 200,
             headers: {
-              'Content-Type': 'application/json charset=utf-8'
+              'Content-Type': 'application/json; charset=utf-8'
             },
             body: animalBodyExpectation
           }

@@ -24,6 +24,8 @@
     "pact": "^1.0.0"
   },
   "dependencies": {
+    "body-parser": "^1.16.1",
+    "cors": "^2.8.1",
     "express": "^4.14.0",
     "superagent": "^3.3.2"
   }
