@@ -45,6 +45,8 @@ module.exports = (opts) => {
   const port = opts.port || 1234
   const host = opts.host || '127.0.0.1'
   const ssl = opts.ssl || false
+  const sslcert = opts.sslcert || false
+  const sslkey = opts.sslkey || false
   const dir = opts.dir || path.resolve(process.cwd(), 'pacts')
   const log = opts.log || path.resolve(process.cwd(), 'logs', 'pact.log')
   const logLevel = opts.logLevel || 'INFO'
@@ -54,7 +56,9 @@ module.exports = (opts) => {
     log: log,
     dir: dir,
     spec: spec,
-    ssl: ssl
+    ssl: ssl,
+    sslcert: sslcert,
+    sslkey: sslkey
   })
   serviceFactory.logLevel(logLevel)
 
