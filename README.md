@@ -177,6 +177,7 @@ let opts = {
 	providerStatesSetupUrl <String>, // URL to send PUT requests to setup a given provider state. Optional.
 	pactBrokerUsername: <String>,    // Username for Pact Broker basic authentication. Optional
 	pactBrokerPassword: <String>,    // Password for Pact Broker basic authentication. Optional
+  timeout: <Number>                // The duration in ms we should wait to confirm verification process was successful. Defaults to 30000, Optional.
 };
 
 verifier.verifyProvider(opts)).then(function () {
