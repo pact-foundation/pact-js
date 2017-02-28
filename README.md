@@ -214,7 +214,20 @@ pact.publishPacts(opts)).then(function () {
 * [Pact with Karma + Jasmine](https://github.com/pact-foundation/pact-js/tree/master/karma/jasmine)
 * [Pact with Karma + Mocha](https://github.com/pact-foundation/pact-js/tree/master/karma/mocha)
 
-#### Note on Jest
+## Troubleshooting
+
+If you are having issues, a good place to start is setting `logLevel: 'DEBUG'`
+when configuring the `pact({...})` object.
+
+### Timeout
+
+Under the hood, Pact JS spins up a [Ruby Mock Service](https://github.com/pact-foundation/pact-mock-service-npm).
+On some systems, this may take more than a few seconds to start. It is recommended
+to review your unit testing timeout to ensure it has sufficient time to start the server.
+
+See [here](http://stackoverflow.com/questions/42496401/all-pact-js-tests-are-failing-with-same-errors/42518752) for more details.
+
+### Note on Jest
 Jest uses JSDOM under the hood which may cause issues with libraries making HTTP request. See [this issue](https://github.com/pact-foundation/pact-js/issues/10) for background,
 and the  Jest [example](https://github.com/pact-foundation/pact-js/blob/master/examples/jest/package.json#L10-L12) for a working solution.
 
