@@ -96,6 +96,10 @@
 
     describe("unfriendMe", function () {
 
+      afterEach(function() {
+        return provider.removeInteractions()
+      })
+
       describe("when I have some friends", function () {
 
         before(function (done) {
@@ -139,11 +143,12 @@
             state: 'I have no friends',
             uponReceiving: 'a request to unfriend',
             withRequest: {
-              method: 'put',
+              method: 'PUT',
               path: '/unfriendMe'
             },
             willRespondWith: {
-              status: 404
+              status: 404,
+              body: {}
             }
           })
           .then(function () { done() }, function (err) { done(err) })
@@ -154,6 +159,7 @@
           client.unfriendMe().then(function() {
             done(new Error('expected request to /unfriend me to fail'))
           }, function(e) {
+            expect(e).to.eql('No friends :(')
             done()
           })
 
