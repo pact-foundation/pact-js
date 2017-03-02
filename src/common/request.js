@@ -55,7 +55,7 @@ module.exports = class Request {
 
         request.end()
       } else {
-        const req = this._request
+        const req = new window.XMLHttpRequest()
         req.onload = () => {
           if (req.status >= 200 && req.status < 400) {
             logger.info(`Resolving promise with: ${req.responseText}`)
