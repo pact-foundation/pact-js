@@ -8,8 +8,12 @@
     beforeAll(function(done) {
       client = example.createClient('http://localhost:1234')
       provider = Pact({ consumer: 'Karma Jasmine', provider: 'Hello' })
+
       // required for slower Travis CI environment
       setTimeout(function () { done() }, 2000)
+
+      // Required if run with `singleRun: false`
+      provider.removeInteractions()
     })
 
     afterAll(function (done) {
@@ -47,7 +51,14 @@
       })
 
       // verify with Pact, and reset expectations
-      it('successfully verifies', function() { provider.verify() })
+      it('successfully verifies', function(done) {
+        provider.verify()
+          .then(function(a) {
+            done()
+          }, function(e) {
+            done.fail(e)
+          })
+      })
     })
 
     describe("findFriendsByAgeAndChildren", function () {
@@ -91,7 +102,15 @@
       })
 
       // verify with Pact, and reset expectations
-      it('successfully verifies', function() { provider.verify() })
+      // verify with Pact, and reset expectations
+      it('successfully verifies', function(done) {
+        provider.verify()
+          .then(function(a) {
+            done()
+          }, function(e) {
+            done.fail(e)
+          })
+      })
     })
 
     describe("unfriendMe", function () {
@@ -132,7 +151,15 @@
             })
         })
 
-        it('successfully verifies', function() { provider.verify() })
+        // verify with Pact, and reset expectations
+        it('successfully verifies', function(done) {
+          provider.verify()
+            .then(function(a) {
+              done()
+            }, function(e) {
+              done.fail(e)
+            })
+        })
       })
 
       // verify with Pact, and reset expectations
@@ -167,7 +194,15 @@
         })
 
         // verify with Pact, and reset expectations
-        it('successfully verifies', function() { provider.verify() })
+        // verify with Pact, and reset expectations
+        it('successfully verifies', function(done) {
+          provider.verify()
+            .then(function(a) {
+              done()
+            }, function(e) {
+              done.fail(e)
+            })
+        })
       })
     })
 
