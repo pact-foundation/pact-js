@@ -47,7 +47,7 @@
       })
 
       // verify with Pact, and reset expectations
-      it('successfully verifies', function() { provider.verify() })
+      it('successfully verifies', function() { return provider.verify() })
     })
 
     describe("findFriendsByAgeAndChildren", function () {
@@ -91,7 +91,7 @@
       })
 
       // verify with Pact, and reset expectations
-      it('successfully verifies', function() { provider.verify() })
+      it('successfully verifies', function() { return provider.verify() })
     })
 
     describe("unfriendMe", function () {
@@ -132,7 +132,7 @@
             })
         })
 
-        it('successfully verifies', function() { provider.verify() })
+        it('successfully verifies', function() { return provider.verify() })
       })
 
       // verify with Pact, and reset expectations
@@ -166,7 +166,7 @@
         })
 
         // verify with Pact, and reset expectations
-        it('successfully verifies', function() { provider.verify() })
+        it('successfully verifies', function() { return provider.verify() })
       })
     })
 
