@@ -174,6 +174,8 @@ describe('Pact', () => {
     })
     describe('and there no animals in the database', () => {
       it('returns a 404', done => {
+        // uncomment below to test a failed verify
+        // const suggestedMates = getAnimalById(123)
         const suggestedMates = getAnimalById(100)
 
         expect(suggestedMates).to.eventually.be.a('null').notify(done)
@@ -182,9 +184,7 @@ describe('Pact', () => {
   })
   describe('when interacting with Animal Service', () => {
     it('should validate the interactions and create a contract', () => {
-      // uncomment below to test a failed verify
-      // return getAnimalById(1123).then(provider.verify)
-      return provider.verify
+      return provider.verify()
     })
   })
 

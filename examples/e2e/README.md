@@ -48,6 +48,8 @@ Given an animal profile, recommends a suitable partner based on similar interest
 1. `npm run test:publish` - Publish contracts to the broker
 1. `npm run test:provider` - Run provider tests
 
+[![asciicast](https://asciinema.org/a/105793.png)](https://asciinema.org/a/105793)
+
 ## Running the API
 
 If you want to experiment with the API to get an understanding:
