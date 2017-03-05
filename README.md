@@ -24,6 +24,30 @@ how to get going.
 
 **NOTE: This project supersedes [Pact Consumer JS DSL](https://github.com/DiUS/pact-consumer-js-dsl).**
 
+<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
+
+- [Pact JS](#pact-js)
+	- [Installation](#installation)
+	- [Using Pact JS](#using-pact-js)
+		- [Using Mocha?](#using-mocha)
+		- [Consumer Side Testing](#consumer-side-testing)
+			- [API](#api)
+			- [Example](#example)
+		- [Provider API Testing](#provider-api-testing)
+		- [Publishing Pacts to a Broker](#publishing-pacts-to-a-broker)
+		- [Flexible Matching](#flexible-matching)
+			- [Match by regular expression](#match-by-regular-expression)
+			- [Match based on type](#match-based-on-type)
+			- [Match based on arrays](#match-based-on-arrays)
+		- [Examples](#examples)
+	- [Troubleshooting](#troubleshooting)
+		- [Timeout](#timeout)
+		- [Note on Jest](#note-on-jest)
+	- [Contributing](#contributing)
+	- [Contact](#contact)
+
+<!-- /TOC -->
+
 ## Installation
 
 It's easy, simply run the below:
@@ -156,7 +180,7 @@ describe('Pact', () => {
 })
 ```
 
-#### Provider API Testing
+### Provider API Testing
 
 Once you have created Pacts for your Consumer, you need to validate those Pacts against your Provider. The Verifier object provides the following API for you to do so:
 
@@ -206,6 +230,135 @@ pact.publishPacts(opts)).then(function () {
 });
 ```
 
+### Flexible Matching
+
+Flexible matching makes your tests more expressive making your tests less brittle.
+Rather than use hard-coded values which must then be present on the Provider side,
+you can use regular expressions and type matches on objects and arrays to validate the
+structure of your APIs.
+
+Read more about using regular expressions and type based matching [here][https://github.com/realestate-com-au/pact/wiki/Regular-expressions-and-type-matching-with-Pact] before continuing.
+
+_NOTE: Make sure to start the mock service via the `Pact` declaration with the option `specification: 2` to get access to these features._
+
+#### Match by regular expression
+
+The underlying mock service is written in Ruby, so the regular expression must be in a Ruby format, not a Javascript format.
+
+```javascript
+
+provider.addInteraction({
+  state: 'Has some animals',
+  uponReceiving: 'a request for an animal',
+  withRequest: {
+    method: 'GET',
+    path: '/animals/1'
+  },
+  willRespondWith: {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8'
+    },
+    body: {
+      id: 100,
+      name: "billy",
+      'gender': term({
+        matcher: 'F|M',
+        generate: 'F'
+      }),
+    }
+  }
+})
+```
+
+#### Match based on type
+
+```javascript
+
+provider.addInteraction({
+  state: 'Has some animals',
+  uponReceiving: 'a request for an animal',
+  withRequest: {
+    method: 'GET',
+    path: '/animals/1'
+  },
+  willRespondWith: {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8'
+    },
+    body: {
+      id: like(1),
+      name: like('Billy')
+    }
+  }
+})
+```
+
+[flexible-matching]: https://github.com/realestate-com-au/pact/wiki/Regular-expressions-and-type-matching-with-Pact
+
+#### Match based on arrays
+
+Matching provides the ability to specify flexible length arrays. For example:
+
+```javascript
+pact.Matchers.eachLike(obj, { min: 3 })
+```
+
+Where `obj` can be any javascript object, value or Pact.Match. It takes optional argument (`{ min: 3 }`) where min is greater than 0 and defaults to 1 if not provided.
+
+Below is an example that uses all of the Pact Matchers.
+
+```javascript
+
+var somethingLike = pact.Matchers.somethingLike;
+var term = pact.Matchers.term;
+var eachLike = pact.Matchers.eachLike;
+
+const animalBodyExpectation = {
+  'id': like(1),
+  'first_name': like('Billy'),
+  'last_name': like('Goat'),
+  'animal': like('goat'),
+  'age': like(21),
+  'gender': term({
+    matcher: 'F|M',
+    generate: 'M'
+  }),
+  'location': {
+    'description': like('Melbourne Zoo'),
+    'country': like('Australia'),
+    'post_code': like(3000)
+  },
+  'eligibility': {
+    'available': like(true),
+    'previously_married': like(false)
+  },
+  'interests': eachLike('walks in the garden/meadow')
+}
+
+// Define animal list payload, reusing existing object matcher
+const animalListExpectation = eachLike(animalBodyExpectation, {
+  min: MIN_ANIMALS
+})
+
+provider.addInteraction({
+  state: 'Has some animals',
+  uponReceiving: 'a request for all animals',
+  withRequest: {
+    method: 'GET',
+    path: '/animals/available'
+  },
+  willRespondWith: {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8'
+    },
+    body: animalListExpectation
+  }
+})
+```
+
 ### Examples
 
 * [Complete Example (Node env)](https://github.com/pact-foundation/pact-js/tree/master/examples/e2e)
@@ -213,6 +366,8 @@ pact.publishPacts(opts)).then(function () {
 * [Pact with Mocha](https://github.com/pact-foundation/pact-js/tree/master/examples/mocha)
 * [Pact with Karma + Jasmine](https://github.com/pact-foundation/pact-js/tree/master/karma/jasmine)
 * [Pact with Karma + Mocha](https://github.com/pact-foundation/pact-js/tree/master/karma/mocha)
+
+[![asciicast](https://asciinema.org/a/105793.png)](https://asciinema.org/a/105793)
 
 ## Troubleshooting
 
