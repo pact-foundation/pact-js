@@ -51,6 +51,7 @@ module.exports = (opts) => {
   const log = opts.log || path.resolve(process.cwd(), 'logs', 'pact.log')
   const logLevel = opts.logLevel || 'INFO'
   const spec = opts.spec || 2
+  const cors = opts.cors || false
   const server = serviceFactory.createServer({
     port: port,
     log: log,
@@ -58,7 +59,8 @@ module.exports = (opts) => {
     spec: spec,
     ssl: ssl,
     sslcert: sslcert,
-    sslkey: sslkey
+    sslkey: sslkey,
+    cors: cors
   })
   serviceFactory.logLevel(logLevel)
 
