@@ -157,16 +157,16 @@ describe('Pact', () => {
         })
 
       // (4) write your test(s)
-      it('should generate a list of TODOs for the main screen', (done) => {
+      it('should generate a list of TODOs for the main screen', () => {
         const todoApp = new TodoApp();
-        const projects = todoApp.getProjects() // <- this method would make the remote http call
-        expect(projects).to.eventually.be.a('array')
-        expect(projects).to.eventually.have.deep.property('projects[0].id', 1).notify(done)
-      })
+        todoApp.getProjects() // <- this method would make the remote http call
+			.then((projects) => {
+				expect(projects).to.be.a('array')
+		        expect(projects).to.have.deep.property('projects[0].id', 1)
 
-      // (5) validate the interactions occurred, this will throw an error if it fails telling you what went wrong
-      it('creates a contract between the TodoApp and TodoService', () => {
-        return pact.verify()
+				// (5) validate the interactions occurred, this will throw an error if it fails telling you what went wrong
+				return provider.verify()
+			})
       })
     })
   });
