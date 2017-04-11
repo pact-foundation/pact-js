@@ -166,7 +166,7 @@ describe('Pact', () => {
 
       // (5) validate the interactions occurred, this will throw an error if it fails telling you what went wrong
       it('creates a contract between the TodoApp and TodoService', () => {
-        return pact.verify()
+        return provider.verify()
       })
     })
   });
