@@ -115,7 +115,7 @@ describe('Pact', () => {
     dir: path.resolve(process.cwd(), 'pacts'),
     logLevel: 'INFO',
     spec: 2
-  });
+  })
 
   // this is the response you expect from your Provider
   const EXPECTED_BODY = [{
@@ -132,7 +132,6 @@ describe('Pact', () => {
 
   context('when there are a list of projects', () => {
     describe('and there is a valid user session', () => {
-
       before((done) => {
         // (2) Start the mock server
         provider.setup()
@@ -154,30 +153,31 @@ describe('Pact', () => {
             })
           })
           .then(() => done())
-        })
+      })
 
       // (4) write your test(s)
       it('should generate a list of TODOs for the main screen', () => {
         const todoApp = new TodoApp();
         todoApp.getProjects() // <- this method would make the remote http call
-			.then((projects) => {
-				expect(projects).to.be.a('array')
-		        expect(projects).to.have.deep.property('projects[0].id', 1)
+          .then((projects) => {
+      			expect(projects).to.be.a('array')
+            expect(projects).to.have.deep.property('projects[0].id', 1)
 
-				// (5) validate the interactions occurred, this will throw an error if it fails telling you what went wrong
-				return provider.verify()
-			})
+            // (5) validate the interactions occurred, this will throw an error if it fails telling you what went wrong
+      			return provider.verify()
+          })
+      })
+
+      // (6) write the pact file for this consumer-provider pair,
+      // and shutdown the associated mock server.
+      // You should do this only _once_ per Provider you are testing.
+      after(() => {
+        provider.finalize()
       })
     })
-  });
-
-  // (6) write the pact file for this consumer-provider pair,
-  // and shutdown the associated mock server.
-  // You should do this only _once_ per Provider you are testing.
-  after(() => {
-    provider.finalize()
-  });  
+  })
 })
+
 ```
 
 ### Provider API Testing
