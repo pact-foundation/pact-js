@@ -160,11 +160,11 @@ describe('Pact', () => {
         const todoApp = new TodoApp();
         todoApp.getProjects() // <- this method would make the remote http call
           .then((projects) => {
-      			expect(projects).to.be.a('array')
+      	    expect(projects).to.be.a('array')
             expect(projects).to.have.deep.property('projects[0].id', 1)
 
             // (5) validate the interactions occurred, this will throw an error if it fails telling you what went wrong
-      			return provider.verify()
+      	    return provider.verify()
           })
       })
 
