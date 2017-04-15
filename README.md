@@ -389,11 +389,9 @@ You'll need to add the following snippet to your `package.json` to ensure it use
 the proper Node environment:
 
 ```js
-...
 "jest": {
-	"testEnvironment": "node"
+  "testEnvironment": "node"
 }
-...
 ```
 
 See [this issue](https://github.com/pact-foundation/pact-js/issues/10) for background,
