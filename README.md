@@ -383,8 +383,21 @@ to review your unit testing timeout to ensure it has sufficient time to start th
 See [here](http://stackoverflow.com/questions/42496401/all-pact-js-tests-are-failing-with-same-errors/42518752) for more details.
 
 ### Note on Jest
-Jest uses JSDOM under the hood which may cause issues with libraries making HTTP request. See [this issue](https://github.com/pact-foundation/pact-js/issues/10) for background,
-and the  Jest [example](https://github.com/pact-foundation/pact-js/blob/master/examples/jest/package.json#L10-L12) for a working solution.
+Jest uses JSDOM under the hood which may cause issues with libraries making HTTP request.
+
+You'll need to add the following snippet to your `package.json` to ensure it uses
+the proper Node environment:
+
+```js
+...
+"jest": {
+	"testEnvironment": "node"
+}
+...
+```
+
+See [this issue](https://github.com/pact-foundation/pact-js/issues/10) for background,
+and the Jest [example](https://github.com/pact-foundation/pact-js/blob/master/examples/jest/package.json#L10-L12) for a working example.
 
 ## Contributing
 1. Fork it
