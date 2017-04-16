@@ -16,6 +16,9 @@ module.exports = {
   },
   target: 'web',
   externals: [ 'mitm' ],
+  node: {
+    net: 'empty'
+  },
   module: {
     loaders: [
       {
