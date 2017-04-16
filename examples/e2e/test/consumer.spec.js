@@ -136,8 +136,8 @@ describe('Pact', () => {
           }
         })
       })
-      .catch(e =>{
-        console.log('ERROR: ', e)
+      .catch(e => {
+        throw new Error("Unable to start the Pact Server: " + e)
       })
   })
 

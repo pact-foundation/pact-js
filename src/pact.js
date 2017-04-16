@@ -9,6 +9,7 @@ require('es6-promise').polyfill()
 
 const isNil = require('lodash.isnil')
 const logger = require('./common/logger')
+const net = require('./common/net')
 const Matchers = require('./dsl/matchers')
 const Verifier = require('./dsl/verifier')
 const MockService = require('./dsl/mockService')
@@ -53,6 +54,7 @@ module.exports = (opts) => {
   const logLevel = opts.logLevel || 'INFO'
   const spec = opts.spec || 2
   const cors = opts.cors || false
+
   const server = serviceFactory.createServer({
     port: port,
     log: log,
@@ -76,7 +78,7 @@ module.exports = (opts) => {
      * Start the Mock Server.
      * @returns {Promise}
      */
-    setup: () => server.start(),
+    setup: () => net.isPortAvailable(port, host).then(() => server.start()),
 
     /**
      * Add an interaction to the {@link MockService}.
