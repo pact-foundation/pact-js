@@ -35,7 +35,7 @@ module.exports.term = (opts) => {
 
 /**
  * The eachLike matcher
- * @param {string} content
+ * @param {any} content
  * @param {Object} opts
  * @param {Number} opts.min
  */
@@ -57,7 +57,7 @@ module.exports.eachLike = (content, opts) => {
 
 /**
  * The somethingLike matcher
- * @param {string} value - the value to be somethingLike
+ * @param {any} value - the value to be somethingLike
  */
 module.exports.somethingLike = (value) => {
   if (isNil(value) || isFunction(value)) {
