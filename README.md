@@ -24,27 +24,29 @@ how to get going.
 
 **NOTE: This project supersedes [Pact Consumer JS DSL](https://github.com/DiUS/pact-consumer-js-dsl).**
 
-<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
+<!-- TOC -->
 
 - [Pact JS](#pact-js)
-	- [Installation](#installation)
-	- [Using Pact JS](#using-pact-js)
-		- [Using Mocha?](#using-mocha)
-		- [Consumer Side Testing](#consumer-side-testing)
-			- [API](#api)
-			- [Example](#example)
-		- [Provider API Testing](#provider-api-testing)
-		- [Publishing Pacts to a Broker](#publishing-pacts-to-a-broker)
-		- [Flexible Matching](#flexible-matching)
-			- [Match by regular expression](#match-by-regular-expression)
-			- [Match based on type](#match-based-on-type)
-			- [Match based on arrays](#match-based-on-arrays)
-		- [Examples](#examples)
-	- [Troubleshooting](#troubleshooting)
-		- [Timeout](#timeout)
-		- [Note on Jest](#note-on-jest)
-	- [Contributing](#contributing)
-	- [Contact](#contact)
+  - [Installation](#installation)
+  - [Using Pact JS](#using-pact-js)
+    - [Using Mocha?](#using-mocha)
+    - [Consumer Side Testing](#consumer-side-testing)
+      - [API](#api)
+      - [Example](#example)
+    - [Provider API Testing](#provider-api-testing)
+    - [Publishing Pacts to a Broker](#publishing-pacts-to-a-broker)
+    - [Flexible Matching](#flexible-matching)
+      - [Match by regular expression](#match-by-regular-expression)
+      - [Match based on type](#match-based-on-type)
+      - [Match based on arrays](#match-based-on-arrays)
+    - [Examples](#examples)
+  - [Using Pact in non-Node environments](#using-pact-in-non-node-environments)
+    - [Using Pact with Karma](#using-pact-with-karma)
+  - [Troubleshooting](#troubleshooting)
+    - [Timeout](#timeout)
+    - [Note on Jest](#note-on-jest)
+  - [Contributing](#contributing)
+  - [Contact](#contact)
 
 <!-- /TOC -->
 
@@ -222,7 +224,7 @@ let opts = {
 	pactBroker: <String>,            // URL to fetch the provider states for the given provider API. Optional.
 	pactBrokerUsername: <String>,    // Username for Pact Broker basic authentication. Optional
 	pactBrokerPassword: <String>,    // Password for Pact Broker basic authentication. Optional
-	consumerVersion: <String>        // A string containing a semver-style version e.g. 1.0.0. Required.  
+	consumerVersion: <String>        // A string containing a semver-style version e.g. 1.0.0. Required.
 };
 
 pact.publishPacts(opts)).then(function () {
@@ -368,6 +370,43 @@ provider.addInteraction({
 * [Pact with Karma + Mocha](https://github.com/pact-foundation/pact-js/tree/master/karma/mocha)
 
 [![asciicast](https://asciinema.org/a/105793.png)](https://asciinema.org/a/105793)
+
+## Using Pact in non-Node environments
+
+Pact requires a Node runtime to be able to start and stop Mock servers, write logs and other things.
+
+However, when used within browser or non-Node based environments - such as with Karma or ng-test
+- this is not possible.
+
+To address this challenge, we have released a separate 'web' based module for this purpose - `pact-web`.
+Whilst it still provides a testing DSL, it cannot start and stop mock servers as per the `pact`
+package, so you will need to coordinate this yourself prior to and after executing any tests.
+
+To get started, install `pact-web` and [Pact Node](https://github.com/pact-foundation/pact-node):
+
+    npm install --save-dev pact-web pact-node
+
+If you're not using Karma, you can start and stop the mock server using [Pact Node](https://github.com/pact-foundation/pact-node) or something like [Grunt Pact](https://github.com/pact-foundation/grunt-pact).
+
+### Using Pact with Karma
+
+We have create a [plugin](https://github.com/pact-foundation/karma-pact) for Karma,
+which will automatically start and stop any Mock Server for your Pact tests.
+
+Modify your `karma.conf.js` file as per below to get started:
+
+```js
+    // Load pact framework - this will start/stop mock server automatically
+    frameworks: ['pact'],
+
+    // load pact web
+    files: [
+      'node_modules/pact-web/pact-web.js',
+      ...
+    ]
+```
+
+Check out the [Examples](/pact-foundation/pact-js#examples) for how to use the Karma interface.
 
 ## Troubleshooting
 
