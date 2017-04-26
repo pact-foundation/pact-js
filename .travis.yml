@@ -43,6 +43,6 @@ deploy:
   skip_cleanup: true
   script: npm publish dist --access public
   on:
-    branch: pact-web
+    branch: feat/pact-web
     tags: false
     node: '6'
