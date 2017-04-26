@@ -16,7 +16,7 @@ module.exports = function (config) {
       // if you are using this example to setup your own project load pact from the node_modules directory
       '../../dist/pact-web.js',
       // Example Using NPM package
-      //'node_modules/pact-web/pact-web.js',
+      // 'node_modules/pact-web/pact-web.js',
       'client.js',
       'client-spec.js'
     ],

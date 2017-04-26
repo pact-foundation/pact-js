@@ -15,7 +15,7 @@ module.exports = function (config) {
     files: [
       '../../dist/pact-web.js',
       // Example Using NPM package
-      //'node_modules/pact-web/pact-web.js',
+      // 'node_modules/pact-web/pact-web.js',
       'client.js',
       'client-spec.js'
     ],
