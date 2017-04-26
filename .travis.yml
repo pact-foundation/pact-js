@@ -30,6 +30,7 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
+    branch: master
     node: '6'
 - provider: npm
   email: pact-foundation@googlegroups.com
@@ -44,6 +45,6 @@ deploy:
   skip_cleanup: true
   script: npm publish dist --access public
   on:
-    branch: feat/pact-web
-    tags: false
+    branch: master
+    tags: true
     node: '6'
