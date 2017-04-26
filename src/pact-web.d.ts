@@ -1,10 +1,10 @@
-import {InteractionObject} from "./dsl/interaction";
+import { InteractionObject } from "./dsl/interaction";
 import * as _Matchers from "./dsl/matchers";
 
-declare function pact(opts: pact.PactKarmaOptions): pact.PactKarmaProvider;
+declare function pact(opts: pact.PactWebOptions): pact.PactWebProvider;
 
 declare namespace pact {
-  export interface PactKarmaOptions {
+  export interface PactWebOptions {
     consumer: string;
     provider: string;
     port?: number;
@@ -12,7 +12,7 @@ declare namespace pact {
     ssl?: boolean;
   }
 
-  export interface PactKarmaProvider {
+  export interface PactWebProvider {
     addInteraction(interactionObj: InteractionObject): Promise<string>;
     verify(): Promise<void>;
     finalize(): Promise<void>;

@@ -1,0 +1,40 @@
+{
+  "name": "pact-web",
+  "version": "2.3.3",
+  "description": "Pact for the browser",
+  "main": "pact-web.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pact-foundation/pact-js.git"
+  },
+  "engines": {
+    "node": ">=4"
+  },
+  "keywords": [
+    "pact",
+    "pact-js",
+    "javascript",
+    "contract testing",
+    "testing",
+    "consumer driven testing"
+  ],
+  "author": "Beth Skurrie <beth@bethesque.com> (https://github.com/bethesque)",
+  "contributors": [
+    {
+      "name": "Tarcio Saraiva",
+      "email": "tarcio@gmail.com",
+      "url": "http://twitter.com/tarciosaraiva"
+    },
+    {
+      "name": "Matt Fellows",
+      "email": "m@onegeek.com.au",
+      "url": "http://twitter.com/matthewfellows"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pact-foundation/pact-js/issues"
+  },
+  "homepage": "http://docs.pact.io/documentation/javascript.html"
+}

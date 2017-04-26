@@ -1,6 +1,6 @@
 /**
- * Pact module for Karma use.
- * @module Pact Karma
+ * Pact module for Web use.
+ * @module Pact Web
  */
 
 'use strict'
