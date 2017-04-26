@@ -1,6 +1,6 @@
 set +x #Don't echo the NPM key
 
-NPMRC_FILE=dist/.npmrc
+NPMRC_FILE=.npmrc
 echo "@pact-foundation:registry=https://registry.npmjs.org/" > $NPMRC_FILE
 echo "//registry.npmjs.org/:_authToken=${NPM_KEY}" >> $NPMRC_FILE
 echo "//registry.npmjs.org/:username=pact-foundation" >> $NPMRC_FILE
