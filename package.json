@@ -18,7 +18,8 @@
     "test:karma:jasmine": "karma start ./karma/jasmine/karma.conf.js",
     "test:karma:mocha": "karma start ./karma/mocha/karma.conf.js",
     "test:checkCoverage": "istanbul check",
-    "posttest": "npm run test:checkCoverage && npm run test:karma && npm run docs"
+    "posttest": "npm run test:checkCoverage && npm run test:karma && npm run docs",
+    "deploy:prepare": "./scripts/create_npmrc_file.sh"
   },
   "repository": {
     "type": "git",

@@ -22,6 +22,7 @@ after_success:
 before_deploy:
 - npm prune --production
 - tar -czvf pactjs.tar.gz config dist src package.json README.md LICENSE
+- npm run deploy:prepare
 deploy:
 - provider: releases
   api_key:
@@ -32,10 +33,17 @@ deploy:
     tags: true
     node: '6'
 - provider: npm
-  email: "tarcio@gmail.com"
+  email: pact-foundation@googlegroups.com
   api_key:
-    secure: KgY7CzHE8ZoMh0aYCG/bIw2W2PWn9gnprbah7fRYq5Iia0EyH2ZGkQCcJNrUetODuDPV5r4Yr+v6FaNmd4TvQZfSoUFXJMW2k98lN3riFVuph6o7XksB6FSqxyf7oZ19RUjs9SmzADJTmLjQIHkQB0lmrf4yiR2OhuEsKsJQB4pGCv0+q/2DBloqapByu1vijPskMtvYdbyvV7k06LzLTmf7Kh6zSBJtL4Ip5LL2hjiAHVU36lYzmd+BeEbhUlPLAjfAHQtwRiQrmAYMGYoppmhiCfrP7EyBJ9XS9p8j+EEON/K9vKoqD5Mhxff57Ou+YNXaIJXAOLpFzJc2OgiKsNTPQZmuZlObuUMA0ah71cWfr7UyHgHq7OXIP+mxBo6onGCETYhZwcj3T8cHOmX8yv6WQueT5ccbuY8Lo413SAVapQcGwWVS1T2Ibe+F0wPi/RWhrLHVS8/hbHl7VT2EGoIKrZCicuKjsv6kciUM9W/MsUj256NVOAIw+Gt8/JbzxrMVUs2miWRLCGaFr8X2ML71IJY2XBpBalA6ej3ZEVEhCzdBIivCvZ06Td8LEEVoZtcxrXODNnt3LM1vDWyNhZMZOzK4BoCIDE5JPubMfpGjL/urEBZzONdOyL/07uKRMMdTHtz+dj5FjSC7OSK9YNe5JBFzO1aTXbNXftAwAzs=
+    secure: VaXOQZncUAPng6MfPhtNZa6h5ICv9SsC3chaqxXFdwESM3e7aIUmzea5TKoGMcmn4+06Cdg6yTES521Q0vRxW/scDe3OdyFgrm5qIVnqIpLvDRImAZjobmpZSvqOOfGo85GlE5eiNaZxFM5WQ9rPt8qH/d6Mjxxowv6Nif9jhi2yBhAmM+6dUTls9UsJZhF0ays9qShRxGB34PtAjd6BFxL0SeDj0kqCKytBUBu/ivkuyj4wkk8wtinsvs3gp6cdc22zuB5YiP/Qi3xfSlDYIoN2GU+u8Cdf2wRXNs7tX/lRkDJpzixqNpSleZFWVXU5sz8dlZbzc2wTcpEkYIKKkgzdov1Y1/Pe0n19Rqk2Mtx3gT8QVQM9OpXgL8JDqMGmZFHF/ubtkO/KzaTK2ncDPsq3O6mCuogd4/GT07DZd+izXS4i6u39NXXGW8decBiE6zwcLcDcKXHL8HR8FiTgNEt03VJhYM22K4IrruhnZEMeTXTKy0LyuUuLcm7/jRTlbShfgChlPw7I/lHTuP+QP2u1gjpjTrLO+Ba3vUxNBO5G2rua1nd1tOxg2B1bGNJE9T4H2wDxnvpqMoqMZxbWUVoUfnnk4IpcFZU3rhcC8FVlMUaxoR3jHhUYNRXdvJ+2EjO7oXHjSyY0SVp0KKtXOrbbRmEq/j/VnGVgXSwOc88=
   skip_cleanup: true
   on:
     tags: true
+    branch: master
     node: '6'
+- provider: script
+  skip_cleanup: true
+  script: npm publish dist --access public
+  on:
+    branch: pact-web
+    tags: false
