@@ -45,3 +45,4 @@ deploy:
   on:
     branch: pact-web
     tags: false
+    node: '6'
