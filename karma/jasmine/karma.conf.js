@@ -13,7 +13,9 @@ module.exports = function (config) {
 
     // list of files / patterns to load in the browser
     files: [
-      '../../dist/pact.web.js',
+      '../../dist/pact-web.js',
+      // Example Using NPM package
+      //'node_modules/pact-web/pact-web.js',
       'client.js',
       'client-spec.js'
     ],
