@@ -22,6 +22,7 @@ var Interaction = require('./dsl/interaction')
  * @param {number} opts.port - port of the mock service, defaults to 1234
  * @param {string} opts.host - host address of the mock service, defaults to 127.0.0.1
  * @param {boolean} opts.ssl - SSL flag to identify the protocol to be used (default false, HTTP)
+ * @param {string} pactfileWriteMode - 'overwrite' | 'update' | 'smart' | 'none', defaults to 'overwrite'
  * @return {@link PactProvider}
  * @static
  */
@@ -40,10 +41,11 @@ module.exports = (opts) => {
   var port = opts.port || 1234
   var host = opts.host || '127.0.0.1'
   var ssl = opts.ssl || false
+  var pactfileWriteMode = opts.pactfileWriteMode || 'overwrite'
 
   logger.info(`Setting up Pact with Consumer "${consumer}" and Provider "${provider}" using mock service on Port: "${port}"`)
 
-  const mockService = new MockService(consumer, provider, port, host, ssl)
+  const mockService = new MockService(consumer, provider, port, host, ssl, pactfileWriteMode)
 
   /** @namespace PactProvider */
   return {

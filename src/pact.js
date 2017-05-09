@@ -29,6 +29,7 @@ const path = require('path')
  * @param {string} opts.host - host address of the mock service, defaults to 127.0.0.1
  * @param {boolean} opts.ssl - SSL flag to identify the protocol to be used (default false, HTTP)
  * @param {boolean} opts.cors - allow CORS OPTION requests to be accepted, defaults to false
+ * @param {string} pactfileWriteMode - 'overwrite' | 'update' | 'smart' | 'none', defaults to 'overwrite'
  * @return {@link PactProvider}
  * @static
  */
@@ -54,6 +55,7 @@ module.exports = (opts) => {
   const logLevel = opts.logLevel || 'INFO'
   const spec = opts.spec || 2
   const cors = opts.cors || false
+  const pactfileWriteMode = opts.pactfileWriteMode || 'overwrite'
 
   const server = serviceFactory.createServer({
     port: port,
@@ -69,7 +71,7 @@ module.exports = (opts) => {
 
   logger.info(`Setting up Pact with Consumer "${consumer}" and Provider "${provider}" using mock service on Port: "${port}"`)
 
-  const mockService = new MockService(consumer, provider, port, host, ssl)
+  const mockService = new MockService(consumer, provider, port, host, ssl, pactfileWriteMode)
 
   /** @namespace PactProvider */
   return {

@@ -1,5 +1,6 @@
 import {InteractionObject} from "./dsl/interaction";
 import * as _Matchers from "./dsl/matchers";
+import {PactfileWriteMode} from "./dsl/mockService";
 import _Verifier = require("./dsl/verifier");
 
 declare function pact(opts: pact.PactOptions): pact.PactProvider;
@@ -18,6 +19,7 @@ declare namespace pact {
     logLevel?: string;
     spec?: number;
     cors?: boolean;
+    pactfileWriteMode?: PactfileWriteMode;
   }
 
   export interface PactProvider {
