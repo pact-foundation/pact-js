@@ -38,7 +38,7 @@ server.listen(8081, () => {
 
 // Verify that the provider meets all consumer expectations
 describe('Pact Verification', () => {
-  it('should validate the expectations of Matching Service', function() { // lexical binding required here
+  it('should validate the expectations of Matching Service', function () { // lexical binding required here
     this.timeout(10000)
 
     let opts = {
@@ -46,11 +46,13 @@ describe('Pact Verification', () => {
       providerStatesUrl: 'http://localhost:8081/states',
       providerStatesSetupUrl: 'http://localhost:8081/setup',
       // Remote pacts
-      // pactUrls: ['https://test.pact.dius.com.au/pacts/provider/Animal%20Profile%20Service/consumer/Matching%20Service/latest'],
+      pactUrls: ['https://test.pact.dius.com.au/pacts/provider/Animal%20Profile%20Service/consumer/Matching%20Service/latest'],
       // Local pacts
-      pactUrls: [path.resolve(process.cwd(), './pacts/matching_service-animal_profile_service.json')],
+      // pactUrls: [path.resolve(process.cwd(), './pacts/matching_service-animal_profile_service.json')],
       pactBrokerUsername: 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
-      pactBrokerPassword: 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1'
+      pactBrokerPassword: 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
+      publishVerificationResult: true,
+      providerVersion: "1.0.0"
     }
 
     return verifier.verifyProvider(opts)
