@@ -197,15 +197,18 @@ Once you have created Pacts for your Consumer, you need to validate those Pacts 
 ```js
 const verifier = require('pact').Verifier;
 let opts = {
-	providerBaseUrl: <String>,           // Running API provider host endpoint. Required.
-	pactUrls: <Array>,                   // Array of local Pact file paths or Pact Broker URLs (http based). Required.
-	providerStatesUrl: <String>,         // URL to fetch the provider states for the given provider API. Optional.
-	providerStatesSetupUrl <String>,     // URL to send PUT requests to setup a given provider state. Optional.
-	pactBrokerUsername: <String>,        // Username for Pact Broker basic authentication. Optional
-	pactBrokerPassword: <String>,        // Password for Pact Broker basic authentication. Optional
-  publishVerificationResult: <Boolean> // Publish verification result to Broker. Optional
-	providerVersion: <Boolean>           // Provider version, required to publish verification result to Broker. Optional otherwise.
-  timeout: <Number>                    // The duration in ms we should wait to confirm verification process was successful. Defaults to 30000, Optional.
+	providerBaseUrl: <String>,            // Running API provider host endpoint. Required.
+	pactBrokerUrl: <String>,              // URL of the Pact Broker to retrieve pacts from. Required if not using pactUrls.
+	provider: <String>,                   // Name of the Provider. Required.
+	tags: <Array>,                        // Array of tags, used to filter pacts from the Broker. Optional.
+	pactUrls: <Array>,                    // Array of local Pact file paths or HTTP-based URLs (e.g. from a broker). Required if not using a Broker.
+	providerStatesUrl: <String>,          // URL to fetch the provider states for the given provider API. Optional.
+	providerStatesSetupUrl: <String>,     // URL to send PUT requests to setup a given provider state. Optional.
+	pactBrokerUsername: <String>,         // Username for Pact Broker basic authentication. Optional
+	pactBrokerPassword: <String>,         // Password for Pact Broker basic authentication. Optional
+	publishVerificationResult: <Boolean>, // Publish verification result to Broker. Optional
+	providerVersion: <Boolean>,           // Provider version, required to publish verification result to Broker. Optional otherwise.
+	timeout: <Number>                     // The duration in ms we should wait to confirm verification process was successful. Defaults to 30000, Optional.
 };
 
 verifier.verifyProvider(opts)).then(function () {
