@@ -42,11 +42,16 @@ describe('Pact Verification', () => {
     this.timeout(10000)
 
     let opts = {
+      provider: 'Animal%20Profile%20Service',
       providerBaseUrl: 'http://localhost:8081',
       providerStatesUrl: 'http://localhost:8081/states',
       providerStatesSetupUrl: 'http://localhost:8081/setup',
-      // Remote pacts
-      pactUrls: ['https://test.pact.dius.com.au/pacts/provider/Animal%20Profile%20Service/consumer/Matching%20Service/latest'],
+      // Fetch pacts from broker
+      pactBrokerUrl: 'https://test.pact.dius.com.au/',
+      // Fetch from broker with given tags
+      tags: ['prod', 'sit5'],
+      // Specific Remote pacts (doesn't need to be a broker)
+      // pactUrls: ['https://test.pact.dius.com.au/pacts/provider/Animal%20Profile%20Service/consumer/Matching%20Service/latest'],
       // Local pacts
       // pactUrls: [path.resolve(process.cwd(), './pacts/matching_service-animal_profile_service.json')],
       pactBrokerUsername: 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
