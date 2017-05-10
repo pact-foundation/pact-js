@@ -44,15 +44,15 @@ server.get('/animals/available', (req, res) => {
 })
 
 // Find an animal by ID
-server.get('/animals/:id', (req, res) => {
-  const response = animalRepository.getById(req.params.id)
-  if (response) {
-    res.end(JSON.stringify(response))
-  } else {
-    res.writeHead(404)
-    res.end()
-  }
-})
+// server.get('/animals/:id', (req, res) => {
+//   const response = animalRepository.getById(req.params.id)
+//   if (response) {
+//     res.end(JSON.stringify(response))
+//   } else {
+//     res.writeHead(404)
+//     res.end()
+//   }
+// })
 
 // Register a new Animal for the service
 server.post('/animals', (req, res) => {
