@@ -6,7 +6,7 @@ var proxyquire = require('proxyquire')
 
 describe('Pact', () => {
 
-  describe('#constructor', ()  => {
+  describe('#constructor', () => {
     let mockServiceSpy, Pact
 
     beforeEach(() => {
@@ -48,7 +48,7 @@ describe('Pact', () => {
 
   })
 
-  describe('#addInteraction', ()  => {
+  describe('#addInteraction', () => {
     let pact, Pact
     let port = 4567
 
@@ -73,10 +73,10 @@ describe('Pact', () => {
         willRespondWith: {
           status: 200,
           headers: { 'Content-Type': 'application/json' },
-          body: { }
+          body: {}
         }
       })
-      expect(addInteractionPromise).to.eventually.have.property('provider_state').notify(done)
+      expect(addInteractionPromise).to.eventually.have.property('providerState').notify(done)
     })
 
     it('creates interaction without state', (done) => {
@@ -90,10 +90,10 @@ describe('Pact', () => {
         willRespondWith: {
           status: 200,
           headers: { 'Content-Type': 'application/json' },
-          body: { }
+          body: {}
         }
       })
-      expect(addInteractionPromise).to.eventually.not.have.property('provider_state').notify(done)
+      expect(addInteractionPromise).to.eventually.not.have.property('providerState').notify(done)
     })
   })
 })

@@ -5,23 +5,23 @@ describe('Interaction', () => {
   describe('#given', () => {
     it('creates Interaction with provider state', () => {
       const actual = new Interaction().given('provider state').json()
-      expect(actual).to.eql({ provider_state: 'provider state' })
+      expect(actual).to.eql({ providerState: 'provider state' })
     })
 
     describe('without provider state', () => {
       it('creates Interaction when undefined', () => {
         const actual = new Interaction().given(undefined).json()
-        expect(actual).to.eql({ })
+        expect(actual).to.eql({})
       })
 
       it('creates Interaction when blank', () => {
         const actual = new Interaction().given('').json()
-        expect(actual).to.eql({ })
+        expect(actual).to.eql({})
       })
 
       it('creates Interaction when nothing is passed', () => {
         const actual = new Interaction().given().json()
-        expect(actual).to.eql({ })
+        expect(actual).to.eql({})
       })
     })
   })
@@ -55,7 +55,7 @@ describe('Interaction', () => {
     })
 
     describe('with only mandatory params', () => {
-      const actual = new Interaction().withRequest({method: 'GET', path: '/search'}).json()
+      const actual = new Interaction().withRequest({ method: 'GET', path: '/search' }).json()
 
       it('has a state compacted with only present keys', () => {
         expect(actual).to.have.keys('request')

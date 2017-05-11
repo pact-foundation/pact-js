@@ -8,7 +8,7 @@
 const omitBy = require('lodash.omitby')
 const isNil = require('lodash.isnil')
 
-const VALID_METHODS = [ 'GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS' ]
+const VALID_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS']
 
 module.exports = class Interaction {
 
@@ -16,7 +16,7 @@ module.exports = class Interaction {
    * Creates a new Interaction.
    * @returns {Interaction} interaction
    */
-  constructor () {
+  constructor() {
     this.state = {}
     return this
   }
@@ -26,9 +26,9 @@ module.exports = class Interaction {
    * @param {string} providerState - The state of the provider.
    * @returns {Interaction} interaction
    */
-  given (providerState) {
+  given(providerState) {
     if (providerState) {
-      this.state['provider_state'] = providerState
+      this.state['providerState'] = providerState
     }
     return this
   }
@@ -38,7 +38,7 @@ module.exports = class Interaction {
    * @param {string} description - A description of the interaction.
    * @returns {Interaction} interaction
    */
-  uponReceiving (description) {
+  uponReceiving(description) {
     if (isNil(description)) {
       throw new Error('You must provide a description for the interaction.')
     }
@@ -56,7 +56,7 @@ module.exports = class Interaction {
    * @param {Object} requestOpts.body - The body, in {@link String} format or {@link Object} format
    * @returns {Interaction} interaction
    */
-  withRequest (requestOpts) {
+  withRequest(requestOpts) {
     var method = requestOpts.method
     var path = requestOpts.path
     var query = requestOpts.query
@@ -92,7 +92,7 @@ module.exports = class Interaction {
   * @param {string} responseOpts.headers
   * @param {Object} responseOpts.body
    */
-  willRespondWith (responseOpts) {
+  willRespondWith(responseOpts) {
     var status = responseOpts.status
     var headers = responseOpts.headers
     var body = responseOpts.body
@@ -112,7 +112,7 @@ module.exports = class Interaction {
    * Returns the interaction object created.
    * @returns {Object}
    */
-  json () {
+  json() {
     return this.state
   }
 }
