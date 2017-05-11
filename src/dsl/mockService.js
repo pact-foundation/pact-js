@@ -18,8 +18,9 @@ module.exports = class MockService {
    * @param {number} port - the mock service port, defaults to 1234
    * @param {string} host - the mock service host, defaults to 127.0.0.1
    * @param {boolean} ssl - which protocol to use, defaults to false (HTTP)
+   * @param {string} pactfileWriteMode - 'overwrite' | 'update' | 'smart' | 'none', defaults to 'overwrite'
    */
-  constructor (consumer, provider, port, host, ssl) {
+  constructor (consumer, provider, port, host, ssl, pactfileWriteMode) {
     if (isNil(consumer) || isNil(provider)) {
       throw new Error('Please provide the names of the provider and consumer for this Pact.')
     }
@@ -27,12 +28,14 @@ module.exports = class MockService {
     port = port || 1234
     host = host || '127.0.0.1'
     ssl = ssl || false
+    pactfileWriteMode = pactfileWriteMode || 'overwrite'
 
     this._request = new Request()
     this._baseURL = `${ssl ? 'https' : 'http'}://${host}:${port}`
     this._pactDetails = {
       consumer: { name: consumer },
-      provider: { name: provider }
+      provider: { name: provider },
+      pactfile_write_mode: pactfileWriteMode
     }
   }
 
