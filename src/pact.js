@@ -29,7 +29,7 @@ const path = require('path')
  * @param {string} opts.host - host address of the mock service, defaults to 127.0.0.1
  * @param {boolean} opts.ssl - SSL flag to identify the protocol to be used (default false, HTTP)
  * @param {boolean} opts.cors - allow CORS OPTION requests to be accepted, defaults to false
- * @param {string} pactfileWriteMode - 'overwrite' | 'update' | 'smart' | 'none', defaults to 'overwrite'
+ * @param {string} pactfileWriteMode - 'overwrite' | 'update', 'none', defaults to 'overwrite'
  * @return {@link PactProvider}
  * @static
  */

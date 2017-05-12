@@ -1,9 +1,9 @@
-import {Interaction} from './interaction';
+import { Interaction } from './interaction';
 
-export type PactfileWriteMode = "overwrite" | "update" | "smart" | "none";
+export type PactfileWriteMode = "overwrite" | "update" | "none";
 
 export class MockService {
-  constructor (
+  constructor(
     consumer: string,
     provider: string,
     port?: number,

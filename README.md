@@ -33,6 +33,7 @@ how to get going.
     - [Consumer Side Testing](#consumer-side-testing)
       - [API](#api)
       - [Example](#example)
+      - [Splitting tests across multiple files](#splitting-tests-across-multiple-files)
     - [Provider API Testing](#provider-api-testing)
     - [Publishing Pacts to a Broker](#publishing-pacts-to-a-broker)
     - [Flexible Matching](#flexible-matching)
@@ -181,6 +182,28 @@ describe('Pact', () => {
 })
 
 ```
+
+#### Splitting tests across multiple files
+
+Pact tests tend to be quite long, due to the need to be specific about request/response payloads. Often times it is nicer to be able to split your tests across multiple files for manageability.
+
+You have two options to achieve this feat:
+
+1. Create a Pact test helper to orchestrate the setup and teardown of the mock service for multiple tests.
+
+    In larger test bases, this can significantly reduce test suite time and the amount of code you have to manage.
+
+    See this [example](https://github.com/tarciosaraiva/pact-melbjs/blob/master/helper.js) and this [issue](https://github.com/pact-foundation/pact-js/issues/11) for more.
+
+2. Set `pactfileWriteMode` to `update` in the `pact()` constructor
+
+    This will allow you to have multiple independent tests for a given Consumer-Provider pair, without it clobbering previous interactions.
+
+    In larger test suites, you'll incur a slow down due to the time taken to start and stop the underlying mock servers.
+
+    See this [PR](https://github.com/pact-foundation/pact-js/pull/48) for background.
+
+    _NOTE_: If using this approach, you *must* be careful to clear out existing pact files (e.g. `rm ./pacts/*.json`) before you run tests to ensure you don't have left over requests that are no longer relevent.
 
 ### Provider API Testing
 

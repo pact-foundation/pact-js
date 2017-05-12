@@ -18,7 +18,7 @@ module.exports = class MockService {
    * @param {number} port - the mock service port, defaults to 1234
    * @param {string} host - the mock service host, defaults to 127.0.0.1
    * @param {boolean} ssl - which protocol to use, defaults to false (HTTP)
-   * @param {string} pactfileWriteMode - 'overwrite' | 'update' | 'smart' | 'none', defaults to 'overwrite'
+   * @param {string} pactfileWriteMode - 'overwrite' | 'update' | 'none', defaults to 'overwrite'
    */
   constructor (consumer, provider, port, host, ssl, pactfileWriteMode) {
     if (isNil(consumer) || isNil(provider)) {

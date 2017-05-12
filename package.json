@@ -1,6 +1,6 @@
 {
   "name": "pact",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "description": "Pact for all things Javascript",
   "main": "./src/pact.js",
   "types": "./src/pact.d.ts",
@@ -92,7 +92,7 @@
     "lodash.isnil": "4.0.0",
     "lodash.isundefined": "3.0.1",
     "lodash.omitby": "4.6.0",
-    "@pact-foundation/pact-node": "~4.9.0",
+    "@pact-foundation/pact-node": "~4.9.1",
     "cli-color": "^1.1.0"
   },
   "devDependencies": {
