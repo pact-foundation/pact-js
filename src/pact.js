@@ -112,7 +112,7 @@ module.exports = (opts) => {
      */
     verify: () => {
       return mockService.verify()
-        .then(() => { mockService.removeInteractions() })
+        .then(() => mockService.removeInteractions())
         .catch(e => {
           // Properly format the error
           console.error('')
