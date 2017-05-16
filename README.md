@@ -36,8 +36,8 @@ how to get going.
       - [Splitting tests across multiple files](#splitting-tests-across-multiple-files)
     - [Publishing Pacts to a Broker and Tagging Pacts](#publishing-pacts-to-a-broker-and-tagging-pacts)
     - [Provider API Testing](#provider-api-testing)
-    - [Publishing Pacts to a Broker](#publishing-pacts-to-a-broker)
       - [Publishing Verification Results to a Pact Broker](#publishing-verification-results-to-a-pact-broker)
+    - [Publishing Pacts to a Broker](#publishing-pacts-to-a-broker)
     - [Flexible Matching](#flexible-matching)
       - [Match by regular expression](#match-by-regular-expression)
       - [Match based on type](#match-based-on-type)
@@ -245,25 +245,6 @@ verifier.verifyProvider(opts)).then(function () {
 
 That's it! Read more about [Verifying Pacts](http://docs.pact.io/documentation/verifying_pacts.html).
 
-### Publishing Pacts to a Broker
-
-Sharing is caring - to simplify sharing Pacts between Consumers and Providers, checkout [sharing pacts](http://docs.pact.io/documentation/sharings_pacts.html) using the [Pact Broker](https://github.com/bethesque/pact_broker).
-
-```js
-let pact = require('@pact-foundation/pact-node');
-let opts = {
-	pactUrls: <Array>,               // Array of local Pact files or directories containing pact files. Path must be absolute. Required.
-	pactBroker: <String>,            // URL to fetch the provider states for the given provider API. Optional.
-	pactBrokerUsername: <String>,    // Username for Pact Broker basic authentication. Optional
-	pactBrokerPassword: <String>,    // Password for Pact Broker basic authentication. Optional
-	consumerVersion: <String>        // A string containing a semver-style version e.g. 1.0.0. Required.
-};
-
-pact.publishPacts(opts)).then(function () {
-	// do something
-});
-```
-
 #### Publishing Verification Results to a Pact Broker
 
 If you're using a Pact Broker (e.g. a hosted one at pact.dius.com.au), you can
@@ -283,6 +264,25 @@ provider: "Foo",
 ```
 
 _NOTE_: You need to be already pulling pacts from the broker for this feature to work.
+
+### Publishing Pacts to a Broker
+
+Sharing is caring - to simplify sharing Pacts between Consumers and Providers, checkout [sharing pacts](http://docs.pact.io/documentation/sharings_pacts.html) using the [Pact Broker](https://github.com/bethesque/pact_broker).
+
+```js
+let pact = require('@pact-foundation/pact-node');
+let opts = {
+	pactUrls: <Array>,               // Array of local Pact files or directories containing pact files. Path must be absolute. Required.
+	pactBroker: <String>,            // URL to fetch the provider states for the given provider API. Optional.
+	pactBrokerUsername: <String>,    // Username for Pact Broker basic authentication. Optional
+	pactBrokerPassword: <String>,    // Password for Pact Broker basic authentication. Optional
+	consumerVersion: <String>        // A string containing a semver-style version e.g. 1.0.0. Required.
+};
+
+pact.publishPacts(opts)).then(function () {
+	// do something
+});
+```
 
 ### Flexible Matching
 
