@@ -34,8 +34,10 @@ how to get going.
       - [API](#api)
       - [Example](#example)
       - [Splitting tests across multiple files](#splitting-tests-across-multiple-files)
+    - [Publishing Pacts to a Broker and Tagging Pacts](#publishing-pacts-to-a-broker-and-tagging-pacts)
     - [Provider API Testing](#provider-api-testing)
     - [Publishing Pacts to a Broker](#publishing-pacts-to-a-broker)
+      - [Publishing Verification Results to a Pact Broker](#publishing-verification-results-to-a-pact-broker)
     - [Flexible Matching](#flexible-matching)
       - [Match by regular expression](#match-by-regular-expression)
       - [Match based on type](#match-based-on-type)
@@ -205,6 +207,8 @@ You have two options to achieve this feat:
 
     _NOTE_: If using this approach, you *must* be careful to clear out existing pact files (e.g. `rm ./pacts/*.json`) before you run tests to ensure you don't have left over requests that are no longer relevent.
 
+### Publishing Pacts to a Broker and Tagging Pacts
+
 ### Provider API Testing
 
 Once you have created Pacts for your Consumer, you need to validate those Pacts against your Provider. The Verifier object provides the following API for you to do so:
@@ -259,6 +263,26 @@ pact.publishPacts(opts)).then(function () {
 	// do something
 });
 ```
+
+#### Publishing Verification Results to a Pact Broker
+
+If you're using a Pact Broker (e.g. a hosted one at pact.dius.com.au), you can
+publish your verification results so that consumers can query if they are safe
+to release.
+
+It looks like this:
+
+![screenshot of verification result](https://cloud.githubusercontent.com/assets/53900/25884085/2066d98e-3593-11e7-82af-3b41a20af8e5.png)
+
+You need to specify the following when constructing the pact object:
+
+```js
+publishVerificationResult: true,
+providerVersion: "1.0.0",
+provider: "Foo",
+```
+
+_NOTE_: You need to be already pulling pacts from the broker for this feature to work.
 
 ### Flexible Matching
 
