@@ -44,6 +44,7 @@ how to get going.
     - [Examples](#examples)
   - [Using Pact in non-Node environments](#using-pact-in-non-node-environments)
     - [Using Pact with Karma](#using-pact-with-karma)
+    - [Using Pact with RequireJS](#using-pact-with-requirejs)
   - [Troubleshooting](#troubleshooting)
     - [Timeout](#timeout)
     - [Note on Jest](#note-on-jest)
@@ -458,6 +459,34 @@ Modify your `karma.conf.js` file as per below to get started:
 ```
 
 Check out the [Examples](/pact-foundation/pact-js#examples) for how to use the Karma interface.
+
+### Using Pact with RequireJS
+
+The module name should be "Pact" - not "pact-js". An example config with a karma test might look
+like the following:
+
+In `client-spec.js` change the `define` to:
+
+```js
+define(['client', 'Pact'], function (example, Pact) {
+```
+
+In `test-main.js`:
+
+```js
+require.config({
+    baseUrl: '/base',
+    paths: {
+        'Pact': 'node_modules/pact-web/pact-web',
+        'client': 'js/client'
+    },
+    deps: allTestFiles,
+    callback: window.__karma__.start
+})
+```
+
+See this [Stack Overflow](https://stackoverflow.com/a/44170373/1008568) question for background, and
+this [gist](https://gist.github.com/mefellows/15c9fcb052c2aa9d8951f91d48d6da54) with a working example.
 
 ## Troubleshooting
 
