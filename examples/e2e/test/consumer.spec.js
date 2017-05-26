@@ -20,9 +20,7 @@ describe('Pact', () => {
   })
 
   // Alias flexible matchers for simplicity
-  const term = pact.Matchers.term
-  const like = pact.Matchers.somethingLike
-  const eachLike = pact.Matchers.eachLike
+  const { somethingLike: like, term, eachLike } = pact.Matchers
 
   // Animal we want to match :)
   const suitor = {

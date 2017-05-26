@@ -295,11 +295,14 @@ Read more about using regular expressions and type based matching [here][https:/
 
 _NOTE: Make sure to start the mock service via the `Pact` declaration with the option `specification: 2` to get access to these features._
 
+For simplicity, we alias the main matches to make our code more readable:
+
 #### Match by regular expression
 
 The underlying mock service is written in Ruby, so the regular expression must be in a Ruby format, not a Javascript format.
 
 ```javascript
+const { term } = pact.Matchers
 
 provider.addInteraction({
   state: 'Has some animals',
@@ -328,6 +331,7 @@ provider.addInteraction({
 #### Match based on type
 
 ```javascript
+const { somethingLike: like } = pact.Matchers
 
 provider.addInteraction({
   state: 'Has some animals',
@@ -364,10 +368,7 @@ Where `obj` can be any javascript object, value or Pact.Match. It takes optional
 Below is an example that uses all of the Pact Matchers.
 
 ```javascript
-
-var somethingLike = pact.Matchers.somethingLike;
-var term = pact.Matchers.term;
-var eachLike = pact.Matchers.eachLike;
+const { somethingLike: like, term, eachLike } = pact.Matchers
 
 const animalBodyExpectation = {
   'id': like(1),
