@@ -255,20 +255,20 @@ in the `verifier` constructor and configure some extra (dynamic) API endpoints.
 
 The two API endpoints you must create are:
 
-* List [Provider States](https://docs.pact.io/documentation/provider_states.html)(`--provider-states-url`) which returns the available states grouped by known consumers and returning an HTTP `200`:
+* List [Provider States](https://docs.pact.io/documentation/provider_states.html) (`--provider-states-url`) which returns the available states grouped by known consumers and returning an HTTP `200`:
 
-```js
-{
-  "SomeUI": [
-    "customer A is logged in",
-    "customer A has a million dollars"
-  ],
-  "BackendAPI": [
-    "customer A is logged in",
-    "there are no customers"
-  ]
-}
-```
+	```js
+	{
+	  "SomeUI": [
+	    "customer A is logged in",
+	    "customer A has a million dollars"
+	  ],
+	  "BackendAPI": [
+	    "customer A is logged in",
+	    "there are no customers"
+	  ]
+	}
+	```
 
 * Setup Provider State (`--provider-states-setup-url`) for the given state, which sets the active pact consumer and provider state accepting two parameters: `consumer` and `state` and returns an HTTP `200` eg. `consumer=web&state=customer%20is%20logged%20in`.
 
