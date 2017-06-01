@@ -9,4 +9,6 @@ echo "//registry.npmjs.org/:always-auth=true" >> $NPMRC_FILE
 
 set -x
 
-cp package.json.web dist/package.json
+VERSION=$(cat package.json | grep version | egrep -o "([0-9.]+)")
+cat package.json.web | sed "s/VERSION/$VERSION/g" > dist/package.json
+

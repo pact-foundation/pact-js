@@ -1,6 +1,6 @@
 {
   "name": "pact-web",
-  "version": "2.5.0",
+  "version": "VERSION",
   "description": "Pact for the browser",
   "main": "pact-web.js",
   "scripts": {},
