@@ -10,13 +10,6 @@ const {
   animalRepository
 } = require('../provider.js')
 
-// Append some extra endpoints to mutate current state of the API
-server.get('/states', (req, res) => {
-  res.json({
-    "Matching Service": ['Has some animals', 'Has no animals', 'Has an animal with ID 1']
-  })
-})
-
 server.post('/setup', (req, res) => {
   const state = req.body.state
 
@@ -42,9 +35,8 @@ describe('Pact Verification', () => {
     this.timeout(10000)
 
     let opts = {
-      provider: 'Animal%20Profile%20Service',
+      provider: 'Animal Profile Service',
       providerBaseUrl: 'http://localhost:8081',
-      providerStatesUrl: 'http://localhost:8081/states',
       providerStatesSetupUrl: 'http://localhost:8081/setup',
       // Fetch pacts from broker
       pactBrokerUrl: 'https://test.pact.dius.com.au/',
