@@ -231,7 +231,6 @@ let opts = {
 	provider: <String>,                   // Name of the Provider. Required.
 	tags: <Array>,                        // Array of tags, used to filter pacts from the Broker. Optional.
 	pactUrls: <Array>,                    // Array of local Pact file paths or HTTP-based URLs (e.g. from a broker). Required if not using a Broker.
-	providerStatesUrl: <String>,          // URL to fetch the provider states for the given provider API. Optional, required only if you provide a 'state' in any consumer tests.
 	providerStatesSetupUrl: <String>,     // URL to send PUT requests to setup a given provider state. Optional, required only if you provide a 'state' in any consumer tests.
 	pactBrokerUsername: <String>,         // Username for Pact Broker basic authentication. Optional
 	pactBrokerPassword: <String>,         // Password for Pact Broker basic authentication. Optional
@@ -250,27 +249,8 @@ That's it! Read more about [Verifying Pacts](http://docs.pact.io/documentation/v
 #### API with Provider States
 
 If you have any `state`'s in your consumer tests that you need to validate during verification, you will need
-to configure your provider for Provider States. This means you must specify `providerStatesUrl` and `providerStatesSetupUrl`
-in the `verifier` constructor and configure some extra (dynamic) API endpoints.
-
-The two API endpoints you must create are:
-
-* List [Provider States](https://docs.pact.io/documentation/provider_states.html) (`--provider-states-url`) which returns the available states grouped by known consumers and returning an HTTP `200`:
-
-	```js
-	{
-	  "SomeUI": [
-	    "customer A is logged in",
-	    "customer A has a million dollars"
-	  ],
-	  "BackendAPI": [
-	    "customer A is logged in",
-	    "there are no customers"
-	  ]
-	}
-	```
-
-* Setup Provider State (`--provider-states-setup-url`) for the given state, which sets the active pact consumer and provider state accepting two parameters: `consumer` and `state` and returns an HTTP `200` eg. `consumer=web&state=customer%20is%20logged%20in`.
+to configure your provider for Provider States. This means you must specify `providerStatesSetupUrl`
+in the `verifier` constructor and configure an extra (dynamic) API endpoint to setup provider state (`--provider-states-setup-url`) for the given test state, which sets the active pact consumer and provider state accepting two parameters: `consumer` and `state` and returns an HTTP `200` eg. `consumer=web&state=customer%20is%20logged%20in`.
 
 See this [Provider](https://github.com/pact-foundation/pact-js/blob/master/examples/e2e/test/provider.spec.js) for a working example, or read more about [Provider States](https://docs.pact.io/documentation/provider_states.html).
 
