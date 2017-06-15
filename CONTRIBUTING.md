@@ -16,5 +16,5 @@ Please provide the following information with your issue to enable us to respond
 * For bigger changes, make sure you start a discussion first by creating an issue and explaining the intended change
 
 [wiki]: https://github.com/pact-foundation/pact_broker/wiki
-[stackoverflow]: https://stackoverflow.com/questions/tagged/pact-js
+[stackoverflow]: https://stackoverflow.com/questions/tagged/pact
 [examples]: https://github.com/pact-foundation/pact-js/tree/master/examples
