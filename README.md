@@ -42,7 +42,8 @@ how to get going.
       - [Match by regular expression](#match-by-regular-expression)
       - [Match based on type](#match-based-on-type)
       - [Match based on arrays](#match-based-on-arrays)
-    - [Examples](#examples)
+  - [Tutorial (60 minutes)](#tutorial-60-minutes)
+  - [Examples](#examples)
   - [Using Pact in non-Node environments](#using-pact-in-non-node-environments)
     - [Using Pact with Karma](#using-pact-with-karma)
     - [Using Pact with RequireJS](#using-pact-with-requirejs)
@@ -423,7 +424,11 @@ provider.addInteraction({
 })
 ```
 
-### Examples
+## Tutorial (60 minutes)
+
+Learn everything in Pact JS in 60 minutes: https://github.com/DiUS/pact-workshop-js
+
+## Examples
 
 * [Complete Example (Node env)](https://github.com/pact-foundation/pact-js/tree/master/examples/e2e)
 * [Pact with Jest (Node env)](https://github.com/pact-foundation/pact-js/tree/master/examples/jest)
