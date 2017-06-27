@@ -355,10 +355,15 @@ provider.addInteraction({
     headers: {
       'Content-Type': 'application/json; charset=utf-8'
     },
-    body: like({
+    body: {
       id: 1,
-      name: 'Billy'
-    })
+      name: like('Billy'),
+      address: like({
+      	street: '123 Smith St',
+	suburb: 'Smithsville',
+	postcode: 7777
+      })
+    }
   }
 })
 ```
