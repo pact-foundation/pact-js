@@ -355,13 +355,15 @@ provider.addInteraction({
     headers: {
       'Content-Type': 'application/json; charset=utf-8'
     },
-    body: {
-      id: like(1),
-      name: like('Billy')
-    }
+    body: like({
+      id: 1,
+      name: 'Billy'
+    })
   }
 })
 ```
+
+Note that you can wrap a `like` around a single value or an object. When wrapped around an object, all values and child object values will be matched according to types, unless overridden by something more specific like a `term`.
 
 [flexible-matching]: https://github.com/realestate-com-au/pact/wiki/Regular-expressions-and-type-matching-with-Pact
 
@@ -381,28 +383,29 @@ Below is an example that uses all of the Pact Matchers.
 const { somethingLike: like, term, eachLike } = pact.Matchers
 
 const animalBodyExpectation = {
-  'id': like(1),
-  'first_name': like('Billy'),
-  'last_name': like('Goat'),
-  'animal': like('goat'),
-  'age': like(21),
+  'id': 1,
+  'first_name': 'Billy',
+  'last_name': 'Goat',
+  'animal': 'goat',
+  'age': 21,
   'gender': term({
     matcher: 'F|M',
     generate: 'M'
   }),
   'location': {
-    'description': like('Melbourne Zoo'),
-    'country': like('Australia'),
-    'post_code': like(3000)
+    'description': 'Melbourne Zoo',
+    'country': 'Australia',
+    'post_code': 3000
   },
   'eligibility': {
-    'available': like(true),
-    'previously_married': like(false)
+    'available': true,
+    'previously_married': false
   },
-  'interests': eachLike('walks in the garden/meadow')
+  'children': eachLike({'name': 'Sally', 'age': 2})
 }
 
 // Define animal list payload, reusing existing object matcher
+// Note that using eachLike ensure that all values are matched by type
 const animalListExpectation = eachLike(animalBodyExpectation, {
   min: MIN_ANIMALS
 })
