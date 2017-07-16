@@ -284,7 +284,7 @@ Sharing is caring - to simplify sharing Pacts between Consumers and Providers, c
 let pact = require('@pact-foundation/pact-node');
 let opts = {
 	pactUrls: <Array>,               // Array of local Pact files or directories containing pact files. Path must be absolute. Required.
-	pactBroker: <String>,            // URL to fetch the provider states for the given provider API. Optional.
+	pactBroker: <String>,            // The base URL of the Pact Broker. eg. https://test.pact.dius.com.au. Required.
 	pactBrokerUsername: <String>,    // Username for Pact Broker basic authentication. Optional
 	pactBrokerPassword: <String>,    // Password for Pact Broker basic authentication. Optional
 	consumerVersion: <String>        // A string containing a semver-style version e.g. 1.0.0. Required.
