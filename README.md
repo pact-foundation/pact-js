@@ -117,7 +117,7 @@ describe('Pact', () => {
   // (1) Create the Pact object to represent your provider
   const provider = pact({
     consumer: 'TodoApp',
-    provider: 'TodoService',,
+    provider: 'TodoService',
     port: MOCK_SERVER_PORT,
     log: path.resolve(process.cwd(), 'logs', 'pact.log'),
     dir: path.resolve(process.cwd(), 'pacts'),
