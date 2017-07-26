@@ -241,7 +241,7 @@ let opts = {
 	timeout: <Number>                     // The duration in ms we should wait to confirm verification process was successful. Defaults to 30000, Optional.
 };
 
-verifier.verifyProvider(opts)).then(function () {
+verifier.verifyProvider(opts).then(function () {
 	// do something
 });
 ```
