@@ -102,13 +102,13 @@ The first step is to create a test for your API Consumer. The example below uses
 Check out the `examples` folder for examples with Karma Jasmine, Mocha and Jest. The example below is taken from the [integration spec](https://github.com/pact-foundation/pact-js/blob/master/test/dsl/integration.spec.js).
 
 ```javascript
-let path = require('path')
-let chai = require('chai')
-let pact = require('pact')
-let request = require ('superagent')
-let chaiAsPromised = require('chai-as-promised')
+const path = require('path')
+const chai = require('chai')
+const pact = require('pact')
+const chaiAsPromised = require('chai-as-promised')
 
-let expect = chai.expect
+const expect = chai.expect
+const MOCK_SERVER_PORT = 2202
 
 chai.use(chaiAsPromised);
 
