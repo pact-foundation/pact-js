@@ -38,3 +38,7 @@ jscpd.json
 
 # Pacts
 pacts/
+
+# IDEs
+.idea
+*.iml
