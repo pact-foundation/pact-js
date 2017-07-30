@@ -172,8 +172,9 @@ describe('Pact', () => {
       	    expect(projects).to.be.a('array')
             expect(projects).to.have.deep.property('projects[0].id', 1)
 
-            // (5) validate the interactions occurred, this will throw an error if it fails telling you what went wrong
-      	    return provider.verify()
+            // (5) validate the interactions you've registered and expected occurred 
+            // this will throw an error if it fails telling you what went wrong
+      	    expect(provider.verify()).to.not.throw()
           })
       })
 
