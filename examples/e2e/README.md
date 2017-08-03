@@ -43,10 +43,10 @@ Given an animal profile, recommends a suitable partner based on similar interest
 
 ## Running the tests
 
-1. `npm install`
-1. `npm run test:consumer` - Run consumer tests
-1. `npm run test:publish` - Publish contracts to the broker
-1. `npm run test:provider` - Run provider tests
+1. `npm install` (on the root project directory)
+1. `npm run test:consumer` (from e2e directory) - Run consumer tests
+1. `npm run test:publish` (from e2e directory) - Publish contracts to the broker
+1. `npm run test:provider` (from e2e directory) - Run provider tests
 
 [![asciicast](https://asciinema.org/a/105793.png)](https://asciinema.org/a/105793)
 
