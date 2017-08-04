@@ -71,7 +71,7 @@ module.exports = (opts) => {
 
   logger.info(`Setting up Pact with Consumer "${consumer}" and Provider "${provider}" using mock service on Port: "${port}"`)
 
-  const mockService = new MockService(consumer, provider, port, host, ssl, pactfileWriteMode)
+  const mockService = new MockService(consumer, provider, dir, port, host, ssl, pactfileWriteMode)
 
   /** @namespace PactProvider */
   return {
