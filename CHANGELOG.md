@@ -6,6 +6,10 @@ Do this to generate your change history
 
 ### v2.6.0
 
+* [50e1041](https://github.com/pact-foundation/pact-js/commit/50e1041) - feat(upgrade): upgrade to latest pact node v4.12.0 (Matt Fellows, Sun Aug 6 14:22:36 2017 +1000)
+
+### v2.6.0
+
 * [844bdfd](https://github.com/pact-foundation/pact-js/commit/844bdfd) - chore(build): allow all minor version upgrades to Pact Node (Matt Fellows, Thu Jun 1 14:10:35 2017 +1000)
 
 ### v2.5.0
