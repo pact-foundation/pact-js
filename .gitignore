@@ -42,3 +42,4 @@ pacts/
 # IDEs
 .idea
 *.iml
+.vscode
