@@ -16,5 +16,6 @@ exclude_paths:
 - "config/**/*"
 - "dist/**.js"
 - "examples/**/*"
+- "karma/**/*"
 - "test/**/*"
 - "docs/**/*"
