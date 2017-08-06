@@ -1,10 +1,10 @@
 # Pact JS
 [![Join the chat at https://gitter.im/realestate-com-au/pact](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/realestate-com-au/pact?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/pact-foundation/pact-js.svg?branch=master)](https://travis-ci.org/pact-foundation/pact-js)
-[![Code Climate](https://codeclimate.com/github/pact-foundation/pact-js/badges/gpa.svg)](https://codeclimate.com/github/pact-foundation/pact-js)
-[![Dependency Status](https://gemnasium.com/badges/github.com/pact-foundation/pact-js.svg)](https://gemnasium.com/github.com/pact-foundation/pact-js)
 [![Coverage Status](https://coveralls.io/repos/github/pact-foundation/pact-js/badge.svg?branch=master)](https://coveralls.io/github/pact-foundation/pact-js?branch=master)
+[![Code Climate](https://codeclimate.com/github/pact-foundation/pact-js/badges/gpa.svg)](https://codeclimate.com/github/pact-foundation/pact-js)
 [![Issue Count](https://codeclimate.com/github/pact-foundation/pact-js/badges/issue_count.svg)](https://codeclimate.com/github/pact-foundation/pact-js)
+[![Dependency Status](https://gemnasium.com/badges/github.com/pact-foundation/pact-js.svg)](https://gemnasium.com/github.com/pact-foundation/pact-js)
 [![npm](https://img.shields.io/github/license/pact-foundation/pact-js.svg?maxAge=2592000)](https://github.com/pact-foundation/pact-js/blob/master/LICENSE)
 
 Implementation of the consumer driven contract library [Pact](https://github.com/pact-foundation/pact-specification) for Javascript.
@@ -172,7 +172,7 @@ describe('Pact', () => {
       	    expect(projects).to.be.a('array')
             expect(projects).to.have.deep.property('projects[0].id', 1)
 
-            // (5) validate the interactions you've registered and expected occurred 
+            // (5) validate the interactions you've registered and expected occurred
             // this will throw an error if it fails telling you what went wrong
       	    expect(provider.verify()).to.not.throw()
           })
