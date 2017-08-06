@@ -4,9 +4,9 @@
   "description": "Pact JS E2E Example",
   "scripts": {
     "test": "npm run test:consumer && npm run test:publish && npm run test:provider",
-    "test:consumer": "./node_modules/.bin/mocha test/consumer.spec.js",
+    "test:consumer": "./node_modules/.bin/mocha --timeout 10000 test/consumer.spec.js",
     "test:publish": "node test/publish.js",
-    "test:provider": "./node_modules/.bin/mocha test/provider.spec.js",
+    "test:provider": "./node_modules/.bin/mocha --timeout 10000 test/provider.spec.js",
     "api": "concurrently 'npm run provider' 'npm run consumer'",
     "consumer": "node ./consumerService.js",
     "provider": "node ./providerService.js"
