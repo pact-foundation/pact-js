@@ -18,6 +18,7 @@
     "test:karma:jasmine": "karma start ./karma/jasmine/karma.conf.js",
     "test:karma:mocha": "karma start ./karma/mocha/karma.conf.js",
     "test:checkCoverage": "istanbul check",
+    "test:e2e-examples": "cd examples/e2e && npm i && npm t",
     "posttest": "npm run test:checkCoverage && npm run test:karma && npm run docs",
     "deploy:prepare": "./scripts/create_npmrc_file.sh"
   },

@@ -19,7 +19,13 @@ addons:
     - ubuntu-toolchain-r-test
     packages:
     - g++-4.8
-script: npm run dist
+script:
+  npm run dist
+
+  # Only run E2E examples on Node 6+
+  if [[ "${TRAVIS_NODE_VERSION}" =~ ^[6-8] ]]; then
+    npm run test:e2e-examples
+  fi
 after_success:
 - npm run coverage
 before_deploy:
