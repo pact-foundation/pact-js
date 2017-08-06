@@ -1,0 +1,14 @@
+{
+  "name": "avajs-pact-example",
+  "version": "1.0.0",
+  "description": "Ava Pact example",
+  "main": "index.js",
+  "scripts": {
+    "test": "ava"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "ava": "^0.21.0",
+    "axios": "^0.14.0"
+  }
+}

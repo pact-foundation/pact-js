@@ -441,6 +441,7 @@ Learn everything in Pact JS in 60 minutes: https://github.com/DiUS/pact-workshop
 ## Examples
 
 * [Complete Example (Node env)](https://github.com/pact-foundation/pact-js/tree/master/examples/e2e)
+* [Pact with AVA (Node env)](https://github.com/pact-foundation/pact-js/tree/master/examples/ava)
 * [Pact with Jest (Node env)](https://github.com/pact-foundation/pact-js/tree/master/examples/jest)
 * [Pact with Mocha](https://github.com/pact-foundation/pact-js/tree/master/examples/mocha)
 * [Pact with Karma + Jasmine](https://github.com/pact-foundation/pact-js/tree/master/karma/jasmine)
