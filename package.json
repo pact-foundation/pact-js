@@ -49,26 +49,9 @@
       "url": "http://twitter.com/matthewfellows"
     },
     {
-      "name": "David Stanciu",
-      "email": "davidstanciu29@gmail.com",
-      "url": "https://github.com/dstanciu29"
-    },
-    {
       "name": "Michel Boudreau",
       "email": "michelboudreau@gmail.com",
       "url": "http://codinghitchhiker.com"
-    },
-    {
-      "name": "Fu Ying",
-      "email": "fu.ying.er@rea-group.com"
-    },
-    {
-      "name": "Malinda Kapuruge",
-      "email": "kaushalye@gmail.com"
-    },
-    {
-      "name": "Ben Sayers",
-      "email": "bpsayers@gmail.com"
     }
   ],
   "license": "MIT",
@@ -87,7 +70,7 @@
     ]
   },
   "dependencies": {
-    "es6-promise": "3.2.1",
+    "es6-promise": "4.1.1",
     "lodash.isfunction": "3.0.8",
     "lodash.isnil": "4.0.0",
     "lodash.isundefined": "3.0.1",
