@@ -1,5 +1,5 @@
 {
-  "name": "jest",
+  "name": "mochajs-pact-example",
   "version": "1.0.0",
   "description": "Mocha Pact example",
   "main": "index.js",
