@@ -1,6 +1,6 @@
-import { InteractionObject } from "./dsl/interaction";
-import * as _Matchers from "./dsl/matchers";
-import {PactfileWriteMode} from "./dsl/mockService";
+import { InteractionObject } from './dsl/interaction';
+import * as _Matchers from './dsl/matchers';
+import {PactfileWriteMode} from './dsl/mockService';
 
 declare function pact(opts: pact.PactWebOptions): pact.PactWebProvider;
 

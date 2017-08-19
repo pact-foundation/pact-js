@@ -1,9 +1,8 @@
 /* eslint-disable */
-var path = require('path');
-var webpack = require('webpack');
-
-var DIST = path.resolve(__dirname, '../dist');
-var APP = path.resolve(__dirname, '../src');
+const path = require('path');
+const webpack = require('webpack');
+const DIST = path.resolve(__dirname, '../dist-web');
+const APP = path.resolve(__dirname, '../src');
 
 module.exports = {
   entry: path.resolve(APP, 'pact-web.js'),
@@ -14,27 +13,33 @@ module.exports = {
     umdNamedDefine: true,
     filename: 'pact-web.js'
   },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js']
+  },
   target: 'web',
-  externals: ['mitm'],
   node: {
     net: 'empty'
   },
   module: {
     loaders: [
-      { test: /\.tsx?$/, loader: 'ignore-loader' },
+      {
+        test: /\.tsx?$/,
+        loader: 'awesome-typescript-loader'
+      },
       {
         loader: 'babel-loader',
         test: APP,
         exclude: /node_modules/,
-        query: { presets: ['es2015'] }
+        query: {
+          presets: ['es2015']
+        }
       }
-    ]
+    ],
   },
   plugins: [
     new webpack.DefinePlugin({ 'global.GENTLY': false }),
     new webpack.IgnorePlugin(/vertx/),
-    new webpack.optimize.DedupePlugin(),
-    new webpack.NoErrorsPlugin()
+    new webpack.NoEmitOnErrorsPlugin()
   ],
   devtool: 'source-map'
 }

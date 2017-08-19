@@ -5,22 +5,23 @@
   "main": "./src/pact.js",
   "types": "./src/pact.d.ts",
   "scripts": {
-    "clean": "rimraf docs dist coverage logs pacts jscpd.json",
+    "build": "./node_modules/.bin/tsc",
+    "clean": "rimraf docs dist dist-web coverage logs pacts jscpd.json",
     "coverage": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "deploy:prepare": "./scripts/create_npmrc_file.sh",
+    "dist": "npm run build && webpack --config ./config/webpack.web.config.js",
     "docs": "documentation build -o docs -f html -g --name 'Pact' src/pact.js",
-    "dist": "webpack --config ./config/webpack.web.config.js",
-    "lint": "standard",
     "jscpd": "jscpd -p src -r json -o jscpd.json",
-    "predist": "npm run clean && npm run lint && npm run jscpd",
+    "lint": "standard && ./node_modules/.bin/tslint -c tslint.json 'src/**/*.ts' -p .",
     "postdist": "npm t",
+    "posttest": "npm run test:checkCoverage && npm run test:karma && npm run docs",
+    "predist": "npm run clean && npm run lint && npm run jscpd",
     "test": "istanbul cover ./node_modules/.bin/_mocha --timeout 10000 -- ./test",
-    "test:karma": "npm run test:karma:jasmine && npm run test:karma:mocha",
-    "test:karma:jasmine": "karma start ./karma/jasmine/karma.conf.js",
-    "test:karma:mocha": "karma start ./karma/mocha/karma.conf.js",
     "test:checkCoverage": "istanbul check",
     "test:e2e-examples": "cd examples/e2e && npm i && npm t",
-    "posttest": "npm run test:checkCoverage && npm run test:karma && npm run docs",
-    "deploy:prepare": "./scripts/create_npmrc_file.sh"
+    "test:karma": "npm run test:karma:jasmine && npm run test:karma:mocha",
+    "test:karma:jasmine": "karma start ./karma/jasmine/karma.conf.js",
+    "test:karma:mocha": "karma start ./karma/mocha/karma.conf.js"
   },
   "repository": {
     "type": "git",
@@ -71,24 +72,26 @@
     ]
   },
   "dependencies": {
+    "@pact-foundation/pact-node": "^4.12.0",
+    "cli-color": "^1.1.0",
     "es6-promise": "4.1.1",
     "lodash.isfunction": "3.0.8",
     "lodash.isnil": "4.0.0",
     "lodash.isundefined": "3.0.1",
-    "lodash.omitby": "4.6.0",
-    "@pact-foundation/pact-node": "^4.12.0",
-    "cli-color": "^1.1.0"
+    "lodash.omitby": "4.6.0"
   },
   "devDependencies": {
+    "awesome-typescript-loader": "^3.2.3",
     "babel-cli": "6.x",
     "babel-eslint": "6.x",
-    "babel-loader": "6.x",
+    "babel-loader": "^7.1.2",
     "babel-preset-es2015": "6.x",
     "bluebird": "3.x",
     "chai": "3.x",
     "chai-as-promised": "5.x",
     "coveralls": "2.x",
     "documentation": "4.0.0-beta9",
+    "enhanced-resolve": "^3.4.1",
     "imports-loader": "0.x",
     "istanbul": "0.4.x",
     "jasmine-core": "2.x",
@@ -106,8 +109,11 @@
     "rimraf": "2.x",
     "sinon": "1.x",
     "sinon-chai": "2.x",
+    "source-map-loader": "^0.2.1",
     "standard": "8.x",
     "superagent": "2.x",
-    "webpack": "1.x"
+    "tslint": "^5.6.0",
+    "typescript": "^2.4.2",
+    "webpack": "^3.5.5"
   }
 }

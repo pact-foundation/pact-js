@@ -8,7 +8,3 @@ echo "//registry.npmjs.org/:email=pact-foundation@googlegroups.com" >> $NPMRC_FI
 echo "//registry.npmjs.org/:always-auth=true" >> $NPMRC_FILE
 
 set -x
-
-VERSION=$(cat package.json | grep version | egrep -o "([0-9.]+)")
-cat package.json.web | sed "s/VERSION/$VERSION/g" > dist/package.json
-

@@ -39,19 +39,10 @@ deploy:
     tags: true
     branch: master
     node: '6'
-- provider: npm
-  email: pact-foundation@googlegroups.com
-  api_key:
-    secure: jvmoyItvKvPrPZjWtD8/l12fjkIunhdBaKduPjzrJ9xGrnRRigI+NY6WVdWlPJ6IMbHi5f258idUhrP3nTL7QCPMSIb0P/JZyrrkHliPLyRhBP+yc/s+AuzYJm09O454JgvxnWuENGsLtR5q6swo6pDGFwthIyAHL/O8AXEavz3jG7GULjwIL/LtBKCzoK+L4WdS8SC0X8WUP6+/hgoiqmydHWKn23EQuw7Ia8ETp6yTuihuap/x8y869HUU+8+punx62Fav6ChsR8olN0WOakI9hC4B+dmz7TRRPTCN2WGa68f5UctAedSba2T/ChBpufAPnHJYAz2T372OMjQtHuD14DDVHoar6X3I5djaq6M1k06hJ7WMTCP0gItaUXMiy6I5Nlo/5tvOIXsUxiO3Ll7GzK5rpj/pqwIrm6Ecda9kPMzaC6IdEPZ9v+yglSd9zsbs2wfAuXlfJvH5/3oeWSCdIzYwJL8v63xQienxhxfAfMLqXP+GyuntqIV/NrHuunpSAjZGqXALJ5Ff1oWybQQVPDTlxWi4VdHfrw1lhPwUWVzNbaFq8hsnrujmLcpq0/X3p3QXgEMB2A3pJ49mm2Y9/YI9m2MPryhBL1x1WmtI+1udONlb1VIeU6KOUUulUXufRPv5gS/3NnisdhYj7KkF4GyrPaQYQAxh8tvy9Xs
-  skip_cleanup: true
-  on:
-    tags: true
-    branch: master
-    node: '6'
 - provider: script
   skip_cleanup: true
-  script: npm publish dist --access public
+  script: ./scripts/deploy.sh
   on:
-    branch: master
     tags: true
+    branch: master
     node: '6'

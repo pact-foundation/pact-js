@@ -1,7 +1,7 @@
-import {InteractionObject} from "./dsl/interaction";
-import * as _Matchers from "./dsl/matchers";
-import {PactfileWriteMode} from "./dsl/mockService";
-import _Verifier = require("./dsl/verifier");
+import {InteractionObject} from './dsl/interaction';
+import * as _Matchers from './dsl/matchers';
+import {PactfileWriteMode} from './dsl/mockService';
+import _Verifier = require('./dsl/verifier');
 
 declare function pact(opts: pact.PactOptions): pact.PactProvider;
 

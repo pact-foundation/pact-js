@@ -1,6 +1,6 @@
 import { Interaction } from './interaction';
 
-export type PactfileWriteMode = "overwrite" | "update" | "none";
+export type PactfileWriteMode = 'overwrite' | 'update' | 'none';
 
 export class MockService {
   constructor(
