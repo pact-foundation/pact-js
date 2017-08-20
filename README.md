@@ -85,7 +85,7 @@ The `Pact` interface provides the following high-level APIs, they are listed in 
 |`pact(options)`        |See [Pact Node documentation](https://github.com/pact-foundation/pact-node#create-pact-mock-server) for options                              |`Object` |Creates a Mock Server test double of your Provider API. If you need multiple Providers for a scenario, you can create as many as these as you need.                  |
 |`setup()`              |n/a         |`Promise`|Start the Mock Server                             |
 |`addInteraction()`     |`Object`    |`Promise`|Register an expectation on the Mock Server, which must be called by your test case(s). You can add multiple interactions per server. These will be validated and written to a pact if successful.
-|`verify()`             |n/a         |`Promise`|Verifies that all and only the interactions specified occurred and that they match. The only exceptions that will not fail the assertion are request/response headers and query parameters. You should call this function after any other assertions and once per test case. |
+|`verify()`             |n/a         |`Promise`|Verifies that all and only the interactions specified occurred and that they [match][request-matching]. You should call this function after any other assertions and once per test case. |
 |`finalize()`           |n/a         |`Promise`|Records the interactions registered to the Mock Server into the pact file and shuts it down.                                               |
 |`removeInteractions`   |n/a         |`Promise`|In some cases you might want to clear out the expectations of the Mock Service, call this to clear out any expectations for the next test run. _NOTE_: `verify()` will implicitly call this. |
 
@@ -557,3 +557,5 @@ The vision is to have a compatible `Pact` implementation in all the commonly use
 
 * Twitter: [@pact_up](https://twitter.com/pact_up)
 * Google users group: https://groups.google.com/forum/#!forum/pact-support
+
+[request-matching]: https://github.com/realestate-com-au/pact/wiki/Understanding-Request-Matching
