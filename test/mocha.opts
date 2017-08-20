@@ -1,4 +1,5 @@
 --bail
+-r ts-node/register
 --require ./test/helper.js
 --reporter spec
 --colors

@@ -314,7 +314,7 @@ For simplicity, we alias the main matches to make our code more readable:
 The underlying mock service is written in Ruby, so the regular expression must be in a Ruby format, not a Javascript format.
 
 ```javascript
-const { term } = pact.Matchers
+const { term } = pact
 
 provider.addInteraction({
   state: 'Has some animals',
@@ -343,7 +343,7 @@ provider.addInteraction({
 #### Match based on type
 
 ```javascript
-const { somethingLike: like } = pact.Matchers
+const { like } = pact
 
 provider.addInteraction({
   state: 'Has some animals',
@@ -379,7 +379,7 @@ Note that you can wrap a `like` around a single value or an object. When wrapped
 Matching provides the ability to specify flexible length arrays. For example:
 
 ```javascript
-pact.Matchers.eachLike(obj, { min: 3 })
+pact.eachLike(obj, { min: 3 })
 ```
 
 Where `obj` can be any javascript object, value or Pact.Match. It takes optional argument (`{ min: 3 }`) where min is greater than 0 and defaults to 1 if not provided.
@@ -387,7 +387,7 @@ Where `obj` can be any javascript object, value or Pact.Match. It takes optional
 Below is an example that uses all of the Pact Matchers.
 
 ```javascript
-const { somethingLike: like, term, eachLike } = pact.Matchers
+const { somethingLike: like, term, eachLike } = pact
 
 const animalBodyExpectation = {
   'id': 1,
