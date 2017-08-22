@@ -1,57 +1,69 @@
 'use strict'
-import { Pact, PactOptions } from '../src/pact';
+import { MockService } from '../src/dsl/mockService';
+import { Pact as PactType, PactOptions } from '../src/pact';
 import * as sinon from 'sinon';
 import { expect } from 'chai';
+import * as proxyquire from 'proxyquire';
 
 describe('Pact', () => {
   const defaults = {
-    consumer: 'test consumer',
-    provider: 'provider'
+    consumer: 'A',
+    provider: 'B'
   } as PactOptions;
 
   describe('#constructor', () => {
-    let mockServiceMock: sinon.SinonMock;
-    let pact: Pact;
+    let mockServiceSpy: sinon.SinonStub;
+    let pactNodeSpy: sinon.SinonStub;
+    let Pact: any; // PactType;
+    let pact: PactType;
     // let pactServer: any; //Pact;
 
     beforeEach(() => {
-      mockServiceMock = sinon.mock(Pact);
-    })
+      mockServiceSpy = sinon.stub();
+      pactNodeSpy = sinon.stub();
+      // const imported = proxyquire('../src/pact', { './dsl/mockService': { MockService: mockServiceSpy } });
+      const imported = proxyquire('../src/pact', { '@pact-foundation/pact-node': pactNodeSpy });
+      Pact = imported.Pact;
+    });
 
     afterEach(() => {
-      mockServiceMock.restore();
-    })
+      mockServiceSpy.reset();
+    });
 
     it('throws Error when consumer not provided', () => {
-      expect('foo').to.eql('foo');
+      expect(() => { new Pact({ 'consumer': '', 'provider': 'provider' }) }).
+        to.throw(Error, 'You must specify a Consumer for this pact.');
+    });
+
+    it('throws Error when provider not provided', () => {
+      expect(() => { new Pact({ 'consumer': 'someconsumer', 'provider': '' }) }).
+        to.throw(Error, 'You must specify a Provider for this pact.');
+    });
+
+    it('returns object with three functions to be invoked', () => {
       pact = new Pact(defaults);
-      expect(typeof pact).to.be('Pact');
-      // expect(() => { PactServer({}) }).to.throw(Error, 'You must specify a Consumer for this pact.')
+      expect(pact).to.have.property('addInteraction');
+      expect(pact).to.have.property('verify');
+      expect(pact).to.have.property('finalize');
+      expect(pact).to.have.property('mockService');
+      expect(pact.mockService).to.be.an.instanceOf(MockService);
     })
 
-    //   it('throws Error when provider not specified', () => {
-    //     expect(() => { Pact({ consumer: 'abc' }) }).to.throw(Error, 'You must specify a Provider for this pact.')
-    //   })
+    it('aoeuaoe', () => {
+      const b = Object.create(Pact.prototype);
+      b.mockService = mockServiceSpy;
+      console.log(b);
+    })
 
-    //   it('returns object with three functions to be invoked', (done) => {
-    //     let pact = Pact({ consumer: 'A', provider: 'B' })
-    //     expect(pact).to.have.property('addInteraction')
-    //     expect(pact).to.have.property('verify')
-    //     expect(pact).to.have.property('finalize')
-    //     expect(mockServiceSpy).to.have.been.calledWithNew
-    //     expect(mockServiceSpy).to.have.been.calledWith('A', 'B', 1234, '127.0.0.1', false)
-    //     done()
-    //   })
-
-    //   it('creates mockService with custom ip and port', (done) => {
-    //     let pact = Pact({ consumer: 'A', provider: 'B', host: '192.168.10.1', port: 8443, ssl: true })
-    //     expect(pact).to.have.property('addInteraction')
-    //     expect(pact).to.have.property('verify')
-    //     expect(pact).to.have.property('finalize')
-    //     expect(mockServiceSpy).to.have.been.calledWithNew
-    //     expect(mockServiceSpy).to.have.been.calledWith('A', 'B', 8443, '192.168.10.1', true)
-    //     done()
-    //   })
+    // it('creates mockService with custom ip and port', (done) => {
+    //   pact = Pact({ consumer: 'A', provider: 'B', host: '192.168.10.1', port: 8443, ssl: true })
+    //   expect(pact).to.have.property('addInteraction')
+    //   expect(pact).to.have.property('verify')
+    //   expect(pact).to.have.property('finalize')
+    //   expect(mockServiceSpy).to.have.been.calledWithNew
+    //   expect(mockServiceSpy).to.have.been.calledWith('A', 'B', 8443, '192.168.10.1', true)
+    //   done()
+    // })
 
     // })
 

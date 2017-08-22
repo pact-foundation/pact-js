@@ -1,7 +1,9 @@
 /**
- * Pact module.
- * @module Pact
+ * Pact module for Web use.
+ * @module Pact Web
  */
+
+'use strict'
 
 import { isNil } from 'lodash';
 import { isPortAvailable } from './common/net';
@@ -14,26 +16,32 @@ import * as Matchers from './dsl/matchers';
 import * as Verifier from './dsl/verifier';
 import * as clc from 'cli-color';
 import { logger } from './common/logger';
-
 // TODO: is this still needed if TypeScript is transpiling down?
 // import { polyfill } from 'es6-promise';
 // polyfill();
 
-// TODO: alias type for Pact for backwards compatibility?
-//       Add deprecation notice?
+
+// TODO: Could probably use class inheritence or mixins
+//       to reduce boilerplate code here
 
 /**
  * Creates a new {@link PactProvider}.
  * @memberof Pact
  * @name create
- * @param {PactOptions} opts
+ * @param {Object} opts
+ * @param {string} opts.consumer - the name of the consumer
+ * @param {string} opts.provider - the name of the provider
+ * @param {number} opts.port - port of the mock service, defaults to 1234
+ * @param {string} opts.host - host address of the mock service, defaults to 127.0.0.1
+ * @param {boolean} opts.ssl - SSL flag to identify the protocol to be used (default false, HTTP)
+ * @param {string} pactfileWriteMode - 'overwrite' | 'update' | 'smart' | 'none', defaults to 'overwrite'
  * @return {@link PactProvider}
  * @static
  */
-export class Pact {
+export class PactWeb {
+  private mockService: MockService;
   private server: any;
-  public opts: PactOptionsComplete;
-  public mockService: MockService;
+  private opts: PactOptionsComplete;
 
   constructor(config: PactOptions) {
     const defaults = {
@@ -42,49 +50,26 @@ export class Pact {
       port: 1234,
       host: '127.0.0.1',
       ssl: false,
-      dir: path.resolve(process.cwd(), 'pacts'),
-      log: path.resolve(process.cwd(), 'logs', 'pact.log'),
-      logLevel: 'INFO',
       spec: 2,
       cors: false,
       pactfileWriteMode: 'overwrite'
     } as PactOptions;
 
-    this.opts = { ...defaults, ...config } as PactOptionsComplete;
+    this.opts = { ...defaults, config } as PactOptionsComplete;
 
-    if (this.opts.consumer === '') {
+    if (isNil(this.opts.consumer)) {
       throw new Error('You must specify a Consumer for this pact.');
     }
 
-    if (this.opts.provider === '') {
+    if (isNil(this.opts.provider)) {
       throw new Error('You must specify a Provider for this pact.');
     }
-
-    this.server = serviceFactory.createServer({
-      port: this.opts.port,
-      log: this.opts.log,
-      dir: this.opts.dir,
-      spec: this.opts.spec,
-      ssl: this.opts.ssl,
-      sslcert: this.opts.sslcert,
-      sslkey: this.opts.sslkey,
-      cors: this.opts.cors
-    });
-    serviceFactory.logLevel(this.opts.logLevel);
 
     logger.info(`Setting up Pact with Consumer "${this.opts.consumer}" and Provider "${this.opts.provider}"
    using mock service on Port: "${this.opts.port}"`)
 
     this.mockService = new MockService(this.opts.consumer, this.opts.provider, this.opts.port, this.opts.host,
       this.opts.ssl, this.opts.pactfileWriteMode);
-  }
-
-  /**
-   * Start the Mock Server.
-   * @returns {Promise}
-   */
-  setup(): Promise<void> {
-    return isPortAvailable(this.opts.port, this.opts.host).then(() => this.server.start());
   }
 
   /**
@@ -108,7 +93,6 @@ export class Pact {
 
     return this.mockService.addInteraction(interaction);
   }
-
   /**
    * Checks with the Mock Service if the expected interactions have been exercised.
    * @memberof PactProvider
@@ -120,29 +104,24 @@ export class Pact {
       .then(() => this.mockService.removeInteractions())
       .catch((e: any) => {
         // Properly format the error
-        console.error('')
-        console.error(clc.red('Pact verification failed!'))
-        console.error(clc.red(e))
+        console.error('');
+        console.error('Pact verification failed!');
+        console.error(e);
 
-        throw new Error('Pact verification failed - expected interactions did not match actual.')
-      })
+        throw new Error('Pact verification failed - expected interactions did not match actual.');
+      });
   }
-
   /**
-   * Writes the Pact and clears any interactions left behind and shutdown the
-   * mock server
+   * Writes the Pact and clears any interactions left behind.
    * @memberof PactProvider
    * @instance
    * @returns {Promise}
    */
-  finalize(): Promise<void> {
-    return this.mockService.writePact().then(() => this.server.delete());
+  finalize(): Promise<string> {
+    return this.mockService.writePact().then(() => this.mockService.removeInteractions());
   }
-
   /**
-   * Writes the pact file out to file. Should be called when all tests have been performed for a
-   * given Consumer <-> Provider pair. It will write out the Pact to the
-   * configured file.
+   * Writes the Pact file but leave interactions in.
    * @memberof PactProvider
    * @instance
    * @returns {Promise}
@@ -150,7 +129,6 @@ export class Pact {
   writePact(): Promise<string> {
     return this.mockService.writePact();
   }
-
   /**
    * Clear up any interactions in the Provider Mock Server.
    * @memberof PactProvider
@@ -161,8 +139,6 @@ export class Pact {
     return this.mockService.removeInteractions();
   }
 }
-
-// declare namespace pact {
 
 /**
  * @param {string} opts.consumer - the name of the consumer
@@ -198,15 +174,8 @@ export interface MandatoryPactOptions {
 export type PactOptionsComplete = PactOptions & MandatoryPactOptions;
 
 /**
- * Exposes {@link Verifier}
- * @memberof Pact
- * @static
- */
-// export interface Verifier;
-
-/**
  * Exposes {@link Matchers#term}
  * @memberof Pact
  * @static
  */
-export { term, eachLike, somethingLike, somethingLike as like } from './dsl/matchers';
+module.exports.Matchers = Matchers
