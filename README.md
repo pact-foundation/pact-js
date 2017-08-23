@@ -457,7 +457,7 @@ package, so you will need to coordinate this yourself prior to and after executi
 
 To get started, install `pact-web` and [Pact Node](https://github.com/pact-foundation/pact-node):
 
-    npm install --save-dev pact-web pact-node
+    npm install --save-dev pact-web @pact-foundation/pact-node
 
 If you're not using Karma, you can start and stop the mock server using [Pact Node](https://github.com/pact-foundation/pact-node) or something like [Grunt Pact](https://github.com/pact-foundation/grunt-pact).
 
