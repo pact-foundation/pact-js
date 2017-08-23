@@ -29,7 +29,6 @@ how to get going.
 - [Pact JS](#pact-js)
   - [Installation](#installation)
   - [Using Pact JS](#using-pact-js)
-    - [Using Mocha?](#using-mocha)
     - [Consumer Side Testing](#consumer-side-testing)
       - [API](#api)
       - [Example](#example)
@@ -64,10 +63,6 @@ npm install --save-dev pact
 ```
 
 ## Using Pact JS
-
-### Using Mocha?
-
-Check out [Pact JS Mocha](https://github.com/pact-foundation/pact-js-mocha).
 
 ### Consumer Side Testing
 
