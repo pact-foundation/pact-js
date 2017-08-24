@@ -6,6 +6,7 @@ export class MockService {
   constructor(
     consumer: string,
     provider: string,
+    pactDir: string,
     port?: number,
     host?: string,
     ssl?: boolean,
