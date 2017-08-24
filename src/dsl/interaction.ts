@@ -54,6 +54,7 @@ export class Interaction {
     if (providerState) {
       this.state['providerState'] = providerState;
     }
+
     return this;
   }
 
@@ -115,7 +116,7 @@ export class Interaction {
   * @param {Object} responseOpts.body
    */
   willRespondWith(responseOpts: ResponseOptions) {
-    if (isNil(status) || status.toString().trim().length === 0) {
+    if (isNil(responseOpts.status) || responseOpts.status.toString().trim().length === 0) {
       throw new Error('You must provide a status code.');
     }
 

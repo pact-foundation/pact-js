@@ -31,7 +31,7 @@ import { logger } from './common/logger';
  * @static
  */
 export class Pact {
-  private server: any;
+  public server: any;
   public opts: PactOptionsComplete;
   public mockService: MockService;
 
@@ -202,7 +202,7 @@ export type PactOptionsComplete = PactOptions & MandatoryPactOptions;
  * @memberof Pact
  * @static
  */
-// export interface Verifier;
+export { verifyProvider } from './dsl/verifier';
 
 /**
  * Exposes {@link Matchers#term}
