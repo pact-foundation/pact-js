@@ -1,5 +1,5 @@
 'use strict'
-import { Interaction } from '../src/dsl/interaction';
+import { Interaction, InteractionObject } from '../src/dsl/interaction';
 import { MockService } from '../src/dsl/mockService';
 import { Pact as PactType, PactOptions, PactOptionsComplete } from '../src/pact';
 import * as sinon from 'sinon';
@@ -46,9 +46,9 @@ describe('Pact', () => {
   } as PactOptionsComplete;
   let mockServiceStub: sinon.SinonStub;
 
-  let sandbox = sinon.sandbox.create({
+  const sandbox = sinon.sandbox.create({
     injectInto: null,
-    properties: ["spy", "stub", "mock"],
+    properties: ['spy', 'stub', 'mock'],
     useFakeTimers: false,
     useFakeServer: false
   });
@@ -116,7 +116,7 @@ describe('Pact', () => {
     const Pact = PactType;
 
     describe('when server is not properly configured', () => {
-      describe('pact is unable to start the server', () => {
+      describe('and pact-node is unable to start the server', () => {
         it('should return a rejected promise', (done) => {
           const startStub = sandbox.stub(PactServer.prototype, 'start').throws('start');
           const b = <PactType><any>Object.create(Pact.prototype);
@@ -135,50 +135,104 @@ describe('Pact', () => {
       });
     });
   });
+
   describe('#addInteraction', () => {
     const Pact = PactType;
+    const interaction: InteractionObject = {
+      state: 'i have a list of projects',
+      uponReceiving: 'a request for projects',
+      withRequest: {
+        method: 'GET',
+        path: '/projects',
+        headers: { 'Accept': 'application/json' }
+      },
+      willRespondWith: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+        body: {}
+      }
+    };
 
-    it.only('creates interaction with state', (done) => {
-      const pact = <PactType><any>Object.create(Pact.prototype);
-      pact.opts = fullOpts;
-      const addInteractionStub = sinon.stub();
-      pact.mockService = <MockService><any>{
-        addInteraction: (int: Interaction): Promise<any> => Promise.resolve(int.json())
-      };
-      let addInteractionPromise = pact.addInteraction({
-        state: 'i have a list of projects',
-        uponReceiving: 'a request for projects',
-        withRequest: {
-          method: 'GET',
-          path: '/projects',
-          headers: { 'Accept': 'application/json' }
-        },
-        willRespondWith: {
-          status: 200,
-          headers: { 'Content-Type': 'application/json' },
-          body: {}
-        }
+    describe('when given a provider state', () => {
+      it('creates interaction with state', (done) => {
+        const pact = <PactType><any>Object.create(Pact.prototype);
+        pact.opts = fullOpts;
+        pact.mockService = <MockService><any>{
+          addInteraction: (int: InteractionObject): Promise<string | undefined> => Promise.resolve(int.state)
+        };
+        expect(pact.addInteraction(interaction)).to.eventually.have.property('providerState').notify(done)
       });
+    });
 
-      expect(addInteractionPromise).to.eventually.have.property('providerState').notify(done)
-    })
+    describe('when not given a provider state', () => {
+      it('creates interaction with state', (done) => {
+        const pact = <PactType><any>Object.create(Pact.prototype);
+        pact.opts = fullOpts;
+        pact.mockService = <MockService><any>{
+          addInteraction: (int: InteractionObject): Promise<string | undefined> => Promise.resolve(int.state)
+        };
 
-    //   it('creates interaction without state', (done) => {
-    //     let addInteractionPromise = pact.addInteraction({
-    //       uponReceiving: 'a request for projects',
-    //       withRequest: {
-    //         method: 'get',
-    //         path: '/projects',
-    //         headers: { 'Accept': 'application/json' }
-    //       },
-    //       willRespondWith: {
-    //         status: 200,
-    //         headers: { 'Content-Type': 'application/json' },
-    //         body: {}
-    //       }
-    //     })
-    //     expect(addInteractionPromise).to.eventually.not.have.property('providerState').notify(done)
-    //   })
+        const interactionWithNoState = interaction;
+        interactionWithNoState.state = undefined;
+        expect(pact.addInteraction(interaction)).to.eventually.not.have.property('providerState').notify(done)
+      });
+    });
+  });
 
+  describe('#verify', () => {
+    const Pact = PactType;
+
+    describe('when pact verification is successful', () => {
+      it('should return a successful promise and remove interactions', (done) => {
+        const verifyStub = sandbox.stub(MockService.prototype, 'verify');
+        verifyStub.resolves('verified!');
+        const removeInteractionsStub = sandbox.stub(MockService.prototype, 'removeInteractions');
+        removeInteractionsStub.resolves('removeInteractions');
+
+        const b = <PactType><any>Object.create(Pact.prototype);
+        b.opts = fullOpts;
+        b.mockService = <MockService><any>{ verify: verifyStub, removeInteractions: removeInteractionsStub };
+
+        const verifyPromise = b.verify();
+        expect(verifyPromise).to.eventually.eq('removeInteractions');
+        expect(verifyPromise).to.eventually.be.fulfilled.notify(done);
+      });
+    });
+
+    describe('when pact verification is unsuccessful', () => {
+      it('should throw an error', (done) => {
+        const verifyStub = sandbox.stub(MockService.prototype, 'verify');
+        verifyStub.rejects('not verified!');
+        const removeInteractionsStub = sandbox.stub(MockService.prototype, 'removeInteractions');
+        removeInteractionsStub.resolves('removeInteractions');
+
+        const b = <PactType><any>Object.create(Pact.prototype);
+        b.opts = fullOpts;
+        b.mockService = <MockService><any>{ verify: verifyStub, removeInteractions: removeInteractionsStub };
+
+        const verifyPromise = b.verify();
+        expect(verifyPromise).to.eventually.be.rejectedWith(Error).notify(done)
+        verifyPromise.catch((e) => {
+          expect(removeInteractionsStub).to.callCount(0);
+        });
+      });
+    });
+
+    describe('when pact verification is successful', () => {
+      describe('and an error is thrown in the cleanup', () => {
+        it.only('should throw an error', (done) => {
+          const verifyStub = sandbox.stub(MockService.prototype, 'verify');
+          verifyStub.resolves('verified!');
+          const removeInteractionsStub = sandbox.stub(MockService.prototype, 'removeInteractions');
+          removeInteractionsStub.throws(new Error('error removing interactions'));
+
+          const b = <PactType><any>Object.create(Pact.prototype);
+          b.opts = fullOpts;
+          b.mockService = <MockService><any>{ verify: verifyStub, removeInteractions: removeInteractionsStub };
+
+          expect(b.verify()).to.eventually.be.rejectedWith(Error).notify(done)
+        });
+      });
+    });
   });
 });

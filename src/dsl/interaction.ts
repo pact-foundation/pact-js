@@ -23,7 +23,7 @@ export interface ResponseOptions {
 }
 
 export interface InteractionObject {
-  state: string;
+  state: string | undefined;
   uponReceiving: string;
   withRequest: RequestOptions;
   willRespondWith: ResponseOptions;
@@ -132,7 +132,7 @@ export class Interaction {
    * Returns the interaction object created.
    * @returns {Object}
    */
-  json() {
+  json(): InteractionState {
     return this.state;
   }
 }

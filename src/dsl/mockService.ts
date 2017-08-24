@@ -54,7 +54,7 @@ export class MockService {
    * @param {Interaction} interaction
    * @returns {Promise}
    */
-  addInteraction(interaction: Interaction) {
+  addInteraction(interaction: Interaction): Promise<string> {
     return this.request.send('POST', `${this.baseUrl}/interactions`, JSON.stringify(interaction.json()));
   }
 
@@ -62,7 +62,7 @@ export class MockService {
    * Removes all interactions.
    * @returns {Promise}
    */
-  removeInteractions() {
+  removeInteractions(): Promise<string> {
     return this.request.send('DELETE', `${this.baseUrl}/interactions`);
   }
 
@@ -70,7 +70,7 @@ export class MockService {
    * Verify all interactions.
    * @returns {Promise}
    */
-  verify() {
+  verify(): Promise<string> {
     return this.request.send('GET', `${this.baseUrl}/interactions/verification`);
   }
 
@@ -78,7 +78,7 @@ export class MockService {
    * Writes the Pact file.
    * @returns {Promise}
    */
-  writePact() {
+  writePact(): Promise<string> {
     return this.request.send('POST', `${this.baseUrl}/pact`, JSON.stringify(this.pactDetails));
   }
 
