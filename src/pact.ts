@@ -15,10 +15,6 @@ import * as Verifier from './dsl/verifier';
 import * as clc from 'cli-color';
 import { logger } from './common/logger';
 
-// TODO: is this still needed if TypeScript is transpiling down?
-// import { polyfill } from 'es6-promise';
-// polyfill();
-
 // TODO: alias type for Pact for backwards compatibility?
 //       Add deprecation notice?
 
@@ -136,7 +132,11 @@ export class Pact {
    * @returns {Promise}
    */
   finalize(): Promise<void> {
-    return this.mockService.writePact().then(() => this.server.delete());
+    return this.mockService.writePact()
+      .then(() => this.server.delete())
+      .catch((err: Error) => {
+        return Promise.all([this.server.delete(), Promise.reject(err)]);
+      });
   }
 
   /**

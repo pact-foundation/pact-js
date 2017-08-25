@@ -220,7 +220,7 @@ describe('Pact', () => {
 
     describe('when pact verification is successful', () => {
       describe('and an error is thrown in the cleanup', () => {
-        it.only('should throw an error', (done) => {
+        it('should throw an error', (done) => {
           const verifyStub = sandbox.stub(MockService.prototype, 'verify');
           verifyStub.resolves('verified!');
           const removeInteractionsStub = sandbox.stub(MockService.prototype, 'removeInteractions');
@@ -232,6 +232,93 @@ describe('Pact', () => {
 
           expect(b.verify()).to.eventually.be.rejectedWith(Error).notify(done)
         });
+      });
+    });
+  });
+
+  describe('#finalize', () => {
+    const Pact = PactType;
+
+    describe('when writing Pact is successful', () => {
+      it('should return a successful promise and shut down down the mock server', (done) => {
+        const writePactStub = sandbox.stub(MockService.prototype, 'writePact').resolves('pact file written!');
+
+        const p = <PactType><any>Object.create(Pact.prototype);
+        p.opts = fullOpts;
+        p.mockService = <MockService><any>{ writePact: writePactStub, removeInteractions: sandbox.stub() };
+        p.server = { delete: sandbox.stub(PactServer.prototype, 'delete').resolves('server deleted!') };
+
+        const writePactPromise = p.finalize();
+        expect(writePactPromise).to.eventually.eq('server deleted!');
+        expect(writePactPromise).to.eventually.be.fulfilled.notify(done);
+      });
+    });
+
+    describe('when writing Pact is unsuccessful', () => {
+      it('should throw an error and shut down the server', (done) => {
+        const writePactStub = sandbox.stub(MockService.prototype, 'writePact').rejects('pact not file written!');
+        const deleteStub = sandbox.stub(PactServer.prototype, 'delete').resolves('server deleted!')
+
+        const p = <PactType><any>Object.create(Pact.prototype);
+        p.opts = fullOpts;
+        p.mockService = <MockService><any>{ writePact: writePactStub, removeInteractions: sandbox.stub() };
+        p.server = { delete: deleteStub };
+
+        const writePactPromise = p.finalize();
+        expect(writePactPromise).to.eventually.be.rejectedWith(Error).notify(done);
+        writePactPromise.catch((e) => {
+          expect(deleteStub).to.callCount(1);
+        });
+      });
+    });
+
+    describe('when writing pact is successful and shutting down the mock server is unsuccessful', () => {
+      it('should throw an error', (done) => {
+        const writePactStub = sandbox.stub(MockService.prototype, 'writePact').resolves('pact file written!');
+
+        const p = <PactType><any>Object.create(Pact.prototype);
+        p.opts = fullOpts;
+        p.mockService = <MockService><any>{ writePact: writePactStub, removeInteractions: sandbox.stub() };
+        p.server = { delete: sandbox.stub(PactServer.prototype, 'delete').rejects('server not deleted!') };
+
+        const writePactPromise = p.finalize();
+        expect(writePactPromise).to.eventually.be.rejectedWith(Error, 'server not deleted!').notify(done);
+      });
+    });
+  });
+
+  describe('#writePact', () => {
+    const Pact = PactType;
+
+    describe('when writing Pact is successful', () => {
+      it('should return a successful promise', (done) => {
+        const writePactStub = sandbox.stub(MockService.prototype, 'writePact').resolves('pact file written!');
+
+        const p = <PactType><any>Object.create(Pact.prototype);
+        p.opts = fullOpts;
+        p.mockService = <MockService><any>{ writePact: writePactStub, removeInteractions: sandbox.stub() };
+
+        const writePactPromise = p.writePact();
+        expect(writePactPromise).to.eventually.eq('pact file written!');
+        expect(writePactPromise).to.eventually.be.fulfilled.notify(done);
+      });
+    });
+  });
+
+  describe('#removeInteractions', () => {
+    const Pact = PactType;
+
+    describe('when writing Pact is successful', () => {
+      it('should return a successful promise', (done) => {
+        const removeInteractionsStub = sandbox.stub(MockService.prototype, 'removeInteractions').resolves('interactions removed!');
+
+        const p = <PactType><any>Object.create(Pact.prototype);
+        p.opts = fullOpts;
+        p.mockService = <MockService><any>{ removeInteractions: removeInteractionsStub };
+
+        const removeInteractionsPromise = p.removeInteractions();
+        expect(removeInteractionsPromise).to.eventually.eq('interactions removed!');
+        expect(removeInteractionsPromise).to.eventually.be.fulfilled.notify(done);
       });
     });
   });
