@@ -9,19 +9,23 @@ export class Request {
   // Can't type these otherwise will break at runtime
   // (browser can't import request types!)
   // These probably needs a good refactor.
-  private _httpRequest: any;
-  private _httpsRequest: any;
-  private _request: any;
+  public _httpRequest: any;
+  public _httpsRequest: any;
+  public _request: any;
 
   constructor() {
+    console.log('constructing', window)
     if (typeof window === 'undefined') {
       logger.info('Using Node "HTTP" module')
+      console.log('constructing1')
       this._httpRequest = require('http');
       this._httpsRequest = require('https');
     } else if ((<any>window).XMLHttpRequest) {
+      console.log('constructing2')
       logger.info('Using browser "XMLHttpRequest" module')
       this._request = new XMLHttpRequest();
     } else {
+      console.log('constructing3')
       logger.info('Unable to determine runtime environment');
     }
   }

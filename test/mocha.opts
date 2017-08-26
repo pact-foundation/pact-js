@@ -1,7 +1,6 @@
 --bail
--r ts-node/register
 --compilers ts:ts-node/register
---require ./test/helper.js
+--require ./test/helper.ts
 --reporter spec
 --colors
 --recursive

@@ -6,8 +6,7 @@
 
 import * as net from 'net';
 
-export function isPortAvailable(port: number, host: string): Promise<void> {
-
+const isPortAvailable = function (port: number, host: string): Promise<void> {
   return new Promise((resolve, reject) => {
     const server: any = net.createServer()
       .listen({ port: port, host: host, exclusive: true })
@@ -15,3 +14,7 @@ export function isPortAvailable(port: number, host: string): Promise<void> {
       .on('listening', () => server.once('close', () => resolve()).close())
   })
 }
+
+export {
+  isPortAvailable
+};

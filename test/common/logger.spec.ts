@@ -1,6 +1,6 @@
-const sinon = require('sinon');
-const expect = require('chai').expect;
-const proxyquire = require('proxyquire');
+import * as sinon from 'sinon';
+import { expect } from 'chai';
+import * as  proxyquire from 'proxyquire';
 
 describe('Logger#info', () => {
   const consoleLogSpy = sinon.spy(console, 'log');

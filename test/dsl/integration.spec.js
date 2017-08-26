@@ -11,7 +11,7 @@ var Matchers = Pact.Matchers
 describe('Integration', () => {
 
   ['http', 'https'].forEach((PROTOCOL) => {
-      describe(`Pact on ${PROTOCOL} protocol`, (protocol) => {
+    describe(`Pact on ${PROTOCOL} protocol`, (protocol) => {
 
       const MOCK_PORT = Math.floor(Math.random() * 999) + 9000
       const PROVIDER_URL = `${PROTOCOL}://localhost:${MOCK_PORT}`
@@ -31,10 +31,10 @@ describe('Integration', () => {
         name: 'Project 1',
         due: '2016-02-11T09:46:56.023Z',
         tasks: [
-          {id: 1, name: 'Do the laundry', 'done': true},
-          {id: 2, name: 'Do the dishes', 'done': false},
-          {id: 3, name: 'Do the backyard', 'done': false},
-          {id: 4, name: 'Do nothing', 'done': false}
+          { id: 1, name: 'Do the laundry', 'done': true },
+          { id: 2, name: 'Do the dishes', 'done': false },
+          { id: 3, name: 'Do the backyard', 'done': false },
+          { id: 4, name: 'Do nothing', 'done': false }
         ]
       }]
 
@@ -63,7 +63,7 @@ describe('Integration', () => {
               body: EXPECTED_BODY
             }
           })
-          .then(() => done())
+            .then(() => done())
         })
 
         // execute your assertions
@@ -100,7 +100,7 @@ describe('Integration', () => {
               body: EXPECTED_BODY
             }
           })
-          .then(() => done())
+            .then(() => done())
         })
 
         // execute your assertions
@@ -156,8 +156,8 @@ describe('Integration', () => {
               return JSON.parse(res.text)[0]
             })
 
-            expect(verificationPromise).to.eventually.have.lengthOf(4)
-            expect(verificationPromise).to.eventually.have.property('tasks').notify(done)
+          expect(verificationPromise).to.eventually.have.lengthOf(4)
+          expect(verificationPromise).to.eventually.have.property('tasks').notify(done)
         })
 
         // verify with Pact, and reset expectations
@@ -246,7 +246,7 @@ describe('Integration', () => {
                 promiseResults.push(response)
                 return request.delete(`${PROVIDER_URL}/projects/2`)
               })
-              .then(() => {}, (err) => { promiseResults.push(err.response) })
+              .then(() => { }, (err) => { promiseResults.push(err.response) })
               .then(() => provider.verify(promiseResults))
 
           expect(verificationPromise).to.be.rejectedWith('Error: Pact verification failed - expected interactions did not match actual.').notify(done)
