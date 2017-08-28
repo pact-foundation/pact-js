@@ -8,7 +8,7 @@ describe('Logger#info', () => {
   context('with logging configuration turned on', () => {
     beforeEach(() => {
       consoleLogSpy.reset();
-      const logger = proxyquire('../../src/common/logger', { './config': { config: { logging: true } } }).logger;
+      const logger = proxyquire('./logger', { './config': { config: { logging: true } } }).logger;
       logger.info('this will be logged');
     });
 
@@ -20,7 +20,7 @@ describe('Logger#info', () => {
   context('with logging configuration turned off', () => {
     beforeEach(() => {
       consoleLogSpy.reset();
-      const logger = proxyquire('../../src/common/logger', { './config': { config: { logging: false } } }).logger;
+      const logger = proxyquire('./logger', { './config': { config: { logging: false } } }).logger;
       logger.info('this will be ignored');
     });
 

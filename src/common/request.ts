@@ -1,6 +1,6 @@
 'use strict'
 
-import { parse } from 'url';
+import { parse, Url } from 'url';
 import { logger } from './logger';
 
 export type HTTPMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD' | 'OPTIONS';
@@ -14,18 +14,14 @@ export class Request {
   public _request: any;
 
   constructor() {
-    console.log('constructing', window)
-    if (typeof window === 'undefined') {
-      logger.info('Using Node "HTTP" module')
-      console.log('constructing1')
-      this._httpRequest = require('http');
-      this._httpsRequest = require('https');
-    } else if ((<any>window).XMLHttpRequest) {
-      console.log('constructing2')
+    if (typeof XMLHttpRequest === 'function' || typeof window !== 'undefined') {
       logger.info('Using browser "XMLHttpRequest" module')
       this._request = new XMLHttpRequest();
+    } else if (typeof window === 'undefined') {
+      logger.info('Using Node "HTTP" module')
+      this._httpRequest = require('http');
+      this._httpsRequest = require('https');
     } else {
-      console.log('constructing3')
       logger.info('Unable to determine runtime environment');
     }
   }
@@ -42,7 +38,7 @@ export class Request {
 
         logger.info(`Sending request with opts: ${JSON.stringify(opts)}`);
 
-        const req = opts.protocol === 'https:' ? this._httpsRequest : this._httpRequest;
+        const req: any = opts.protocol === 'https:' ? this._httpsRequest : this._httpRequest;
         const request = req.request(opts, (response: any) => {
           let responseBody = '';
           response.setEncoding('utf8');
@@ -55,8 +51,8 @@ export class Request {
               logger.info(`Rejecting promise with: ${responseBody}`);
               reject(responseBody);
             }
-          })
-        })
+          });
+        });
 
         request.on('error', (err: any) => {
           logger.info(`Rejecting promise with: ${err}`);
@@ -90,6 +86,6 @@ export class Request {
         req.setRequestHeader('Content-Type', 'application/json');
         req.send(body);
       }
-    })
+    });
   }
 }

@@ -4,7 +4,8 @@
     "outDir": "./dist",
     "baseUrl": "src",
     "sourceMap": true,
-    "declaration": false,
+    "declaration": true,
+    "noLib": false,
     "noImplicitReturns": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
@@ -16,7 +17,8 @@
     "target": "es5",
     "allowJs": true,
     "typeRoots": [
-      "node_modules/@types"
+      "node_modules/@types",
+      "src/types/**/*"
     ],
     "lib": [
       "es2016",
@@ -24,11 +26,11 @@
     ]
   },
   "include": [
-        "./src/**/*"
+    "./src/**/*"
   ],
   "exclude": [
-        "./node_modules/**/*",
-        "./dist",
-        "./examples"
+    "./node_modules/**/*",
+    "./dist",
+    "./examples"
   ]
 }

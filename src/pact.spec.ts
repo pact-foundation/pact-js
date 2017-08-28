@@ -1,7 +1,7 @@
 'use strict'
-import { Interaction, InteractionObject } from '../src/dsl/interaction';
-import { MockService } from '../src/dsl/mockService';
-import { Pact as PactType, PactOptions, PactOptionsComplete } from '../src/pact';
+import { Interaction, InteractionObject } from './dsl/interaction';
+import { MockService } from './dsl/mockService';
+import { Pact as PactType, PactOptions, PactOptionsComplete } from './pact';
 import * as sinon from 'sinon';
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
@@ -66,7 +66,7 @@ describe('Pact', () => {
     let pact: PactType;
 
     beforeEach(() => {
-      const imported = proxyquire('../src/pact', {
+      const imported = proxyquire('./pact', {
         '@pact-foundation/pact-node': sinon.createStubInstance(PactNodeFactory)
       });
       Pact = imported.Pact;

@@ -1,5 +1,5 @@
-import { logger } from '../../src/common/logger';
-import { isPortAvailable } from '../../src/common/net';
+import { logger } from './logger';
+import { isPortAvailable } from './net';
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const expect = chai.expect;
