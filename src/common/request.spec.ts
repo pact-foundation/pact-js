@@ -1,3 +1,4 @@
+import { loadavg } from 'os';
 import { parse, Url, URL } from 'url';
 import * as sinon from 'sinon';
 import * as chai from 'chai';
@@ -7,48 +8,63 @@ import { Request } from './request';
 describe('Request', () => {
   let request: Request;
 
-  before(() => {
+  beforeEach(() => {
     request = new Request();
-  });
-
-  after(() => {
   });
 
   context('#constructor', () => {
     describe('when running in a browser-based environment', () => {
       it.skip('should use "XMLHttpRequest" request object', () => {
         // Need to find an elegant way of turning on 'window' in TypeScript
-        expect(request._request).to.not.be.undefined;
-        expect(request._request).to.not.be.null;
-        expect(request._request.open).to.be.a('function');
-        expect(request._request.setRequestHeader).to.be.a('function');
-        expect(request._request.send).to.be.a('function');
+        expect(request.request).to.not.be.undefined;
+        expect(request.request).to.not.be.null;
+        expect(request.request.open).to.be.a('function');
+        expect(request.request.setRequestHeader).to.be.a('function');
+        expect(request.request.send).to.be.a('function');
       });
     });
     describe('when running in a node-based environment', () => {
       it('should use "Request" objects', () => {
-        expect(request._httpRequest).to.not.be.null;
-        expect(request._httpRequest).to.not.be.undefined;
-        expect(request._httpsRequest).to.not.be.null;
-        expect(request._httpsRequest).to.not.be.undefined;
+        expect(request.httpRequest).to.not.be.null;
+        expect(request.httpRequest).to.not.be.undefined;
+        expect(request.httpsRequest).to.not.be.null;
+        expect(request.httpsRequest).to.not.be.undefined;
+        expect(request.responseBody).to.eq('');
       });
     });
   });
 
   context('#send', () => {
-    describe.only('asserting invocations are in place', () => {
-      let requestMock: sinon.SinonMock;
-      let responseMock: any;
-
-      beforeEach(() => {
-        requestMock = sinon.mock(request._httpRequest);
-        responseMock = {
-          statusCode: 200,
-          setEncoding: () => { },
-          on: (_: any, cb: (data: any) => any) => {
-            cb('Response body!')
+    let requestMock: sinon.SinonMock;
+    const onSpy = sinon.spy();
+    const writeSpy = sinon.spy();
+    const endSpy = sinon.spy();
+    const requestLibMock = {
+      on: onSpy,
+      write: writeSpy,
+      end: endSpy
+    };
+    let responseMock: any;
+    const generateResponseMock = (status: number, call = true) => {
+      return {
+        statusCode: status,
+        setEncoding: () => { },
+        on: (_: any, cb: (data: any) => any) => {
+          if (call) {
+            cb('Response body!');
           }
-        };
+        }
+      };
+    };
+
+    afterEach(() => {
+      requestMock.restore();
+    });
+
+    describe('when communication to the Pact Mock Service is successful', () => {
+      beforeEach(() => {
+        requestMock = sinon.mock(request.httpRequest);
+        responseMock = generateResponseMock(200);
 
         const args: any = parse('http://localhost:8888/');
         args.method = 'GET';
@@ -59,60 +75,100 @@ describe('Request', () => {
 
         requestMock
           .expects('request')
-          .atLeast(1)
+          .once()
           .withArgs(args)
-          .returns({
-            on: () => { },
-            write: () => { },
-            end: () => { }
-          })
+          .returns(requestLibMock)
           .callsArgWith(1, responseMock);
       });
 
-      afterEach(() => {
-        requestMock.restore();
+      describe('and there is no request body', () => {
+        it('should should return a successful promise', (done) => {
+          const reqPromise = request.send('GET', 'http://localhost:8888')
+          requestMock.verify();
+          expect(onSpy.calledOnce)
+          expect(endSpy.calledOnce)
+          expect(writeSpy.notCalled)
+          expect(reqPromise).to.eventually.equal('Response body!');
+          expect(reqPromise).to.eventually.be.fulfilled.notify(done);
+        });
       });
 
-      it('should have sent headers and body to the correct URL', (done) => {
+      describe('and there is a request body', () => {
+        it('should should return a successful promise', (done) => {
+          const reqPromise = request.send('GET', 'http://localhost:8888', 'some body')
+          requestMock.verify();
+          expect(onSpy.calledOnce)
+          expect(endSpy.calledOnce)
+          expect(writeSpy.calledOnce)
+          expect(reqPromise).to.eventually.equal('Response body!');
+          expect(reqPromise).to.eventually.be.fulfilled.notify(done);
+        });
+      });
+
+    });
+
+    describe('when the pact service returns a failure', () => {
+      beforeEach(() => {
+        requestMock = sinon.mock(request.httpRequest);
+        responseMock = generateResponseMock(500);
+
+        const args: any = parse('http://localhost:8888/');
+        args.method = 'GET';
+        args.headers = {
+          'X-Pact-Mock-Service': 'true',
+          'Content-Type': 'application/json'
+        };
+
+        requestMock
+          .expects('request')
+          .once()
+          .withArgs(args)
+          .returns(requestLibMock)
+          .callsArgWith(1, responseMock);
+      });
+
+      it('should should return a rejected promise', (done) => {
         const reqPromise = request.send('GET', 'http://localhost:8888')
         requestMock.verify();
-        expect(reqPromise).to.eventually.be.fulfilled.notify(done);
+        expect(onSpy.calledOnce)
+        expect(endSpy.calledOnce)
+        expect(writeSpy.notCalled)
+        expect(reqPromise).to.eventually.be.rejectedWith('Response body!').notify(done);
       });
     });
 
-    describe('with a successful request', () => {
+    describe('when communication to the pact service is a failure', () => {
+      const err = 'Error: Failed to communicate to Pact Mock Service'
+      const requestErrorMock = {
+        on: (a: string, cb: (err: Error) => {}) => {
+          if (a === 'error') {
+            cb(new Error(err));
+          }
+        }, write: () => { }, end: () => { }
+      };
       beforeEach(() => {
-        sinon.stub(request._request, 'send', () => {
-          request._request.status = 200;
-          request._request.responseText = 'it works';
-          request._request.onload();
-        });
+        requestMock = sinon.mock(request.httpRequest);
+        responseMock = generateResponseMock(200, false);
+
+        const args: any = parse('http://localhost:8888/');
+        args.method = 'GET';
+        args.headers = {
+          'X-Pact-Mock-Service': 'true',
+          'Content-Type': 'application/json'
+        };
+
+        requestMock
+          .expects('request')
+          .once()
+          .withArgs(args)
+          .returns(requestErrorMock)
+          .callsArgWith(1, responseMock);
       });
 
-      afterEach(() => {
-        request._request.send.restore();
-      });
-
-      it('should resolve the promise', () => {
-        expect(request.send('GET', 'http://localhost:8888')).to.have.been.fulfilled;
-      });
-    });
-
-    describe('with an unsuccessful request', () => {
-      beforeEach(() => {
-        sinon.stub(request._request, 'send', () => {
-          request._request.status = 404;
-          request._request.responseText = 'it does not work';
-          request._request.onload();
-        });
-      });
-
-      afterEach(() => {
-        request._request.send.restore();
-      });
-
-      it('should reject the promise', function () {
-        expect(request.send('GET', 'http://localhost:8888')).to.have.been.rejected;
+      it('should should return a rejected promise', (done) => {
+        const reqPromise = request.send('GET', 'http://localhost:8888')
+        requestMock.verify();
+        expect(reqPromise).to.eventually.be.rejectedWith(err).notify(done);
       });
     });
   });

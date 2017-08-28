@@ -9,18 +9,19 @@ export class Request {
   // Can't type these otherwise will break at runtime
   // (browser can't import request types!)
   // These probably needs a good refactor.
-  public _httpRequest: any;
-  public _httpsRequest: any;
-  public _request: any;
+  public httpRequest: any;
+  public httpsRequest: any;
+  public request: any;
+  public responseBody = '';
 
   constructor() {
     if (typeof XMLHttpRequest === 'function' || typeof window !== 'undefined') {
       logger.info('Using browser "XMLHttpRequest" module')
-      this._request = new XMLHttpRequest();
+      this.request = new XMLHttpRequest();
     } else if (typeof window === 'undefined') {
       logger.info('Using Node "HTTP" module')
-      this._httpRequest = require('http');
-      this._httpsRequest = require('https');
+      this.httpRequest = require('http');
+      this.httpsRequest = require('https');
     } else {
       logger.info('Unable to determine runtime environment');
     }
@@ -38,18 +39,17 @@ export class Request {
 
         logger.info(`Sending request with opts: ${JSON.stringify(opts)}`);
 
-        const req: any = opts.protocol === 'https:' ? this._httpsRequest : this._httpRequest;
+        const req: any = opts.protocol === 'https:' ? this.httpsRequest : this.httpRequest;
         const request = req.request(opts, (response: any) => {
-          let responseBody = '';
           response.setEncoding('utf8');
-          response.on('data', (data: string) => { responseBody += data });
+          response.on('data', (data: string) => { this.responseBody += data });
           response.on('end', () => {
             if (response.statusCode >= 200 && response.statusCode < 400) {
-              logger.info(`Resolving promise with: ${responseBody}`);
-              resolve(responseBody);
+              logger.info(`Resolving promise with: ${this.responseBody}`);
+              resolve(this.responseBody);
             } else {
-              logger.info(`Rejecting promise with: ${responseBody}`);
-              reject(responseBody);
+              logger.info(`Rejecting promise with: ${this.responseBody}`);
+              reject(this.responseBody);
             }
           });
         });
@@ -65,7 +65,7 @@ export class Request {
 
         request.end();
       } else {
-        const req = this._request;
+        const req = this.request;
         req.onload = () => {
           if (req.status >= 200 && req.status < 400) {
             logger.info(`Resolving promise with: ${req.responseText}`);
