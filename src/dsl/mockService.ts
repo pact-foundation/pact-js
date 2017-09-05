@@ -4,7 +4,7 @@
  * https://gist.github.com/bethesque/9d81f21d6f77650811f4.
  * @module MockService
  */
-import { isNil } from 'lodash';
+import { isEmpty } from 'lodash';
 import { Request } from '../common/request';
 import { Interaction } from './interaction';
 
@@ -17,9 +17,9 @@ export interface PactDetails {
 }
 
 export class MockService {
-  private pactDetails: PactDetails;
-  private request: Request;
-  private baseUrl: string;
+  public pactDetails: PactDetails;
+  public request: Request;
+  public baseUrl: string;
 
   /**
    * @param {string} consumer - the consumer name
@@ -36,7 +36,7 @@ export class MockService {
     private ssl = false,
     private pactfileWriteMode: PactfileWriteMode = 'overwrite') {
 
-    if (isNil(consumer) || isNil(provider)) {
+    if (isEmpty(consumer) || isEmpty(provider)) {
       throw new Error('Please provide the names of the provider and consumer for this Pact.')
     }
 

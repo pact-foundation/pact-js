@@ -5,7 +5,7 @@ var expect = require('chai').expect
 var Promise = require('bluebird')
 var request = require('superagent')
 
-var Pact = require('../../src/pact')
+var Pact = require('../../dist/pact')
 var Matchers = Pact.Matchers
 
 describe('Integration', () => {
@@ -30,11 +30,26 @@ describe('Integration', () => {
         id: 1,
         name: 'Project 1',
         due: '2016-02-11T09:46:56.023Z',
-        tasks: [
-          { id: 1, name: 'Do the laundry', 'done': true },
-          { id: 2, name: 'Do the dishes', 'done': false },
-          { id: 3, name: 'Do the backyard', 'done': false },
-          { id: 4, name: 'Do nothing', 'done': false }
+        tasks: [{
+            id: 1,
+            name: 'Do the laundry',
+            'done': true
+          },
+          {
+            id: 2,
+            name: 'Do the dishes',
+            'done': false
+          },
+          {
+            id: 3,
+            name: 'Do the backyard',
+            'done': false
+          },
+          {
+            id: 4,
+            name: 'Do nothing',
+            'done': false
+          }
         ]
       }]
 
@@ -50,19 +65,23 @@ describe('Integration', () => {
         // add interactions, as many as needed
         before((done) => {
           provider.addInteraction({
-            state: 'i have a list of projects',
-            uponReceiving: 'a request for projects',
-            withRequest: {
-              method: 'get',
-              path: '/projects',
-              headers: { 'Accept': 'application/json' }
-            },
-            willRespondWith: {
-              status: 200,
-              headers: { 'Content-Type': 'application/json' },
-              body: EXPECTED_BODY
-            }
-          })
+              state: 'i have a list of projects',
+              uponReceiving: 'a request for projects',
+              withRequest: {
+                method: 'get',
+                path: '/projects',
+                headers: {
+                  'Accept': 'application/json'
+                }
+              },
+              willRespondWith: {
+                status: 200,
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: EXPECTED_BODY
+              }
+            })
             .then(() => done())
         })
 
@@ -70,7 +89,9 @@ describe('Integration', () => {
         it('returns the correct body', (done) => {
           request
             .get(`${PROVIDER_URL}/projects`)
-            .set({ 'Accept': 'application/json' })
+            .set({
+              'Accept': 'application/json'
+            })
             .then((res) => {
               expect(res.text).to.eql(JSON.stringify(EXPECTED_BODY))
             })
@@ -86,20 +107,26 @@ describe('Integration', () => {
         // add interactions, as many as needed
         before((done) => {
           provider.addInteraction({
-            state: 'i have a list of projects',
-            uponReceiving: 'a request for projects with a filter',
-            withRequest: {
-              method: 'get',
-              path: '/projects',
-              query: { from: 'today' },
-              headers: { 'Accept': 'application/json' }
-            },
-            willRespondWith: {
-              status: 200,
-              headers: { 'Content-Type': 'application/json' },
-              body: EXPECTED_BODY
-            }
-          })
+              state: 'i have a list of projects',
+              uponReceiving: 'a request for projects with a filter',
+              withRequest: {
+                method: 'get',
+                path: '/projects',
+                query: {
+                  from: 'today'
+                },
+                headers: {
+                  'Accept': 'application/json'
+                }
+              },
+              willRespondWith: {
+                status: 200,
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: EXPECTED_BODY
+              }
+            })
             .then(() => done())
         })
 
@@ -107,7 +134,9 @@ describe('Integration', () => {
         it('returns the correct body', (done) => {
           request
             .get(`${PROVIDER_URL}/projects?from=today`)
-            .set({ 'Accept': 'application/json' })
+            .set({
+              'Accept': 'application/json'
+            })
             .then((res) => {
               expect(res.text).to.eql(JSON.stringify(EXPECTED_BODY))
             })
@@ -128,11 +157,18 @@ describe('Integration', () => {
             withRequest: {
               method: 'get',
               path: '/projects',
-              headers: { 'Accept': 'application/json' }
+              headers: {
+                'Accept': 'application/json'
+              }
             },
             willRespondWith: {
               status: 200,
-              headers: { 'Content-Type': Matchers.term({ generate: 'application/json', matcher: 'application\/json' }) },
+              headers: {
+                'Content-Type': Matchers.term({
+                  generate: 'application/json',
+                  matcher: 'application\/json'
+                })
+              },
               body: [{
                 id: 1,
                 name: 'Project 1',
@@ -141,7 +177,9 @@ describe('Integration', () => {
                   id: Matchers.somethingLike(1),
                   name: Matchers.somethingLike('Do the laundry'),
                   'done': Matchers.somethingLike(true)
-                }, { min: 4 })
+                }, {
+                  min: 4
+                })
               }]
             }
           }).then(() => done())
@@ -151,7 +189,9 @@ describe('Integration', () => {
         it('returns the correct body', (done) => {
           const verificationPromise = request
             .get(`${PROVIDER_URL}/projects`)
-            .set({ 'Accept': 'application/json' })
+            .set({
+              'Accept': 'application/json'
+            })
             .then((res) => {
               return JSON.parse(res.text)[0]
             })
@@ -173,11 +213,15 @@ describe('Integration', () => {
             withRequest: {
               method: 'get',
               path: '/projects',
-              headers: { 'Accept': 'application/json' }
+              headers: {
+                'Accept': 'application/json'
+              }
             },
             willRespondWith: {
               status: 200,
-              headers: { 'Content-Type': 'application/json' },
+              headers: {
+                'Content-Type': 'application/json'
+              },
               body: EXPECTED_BODY
             }
           })
@@ -188,11 +232,15 @@ describe('Integration', () => {
             withRequest: {
               method: 'get',
               path: '/projects/2',
-              headers: { 'Accept': 'application/json' }
+              headers: {
+                'Accept': 'application/json'
+              }
             },
             willRespondWith: {
               status: 404,
-              headers: { 'Content-Type': 'application/json' }
+              headers: {
+                'Content-Type': 'application/json'
+              }
             }
           })
 
@@ -202,14 +250,18 @@ describe('Integration', () => {
         it('allows two requests', (done) => {
           const verificationPromise =
             request.get(`${PROVIDER_URL}/projects`)
-              .set({ 'Accept': 'application/json' })
-              .then((res) => {
-                return res.text
-              })
+            .set({
+              'Accept': 'application/json'
+            })
+            .then((res) => {
+              return res.text
+            })
           expect(verificationPromise).to.eventually.eql(JSON.stringify(EXPECTED_BODY)).notify(done)
 
           const verificationPromise404 =
-            request.get(`${PROVIDER_URL}/projects/2`).set({ 'Accept': 'application/json' })
+            request.get(`${PROVIDER_URL}/projects/2`).set({
+              'Accept': 'application/json'
+            })
           expect(verificationPromise404).to.eventually.be.rejected
         })
 
@@ -226,11 +278,15 @@ describe('Integration', () => {
             withRequest: {
               method: 'get',
               path: '/projects',
-              headers: { 'Accept': 'application/json' }
+              headers: {
+                'Accept': 'application/json'
+              }
             },
             willRespondWith: {
               status: 200,
-              headers: { 'Content-Type': 'application/json' },
+              headers: {
+                'Content-Type': 'application/json'
+              },
               body: EXPECTED_BODY
             }
           }).then(() => done())
@@ -241,13 +297,17 @@ describe('Integration', () => {
 
           const verificationPromise =
             request.get(`${PROVIDER_URL}/projects`)
-              .set({ 'Accept': 'application/json' })
-              .then((response) => {
-                promiseResults.push(response)
-                return request.delete(`${PROVIDER_URL}/projects/2`)
-              })
-              .then(() => { }, (err) => { promiseResults.push(err.response) })
-              .then(() => provider.verify(promiseResults))
+            .set({
+              'Accept': 'application/json'
+            })
+            .then((response) => {
+              promiseResults.push(response)
+              return request.delete(`${PROVIDER_URL}/projects/2`)
+            })
+            .then(() => {}, (err) => {
+              promiseResults.push(err.response)
+            })
+            .then(() => provider.verify(promiseResults))
 
           expect(verificationPromise).to.be.rejectedWith('Error: Pact verification failed - expected interactions did not match actual.').notify(done)
         })

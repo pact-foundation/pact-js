@@ -4,7 +4,6 @@
     "outDir": "./dist",
     "baseUrl": "src",
     "sourceMap": true,
-    "declaration": true,
     "noLib": false,
     "noImplicitReturns": true,
     "noImplicitAny": true,

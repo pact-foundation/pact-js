@@ -5,7 +5,7 @@ const nock = require('nock');
 import { MockService } from './mockService';
 import { Interaction } from './interaction';
 
-describe.only('MockService', () => {
+describe('MockService', () => {
 
   after(() => {
     nock.restore()
@@ -31,12 +31,12 @@ describe.only('MockService', () => {
     })
 
     it('does not create a MockService when consumer is not informed', () => {
-      expect(() => { new MockService() })
+      expect(() => { new MockService('', 'provider') })
         .to.throw(Error, 'Please provide the names of the provider and consumer for this Pact.')
     })
 
     it('does not create a MockService when provider is not informed', () => {
-      expect(() => { new MockService('consumer') })
+      expect(() => { new MockService('consumer', '') })
         .to.throw(Error, 'Please provide the names of the provider and consumer for this Pact.')
     })
   })
@@ -45,7 +45,7 @@ describe.only('MockService', () => {
     const mock = new MockService('consumer', 'provider', 1234)
 
     const interaction = new Interaction()
-    interaction.uponReceiving('duh').withRequest({ method: 'get', path: '/search' }).willRespondWith({ status: 200 })
+    interaction.uponReceiving('duh').withRequest({ method: 'GET', path: '/search' }).willRespondWith({ status: 200 })
 
     it('when Interaction added successfully', (done) => {
       nock(mock.baseUrl).post(/interactions$/).reply(200)

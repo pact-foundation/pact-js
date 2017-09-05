@@ -17,12 +17,34 @@
     "postdist": "npm t",
     "posttest": "npm run test:checkCoverage && npm run test:karma && npm run docs",
     "predist": "npm run clean && npm run lint && npm run jscpd",
+    "test": "nyc mocha && npm run test:integration",
+    "test:integration": "./node_modules/.bin/_mocha ./test/**/*.spec.js",
     "test:typescript": "istanbul cover ./node_modules/.bin/_mocha -- ./src/**/*.spec.ts",
     "test:checkCoverage": "istanbul check",
     "test:e2e-examples": "cd examples/e2e && npm i && npm t",
     "test:karma": "npm run test:karma:jasmine && npm run test:karma:mocha",
     "test:karma:jasmine": "karma start ./karma/jasmine/karma.conf.js",
     "test:karma:mocha": "karma start ./karma/mocha/karma.conf.js"
+  },
+  "nyc": {
+    "include": [
+      "src/*.ts",
+      "src/**/*.ts"
+    ],
+    "exclude": [
+      "**/*.d.ts"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "json",
+      "html"
+    ],
+    "all": true
   },
   "repository": {
     "type": "git",
@@ -114,11 +136,13 @@
     "karma-phantomjs-launcher": "1.x",
     "mocha": "3.x",
     "nock": "8.x",
+    "nyc": "^11.2.0",
     "proxyquire": "1.x",
     "rimraf": "2.x",
     "sinon": "^3.2.1",
     "sinon-chai": "^2.13.0",
     "source-map-loader": "^0.2.1",
+    "source-map-support": "^0.4.17",
     "standard": "8.x",
     "superagent": "2.x",
     "ts-node": "^3.3.0",
