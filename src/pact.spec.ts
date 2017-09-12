@@ -128,9 +128,10 @@ describe('Pact', () => {
     });
     describe('when server is properly configured', () => {
       it('should start the mock server in the background', (done) => {
+        const startStub = sandbox.stub(PactServer.prototype, 'start');
         const b = <PactType><any>Object.create(Pact.prototype);
         b.opts = fullOpts;
-        b.server = sinon.createStubInstance(PactServer);
+        b.server = { start: startStub };
         expect(b.setup()).to.eventually.be.fulfilled.notify(done);
       });
     });

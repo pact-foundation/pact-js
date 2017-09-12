@@ -11,13 +11,12 @@
     "coverage": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "deploy:prepare": "./scripts/create_npmrc_file.sh",
     "dist": "npm run build && webpack --config ./config/webpack.web.config.js",
-    "docs": "documentation build -o docs -f html -g --name 'Pact' src/pact.js",
     "jscpd": "jscpd -p src -r json -o jscpd.json",
     "lint": "standard && ./node_modules/.bin/tslint -c tslint.json 'src/**/*.ts' -p . -e '**/*.*.ts'",
     "postdist": "npm t",
-    "posttest": "npm run test:checkCoverage && npm run test:karma && npm run docs",
+    "posttest": "npm run test:checkCoverage && npm run test:karma",
     "predist": "npm run clean && npm run lint && npm run jscpd",
-    "test": "nyc ./node_modules/.bin/mocha",
+    "test": "nyc mocha",
     "test:checkCoverage": "istanbul check",
     "test:e2e-examples": "cd examples/e2e && npm i && npm t",
     "test:karma": "npm run test:karma:jasmine && npm run test:karma:mocha",
@@ -31,7 +30,8 @@
       "src/**/*.ts"
     ],
     "exclude": [
-      "**/*.d.ts"
+      "**/*.d.ts",
+      "**/*.spec.ts"
     ],
     "extension": [
       ".ts"
@@ -41,9 +41,11 @@
     ],
     "reporter": [
       "json",
+      "text-summary",
       "html"
     ],
-    "all": true
+    "sourceMap": true,
+    "instrument": true
   },
   "repository": {
     "type": "git",
@@ -121,7 +123,6 @@
     "chai": "3.x",
     "chai-as-promised": "5.x",
     "coveralls": "2.x",
-    "documentation": "4.0.0-beta9",
     "enhanced-resolve": "^3.4.1",
     "es6-promise": "^4.1.1",
     "imports-loader": "0.x",
@@ -144,7 +145,7 @@
     "sinon": "^3.2.1",
     "sinon-chai": "^2.13.0",
     "source-map-loader": "^0.2.1",
-    "source-map-support": "^0.4.17",
+    "source-map-support": "^0.4.18",
     "standard": "8.x",
     "superagent": "2.x",
     "ts-node": "^3.3.0",
