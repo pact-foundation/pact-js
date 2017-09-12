@@ -1,29 +1,27 @@
 'use strict'
 
-var path = require('path')
-var expect = require('chai').expect
-var Promise = require('bluebird')
-var request = require('superagent')
+const path = require('path')
+const expect = require('chai').expect
+const Promise = require('bluebird')
+const request = require('superagent')
 
-var pact = require('../../dist/pact')
-var Pact = pact.Pact;
-var Matchers = Pact.Matchers
+import { Pact, eachLike, like as like, term } from './pact';
 
 describe('Integration', () => {
 
-  ['http', 'https'].forEach((PROTOCOL) => {
-    describe(`Pact on ${PROTOCOL} protocol`, (protocol) => {
+  ['http', 'https'].forEach((protocol) => {
+    describe(`Pact on ${protocol} protocol`, () => {
 
       const MOCK_PORT = Math.floor(Math.random() * 999) + 9000
-      const PROVIDER_URL = `${PROTOCOL}://localhost:${MOCK_PORT}`
+      const PROVIDER_URL = `${protocol}://localhost:${MOCK_PORT}`
       const provider = new Pact({
         consumer: 'Matching Service',
         provider: 'Animal Profile Service',
         port: MOCK_PORT,
         log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
         dir: path.resolve(process.cwd(), 'pacts'),
-        logLevel: 'INFO',
-        ssl: (PROTOCOL === 'https'),
+        logLevel: 'WARN',
+        ssl: (protocol === 'https'),
         spec: 2
       })
 
@@ -54,9 +52,9 @@ describe('Integration', () => {
         ]
       }]
 
-      let counter = 1
+      const counter = 1
 
-      before(provider.setup)
+      before(() => provider.setup())
 
       // once all tests are run, write pact and remove interactions
       after(() => provider.finalize())
@@ -64,12 +62,12 @@ describe('Integration', () => {
       context('with a single request', () => {
 
         // add interactions, as many as needed
-        before((done) => {
-          provider.addInteraction({
+        before(() => {
+          return provider.addInteraction({
             state: 'i have a list of projects',
             uponReceiving: 'a request for projects',
             withRequest: {
-              method: 'get',
+              method: 'GET',
               path: '/projects',
               headers: {
                 'Accept': 'application/json'
@@ -83,7 +81,6 @@ describe('Integration', () => {
               body: EXPECTED_BODY
             }
           })
-            .then(() => done())
         })
 
         // execute your assertions
@@ -93,7 +90,7 @@ describe('Integration', () => {
             .set({
               'Accept': 'application/json'
             })
-            .then((res) => {
+            .then((res: any) => {
               expect(res.text).to.eql(JSON.stringify(EXPECTED_BODY))
             })
             .then(done)
@@ -106,12 +103,12 @@ describe('Integration', () => {
       context('with a single request with query string parameters', () => {
 
         // add interactions, as many as needed
-        before((done) => {
-          provider.addInteraction({
+        before(() => {
+          return provider.addInteraction({
             state: 'i have a list of projects',
             uponReceiving: 'a request for projects with a filter',
             withRequest: {
-              method: 'get',
+              method: 'GET',
               path: '/projects',
               query: {
                 from: 'today'
@@ -128,7 +125,6 @@ describe('Integration', () => {
               body: EXPECTED_BODY
             }
           })
-            .then(() => done())
         })
 
         // execute your assertions
@@ -138,7 +134,7 @@ describe('Integration', () => {
             .set({
               'Accept': 'application/json'
             })
-            .then((res) => {
+            .then((res: any) => {
               expect(res.text).to.eql(JSON.stringify(EXPECTED_BODY))
             })
             .then(done)
@@ -148,15 +144,15 @@ describe('Integration', () => {
         it('successfully verifies', () => provider.verify())
       })
 
-      context('with a single request and matchers', () => {
+      context('with a single request and eachLike, like, term', () => {
 
         // add interactions, as many as needed
-        before((done) => {
-          provider.addInteraction({
+        before(() => {
+          return provider.addInteraction({
             state: 'i have a list of projects but I dont know how many',
             uponReceiving: 'a request for such projects',
             withRequest: {
-              method: 'get',
+              method: 'GET',
               path: '/projects',
               headers: {
                 'Accept': 'application/json'
@@ -165,7 +161,7 @@ describe('Integration', () => {
             willRespondWith: {
               status: 200,
               headers: {
-                'Content-Type': Matchers.term({
+                'Content-Type': term({
                   generate: 'application/json',
                   matcher: 'application\/json'
                 })
@@ -174,16 +170,16 @@ describe('Integration', () => {
                 id: 1,
                 name: 'Project 1',
                 due: '2016-02-11T09:46:56.023Z',
-                tasks: Matchers.eachLike({
-                  id: Matchers.somethingLike(1),
-                  name: Matchers.somethingLike('Do the laundry'),
-                  'done': Matchers.somethingLike(true)
+                tasks: eachLike({
+                  id: like(1),
+                  name: like('Do the laundry'),
+                  'done': like(true)
                 }, {
                     min: 4
                   })
               }]
             }
-          }).then(() => done())
+          })
         })
 
         // execute your assertions
@@ -193,11 +189,10 @@ describe('Integration', () => {
             .set({
               'Accept': 'application/json'
             })
-            .then((res) => {
+            .then((res: any) => {
               return JSON.parse(res.text)[0]
             })
 
-          expect(verificationPromise).to.eventually.have.lengthOf(4)
           expect(verificationPromise).to.eventually.have.property('tasks').notify(done)
         })
 
@@ -208,11 +203,11 @@ describe('Integration', () => {
       context('with two requests', () => {
 
         before((done) => {
-          let interaction1 = provider.addInteraction({
+          const interaction1 = provider.addInteraction({
             state: 'i have a list of projects',
             uponReceiving: 'a request for projects',
             withRequest: {
-              method: 'get',
+              method: 'GET',
               path: '/projects',
               headers: {
                 'Accept': 'application/json'
@@ -227,11 +222,11 @@ describe('Integration', () => {
             }
           })
 
-          let interaction2 = provider.addInteraction({
+          const interaction2 = provider.addInteraction({
             state: 'i have a list of projects',
             uponReceiving: 'a request for a project that does not exist',
             withRequest: {
-              method: 'get',
+              method: 'GET',
               path: '/projects/2',
               headers: {
                 'Accept': 'application/json'
@@ -254,7 +249,7 @@ describe('Integration', () => {
               .set({
                 'Accept': 'application/json'
               })
-              .then((res) => {
+              .then((res: any) => {
                 return res.text
               })
           expect(verificationPromise).to.eventually.eql(JSON.stringify(EXPECTED_BODY)).notify(done)
@@ -277,7 +272,7 @@ describe('Integration', () => {
             state: 'i have a list of projects',
             uponReceiving: 'a request for projects',
             withRequest: {
-              method: 'get',
+              method: 'GET',
               path: '/projects',
               headers: {
                 'Accept': 'application/json'
@@ -294,21 +289,21 @@ describe('Integration', () => {
         })
 
         it('fails verification', (done) => {
-          let promiseResults = []
+          const promiseResults: Array<Promise<any>> = []
 
           const verificationPromise =
             request.get(`${PROVIDER_URL}/projects`)
               .set({
                 'Accept': 'application/json'
               })
-              .then((response) => {
+              .then((response: any) => {
                 promiseResults.push(response)
                 return request.delete(`${PROVIDER_URL}/projects/2`)
               })
-              .then(() => { }, (err) => {
+              .then(() => { }, (err: any) => {
                 promiseResults.push(err.response)
               })
-              .then(() => provider.verify(promiseResults))
+              .then(() => provider.verify())
 
           expect(verificationPromise).to.be.rejectedWith('Error: Pact verification failed - expected interactions did not match actual.').notify(done)
         })

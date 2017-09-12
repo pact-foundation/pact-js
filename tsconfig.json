@@ -12,9 +12,9 @@
     "moduleResolution": "node",
     "noEmitOnError": true,
     "emitDecoratorMetadata": true,
+    "declaration": true,
     "experimentalDecorators": true,
     "target": "es5",
-    "allowJs": true,
     "typeRoots": [
       "node_modules/@types",
       "src/types/**/*"
@@ -30,6 +30,7 @@
   "exclude": [
     "./node_modules/**/*",
     "./dist",
-    "./examples"
+    "./examples",
+    "**/*.spec.ts"
   ]
 }
