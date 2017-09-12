@@ -3,7 +3,7 @@
  * @module Pact
  */
 
-import { isNil } from 'lodash';
+import { isEmpty } from 'lodash';
 import { isPortAvailable } from './common/net';
 import { MockService, PactfileWriteMode } from './dsl/mockService';
 import { Interaction, InteractionObject } from './dsl/interaction';
@@ -48,11 +48,11 @@ export class Pact {
 
     this.opts = { ...defaults, ...config } as PactOptionsComplete;
 
-    if (this.opts.consumer === '') {
+    if (isEmpty(this.opts.consumer)) {
       throw new Error('You must specify a Consumer for this pact.');
     }
 
-    if (this.opts.provider === '') {
+    if (isEmpty(this.opts.provider)) {
       throw new Error('You must specify a Provider for this pact.');
     }
 

@@ -5,7 +5,7 @@
 
 'use strict'
 
-import { isNil } from 'lodash';
+import { isEmpty } from 'lodash';
 import { isPortAvailable } from './common/net';
 import { MockService, PactfileWriteMode } from './dsl/mockService';
 import { Interaction, InteractionObject } from './dsl/interaction';
@@ -16,13 +16,8 @@ import * as Matchers from './dsl/matchers';
 import * as Verifier from './dsl/verifier';
 import * as clc from 'cli-color';
 import { logger } from './common/logger';
-// TODO: is this still needed if TypeScript is transpiling down?
-// import { polyfill } from 'es6-promise';
-// polyfill();
-
-
-// TODO: Could probably use class inheritence or mixins
-//       to reduce boilerplate code here
+import { polyfill } from 'es6-promise';
+polyfill();
 
 /**
  * Creates a new {@link PactProvider}.
@@ -55,13 +50,13 @@ export class PactWeb {
       pactfileWriteMode: 'overwrite'
     } as PactOptions;
 
-    this.opts = { ...defaults, config } as PactOptionsComplete;
+    this.opts = { ...defaults, ...config } as PactOptionsComplete;
 
-    if (isNil(this.opts.consumer)) {
+    if (isEmpty(this.opts.consumer)) {
       throw new Error('You must specify a Consumer for this pact.');
     }
 
-    if (isNil(this.opts.provider)) {
+    if (isEmpty(this.opts.provider)) {
       throw new Error('You must specify a Provider for this pact.');
     }
 

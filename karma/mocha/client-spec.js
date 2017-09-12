@@ -1,13 +1,13 @@
 /*eslint-disable*/
-(function() {
+(function () {
 
-  describe("Client", function() {
+  describe("Client", function () {
 
     var client, provider
 
-    before(function(done) {
+    before(function (done) {
       client = example.createClient('http://localhost:1234')
-      provider = Pact({ consumer: 'Karma Mocha', provider: 'Hello' })
+      provider = new Pact.PactWeb({ consumer: 'Karma Mocha', provider: 'Hello' })
       // required for slower Travis CI environment
       setTimeout(function () { done() }, 1000)
     })
@@ -31,10 +31,10 @@
             body: { reply: "Hello" }
           }
         })
-        .then(function () { done() }, function (err) { done(err) })
+          .then(function () { done() }, function (err) { done(err) })
       })
 
-      it("should say hello", function(done) {
+      it("should say hello", function (done) {
         //Run the tests
         client.sayHello()
           .then(function (data) {
@@ -47,20 +47,20 @@
       })
 
       // verify with Pact, and reset expectations
-      it('successfully verifies', function() { return provider.verify() })
+      it('successfully verifies', function () { return provider.verify() })
     })
 
     describe("findFriendsByAgeAndChildren", function () {
 
       before(function (done) {
-      provider
+        provider
           .addInteraction({
             uponReceiving: 'a request friends',
             withRequest: {
               method: 'GET',
               path: '/friends',
               query: {
-                age: Pact.Matchers.term({generate: '30', matcher: '\\d+'}), //remember query params are always strings
+                age: Pact.Matchers.term({ generate: '30', matcher: '\\d+' }), //remember query params are always strings
                 children: ['Mary Jane', 'James'] // specify params with multiple values in an array
               },
               headers: { 'Accept': 'application/json' }
@@ -78,11 +78,11 @@
           .then(function () { done() }, function (err) { done(err) })
       })
 
-      it("should return some friends", function(done) {
+      it("should return some friends", function (done) {
         //Run the tests
         client.findFriendsByAgeAndChildren('33', ['Mary Jane', 'James'])
           .then(function (res) {
-            expect(JSON.parse(res.responseText)).to.eql({friends: [{ name: 'Sue' }]})
+            expect(JSON.parse(res.responseText)).to.eql({ friends: [{ name: 'Sue' }] })
             done()
           })
           .catch(function (err) {
@@ -91,12 +91,12 @@
       })
 
       // verify with Pact, and reset expectations
-      it('successfully verifies', function() { return provider.verify() })
+      it('successfully verifies', function () { return provider.verify() })
     })
 
     describe("unfriendMe", function () {
 
-      afterEach(function() {
+      afterEach(function () {
         return provider.removeInteractions()
       })
 
@@ -117,10 +117,10 @@
               body: { reply: "Bye" }
             }
           })
-          .then(function () { done() }, function (err) { done(err) })
+            .then(function () { done() }, function (err) { done(err) })
         })
 
-        it("should unfriend me", function(done) {
+        it("should unfriend me", function (done) {
           //Run the tests
           client.unfriendMe()
             .then(function (res) {
@@ -132,7 +132,7 @@
             })
         })
 
-        it('successfully verifies', function() { return provider.verify() })
+        it('successfully verifies', function () { return provider.verify() })
       })
 
       // verify with Pact, and reset expectations
@@ -151,14 +151,14 @@
               body: {}
             }
           })
-          .then(function () { done() }, function (err) { done(err) })
+            .then(function () { done() }, function (err) { done(err) })
         })
 
         it("returns an error message", function (done) {
           //Run the tests
-          client.unfriendMe().then(function() {
+          client.unfriendMe().then(function () {
             done(new Error('expected request to /unfriend me to fail'))
-          }, function(e) {
+          }, function (e) {
             expect(e).to.eql('No friends :(')
             done()
           })
@@ -166,7 +166,7 @@
         })
 
         // verify with Pact, and reset expectations
-        it('successfully verifies', function() { return provider.verify() })
+        it('successfully verifies', function () { return provider.verify() })
       })
     })
 

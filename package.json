@@ -22,7 +22,8 @@
     "test:e2e-examples": "cd examples/e2e && npm i && npm t",
     "test:karma": "npm run test:karma:jasmine && npm run test:karma:mocha",
     "test:karma:jasmine": "karma start ./karma/jasmine/karma.conf.js",
-    "test:karma:mocha": "karma start ./karma/mocha/karma.conf.js"
+    "test:karma:mocha": "karma start ./karma/mocha/karma.conf.js",
+    "webpack": "webpack --config ./config/webpack.web.config.js"
   },
   "nyc": {
     "include": [
@@ -122,6 +123,7 @@
     "coveralls": "2.x",
     "documentation": "4.0.0-beta9",
     "enhanced-resolve": "^3.4.1",
+    "es6-promise": "^4.1.1",
     "imports-loader": "0.x",
     "istanbul": "0.4.x",
     "jasmine-core": "2.x",
