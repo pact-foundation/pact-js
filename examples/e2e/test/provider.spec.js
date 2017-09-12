@@ -1,4 +1,4 @@
-const verifier = require('../../../src/pact.js').Verifier
+const verifyProvider = require('../../../dist/pact').verifyProvider
 const path = require('path')
 const chai = require('chai')
 const chaiAsPromised = require('chai-as-promised')
@@ -52,7 +52,7 @@ describe('Pact Verification', () => {
       providerVersion: "1.0.0"
     }
 
-    return verifier.verifyProvider(opts)
+    return verifyProvider(opts)
       .then(output => {
         console.log('Pact Verification Complete!')
         console.log(output)
