@@ -2,7 +2,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const DIST = path.resolve(__dirname, '../dist-web');
-const APP = path.resolve(__dirname, '../src');
+const APP = path.resolve(__dirname, '../dist');
 
 module.exports = {
   entry: path.resolve(APP, 'pact-web.js'),
