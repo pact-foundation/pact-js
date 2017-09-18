@@ -13,5 +13,10 @@ module.exports = {
     if (config.logging) {
       console.log(msg)
     }
+  },
+  warn: (msg) => {
+    if (config.logging) {
+      console.warn(msg)
+    }
   }
 }

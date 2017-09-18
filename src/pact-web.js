@@ -29,21 +29,16 @@ var Interaction = require('./dsl/interaction')
 module.exports = (opts) => {
   var consumer = opts.consumer
   var provider = opts.provider
-
-  if (isNil(consumer)) {
-    throw new Error('You must provide a Consumer for this pact.')
-  }
-
-  if (isNil(provider)) {
-    throw new Error('You must provide a Provider for this pact.')
-  }
-
   var port = opts.port || 1234
   var host = opts.host || '127.0.0.1'
   var ssl = opts.ssl || false
   var pactfileWriteMode = opts.pactfileWriteMode || 'overwrite'
 
-  logger.info(`Setting up Pact with Consumer "${consumer}" and Provider "${provider}" using mock service on Port: "${port}"`)
+  if (isNil(consumer) || isNil(provider)) {
+    logger.info(`Setting up Pact using mock service on port: "${port}"`)
+  } else {
+    logger.info(`Setting up Pact with Consumer "${consumer}" and Provider "${provider}" using mock service on port: "${port}"`)
+  }
 
   const mockService = new MockService(consumer, provider, port, host, ssl, pactfileWriteMode)
 
