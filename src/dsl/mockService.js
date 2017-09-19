@@ -9,6 +9,7 @@
 
 const isNil = require('lodash.isnil')
 const Request = require('../common/request')
+const logger = require('../common/logger')
 
 module.exports = class MockService {
 
@@ -22,7 +23,8 @@ module.exports = class MockService {
    */
   constructor (consumer, provider, port, host, ssl, pactfileWriteMode) {
     if (isNil(consumer) || isNil(provider)) {
-      throw new Error('Please provide the names of the provider and consumer for this Pact.')
+      logger.warn('Warning: Consumer\Provider details not provided, ensure ' +
+        'that the mock service has been started with this information')
     }
 
     port = port || 1234
@@ -33,9 +35,9 @@ module.exports = class MockService {
     this._request = new Request()
     this._baseURL = `${ssl ? 'https' : 'http'}://${host}:${port}`
     this._pactDetails = {
-      consumer: { name: consumer },
-      provider: { name: provider },
-      pactfile_write_mode: pactfileWriteMode
+      pactfile_write_mode: pactfileWriteMode,
+      consumer: (consumer) ? { name: consumer } : undefined,
+      provider: (provider) ? { name: provider } : undefined
     }
   }
 
