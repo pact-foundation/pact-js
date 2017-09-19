@@ -4,6 +4,24 @@ Do this to generate your change history
 
     git log --pretty=format:'* [%h](https://github.com/pact-foundation/pact-js/commit/%h) - %s (%an, %ad)' vX.Y.Z..HEAD | egrep -v "wip(:|\()" | grep -v "docs(" | grep -v "chore(" | grep -v Merge | grep -v "test("
 
+### v3.0.0
+
+* [e9f3a4a](https://github.com/pact-foundation/pact-js/commit/e9f3a4a) - feat(karma): relax consumer/provider requirement in MockService (Matt Fellows, Tue Sep 19 08:52:56 2017 +1000)
+* [f141c5e](https://github.com/pact-foundation/pact-js/commit/f141c5e) - fix(tests): update e2e tests with timeout for CI builds (Matt Fellows, Sun Aug 6 17:32:26 2017 +1000)
+* [65e8314](https://github.com/pact-foundation/pact-js/commit/65e8314) - feat(example): adding example for the AVA test framework (Liran Tal, Sat Aug 5 02:12:54 2017 +0300)
+
+### v2.7.0
+
+* [50e1041](https://github.com/pact-foundation/pact-js/commit/50e1041) - feat(upgrade): upgrade to latest pact node v4.12.0 (Matt Fellows, Sun Aug 6 14:22:36 2017 +1000)
+* [bac51ad](https://github.com/pact-foundation/pact-js/commit/bac51ad) - fix(issue_template): Corrected typos (Beth Skurrie, Sat Aug 5 11:52:42 2017 +1000)
+* [84b78c3](https://github.com/pact-foundation/pact-js/commit/84b78c3) - fix(gitignore): ignore IDE generated project files (Liran Tal, Fri Jul 28 06:14:44 2017 +0300)
+* [8af914b](https://github.com/pact-foundation/pact-js/commit/8af914b) - Fix typo (MiguelCG, Wed Jul 26 22:12:39 2017 +0100)
+* [af18c28](https://github.com/pact-foundation/pact-js/commit/af18c28) - Fix typo in readme (MiguelCG, Thu Jul 20 20:02:24 2017 +0100)
+* [6068b62](https://github.com/pact-foundation/pact-js/commit/6068b62) - Added example of like around value and like around object (Beth Skurrie, Tue Jun 27 14:54:24 2017 +1000)
+* [587f71f](https://github.com/pact-foundation/pact-js/commit/587f71f) - Updated documentation around like and eachLike (Beth Skurrie, Tue Jun 27 14:51:27 2017 +1000)
+* [4ba6793](https://github.com/pact-foundation/pact-js/commit/4ba6793) - Create CONTRIBUTING.md (Beth Skurrie, Fri Jun 16 09:38:20 2017 +1000)
+* [5676377](https://github.com/pact-foundation/pact-js/commit/5676377) - Create CONTRIBUTING.md (Beth Skurrie, Fri Jun 16 09:37:37 2017 +1000)
+
 ### v2.6.0
 
 * [50e1041](https://github.com/pact-foundation/pact-js/commit/50e1041) - feat(upgrade): upgrade to latest pact node v4.12.0 (Matt Fellows, Sun Aug 6 14:22:36 2017 +1000)
