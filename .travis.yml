@@ -13,16 +13,7 @@ env:
   global:
   # NPM KEY
   - secure: NikiOMeibEpwVk4mLdXxCDm4jknLWZQQACSwHPlotB0u9JRzlyIoJhm47uzlPnKMtCylV0DMXQo32qbuv2xTIbB0cuZqcTzJaE2pQPHpnsVOrUnOlzRF0bSyRZGY/22ELQxWgK2Jc94lWBiniHbZzLeRh/iSAShj/lmUgVRXgUg1bxjdPNDOb3A+QNMMTl8NIp9FajsOp1l+2RXOZaJZwZChMnB+jLIMk4C56onV+rTn4EvxM/6mY0tOD+fO78Qz72riAcP8CSm/POlwTd/LcKdjtV+A6udPmuetZEy+4SWRF82WsWvU9RTytkr4kgct/uD7Y1oBVS9FMMBndS0YV6GSRnz4nwSUfAGJC93cijcrBzMRJxJ8+lYDMNPmED352RfIo68Lnrp73fXii2KMbyrSDFZUxaP4BMJu2LgUTBbk1+mxcEZMwByR2ZGEZMI7XXft1t2rMLWbWd9Ppo1XlT4XsJ6sLQHdU8/XDq4Zz7s4TVUnhNSpHqRUHQlpUxsvncUo7JgLoB9VzUIA8hK6Vs6/zKvCLgTew330vjDFTQCl473OlsfuFBpqHLBc57kfWbaugvan5OW1RXUpydoptX5tmIIIfWe8XbyKKCBK+fS9LO7qQaYlsPDyjQqJ+IXBRd239odNia/ke6F9Pkvcdt2Z/NEqDtuN9azKy+LHGT8
-script: |
-  npm run dist
-
-  # Only run E2E examples on Node 6+
-  if [[ "${TRAVIS_NODE_VERSION}" =~ ^[6-8] ]]; then
-    echo "Running e2e examples build for node version ${TRAVIS_NODE_VERSION}"
-    npm run test:e2e-examples
-  else
-    echo "Skipping examples for node version ${TRAVIS_NODE_VERSION}"
-  fi
+script: ./scripts/build.sh
 after_success:
 - npm run coverage
 before_deploy:
