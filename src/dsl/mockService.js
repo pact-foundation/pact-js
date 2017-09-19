@@ -23,7 +23,7 @@ module.exports = class MockService {
    */
   constructor (consumer, provider, port, host, ssl, pactfileWriteMode) {
     if (isNil(consumer) || isNil(provider)) {
-      logger.warn('Warning: Consumer\Provider details not provided, ensure ' +
+      logger.warn('Warning: Consumer\\Provider details not provided, ensure ' +
         'that the mock service has been started with this information')
     }
 
