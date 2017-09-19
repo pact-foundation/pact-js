@@ -121,7 +121,7 @@ describe('Matcher', function() {
     describe('when object.min is invalid', function() {
       it('should throw an error message', function() {
         expect(function() {
-          eachLike({a: 1}, {min: 0})
+          eachLike({a: 1}, {min: -1})
         }).to.throw(Error)
 
         expect(function() {

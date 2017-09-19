@@ -44,8 +44,8 @@ module.exports.eachLike = (content, opts) => {
     throw new Error('Error creating a Pact eachLike. Please provide a content argument')
   }
 
-  if (opts && (isNil(opts.min) || opts.min < 1)) {
-    throw new Error('Error creating a Pact eachLike. Please provide opts.min that is > 1')
+  if (opts && (isNil(opts.min) || opts.min < 0)) {
+    throw new Error('Error creating a Pact eachLike. Please provide opts.min that is >= 0')
   }
 
   return {
