@@ -296,7 +296,7 @@ Rather than use hard-coded values which must then be present on the Provider sid
 you can use regular expressions and type matches on objects and arrays to validate the
 structure of your APIs.
 
-Read more about using regular expressions and type based matching [here][https://github.com/realestate-com-au/pact/wiki/Regular-expressions-and-type-matching-with-Pact] before continuing.
+Read more about using regular expressions and type based matching [here](https://github.com/realestate-com-au/pact/wiki/Regular-expressions-and-type-matching-with-Pact) before continuing.
 
 _NOTE: Make sure to start the mock service via the `Pact` declaration with the option `specification: 2` to get access to these features._
 
