@@ -10,7 +10,7 @@ module.exports = {
     path: DIST,
     library: 'Pact',
     libraryTarget: 'umd',
-    umdNamedDefine: true,
+    umdNamedDefine: false,
     filename: 'pact-web.js'
   },
   resolve: {
