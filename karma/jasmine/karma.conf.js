@@ -35,8 +35,9 @@ module.exports = function (config) {
     // Pact Providers
     pact: [{
       port: 1234,
-      consumer: 'Karma Jasmine',
-      provider: 'Hello'
+      consumer: 'KarmaJasmineConsumer',
+      provider: 'KarmaJasmineProvider',
+      logLevel: 'DEBUG'
     }],
 
     // web server port
@@ -44,7 +45,7 @@ module.exports = function (config) {
 
     plugins: [
       'karma-*',
-      '@pact-foundation/karma-pact',
+      '@pact-foundation/karma-pact'
     ],
 
     // enable / disable colors in the output (reporters and logs)

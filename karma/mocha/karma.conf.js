@@ -34,19 +34,27 @@ module.exports = function (config) {
     reporters: ['progress'],
 
     // Pact Providers
-    pact: {
+    pact: [{
       port: 1234,
-      consumer: 'Karma Mocha',
-      provider: 'Hello'
-    },
+      consumer: 'KarmaMochaConsumer',
+      provider: 'KarmaMochaProvider',
+      logLevel: 'DEBUG'
+    }],
 
     // web server port
     port: 9876,
 
     plugins: [
       'karma-*',
-      '@pact-foundation/karma-pact',
+      '@pact-foundation/karma-pact'
     ],
+
+    // increase mocha timeout to deal with starting mock server(s)
+    client: {
+      mocha: {
+        timeout: 10000
+      }
+    },
 
     // enable / disable colors in the output (reporters and logs)
     colors: true,
