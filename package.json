@@ -71,15 +71,16 @@
     ]
   },
   "dependencies": {
+    "@pact-foundation/pact-node": "^4.12.0",
+    "cli-color": "^1.1.0",
     "es6-promise": "4.1.1",
     "lodash.isfunction": "3.0.8",
     "lodash.isnil": "4.0.0",
     "lodash.isundefined": "3.0.1",
-    "lodash.omitby": "4.6.0",
-    "@pact-foundation/pact-node": "^4.12.0",
-    "cli-color": "^1.1.0"
+    "lodash.omitby": "4.6.0"
   },
   "devDependencies": {
+    "@pact-foundation/karma-pact": "^2.0.0",
     "babel-cli": "6.x",
     "babel-eslint": "6.x",
     "babel-loader": "6.x",
@@ -91,14 +92,14 @@
     "documentation": "4.0.0-beta9",
     "imports-loader": "0.x",
     "istanbul": "0.4.x",
+    "jasmine": "^2.8.0",
     "jasmine-core": "2.x",
     "jscpd": "0.6.x",
     "json-loader": "0.5.x",
     "karma": "1.x",
     "karma-chai": "0.1.x",
-    "karma-jasmine": "1.x",
+    "karma-jasmine": "^1.1.0",
     "karma-mocha": "1.x",
-    "karma-pact": "0.0.7",
     "karma-phantomjs-launcher": "1.x",
     "mocha": "3.x",
     "nock": "8.x",
