@@ -58,6 +58,7 @@ module.exports = (opts) => {
   const pactfileWriteMode = opts.pactfileWriteMode || 'overwrite'
 
   const server = serviceFactory.createServer({
+    host: host,
     port: port,
     log: log,
     dir: dir,
