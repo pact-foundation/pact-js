@@ -75,12 +75,7 @@ module.exports = (opts) => {
       return mockService.verify()
         .then(() => mockService.removeInteractions())
         .catch(e => {
-          // Properly format the error
-          console.error('')
-          console.error('Pact verification failed!')
-          console.error(e)
-
-          throw new Error('Pact verification failed - expected interactions did not match actual.')
+          throw new Error(e)
         })
     },
     /**

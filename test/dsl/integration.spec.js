@@ -249,7 +249,7 @@ describe('Integration', () => {
               .then(() => {}, (err) => { promiseResults.push(err.response) })
               .then(() => provider.verify(promiseResults))
 
-          expect(verificationPromise).to.be.rejectedWith('Error: Pact verification failed - expected interactions did not match actual.').notify(done)
+          expect(verificationPromise).to.be.rejected.notify(done)
         })
       })
     })
