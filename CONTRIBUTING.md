@@ -1,5 +1,10 @@
 # Contributing
 
+**PLEASE NOTE**: We are currently migrating the code base to TypeScript and except for critical bug fixes, are freezing master until this work is complete.
+
+In the meanwhile, any contributions should be based off https://github.com/pact-foundation/pact-js/tree/feat/typescript/src.
+
+
 ## Raising issues
 
 Before raising an issue, make sure you have checked the open and closed issues to see if an answer is provided there.
