@@ -1,5 +1,6 @@
 // Karma configuration
 // Generated on Thu Nov 20 2014 14:51:15 GMT+1100 (AEDT)
+var path = require('path')
 
 module.exports = function (config) {
   config.set({
@@ -37,7 +38,9 @@ module.exports = function (config) {
       port: 1234,
       consumer: 'KarmaJasmineConsumer',
       provider: 'KarmaJasmineProvider',
-      logLevel: 'DEBUG'
+      logLevel: 'DEBUG',
+      log: path.resolve(process.cwd(), 'logs', 'pact.log'),
+      dir: path.resolve(process.cwd(), 'pacts')
     }],
 
     // web server port

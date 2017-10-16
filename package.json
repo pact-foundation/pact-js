@@ -71,7 +71,7 @@
     ]
   },
   "dependencies": {
-    "@pact-foundation/pact-node": "^4.12.0",
+    "@pact-foundation/pact-node": "^5.1.2",
     "cli-color": "^1.1.0",
     "es6-promise": "4.1.1",
     "lodash.isfunction": "3.0.8",
@@ -80,7 +80,7 @@
     "lodash.omitby": "4.6.0"
   },
   "devDependencies": {
-    "@pact-foundation/karma-pact": "^2.0.0",
+    "@pact-foundation/karma-pact": "^2.1.1",
     "babel-cli": "6.x",
     "babel-eslint": "6.x",
     "babel-loader": "6.x",
