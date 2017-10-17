@@ -22,3 +22,14 @@ Consider forking the project and modifying the [E2E test](https://github.com/pac
 ## Relevant log files
 
 Please ensure you set logging to `DEBUG` and attach any relevant log files here (or link from a gist).
+
+### Debugging
+
+Can you run the following commands? If not, please provide any stack trace:
+
+```
+./node_modules/@pact-foundation/pact-standalone/platforms/<platform>/bin/pact-mock-service
+./node_modules/@pact-foundation/pact-standalone/platforms/<platform>/bin/pact-provider-verifier
+```
+
+Replace `<platform>` with your relevant OS.

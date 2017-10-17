@@ -466,18 +466,28 @@ We have create a [plugin](https://github.com/pact-foundation/karma-pact) for Kar
 which will automatically start and stop any Mock Server for your Pact tests.
 
 Modify your `karma.conf.js` file as per below to get started:
-
-```js
-    // Load pact framework - this will start/stop mock server automatically
+```javascript
+module.exports = function (config) {
+  config.set({
+    // in here we are simply telling to use Jasmine with Pact
     frameworks: ['pact'],
-
-    // load pact web
-    files: [
-      'node_modules/pact-web/pact-web.js',
-      ...
-    ]
+	// the Pact options will go here, you can start
+	// as many providers as you need
+    pact: [{
+    	port: 1234,
+    	consumer: "some-consumer",
+    	provider: "some-provider",
+		dir: "pact/files/go/here",
+		log: "log/files/go/here"
+	}],
+	// ensure Pact and default karma plugins are loaded
+    plugins: [
+      'karma-*',
+      '@pact-foundation/karma-pact',
+    ],
+  });
+};
 ```
-
 Check out the [Examples](#examples) for how to use the Karma interface.
 
 ### Using Pact with RequireJS
@@ -543,6 +553,22 @@ Also, [from Jest 20](https://facebook.github.io/jest/blog/2017/05/06/jest-20-del
 
 See [this issue](https://github.com/pact-foundation/pact-js/issues/10) for background,
 and the Jest [example](https://github.com/pact-foundation/pact-js/blob/master/examples/jest/package.json#L10-L12) for a working example.
+
+### Debugging
+
+If your standard tricks don't get you anywhere, setting the logLevel to `DEBUG` and increasing the timeout doesn't help and you don't know where else to look, it could be that the binaries we use to do much of the Pact magic aren't starting as expected.
+
+Try starting the mock service manually and seeing if it comes up. When submitting a bug report, it would be worth running these commands before hand as it will greatly help us:
+
+```
+./node_modules/@pact-foundation/pact-standalone/platforms/<platform>/bin/pact-mock-service
+```
+
+...and also the verifier (it will whinge about missing params, but that means it works):
+
+```
+./node_modules/@pact-foundation/pact-standalone/platforms/darwin/bin/pact-provider-verifier
+```
 
 ## Contributing
 1. Fork it
