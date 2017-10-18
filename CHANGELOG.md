@@ -1,74 +1,238 @@
-# Changelog
+# Change Log
 
-Do this to generate your change history
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-    git log --pretty=format:'* [%h](https://github.com/pact-foundation/pact-js/commit/%h) - %s (%an, %ad)' vX.Y.Z..HEAD | egrep -v "wip(:|\()" | grep -v "docs(" | grep -v "chore(" | grep -v Merge | grep -v "test("
+<a name="4.0.0"></a>
+# [4.0.0](https://github.com/pact-foundation/pact-js/compare/v3.0.1...v4.0.0) (2017-10-18)
 
-### v3.0.0
 
-* [e9f3a4a](https://github.com/pact-foundation/pact-js/commit/e9f3a4a) - feat(karma): relax consumer/provider requirement in MockService (Matt Fellows, Tue Sep 19 08:52:56 2017 +1000)
-* [f141c5e](https://github.com/pact-foundation/pact-js/commit/f141c5e) - fix(tests): update e2e tests with timeout for CI builds (Matt Fellows, Sun Aug 6 17:32:26 2017 +1000)
-* [65e8314](https://github.com/pact-foundation/pact-js/commit/65e8314) - feat(example): adding example for the AVA test framework (Liran Tal, Sat Aug 5 02:12:54 2017 +0300)
+### Bug Fixes
 
-### v2.7.0
+* **src:** fix typo in error message ([e91588c](https://github.com/pact-foundation/pact-js/commit/e91588c))
+* **verification:** pass validation error message on ([3041282](https://github.com/pact-foundation/pact-js/commit/3041282))
 
-* [50e1041](https://github.com/pact-foundation/pact-js/commit/50e1041) - feat(upgrade): upgrade to latest pact node v4.12.0 (Matt Fellows, Sun Aug 6 14:22:36 2017 +1000)
-* [bac51ad](https://github.com/pact-foundation/pact-js/commit/bac51ad) - fix(issue_template): Corrected typos (Beth Skurrie, Sat Aug 5 11:52:42 2017 +1000)
-* [84b78c3](https://github.com/pact-foundation/pact-js/commit/84b78c3) - fix(gitignore): ignore IDE generated project files (Liran Tal, Fri Jul 28 06:14:44 2017 +0300)
-* [8af914b](https://github.com/pact-foundation/pact-js/commit/8af914b) - Fix typo (MiguelCG, Wed Jul 26 22:12:39 2017 +0100)
-* [af18c28](https://github.com/pact-foundation/pact-js/commit/af18c28) - Fix typo in readme (MiguelCG, Thu Jul 20 20:02:24 2017 +0100)
-* [6068b62](https://github.com/pact-foundation/pact-js/commit/6068b62) - Added example of like around value and like around object (Beth Skurrie, Tue Jun 27 14:54:24 2017 +1000)
-* [587f71f](https://github.com/pact-foundation/pact-js/commit/587f71f) - Updated documentation around like and eachLike (Beth Skurrie, Tue Jun 27 14:51:27 2017 +1000)
-* [4ba6793](https://github.com/pact-foundation/pact-js/commit/4ba6793) - Create CONTRIBUTING.md (Beth Skurrie, Fri Jun 16 09:38:20 2017 +1000)
-* [5676377](https://github.com/pact-foundation/pact-js/commit/5676377) - Create CONTRIBUTING.md (Beth Skurrie, Fri Jun 16 09:37:37 2017 +1000)
 
-### v2.6.0
+### Features
 
-* [50e1041](https://github.com/pact-foundation/pact-js/commit/50e1041) - feat(upgrade): upgrade to latest pact node v4.12.0 (Matt Fellows, Sun Aug 6 14:22:36 2017 +1000)
+* **pact-node:** upgrade to pact-node 5.x.x ([6d2ad81](https://github.com/pact-foundation/pact-js/commit/6d2ad81))
+* **pact-server:** Allow to run pact mock server on a host other than localhost/127.0.0.1 ([e24be20](https://github.com/pact-foundation/pact-js/commit/e24be20))
 
-### v2.6.0
 
-* [844bdfd](https://github.com/pact-foundation/pact-js/commit/844bdfd) - chore(build): allow all minor version upgrades to Pact Node (Matt Fellows, Thu Jun 1 14:10:35 2017 +1000)
 
-### v2.5.0
+<a name="3.0.1"></a>
+## [3.0.1](https://github.com/pact-foundation/pact-js/compare/v2.7.0...v3.0.1) (2017-09-19)
 
-* [f11f0eb](https://github.com/pact-foundation/pact-js/commit/f11f0eb) - Wait for removeInteractions() on verify() (Voon Siong Wong, Mon May 15 12:04:58 2017 +1000)
 
-### 2.4.1
+### Bug Fixes
 
-* [6b32990](https://github.com/pact-foundation/pact-js/commit/6b32990) - feat(writemode): update pactFileWriteMode flag and docs (Matt Fellows, Fri May 12 10:40:27 2017 +1000)
-* [cc44554](https://github.com/pact-foundation/pact-js/commit/cc44554) - fix(providerstate): make providerState serialisation spec compliant #12 (Matt Fellows, Thu May 11 20:51:51 2017 +1000)
-* [da92274](https://github.com/pact-foundation/pact-js/commit/da92274) - feat(mock service): add pactfile_write_mode option handling (Narazaka, Tue May 9 18:56:56 2017 +0900)
-* [592b9db](https://github.com/pact-foundation/pact-js/commit/592b9db) - feat(verifications): update example to publish verification results (Matt Fellows, Tue May 9 17:06:30 2017 +1000)
+* **lint:** fix lint in mock service ([e4c61b1](https://github.com/pact-foundation/pact-js/commit/e4c61b1))
+* **tests:** update e2e tests with timeout for CI builds ([f141c5e](https://github.com/pact-foundation/pact-js/commit/f141c5e))
+* **typo:** cosmetic cleanup for typo of wrong project name ([18d49f6](https://github.com/pact-foundation/pact-js/commit/18d49f6))
 
-### 2.3.3
 
-* [8eeb561](https://github.com/pact-foundation/pact-js/commit/8eeb561) - feat(typescript): add TypeScript annotations (Narazaka, Wed Apr 19 20:37:01 2017 +0900)
+### Features
 
-### 2.3.2
+* **karma:** relax consumer/provider requirement in MockService ([e9f3a4a](https://github.com/pact-foundation/pact-js/commit/e9f3a4a))
 
-* [c729d8e](https://github.com/pact-foundation/pact-js/commit/c729d8e) - feat(port-check): check if port is available during setup() #37 (Matt Fellows, Sun Apr 16 12:10:19 2017 +1000)
 
-### 2.3.1
 
-* [a617b03](https://github.com/pact-foundation/pact-js/commit/a617b03) - Pass cors option to pact-node (Jeff Chen, Mon Mar 27 18:58:41 2017 -0700)
+<a name="2.7.0"></a>
+# [2.7.0](https://github.com/pact-foundation/pact-js/compare/v2.6.0...v2.7.0) (2017-08-06)
 
-### 2.2.0
 
-* [c54d224](https://github.com/pact-foundation/pact-js/commit/c54d224) - feat(ssl): add ability to specify custom ssl key + cert #29 (Matt Fellows, Tue Feb 28 08:10:26 2017 +1100)
+### Bug Fixes
 
-### 2.1.0
+* **gitignore:** ignore IDE generated project files ([84b78c3](https://github.com/pact-foundation/pact-js/commit/84b78c3))
+* **issue_template:** Corrected typos ([bac51ad](https://github.com/pact-foundation/pact-js/commit/bac51ad))
 
-* [4d0901e](https://github.com/pact-foundation/pact-js/commit/4d0901e) - feat(verify): update to latest pact-node including ability to set verification timeout #28 (Matt Fellows, Mon Feb 27 18:33:00 2017 +1100)
 
-### 2.0.0
+### Features
 
-* [ef27b7c](https://github.com/pact-foundation/pact-js/commit/ef27b7c) - feat(karma): update code formatting (Matt Fellows, Sun Feb 19 21:27:42 2017 +1100)
-* [7182c7b](https://github.com/pact-foundation/pact-js/commit/7182c7b) - feat(karma): update tests for karma suite and adapted Pact API for Karma (Matt Fellows, Sun Feb 19 21:10:33 2017 +1100)
-* [a06a14d](https://github.com/pact-foundation/pact-js/commit/a06a14d) - fix(api): remove redundant responseParser and tests (Matt Fellows, Sun Feb 19 12:45:48 2017 +1100)
-* [67482d1](https://github.com/pact-foundation/pact-js/commit/67482d1) - feat(api): redesign API to make it simpler to interact with (Matt Fellows, Tue Jan 24 08:57:17 2017 +1100)
-* [898203a](https://github.com/pact-foundation/pact-js/commit/898203a) - feat(examples): update e2e provider test to use mocha interface (Matt Fellows, Thu Jan 19 14:22:12 2017 +1100)
+* **example:** adding example for the AVA test framework ([65e8314](https://github.com/pact-foundation/pact-js/commit/65e8314))
+* **upgrade:** upgrade to latest pact node v4.12.0 ([50e1041](https://github.com/pact-foundation/pact-js/commit/50e1041))
 
-### v1.0.0 and earlier
 
-Initial implementation!
+
+<a name="2.6.0"></a>
+# [2.6.0](https://github.com/pact-foundation/pact-js/compare/v2.5.0...v2.6.0) (2017-06-13)
+
+
+
+<a name="2.5.0"></a>
+# [2.5.0](https://github.com/pact-foundation/pact-js/compare/v2.4.1...v2.5.0) (2017-05-15)
+
+
+
+<a name="2.4.1"></a>
+## [2.4.1](https://github.com/pact-foundation/pact-js/compare/v2.4.0...v2.4.1) (2017-05-12)
+
+
+### Features
+
+* **writemode:** update pactFileWriteMode flag and docs ([6b32990](https://github.com/pact-foundation/pact-js/commit/6b32990))
+
+
+
+<a name="2.4.0"></a>
+# [2.4.0](https://github.com/pact-foundation/pact-js/compare/v2.3.4...v2.4.0) (2017-05-11)
+
+
+### Bug Fixes
+
+* **providerstate:** make providerState serialisation spec compliant [#12](https://github.com/pact-foundation/pact-js/issues/12) ([cc44554](https://github.com/pact-foundation/pact-js/commit/cc44554))
+
+
+### Features
+
+* **mock service:** add pactfile_write_mode option handling ([da92274](https://github.com/pact-foundation/pact-js/commit/da92274))
+* **verifications:** update example to publish verification results ([592b9db](https://github.com/pact-foundation/pact-js/commit/592b9db))
+
+
+
+<a name="2.3.4"></a>
+## [2.3.4](https://github.com/pact-foundation/pact-js/compare/v2.3.3...v2.3.4) (2017-04-26)
+
+
+### Features
+
+* **pact-web:** only deploy pact-web on tagged master ([a66cbea](https://github.com/pact-foundation/pact-js/commit/a66cbea))
+
+
+
+<a name="2.3.3"></a>
+## [2.3.3](https://github.com/pact-foundation/pact-js/compare/v2.3.1...v2.3.3) (2017-04-21)
+
+
+### Features
+
+* **port-check:** check if port is available during setup() [#37](https://github.com/pact-foundation/pact-js/issues/37) ([c729d8e](https://github.com/pact-foundation/pact-js/commit/c729d8e))
+* **typescript:** add TypeScript annotations ([8eeb561](https://github.com/pact-foundation/pact-js/commit/8eeb561))
+
+
+
+<a name="2.3.1"></a>
+## [2.3.1](https://github.com/pact-foundation/pact-js/compare/v2.2.1...v2.3.1) (2017-04-03)
+
+
+
+<a name="2.2.1"></a>
+## [2.2.1](https://github.com/pact-foundation/pact-js/compare/v2.2.0...v2.2.1) (2017-03-12)
+
+
+### Bug Fixes
+
+* **test:** fix logic issue in karma tests that was passing for the wrong reasons ([080898f](https://github.com/pact-foundation/pact-js/commit/080898f))
+* **test:** update karma jasmine test to properly fail tests if verification fails. ([802d5dc](https://github.com/pact-foundation/pact-js/commit/802d5dc))
+* **test:** update karma mocha test to fail if verification fails ([98a6380](https://github.com/pact-foundation/pact-js/commit/98a6380))
+
+
+
+<a name="2.2.0"></a>
+# [2.2.0](https://github.com/pact-foundation/pact-js/compare/v2.1.0...v2.2.0) (2017-02-27)
+
+
+### Features
+
+* **ssl:** add ability to specify custom ssl key + cert [#29](https://github.com/pact-foundation/pact-js/issues/29) ([c54d224](https://github.com/pact-foundation/pact-js/commit/c54d224))
+
+
+
+<a name="2.1.0"></a>
+# [2.1.0](https://github.com/pact-foundation/pact-js/compare/v2.0.1...v2.1.0) (2017-02-27)
+
+
+### Features
+
+* **test:** update end-to-end test example ([cb38b17](https://github.com/pact-foundation/pact-js/commit/cb38b17))
+* **verify:** update to latest pact-node including ability to set verification timeout [#28](https://github.com/pact-foundation/pact-js/issues/28) ([4d0901e](https://github.com/pact-foundation/pact-js/commit/4d0901e))
+
+
+
+<a name="2.0.1"></a>
+## [2.0.1](https://github.com/pact-foundation/pact-js/compare/v2.0.0...v2.0.1) (2017-02-26)
+
+
+### Bug Fixes
+
+* pact-node and cli-color should be dependencies ([#26](https://github.com/pact-foundation/pact-js/issues/26) [#25](https://github.com/pact-foundation/pact-js/issues/25)) ([83c8af3](https://github.com/pact-foundation/pact-js/commit/83c8af3))
+
+
+
+<a name="2.0.0"></a>
+# [2.0.0](https://github.com/pact-foundation/pact-js/compare/v1.0.0...v2.0.0) (2017-02-22)
+
+
+### Bug Fixes
+
+* **api:** remove redundant responseParser and tests ([a06a14d](https://github.com/pact-foundation/pact-js/commit/a06a14d))
+* **test:** properly pass through ssl flag ([bc3120d](https://github.com/pact-foundation/pact-js/commit/bc3120d))
+* **test:** set timeout to 10s for Travis builds ([e76d0e8](https://github.com/pact-foundation/pact-js/commit/e76d0e8))
+* **test:** update all mainline tests to match new API ([936a75d](https://github.com/pact-foundation/pact-js/commit/936a75d))
+* **test:** update e2e test to properly wait for pact finalisation ([b98c1f9](https://github.com/pact-foundation/pact-js/commit/b98c1f9))
+* **test:** update formatting in integration test ([6bd19c9](https://github.com/pact-foundation/pact-js/commit/6bd19c9))
+* **test:** update jest tests with new API, fixes [#21](https://github.com/pact-foundation/pact-js/issues/21) ([4eb2e1c](https://github.com/pact-foundation/pact-js/commit/4eb2e1c))
+* **test:** update mocha tests with new API, fixes [#22](https://github.com/pact-foundation/pact-js/issues/22) ([2062d6d](https://github.com/pact-foundation/pact-js/commit/2062d6d))
+* **tests:** remove trailing semi-colons for consistency ([7a9565d](https://github.com/pact-foundation/pact-js/commit/7a9565d))
+
+
+### Features
+
+* **api:** redesign API to make it simpler to interact with ([67482d1](https://github.com/pact-foundation/pact-js/commit/67482d1))
+* **examples:** update e2e provider test to use mocha interface ([898203a](https://github.com/pact-foundation/pact-js/commit/898203a))
+* **karma:** update code formatting ([ef27b7c](https://github.com/pact-foundation/pact-js/commit/ef27b7c))
+* **karma:** update tests for karma suite and adapted Pact API for Karma ([7182c7b](https://github.com/pact-foundation/pact-js/commit/7182c7b))
+
+
+
+<a name="1.0.0"></a>
+# [1.0.0](https://github.com/pact-foundation/pact-js/compare/v1.0.0-rc.5...v1.0.0) (2017-01-21)
+
+
+### Features
+
+* **example:** add better readme, cleanup linting for E2E example ([4a8e8cb](https://github.com/pact-foundation/pact-js/commit/4a8e8cb))
+* **examples:** running consumer tests for E2E example ([274f18f](https://github.com/pact-foundation/pact-js/commit/274f18f))
+* **examples:** update docu for e2e example ([491f641](https://github.com/pact-foundation/pact-js/commit/491f641))
+* **examples:** WIP e2e example ([14a464c](https://github.com/pact-foundation/pact-js/commit/14a464c))
+* **examples:** working e2e example ([24b9888](https://github.com/pact-foundation/pact-js/commit/24b9888))
+
+
+
+<a name="1.0.0-rc.5"></a>
+# [1.0.0-rc.5](https://github.com/pact-foundation/pact-js/compare/v1.0.0-rc.4...v1.0.0-rc.5) (2016-08-28)
+
+
+### Bug Fixes
+
+* **readme:** fix example in readme ([f0eeb0f](https://github.com/pact-foundation/pact-js/commit/f0eeb0f))
+* **style:** remove empty space breaking linter ([62a72d8](https://github.com/pact-foundation/pact-js/commit/62a72d8))
+
+
+### Features
+
+* **interceptor:** remove Interceptor from DSL ([0b9e4f4](https://github.com/pact-foundation/pact-js/commit/0b9e4f4))
+
+
+
+<a name="1.0.0-rc.4"></a>
+# [1.0.0-rc.4](https://github.com/pact-foundation/pact-js/compare/v1.0.0-rc.3...v1.0.0-rc.4) (2016-08-02)
+
+
+### Features
+
+* **app:** update distribution files ([8f9f7e2](https://github.com/pact-foundation/pact-js/commit/8f9f7e2))
+
+
+
+<a name="1.0.0-rc.3"></a>
+# [1.0.0-rc.3](https://github.com/pact-foundation/pact-js/compare/v1.0.0-rc.2...v1.0.0-rc.3) (2016-08-01)
+
+
+
+<a name="1.0.0-rc.2"></a>
+# [1.0.0-rc.2](https://github.com/pact-foundation/pact-js/compare/v1.0.0-rc...v1.0.0-rc.2) (2016-07-11)
+
+
+### Bug Fixes
+
+* **lib:** better handling HTTP responses ([7b07821](https://github.com/pact-foundation/pact-js/commit/7b07821))

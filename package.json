@@ -11,8 +11,10 @@
     "dist": "webpack --config ./config/webpack.web.config.js",
     "lint": "standard",
     "jscpd": "jscpd -p src -r json -o jscpd.json",
-    "predist": "npm run clean && npm run lint && npm run jscpd",
     "postdist": "npm t",
+    "predist": "npm run clean && npm run lint && npm run jscpd",
+    "prerelease": "npm i && rm package-lock.json",
+    "release": "standard-version",
     "test": "istanbul cover ./node_modules/.bin/_mocha --timeout 10000 -- ./test",
     "test:karma": "npm run test:karma:jasmine && npm run test:karma:mocha",
     "test:karma:jasmine": "karma start ./karma/jasmine/karma.conf.js",
@@ -108,6 +110,7 @@
     "sinon": "1.x",
     "sinon-chai": "2.x",
     "standard": "8.x",
+    "standard-version": "^4.2.0",
     "superagent": "2.x",
     "webpack": "1.x"
   }
