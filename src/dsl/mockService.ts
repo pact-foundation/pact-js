@@ -7,12 +7,16 @@
 import { isEmpty } from 'lodash';
 import { Request } from '../common/request';
 import { Interaction } from './interaction';
+import { logger } from '../common/logger';
 
 export type PactfileWriteMode = 'overwrite' | 'update' | 'none';
 
+export interface Pacticipant {
+  name: string
+}
 export interface PactDetails {
-  consumer: { name: string };
-  provider: { name: string };
+  consumer?: Pacticipant;
+  provider?: Pacticipant;
   pactfile_write_mode: PactfileWriteMode;
 }
 
@@ -29,22 +33,23 @@ export class MockService {
    * @param {boolean} ssl - which protocol to use, defaults to false (HTTP)
    * @param {string} pactfileWriteMode - 'overwrite' | 'update' | 'none', defaults to 'overwrite'
    */
-  constructor(private consumer: string,
-    private provider: string,
+  constructor(private consumer?: string,
+    private provider?: string,
     private port = 1234,
     private host = '127.0.0.1',
     private ssl = false,
     private pactfileWriteMode: PactfileWriteMode = 'overwrite') {
 
     if (isEmpty(consumer) || isEmpty(provider)) {
-      throw new Error('Please provide the names of the provider and consumer for this Pact.')
+      logger.warn('Warning: Consumer\Provider details not provided, ensure ' +
+        'that the mock service has been started with this information')
     }
 
     this.request = new Request();
     this.baseUrl = `${ssl ? 'https' : 'http'}://${host}:${port}`;
     this.pactDetails = {
-      consumer: { name: consumer },
-      provider: { name: provider },
+      consumer: (consumer) ? { name: consumer } : undefined,
+      provider: (provider) ? { name: provider } : undefined,
       pactfile_write_mode: pactfileWriteMode
     };
   }

@@ -11,6 +11,11 @@ const logger = {
     if (config.logging) {
       console.log(msg);
     }
+  },
+  warn: (msg: any) => {
+    if (config.logging) {
+      console.warn(msg)
+    }
   }
 }
 

@@ -32,12 +32,12 @@ describe('MockService', () => {
 
     it('does not create a MockService when consumer is not informed', () => {
       expect(() => { new MockService('', 'provider') })
-        .to.throw(Error, 'Please provide the names of the provider and consumer for this Pact.')
+        .not.to.throw(Error);
     })
 
     it('does not create a MockService when provider is not informed', () => {
       expect(() => { new MockService('consumer', '') })
-        .to.throw(Error, 'Please provide the names of the provider and consumer for this Pact.')
+        .not.to.throw(Error);
     })
   })
 
@@ -64,13 +64,12 @@ describe('MockService', () => {
 
     it('when interactions are removed successfully', (done) => {
       nock(mock.baseUrl).delete(/interactions$/).reply(200)
-      expect(mock.removeInteractions()).to.eventually.notify(done)
+      expect(mock.removeInteractions()).to.eventually.be.fulfilled.notify(done)
     })
 
     it('when interactions fail to be removed', (done) => {
       nock(mock.baseUrl).delete(/interactions$/).reply(500)
-      expect(mock.removeInteractions()).to.eventually.be.rejected
-      done()
+      expect(mock.removeInteractions()).to.eventually.be.rejected.notify(done)
     })
   })
 
@@ -79,29 +78,51 @@ describe('MockService', () => {
 
     it('when verification is successful', (done) => {
       nock(mock.baseUrl).get(/interactions\/verification$/).reply(200)
-      expect(mock.verify()).to.eventually.notify(done)
+      expect(mock.verify()).to.eventually.be.fulfilled.notify(done)
     })
 
     it('when verification fails', (done) => {
       nock(mock.baseUrl).get(/interactions\/verification$/).reply(500)
-      expect(mock.verify()).to.eventually.be.rejected
-      done()
+      expect(mock.verify()).to.eventually.be.rejected.notify(done)
     })
   })
 
   describe('#writePact', () => {
-    const mock = new MockService('consumer', 'provider', 1234)
+    describe('when consumer and provider details provided', () => {
+      const mock = new MockService('aconsumer', 'aprovider', 1234)
 
-    it('when writing is successful', (done) => {
-      nock(mock.baseUrl).post(/pact$/).reply(200)
-      expect(mock.writePact()).to.eventually.notify(done)
+      describe('and writing is successful', () => {
+        it('should write the consumer and provider details into the pact', (done) => {
+          nock(mock.baseUrl)
+            .post(/pact$/, {
+              pactfile_write_mode: 'overwrite',
+              consumer: { name: 'aconsumer' },
+              provider: { name: 'aprovider' }
+            })
+            .reply(200)
+          expect(mock.writePact()).to.eventually.be.fulfilled.notify(done)
+        })
+      })
+
+      describe('and writing fails', () => {
+        it('should return a rejected promise', (done) => {
+          nock(mock.baseUrl)
+            .post(/pact$/).reply(500)
+          expect(mock.writePact()).to.eventually.be.rejected.notify(done)
+        })
+      })
     })
-
-    it('when writing fails', (done) => {
-      nock(mock.baseUrl).post(/pact$/).reply(500)
-      expect(mock.writePact()).to.eventually.be.rejected
-      done()
+    describe('when consumer and provider details are not provided', () => {
+      const mock = new MockService(undefined, undefined, 1234)
+      it('should not write the consumer and provider details into the pact', (done) => {
+        nock(mock.baseUrl)
+          .post(/pact$/, {
+            pactfile_write_mode: 'overwrite',
+            consumer: undefined,
+            provider: undefined
+          }).reply(200)
+        expect(mock.writePact()).to.eventually.be.fulfilled.notify(done)
+      })
     })
   })
-
 })

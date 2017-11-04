@@ -52,12 +52,10 @@ export class PactWeb {
 
     this.opts = { ...defaults, ...config } as PactOptionsComplete;
 
-    if (isEmpty(this.opts.consumer)) {
-      throw new Error('You must specify a Consumer for this pact.');
-    }
-
-    if (isEmpty(this.opts.provider)) {
-      throw new Error('You must specify a Provider for this pact.');
+    if (isEmpty(this.opts.consumer) || isEmpty(this.opts.provider)) {
+      logger.info(`Setting up Pact using mock service on port: "${this.opts.port}"`)
+    } else {
+      logger.info(`Setting up Pact with Consumer "${this.opts.consumer}" and Provider "${this.opts.provider}" using mock service on port: "${this.opts.port}"`)
     }
 
     logger.info(`Setting up Pact with Consumer "${this.opts.consumer}" and Provider "${this.opts.provider}"
@@ -140,8 +138,8 @@ export class PactWeb {
  * @param {string} pactfileWriteMode - 'overwrite' | 'update', 'none', defaults to 'overwrite'
  */
 export interface PactOptions {
-  consumer: string;
-  provider: string;
+  consumer?: string;
+  provider?: string;
   port?: number;
   host?: string;
   ssl?: boolean;
