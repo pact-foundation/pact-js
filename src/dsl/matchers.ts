@@ -41,7 +41,7 @@ export function eachLike<T>(content: T, opts?: { min: number }) {
   }
 
   if (opts && (isNil(opts.min) || opts.min < 1)) {
-    throw new Error('Error creating a Pact eachLike. Please provide opts.min that is > 1');
+    throw new Error('Error creating a Pact eachLike. Please provide opts.min that is > 0');
   }
 
   return {
