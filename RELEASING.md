@@ -5,9 +5,11 @@
 * Update the version number in each `package.json` file to latest version
 * Commit
 
-    $ git add package.json
-    $ git commit -am "chore(release): release vX.Y.Z"
-    $ git tag -a "vX.Y.Z" -m "release vX.Y.Z" && git push --follow-tags
+        $ npm run release
+        $ # review workspace and commits - if all looks good...
+        $ git push --follow-tags
+
+Travis CI will do the rest.
 
 ## How to re-tag if a publish fails
 

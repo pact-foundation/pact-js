@@ -16,6 +16,8 @@
     "postdist": "npm t",
     "posttest": "npm run test:checkCoverage && npm run test:karma",
     "predist": "npm run clean && npm run lint && npm run jscpd",
+    "prerelease": "npm i && rm package-lock.json",
+    "release": "standard-version",
     "test": "nyc mocha",
     "test:checkCoverage": "istanbul check",
     "test:e2e-examples": "cd examples/e2e && npm i && npm t",
@@ -62,8 +64,7 @@
     "consumer driven testing"
   ],
   "author": "Beth Skurrie <beth@bethesque.com> (https://github.com/bethesque)",
-  "contributors": [
-    {
+  "contributors": [{
       "name": "Tarcio Saraiva",
       "email": "tarcio@gmail.com",
       "url": "http://twitter.com/tarciosaraiva"
@@ -147,6 +148,7 @@
     "source-map-loader": "^0.2.1",
     "source-map-support": "^0.4.18",
     "standard": "8.x",
+    "standard-version": "^4.2.0",
     "superagent": "2.x",
     "ts-node": "^3.3.0",
     "tslint": "^5.6.0",
