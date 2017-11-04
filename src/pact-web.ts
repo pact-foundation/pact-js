@@ -55,7 +55,8 @@ export class PactWeb {
     if (isEmpty(this.opts.consumer) || isEmpty(this.opts.provider)) {
       logger.info(`Setting up Pact using mock service on port: "${this.opts.port}"`)
     } else {
-      logger.info(`Setting up Pact with Consumer "${this.opts.consumer}" and Provider "${this.opts.provider}" using mock service on port: "${this.opts.port}"`)
+      logger.info(`Setting up Pact with Consumer "${this.opts.consumer}" and Provider
+        "${this.opts.provider}" using mock service on port: "${this.opts.port}"`)
     }
 
     logger.info(`Setting up Pact with Consumer "${this.opts.consumer}" and Provider "${this.opts.provider}"
