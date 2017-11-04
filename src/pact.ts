@@ -57,6 +57,7 @@ export class Pact {
     }
 
     this.server = serviceFactory.createServer({
+      host: this.opts.host,
       port: this.opts.port,
       log: this.opts.log,
       dir: this.opts.dir,
