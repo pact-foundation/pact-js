@@ -32,25 +32,25 @@ describe('Integration', () => {
         name: 'Project 1',
         due: '2016-02-11T09:46:56.023Z',
         tasks: [{
-          id: 1,
-          name: 'Do the laundry',
-          'done': true
-        },
-        {
-          id: 2,
-          name: 'Do the dishes',
-          'done': false
-        },
-        {
-          id: 3,
-          name: 'Do the backyard',
-          'done': false
-        },
-        {
-          id: 4,
-          name: 'Do nothing',
-          'done': false
-        }
+            id: 1,
+            name: 'Do the laundry',
+            'done': true
+          },
+          {
+            id: 2,
+            name: 'Do the dishes',
+            'done': false
+          },
+          {
+            id: 3,
+            name: 'Do the backyard',
+            'done': false
+          },
+          {
+            id: 4,
+            name: 'Do nothing',
+            'done': false
+          }
         ]
       }]
 
@@ -66,23 +66,23 @@ describe('Integration', () => {
         // add interactions, as many as needed
         before((done) => {
           provider.addInteraction({
-            state: 'i have a list of projects',
-            uponReceiving: 'a request for projects',
-            withRequest: {
-              method: 'get',
-              path: '/projects',
-              headers: {
-                'Accept': 'application/json'
-              }
-            },
-            willRespondWith: {
-              status: 200,
-              headers: {
-                'Content-Type': 'application/json'
+              state: 'i have a list of projects',
+              uponReceiving: 'a request for projects',
+              withRequest: {
+                method: 'get',
+                path: '/projects',
+                headers: {
+                  'Accept': 'application/json'
+                }
               },
-              body: EXPECTED_BODY
-            }
-          })
+              willRespondWith: {
+                status: 200,
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: EXPECTED_BODY
+              }
+            })
             .then(() => done())
         })
 
@@ -108,26 +108,26 @@ describe('Integration', () => {
         // add interactions, as many as needed
         before((done) => {
           provider.addInteraction({
-            state: 'i have a list of projects',
-            uponReceiving: 'a request for projects with a filter',
-            withRequest: {
-              method: 'get',
-              path: '/projects',
-              query: {
-                from: 'today'
+              state: 'i have a list of projects',
+              uponReceiving: 'a request for projects with a filter',
+              withRequest: {
+                method: 'get',
+                path: '/projects',
+                query: {
+                  from: 'today'
+                },
+                headers: {
+                  'Accept': 'application/json'
+                }
               },
-              headers: {
-                'Accept': 'application/json'
+              willRespondWith: {
+                status: 200,
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: EXPECTED_BODY
               }
-            },
-            willRespondWith: {
-              status: 200,
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: EXPECTED_BODY
-            }
-          })
+            })
             .then(() => done())
         })
 
@@ -179,8 +179,8 @@ describe('Integration', () => {
                   name: Matchers.somethingLike('Do the laundry'),
                   'done': Matchers.somethingLike(true)
                 }, {
-                    min: 4
-                  })
+                  min: 4
+                })
               }]
             }
           }).then(() => done())
@@ -251,12 +251,12 @@ describe('Integration', () => {
         it('allows two requests', (done) => {
           const verificationPromise =
             request.get(`${PROVIDER_URL}/projects`)
-              .set({
-                'Accept': 'application/json'
-              })
-              .then((res) => {
-                return res.text
-              })
+            .set({
+              'Accept': 'application/json'
+            })
+            .then((res) => {
+              return res.text
+            })
           expect(verificationPromise).to.eventually.eql(JSON.stringify(EXPECTED_BODY)).notify(done)
 
           const verificationPromise404 =
@@ -298,19 +298,19 @@ describe('Integration', () => {
 
           const verificationPromise =
             request.get(`${PROVIDER_URL}/projects`)
-              .set({
-                'Accept': 'application/json'
-              })
-              .then((response) => {
-                promiseResults.push(response)
-                return request.delete(`${PROVIDER_URL}/projects/2`)
-              })
-              .then(() => { }, (err) => {
-                promiseResults.push(err.response)
-              })
-              .then(() => provider.verify(promiseResults))
+            .set({
+              'Accept': 'application/json'
+            })
+            .then((response) => {
+              promiseResults.push(response)
+              return request.delete(`${PROVIDER_URL}/projects/2`)
+            })
+            .then(() => {}, (err) => {
+              promiseResults.push(err.response)
+            })
+            .then(() => provider.verify(promiseResults))
 
-          expect(verificationPromise).to.be.rejectedWith('Error: Pact verification failed - expected interactions did not match actual.').notify(done)
+          expect(verificationPromise).to.be.rejected.notify(done)
         })
       })
     })

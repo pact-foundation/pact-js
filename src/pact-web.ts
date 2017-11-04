@@ -98,12 +98,7 @@ export class PactWeb {
     return this.mockService.verify()
       .then(() => this.mockService.removeInteractions())
       .catch((e: any) => {
-        // Properly format the error
-        console.error('');
-        console.error('Pact verification failed!');
-        console.error(e);
-
-        throw new Error('Pact verification failed - expected interactions did not match actual.');
+        throw new Error(e);
       });
   }
   /**
