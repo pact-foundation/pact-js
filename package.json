@@ -68,7 +68,8 @@
     "consumer driven testing"
   ],
   "author": "Beth Skurrie <beth@bethesque.com> (https://github.com/bethesque)",
-  "contributors": [{
+  "contributors": [
+    {
       "name": "Tarcio Saraiva",
       "email": "tarcio@gmail.com",
       "url": "http://twitter.com/tarciosaraiva"
@@ -100,7 +101,6 @@
     ]
   },
   "dependencies": {
-    "@pact-foundation/pact-node": "^4.12.0",
     "cli-color": "^1.1.0",
     "lodash.isfunction": "3.0.8",
     "lodash.isnil": "4.0.0",
@@ -108,6 +108,7 @@
     "lodash.omitby": "4.6.0"
   },
   "devDependencies": {
+    "@pact-foundation/pact-node": "^5.1.2",
     "@types/chai": "^4.0.3",
     "@types/chai-as-promised": "0.0.31",
     "@types/cli-color": "^0.3.29",
