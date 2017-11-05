@@ -5,9 +5,9 @@
 * Update the version number in each `package.json` file to latest version
 * Commit
 
-    $ npm run release
-    $ # review workspace and commits - if all looks good...
-    $ git push --follow-tags
+        $ npm run release
+        $ # review workspace and commits - if all looks good...
+        $ git push --follow-tags
 
 Travis CI will do the rest.
 
