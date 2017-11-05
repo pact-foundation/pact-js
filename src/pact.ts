@@ -206,8 +206,22 @@ export type PactOptionsComplete = PactOptions & MandatoryPactOptions;
 export { verifyProvider } from './dsl/verifier';
 
 /**
- * Exposes {@link Matchers#term}
+ * Exposes {@link Matchers}
  * @memberof Pact
  * @static
  */
 export { term, eachLike, somethingLike, somethingLike as like } from './dsl/matchers';
+
+/**
+ * Exposes {@link Interaction}
+ * @memberof Pact
+ * @static
+ */
+export * from './dsl/interaction';
+
+/**
+ * Exposes {@link MockService}
+ * @memberof Pact
+ * @static
+ */
+export * from './dsl/mockService';
