@@ -27,7 +27,6 @@ class PactNodeFactory {
 
 class PactNodeMockService {
   addInteraction(): Promise<any> {
-    console.log("aoeuaoeuaoeu");
     return Promise.resolve('addInteraction');
   };
 }
