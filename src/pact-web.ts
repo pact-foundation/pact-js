@@ -168,3 +168,17 @@ export type PactOptionsComplete = PactOptions & MandatoryPactOptions;
  * @static
  */
 module.exports.Matchers = Matchers
+
+/**
+ * Exposes {@link Interaction}
+ * @memberof Pact
+ * @static
+ */
+export * from './dsl/interaction';
+
+/**
+ * Exposes {@link MockService}
+ * @memberof Pact
+ * @static
+ */
+export * from './dsl/mockService';
