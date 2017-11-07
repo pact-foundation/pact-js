@@ -38,30 +38,22 @@
         })
       })
 
-      it("should say hello", function (done) {
+      it("should say hello", function () {
         //Run the tests
-        client.sayHello()
+        return client.sayHello()
           .then(function (data) {
             expect(JSON.parse(data.responseText)).to.eql({
               reply: "Hello"
             })
-            done()
+            // verify with Pact, and reset expectations
+            return provider.verify()
           })
-          .catch(function (err) {
-            done(err)
-          })
-      })
-
-      // verify with Pact, and reset expectations
-      it('successfully verifies', function () {
-        return provider.verify()
       })
     })
 
     describe("findFriendsByAgeAndChildren", function () {
-
-      before(function (done) {
-        provider
+      before(function () {
+        return provider
           .addInteraction({
             uponReceiving: 'a request friends',
             withRequest: {
@@ -92,32 +84,20 @@
               }
             }
           })
-          .then(function () {
-            done()
-          }, function (err) {
-            done(err)
-          })
       })
 
-      it("should return some friends", function (done) {
+      it("should return some friends", function () {
         //Run the tests
-        client.findFriendsByAgeAndChildren('33', ['Mary Jane', 'James'])
+        return client.findFriendsByAgeAndChildren('33', ['Mary Jane', 'James'])
           .then(function (res) {
             expect(JSON.parse(res.responseText)).to.eql({
               friends: [{
                 name: 'Sue'
               }]
             })
-            done()
+            // verify with Pact, and reset expectations
+            return provider.verify()
           })
-          .catch(function (err) {
-            done(err)
-          })
-      })
-
-      // verify with Pact, and reset expectations
-      it('successfully verifies', function () {
-        return provider.verify()
       })
     })
 
@@ -128,92 +108,69 @@
       })
 
       describe("when I have some friends", function () {
-
-        before(function (done) {
+        before(function () {
           //Add interaction
-          provider.addInteraction({
-              state: 'I am friends with Fred',
-              uponReceiving: 'a request to unfriend',
-              withRequest: {
-                method: 'PUT',
-                path: '/unfriendMe'
+          return provider.addInteraction({
+            state: 'I am friends with Fred',
+            uponReceiving: 'a request to unfriend',
+            withRequest: {
+              method: 'PUT',
+              path: '/unfriendMe'
+            },
+            willRespondWith: {
+              status: 200,
+              headers: {
+                "Content-Type": "application/json"
               },
-              willRespondWith: {
-                status: 200,
-                headers: {
-                  "Content-Type": "application/json"
-                },
-                body: {
-                  reply: "Bye"
-                }
+              body: {
+                reply: "Bye"
               }
-            })
-            .then(function () {
-              done()
-            }, function (err) {
-              done(err)
-            })
+            }
+          })
         })
 
-        it("should unfriend me", function (done) {
+        it("should unfriend me", function () {
           //Run the tests
-          client.unfriendMe()
+          return client.unfriendMe()
             .then(function (res) {
               expect(JSON.parse(res.responseText)).to.eql({
                 reply: "Bye"
               })
-              done()
+              // verify with Pact, and reset expectations
+              return provider.verify()
             })
-            .catch(function (err) {
-              done(err)
-            })
-        })
-
-        it('successfully verifies', function () {
-          return provider.verify()
         })
       })
 
       // verify with Pact, and reset expectations
       describe("when there are no friends", function () {
-        before(function (done) {
+        before(function () {
           //Add interaction
-          provider.addInteraction({
-              state: 'I have no friends',
-              uponReceiving: 'a request to unfriend',
-              withRequest: {
-                method: 'PUT',
-                path: '/unfriendMe'
-              },
-              willRespondWith: {
-                status: 404,
-                body: {}
-              }
-            })
-            .then(function () {
-              done()
-            }, function (err) {
-              done(err)
-            })
+          return provider.addInteraction({
+            state: 'I have no friends',
+            uponReceiving: 'a request to unfriend',
+            withRequest: {
+              method: 'PUT',
+              path: '/unfriendMe'
+            },
+            willRespondWith: {
+              status: 404,
+              body: {}
+            }
+          })
         })
 
-        it("returns an error message", function (done) {
+        it("returns an error message", function () {
           //Run the tests
-          client.unfriendMe().then(function () {
-            done(new Error('expected request to /unfriend me to fail'))
+          return client.unfriendMe().then(function () {
+            throw new Error('expected request to /unfriend me to fail')
           }, function (e) {
             expect(e).to.eql('No friends :(')
-            done()
+            // verify with Pact, and reset expectations
+            return provider.verify()
           })
-
-        })
-
-        // verify with Pact, and reset expectations
-        it('successfully verifies', function () {
-          return provider.verify()
         })
       })
     })
-
   })
 })()
