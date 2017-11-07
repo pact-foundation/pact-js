@@ -1,5 +1,6 @@
 // Karma configuration
 // Generated on Thu Nov 20 2014 14:51:15 GMT+1100 (AEDT)
+var path = require('path')
 
 module.exports = function (config) {
   config.set({
@@ -33,8 +34,23 @@ module.exports = function (config) {
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
     reporters: ['progress'],
 
+    // Pact Providers
+    pact: [{
+      port: 1234,
+      consumer: 'KarmaMochaConsumer',
+      provider: 'KarmaMochaProvider',
+      logLevel: 'DEBUG',
+      log: path.resolve(process.cwd(), 'logs', 'pact.log'),
+      dir: path.resolve(process.cwd(), 'pacts')
+    }],
+
     // web server port
     port: 9876,
+
+    plugins: [
+      'karma-*',
+      '@pact-foundation/karma-pact'
+    ],
 
     // enable / disable colors in the output (reporters and logs)
     colors: true,

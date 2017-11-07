@@ -1,5 +1,6 @@
 // Karma configuration
 // Generated on Thu Nov 20 2014 14:51:15 GMT+1100 (AEDT)
+var path = require('path')
 
 module.exports = function (config) {
   config.set({
@@ -31,6 +32,21 @@ module.exports = function (config) {
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
     reporters: ['progress'],
+
+    // Pact Providers
+    pact: [{
+      port: 1234,
+      consumer: 'KarmaJasmineConsumer',
+      provider: 'KarmaJasmineProvider',
+      logLevel: 'DEBUG',
+      log: path.resolve(process.cwd(), 'logs', 'pact.log'),
+      dir: path.resolve(process.cwd(), 'pacts')
+    }],
+
+    plugins: [
+      'karma-*',
+      '@pact-foundation/karma-pact'
+    ],
 
     // web server port
     port: 9876,

@@ -108,6 +108,7 @@
     "lodash.omitby": "4.6.0"
   },
   "devDependencies": {
+    "@pact-foundation/karma-pact": "^2.1.1",
     "@pact-foundation/pact-node": "^5.1.2",
     "@types/chai": "^4.0.3",
     "@types/chai-as-promised": "0.0.31",
@@ -137,9 +138,8 @@
     "json-loader": "0.5.x",
     "karma": "1.x",
     "karma-chai": "0.1.x",
-    "karma-jasmine": "1.x",
+    "karma-jasmine": "^1.1.0",
     "karma-mocha": "1.x",
-    "karma-pact": "0.0.7",
     "karma-phantomjs-launcher": "1.x",
     "loader-utils": "^1.1.0",
     "mocha": "3.x",
