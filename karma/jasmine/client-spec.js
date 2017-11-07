@@ -20,12 +20,7 @@
     })
 
     afterAll(function (done) {
-      provider.finalize()
-        .then(function () {
-          done()
-        }, function (err) {
-          done.fail(err)
-        })
+      provider.finalize().then(done, done.fail)
     })
 
     describe("sayHello", function () {
@@ -46,11 +41,7 @@
               }
             }
           })
-          .then(function () {
-            done()
-          }, function (err) {
-            done.fail(err)
-          })
+          .then(done, done.fail)
       })
 
       it("should say hello", function (done) {
@@ -60,21 +51,8 @@
             expect(JSON.parse(data.responseText)).toEqual({
               reply: "Hello"
             })
-            done()
-          })
-          .catch(function (err) {
-            done.fail(err)
-          })
-      })
-
-      // verify with Pact, and reset expectations
-      it('successfully verifies', function (done) {
-        provider.verify()
-          .then(function (a) {
-            done()
-          }, function (e) {
-            done.fail(e)
-          })
+            provider.verify().then(done, done.fail)
+          }, done.fail)
       })
     })
 
@@ -112,11 +90,7 @@
               }
             }
           })
-          .then(function () {
-            done()
-          }, function (err) {
-            done.fail(err)
-          })
+          .then(done, done.fail)
       })
 
       it("should return some friends", function (done) {
@@ -128,22 +102,8 @@
                 name: 'Sue'
               }]
             })
-            done()
-          })
-          .catch(function (err) {
-            done.fail(err)
-          })
-      })
-
-      // verify with Pact, and reset expectations
-      // verify with Pact, and reset expectations
-      it('successfully verifies', function (done) {
-        provider.verify()
-          .then(function (a) {
-            done()
-          }, function (e) {
-            done.fail(e)
-          })
+            provider.verify().then(done, done.fail)
+          }, done.fail)
       })
     })
 
@@ -174,11 +134,7 @@
                 }
               }
             })
-            .then(function () {
-              done()
-            }, function (err) {
-              done.fail(err)
-            })
+            .then(done, done.fail)
         })
 
         it("should unfriend me", function (done) {
@@ -188,21 +144,8 @@
               expect(JSON.parse(res.responseText)).toEqual({
                 reply: "Bye"
               })
-              done()
-            })
-            .catch(function (err) {
-              done.fail(err)
-            })
-        })
-
-        // verify with Pact, and reset expectations
-        it('successfully verifies', function (done) {
-          provider.verify()
-            .then(function (a) {
-              done()
-            }, function (e) {
-              done.fail(e)
-            })
+              provider.verify().then(done, done.fail)
+            }, done.fail)
         })
       })
 
@@ -224,11 +167,7 @@
                 }
               }
             })
-            .then(function () {
-              done()
-            }, function (err) {
-              done.fail(err)
-            })
+            .then(done, done.fail)
         })
 
         it("returns an error message", function (done) {
@@ -238,23 +177,10 @@
           }, function (e) {
             expect(e.status).toEqual(404)
             expect(JSON.parse(e.responseText).error).toEqual('No friends :(')
-            done()
+            provider.verify().then(done, done.fail)
           })
-
-        })
-
-        // verify with Pact, and reset expectations
-        // verify with Pact, and reset expectations
-        it('successfully verifies', function (done) {
-          provider.verify()
-            .then(function (a) {
-              done()
-            }, function (e) {
-              done.fail(e)
-            })
         })
       })
     })
-
   })
 })()
