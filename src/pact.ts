@@ -7,13 +7,13 @@ import { isEmpty } from 'lodash';
 import { isPortAvailable } from './common/net';
 import { MockService, PactfileWriteMode } from './dsl/mockService';
 import { Interaction, InteractionObject } from './dsl/interaction';
-import * as serviceFactory from '@pact-foundation/pact-node';
 import * as path from 'path';
 import * as process from 'process';
 import * as Matchers from './dsl/matchers';
 import * as Verifier from './dsl/verifier';
 import * as clc from 'cli-color';
 import { logger } from './common/logger';
+import serviceFactory from '@pact-foundation/pact-node';
 
 // TODO: alias type for Pact for backwards compatibility?
 //       Add deprecation notice?
@@ -40,7 +40,7 @@ export class Pact {
       ssl: false,
       dir: path.resolve(process.cwd(), 'pacts'),
       log: path.resolve(process.cwd(), 'logs', 'pact.log'),
-      logLevel: 'INFO',
+      logLevel: 'info',
       spec: 2,
       cors: false,
       pactfileWriteMode: 'overwrite'
@@ -184,7 +184,7 @@ export interface PactOptions {
   sslkey?: string;
   dir?: string;
   log?: string;
-  logLevel?: string;
+  logLevel?: 'trace' | 'debug' | 'info' | 'error' | 'fatal' | undefined;
   spec?: number;
   cors?: boolean;
   pactfileWriteMode?: PactfileWriteMode;

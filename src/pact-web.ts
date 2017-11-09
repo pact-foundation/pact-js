@@ -9,7 +9,6 @@ import { isEmpty } from 'lodash';
 import { isPortAvailable } from './common/net';
 import { MockService, PactfileWriteMode } from './dsl/mockService';
 import { Interaction, InteractionObject } from './dsl/interaction';
-import * as serviceFactory from '@pact-foundation/pact-node';
 import * as path from 'path';
 import * as process from 'process';
 import * as Matchers from './dsl/matchers';

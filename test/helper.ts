@@ -3,7 +3,7 @@
 import * as  chai from 'chai';
 import * as sinonChai from 'sinon-chai';
 import * as chaiAsPromised from 'chai-as-promised';
-import * as wrapper from '@pact-foundation/pact-node';
+import wrapper from '@pact-foundation/pact-node';
 
 chai.use(sinonChai);
 chai.use(chaiAsPromised);

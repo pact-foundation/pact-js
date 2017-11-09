@@ -103,6 +103,7 @@
     ]
   },
   "dependencies": {
+    "@pact-foundation/pact-node": "^5.2.1",
     "cli-color": "^1.1.0",
     "lodash.isfunction": "3.0.8",
     "lodash.isnil": "4.0.0",
@@ -111,7 +112,6 @@
   },
   "devDependencies": {
     "@pact-foundation/karma-pact": "^2.1.1",
-    "@pact-foundation/pact-node": "^5.1.2",
     "@types/chai": "^4.0.3",
     "@types/chai-as-promised": "0.0.31",
     "@types/cli-color": "^0.3.29",
