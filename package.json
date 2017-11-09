@@ -17,6 +17,7 @@
     "posttest": "npm run test:checkCoverage && npm run test:karma",
     "predist": "npm run clean && npm run lint && npm run jscpd",
     "prerelease": "npm i && rm package-lock.json",
+    "publish": "./scripts/publish.sh",
     "release": "standard-version",
     "test": "nyc mocha",
     "test:checkCoverage": "istanbul check",
@@ -28,6 +29,7 @@
     "test:karma": "npm run test:karma:jasmine && npm run test:karma:mocha",
     "test:karma:jasmine": "karma start ./karma/jasmine/karma.conf.js",
     "test:karma:mocha": "karma start ./karma/mocha/karma.conf.js",
+    "travis": "./scripts/build.sh",
     "webpack": "webpack --config ./config/webpack.web.config.js"
   },
   "nyc": {
