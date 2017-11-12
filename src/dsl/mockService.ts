@@ -14,6 +14,7 @@ export type PactfileWriteMode = 'overwrite' | 'update' | 'none';
 export interface Pacticipant {
   name: string
 }
+
 export interface PactDetails {
   consumer?: Pacticipant;
   provider?: Pacticipant;
