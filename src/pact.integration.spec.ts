@@ -20,7 +20,7 @@ describe('Integration', () => {
         port: MOCK_PORT,
         log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
         dir: path.resolve(process.cwd(), 'pacts'),
-        logLevel: 'WARN',
+        logLevel: 'warn',
         ssl: (protocol === 'https'),
         spec: 2
       })

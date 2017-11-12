@@ -184,7 +184,7 @@ export interface PactOptions {
   sslkey?: string;
   dir?: string;
   log?: string;
-  logLevel?: 'trace' | 'debug' | 'info' | 'error' | 'fatal' | undefined;
+  logLevel?: 'trace' | 'debug' | 'info' | 'error' | 'fatal' | 'warn' | undefined;
   spec?: number;
   cors?: boolean;
   pactfileWriteMode?: PactfileWriteMode;
