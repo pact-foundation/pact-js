@@ -560,7 +560,7 @@ and the Jest [example](https://github.com/pact-foundation/pact-js/blob/master/ex
 
 Test runners like AVA and Jest may run tests in parallel. If you are seeing weird behaviour, configured your test runner to run in serial.
 
-See #124 for more background.
+See issue [#124](https://github.com/pact-foundation/pact-js/issues/124) for more background.
 
 ### Debugging
 
