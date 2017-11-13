@@ -51,8 +51,6 @@ how to get going.
   - [Troubleshooting](#troubleshooting)
     - [Timeout](#timeout)
     - [Note on Jest](#note-on-jest)
-  - [Contributing](#contributing)
-  - [Contact](#contact)
 
 <!-- /TOC -->
 
@@ -529,6 +527,7 @@ See [here](http://stackoverflow.com/questions/42496401/all-pact-js-tests-are-fai
 
 ### Note on Jest
 Jest uses JSDOM under the hood which may cause issues with libraries making HTTP request.
+Jest also can run tests in parallel, which is currently not supported as the mock server is stateful.
 
 You'll need to add the following snippet to your `package.json` to ensure it uses
 the proper Node environment:
@@ -539,8 +538,38 @@ the proper Node environment:
 }
 ```
 
+Also, [from Jest 20](https://facebook.github.io/jest/blog/2017/05/06/jest-20-delightful-testing-multi-project-runner.html), you can add the environment to the top of the test file as a comment. This will allow your pact test to run along side the rest of your JSDOM env tests.
+
+```js
+/**
+ * @jest-environment node
+ */
+ ```
+
 See [this issue](https://github.com/pact-foundation/pact-js/issues/10) for background,
 and the Jest [example](https://github.com/pact-foundation/pact-js/blob/master/examples/jest/package.json#L10-L12) for a working example.
+
+### Parallel tests
+
+Test runners like AVA and Jest may run tests in parallel. If you are seeing weird behaviour, configured your test runner to run in serial.
+
+See #124 for more background.
+
+### Debugging
+
+If your standard tricks don't get you anywhere, setting the logLevel to `DEBUG` and increasing the timeout doesn't help and you don't know where else to look, it could be that the binaries we use to do much of the Pact magic aren't starting as expected.
+
+Try starting the mock service manually and seeing if it comes up. When submitting a bug report, it would be worth running these commands before hand as it will greatly help us:
+
+```
+./node_modules/@pact-foundation/pact-standalone/platforms/<platform>/bin/pact-mock-service
+```
+
+...and also the verifier (it will whinge about missing params, but that means it works):
+
+```
+./node_modules/@pact-foundation/pact-standalone/platforms/darwin/bin/pact-provider-verifier
+```
 
 ## Contributing
 1. Fork it
