@@ -1,4 +1,5 @@
 # Pact JS
+
 [![Join the chat at https://gitter.im/realestate-com-au/pact](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/realestate-com-au/pact?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/pact-foundation/pact-js.svg?branch=master)](https://travis-ci.org/pact-foundation/pact-js)
 [![Coverage Status](https://coveralls.io/repos/github/pact-foundation/pact-js/badge.svg?branch=master)](https://coveralls.io/github/pact-foundation/pact-js?branch=master)
@@ -533,6 +534,7 @@ See [here](http://stackoverflow.com/questions/42496401/all-pact-js-tests-are-fai
 
 ### Note on Jest
 Jest uses JSDOM under the hood which may cause issues with libraries making HTTP request.
+Jest also can run tests in parallel, which is currently not supported as the mock server is stateful.
 
 You'll need to add the following snippet to your `package.json` to ensure it uses
 the proper Node environment:
@@ -553,6 +555,12 @@ Also, [from Jest 20](https://facebook.github.io/jest/blog/2017/05/06/jest-20-del
 
 See [this issue](https://github.com/pact-foundation/pact-js/issues/10) for background,
 and the Jest [example](https://github.com/pact-foundation/pact-js/blob/master/examples/jest/package.json#L10-L12) for a working example.
+
+### Parallel tests
+
+Test runners like AVA and Jest may run tests in parallel. If you are seeing weird behaviour, configured your test runner to run in serial.
+
+See #124 for more background.
 
 ### Debugging
 
