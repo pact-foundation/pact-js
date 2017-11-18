@@ -12,6 +12,8 @@
   },
   "devDependencies": {
     "axios": "^0.14.0",
-    "jest-cli": "^15.1.1"
+    "babel-jest": "^21.2.0",
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "jest-cli": "^21.2.1"
   }
 }
