@@ -20,8 +20,16 @@ const provider = Pact({
 const EXPECTED_BODY = [{dog: 1}]
 
 test.before('setting up Dog API expectations', async () => {
-
   await provider.setup()
+})
+
+test('Dog API returns correct response', async t => {
+  t.plan(1)
+
+  // BEGIN -
+  // Setup interactions for expected API response from provider
+  // This is done due to similar reasons of tear-up/down of database
+  // data in tests.
   const interaction = {
     state: 'i have a list of projects',
     uponReceiving: 'a request for projects',
@@ -38,15 +46,14 @@ test.before('setting up Dog API expectations', async () => {
   }
 
   await provider.addInteraction(interaction)
-})
-
-test('Dog API returns correct response', async t => {
-  t.plan(2)
+  // END
 
   const urlAndPort = {url: url, port: port}
   const response = await getMeDogs(urlAndPort)
   t.deepEqual(response.data, EXPECTED_BODY)
+})
 
+test.afterEach(async t => {
   // verify with Pact, and reset expectations
   await t.notThrows(provider.verify())
 })
