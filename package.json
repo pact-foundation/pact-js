@@ -40,8 +40,7 @@
     "consumer driven testing"
   ],
   "author": "Beth Skurrie <beth@bethesque.com> (https://github.com/bethesque)",
-  "contributors": [
-    {
+  "contributors": [{
       "name": "Tarcio Saraiva",
       "email": "tarcio@gmail.com",
       "url": "http://twitter.com/tarciosaraiva"
@@ -96,7 +95,7 @@
     "istanbul": "0.4.x",
     "jasmine": "^2.8.0",
     "jasmine-core": "2.x",
-    "jscpd": "0.6.x",
+    "jscpd": "0.6.10",
     "json-loader": "0.5.x",
     "karma": "1.x",
     "karma-chai": "0.1.x",
