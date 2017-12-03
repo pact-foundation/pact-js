@@ -19,12 +19,12 @@ describe("Dog's API", () => {
 
   const EXPECTED_BODY = [{dog: 1}]
 
-  beforeAll(() => provider.setup())
+  beforeAll(async () => await provider.setup())
 
-  afterAll(() => provider.finalize())
+  afterAll(async () => await provider.finalize())
 
   describe("works", () => {
-    beforeAll(done => {
+    beforeAll(async () => {
       const interaction = {
         state: 'i have a list of projects',
         uponReceiving: 'a request for projects',
@@ -39,21 +39,18 @@ describe("Dog's API", () => {
           body: EXPECTED_BODY
         }
       }
-      provider.addInteraction(interaction).then(done, done)
+      await provider.addInteraction(interaction)
     })
 
     // add expectations
-    it('returns a sucessful body', done => {
-      return getMeDogs({ url, port })
-        .then(response => {
-          expect(response.headers['content-type']).toEqual('application/json')
-          expect(response.data).toEqual(EXPECTED_BODY)
-          expect(response.status).toEqual(200)
-          done()
-        })
+    it('returns a sucessful body', async () => {
+      const response = await getMeDogs({url, port})
+      expect(response.headers['content-type']).toEqual('application/json')
+      expect(response.data).toEqual(EXPECTED_BODY)
+      expect(response.status).toEqual(200)
     })
 
     // verify with Pact, and reset expectations
-    it('successfully verifies', () => provider.verify())
+    it('successfully verifies', async () => await provider.verify())
   })
 })
