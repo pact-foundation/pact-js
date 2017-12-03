@@ -4,6 +4,7 @@
 * **Consumer Pact library**: e.g. Pact JS v2.6.0
 * **Provider Pact library**: e.g. pact-jvm-provider-maven_2.11 v 3.3.8
 * **Node Version**: `node --version`
+* **Testing framework and version**: e.g. Mocha, Jest, Jasmine, Ava...
 
 ## Expected behaviour
 
