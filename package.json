@@ -70,7 +70,8 @@
     "consumer driven testing"
   ],
   "author": "Beth Skurrie <beth@bethesque.com> (https://github.com/bethesque)",
-  "contributors": [{
+  "contributors": [
+    {
       "name": "Tarcio Saraiva",
       "email": "tarcio@gmail.com",
       "url": "http://twitter.com/tarciosaraiva"
@@ -107,7 +108,8 @@
     "lodash.isfunction": "3.0.8",
     "lodash.isnil": "4.0.0",
     "lodash.isundefined": "3.0.1",
-    "lodash.omitby": "4.6.0"
+    "lodash.omitby": "4.6.0",
+    "moment": "^2.19.3"
   },
   "devDependencies": {
     "@pact-foundation/karma-pact": "2.x.x",

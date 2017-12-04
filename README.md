@@ -237,7 +237,8 @@ let opts = {
 	pactBrokerUsername: <String>,         // Username for Pact Broker basic authentication. Optional
 	pactBrokerPassword: <String>,         // Password for Pact Broker basic authentication. Optional
 	publishVerificationResult: <Boolean>, // Publish verification result to Broker. Optional
-	providerVersion: <Boolean>,           // Provider version, required to publish verification result to Broker. Optional otherwise.
+	providerVersion: <Boolean>,           // Provider version, required to publish verification result to
+	customProviderHeaders: <Array>        // Header(s) to add to provider state set up and pact verification requests. eg 'Authorization: Basic cGFjdDpwYWN0'.Broker. Optional otherwise.
 	timeout: <Number>                     // The duration in ms we should wait to confirm verification process was successful. Defaults to 30000, Optional.
 };
 

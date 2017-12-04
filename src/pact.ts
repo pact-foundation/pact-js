@@ -166,14 +166,14 @@ export class Pact {
  * @memberof Pact
  * @static
  */
-export { verifyProvider } from './dsl/verifier';
+export * from './dsl/verifier';
 
 /**
  * Exposes {@link Matchers}
  * @memberof Pact
  * @static
  */
-export { term, eachLike, somethingLike, somethingLike as like } from './dsl/matchers';
+export * from './dsl/matchers';
 
 /**
  * Exposes {@link Interaction}
