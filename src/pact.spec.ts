@@ -1,7 +1,8 @@
 'use strict'
 import { Interaction, InteractionObject } from './dsl/interaction';
 import { MockService } from './dsl/mockService';
-import { Pact as PactType, PactOptions, PactOptionsComplete } from './pact';
+import { Pact as PactType } from './pact';
+import { PactOptions, PactOptionsComplete } from './dsl/options';
 import * as sinon from 'sinon';
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';

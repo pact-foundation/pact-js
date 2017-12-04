@@ -7,6 +7,7 @@
 import { MatcherResult } from './matchers';
 import { HTTPMethod } from '../common/request';
 import { isNil, omitBy } from 'lodash';
+const REQUEST_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'];
 
 export interface RequestOptions {
   method: HTTPMethod;
@@ -87,23 +88,22 @@ export class Interaction {
       throw new Error('You must provide a HTTP method.')
     }
 
-    // if (VALID_METHODS.indexOf(requestOpts.method.toUpperCase()) < 0) {
-    //   throw new Error('You must provide a valid HTTP method.');
-    // }
+    if (
+      REQUEST_METHODS.indexOf(requestOpts.method.toUpperCase()) < 0) {
+      throw new Error('You must provide a valid HTTP method.');
+    }
 
     if (isNil(requestOpts.path)) {
       throw new Error('You must provide a path.');
     }
 
-    this.state['request'] = requestOpts;
-
-    // omitBy({
-    //   method: requestOpts.method.toUpperCase(),
-    //   path: requestOpts.path,
-    //   query: requestOpts.query,
-    //   headers: requestOpts.headers,
-    //   body: requestOpts.body
-    // }, isNil)
+    this.state['request'] = omitBy({
+      method: requestOpts.method.toUpperCase(),
+      path: requestOpts.path,
+      query: requestOpts.query,
+      headers: requestOpts.headers,
+      body: requestOpts.body
+    }, isNil) as RequestOptions;
 
     return this;
   }
@@ -120,12 +120,11 @@ export class Interaction {
       throw new Error('You must provide a status code.');
     }
 
-    this.state['response'] = responseOpts;
-    // omitBy({
-    //   status: status,
-    //   headers: headers || undefined,
-    //   body: body || undefined
-    // }, isNil);
+    this.state['response'] = omitBy({
+      status: responseOpts.status,
+      headers: responseOpts.headers || undefined,
+      body: responseOpts.body || undefined
+    }, isNil) as ResponseOptions;
   }
 
   /**

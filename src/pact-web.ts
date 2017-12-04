@@ -2,20 +2,12 @@
  * Pact module for Web use.
  * @module Pact Web
  */
-
-'use strict'
-
-import { isEmpty } from 'lodash';
-import { isPortAvailable } from './common/net';
-import { MockService, PactfileWriteMode } from './dsl/mockService';
-import { Interaction, InteractionObject } from './dsl/interaction';
-import * as path from 'path';
-import * as process from 'process';
-import * as Matchers from './dsl/matchers';
-import * as Verifier from './dsl/verifier';
-import * as clc from 'cli-color';
-import { logger } from './common/logger';
 import { polyfill } from 'es6-promise';
+import { isEmpty } from 'lodash';
+import { logger } from './common/logger';
+import { Interaction, InteractionObject } from './dsl/interaction';
+import { MockService } from './dsl/mockService';
+import { PactOptions, PactOptionsComplete } from './dsl/options';
 polyfill();
 
 /**
@@ -129,44 +121,11 @@ export class PactWeb {
 }
 
 /**
- * @param {string} opts.consumer - the name of the consumer
- * @param {string} opts.provider - the name of the provider
- * @param {number} opts.port - port of the mock service, defaults to 1234
- * @param {string} opts.host - host address of the mock service, defaults to 127.0.0.1
- * @param {boolean} opts.ssl - SSL flag to identify the protocol to be used (default false, HTTP)
- * @param {boolean} opts.cors - allow CORS OPTION requests to be accepted, defaults to false
- * @param {string} pactfileWriteMode - 'overwrite' | 'update', 'none', defaults to 'overwrite'
- */
-export interface PactOptions {
-  consumer?: string;
-  provider?: string;
-  port?: number;
-  host?: string;
-  ssl?: boolean;
-  sslcert?: string;
-  sslkey?: string;
-  dir?: string;
-  log?: string;
-  logLevel?: string;
-  spec?: number;
-  cors?: boolean;
-  pactfileWriteMode?: PactfileWriteMode;
-}
-
-export interface MandatoryPactOptions {
-  port: number;
-  host: string;
-  ssl: boolean;
-}
-
-export type PactOptionsComplete = PactOptions & MandatoryPactOptions;
-
-/**
  * Exposes {@link Matchers#term}
  * @memberof Pact
  * @static
  */
-module.exports.Matchers = Matchers
+export * from './dsl/matchers';
 
 /**
  * Exposes {@link Interaction}

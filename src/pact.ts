@@ -7,6 +7,7 @@ import { isEmpty } from 'lodash';
 import { isPortAvailable } from './common/net';
 import { MockService, PactfileWriteMode } from './dsl/mockService';
 import { Interaction, InteractionObject } from './dsl/interaction';
+import { PactOptions, PactOptionsComplete, MandatoryPactOptions } from './dsl/options';
 import * as path from 'path';
 import * as process from 'process';
 import * as Matchers from './dsl/matchers';
@@ -14,9 +15,6 @@ import * as Verifier from './dsl/verifier';
 import * as clc from 'cli-color';
 import { logger } from './common/logger';
 import serviceFactory from '@pact-foundation/pact-node';
-
-// TODO: alias type for Pact for backwards compatibility?
-//       Add deprecation notice?
 
 /**
  * Creates a new {@link PactProvider}.
@@ -162,41 +160,6 @@ export class Pact {
     return this.mockService.removeInteractions();
   }
 }
-
-// declare namespace pact {
-
-/**
- * @param {string} opts.consumer - the name of the consumer
- * @param {string} opts.provider - the name of the provider
- * @param {number} opts.port - port of the mock service, defaults to 1234
- * @param {string} opts.host - host address of the mock service, defaults to 127.0.0.1
- * @param {boolean} opts.ssl - SSL flag to identify the protocol to be used (default false, HTTP)
- * @param {boolean} opts.cors - allow CORS OPTION requests to be accepted, defaults to false
- * @param {string} pactfileWriteMode - 'overwrite' | 'update', 'none', defaults to 'overwrite'
- */
-export interface PactOptions {
-  consumer: string;
-  provider: string;
-  port?: number;
-  host?: string;
-  ssl?: boolean;
-  sslcert?: string;
-  sslkey?: string;
-  dir?: string;
-  log?: string;
-  logLevel?: 'trace' | 'debug' | 'info' | 'error' | 'fatal' | 'warn' | undefined;
-  spec?: number;
-  cors?: boolean;
-  pactfileWriteMode?: PactfileWriteMode;
-}
-
-export interface MandatoryPactOptions {
-  port: number;
-  host: string;
-  ssl: boolean;
-}
-
-export type PactOptionsComplete = PactOptions & MandatoryPactOptions;
 
 /**
  * Exposes {@link Verifier}

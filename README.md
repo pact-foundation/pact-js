@@ -37,6 +37,7 @@ how to get going.
     - [Publishing Pacts to a Broker and Tagging Pacts](#publishing-pacts-to-a-broker-and-tagging-pacts)
     - [Provider API Testing](#provider-api-testing)
       - [API with Provider States](#api-with-provider-states)
+      - [API with Authorization](#api-with-authorization)
       - [Publishing Verification Results to a Pact Broker](#publishing-verification-results-to-a-pact-broker)
     - [Publishing Pacts to a Broker](#publishing-pacts-to-a-broker)
     - [Flexible Matching](#flexible-matching)
@@ -254,6 +255,24 @@ to configure your provider for Provider States. This means you must specify `pro
 in the `verifier` constructor and configure an extra (dynamic) API endpoint to setup provider state (`--provider-states-setup-url`) for the given test state, which sets the active pact consumer and provider state accepting two parameters: `consumer` and `state` and returns an HTTP `200` eg. `consumer=web&state=customer%20is%20logged%20in`.
 
 See this [Provider](https://github.com/pact-foundation/pact-js/blob/master/examples/e2e/test/provider.spec.js) for a working example, or read more about [Provider States](https://docs.pact.io/documentation/provider_states.html).
+
+#### API with Authorization
+
+Sometimes you may need to add things to the requests that can't be persisted in a pact file. Examples of these would be authentication tokens, which have a small life span. e.g. an OAuth bearer token: `Authorization: Bearer 0b79bab50daca910b000d4f1a2b675d604257e42`.
+
+For this case, we have a facility that should be carefully used during verification - `customProviderHeaders`. e.g. to have two headers sent as part of the verification request, modify the `verifyProvider` options as per below:
+
+```js
+    let opts = {
+      provider: 'Animal Profile Service',
+      ...
+      customProviderHeaders: ['Authorization: Bearer e5e5e5e5e5e5e5', 'SomeSpecialHeader: some specialvalue']
+    }
+
+    return verifyProvider(opts).then(output => { ... })
+```
+
+*Important Note*: You should only use this feature for things that can not be persisted in the pact file. By modifying the request, you are potentially modifying the contract from the consumer tests!
 
 #### Publishing Verification Results to a Pact Broker
 

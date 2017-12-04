@@ -3,6 +3,9 @@ const path = require('path')
 const chai = require('chai')
 const chaiAsPromised = require('chai-as-promised')
 const expect = chai.expect
+const {
+  VerifierOptions
+} = require('@pact-foundation/pact-node');
 chai.use(chaiAsPromised)
 const {
   server,
@@ -43,13 +46,14 @@ describe('Pact Verification', () => {
       // Fetch from broker with given tags
       tags: ['prod', 'sit5'],
       // Specific Remote pacts (doesn't need to be a broker)
-      // pactUrls: ['https://test.pact.dius.com.au/pacts/provider/Animal%20Profile%20Service/consumer/Matching%20Service/latest'],
+      // pactFilesOrDirs: ['https://test.pact.dius.com.au/pacts/provider/Animal%20Profile%20Service/consumer/Matching%20Service/latest'],
       // Local pacts
-      // pactUrls: [path.resolve(process.cwd(), './pacts/matching_service-animal_profile_service.json')],
+      // pactFilesOrDirs: [path.resolve(process.cwd(), './pacts/matching_service-animal_profile_service.json')],
       pactBrokerUsername: 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
       pactBrokerPassword: 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
       publishVerificationResult: true,
-      providerVersion: "1.0.0"
+      providerVersion: "1.0.0",
+      customProviderHeaders: ['Authorization: basic e5e5e5e5e5e5e5']
     }
 
     return verifyProvider(opts)
