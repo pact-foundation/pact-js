@@ -108,8 +108,7 @@
     "lodash.isfunction": "3.0.8",
     "lodash.isnil": "4.0.0",
     "lodash.isundefined": "3.0.1",
-    "lodash.omitby": "4.6.0",
-    "moment": "^2.19.3"
+    "lodash.omitby": "4.6.0"
   },
   "devDependencies": {
     "@pact-foundation/karma-pact": "2.x.x",
