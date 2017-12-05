@@ -1,5 +1,5 @@
 {
-  "name": "pact-web",
+  "name": "@pact-foundation/pact-web",
   "version": "VERSION",
   "description": "Pact for the browser",
   "main": "pact-web.js",
