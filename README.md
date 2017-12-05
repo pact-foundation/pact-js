@@ -261,13 +261,13 @@ Sometimes you may need to add things to the requests that can't be persisted in 
 For this case, we have a facility that should be carefully used during verification - `customProviderHeaders`. e.g. to have two headers sent as part of the verification request, modify the `verifyProvider` options as per below:
 
 ```js
-    let opts = {
-      provider: 'Animal Profile Service',
-      ...
-      customProviderHeaders: ['Authorization: Bearer e5e5e5e5e5e5e5', 'SomeSpecialHeader: some specialvalue']
-    }
+let opts = {
+  provider: 'Animal Profile Service',
+  ...
+  customProviderHeaders: ['Authorization: Bearer e5e5e5e5e5e5e5', 'SomeSpecialHeader: some specialvalue']
+}
 
-    return verifyProvider(opts).then(output => { ... })
+return verifyProvider(opts).then(output => { ... })
 ```
 
 *Important Note*: You should only use this feature for things that can not be persisted in the pact file. By modifying the request, you are potentially modifying the contract from the consumer tests!
