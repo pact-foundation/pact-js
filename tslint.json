@@ -23,7 +23,7 @@
     "label-position": true,
     "max-line-length": [
       true,
-      140
+      "^export const"
     ],
     "member-access": false,
     "member-ordering": [

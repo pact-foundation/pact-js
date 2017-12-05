@@ -63,9 +63,9 @@ export function term(opts: { generate: string, matcher: string }) {
  * UUID v4 matcher.
  * @param {string} uuuid - a UUID to use as an example.
  */
-export function uuid(uuid?: string) {
+export function uuid(id?: string) {
   return term({
-    generate: uuid || 'ce118b6e-d8e1-11e7-9296-cec278b6b50a',
+    generate: id || 'ce118b6e-d8e1-11e7-9296-cec278b6b50a',
     matcher: UUID_V4_FORMAT
   });
 }
