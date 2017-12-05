@@ -28,6 +28,7 @@ export class Pact {
   public server: any;
   public opts: PactOptionsComplete;
   public mockService: MockService;
+  private finalized: boolean;
 
   constructor(config: PactOptions) {
     const defaults = {
@@ -131,6 +132,12 @@ export class Pact {
    * @returns {Promise}
    */
   finalize(): Promise<void> {
+    if (this.finalized) {
+      logger.warn('finalize() has already been called, this is probably a logic error in your test setup. ' +
+        'In the future this will be an error.');
+    };
+    this.finalized = true;
+
     return this.mockService.writePact()
       .then(() => this.server.delete())
       .catch((err: Error) => {
