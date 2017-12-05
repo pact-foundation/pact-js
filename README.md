@@ -285,9 +285,14 @@ It looks like this:
 You need to specify the following when constructing the pact object:
 
 ```js
-publishVerificationResult: true,
-providerVersion: "1.0.0",
-provider: "Foo",
+let opts = {
+  provider: 'Animal Profile Service',
+  ...
+  publishVerificationResult: true,
+  providerVersion: "1.0.0",
+  provider: "Foo",
+
+}
 ```
 
 _NOTE_: You need to be already pulling pacts from the broker for this feature to work.
