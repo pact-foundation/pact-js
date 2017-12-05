@@ -258,7 +258,9 @@ See this [Provider](https://github.com/pact-foundation/pact-js/blob/master/examp
 
 Sometimes you may need to add things to the requests that can't be persisted in a pact file. Examples of these would be authentication tokens, which have a small life span. e.g. an OAuth bearer token: `Authorization: Bearer 0b79bab50daca910b000d4f1a2b675d604257e42`.
 
-For this case, we have a facility that should be carefully used during verification - `customProviderHeaders`. e.g. to have two headers sent as part of the verification request, modify the `verifyProvider` options as per below:
+For this case, we have a facility that should be carefully used during verification - the ability to specificy custom headers to be sent during provider verification. The flag to achieve this is `customProviderHeaders`.
+
+For example, to have two headers sent as part of the verification request, modify the `verifyProvider` options as per below:
 
 ```js
 let opts = {
@@ -269,6 +271,8 @@ let opts = {
 
 return verifyProvider(opts).then(output => { ... })
 ```
+
+As you can see, this is your opportunity to modify\add to headers being sent to the Provider API, for example to create a valid time-bound token.
 
 *Important Note*: You should only use this feature for things that can not be persisted in the pact file. By modifying the request, you are potentially modifying the contract from the consumer tests!
 
