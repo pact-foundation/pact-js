@@ -527,11 +527,27 @@ Modify your `karma.conf.js` file as per below to get started:
     // Load pact framework - this will start/stop mock server automatically
     frameworks: ['pact'],
 
-    // load pact web
+    // Load the pact and default karma plugins
+    plugins: [
+      'karma-*',
+      '@pact-foundation/karma-pact'
+    ],
+
+    // load pact web module
     files: [
       'node_modules/pact-web/pact-web.js',
       ...
-    ]
+    ],
+
+    // Configure the mock service
+    pact: [{
+      port: 1234,
+      consumer: 'KarmaMochaConsumer',
+      provider: 'KarmaMochaProvider',
+      logLevel: 'DEBUG',
+      log: path.resolve(process.cwd(), 'logs', 'pact.log'),
+      dir: path.resolve(process.cwd(), 'pacts')
+    }],
 ```
 
 Check out the [Examples](/pact-foundation/pact-js#examples) for how to use the Karma interface.
