@@ -29,17 +29,17 @@ how to get going.
 - [Pact JS](#pact-js)
   - [Installation](#installation)
   - [Using Pact JS](#using-pact-js)
-    - [Using Mocha?](#using-mocha)
     - [Consumer Side Testing](#consumer-side-testing)
       - [API](#api)
+      - [Constructor Options](#constructor-options)
       - [Example](#example)
-      - [Splitting tests across multiple files](#splitting-tests-across-multiple-files)
-    - [Publishing Pacts to a Broker and Tagging Pacts](#publishing-pacts-to-a-broker-and-tagging-pacts)
     - [Provider API Testing](#provider-api-testing)
+      - [Verification Options](#verification-options)
       - [API with Provider States](#api-with-provider-states)
       - [API with Authorization](#api-with-authorization)
       - [Publishing Verification Results to a Pact Broker](#publishing-verification-results-to-a-pact-broker)
     - [Publishing Pacts to a Broker](#publishing-pacts-to-a-broker)
+      - [Publishing options](#publishing-options)
     - [Matching](#matching)
       - [Match common formats](#match-common-formats)
       - [Match based on type](#match-based-on-type)
@@ -51,6 +51,7 @@ how to get going.
     - [Using Pact with Karma](#using-pact-with-karma)
     - [Using Pact with RequireJS](#using-pact-with-requirejs)
   - [Troubleshooting](#troubleshooting)
+    - [Splitting tests across multiple files](#splitting-tests-across-multiple-files)
     - [Timeout](#timeout)
     - [Note on Jest](#note-on-jest)
 
@@ -65,10 +66,6 @@ npm install --save-dev pact
 
 ## Using Pact JS
 
-### Using Mocha?
-
-Check out [Pact JS Mocha](https://github.com/pact-foundation/pact-js-mocha).
-
 ### Consumer Side Testing
 
 To use the library on your tests, add the pact dependency:
@@ -77,17 +74,34 @@ To use the library on your tests, add the pact dependency:
 let Pact = require('pact')
 ```
 
-The `Pact` interface provides the following high-level APIs, they are listed in the order in which they typically get called in the lifecycle of testing a consumer:
+The `Pact` class provides the following high-level APIs, they are listed in the order in which they typically get called in the lifecycle of testing a consumer:
 
 #### API
 |API                    |Options     |Returns|Description                                       |
 |-----------------------|------------|------------------------------------------------------|---|
-|`pact(options)`        |See [Pact Node documentation](https://github.com/pact-foundation/pact-node#create-pact-mock-server) for options                              |`Object` |Creates a Mock Server test double of your Provider API. If you need multiple Providers for a scenario, you can create as many as these as you need.                  |
-|`setup()`              |n/a         |`Promise`|Start the Mock Server                             |
-|`addInteraction()`     |`Object`    |`Promise`|Register an expectation on the Mock Server, which must be called by your test case(s). You can add multiple interactions per server. These will be validated and written to a pact if successful.
-|`verify()`             |n/a         |`Promise`|Verifies that all interactions specified          |
-|`finalize()`           |n/a         |`Promise`|Records the interactions registered to the Mock Server into the pact file and shuts it down.                                               |
-|`removeInteractions`   |n/a         |`Promise`|In some cases you might want to clear out the expectations of the Mock Service, call this to clear out any expectations for the next test run. _NOTE_: `verify()` will implicitly call this. |
+|`new Pact(options)`        |See constructor options below |`Object` |Creates a Mock Server test double of your Provider API. If you need multiple Providers for a scenario, you can create as many as these as you need.                  |
+|`setup()`              |n/a         |`Promise`|Start the Mock Server and wait for it to be available. You would normally call this only once in a `beforeAll(...)` type clause |
+|`addInteraction()`     |`Object`    |`Promise`|Register an expectation on the Mock Server, which must be called by your test case(s). You can add multiple interactions per server, and each test would normally contain one or more of these. These will be validated and written to a pact if successful.
+|`verify()`             |n/a         |`Promise`|Verifies that all interactions specified. This should be called once per test, to ensure your expectations were correct |
+|`finalize()`           |n/a         |`Promise`|Records the interactions registered to the Mock Server into the pact file and shuts it down. You would normally call this only once in an `afterAll(...)` type clause.|
+
+#### Constructor Options
+
+|Parameter | Required?  | Type        | Description |
+|----------|------------|-------------|--------------|
+| `consumer` | yes | string | The name of the consumer |
+| `provider` | yes | string | The name of the provider |
+| `port` | no | number | The port to run the mock service on, defaults to 1234 |
+| `host` | no | string | The host to run the mock service, defaults to 127.0.0.1 |
+| `ssl` | no | boolean | SSL flag to identify the protocol to be used (default false, HTTP) |
+| `sslcert` | no | string | Path to SSL certificate to serve on the mock service |
+| `sslkey` | no | string | Path to SSL key to serve on the mock service |
+| `dir` | no | string | Directory to output pact files |
+| `log` | no | string | Directory to log to |
+| `logLevel` | no | string | Log level: one of 'trace', 'debug', 'info', 'error', 'fatal' or 'warn' |
+| `spec` | no | number | Pact specification version (defaults to 2) |
+| `cors` | no | boolean | Allow CORS OPTION requests to be accepted, defaults to false |
+| `pactfileWriteMode` | no | string | Control how the Pact files are written. Choices: 'overwrite' 'update' or 'none'. Defaults to 'overwrite'|
 
 #### Example
 The first step is to create a test for your API Consumer. The example below uses [Mocha](https://mochajs.org), and demonstrates the basic approach:
@@ -190,37 +204,13 @@ describe('Pact', () => {
 
 ```
 
-#### Splitting tests across multiple files
-
-Pact tests tend to be quite long, due to the need to be specific about request/response payloads. Often times it is nicer to be able to split your tests across multiple files for manageability.
-
-You have two options to achieve this feat:
-
-1. Create a Pact test helper to orchestrate the setup and teardown of the mock service for multiple tests.
-
-    In larger test bases, this can significantly reduce test suite time and the amount of code you have to manage.
-
-    See this [example](https://github.com/tarciosaraiva/pact-melbjs/blob/master/helper.js) and this [issue](https://github.com/pact-foundation/pact-js/issues/11) for more.
-
-2. Set `pactfileWriteMode` to `update` in the `pact()` constructor
-
-    This will allow you to have multiple independent tests for a given Consumer-Provider pair, without it clobbering previous interactions.
-
-    In larger test suites, you'll incur a slow down due to the time taken to start and stop the underlying mock servers.
-
-    See this [PR](https://github.com/pact-foundation/pact-js/pull/48) for background.
-
-    _NOTE_: If using this approach, you *must* be careful to clear out existing pact files (e.g. `rm ./pacts/*.json`) before you run tests to ensure you don't have left over requests that are no longer relevent.
-
-### Publishing Pacts to a Broker and Tagging Pacts
-
 ### Provider API Testing
 
 Once you have created Pacts for your Consumer, you need to validate those Pacts against your Provider. The Verifier object provides the following API for you to do so:
 
-|API                    |Options     |Returns|Description                                       |
-|-----------------------|:------------:|----------------------------------------------|----|
-|`verifyProvider()`              |n/a         |`Promise`|Start the Mock Server                             |
+|API                    |Options       |Returns|Description                            |
+|-----------------------|:------------:|-------|---------------------------------------|
+|`verifyProvider()`     | See below    |`Promise`|Start the Mock Server                |
 
 1. Start your local Provider service.
 1. Optionally, instrument your API with ability to configure [provider states](https://github.com/pact-foundation/pact-provider-verifier/)
@@ -229,24 +219,30 @@ Once you have created Pacts for your Consumer, you need to validate those Pacts 
 ```js
 const verifier = require('pact').Verifier;
 let opts = {
-	providerBaseUrl: <String>,            // Running API provider host endpoint. Required.
-	pactBrokerUrl: <String>,              // URL of the Pact Broker to retrieve pacts from. Required if not using pactUrls.
-	provider: <String>,                   // Name of the Provider. Required.
-	tags: <Array>,                        // Array of tags, used to filter pacts from the Broker. Optional.
-	pactUrls: <Array>,                    // Array of local Pact file paths or HTTP-based URLs (e.g. from a broker). Required if not using a Broker.
-	providerStatesSetupUrl: <String>,     // URL to send PUT requests to setup a given provider state. Optional, required only if you provide a 'state' in any consumer tests.
-	pactBrokerUsername: <String>,         // Username for Pact Broker basic authentication. Optional
-	pactBrokerPassword: <String>,         // Password for Pact Broker basic authentication. Optional
-	publishVerificationResult: <Boolean>, // Publish verification result to Broker. Optional
-	providerVersion: <Boolean>,           // Provider version, required to publish verification result to
-	customProviderHeaders: <Array>        // Header(s) to add to provider state set up and pact verification requests. eg 'Authorization: Basic cGFjdDpwYWN0'.Broker. Optional otherwise.
-	timeout: <Number>                     // The duration in ms we should wait to confirm verification process was successful. Defaults to 30000, Optional.
+  ...
 };
 
 verifier.verifyProvider(opts).then(function () {
 	// do something
 });
 ```
+
+#### Verification Options
+
+| Parameter             | Required     | Type |Description                            |
+|-----------------------|:------------:|-------|--------------------------------------|
+| `providerBaseUrl` | true | string | Running API provider host endpoint. Required.   |
+| `provider` | true | string | Name of the Provider. Required. |
+| `pactUrls` | true |  array of strings | Array of local Pact file paths or HTTP-based URLs (e.g. from a broker). Re`quired` if not using a Broker. |
+| `pactBrokerUrl` | false | string | URL of the Pact Broker to retrieve pacts from. Required if not using pactUrls. |
+| `tags` | false |  array of strings | Array of tags, used to filter pacts from the Broker. Optional. |
+| `providerStatesSetupUrl` | false | string | URL to send PUT requests to setup a given provider state. Optional, required only if you provide a 'state' in any consumer tests. |
+| `pactBrokerUsername` | false | string | Username for Pact Broker basic authentication |
+| `pactBrokerPassword` | false | string | Password for Pact Broker basic authentication |
+| `publishVerificationResult` | false | boolean | Publish verification result to Broker |
+| `providerVersion` | false |  boolean | Provider version, required to publish verification results to a broker|
+| `customProviderHeaders` | false |  array of strings | Header(s) to add to provider state set up and pact verification re`quests`. eg 'Authorization: Basic cGFjdDpwYWN0'.Broker. Optional otherwise. |
+| `timeout` | false | number | The duration in ms we should wait to confirm verification process was successful. Defaults to 30000, Optional. |
 
 That's it! Read more about [Verifying Pacts](http://docs.pact.io/documentation/verifying_pacts.html).
 
@@ -303,17 +299,25 @@ Sharing is caring - to simplify sharing Pacts between Consumers and Providers, c
 ```js
 let pact = require('@pact-foundation/pact-node');
 let opts = {
-	pactUrls: <Array>,               // Array of local Pact files or directories containing pact files. Path must be absolute. Required.
-	pactBroker: <String>,            // The base URL of the Pact Broker. eg. https://test.pact.dius.com.au. Required.
-	pactBrokerUsername: <String>,    // Username for Pact Broker basic authentication. Optional
-	pactBrokerPassword: <String>,    // Password for Pact Broker basic authentication. Optional
-	consumerVersion: <String>        // A string containing a semver-style version e.g. 1.0.0. Required.
+   ...
 };
 
 pact.publishPacts(opts)).then(function () {
 	// do something
 });
 ```
+
+#### Publishing options
+
+| Parameter             | Required     | Type |Description                            |
+|-----------------------|:------------:|-------|--------------------------------------|
+| `providerBaseUrl` | true | string | Running API provider host endpoint. Required.   |
+| `pactUrls` | false | array of strings | Array of local Pact files or directories containing pact files. Path must be absolute. Required. |
+| `pactBroker` | false | string | The base URL of the Pact Broker. eg. https://test.pact.dius.com.au. Required. |
+| `pactBrokerUsername` | false | string | Username for Pact Broker basic authentication. Optional |
+| `pactBrokerPassword` | false | string | Password for Pact Broker basic authentication. Optional |
+| `consumerVersion` |false | string | A string containing a semver-style version e.g. 1.0.0. Required. |
+| `tags` |false | array of strings | Tag your pacts, often used with your branching, release or environment strategy e.g. ['prod', 'test'] |
 
 ### Matching
 
@@ -555,6 +559,28 @@ this [gist](https://gist.github.com/mefellows/15c9fcb052c2aa9d8951f91d48d6da54) 
 
 If you are having issues, a good place to start is setting `logLevel: 'DEBUG'`
 when configuring the `pact({...})` object.
+
+### Splitting tests across multiple files
+
+Pact tests tend to be quite long, due to the need to be specific about request/response payloads. Often times it is nicer to be able to split your tests across multiple files for manageability.
+
+You have two options to achieve this feat:
+
+1. Create a Pact test helper to orchestrate the setup and teardown of the mock service for multiple tests.
+
+    In larger test bases, this can significantly reduce test suite time and the amount of code you have to manage.
+
+    See this [example](https://github.com/tarciosaraiva/pact-melbjs/blob/master/helper.js) and this [issue](https://github.com/pact-foundation/pact-js/issues/11) for more.
+
+2. Set `pactfileWriteMode` to `update` in the `pact()` constructor
+
+    This will allow you to have multiple independent tests for a given Consumer-Provider pair, without it clobbering previous interactions.
+
+    In larger test suites, you'll incur a slow down due to the time taken to start and stop the underlying mock servers.
+
+    See this [PR](https://github.com/pact-foundation/pact-js/pull/48) for background.
+
+    _NOTE_: If using this approach, you *must* be careful to clear out existing pact files (e.g. `rm ./pacts/*.json`) before you run tests to ensure you don't have left over requests that are no longer relevent.
 
 ### Timeout
 
