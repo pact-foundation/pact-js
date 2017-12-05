@@ -22,7 +22,6 @@ import serviceFactory from '@pact-foundation/pact-node';
  * @name create
  * @param {PactOptions} opts
  * @return {@link PactProvider}
- * @static
  */
 export class Pact {
   public server: any;

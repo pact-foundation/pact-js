@@ -11,23 +11,17 @@ import { PactOptions, PactOptionsComplete } from './dsl/options';
 polyfill();
 
 /**
- * Creates a new {@link PactProvider}.
+ * Creates a new {@link PactWeb}.
  * @memberof Pact
  * @name create
- * @param {Object} opts
- * @param {string} opts.consumer - the name of the consumer
- * @param {string} opts.provider - the name of the provider
- * @param {number} opts.port - port of the mock service, defaults to 1234
- * @param {string} opts.host - host address of the mock service, defaults to 127.0.0.1
- * @param {boolean} opts.ssl - SSL flag to identify the protocol to be used (default false, HTTP)
- * @param {string} pactfileWriteMode - 'overwrite' | 'update' | 'smart' | 'none', defaults to 'overwrite'
- * @return {@link PactProvider}
+ * @param {PactOptions} opts
+ * @return {@link PactWeb}
  * @static
  */
 export class PactWeb {
-  private mockService: MockService;
-  private server: any;
-  private opts: PactOptionsComplete;
+  public mockService: MockService;
+  public server: any;
+  public opts: PactOptionsComplete;
 
   constructor(config: PactOptions) {
     const defaults = {
