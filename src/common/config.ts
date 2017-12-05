@@ -3,8 +3,8 @@
  * @module config
  * @private
  */
-import { resolve } from 'path';
-import * as process from 'process';
+import { resolve } from "path";
+import * as process from "process";
 
 export interface Config {
   mockService: {
@@ -13,18 +13,19 @@ export interface Config {
   };
   logging: boolean;
 }
-const PACT_CONFIG_FILE = resolve(process.cwd(), 'config', 'pact.config.js');
+const PACT_CONFIG_FILE = resolve(process.cwd(), "config", "pact.config.js");
 const DEFAULT_PACT_CONFIG: Config = {
+  logging: false,
   mockService: {
-    host: '127.0.0.1',
-    port: 1234
+    host: "127.0.0.1",
+    port: 1234,
   },
-  logging: false
 };
 
 let config: Config;
 
 try {
+  // tslint:disable:no-var-requires
   config = require(PACT_CONFIG_FILE);
 } catch (e) {
   config = DEFAULT_PACT_CONFIG;

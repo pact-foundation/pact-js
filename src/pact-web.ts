@@ -2,12 +2,12 @@
  * Pact module for Web use.
  * @module Pact Web
  */
-import { polyfill } from 'es6-promise';
-import { isEmpty } from 'lodash';
-import { logger } from './common/logger';
-import { Interaction, InteractionObject } from './dsl/interaction';
-import { MockService } from './dsl/mockService';
-import { PactOptions, PactOptionsComplete } from './dsl/options';
+import { polyfill } from "es6-promise";
+import { isEmpty } from "lodash";
+import { logger } from "./common/logger";
+import { Interaction, InteractionObject } from "./dsl/interaction";
+import { MockService } from "./dsl/mockService";
+import { PactOptions, PactOptionsComplete } from "./dsl/options";
 polyfill();
 
 /**
@@ -25,27 +25,27 @@ export class PactWeb {
 
   constructor(config: PactOptions) {
     const defaults = {
-      consumer: '',
-      provider: '',
-      port: 1234,
-      host: '127.0.0.1',
-      ssl: false,
-      spec: 2,
+      consumer: "",
       cors: false,
-      pactfileWriteMode: 'overwrite'
+      host: "127.0.0.1",
+      pactfileWriteMode: "overwrite",
+      port: 1234,
+      provider: "",
+      spec: 2,
+      ssl: false,
     } as PactOptions;
 
     this.opts = { ...defaults, ...config } as PactOptionsComplete;
 
     if (isEmpty(this.opts.consumer) || isEmpty(this.opts.provider)) {
-      logger.info(`Setting up Pact using mock service on port: "${this.opts.port}"`)
+      logger.info(`Setting up Pact using mock service on port: "${this.opts.port}"`);
     } else {
       logger.info(`Setting up Pact with Consumer "${this.opts.consumer}" and Provider
-        "${this.opts.provider}" using mock service on port: "${this.opts.port}"`)
+        "${this.opts.provider}" using mock service on port: "${this.opts.port}"`);
     }
 
     logger.info(`Setting up Pact with Consumer "${this.opts.consumer}" and Provider "${this.opts.provider}"
-   using mock service on Port: "${this.opts.port}"`)
+      using mock service on Port: "${this.opts.port}"`);
 
     this.mockService = new MockService(this.opts.consumer, this.opts.provider, this.opts.port, this.opts.host,
       this.opts.ssl, this.opts.pactfileWriteMode);
@@ -58,7 +58,7 @@ export class PactWeb {
    * @param {Interaction} interactionObj
    * @returns {Promise}
    */
-  addInteraction(interactionObj: InteractionObject): Promise<string> {
+  public addInteraction(interactionObj: InteractionObject): Promise<string> {
     const interaction = new Interaction();
 
     if (interactionObj.state) {
@@ -78,7 +78,7 @@ export class PactWeb {
    * @instance
    * @returns {Promise}
    */
-  verify(): Promise<string> {
+  public verify(): Promise<string> {
     return this.mockService.verify()
       .then(() => this.mockService.removeInteractions())
       .catch((e: any) => {
@@ -91,7 +91,7 @@ export class PactWeb {
    * @instance
    * @returns {Promise}
    */
-  finalize(): Promise<string> {
+  public finalize(): Promise<string> {
     return this.mockService.writePact().then(() => this.mockService.removeInteractions());
   }
   /**
@@ -100,7 +100,7 @@ export class PactWeb {
    * @instance
    * @returns {Promise}
    */
-  writePact(): Promise<string> {
+  public writePact(): Promise<string> {
     return this.mockService.writePact();
   }
   /**
@@ -109,7 +109,7 @@ export class PactWeb {
    * @instance
    * @returns {Promise}
    */
-  removeInteractions(): Promise<string> {
+  public removeInteractions(): Promise<string> {
     return this.mockService.removeInteractions();
   }
 }
@@ -119,18 +119,18 @@ export class PactWeb {
  * @memberof Pact
  * @static
  */
-export * from './dsl/matchers';
+export * from "./dsl/matchers";
 
 /**
  * Exposes {@link Interaction}
  * @memberof Pact
  * @static
  */
-export * from './dsl/interaction';
+export * from "./dsl/interaction";
 
 /**
  * Exposes {@link MockService}
  * @memberof Pact
  * @static
  */
-export * from './dsl/mockService';
+export * from "./dsl/mockService";

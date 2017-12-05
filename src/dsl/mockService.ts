@@ -4,15 +4,15 @@
  * https://gist.github.com/bethesque/9d81f21d6f77650811f4.
  * @module MockService
  */
-import { isEmpty } from 'lodash';
-import { Request } from '../common/request';
-import { Interaction } from './interaction';
-import { logger } from '../common/logger';
+import { isEmpty } from "lodash";
+import { logger } from "../common/logger";
+import { Request } from "../common/request";
+import { Interaction } from "./interaction";
 
-export type PactfileWriteMode = 'overwrite' | 'update' | 'none';
+export type PactfileWriteMode = "overwrite" | "update" | "none";
 
 export interface Pacticipant {
-  name: string
+  name: string;
 }
 
 export interface PactDetails {
@@ -34,24 +34,25 @@ export class MockService {
    * @param {boolean} ssl - which protocol to use, defaults to false (HTTP)
    * @param {string} pactfileWriteMode - 'overwrite' | 'update' | 'none', defaults to 'overwrite'
    */
-  constructor(private consumer?: string,
+  constructor(
+    private consumer?: string,
     private provider?: string,
     private port = 1234,
-    private host = '127.0.0.1',
+    private host = "127.0.0.1",
     private ssl = false,
-    private pactfileWriteMode: PactfileWriteMode = 'overwrite') {
+    private pactfileWriteMode: PactfileWriteMode = "overwrite") {
 
     if (isEmpty(consumer) || isEmpty(provider)) {
-      logger.warn('Warning: Consumer\Provider details not provided, ensure ' +
-        'that the mock service has been started with this information')
+      logger.warn("Warning: Consumer\Provider details not provided, ensure " +
+        "that the mock service has been started with this information");
     }
 
     this.request = new Request();
-    this.baseUrl = `${ssl ? 'https' : 'http'}://${host}:${port}`;
+    this.baseUrl = `${ssl ? "https" : "http"}://${host}:${port}`;
     this.pactDetails = {
       consumer: (consumer) ? { name: consumer } : undefined,
+      pactfile_write_mode: pactfileWriteMode,
       provider: (provider) ? { name: provider } : undefined,
-      pactfile_write_mode: pactfileWriteMode
     };
   }
 
@@ -60,32 +61,32 @@ export class MockService {
    * @param {Interaction} interaction
    * @returns {Promise}
    */
-  addInteraction(interaction: Interaction): Promise<string> {
-    return this.request.send('POST', `${this.baseUrl}/interactions`, JSON.stringify(interaction.json()));
+  public addInteraction(interaction: Interaction): Promise<string> {
+    return this.request.send("POST", `${this.baseUrl}/interactions`, JSON.stringify(interaction.json()));
   }
 
   /**
    * Removes all interactions.
    * @returns {Promise}
    */
-  removeInteractions(): Promise<string> {
-    return this.request.send('DELETE', `${this.baseUrl}/interactions`);
+  public removeInteractions(): Promise<string> {
+    return this.request.send("DELETE", `${this.baseUrl}/interactions`);
   }
 
   /**
    * Verify all interactions.
    * @returns {Promise}
    */
-  verify(): Promise<string> {
-    return this.request.send('GET', `${this.baseUrl}/interactions/verification`);
+  public verify(): Promise<string> {
+    return this.request.send("GET", `${this.baseUrl}/interactions/verification`);
   }
 
   /**
    * Writes the Pact file.
    * @returns {Promise}
    */
-  writePact(): Promise<string> {
-    return this.request.send('POST', `${this.baseUrl}/pact`, JSON.stringify(this.pactDetails));
+  public writePact(): Promise<string> {
+    return this.request.send("POST", `${this.baseUrl}/pact`, JSON.stringify(this.pactDetails));
   }
 
 }

@@ -1,10 +1,12 @@
+/* tslint:disable:no-console */
+
 /**
  * Logger module.
  * @module logger
  * @private
  */
 
-import { config } from './config';
+import { config } from "./config";
 
 const logger = {
   info: (msg: any) => {
@@ -14,9 +16,9 @@ const logger = {
   },
   warn: (msg: any) => {
     if (config.logging) {
-      console.warn(msg)
+      console.warn(msg);
     }
-  }
-}
+  },
+};
 
 export { logger };

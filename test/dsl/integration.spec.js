@@ -9,7 +9,7 @@ var pact = require('../../dist/pact')
 var Pact = pact.Pact;
 var Matchers = Pact.Matchers
 
-describe('Integration', () => {
+describe('Integration Suite', () => {
 
   ['http', 'https'].forEach((PROTOCOL) => {
     describe(`Pact on ${PROTOCOL} protocol`, (protocol) => {
@@ -22,7 +22,7 @@ describe('Integration', () => {
         port: MOCK_PORT,
         log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
         dir: path.resolve(process.cwd(), 'pacts'),
-        logLevel: 'INFO',
+        logLevel: 'info',
         ssl: (PROTOCOL === 'https'),
         spec: 2
       })

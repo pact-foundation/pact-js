@@ -2,7 +2,7 @@
  * Pact Options module.
  * @module PactOptions
  */
-import { PactfileWriteMode } from './mockService';
+import { PactfileWriteMode } from "./mockService";
 
 export interface PactOptions {
   // The name of the consumer
@@ -33,7 +33,7 @@ export interface PactOptions {
   log?: string;
 
   // Log level
-  logLevel?: 'trace' | 'debug' | 'info' | 'error' | 'fatal' | 'warn' | undefined;
+  logLevel?: "trace" | "debug" | "info" | "error" | "fatal" | "warn" | undefined;
 
   // Pact specification version (defaults to 2)
   spec?: number;

@@ -3,11 +3,10 @@
  * @module Interaction
  */
 
-
-import { MatcherResult } from './matchers';
-import { HTTPMethod } from '../common/request';
-import { isNil, omitBy } from 'lodash';
-const REQUEST_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'];
+import { isNil, omitBy } from "lodash";
+import { HTTPMethod } from "../common/request";
+import { MatcherResult } from "./matchers";
+const REQUEST_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"];
 
 export interface RequestOptions {
   method: HTTPMethod;
@@ -41,19 +40,13 @@ export class Interaction {
   private state: InteractionState = {};
 
   /**
-   * Creates a new Interaction.
-   * @returns {Interaction} interaction
-   */
-  constructor() { }
-
-  /**
    * Gives a state the provider should be in for this interaction.
    * @param {string} providerState - The state of the provider.
    * @returns {Interaction} interaction
    */
-  given(providerState: string) {
+  public given(providerState: string) {
     if (providerState) {
-      this.state['providerState'] = providerState;
+      this.state.providerState = providerState;
     }
 
     return this;
@@ -64,11 +57,11 @@ export class Interaction {
    * @param {string} description - A description of the interaction.
    * @returns {Interaction} interaction
    */
-  uponReceiving(description: string) {
+  public uponReceiving(description: string) {
     if (isNil(description)) {
-      throw new Error('You must provide a description for the interaction.');
+      throw new Error("You must provide a description for the interaction.");
     }
-    this.state['description'] = description;
+    this.state.description = description;
 
     return this;
   }
@@ -83,47 +76,47 @@ export class Interaction {
    * @param {Object} requestOpts.body - The body, in {@link String} format or {@link Object} format
    * @returns {Interaction} interaction
    */
-  withRequest(requestOpts: RequestOptions) {
+  public withRequest(requestOpts: RequestOptions) {
     if (isNil(requestOpts.method)) {
-      throw new Error('You must provide a HTTP method.')
+      throw new Error("You must provide a HTTP method.");
     }
 
     if (
       REQUEST_METHODS.indexOf(requestOpts.method.toUpperCase()) < 0) {
-      throw new Error('You must provide a valid HTTP method.');
+      throw new Error("You must provide a valid HTTP method.");
     }
 
     if (isNil(requestOpts.path)) {
-      throw new Error('You must provide a path.');
+      throw new Error("You must provide a path.");
     }
 
-    this.state['request'] = omitBy({
+    this.state.request = omitBy({
+      body: requestOpts.body,
+      headers: requestOpts.headers,
       method: requestOpts.method.toUpperCase(),
       path: requestOpts.path,
       query: requestOpts.query,
-      headers: requestOpts.headers,
-      body: requestOpts.body
     }, isNil) as RequestOptions;
 
     return this;
   }
 
   /**
-  * The response expected by the consumer.
-  * @param {Object} responseOpts
-  * @param {string} responseOpts.status - The HTTP status
-  * @param {string} responseOpts.headers
-  * @param {Object} responseOpts.body
+   * The response expected by the consumer.
+   * @param {Object} responseOpts
+   * @param {string} responseOpts.status - The HTTP status
+   * @param {string} responseOpts.headers
+   * @param {Object} responseOpts.body
    */
-  willRespondWith(responseOpts: ResponseOptions) {
+  public willRespondWith(responseOpts: ResponseOptions) {
     if (isNil(responseOpts.status) || responseOpts.status.toString().trim().length === 0) {
-      throw new Error('You must provide a status code.');
+      throw new Error("You must provide a status code.");
     }
 
-    this.state['response'] = omitBy({
-      status: responseOpts.status,
+    this.state.response = omitBy({
+      body: responseOpts.body || undefined,
       headers: responseOpts.headers || undefined,
-      body: responseOpts.body || undefined
+      status: responseOpts.status,
     }, isNil) as ResponseOptions;
   }
 
@@ -131,7 +124,7 @@ export class Interaction {
    * Returns the interaction object created.
    * @returns {Object}
    */
-  json(): InteractionState {
+  public json(): InteractionState {
     return this.state;
   }
 }
