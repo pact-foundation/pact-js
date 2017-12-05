@@ -37,9 +37,9 @@ how to get going.
       - [Verification Options](#verification-options)
       - [API with Provider States](#api-with-provider-states)
       - [API with Authorization](#api-with-authorization)
-      - [Publishing Verification Results to a Pact Broker](#publishing-verification-results-to-a-pact-broker)
     - [Publishing Pacts to a Broker](#publishing-pacts-to-a-broker)
       - [Publishing options](#publishing-options)
+      - [Publishing Verification Results to a Pact Broker](#publishing-verification-results-to-a-pact-broker)
     - [Matching](#matching)
       - [Match common formats](#match-common-formats)
       - [Match based on type](#match-based-on-type)
@@ -272,31 +272,6 @@ return verifyProvider(opts).then(output => { ... })
 
 *Important Note*: You should only use this feature for things that can not be persisted in the pact file. By modifying the request, you are potentially modifying the contract from the consumer tests!
 
-#### Publishing Verification Results to a Pact Broker
-
-If you're using a Pact Broker (e.g. a hosted one at pact.dius.com.au), you can
-publish your verification results so that consumers can query if they are safe
-to release.
-
-It looks like this:
-
-![screenshot of verification result](https://cloud.githubusercontent.com/assets/53900/25884085/2066d98e-3593-11e7-82af-3b41a20af8e5.png)
-
-You need to specify the following when constructing the pact object:
-
-```js
-let opts = {
-  provider: 'Animal Profile Service',
-  ...
-  publishVerificationResult: true,
-  providerVersion: "1.0.0",
-  provider: "Foo",
-
-}
-```
-
-_NOTE_: You need to be already pulling pacts from the broker for this feature to work.
-
 ### Publishing Pacts to a Broker
 
 Sharing is caring - to simplify sharing Pacts between Consumers and Providers, checkout [sharing pacts](http://docs.pact.io/documentation/sharings_pacts.html) using the [Pact Broker](https://github.com/bethesque/pact_broker).
@@ -323,6 +298,31 @@ pact.publishPacts(opts)).then(function () {
 | `pactBrokerPassword` | false | string | Password for Pact Broker basic authentication. Optional |
 | `consumerVersion` |false | string | A string containing a semver-style version e.g. 1.0.0. Required. |
 | `tags` |false | array of strings | Tag your pacts, often used with your branching, release or environment strategy e.g. ['prod', 'test'] |
+
+#### Publishing Verification Results to a Pact Broker
+
+If you're using a Pact Broker (e.g. a hosted one at pact.dius.com.au), you can
+publish your verification results so that consumers can query if they are safe
+to release.
+
+It looks like this:
+
+![screenshot of verification result](https://cloud.githubusercontent.com/assets/53900/25884085/2066d98e-3593-11e7-82af-3b41a20af8e5.png)
+
+You need to specify the following when constructing the pact object:
+
+```js
+let opts = {
+  provider: 'Animal Profile Service',
+  ...
+  publishVerificationResult: true,
+  providerVersion: "1.0.0",
+  provider: "Foo",
+
+}
+```
+
+_NOTE_: You need to be retrieving pacts from the broker for this feature to work.
 
 ### Matching
 
