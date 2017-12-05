@@ -503,8 +503,7 @@ Learn everything in Pact JS in 60 minutes: https://github.com/DiUS/pact-workshop
 
 Pact requires a Node runtime to be able to start and stop Mock servers, write logs and other things.
 
-However, when used within browser or non-Node based environments - such as with Karma or ng-test
-- this is not possible.
+However, when used within browser or non-Node based environments - such as with Karma or ng-test - this is not possible.
 
 To address this challenge, we have released a separate 'web' based module for this purpose - `pact-web`.
 Whilst it still provides a testing DSL, it cannot start and stop mock servers as per the `pact`
