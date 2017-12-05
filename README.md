@@ -40,10 +40,11 @@ how to get going.
       - [API with Authorization](#api-with-authorization)
       - [Publishing Verification Results to a Pact Broker](#publishing-verification-results-to-a-pact-broker)
     - [Publishing Pacts to a Broker](#publishing-pacts-to-a-broker)
-    - [Flexible Matching](#flexible-matching)
-      - [Match by regular expression](#match-by-regular-expression)
+    - [Matching](#matching)
+      - [Match common formats](#match-common-formats)
       - [Match based on type](#match-based-on-type)
       - [Match based on arrays](#match-based-on-arrays)
+      - [Match by regular expression](#match-by-regular-expression)
   - [Tutorial (60 minutes)](#tutorial-60-minutes)
   - [Examples](#examples)
   - [Using Pact in non-Node environments](#using-pact-in-non-node-environments)
@@ -314,49 +315,34 @@ pact.publishPacts(opts)).then(function () {
 });
 ```
 
-### Flexible Matching
+### Matching
 
-Flexible matching makes your tests more expressive making your tests less brittle.
+Matching makes your tests more expressive making your tests less brittle.
+
 Rather than use hard-coded values which must then be present on the Provider side,
 you can use regular expressions and type matches on objects and arrays to validate the
 structure of your APIs.
 
-Read more about using regular expressions and type based matching [here][https://github.com/realestate-com-au/pact/wiki/Regular-expressions-and-type-matching-with-Pact] before continuing.
-
 _NOTE: Make sure to start the mock service via the `Pact` declaration with the option `specification: 2` to get access to these features._
 
-For simplicity, we alias the main matches to make our code more readable:
+#### Match common formats
 
-#### Match by regular expression
+Often times, you find yourself having to re-write regular expressions for common formats. We've created a number of them for you to save you the time:
 
-The underlying mock service is written in Ruby, so the regular expression must be in a Ruby format, not a Javascript format.
-
-```javascript
-const { term } = pact
-
-provider.addInteraction({
-  state: 'Has some animals',
-  uponReceiving: 'a request for an animal',
-  withRequest: {
-    method: 'GET',
-    path: '/animals/1'
-  },
-  willRespondWith: {
-    status: 200,
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8'
-    },
-    body: {
-      id: 100,
-      name: "billy",
-      'gender': term({
-        matcher: 'F|M',
-        generate: 'F'
-      }),
-    }
-  }
-})
-```
+| method | description |
+|--------|-------------|
+| `boolean` | Match a boolean value (using equality) |
+| `integer` | Will match all numbers that are integers (both ints and longs)|
+| `decimal` | Will match all real numbers (floating point and decimal)|
+| `hexadecimal` | Will match all hexadecimal encoded strings |
+| `iso8601Date` | Will match string containing basic ISO8601 dates (e.g. 2016-01-01)|
+| `iso8601DateTime` | Will match string containing ISO 8601 formatted dates (e.g. 2015-08-06T16:53:10+01:00)|
+| `iso8601DateTimeWithMillis` | Will match string containing ISO 8601 formatted dates, enforcing millisecond precision (e.g. 2015-08-06T16:53:10.123+01:00)|
+| `rfc3339Timestamp` | Will match a string containing an RFC3339 formatted timestapm (e.g. Mon, 31 Oct 2016 15:21:41 -0400)|
+| `iso8601Time` | Will match string containing times (e.g. T22:44:30.652Z)|
+| `ipv4Address` | Will match string containing IP4 formatted address |
+| `ipv6Address` | Will match string containing IP6 formatted address |
+| `uuid` | Will match strings containing UUIDs |
 
 #### Match based on type
 
@@ -448,6 +434,39 @@ provider.addInteraction({
       'Content-Type': 'application/json; charset=utf-8'
     },
     body: animalListExpectation
+  }
+})
+```
+
+#### Match by regular expression
+
+If none of the above matchers or formats work, you can write your own regex matcher.
+
+The underlying mock service is written in Ruby, so the regular expression must be in a Ruby format, not a Javascript format.
+
+```javascript
+const { term } = pact
+
+provider.addInteraction({
+  state: 'Has some animals',
+  uponReceiving: 'a request for an animal',
+  withRequest: {
+    method: 'GET',
+    path: '/animals/1'
+  },
+  willRespondWith: {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8'
+    },
+    body: {
+      id: 100,
+      name: "billy",
+      'gender': term({
+        matcher: 'F|M',
+        generate: 'F'
+      }),
+    }
   }
 })
 ```

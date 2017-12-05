@@ -6,8 +6,30 @@
 
 import { isNil, isFunction, isUndefined } from 'lodash';
 
+// Note: The following regexes are Ruby formatted, so attempting to parse as JS without modification is probably not going to work as intended!
+export const ISO8601_DATE_FORMAT = '^([\\+-]?\\d{4}(?!\\d{2}\\b))((-?)((0[1-9]|1[0-2])(\\3([12]\\d|0[1-9]|3[01]))?|W([0-4]\\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\\d|[12]\\d{2}|3([0-5]\\d|6[1-6])))?)$';
+export const ISO8601_DATETIME_FORMAT = '^\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d([+-][0-2]\\d:[0-5]\\d|Z)$';
+export const ISO8601_DATETIME_WITH_MILLIS_FORMAT = '^\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d\\.\\d{3}([+-][0-2]\\d:[0-5]\\d|Z)$';
+export const ISO8601_TIME_FORMAT = '^(T\\d\\d:\\d\\d(:\\d\\d)?(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?)?$';
+export const RFC3339_TIMESTAMP_FORMAT = '^(Mon|Tue|Wed|Thu|Fri|Sat|Sun),\\s\\d{2}\\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\\s\\d{4}\\s\\d{2}:\\d{2}:\\d{2}\\s(\\+|-)\\d{4}$';
+export const UUID_V4_FORMAT = '^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$';
+export const IPV4_FORMAT = '^(\\d{1,3}\\.)+\\d{1,3}$';
+export const IPV6_FORMAT = '^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$';
+export const HEX_FORMAT = '^[0-9a-fA-F]+$';
+
 /**
- * The term matcher.
+ * Validates the given example against the regex.
+ *
+ * @param example Example to use in the matcher.
+ * @param matcher Regular expression to check.
+ */
+export function validateExample(example: string, matcher: string): boolean {
+  // Note we escape the double \\ as these get sent over the wire as JSON
+  return new RegExp(matcher.replace('\\\\', '\\')).test(example);
+}
+
+/**
+ * The term matcher. Also aliased to 'regex' for discoverability.
  * @param {Object} opts
  * @param {string} opts.generate - a value to represent the matched String
  * @param {string} opts.matcher - a Regex representing the value
@@ -18,6 +40,10 @@ export function term(opts: { generate: string, matcher: string }) {
 
   if (isNil(generate) || isNil(matcher)) {
     throw new Error('Error creating a Pact Term. Please provide an object containing "generate" and "matcher" properties');
+  }
+
+  if (!validateExample(generate, matcher)) {
+    throw new Error(`Example '${generate}' does not match provided regular expression '${matcher}'`);
   }
 
   return {
@@ -34,13 +60,13 @@ export function term(opts: { generate: string, matcher: string }) {
 }
 
 /**
- * UUIDv4 matcher.
+ * UUID v4 matcher.
  * @param {string} uuuid - a UUID to use as an example.
  */
-export function uuidV4(uuid?: string) {
+export function uuid(uuid?: string) {
   return term({
     generate: uuid || 'ce118b6e-d8e1-11e7-9296-cec278b6b50a',
-    matcher: '/^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$/'
+    matcher: UUID_V4_FORMAT
   });
 }
 
@@ -48,10 +74,10 @@ export function uuidV4(uuid?: string) {
  * IPv4 matcher.
  * @param {string} ip - an IPv4 address to use as an example. Defaults to `127.0.0.13`
  */
-export function ipv4(ip?: string) {
+export function ipv4Address(ip?: string) {
   return term({
     generate: ip || '127.0.0.13',
-    matcher: '(\\d{1,3}\\.)+\\d{1,3}'
+    matcher: IPV4_FORMAT
   });
 }
 
@@ -59,21 +85,33 @@ export function ipv4(ip?: string) {
  * IPv6 matcher.
  * @param {string} ip - an IPv6 address to use as an example. Defaults to '::ffff:192.0.2.128'
  */
-export function ipv6(ip?: string) {
+export function ipv6Address(ip?: string) {
   return term({
     generate: ip || '::ffff:192.0.2.128',
-    matcher: '(\\A([0-9a-f]{1,4}:){1,1}(:[0-9a-f]{1,4}){1,6}\\Z)|(\\A([0-9a-f]{1,4}:){1,2}(:[0-9a-f]{1,4}){1,5}\\Z)|(\\A([0-9a-f]{1,4}:){1,3}(:[0-9a-f]{1,4}){1,4}\\Z)|(\\A([0-9a-f]{1,4}:){1,4}(:[0-9a-f]{1,4}){1,3}\\Z)|(\\A([0-9a-f]{1,4}:){1,5}(:[0-9a-f]{1,4}){1,2}\\Z)|(\\A([0-9a-f]{1,4}:){1,6}(:[0-9a-f]{1,4}){1,1}\\Z)|(\\A(([0-9a-f]{1,4}:){1,7}|:):\\Z)|(\\A:(:[0-9a-f]{1,4}){1,7}\\Z)|(\\A((([0-9a-f]{1,4}:){6})(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3})\\Z)|(\\A(([0-9a-f]{1,4}:){5}[0-9a-f]{1,4}:(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3})\\Z)|(\\A([0-9a-f]{1,4}:){5}:[0-9a-f]{1,4}:(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}\\Z)|(\\A([0-9a-f]{1,4}:){1,1}(:[0-9a-f]{1,4}){1,4}:(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}\\Z)|(\\A([0-9a-f]{1,4}:){1,2}(:[0-9a-f]{1,4}){1,3}:(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}\\Z)|(\\A([0-9a-f]{1,4}:){1,3}(:[0-9a-f]{1,4}){1,2}:(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}\\Z)|(\\A([0-9a-f]{1,4}:){1,4}(:[0-9a-f]{1,4}){1,1}:(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}\\Z)|(\\A(([0-9a-f]{1,4}:){1,5}|:):(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}\\Z)|(\\A:(:[0-9a-f]{1,4}){1,5}:(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}\\Z)'
+    matcher: IPV6_FORMAT
   });
 }
 
 /**
- * ISO8601 DateTime matcher
- * @param {string} date - an ISO8601 Date and Time string, e.g. 2013-02-04T22:44:30.652Z
+ * ISO8601 DateTime matcher.
+ * @param {string} date - an ISO8601 Date and Time string
+ *                        e.g. 2015-08-06T16:53:10+01:00 are valid
  */
 export function iso8601DateTime(date?: string) {
   return term({
-    generate: date || '2013-02-01T22:44:30.652Z',
-    matcher: '^([\\+-]?\\d{4}(?!\\d{2}\\b))((-?)((0[1-9]|1[0-2])(\\3([12]\\d|0[1-9]|3[01]))?|W([0-4]\\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\\d|[12]\\d{2}|3([0-5]\\d|6[1-6])))([T\\s]((([01]\\d|2[0-3])((:?)[0-5]\\d)?|24\\:?00)([\\.,]\\d+(?!:))?)?(\\17[0-5]\\d([\\.,]\\d+)?)?([zZ]|([\\+-])([01]\\d|2[0-3]):?([0-5]\\d)?)?)?)?$'
+    generate: date || '2015-08-06T16:53:10+01:00',
+    matcher: ISO8601_DATETIME_FORMAT
+  });
+}
+
+/**
+ * ISO8601 DateTime matcher with required millisecond precision
+ * @param {string} date - an ISO8601 Date and Time string, e.g. 2015-08-06T16:53:10.123+01:00
+ */
+export function iso8601DateTimeWithMillis(date?: string) {
+  return term({
+    generate: date || '2015-08-06T16:53:10.123+01:00',
+    matcher: ISO8601_DATETIME_WITH_MILLIS_FORMAT
   });
 }
 
@@ -84,21 +122,9 @@ export function iso8601DateTime(date?: string) {
 export function iso8601Date(date?: string) {
   return term({
     generate: date || '2013-02-01',
-    matcher: '^([\\+-]?\\d{4}(?!\\d{2}\\b))((-?)((0[1-9]|1[0-2])(\\3([12]\\d|0[1-9]|3[01]))?|W([0-4]\\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\\d|[12]\\d{2}|3([0-5]\\d|6[1-6])))?)'
+    matcher: ISO8601_DATE_FORMAT
   });
 }
-
-/**
- * RFC822 Date matcher.
- * @param {string} date - a basic yyyy-MM-dd date string e.g. 2000-09-31
- */
-export function iso8601Date(date?: string) {
-  return term({
-    generate: date || '2013-02-01',
-    matcher: '(?x)(Mon|Tue|Wed|Thu|Fri|Sat|Sun),\\s\\d{2}\\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\\s\\d{4}\\s\\d{2}:\\d{2}:\\d{2}\\s(\\+|-)\\d{4}'
-  });
-}
-
 
 /**
  *  ISO8601 Time Matcher, matches a pattern of the format "'T'HH:mm:ss".
@@ -107,18 +133,18 @@ export function iso8601Date(date?: string) {
 export function iso8601Time(time?: string) {
   return term({
     generate: time || 'T22:44:30.652Z',
-    matcher: '^(T\\d\\d:\\d\\d(:\\d\\d)?(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?)?$'
+    matcher: ISO8601_TIME_FORMAT
   });
 }
 
 /**
  * RFC3339 Timestamp matcher, a subset of ISO8609
- * @param {string} date - an RFC3339 Date and Time string, e.g. 2013-02-04T22:44:30.652Z
+ * @param {string} date - an RFC3339 Date and Time string, e.g. Mon, 31 Oct 2016 15:21:41 -0400
  */
 export function rfc3339Timestamp(timestamp?: string) {
   return term({
-    generate: date || '2013-02-01T22:44:30.652Z',
-    matcher: '^([0-9]+)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])[Tt]([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\\.[0-9]+)?(([Zz])|([\+|\-]([01][0-9]|2[0-3]):[0-5][0-9]))$'
+    generate: timestamp || 'Mon, 31 Oct 2016 15:21:41 -0400',
+    matcher: RFC3339_TIMESTAMP_FORMAT
   });
 }
 
@@ -126,16 +152,16 @@ export function rfc3339Timestamp(timestamp?: string) {
  * Hexadecimal Matcher.
  * @param {string} hex - a hex value.
  */
-export function Hex(hex?: string) {
+export function hexadecimal(hex?: string) {
   return term({
     generate: hex || '3F',
-    matcher: '[0-9a-fA-F]+'
+    matcher: HEX_FORMAT
   });
 }
 
 /**
  * Decimal Matcher.
- * @param {float} hex - a hex value.
+ * @param {float} float - a decimal value.
  */
 export function decimal(float?: number) {
   return somethingLike<number>(float || 13.01);
