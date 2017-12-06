@@ -674,4 +674,5 @@ The vision is to have a compatible `Pact` implementation in all the commonly use
 ## Contact
 
 * Twitter: [@pact_up](https://twitter.com/pact_up)
+* Stack Overflow: https://stackoverflow.com/questions/tagged/pact
 * Google users group: https://groups.google.com/forum/#!forum/pact-support
