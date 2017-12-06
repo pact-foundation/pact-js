@@ -14,7 +14,7 @@ done
 
 echo "--> Releasing artifacts"
 echo "    Publishing pact..."
-npm publish dist --access public
+npm publish dist --tag beta --access public
 echo "    done!"
 
 echo "--> Creating pact-web package"
@@ -22,5 +22,5 @@ VERSION=$(cat package.json | grep '\"version\"' | egrep -o "([0-9.]+)")
 sed "s/VERSION/$VERSION/g" < package.json.web > dist-web/package.json
 
 echo "    Publishing pact-web..."
-npm publish dist-web --access public
+npm publish dist-web --tag beta --access public
 echo "    done!"

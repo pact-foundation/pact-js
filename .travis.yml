@@ -32,11 +32,11 @@ deploy:
   on:
     tags: true
     branch: master
-    node: '6'
+    node: '8'
 - provider: script
   skip_cleanup: true
   script: ./scripts/publish.sh
   on:
     tags: true
     branch: master
-    node: '6'
+    node: '8'
