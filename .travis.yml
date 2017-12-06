@@ -32,7 +32,7 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
-    branch: master
+    branch: 4.x.x
     node: '6'
 - provider: npm
   email: pact-foundation@googlegroups.com
@@ -41,12 +41,12 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
-    branch: master
+    branch: 4.x.x
     node: '6'
 - provider: script
   skip_cleanup: true
   script: npm publish dist --access public
   on:
-    branch: master
+    branch: 4.x.x
     tags: true
     node: '6'
