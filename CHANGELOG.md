@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="5.0.3"></a>
+## [5.0.3](https://github.com/pact-foundation/pact-js/compare/v5.0.2...v5.0.3) (2017-12-06)
+
+
+
 <a name="5.0.0"></a>
 # [5.0.0](https://github.com/pact-foundation/pact-js/compare/v4.2.1...v5.0.0) (2017-12-06)
 
