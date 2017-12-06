@@ -86,7 +86,7 @@ See [`4.x.x` documentation](https://github.com/pact-foundation/pact-js/tree/4.x.
 To use the library on your tests, add the pact dependency:
 
 ```javascript
-let Pact = require('pact')
+const { Pact } = require('pact')
 ```
 
 The `Pact` class provides the following high-level APIs, they are listed in the order in which they typically get called in the lifecycle of testing a consumer:
@@ -133,7 +133,7 @@ Check out the `examples` folder for examples with Karma Jasmine, Mocha and Jest.
 ```javascript
 const path = require('path')
 const chai = require('chai')
-const pact = require('pact')
+const { Pact } = require('pact')
 const chaiAsPromised = require('chai-as-promised')
 
 const expect = chai.expect
