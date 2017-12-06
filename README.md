@@ -28,6 +28,8 @@ how to get going.
 
 - [Pact JS](#pact-js)
   - [Installation](#installation)
+    - [Beta (5.x.x)](#beta-5xx)
+    - [Stable (4.x.x)](#stable-4xx)
   - [Using Pact JS](#using-pact-js)
     - [Consumer Side Testing](#consumer-side-testing)
       - [API](#api)
@@ -59,10 +61,23 @@ how to get going.
 
 ## Installation
 
+### Beta (5.x.x)
+
 It's easy, simply run the below:
 ```
 npm install --save-dev @pact-foundation/pact
 ```
+
+_NOTE_: the `5.x.x` release is currently in *beta*, for the previous stable version see the [`4.x.x` branch](https://github.com/pact-foundation/pact-js/tree/4.x.x).
+
+### Stable (4.x.x)
+
+It's easy, simply run the below:
+```
+npm install --save-dev pact
+```
+
+See [`4.x.x` documentation](https://github.com/pact-foundation/pact-js/tree/4.x.x) for usage details.
 
 ## Using Pact JS
 

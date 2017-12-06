@@ -1,10 +1,9 @@
 {
   "name": "@pact-foundation/pact",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Pact for all things Javascript",
-  "main": "./src/pact.js",
-  "types": "./src/pact.d.ts",
-  "typings": "./src/types/custom.d.ts",
+  "main": "./pact.js",
+  "types": "./pact.d.ts",
   "scripts": {
     "build": "tsc",
     "clean": "rimraf docs dist dist-web coverage .nyc_output logs pacts jscpd.json",
@@ -17,7 +16,6 @@
     "posttest": "npm run test:karma",
     "predist": "npm run clean && npm run lint && npm run jscpd",
     "prerelease": "npm i && rm package-lock.json",
-    "publish": "./scripts/publish.sh",
     "release": "standard-version",
     "test": "nyc --check-coverage --reporter=html --reporter=text-summary mocha",
     "test:examples": "npm run test:e2e-examples && npm run test:jest-examples && npm run test:mocha-examples && npm run test:ava-examples",
