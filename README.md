@@ -65,7 +65,7 @@ how to get going.
 
 It's easy, simply run the below:
 ```
-npm install --save-dev @pact-foundation/pact
+npm install --save-dev @pact-foundation/pact@beta
 ```
 
 _NOTE_: the `5.x.x` release is currently in *beta*, for the previous stable version see the [`4.x.x` branch](https://github.com/pact-foundation/pact-js/tree/4.x.x).
