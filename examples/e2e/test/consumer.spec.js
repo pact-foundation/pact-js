@@ -2,8 +2,7 @@ const path = require('path')
 const chai = require('chai')
 const chaiAsPromised = require('chai-as-promised')
 const expect = chai.expect
-const pact = require('../../../dist/pact')
-const Pact = pact.Pact
+const { Pact, Matchers } = require('../../../dist/pact');
 const MOCK_SERVER_PORT = 1234
 const LOG_LEVEL = process.env.LOG_LEVEL || 'WARN'
 
@@ -21,12 +20,7 @@ describe('Pact', () => {
   })
 
   // Alias flexible matchers for simplicity
-  const {
-    somethingLike: like,
-    term,
-    eachLike,
-    iso8601DateTimeWithMillis
-  } = pact
+  const { eachLike, like, term, iso8601DateTimeWithMillis } = Matchers;
 
   // Animal we want to match :)
   const suitor = {
