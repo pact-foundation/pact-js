@@ -1,19 +1,21 @@
 /*eslint-disable*/
 (function () {
 
-  jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
-
   describe("Client", function () {
+
     var client, provider
 
     beforeAll(function (done) {
       client = example.createClient('http://localhost:1234')
-      provider = Pact({}) // defaults to using port 1234
+      provider = new Pact.PactWeb({
+        consumer: 'Karma Jasmine',
+        provider: 'Hello'
+      })
 
       // required for slower Travis CI environment
       setTimeout(function () {
         done()
-      }, 5000)
+      }, 2000)
 
       // Required if run with `singleRun: false`
       provider.removeInteractions()

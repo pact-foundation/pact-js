@@ -1,10 +1,9 @@
 {
-  "name": "pact-web",
+  "name": "@pact-foundation/pact-web",
   "version": "VERSION",
   "description": "Pact for the browser",
   "main": "pact-web.js",
   "scripts": {},
-  "types": "./pact-web.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pact-foundation/pact-js.git"

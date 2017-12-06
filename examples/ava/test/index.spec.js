@@ -2,13 +2,14 @@
 
 const path = require('path')
 const test = require('ava')
-const Pact = require('../../../src/pact.js')
+const pact = require('../../../dist/pact')
+const Pact = pact.Pact;
 const getMeDogs = require('../index').getMeDogs
 
 const url = 'http://localhost'
 const port = 8989
 
-const provider = Pact({
+const provider = new Pact({
   port: port,
   log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
   dir: path.resolve(process.cwd(), 'pacts'),
@@ -17,9 +18,11 @@ const provider = Pact({
   provider: 'MyProvider'
 })
 
-const EXPECTED_BODY = [{dog: 1}]
+const EXPECTED_BODY = [{
+  dog: 1
+}]
 
-test.before('setting up Dog API expectations', async () => {
+test.before('setting up Dog API expectations', async() => {
   await provider.setup()
 })
 
@@ -36,11 +39,15 @@ test('Dog API returns correct response', async t => {
     withRequest: {
       method: 'GET',
       path: '/dogs',
-      headers: {'Accept': 'application/json'}
+      headers: {
+        'Accept': 'application/json'
+      }
     },
     willRespondWith: {
       status: 200,
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: EXPECTED_BODY
     }
   }
@@ -48,7 +55,10 @@ test('Dog API returns correct response', async t => {
   await provider.addInteraction(interaction)
   // END
 
-  const urlAndPort = {url: url, port: port}
+  const urlAndPort = {
+    url: url,
+    port: port
+  }
   const response = await getMeDogs(urlAndPort)
   t.deepEqual(response.data, EXPECTED_BODY)
 })
@@ -58,6 +68,6 @@ test.afterEach(async t => {
   await t.notThrows(provider.verify())
 })
 
-test.always.after('pact.js mock server graceful shutdown', async () => {
+test.always.after('pact.js mock server graceful shutdown', async() => {
   await provider.finalize()
 })

@@ -2,6 +2,8 @@
 logs/
 *.log
 npm-debug.log*
+package-lock.json
+.nyc_output
 
 # Runtime data
 pids
@@ -23,10 +25,10 @@ coverage
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
 dist
+dist-web
 
 # Dependency directory
 node_modules
-package-lock.json
 
 # Optional npm cache directory
 .npm

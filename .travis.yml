@@ -5,6 +5,9 @@ node_js:
 - '6'
 - '7'
 - '8'
+os:
+- linux
+- osx
 matrix:
   fast_finish: true
 env:
@@ -14,10 +17,6 @@ env:
   # NPM KEY
   - secure: NikiOMeibEpwVk4mLdXxCDm4jknLWZQQACSwHPlotB0u9JRzlyIoJhm47uzlPnKMtCylV0DMXQo32qbuv2xTIbB0cuZqcTzJaE2pQPHpnsVOrUnOlzRF0bSyRZGY/22ELQxWgK2Jc94lWBiniHbZzLeRh/iSAShj/lmUgVRXgUg1bxjdPNDOb3A+QNMMTl8NIp9FajsOp1l+2RXOZaJZwZChMnB+jLIMk4C56onV+rTn4EvxM/6mY0tOD+fO78Qz72riAcP8CSm/POlwTd/LcKdjtV+A6udPmuetZEy+4SWRF82WsWvU9RTytkr4kgct/uD7Y1oBVS9FMMBndS0YV6GSRnz4nwSUfAGJC93cijcrBzMRJxJ8+lYDMNPmED352RfIo68Lnrp73fXii2KMbyrSDFZUxaP4BMJu2LgUTBbk1+mxcEZMwByR2ZGEZMI7XXft1t2rMLWbWd9Ppo1XlT4XsJ6sLQHdU8/XDq4Zz7s4TVUnhNSpHqRUHQlpUxsvncUo7JgLoB9VzUIA8hK6Vs6/zKvCLgTew330vjDFTQCl473OlsfuFBpqHLBc57kfWbaugvan5OW1RXUpydoptX5tmIIIfWe8XbyKKCBK+fS9LO7qQaYlsPDyjQqJ+IXBRd239odNia/ke6F9Pkvcdt2Z/NEqDtuN9azKy+LHGT8
 script: ./scripts/build.sh
-cache:
-  apt: true
-  directories:
-  - node_modules
 after_success:
 - npm run coverage
 before_deploy:
@@ -33,20 +32,11 @@ deploy:
   on:
     tags: true
     branch: master
-    node: '6'
-- provider: npm
-  email: pact-foundation@googlegroups.com
-  api_key:
-    secure: jvmoyItvKvPrPZjWtD8/l12fjkIunhdBaKduPjzrJ9xGrnRRigI+NY6WVdWlPJ6IMbHi5f258idUhrP3nTL7QCPMSIb0P/JZyrrkHliPLyRhBP+yc/s+AuzYJm09O454JgvxnWuENGsLtR5q6swo6pDGFwthIyAHL/O8AXEavz3jG7GULjwIL/LtBKCzoK+L4WdS8SC0X8WUP6+/hgoiqmydHWKn23EQuw7Ia8ETp6yTuihuap/x8y869HUU+8+punx62Fav6ChsR8olN0WOakI9hC4B+dmz7TRRPTCN2WGa68f5UctAedSba2T/ChBpufAPnHJYAz2T372OMjQtHuD14DDVHoar6X3I5djaq6M1k06hJ7WMTCP0gItaUXMiy6I5Nlo/5tvOIXsUxiO3Ll7GzK5rpj/pqwIrm6Ecda9kPMzaC6IdEPZ9v+yglSd9zsbs2wfAuXlfJvH5/3oeWSCdIzYwJL8v63xQienxhxfAfMLqXP+GyuntqIV/NrHuunpSAjZGqXALJ5Ff1oWybQQVPDTlxWi4VdHfrw1lhPwUWVzNbaFq8hsnrujmLcpq0/X3p3QXgEMB2A3pJ49mm2Y9/YI9m2MPryhBL1x1WmtI+1udONlb1VIeU6KOUUulUXufRPv5gS/3NnisdhYj7KkF4GyrPaQYQAxh8tvy9Xs
-  skip_cleanup: true
-  on:
-    tags: true
-    branch: master
-    node: '6'
+    node: '8'
 - provider: script
   skip_cleanup: true
-  script: npm publish dist --access public
+  script: ./scripts/publish.sh
   on:
-    branch: master
     tags: true
-    node: '6'
+    branch: master
+    node: '8'

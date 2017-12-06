@@ -14,7 +14,7 @@ module.exports = function (config) {
 
     // list of files / patterns to load in the browser
     files: [
-      '../../dist/pact-web.js',
+      '../../dist-web/pact-web.js',
       // Example Using NPM package
       // 'node_modules/pact-web/pact-web.js',
       'client.js',
@@ -43,13 +43,13 @@ module.exports = function (config) {
       dir: path.resolve(process.cwd(), 'pacts')
     }],
 
-    // web server port
-    port: 9876,
-
     plugins: [
       'karma-*',
       '@pact-foundation/karma-pact'
     ],
+
+    // web server port
+    port: 9876,
 
     // enable / disable colors in the output (reporters and logs)
     colors: true,

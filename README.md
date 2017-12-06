@@ -1,5 +1,4 @@
 # Pact JS
-
 [![Join the chat at https://gitter.im/realestate-com-au/pact](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/realestate-com-au/pact?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/pact-foundation/pact-js.svg?branch=master)](https://travis-ci.org/pact-foundation/pact-js)
 [![Coverage Status](https://coveralls.io/repos/github/pact-foundation/pact-js/badge.svg?branch=master)](https://coveralls.io/github/pact-foundation/pact-js?branch=master)
@@ -32,23 +31,27 @@ how to get going.
   - [Using Pact JS](#using-pact-js)
     - [Consumer Side Testing](#consumer-side-testing)
       - [API](#api)
+      - [Constructor Options](#constructor-options)
       - [Example](#example)
-      - [Splitting tests across multiple files](#splitting-tests-across-multiple-files)
-    - [Publishing Pacts to a Broker and Tagging Pacts](#publishing-pacts-to-a-broker-and-tagging-pacts)
     - [Provider API Testing](#provider-api-testing)
+      - [Verification Options](#verification-options)
       - [API with Provider States](#api-with-provider-states)
-      - [Publishing Verification Results to a Pact Broker](#publishing-verification-results-to-a-pact-broker)
+      - [API with Authorization](#api-with-authorization)
     - [Publishing Pacts to a Broker](#publishing-pacts-to-a-broker)
-    - [Flexible Matching](#flexible-matching)
-      - [Match by regular expression](#match-by-regular-expression)
+      - [Publishing options](#publishing-options)
+      - [Publishing Verification Results to a Pact Broker](#publishing-verification-results-to-a-pact-broker)
+    - [Matching](#matching)
+      - [Match common formats](#match-common-formats)
       - [Match based on type](#match-based-on-type)
       - [Match based on arrays](#match-based-on-arrays)
+      - [Match by regular expression](#match-by-regular-expression)
   - [Tutorial (60 minutes)](#tutorial-60-minutes)
   - [Examples](#examples)
   - [Using Pact in non-Node environments](#using-pact-in-non-node-environments)
     - [Using Pact with Karma](#using-pact-with-karma)
     - [Using Pact with RequireJS](#using-pact-with-requirejs)
   - [Troubleshooting](#troubleshooting)
+    - [Splitting tests across multiple files](#splitting-tests-across-multiple-files)
     - [Timeout](#timeout)
     - [Note on Jest](#note-on-jest)
 
@@ -58,7 +61,7 @@ how to get going.
 
 It's easy, simply run the below:
 ```
-npm install --save-dev pact
+npm install --save-dev @pact-foundation/pact
 ```
 
 ## Using Pact JS
@@ -71,17 +74,34 @@ To use the library on your tests, add the pact dependency:
 let Pact = require('pact')
 ```
 
-The `Pact` interface provides the following high-level APIs, they are listed in the order in which they typically get called in the lifecycle of testing a consumer:
+The `Pact` class provides the following high-level APIs, they are listed in the order in which they typically get called in the lifecycle of testing a consumer:
 
 #### API
 |API                    |Options     |Returns|Description                                       |
 |-----------------------|------------|------------------------------------------------------|---|
-|`pact(options)`        |See [Pact Node documentation](https://github.com/pact-foundation/pact-node#create-pact-mock-server) for options                              |`Object` |Creates a Mock Server test double of your Provider API. If you need multiple Providers for a scenario, you can create as many as these as you need.                  |
-|`setup()`              |n/a         |`Promise`|Start the Mock Server                             |
-|`addInteraction()`     |`Object`    |`Promise`|Register an expectation on the Mock Server, which must be called by your test case(s). You can add multiple interactions per server. These will be validated and written to a pact if successful.
-|`verify()`             |n/a         |`Promise`|Verifies that all and only the interactions specified occurred and that they [match][request-matching]. You should call this function after any other assertions and once per test case. |
-|`finalize()`           |n/a         |`Promise`|Records the interactions registered to the Mock Server into the pact file and shuts it down.                                               |
-|`removeInteractions`   |n/a         |`Promise`|In some cases you might want to clear out the expectations of the Mock Service, call this to clear out any expectations for the next test run. _NOTE_: `verify()` will implicitly call this. |
+|`new Pact(options)`        |See constructor options below |`Object` |Creates a Mock Server test double of your Provider API. If you need multiple Providers for a scenario, you can create as many as these as you need.                  |
+|`setup()`              |n/a         |`Promise`|Start the Mock Server and wait for it to be available. You would normally call this only once in a `beforeAll(...)` type clause |
+|`addInteraction()`     |`Object`    |`Promise`|Register an expectation on the Mock Server, which must be called by your test case(s). You can add multiple interactions per server, and each test would normally contain one or more of these. These will be validated and written to a pact if successful.
+|`verify()`             |n/a         |`Promise`|Verifies that all interactions specified. This should be called once per test, to ensure your expectations were correct |
+|`finalize()`           |n/a         |`Promise`|Records the interactions registered to the Mock Server into the pact file and shuts it down. You would normally call this only once in an `afterAll(...)` type clause.|
+
+#### Constructor Options
+
+|Parameter | Required?  | Type        | Description |
+|----------|------------|-------------|--------------|
+| `consumer` | yes | string | The name of the consumer |
+| `provider` | yes | string | The name of the provider |
+| `port` | no | number | The port to run the mock service on, defaults to 1234 |
+| `host` | no | string | The host to run the mock service, defaults to 127.0.0.1 |
+| `ssl` | no | boolean | SSL flag to identify the protocol to be used (default false, HTTP) |
+| `sslcert` | no | string | Path to SSL certificate to serve on the mock service |
+| `sslkey` | no | string | Path to SSL key to serve on the mock service |
+| `dir` | no | string | Directory to output pact files |
+| `log` | no | string | Directory to log to |
+| `logLevel` | no | string | Log level: one of 'trace', 'debug', 'info', 'error', 'fatal' or 'warn' |
+| `spec` | no | number | Pact specification version (defaults to 2) |
+| `cors` | no | boolean | Allow CORS OPTION requests to be accepted, defaults to false |
+| `pactfileWriteMode` | no | string | Control how the Pact files are written. Choices: 'overwrite' 'update' or 'none'. Defaults to 'overwrite'|
 
 #### Example
 The first step is to create a test for your API Consumer. The example below uses [Mocha](https://mochajs.org), and demonstrates the basic approach:
@@ -184,62 +204,45 @@ describe('Pact', () => {
 
 ```
 
-#### Splitting tests across multiple files
-
-Pact tests tend to be quite long, due to the need to be specific about request/response payloads. Often times it is nicer to be able to split your tests across multiple files for manageability.
-
-You have two options to achieve this feat:
-
-1. Create a Pact test helper to orchestrate the setup and teardown of the mock service for multiple tests.
-
-    In larger test bases, this can significantly reduce test suite time and the amount of code you have to manage.
-
-    See this [example](https://github.com/tarciosaraiva/pact-melbjs/blob/master/helper.js) and this [issue](https://github.com/pact-foundation/pact-js/issues/11) for more.
-
-2. Set `pactfileWriteMode` to `update` in the `pact()` constructor
-
-    This will allow you to have multiple independent tests for a given Consumer-Provider pair, without it clobbering previous interactions.
-
-    In larger test suites, you'll incur a slow down due to the time taken to start and stop the underlying mock servers.
-
-    See this [PR](https://github.com/pact-foundation/pact-js/pull/48) for background.
-
-    _NOTE_: If using this approach, you *must* be careful to clear out existing pact files (e.g. `rm ./pacts/*.json`) before you run tests to ensure you don't have left over requests that are no longer relevent.
-
-### Publishing Pacts to a Broker and Tagging Pacts
-
 ### Provider API Testing
 
 Once you have created Pacts for your Consumer, you need to validate those Pacts against your Provider. The Verifier object provides the following API for you to do so:
 
-|API                    |Options     |Returns|Description                                       |
-|-----------------------|:------------:|----------------------------------------------|----|
-|`verifyProvider()`              |n/a         |`Promise`|Start the Mock Server                             |
+|API                    |Options       |Returns|Description                            |
+|-----------------------|:------------:|-------|---------------------------------------|
+|`verifyProvider()`     | See below    |`Promise`|Start the Mock Server                |
 
 1. Start your local Provider service.
 1. Optionally, instrument your API with ability to configure [provider states](https://github.com/pact-foundation/pact-provider-verifier/)
 1. Then run the Provider side verification step
 
 ```js
-const verifier = require('pact').Verifier;
+const { Verifier } = require('pact');
 let opts = {
-	providerBaseUrl: <String>,            // Running API provider host endpoint. Required.
-	pactBrokerUrl: <String>,              // URL of the Pact Broker to retrieve pacts from. Required if not using pactUrls.
-	provider: <String>,                   // Name of the Provider. Required.
-	tags: <Array>,                        // Array of tags, used to filter pacts from the Broker. Optional.
-	pactUrls: <Array>,                    // Array of local Pact file paths or HTTP-based URLs (e.g. from a broker). Required if not using a Broker.
-	providerStatesSetupUrl: <String>,     // URL to send PUT requests to setup a given provider state. Optional, required only if you provide a 'state' in any consumer tests.
-	pactBrokerUsername: <String>,         // Username for Pact Broker basic authentication. Optional
-	pactBrokerPassword: <String>,         // Password for Pact Broker basic authentication. Optional
-	publishVerificationResult: <Boolean>, // Publish verification result to Broker. Optional
-	providerVersion: <Boolean>,           // Provider version, required to publish verification result to Broker. Optional otherwise.
-	timeout: <Number>                     // The duration in ms we should wait to confirm verification process was successful. Defaults to 30000, Optional.
+  ...
 };
 
-verifier.verifyProvider(opts).then(function () {
+new Verifier().verifyProvider(opts).then(function () {
 	// do something
 });
 ```
+
+#### Verification Options
+
+| Parameter             | Required     | Type |Description                            |
+|-----------------------|:------------:|-------|--------------------------------------|
+| `providerBaseUrl` | true | string | Running API provider host endpoint. Required.   |
+| `provider` | true | string | Name of the Provider. Required. |
+| `pactUrls` | true |  array of strings | Array of local Pact file paths or HTTP-based URLs (e.g. from a broker). Re`quired` if not using a Broker. |
+| `pactBrokerUrl` | false | string | URL of the Pact Broker to retrieve pacts from. Required if not using pactUrls. |
+| `tags` | false |  array of strings | Array of tags, used to filter pacts from the Broker. Optional. |
+| `providerStatesSetupUrl` | false | string | URL to send PUT requests to setup a given provider state. Optional, required only if you provide a 'state' in any consumer tests. |
+| `pactBrokerUsername` | false | string | Username for Pact Broker basic authentication |
+| `pactBrokerPassword` | false | string | Password for Pact Broker basic authentication |
+| `publishVerificationResult` | false | boolean | Publish verification result to Broker |
+| `providerVersion` | false |  boolean | Provider version, required to publish verification results to a broker|
+| `customProviderHeaders` | false |  array of strings | Header(s) to add to provider state set up and pact verification re`quests`. eg 'Authorization: Basic cGFjdDpwYWN0'.Broker. Optional otherwise. |
+| `timeout` | false | number | The duration in ms we should wait to confirm verification process was successful. Defaults to 30000, Optional. |
 
 That's it! Read more about [Verifying Pacts](http://docs.pact.io/documentation/verifying_pacts.html).
 
@@ -247,9 +250,58 @@ That's it! Read more about [Verifying Pacts](http://docs.pact.io/documentation/v
 
 If you have any `state`'s in your consumer tests that you need to validate during verification, you will need
 to configure your provider for Provider States. This means you must specify `providerStatesSetupUrl`
-in the `verifier` constructor and configure an extra (dynamic) API endpoint to setup provider state (`--provider-states-setup-url`) for the given test state, which sets the active pact consumer and provider state accepting two parameters: `consumer` and `state` and returns an HTTP `200` eg. `consumer=web&state=customer%20is%20logged%20in`.
+in the `verifyProvider` function and configure an extra (dynamic) API endpoint to setup provider state (`--provider-states-setup-url`) for the given test state, which sets the active pact consumer and provider state accepting two parameters: `consumer` and `state` and returns an HTTP `200` eg. `consumer=web&state=customer%20is%20logged%20in`.
 
 See this [Provider](https://github.com/pact-foundation/pact-js/blob/master/examples/e2e/test/provider.spec.js) for a working example, or read more about [Provider States](https://docs.pact.io/documentation/provider_states.html).
+
+#### API with Authorization
+
+Sometimes you may need to add things to the requests that can't be persisted in a pact file. Examples of these would be authentication tokens, which have a small life span. e.g. an OAuth bearer token: `Authorization: Bearer 0b79bab50daca910b000d4f1a2b675d604257e42`.
+
+For this case, we have a facility that should be carefully used during verification - the ability to specificy custom headers to be sent during provider verification. The flag to achieve this is `customProviderHeaders`.
+
+For example, to have two headers sent as part of the verification request, modify the `verifyProvider` options as per below:
+
+```js
+let opts = {
+  provider: 'Animal Profile Service',
+  ...
+  customProviderHeaders: ['Authorization: Bearer e5e5e5e5e5e5e5', 'SomeSpecialHeader: some specialvalue']
+}
+
+return new Verifier().verifyProvider(opts).then(output => { ... })
+```
+
+As you can see, this is your opportunity to modify\add to headers being sent to the Provider API, for example to create a valid time-bound token.
+
+*Important Note*: You should only use this feature for things that can not be persisted in the pact file. By modifying the request, you are potentially modifying the contract from the consumer tests!
+
+### Publishing Pacts to a Broker
+
+Sharing is caring - to simplify sharing Pacts between Consumers and Providers, checkout [sharing pacts](http://docs.pact.io/documentation/sharings_pacts.html) using the [Pact Broker](https://github.com/bethesque/pact_broker).
+
+```js
+let pact = require('@pact-foundation/pact-node');
+let opts = {
+   ...
+};
+
+pact.publishPacts(opts)).then(function () {
+	// do something
+});
+```
+
+#### Publishing options
+
+| Parameter             | Required     | Type |Description                            |
+|-----------------------|:------------:|-------|--------------------------------------|
+| `providerBaseUrl` | true | string | Running API provider host endpoint. Required.   |
+| `pactUrls` | false | array of strings | Array of local Pact files or directories containing pact files. Path must be absolute. Required. |
+| `pactBroker` | false | string | The base URL of the Pact Broker. eg. https://test.pact.dius.com.au. Required. |
+| `pactBrokerUsername` | false | string | Username for Pact Broker basic authentication. Optional |
+| `pactBrokerPassword` | false | string | Password for Pact Broker basic authentication. Optional |
+| `consumerVersion` |false | string | A string containing a semver-style version e.g. 1.0.0. Required. |
+| `tags` |false | array of strings | Tag your pacts, often used with your branching, release or environment strategy e.g. ['prod', 'test'] |
 
 #### Publishing Verification Results to a Pact Broker
 
@@ -264,80 +316,51 @@ It looks like this:
 You need to specify the following when constructing the pact object:
 
 ```js
-publishVerificationResult: true,
-providerVersion: "1.0.0",
-provider: "Foo",
-```
-
-_NOTE_: You need to be already pulling pacts from the broker for this feature to work.
-
-### Publishing Pacts to a Broker
-
-Sharing is caring - to simplify sharing Pacts between Consumers and Providers, checkout [sharing pacts](http://docs.pact.io/documentation/sharings_pacts.html) using the [Pact Broker](https://github.com/bethesque/pact_broker).
-
-```js
-let pact = require('@pact-foundation/pact-node');
 let opts = {
-	pactUrls: <Array>,               // Array of local Pact files or directories containing pact files. Path must be absolute. Required.
-	pactBroker: <String>,            // The base URL of the Pact Broker. eg. https://test.pact.dius.com.au. Required.
-	pactBrokerUsername: <String>,    // Username for Pact Broker basic authentication. Optional
-	pactBrokerPassword: <String>,    // Password for Pact Broker basic authentication. Optional
-	consumerVersion: <String>        // A string containing a semver-style version e.g. 1.0.0. Required.
-};
+  provider: 'Animal Profile Service',
+  ...
+  publishVerificationResult: true,
+  providerVersion: "1.0.0",
+  provider: "Foo",
 
-pact.publishPacts(opts)).then(function () {
-	// do something
-});
+}
 ```
 
-### Flexible Matching
+_NOTE_: You need to be retrieving pacts from the broker for this feature to work.
 
-Flexible matching makes your tests more expressive making your tests less brittle.
+### Matching
+
+Matching makes your tests more expressive making your tests less brittle.
+
 Rather than use hard-coded values which must then be present on the Provider side,
 you can use regular expressions and type matches on objects and arrays to validate the
 structure of your APIs.
 
-[Read more about using regular expressions and type based matching](https://github.com/realestate-com-au/pact/wiki/Regular-expressions-and-type-matching-with-Pact) before continuing.
-
 _NOTE: Make sure to start the mock service via the `Pact` declaration with the option `specification: 2` to get access to these features._
 
-For simplicity, we alias the main matches to make our code more readable:
+#### Match common formats
 
-#### Match by regular expression
+Often times, you find yourself having to re-write regular expressions for common formats. We've created a number of them for you to save you the time:
 
-The underlying mock service is written in Ruby, so the regular expression must be in a Ruby format, not a Javascript format.
-
-```javascript
-const { term } = pact.Matchers
-
-provider.addInteraction({
-  state: 'Has some animals',
-  uponReceiving: 'a request for an animal',
-  withRequest: {
-    method: 'GET',
-    path: '/animals/1'
-  },
-  willRespondWith: {
-    status: 200,
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8'
-    },
-    body: {
-      id: 100,
-      name: "billy",
-      'gender': term({
-        matcher: 'F|M',
-        generate: 'F'
-      }),
-    }
-  }
-})
-```
+| method | description |
+|--------|-------------|
+| `boolean` | Match a boolean value (using equality) |
+| `integer` | Will match all numbers that are integers (both ints and longs)|
+| `decimal` | Will match all real numbers (floating point and decimal)|
+| `hexadecimal` | Will match all hexadecimal encoded strings |
+| `iso8601Date` | Will match string containing basic ISO8601 dates (e.g. 2016-01-01)|
+| `iso8601DateTime` | Will match string containing ISO 8601 formatted dates (e.g. 2015-08-06T16:53:10+01:00)|
+| `iso8601DateTimeWithMillis` | Will match string containing ISO 8601 formatted dates, enforcing millisecond precision (e.g. 2015-08-06T16:53:10.123+01:00)|
+| `rfc3339Timestamp` | Will match a string containing an RFC3339 formatted timestapm (e.g. Mon, 31 Oct 2016 15:21:41 -0400)|
+| `iso8601Time` | Will match string containing times (e.g. T22:44:30.652Z)|
+| `ipv4Address` | Will match string containing IP4 formatted address |
+| `ipv6Address` | Will match string containing IP6 formatted address |
+| `uuid` | Will match strings containing UUIDs |
 
 #### Match based on type
 
 ```javascript
-const { somethingLike: like } = pact.Matchers
+const { like } = pact
 
 provider.addInteraction({
   state: 'Has some animals',
@@ -373,7 +396,7 @@ Note that you can wrap a `like` around a single value or an object. When wrapped
 Matching provides the ability to specify flexible length arrays. For example:
 
 ```javascript
-pact.Matchers.eachLike(obj, { min: 3 })
+pact.eachLike(obj, { min: 3 })
 ```
 
 Where `obj` can be any javascript object, value or Pact.Match. It takes optional argument (`{ min: 3 }`) where min is greater than 0 and defaults to 1 if not provided.
@@ -381,7 +404,7 @@ Where `obj` can be any javascript object, value or Pact.Match. It takes optional
 Below is an example that uses all of the Pact Matchers.
 
 ```javascript
-const { somethingLike: like, term, eachLike } = pact.Matchers
+const { somethingLike: like, term, eachLike } = pact
 
 const animalBodyExpectation = {
   'id': 1,
@@ -428,6 +451,39 @@ provider.addInteraction({
 })
 ```
 
+#### Match by regular expression
+
+If none of the above matchers or formats work, you can write your own regex matcher.
+
+The underlying mock service is written in Ruby, so the regular expression must be in a Ruby format, not a Javascript format.
+
+```javascript
+const { term } = pact
+
+provider.addInteraction({
+  state: 'Has some animals',
+  uponReceiving: 'a request for an animal',
+  withRequest: {
+    method: 'GET',
+    path: '/animals/1'
+  },
+  willRespondWith: {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8'
+    },
+    body: {
+      id: 100,
+      name: "billy",
+      'gender': term({
+        matcher: 'F|M',
+        generate: 'F'
+      }),
+    }
+  }
+})
+```
+
 ## Tutorial (60 minutes)
 
 Learn everything in Pact JS in 60 minutes: https://github.com/DiUS/pact-workshop-js
@@ -440,7 +496,6 @@ Learn everything in Pact JS in 60 minutes: https://github.com/DiUS/pact-workshop
 * [Pact with Mocha](https://github.com/pact-foundation/pact-js/tree/master/examples/mocha)
 * [Pact with Karma + Jasmine](https://github.com/pact-foundation/pact-js/tree/master/karma/jasmine)
 * [Pact with Karma + Mocha](https://github.com/pact-foundation/pact-js/tree/master/karma/mocha)
-* [Angular 4 + Mocha](https://github.com/stones/pact-angular-4-mocha)
 
 [![asciicast](https://asciinema.org/a/105793.png)](https://asciinema.org/a/105793)
 
@@ -448,8 +503,7 @@ Learn everything in Pact JS in 60 minutes: https://github.com/DiUS/pact-workshop
 
 Pact requires a Node runtime to be able to start and stop Mock servers, write logs and other things.
 
-However, when used within browser or non-Node based environments - such as with Karma or ng-test
-- this is not possible.
+However, when used within browser or non-Node based environments - such as with Karma or ng-test - this is not possible.
 
 To address this challenge, we have released a separate 'web' based module for this purpose - `pact-web`.
 Whilst it still provides a testing DSL, it cannot start and stop mock servers as per the `pact`
@@ -457,7 +511,7 @@ package, so you will need to coordinate this yourself prior to and after executi
 
 To get started, install `pact-web` and [Pact Node](https://github.com/pact-foundation/pact-node):
 
-    npm install --save-dev pact-web @pact-foundation/pact-node
+    npm install --save-dev @pact-foundation/pact-web @pact-foundation/pact-node
 
 If you're not using Karma, you can start and stop the mock server using [Pact Node](https://github.com/pact-foundation/pact-node) or something like [Grunt Pact](https://github.com/pact-foundation/grunt-pact).
 
@@ -467,29 +521,35 @@ We have create a [plugin](https://github.com/pact-foundation/karma-pact) for Kar
 which will automatically start and stop any Mock Server for your Pact tests.
 
 Modify your `karma.conf.js` file as per below to get started:
-```javascript
-module.exports = function (config) {
-  config.set({
-    // in here we are simply telling to use Jasmine with Pact
+
+```js
+    // Load pact framework - this will start/stop mock server automatically
     frameworks: ['pact'],
-	// the Pact options will go here, you can start
-	// as many providers as you need
-    pact: [{
-    	port: 1234,
-    	consumer: "some-consumer",
-    	provider: "some-provider",
-		dir: "pact/files/go/here",
-		log: "log/files/go/here"
-	}],
-	// ensure Pact and default karma plugins are loaded
+
+    // Load the pact and default karma plugins
     plugins: [
       'karma-*',
-      '@pact-foundation/karma-pact',
+      '@pact-foundation/karma-pact'
     ],
-  });
-};
+
+    // load pact web module
+    files: [
+      'node_modules/pact-web/pact-web.js',
+      ...
+    ],
+
+    // Configure the mock service
+    pact: [{
+      port: 1234,
+      consumer: 'KarmaMochaConsumer',
+      provider: 'KarmaMochaProvider',
+      logLevel: 'DEBUG',
+      log: path.resolve(process.cwd(), 'logs', 'pact.log'),
+      dir: path.resolve(process.cwd(), 'pacts')
+    }],
 ```
-Check out the [Examples](#examples) for how to use the Karma interface.
+
+Check out the [Examples](/pact-foundation/pact-js#examples) for how to use the Karma interface.
 
 ### Using Pact with RequireJS
 
@@ -523,6 +583,28 @@ this [gist](https://gist.github.com/mefellows/15c9fcb052c2aa9d8951f91d48d6da54) 
 
 If you are having issues, a good place to start is setting `logLevel: 'DEBUG'`
 when configuring the `pact({...})` object.
+
+### Splitting tests across multiple files
+
+Pact tests tend to be quite long, due to the need to be specific about request/response payloads. Often times it is nicer to be able to split your tests across multiple files for manageability.
+
+You have two options to achieve this feat:
+
+1. Create a Pact test helper to orchestrate the setup and teardown of the mock service for multiple tests.
+
+    In larger test bases, this can significantly reduce test suite time and the amount of code you have to manage.
+
+    See this [example](https://github.com/tarciosaraiva/pact-melbjs/blob/master/helper.js) and this [issue](https://github.com/pact-foundation/pact-js/issues/11) for more.
+
+2. Set `pactfileWriteMode` to `update` in the `pact()` constructor
+
+    This will allow you to have multiple independent tests for a given Consumer-Provider pair, without it clobbering previous interactions.
+
+    In larger test suites, you'll incur a slow down due to the time taken to start and stop the underlying mock servers.
+
+    See this [PR](https://github.com/pact-foundation/pact-js/pull/48) for background.
+
+    _NOTE_: If using this approach, you *must* be careful to clear out existing pact files (e.g. `rm ./pacts/*.json`) before you run tests to ensure you don't have left over requests that are no longer relevent.
 
 ### Timeout
 
@@ -560,7 +642,7 @@ and the Jest [example](https://github.com/pact-foundation/pact-js/blob/master/ex
 
 Test runners like AVA and Jest may run tests in parallel. If you are seeing weird behaviour, configured your test runner to run in serial.
 
-See issue [#124](https://github.com/pact-foundation/pact-js/issues/124) for more background.
+See #124 for more background.
 
 ### Debugging
 
@@ -593,5 +675,3 @@ The vision is to have a compatible `Pact` implementation in all the commonly use
 
 * Twitter: [@pact_up](https://twitter.com/pact_up)
 * Google users group: https://groups.google.com/forum/#!forum/pact-support
-
-[request-matching]: https://github.com/realestate-com-au/pact/wiki/Understanding-Request-Matching

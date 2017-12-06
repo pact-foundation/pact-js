@@ -1,0 +1,26 @@
+{
+  "include": [
+    "src/*.ts",
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "**/*.d.ts",
+    "**/*.spec.ts"
+  ],
+  "extension": [
+    ".ts"
+  ],
+  "require": [
+    "ts-node/register"
+  ],
+  "reporter": [
+    "text-summary",
+    "lcovonly"
+  ],
+  "sourceMap": true,
+  "instrument": true,
+  "lines": 90,
+  "statements": 90,
+  "functions": 90,
+  "branches": 90
+}

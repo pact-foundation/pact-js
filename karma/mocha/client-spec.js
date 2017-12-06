@@ -7,11 +7,14 @@
 
     before(function (done) {
       client = example.createClient('http://localhost:1234')
-      provider = Pact({}) // defaults to use port 1234
+      provider = new Pact.PactWeb({
+        consumer: 'Karma Mocha',
+        provider: 'Hello'
+      })
       // required for slower Travis CI environment
       setTimeout(function () {
         done()
-      }, 2000)
+      }, 1000)
     })
 
     after(function () {

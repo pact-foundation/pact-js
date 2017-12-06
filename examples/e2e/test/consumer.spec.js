@@ -2,14 +2,14 @@ const path = require('path')
 const chai = require('chai')
 const chaiAsPromised = require('chai-as-promised')
 const expect = chai.expect
-const pact = require('../../../src/pact.js')
+const { Pact, Matchers } = require('../../../dist/pact');
 const MOCK_SERVER_PORT = 1234
 const LOG_LEVEL = process.env.LOG_LEVEL || 'WARN'
 
 chai.use(chaiAsPromised)
 
 describe('Pact', () => {
-  const provider = pact({
+  const provider = new Pact({
     consumer: 'Matching Service',
     provider: 'Animal Profile Service',
     port: MOCK_SERVER_PORT,
@@ -20,11 +20,12 @@ describe('Pact', () => {
   })
 
   // Alias flexible matchers for simplicity
-  const { somethingLike: like, term, eachLike } = pact.Matchers
+  const { eachLike, like, term, iso8601DateTimeWithMillis } = Matchers;
 
   // Animal we want to match :)
   const suitor = {
     'id': 2,
+    'available_from': '2017-12-04T14:47:18.582Z',
     'first_name': 'Nanny',
     'animal': 'goat',
     'last_name': 'Doe',
@@ -55,6 +56,7 @@ describe('Pact', () => {
   // API we don't care about
   const animalBodyExpectation = {
     'id': like(1),
+    'available_from': iso8601DateTimeWithMillis(),
     'first_name': like('Billy'),
     'last_name': like('Goat'),
     'animal': like('goat'),

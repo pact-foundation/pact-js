@@ -1,14 +1,14 @@
 'use strict'
 
 const path = require('path')
-const Pact = require('../../../src/pact.js')
+const Pact = require('../../../dist/pact').Pact
 const getMeDogs = require('../index').getMeDogs
 
 describe("Dog's API", () => {
   let url = 'http://localhost'
 
   const port = 8989
-  const provider = Pact({
+  const provider = new Pact({
     port: port,
     log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
     dir: path.resolve(process.cwd(), 'pacts'),
@@ -17,7 +17,9 @@ describe("Dog's API", () => {
     provider: 'MyProvider'
   })
 
-  const EXPECTED_BODY = [{dog: 1}]
+  const EXPECTED_BODY = [{
+    dog: 1
+  }]
 
   beforeAll(() => provider.setup())
 
@@ -31,11 +33,15 @@ describe("Dog's API", () => {
         withRequest: {
           method: 'GET',
           path: '/dogs',
-          headers: { 'Accept': 'application/json' }
+          headers: {
+            'Accept': 'application/json'
+          }
         },
         willRespondWith: {
           status: 200,
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json'
+          },
           body: EXPECTED_BODY
         }
       }
@@ -44,7 +50,10 @@ describe("Dog's API", () => {
 
     // add expectations
     it('returns a sucessful body', done => {
-      return getMeDogs({ url, port })
+      return getMeDogs({
+          url,
+          port
+        })
         .then(response => {
           expect(response.headers['content-type']).toEqual('application/json')
           expect(response.data).toEqual(EXPECTED_BODY)
