@@ -19,7 +19,7 @@
     "prerelease": "npm i && rm package-lock.json",
     "publish": "./scripts/publish.sh",
     "release": "standard-version",
-    "test": "nyc --check-coverage --reporter=html --reporter=text mocha",
+    "test": "nyc --check-coverage --reporter=html --reporter=text-summary mocha",
     "test:examples": "npm run test:e2e-examples && npm run test:jest-examples && npm run test:mocha-examples && npm run test:ava-examples",
     "test:e2e-examples": "cd examples/e2e && npm i && npm t",
     "test:ava-examples": "cd examples/ava && npm i && npm t",
