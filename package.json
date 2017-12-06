@@ -7,20 +7,19 @@
   "typings": "./src/types/custom.d.ts",
   "scripts": {
     "build": "tsc",
-    "clean": "rimraf docs dist dist-web coverage logs pacts jscpd.json",
-    "coverage": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "clean": "rimraf docs dist dist-web coverage .nyc_output logs pacts jscpd.json",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
     "deploy:prepare": "./scripts/create_npmrc_file.sh",
     "dist": "npm run build && webpack --config ./config/webpack.web.config.js",
     "jscpd": "jscpd -p src -r json -o jscpd.json",
     "lint": "standard && tslint -c tslint.json 'src/**/*.ts'",
     "postdist": "npm t",
-    "posttest": "npm run test:checkCoverage && npm run test:karma",
+    "posttest": "npm run test:karma",
     "predist": "npm run clean && npm run lint && npm run jscpd",
     "prerelease": "npm i && rm package-lock.json",
     "publish": "./scripts/publish.sh",
     "release": "standard-version",
-    "test": "nyc mocha",
-    "test:checkCoverage": "istanbul check",
+    "test": "nyc --check-coverage --reporter=html --reporter=text mocha",
     "test:examples": "npm run test:e2e-examples && npm run test:jest-examples && npm run test:mocha-examples && npm run test:ava-examples",
     "test:e2e-examples": "cd examples/e2e && npm i && npm t",
     "test:ava-examples": "cd examples/ava && npm i && npm t",
@@ -31,28 +30,6 @@
     "test:karma:mocha": "karma start ./karma/mocha/karma.conf.js",
     "travis": "./scripts/build.sh",
     "webpack": "webpack --config ./config/webpack.web.config.js"
-  },
-  "nyc": {
-    "include": [
-      "src/*.ts",
-      "src/**/*.ts"
-    ],
-    "exclude": [
-      "**/*.d.ts",
-      "**/*.spec.ts"
-    ],
-    "extension": [
-      ".ts"
-    ],
-    "require": [
-      "ts-node/register"
-    ],
-    "reporter": [
-      "text-summary",
-      "lcovonly"
-    ],
-    "sourceMap": true,
-    "instrument": true
   },
   "repository": {
     "type": "git",
@@ -70,7 +47,8 @@
     "consumer driven testing"
   ],
   "author": "Beth Skurrie <beth@bethesque.com> (https://github.com/bethesque)",
-  "contributors": [{
+  "contributors": [
+    {
       "name": "Tarcio Saraiva",
       "email": "tarcio@gmail.com",
       "url": "http://twitter.com/tarciosaraiva"
@@ -134,7 +112,7 @@
     "bluebird": "3.x",
     "chai": "3.x",
     "chai-as-promised": "5.x",
-    "coveralls": "^2.13.1",
+    "coveralls": "^2.13.3",
     "enhanced-resolve": "^3.4.1",
     "es6-promise": "^4.1.1",
     "imports-loader": "0.x",
