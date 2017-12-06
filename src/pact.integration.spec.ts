@@ -5,13 +5,13 @@ const expect = require("chai").expect;
 const Promise = require("bluebird");
 const request = require("superagent");
 
-import { eachLike, like as like, Pact, term } from "./pact";
+import { Interaction, Matchers, Pact } from "./pact";
+const { eachLike, like, term } = Matchers;
 
 describe("Integration", () => {
 
   ["http", "https"].forEach((protocol) => {
     describe(`Pact on ${protocol} protocol`, () => {
-
       const MOCK_PORT = Math.floor(Math.random() * 999) + 9000;
       const PROVIDER_URL = `${protocol}://localhost:${MOCK_PORT}`;
       const provider = new Pact({

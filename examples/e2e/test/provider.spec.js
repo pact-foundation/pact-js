@@ -1,4 +1,6 @@
-const verifyProvider = require('../../../dist/pact').verifyProvider
+const {
+  Verifier
+} = require('../../../dist/pact')
 const path = require('path')
 const chai = require('chai')
 const chaiAsPromised = require('chai-as-promised')
@@ -56,7 +58,7 @@ describe('Pact Verification', () => {
       customProviderHeaders: ['Authorization: basic e5e5e5e5e5e5e5']
     }
 
-    return verifyProvider(opts)
+    return new Verifier().verifyProvider(opts)
       .then(output => {
         console.log('Pact Verification Complete!')
         console.log(output)

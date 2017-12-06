@@ -115,11 +115,14 @@ export class PactWeb {
 }
 
 /**
- * Exposes {@link Matchers#term}
+ * Exposes {@link Matchers}
+ * To avoid polluting the root module's namespace, re-export
+ * Matchers as its owns module
  * @memberof Pact
  * @static
  */
-export * from "./dsl/matchers";
+import * as Matchers from "./dsl/matchers";
+export import Matchers = Matchers;
 
 /**
  * Exposes {@link Interaction}

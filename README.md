@@ -217,12 +217,12 @@ Once you have created Pacts for your Consumer, you need to validate those Pacts 
 1. Then run the Provider side verification step
 
 ```js
-const verifier = require('pact').Verifier;
+const { Verifier } = require('pact');
 let opts = {
   ...
 };
 
-verifier.verifyProvider(opts).then(function () {
+new Verifier().verifyProvider(opts).then(function () {
 	// do something
 });
 ```
@@ -250,7 +250,7 @@ That's it! Read more about [Verifying Pacts](http://docs.pact.io/documentation/v
 
 If you have any `state`'s in your consumer tests that you need to validate during verification, you will need
 to configure your provider for Provider States. This means you must specify `providerStatesSetupUrl`
-in the `verifier` constructor and configure an extra (dynamic) API endpoint to setup provider state (`--provider-states-setup-url`) for the given test state, which sets the active pact consumer and provider state accepting two parameters: `consumer` and `state` and returns an HTTP `200` eg. `consumer=web&state=customer%20is%20logged%20in`.
+in the `verifyProvider` function and configure an extra (dynamic) API endpoint to setup provider state (`--provider-states-setup-url`) for the given test state, which sets the active pact consumer and provider state accepting two parameters: `consumer` and `state` and returns an HTTP `200` eg. `consumer=web&state=customer%20is%20logged%20in`.
 
 See this [Provider](https://github.com/pact-foundation/pact-js/blob/master/examples/e2e/test/provider.spec.js) for a working example, or read more about [Provider States](https://docs.pact.io/documentation/provider_states.html).
 
@@ -269,7 +269,7 @@ let opts = {
   customProviderHeaders: ['Authorization: Bearer e5e5e5e5e5e5e5', 'SomeSpecialHeader: some specialvalue']
 }
 
-return verifyProvider(opts).then(output => { ... })
+return new Verifier().verifyProvider(opts).then(output => { ... })
 ```
 
 As you can see, this is your opportunity to modify\add to headers being sent to the Provider API, for example to create a valid time-bound token.

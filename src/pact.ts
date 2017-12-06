@@ -7,7 +7,6 @@ import * as clc from "cli-color";
 import { isEmpty } from "lodash";
 import * as path from "path";
 import * as process from "process";
-
 import { logger } from "./common/logger";
 import { isPortAvailable } from "./common/net";
 import { Interaction, InteractionObject } from "./dsl/interaction";
@@ -180,10 +179,13 @@ export * from "./dsl/verifier";
 
 /**
  * Exposes {@link Matchers}
+ * To avoid polluting the root module's namespace, re-export
+ * Matchers as its owns module
  * @memberof Pact
  * @static
  */
-export * from "./dsl/matchers";
+import * as Matchers from "./dsl/matchers";
+export import Matchers = Matchers;
 
 /**
  * Exposes {@link Interaction}
