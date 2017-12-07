@@ -45,7 +45,11 @@ test('Dog API returns correct response', async t => {
         'Content-Type': 'application/json'
       },
       body: [{
-        dog: pact.Matchers.somethingLike(1)
+        dog: pact.Matchers.somethingLike(1),
+        name: pact.Matchers.term({
+          matcher: '\(\\S+\)',
+          generate: 'rocky'
+        })
       }]
     }
   }
@@ -58,7 +62,7 @@ test('Dog API returns correct response', async t => {
     port: port
   }
   const response = await getMeDogs(urlAndPort)
-  t.deepEqual(response.data, [{ dog: 1 }])
+  t.deepEqual(response.data, [{ dog: 1, name: "rocky" }])
 })
 
 test.afterEach(async t => {
