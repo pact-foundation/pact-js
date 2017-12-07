@@ -18,10 +18,6 @@ const provider = new Pact({
   provider: 'MyProvider'
 })
 
-const EXPECTED_BODY = [{
-  dog: 1
-}]
-
 test.before('setting up Dog API expectations', async() => {
   await provider.setup()
 })
@@ -48,7 +44,13 @@ test('Dog API returns correct response', async t => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: EXPECTED_BODY
+      body: [{
+        dog: pact.Matchers.somethingLike(1),
+        name: pact.Matchers.term({
+          matcher: '\(\\S+\)',
+          generate: 'rocky'
+        })
+      }]
     }
   }
 
@@ -60,7 +62,7 @@ test('Dog API returns correct response', async t => {
     port: port
   }
   const response = await getMeDogs(urlAndPort)
-  t.deepEqual(response.data, EXPECTED_BODY)
+  t.deepEqual(response.data, [{ dog: 1, name: "rocky" }])
 })
 
 test.afterEach(async t => {
