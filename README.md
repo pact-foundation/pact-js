@@ -54,6 +54,7 @@ how to get going.
     - [Using Pact with RequireJS](#using-pact-with-requirejs)
   - [Troubleshooting](#troubleshooting)
     - [Splitting tests across multiple files](#splitting-tests-across-multiple-files)
+    - [Re-run specific verification failures](#re-run-specific-verification-failures)
     - [Timeout](#timeout)
     - [Note on Jest](#note-on-jest)
 
@@ -620,6 +621,30 @@ You have two options to achieve this feat:
     See this [PR](https://github.com/pact-foundation/pact-js/pull/48) for background.
 
     _NOTE_: If using this approach, you *must* be careful to clear out existing pact files (e.g. `rm ./pacts/*.json`) before you run tests to ensure you don't have left over requests that are no longer relevent.
+
+### Re-run specific verification failures
+
+If you prefix your test command (e.g. `npm t`) with the following two environment variables, you can selectively run a specific interaction during provider verification.
+
+For the e2e example, let's assume we have the following failure:
+
+```sh
+3 interactions, 2 failures
+
+Failed interactions:
+
+* A request for all animals given Has some animals
+
+* A request for an animal with id 1 given Has an animal with ID 1
+```
+
+If we wanted to target the second failure, we can extract the description and state as the bits before and after the word "given":
+
+```sh
+PACT_DESCRIPTION="a request for an animal with ID 1" PACT_PROVIDER_STATE="Has an animal with ID 1" npm t
+```
+
+Also note that `PACT_DESCRIPTION` is the failing `description` and `PACT_PROVIDER_STATE` is the corresponding `providerState` from the pact file itself.
 
 ### Timeout
 
