@@ -26,7 +26,7 @@ describe("Dog's API", () => {
   afterAll(() => provider.finalize())
 
   describe("works", () => {
-    beforeAll(done => {
+    beforeAll(() => {
       const interaction = {
         state: 'i have a list of projects',
         uponReceiving: 'a request for projects',
@@ -45,7 +45,7 @@ describe("Dog's API", () => {
           body: EXPECTED_BODY
         }
       }
-      provider.addInteraction(interaction).then(done, done)
+      return provider.addInteraction(interaction)
     })
 
     // add expectations

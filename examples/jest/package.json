@@ -12,6 +12,6 @@
   },
   "devDependencies": {
     "axios": "^0.14.0",
-    "jest-cli": "^15.1.1"
+    "jest-cli": "^21.0.0"
   }
 }
