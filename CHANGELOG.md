@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="4.3.1"></a>
+## [4.3.1](https://github.com/pact-foundation/pact-js/compare/v4.3.0...v4.3.1) (2017-12-08)
+
+
+### Bug Fixes
+
+* **pact-node:** update e2e tests with latest pact-node API ([a2828cf](https://github.com/pact-foundation/pact-js/commit/a2828cf))
+
+
+
 <a name="4.3.0"></a>
 # [4.3.0](https://github.com/pact-foundation/pact-js/compare/v4.2.1...v4.3.0) (2017-12-08)
 
