@@ -4,6 +4,7 @@
  * https://gist.github.com/bethesque/9d81f21d6f77650811f4.
  * @module MockService
  */
+import { Environment } from "dsl/options";
 import { isEmpty } from "lodash";
 import { logger } from "../common/logger";
 import { Request } from "../common/request";
@@ -43,9 +44,10 @@ export class MockService {
     private port = 1234,
     private host = "127.0.0.1",
     private ssl = false,
-    private pactfileWriteMode: PactfileWriteMode = "overwrite") {
+    private pactfileWriteMode: PactfileWriteMode = "overwrite",
+    private environment?: Environment) {
 
-    this.request = new Request();
+    this.request = new Request(environment);
     this.baseUrl = `${ssl ? "https" : "http"}://${host}:${port}`;
     this.pactDetails = {
       consumer: (consumer) ? { name: consumer } : undefined,

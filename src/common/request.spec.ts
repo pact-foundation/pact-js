@@ -3,7 +3,10 @@ import * as chai from "chai";
 import { loadavg } from "os";
 import * as sinon from "sinon";
 import { parse, Url, URL } from "url";
+import mock from "xhr-mock";
 const expect = chai.expect;
+import { Environment } from "../dsl/options";
+import { environment } from "./environment";
 import { Request } from "./request";
 
 describe("Request", () => {
@@ -14,16 +17,39 @@ describe("Request", () => {
   });
 
   context("#constructor", () => {
+    const g: any = global;
+
+    beforeEach(() => mock.setup());
+    afterEach(() => {
+      mock.teardown();
+      if (g.window) {
+        g.window = undefined;
+      }
+    });
+
     describe("when running in a browser-based environment", () => {
-      it.skip('should use "XMLHttpRequest" request object', () => {
-        // Need to find an elegant way of turning on 'window' in TypeScript
+      it('should use "XMLHttpRequest" request object', () => {
+        g.window = {};
+        request = new Request();
+
         expect(request.request).to.not.be.undefined;
         expect(request.request).to.not.be.null;
         expect(request.request.open).to.be.a("function");
         expect(request.request.setRequestHeader).to.be.a("function");
         expect(request.request.send).to.be.a("function");
       });
+
+      it("should use the node environment if specified", () => {
+        request = new Request("node");
+
+        expect(request.httpRequest).to.not.be.null;
+        expect(request.httpRequest).to.not.be.undefined;
+        expect(request.httpsRequest).to.not.be.null;
+        expect(request.httpsRequest).to.not.be.undefined;
+        expect(request.responseBody).to.eq("");
+      });
     });
+
     describe("when running in a node-based environment", () => {
       it('should use "Request" objects', () => {
         expect(request.httpRequest).to.not.be.null;
@@ -31,6 +57,41 @@ describe("Request", () => {
         expect(request.httpsRequest).to.not.be.null;
         expect(request.httpsRequest).to.not.be.undefined;
         expect(request.responseBody).to.eq("");
+      });
+
+      it("should use the web environment if specified", () => {
+        request = new Request("web");
+
+        expect(request.request).to.not.be.undefined;
+        expect(request.request).to.not.be.null;
+        expect(request.request.open).to.be.a("function");
+        expect(request.request.setRequestHeader).to.be.a("function");
+        expect(request.request.send).to.be.a("function");
+      });
+    });
+
+    describe("when unable to determine environment", () => {
+      let isNode: sinon.SinonStub;
+      let isBrowser: sinon.SinonStub;
+
+      beforeEach(() => {
+        isNode = sinon.stub(environment, "isNode").returns(false);
+        isBrowser = sinon.stub(environment, "isBrowser").returns(false);
+      });
+
+      afterEach(() => {
+        isNode.restore();
+        isBrowser.restore();
+      });
+
+      it("should do nothing", () => {
+        mock.teardown();
+        g.window = undefined;
+
+        request = new Request();
+        expect(request.request).to.be.undefined;
+        expect(request.httpRequest).to.be.undefined;
+        expect(request.httpsRequest).to.be.undefined;
       });
     });
   });
@@ -53,7 +114,7 @@ describe("Request", () => {
             cb("Response body!");
           }
         },
-        setEncoding: () => { },
+        setEncoding: () => {},
         statusCode: status,
       };
     };
@@ -96,7 +157,11 @@ describe("Request", () => {
 
       describe("and there is a request body", () => {
         it("should should return a successful promise", (done) => {
-          const reqPromise = request.send("GET", "http://localhost:8888", "some body");
+          const reqPromise = request.send(
+            "GET",
+            "http://localhost:8888",
+            "some body",
+          );
           requestMock.verify();
           expect(onSpy.calledOnce);
           expect(endSpy.calledOnce);
@@ -105,7 +170,6 @@ describe("Request", () => {
           expect(reqPromise).to.eventually.be.fulfilled.notify(done);
         });
       });
-
     });
 
     describe("when the pact service returns a failure", () => {
@@ -134,20 +198,22 @@ describe("Request", () => {
         expect(onSpy.calledOnce);
         expect(endSpy.calledOnce);
         expect(writeSpy.notCalled);
-        expect(reqPromise).to.eventually.be.rejectedWith("Response body!").notify(done);
+        expect(reqPromise)
+          .to.eventually.be.rejectedWith("Response body!")
+          .notify(done);
       });
     });
 
     describe("when communication to the pact service is a failure", () => {
       const err = "Error: Failed to communicate to Pact Mock Service";
       const requestErrorMock = {
-        end: () => { },
+        end: () => {},
         on: (a: string, cb: (err: Error) => {}) => {
           if (a === "error") {
             cb(new Error(err));
           }
         },
-        write: () => { },
+        write: () => {},
       };
       beforeEach(() => {
         requestMock = sinon.mock(request.httpRequest);
@@ -171,7 +237,9 @@ describe("Request", () => {
       it("should should return a rejected promise", (done) => {
         const reqPromise = request.send("GET", "http://localhost:8888");
         requestMock.verify();
-        expect(reqPromise).to.eventually.be.rejectedWith(err).notify(done);
+        expect(reqPromise)
+          .to.eventually.be.rejectedWith(err)
+          .notify(done);
       });
     });
   });
