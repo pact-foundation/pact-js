@@ -41,7 +41,7 @@ describe('Pact Verification', () => {
       // Fetch pacts from broker
       pactBrokerUrl: 'https://test.pact.dius.com.au/',
       // Fetch from broker with given tags
-      tags: ['prod', 'sit5'],
+      tags: ['4.x.x'],
       // Specific Remote pacts (doesn't need to be a broker)
       // pactUrls: ['https://test.pact.dius.com.au/pacts/provider/Animal%20Profile%20Service/consumer/Matching%20Service/latest'],
       // Local pacts
@@ -49,7 +49,7 @@ describe('Pact Verification', () => {
       pactBrokerUsername: 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
       pactBrokerPassword: 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
       publishVerificationResult: true,
-      providerVersion: "1.0.0"
+      providerVersion: "1.0.1"
     }
 
     return verifier.verifyProvider(opts)
