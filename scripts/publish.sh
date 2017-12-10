@@ -17,7 +17,7 @@ done
 
 echo "--> Releasing artifacts"
 echo "    Publishing pact@${VERSION}..."
-npm publish dist --tag=beta --access public
+npm publish dist --access public
 echo "    done!"
 
 echo "--> Creating pact-web package"
@@ -32,5 +32,5 @@ for type in "${types[@]}"; do
 done
 
 echo "    Publishing pact-web@${VERSION}..."
-npm publish dist-web --tag=beta --access public
+npm publish dist-web --access public
 echo "    done!"
