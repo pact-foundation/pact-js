@@ -28,7 +28,7 @@ how to get going.
 
 - [Pact JS](#pact-js)
   - [Installation](#installation)
-    - [Beta (5.x.x)](#beta-5xx)
+    - [Latest (5.x.x)](#latest-5xx)
     - [Stable (4.x.x)](#stable-4xx)
   - [Using Pact JS](#using-pact-js)
     - [Consumer Side Testing](#consumer-side-testing)
@@ -62,18 +62,16 @@ how to get going.
 
 ## Installation
 
-### Beta (5.x.x)
+### Latest (5.x.x)
 
-It's easy, simply run the below:
 ```
-npm install --save-dev @pact-foundation/pact@beta
+npm install --save-dev @pact-foundation/pact
 ```
 
-_NOTE_: the `5.x.x` release is currently in *beta*, for the previous stable version see the [`4.x.x` branch](https://github.com/pact-foundation/pact-js/tree/4.x.x).
+_NOTE_: the `5.x.x` release contains several breaking changes from the previous version and will be maintained in parallel with the previous stable version. See the [`4.x.x`](https://github.com/pact-foundation/pact-js/tree/4.x.x) documentation for more details.
 
 ### Stable (4.x.x)
 
-It's easy, simply run the below:
 ```
 npm install --save-dev pact
 ```
@@ -145,7 +143,7 @@ chai.use(chaiAsPromised);
 describe('Pact', () => {
 
   // (1) Create the Pact object to represent your provider
-  const provider = pact({
+  const provider = new Pact({
     consumer: 'TodoApp',
     provider: 'TodoService',
     port: MOCK_SERVER_PORT,
@@ -598,7 +596,7 @@ this [gist](https://gist.github.com/mefellows/15c9fcb052c2aa9d8951f91d48d6da54) 
 ## Troubleshooting
 
 If you are having issues, a good place to start is setting `logLevel: 'DEBUG'`
-when configuring the `pact({...})` object.
+when configuring the `new Pact({...})` object.
 
 ### Splitting tests across multiple files
 
@@ -612,7 +610,7 @@ You have two options to achieve this feat:
 
     See this [example](https://github.com/tarciosaraiva/pact-melbjs/blob/master/helper.js) and this [issue](https://github.com/pact-foundation/pact-js/issues/11) for more.
 
-2. Set `pactfileWriteMode` to `update` in the `pact()` constructor
+2. Set `pactfileWriteMode` to `update` in the `Pact()` constructor
 
     This will allow you to have multiple independent tests for a given Consumer-Provider pair, without it clobbering previous interactions.
 
