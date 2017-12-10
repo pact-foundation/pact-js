@@ -56,11 +56,14 @@ export class Pact {
     }
 
     this.server = serviceFactory.createServer({
+      consumer: this.opts.consumer,
       cors: this.opts.cors,
       dir: this.opts.dir,
       host: this.opts.host,
       log: this.opts.log,
+      pactfileWriteMode: this.opts.pactfileWriteMode,
       port: this.opts.port,
+      provider: this.opts.provider,
       spec: this.opts.spec,
       ssl: this.opts.ssl,
       sslcert: this.opts.sslcert,
@@ -71,7 +74,7 @@ export class Pact {
     logger.info(`Setting up Pact with Consumer "${this.opts.consumer}" and Provider "${this.opts.provider}"
    using mock service on Port: "${this.opts.port}"`);
 
-    this.mockService = new MockService(this.opts.consumer, this.opts.provider, this.opts.port, this.opts.host,
+    this.mockService = new MockService(undefined, undefined, this.opts.port, this.opts.host,
       this.opts.ssl, this.opts.pactfileWriteMode);
   }
 

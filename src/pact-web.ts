@@ -37,15 +37,12 @@ export class PactWeb {
 
     this.opts = { ...defaults, ...config } as PactOptionsComplete;
 
-    if (isEmpty(this.opts.consumer) || isEmpty(this.opts.provider)) {
-      logger.info(`Setting up Pact using mock service on port: "${this.opts.port}"`);
-    } else {
-      logger.info(`Setting up Pact with Consumer "${this.opts.consumer}" and Provider
-        "${this.opts.provider}" using mock service on port: "${this.opts.port}"`);
+    if (!isEmpty(this.opts.consumer) || !isEmpty(this.opts.provider)) {
+      logger.warn(`Passing in consumer/provider to PactWeb is deprecated,
+        and will be removed in the next major version`);
     }
 
-    logger.info(`Setting up Pact with Consumer "${this.opts.consumer}" and Provider "${this.opts.provider}"
-      using mock service on Port: "${this.opts.port}"`);
+    logger.info(`Setting up Pact using mock service on port: "${this.opts.port}"`);
 
     this.mockService = new MockService(this.opts.consumer, this.opts.provider, this.opts.port, this.opts.host,
       this.opts.ssl, this.opts.pactfileWriteMode);

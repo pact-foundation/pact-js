@@ -9,7 +9,7 @@ import { logger } from "../common/logger";
 import { Request } from "../common/request";
 import { Interaction } from "./interaction";
 
-export type PactfileWriteMode = "overwrite" | "update" | "none";
+export type PactfileWriteMode = "overwrite" | "update" | "merge";
 
 export interface Pacticipant {
   name: string;
@@ -32,20 +32,18 @@ export class MockService {
    * @param {number} port - the mock service port, defaults to 1234
    * @param {string} host - the mock service host, defaults to 127.0.0.1
    * @param {boolean} ssl - which protocol to use, defaults to false (HTTP)
-   * @param {string} pactfileWriteMode - 'overwrite' | 'update' | 'none', defaults to 'overwrite'
+   * @param {string} pactfileWriteMode - 'overwrite' | 'update' | 'merge', defaults to 'overwrite'
    */
   constructor(
+    // Deprecated as at https://github.com/pact-foundation/pact-js/issues/105
     private consumer?: string,
     private provider?: string,
+
+    // Valid
     private port = 1234,
     private host = "127.0.0.1",
     private ssl = false,
     private pactfileWriteMode: PactfileWriteMode = "overwrite") {
-
-    if (isEmpty(consumer) || isEmpty(provider)) {
-      logger.warn("Warning: Consumer\Provider details not provided, ensure " +
-        "that the mock service has been started with this information");
-    }
 
     this.request = new Request();
     this.baseUrl = `${ssl ? "https" : "http"}://${host}:${port}`;
