@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="5.2.0"></a>
+# [5.2.0](https://github.com/pact-foundation/pact-js/compare/v5.0.3...v5.2.0) (2017-12-10)
+
+
+### Bug Fixes
+
+* **jest:** update jest example to be compatible with v21.x.x ([#132](https://github.com/pact-foundation/pact-js/issues/132)) ([7fabfc4](https://github.com/pact-foundation/pact-js/commit/7fabfc4))
+
+
+### Features
+
+* **examples:** extending ava examples with matchers ([51fb8ae](https://github.com/pact-foundation/pact-js/commit/51fb8ae))
+* **mock-service:** pass arguments to CLI not API ([2b9053c](https://github.com/pact-foundation/pact-js/commit/2b9053c)), closes [#105](https://github.com/pact-foundation/pact-js/issues/105)
+* **pact-node:** update to latest pact-node 6.4.x ([2430ee0](https://github.com/pact-foundation/pact-js/commit/2430ee0)), closes [#131](https://github.com/pact-foundation/pact-js/issues/131)
+
+
+
 <a name="5.1.0"></a>
 # [5.1.0](https://github.com/pact-foundation/pact-js/compare/v5.0.3...v5.1.0) (2017-12-08)
 
