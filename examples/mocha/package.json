@@ -4,7 +4,7 @@
   "description": "Mocha Pact example",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "rm -rf pacts && mocha"
   },
   "license": "MIT",
   "devDependencies": {

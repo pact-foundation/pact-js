@@ -7,7 +7,7 @@ const getMeDogs = require('../index').getMeDogs
 
 describe('The Dog API', () => {
   let url = 'http://localhost'
-  const port = 8989
+  const port = 8990
 
   const provider = new Pact({
     port: port,
@@ -19,22 +19,19 @@ describe('The Dog API', () => {
     pactfileWriteMode: 'merge'
   })
 
-  const EXPECTED_BODY = [{
-    dog: 1
-  },
-  {
+  const EXPECTED_BODY = {
     dog: 2
-  }]
+  };
 
   before(() => provider.setup())
 
   after(() => provider.finalize())
 
-  describe('get /dogs', () => {
+  describe('get /dog/1', () => {
     before(done => {
       const interaction = {
-        state: 'i have a list of docs',
-        uponReceiving: 'a request for all docs',
+        state: 'i have a list of dogs',
+        uponReceiving: 'a request for a dog',
         withRequest: {
           method: 'GET',
           path: '/dogs',
