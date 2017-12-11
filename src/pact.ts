@@ -61,7 +61,7 @@ export class Pact {
       dir: this.opts.dir,
       host: this.opts.host,
       log: this.opts.log,
-      pactfileWriteMode: this.opts.pactfileWriteMode,
+      pactFileWriteMode: this.opts.pactfileWriteMode,
       port: this.opts.port,
       provider: this.opts.provider,
       spec: this.opts.spec,

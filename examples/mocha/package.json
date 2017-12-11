@@ -4,12 +4,13 @@
   "description": "Mocha Pact example",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha-parallel-tests"
   },
   "license": "MIT",
   "devDependencies": {
     "axios": "^0.14.0",
     "chai": "^3.5.0",
-    "mocha": "^3.0.2"
+    "mocha": "^3.5.3",
+    "mocha-parallel-tests": "^1.2.10"
   }
 }

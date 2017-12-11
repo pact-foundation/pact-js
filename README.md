@@ -53,6 +53,7 @@ how to get going.
     - [Using Pact with Karma](#using-pact-with-karma)
     - [Using Pact with RequireJS](#using-pact-with-requirejs)
   - [Troubleshooting](#troubleshooting)
+    - [Parallel tests](#parallel-tests)
     - [Splitting tests across multiple files](#splitting-tests-across-multiple-files)
     - [Re-run specific verification failures](#re-run-specific-verification-failures)
     - [Timeout](#timeout)
@@ -598,11 +599,29 @@ this [gist](https://gist.github.com/mefellows/15c9fcb052c2aa9d8951f91d48d6da54) 
 If you are having issues, a good place to start is setting `logLevel: 'DEBUG'`
 when configuring the `new Pact({...})` object.
 
+### Parallel tests
+
+Pact tests are inherently stateful, as we need to keep track of the interactions on a per-test basis, to ensure each contract is validated in isolation from others. However, in larger test suites or modern test frameworks (like Ava), this can result in slower test execution.
+
+The good news is, parallel test execution is possible, you need to ensure that:
+
+1. Each test is fully self-contained, with its own mock server on its own port
+1. You set the option `pactfileWriteMode` to `"merge"`, instructing Pact to merge any pact documents with the same consumer and provider pairing at the end of all test runs.
+
+When all of your tests have completed, the result is the union of the all of the interactions from each test case in the generated pact file.
+
+See the following examples for working parallel tests:
+
+* [Pact with AVA (Node env)](https://github.com/pact-foundation/pact-js/tree/master/examples/ava)
+* [Pact with Mocha](https://github.com/pact-foundation/pact-js/tree/master/examples/mocha)
+
 ### Splitting tests across multiple files
 
 Pact tests tend to be quite long, due to the need to be specific about request/response payloads. Often times it is nicer to be able to split your tests across multiple files for manageability.
 
-You have two options to achieve this feat:
+You have a number of options to achieve this feat:
+
+1. Consider implementing the [Parallel tests](#parallel-tests) guidelines.
 
 1. Create a Pact test helper to orchestrate the setup and teardown of the mock service for multiple tests.
 
@@ -610,7 +629,7 @@ You have two options to achieve this feat:
 
     See this [example](https://github.com/tarciosaraiva/pact-melbjs/blob/master/helper.js) and this [issue](https://github.com/pact-foundation/pact-js/issues/11) for more.
 
-2. Set `pactfileWriteMode` to `update` in the `Pact()` constructor
+1. Set `pactfileWriteMode` to `update` in the `Pact()` constructor
 
     This will allow you to have multiple independent tests for a given Consumer-Provider pair, without it clobbering previous interactions.
 
@@ -675,12 +694,6 @@ Also, [from Jest 20](https://facebook.github.io/jest/blog/2017/05/06/jest-20-del
 
 See [this issue](https://github.com/pact-foundation/pact-js/issues/10) for background,
 and the Jest [example](https://github.com/pact-foundation/pact-js/blob/master/examples/jest/package.json#L10-L12) for a working example.
-
-### Parallel tests
-
-Test runners like AVA and Jest may run tests in parallel. If you are seeing weird behaviour, configured your test runner to run in serial.
-
-See #124 for more background.
 
 ### Debugging
 

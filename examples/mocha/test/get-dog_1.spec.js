@@ -3,11 +3,11 @@
 const expect = require('chai').expect
 const path = require('path')
 const Pact = require('../../../dist/pact').Pact
-const getMeDogs = require('../index').getMeDogs
+const getMeDog = require('../index').getMeDog
 
 describe('The Dog API', () => {
   let url = 'http://localhost'
-  const port = 8989
+  const port = 8990
 
   const provider = new Pact({
     port: port,
@@ -15,25 +15,26 @@ describe('The Dog API', () => {
     dir: path.resolve(process.cwd(), 'pacts'),
     spec: 2,
     consumer: 'MyConsumer',
-    provider: 'MyProvider'
+    provider: 'MyProvider',
+    pactfileWriteMode: 'merge'
   })
 
-  const EXPECTED_BODY = [{
+  const EXPECTED_BODY = {
     dog: 1
-  }]
+  };
 
   before(() => provider.setup())
 
   after(() => provider.finalize())
 
-  describe('works', () => {
+  describe('get /dog/1', () => {
     before(done => {
       const interaction = {
-        state: 'i have a list of projects',
-        uponReceiving: 'a request for projects',
+        state: 'i have a list of dogs',
+        uponReceiving: 'a request for a single dog',
         withRequest: {
           method: 'GET',
-          path: '/dogs',
+          path: '/dogs/1',
           headers: {
             'Accept': 'application/json'
           }
@@ -57,15 +58,13 @@ describe('The Dog API', () => {
         url: url,
         port: port
       }
-      getMeDogs(urlAndPort)
+      getMeDog(urlAndPort)
         .then(response => {
           expect(response.data).to.eql(EXPECTED_BODY)
           done()
-        })
-        .catch(done)
+        }, done)
     })
 
-    // verify with Pact, and reset expectations
-    it('successfully verifies', () => provider.verify())
+    afterEach(() => provider.verify())
   })
 })
