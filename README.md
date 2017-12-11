@@ -605,6 +605,7 @@ Pact tests are inherently stateful, as we need to keep track of the interactions
 
 The good news is, parallel test execution is possible, you need to ensure that:
 
+1. Before any test run invocation, you remove any existing pact files (otherwise you end up with invalid interactions left over from previous test runs)
 1. Each test is fully self-contained, with its own mock server on its own port
 1. You set the option `pactfileWriteMode` to `"merge"`, instructing Pact to merge any pact documents with the same consumer and provider pairing at the end of all test runs.
 

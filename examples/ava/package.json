@@ -4,7 +4,7 @@
   "description": "Ava Pact example",
   "main": "index.js",
   "scripts": {
-    "test": "ava"
+    "test": "if [ -d 'pacts' ]; then rm -rf pacts; fi && ava"
   },
   "license": "MIT",
   "devDependencies": {
