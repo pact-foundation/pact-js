@@ -632,13 +632,13 @@ You have a number of options to achieve this feat:
 
 1. Set `pactfileWriteMode` to `update` in the `Pact()` constructor
 
-    This will allow you to have multiple independent tests for a given Consumer-Provider pair, without it clobbering previous interactions.
+    This will allow you to have multiple independent tests for a given Consumer-Provider pair, without it clobbering previous interactions, thereby allowing you to incrementally build up or modify your pact files.
 
-    In larger test suites, you'll incur a slow down due to the time taken to start and stop the underlying mock servers.
-
-    See this [PR](https://github.com/pact-foundation/pact-js/pull/48) for background.
+    This feature addresses the use case of "my pact suite takes bloody ages to run, so I just want to replace the interactions that have been run in this test execution" and requires careful management
 
     _NOTE_: If using this approach, you *must* be careful to clear out existing pact files (e.g. `rm ./pacts/*.json`) before you run tests to ensure you don't have left over requests that are no longer relevent.
+
+    See this [PR](https://github.com/pact-foundation/pact-js/pull/48) for background.
 
 ### Re-run specific verification failures
 
