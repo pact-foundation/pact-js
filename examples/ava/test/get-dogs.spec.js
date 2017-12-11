@@ -15,14 +15,15 @@ const provider = new Pact({
   dir: path.resolve(process.cwd(), 'pacts'),
   spec: 2,
   consumer: 'MyConsumer',
-  provider: 'MyProvider'
+  provider: 'MyProvider',
+  pactfileWriteMode: 'merge'
 })
 
 test.before('setting up Dog API expectations', async() => {
   await provider.setup()
 })
 
-test('Dog API returns correct response', async t => {
+test('Dog API GET /dogs', async t => {
   t.plan(1)
 
   // BEGIN -
@@ -30,8 +31,8 @@ test('Dog API returns correct response', async t => {
   // This is done due to similar reasons of tear-up/down of database
   // data in tests.
   const interaction = {
-    state: 'i have a list of projects',
-    uponReceiving: 'a request for projects',
+    state: 'i have a list of dogs',
+    uponReceiving: 'a request for all dogs',
     withRequest: {
       method: 'GET',
       path: '/dogs',
@@ -62,7 +63,10 @@ test('Dog API returns correct response', async t => {
     port: port
   }
   const response = await getMeDogs(urlAndPort)
-  t.deepEqual(response.data, [{ dog: 1, name: "rocky" }])
+  t.deepEqual(response.data, [{
+    dog: 1,
+    name: "rocky"
+  }])
 })
 
 test.afterEach(async t => {

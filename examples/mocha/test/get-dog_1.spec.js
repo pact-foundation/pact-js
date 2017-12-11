@@ -3,7 +3,7 @@
 const expect = require('chai').expect
 const path = require('path')
 const Pact = require('../../../dist/pact').Pact
-const getMeDogs = require('../index').getMeDogs
+const getMeDog = require('../index').getMeDog
 
 describe('The Dog API', () => {
   let url = 'http://localhost'
@@ -20,7 +20,7 @@ describe('The Dog API', () => {
   })
 
   const EXPECTED_BODY = {
-    dog: 2
+    dog: 1
   };
 
   before(() => provider.setup())
@@ -31,10 +31,10 @@ describe('The Dog API', () => {
     before(done => {
       const interaction = {
         state: 'i have a list of dogs',
-        uponReceiving: 'a request for a dog',
+        uponReceiving: 'a request for a single dog',
         withRequest: {
           method: 'GET',
-          path: '/dogs',
+          path: '/dogs/1',
           headers: {
             'Accept': 'application/json'
           }
@@ -58,15 +58,13 @@ describe('The Dog API', () => {
         url: url,
         port: port
       }
-      getMeDogs(urlAndPort)
+      getMeDog(urlAndPort)
         .then(response => {
           expect(response.data).to.eql(EXPECTED_BODY)
           done()
-        })
-        .catch(done)
+        }, done)
     })
 
-    // verify with Pact, and reset expectations
-    it('successfully verifies', () => provider.verify())
+    afterEach(() => provider.verify())
   })
 })

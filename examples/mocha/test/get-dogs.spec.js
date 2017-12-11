@@ -20,11 +20,12 @@ describe('The Dog API', () => {
   })
 
   const EXPECTED_BODY = [{
-    dog: 1
-  },
-  {
-    dog: 2
-  }]
+      dog: 1
+    },
+    {
+      dog: 2
+    }
+  ]
 
   before(() => provider.setup())
 
@@ -33,8 +34,8 @@ describe('The Dog API', () => {
   describe('get /dogs', () => {
     before(done => {
       const interaction = {
-        state: 'i have a list of docs',
-        uponReceiving: 'a request for all docs',
+        state: 'i have a list of dogs',
+        uponReceiving: 'a request for all dogs',
         withRequest: {
           method: 'GET',
           path: '/dogs',
@@ -65,11 +66,10 @@ describe('The Dog API', () => {
         .then(response => {
           expect(response.data).to.eql(EXPECTED_BODY)
           done()
-        })
-        .catch(done)
+        }, done)
     })
 
     // verify with Pact, and reset expectations
-    it('successfully verifies', () => provider.verify())
+    afterEach(() => provider.verify())
   })
 })
