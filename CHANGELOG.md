@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="5.3.0"></a>
+# [5.3.0](https://github.com/pact-foundation/pact-js/compare/v5.2.0...v5.3.0) (2017-12-11)
+
+
+### Features
+
+* **parallel:** allow pactfileWriteMode to support 'merge'. [#124](https://github.com/pact-foundation/pact-js/issues/124) ([81e1078](https://github.com/pact-foundation/pact-js/commit/81e1078))
+
+
+
 <a name="5.2.0"></a>
 # [5.2.0](https://github.com/pact-foundation/pact-js/compare/v5.0.3...v5.2.0) (2017-12-10)
 
