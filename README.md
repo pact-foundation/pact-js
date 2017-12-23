@@ -549,7 +549,7 @@ Modify your `karma.conf.js` file as per below to get started:
 
     // load pact web module
     files: [
-      'node_modules/pact-web/pact-web.js',
+      'node_modules/@pact-foundation/pact-web/pact-web.js',
       ...
     ],
 
@@ -564,7 +564,7 @@ Modify your `karma.conf.js` file as per below to get started:
     }],
 ```
 
-Check out the [Examples](/pact-foundation/pact-js#examples) for how to use the Karma interface.
+Check out the [Examples](#examples) for how to use the Karma interface.
 
 ### Using Pact with RequireJS
 
