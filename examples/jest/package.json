@@ -4,7 +4,8 @@
   "description": "Jest Pact example",
   "main": "index.js",
   "scripts": {
-    "test": "jest --runInBand"
+    "test": "jest __tests__/ --runInBand --setupFiles ./pactSetup.js --setupTestFrameworkScriptFile ./pactTestWrapper.js ",
+    "publish:pact": "node ./publish.js"
   },
   "license": "MIT",
   "jest": {

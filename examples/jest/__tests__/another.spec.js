@@ -2,23 +2,23 @@
 
 const path = require('path')
 const Pact = require('../../../dist/pact').Pact
-const getMeDogs = require('../index').getMeDogs
+const getMeCats = require('../index').getMeCats
 
-describe("Dog's API", () => {
+describe("Cat's API", () => {
   let url = 'http://localhost'
 
   const EXPECTED_BODY = [{
-    dog: 1
+    cat: 2
   }]
 
-  describe("works", () => {
+  describe("another works", () => {
     beforeAll(() => {
       const interaction = {
-        state: 'i have a list of projects',
-        uponReceiving: 'a request for projects',
+        state: 'i have a list of games',
+        uponReceiving: 'a request for games',
         withRequest: {
           method: 'GET',
-          path: '/dogs',
+          path: '/cats',
           headers: {
             'Accept': 'application/json'
           }
@@ -36,7 +36,7 @@ describe("Dog's API", () => {
 
     // add expectations
     it('returns a sucessful body', done => {
-      return getMeDogs({
+      return getMeCats({
           url,
           port
         })

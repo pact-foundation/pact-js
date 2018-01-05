@@ -46,3 +46,8 @@ pacts/
 .idea
 *.iml
 .vscode
+*.swp
+
+# Local config files
+.nvmrc
+.envrc
