@@ -8,7 +8,9 @@ import { Promise } from "es6-promise";
 
 export class Verifier {
   public verifyProvider(opts: VerifierOptions): Promise<string> {
-    return pact.verifyPacts(opts)
-      .then((value: string) => Promise.resolve(value), (error: any) => Promise.reject(error));
+    return new Promise((resolve, reject) => {
+      pact.verifyPacts(opts)
+        .then((value: string) => resolve(value), (error: any) => reject(error));
+    });
   }
 }
