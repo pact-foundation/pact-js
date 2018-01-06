@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="4.3.2"></a>
+## [4.3.2](https://github.com/pact-foundation/pact-js/compare/v4.3.1...v4.3.2) (2018-01-06)
+
+
+### Bug Fixes
+
+* **logging:** set pact-node log level before constructing server [#139](https://github.com/pact-foundation/pact-js/issues/139) ([ca287bd](https://github.com/pact-foundation/pact-js/commit/ca287bd))
+
+
+
 <a name="4.3.1"></a>
 ## [4.3.1](https://github.com/pact-foundation/pact-js/compare/v4.3.0...v4.3.1) (2017-12-08)
 
