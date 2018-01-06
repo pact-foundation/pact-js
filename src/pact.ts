@@ -54,7 +54,7 @@ export class Pact {
     if (isEmpty(this.opts.provider)) {
       throw new Error("You must specify a Provider for this pact.");
     }
-    
+
     serviceFactory.logLevel(this.opts.logLevel);
     this.server = serviceFactory.createServer({
       consumer: this.opts.consumer,
