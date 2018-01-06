@@ -54,7 +54,8 @@ export class Pact {
     if (isEmpty(this.opts.provider)) {
       throw new Error("You must specify a Provider for this pact.");
     }
-
+    
+    serviceFactory.logLevel(this.opts.logLevel);
     this.server = serviceFactory.createServer({
       consumer: this.opts.consumer,
       cors: this.opts.cors,
@@ -69,7 +70,6 @@ export class Pact {
       sslcert: this.opts.sslcert,
       sslkey: this.opts.sslkey,
     });
-    serviceFactory.logLevel(this.opts.logLevel);
 
     logger.info(`Setting up Pact with Consumer "${this.opts.consumer}" and Provider "${this.opts.provider}"
    using mock service on Port: "${this.opts.port}"`);
