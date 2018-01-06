@@ -80,6 +80,7 @@
   "dependencies": {
     "@pact-foundation/pact-node": "^6.7.0",
     "cli-color": "^1.1.0",
+    "es6-promise": "^4.1.1",
     "lodash": "^4.17.4",
     "lodash.isfunction": "3.0.8",
     "lodash.isnil": "4.0.0",
@@ -112,7 +113,6 @@
     "chai-as-promised": "5.x",
     "coveralls": "^2.13.3",
     "enhanced-resolve": "^3.4.1",
-    "es6-promise": "^4.1.1",
     "imports-loader": "0.x",
     "istanbul": "0.4.x",
     "jasmine-core": "2.x",
