@@ -57,6 +57,7 @@ module.exports = (opts) => {
   const cors = opts.cors || false
   const pactfileWriteMode = opts.pactfileWriteMode || 'overwrite'
 
+  serviceFactory.logLevel(logLevel)
   const server = serviceFactory.createServer({
     host: host,
     port: port,
@@ -68,7 +69,6 @@ module.exports = (opts) => {
     sslkey: sslkey,
     cors: cors
   })
-  serviceFactory.logLevel(logLevel)
 
   logger.info(`Setting up Pact with Consumer "${consumer}" and Provider "${provider}" using mock service on Port: "${port}"`)
 
