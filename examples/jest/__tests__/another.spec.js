@@ -12,7 +12,7 @@ describe("Cat's API", () => {
   }]
 
   describe("another works", () => {
-    beforeAll(() => {
+    beforeEach(() => {
       const interaction = {
         state: 'i have a list of games',
         uponReceiving: 'a request for games',
@@ -49,6 +49,6 @@ describe("Cat's API", () => {
     })
 
     // verify with Pact, and reset expectations
-    it('successfully verifies', () => provider.verify())
+    afterEach(() => provider.verify())
   })
 })

@@ -12,7 +12,7 @@ describe("Dog's API", () => {
   }]
 
   describe("works", () => {
-    beforeAll(() => {
+    beforeEach(() => {
       const interaction = {
         state: 'i have a list of projects',
         uponReceiving: 'a request for projects',
@@ -49,6 +49,6 @@ describe("Dog's API", () => {
     })
 
     // verify with Pact, and reset expectations
-    it('successfully verifies', () => provider.verify())
+    afterEach(() => provider.verify())
   })
 })
