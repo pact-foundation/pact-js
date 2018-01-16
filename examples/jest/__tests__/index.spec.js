@@ -46,9 +46,7 @@ describe("Dog's API", () => {
           expect(response.status).toEqual(200)
           done()
         })
+        .then(() => provider.verify());
     })
-
-    // verify with Pact, and reset expectations
-    afterEach(() => provider.verify())
   })
 })
