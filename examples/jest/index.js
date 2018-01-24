@@ -13,3 +13,15 @@ exports.getMeDogs = (endpoint) => {
     headers: { 'Accept': 'application/json' }
   })
 }
+
+exports.getMeCats = (endpoint) => {
+  const url = endpoint.url
+  const port = endpoint.port
+
+  return axios.request({
+    method: 'GET',
+    baseURL: `${url}:${port}`,
+    url: '/cats',
+    headers: { 'Accept': 'application/json' }
+   })
+};
