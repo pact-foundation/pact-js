@@ -1,0 +1,35 @@
+# build version format
+version: "{build}"
+
+# fix lineendings in Windows
+init:
+  - git config --global core.autocrlf input
+
+# Test against these versions of Node
+environment:
+  matrix:
+    # - nodejs_version: "4"
+    # - nodejs_version: "5"
+    # - nodejs_version: "6"
+    # - nodejs_version: "7"
+    - nodejs_version: "8"
+
+platform:
+  # - x86
+  - x64
+
+install:
+  # Install Node
+  - ps: Install-Product node $env:nodejs_version $env:platform
+  # install modules
+  - npm install
+
+# Post-install test scripts.
+test_script:
+  # Output useful info for debugging.
+  - node --version
+  - npm --version
+  - npm run dist
+
+# Don't actually build.
+build: off
