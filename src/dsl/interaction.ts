@@ -3,10 +3,9 @@
  * @module Interaction
  */
 
-import { isNil, omitBy } from "lodash";
-import { HTTPMethod } from "../common/request";
-import { MatcherResult } from "./matchers";
-const REQUEST_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"];
+import {isNil, keys, omitBy} from "lodash";
+import {HTTPMethod} from "../common/request";
+import {MatcherResult} from "./matchers";
 
 export interface RequestOptions {
   method: HTTPMethod;
@@ -80,23 +79,15 @@ export class Interaction {
     if (isNil(requestOpts.method)) {
       throw new Error("You must provide a HTTP method.");
     }
-
-    if (
-      REQUEST_METHODS.indexOf(requestOpts.method.toUpperCase()) < 0) {
-      throw new Error("You must provide a valid HTTP method.");
+    if (!HTTPMethod[requestOpts.method]) {
+      throw new Error(`You must provide a valid HTTP method: ${keys(HTTPMethod).join(", ")}`);
     }
 
     if (isNil(requestOpts.path)) {
       throw new Error("You must provide a path.");
     }
 
-    this.state.request = omitBy({
-      body: requestOpts.body,
-      headers: requestOpts.headers,
-      method: requestOpts.method.toUpperCase(),
-      path: requestOpts.path,
-      query: requestOpts.query,
-    }, isNil) as RequestOptions;
+    this.state.request = omitBy(requestOpts, isNil) as RequestOptions;
 
     return this;
   }

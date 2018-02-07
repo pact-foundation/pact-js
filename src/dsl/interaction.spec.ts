@@ -1,12 +1,16 @@
 import * as chai from "chai";
-const expect = require("chai").expect;
-import { Interaction } from "./interaction";
+import * as chaiAsPromised from "chai-as-promised";
+import {HTTPMethod} from "../common/request";
+import {Interaction, RequestOptions} from "./interaction";
+
+chai.use(chaiAsPromised);
+const expect = chai.expect;
 
 describe("Interaction", () => {
   describe("#given", () => {
     it("creates Interaction with provider state", () => {
       const actual = new Interaction().given("provider state").json();
-      expect(actual).to.eql({ providerState: "provider state" });
+      expect(actual).to.eql({providerState: "provider state"});
     });
 
     describe("without provider state", () => {
@@ -30,7 +34,7 @@ describe("Interaction", () => {
 
     it("has a state with description", () => {
       interaction.uponReceiving("an interaction description");
-      expect(interaction.json()).to.eql({ description: "an interaction description" });
+      expect(interaction.json()).to.eql({description: "an interaction description"});
     });
   });
 
@@ -42,16 +46,17 @@ describe("Interaction", () => {
     });
 
     it("throws error when method is not provided", () => {
-      expect(interaction.withRequest.bind(interaction, { ath: "/" }))
+      expect(interaction.withRequest.bind(interaction, {ath: "/"}))
         .to.throw(Error, "You must provide a HTTP method.");
     });
 
     it("throws error when path is not provided", () => {
-      expect(interaction.withRequest.bind(interaction, { method: "GET" })).to.throw(Error, "You must provide a path.");
+      expect(interaction.withRequest({method: HTTPMethod.GET} as RequestOptions))
+        .to.throw(Error, "You must provide a path.");
     });
 
     describe("with only mandatory params", () => {
-      const actual = new Interaction().withRequest({ method: "GET", path: "/search" }).json();
+      const actual = new Interaction().withRequest({method: HTTPMethod.GET, path: "/search"}).json();
 
       it("has a state containing only the given keys", () => {
         expect(actual).to.have.keys("request");
@@ -65,9 +70,9 @@ describe("Interaction", () => {
 
     describe("with all other parameters", () => {
       const actual = new Interaction().withRequest({
-        body: { id: 1, name: "Test", due: "tomorrow" },
-        headers: { "Content-Type": "application/json" },
-        method: "GET",
+        body: {id: 1, name: "Test", due: "tomorrow"},
+        headers: {"Content-Type": "application/json"},
+        method: HTTPMethod.GET,
         path: "/search",
         query: "q=test",
       }).json();
@@ -87,13 +92,13 @@ describe("Interaction", () => {
     });
 
     it("throws error when status is blank", () => {
-      expect(interaction.willRespondWith.bind(interaction, { status: "" }))
+      expect(interaction.willRespondWith.bind(interaction, {status: ""}))
         .to.throw(Error, "You must provide a status code.");
     });
 
     describe("with only mandatory params", () => {
       interaction = new Interaction();
-      interaction.willRespondWith({ status: 200 });
+      interaction.willRespondWith({status: 200});
       const actual = interaction.json();
 
       it("has a state compacted with only present keys", () => {
@@ -109,8 +114,8 @@ describe("Interaction", () => {
     describe("with all other parameters", () => {
       interaction = new Interaction();
       interaction.willRespondWith({
-        body: { id: 1, name: "Test", due: "tomorrow" },
-        headers: { "Content-Type": "application/json" },
+        body: {id: 1, name: "Test", due: "tomorrow"},
+        headers: {"Content-Type": "application/json"},
         status: 404,
       });
 
