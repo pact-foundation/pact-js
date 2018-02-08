@@ -18,15 +18,17 @@
     "prerelease": "npm i && rm package-lock.json",
     "release": "standard-version",
     "test": "nyc --check-coverage --reporter=html --reporter=text-summary mocha",
-    "test:examples": "npm run test:e2e-examples && npm run test:jest-examples && npm run test:mocha-examples && npm run test:ava-examples",
+    "test:examples": "npm run test:e2e-examples && npm run test:jest-examples && npm run test:mocha-examples && npm run test:ava-examples && npm run test:ts-examples",
     "test:e2e-examples": "cd examples/e2e && npm i && npm t",
     "test:ava-examples": "cd examples/ava && npm i && npm t",
     "test:jest-examples": "cd examples/jest && npm i && npm t",
     "test:mocha-examples": "cd examples/mocha && npm i && npm t",
+    "test:ts-examples": "cd examples/typescript && npm i && npm t",
     "test:karma": "npm run test:karma:jasmine && npm run test:karma:mocha",
     "test:karma:jasmine": "karma start ./karma/jasmine/karma.conf.js",
     "test:karma:mocha": "karma start ./karma/mocha/karma.conf.js",
     "travis": "./scripts/build.sh",
+    "appveyor": "./scripts/build.ps1",
     "webpack": "webpack --config ./config/webpack.web.config.js"
   },
   "repository": {
@@ -45,8 +47,7 @@
     "consumer driven testing"
   ],
   "author": "Beth Skurrie <beth@bethesque.com> (https://github.com/bethesque)",
-  "contributors": [
-    {
+  "contributors": [{
       "name": "Tarcio Saraiva",
       "email": "tarcio@gmail.com",
       "url": "http://twitter.com/tarciosaraiva"

@@ -169,6 +169,31 @@ describe("Pact", () => {
         interactionWithNoState.state = undefined;
         expect(pact.addInteraction(interaction)).to.eventually.not.have.property("providerState").notify(done);
       });
+
+      describe("when given an Interaction as a builder", () => {
+        it("creates interaction", (done) => {
+          const interaction2 = new Interaction()
+            .given("i have a list of projects")
+            .uponReceiving("a request for projects")
+            .withRequest({
+              method: "GET",
+              path: "/projects",
+              headers: { Accept: "application/json" },
+            })
+            .willRespondWith({
+              status: 200,
+              headers: { "Content-Type": "application/json" },
+              body: {},
+            });
+
+          const pact = Object.create(Pact.prototype) as any as PactType;
+          pact.opts = fullOpts;
+          pact.mockService = {
+            addInteraction: (int: Interaction): Promise<Interaction> => Promise.resolve(int),
+          } as any as MockService;
+          expect(pact.addInteraction(interaction2)).to.eventually.have.property("given").notify(done);
+        });
+      });
     });
   });
 

@@ -94,21 +94,18 @@ export class Pact {
    * @returns {Promise}
    */
   public addInteraction(interactionObj: InteractionObject | Interaction): Promise<string> {
-    let interaction: Interaction;
-
-    // tslint:disable:no-angle-bracket-type-assertion
-    if (<InteractionObject>(<any>interactionObj).state) {
-      interaction = new Interaction();
-      if (interactionObj.state) {
-        interaction.given(interactionObj.state);
-      }
-
-      interaction
-        .uponReceiving(interactionObj.uponReceiving)
-        .withRequest(interactionObj.withRequest)
-        .willRespondWith(interactionObj.willRespondWith);
+    if (interactionObj instanceof Interaction) {
+      return this.mockService.addInteraction(interactionObj);
+    }
+    const interaction = new Interaction();
+    if (interactionObj.state) {
+      interaction.given(interactionObj.state);
     }
 
+    interaction
+      .uponReceiving(interactionObj.uponReceiving)
+      .withRequest(interactionObj.withRequest)
+      .willRespondWith(interactionObj.willRespondWith);
 
     return this.mockService.addInteraction(interaction);
   }

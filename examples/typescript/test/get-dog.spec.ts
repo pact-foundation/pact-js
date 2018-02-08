@@ -5,11 +5,12 @@ import path = require("path");
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
 import pact = require("../../../dist/pact");
-import { InteractionObject, Interaction } from "../../../dist/pact";
+import { Interaction, InteractionObject } from "../../../dist/pact";
 
 const Pact = pact.Pact;
 const expect = chai.expect;
 const proxyquire = require("proxyquire").noCallThru();
+import { HTTPMethod } from "../../../dist/common/request";
 import { DogService } from "../index";
 
 chai.use(sinonChai);
@@ -36,7 +37,9 @@ describe("The Dog API", () => {
 
   after(() => provider.finalize());
 
-  describe("get /dogs", () => {
+  afterEach(() => provider.verify());
+
+  describe("get /dogs using builder pattern", () => {
     before(() => {
       const interaction = new Interaction()
         .given("I have a list of dogs")
@@ -55,39 +58,51 @@ describe("The Dog API", () => {
           },
           body: EXPECTED_BODY,
         });
+
       return provider.addInteraction(interaction);
-      // before(() => {
-      //   const interaction = {
-      //     state: "i have a list of dogs",
-      //     uponReceiving: "a request for all dogs",
-      //     withRequest: {
-      //       method: "GET",
-      //       path: "/dogs",
-      //       headers: {
-      //         Accept: "application/json",
-      //       },
-      //     },
-      //     willRespondWith: {
-      //       status: 200,
-      //       headers: {
-      //         "Content-Type": "application/json",
-      //       },
-      //       body: EXPECTED_BODY,
-      //     },
-      //   } as InteractionObject;
-      //   return provider.addInteraction(interaction);
-      // });
+    });
 
-      it("returns the correct response", (done) => {
-        dogService
-          .getMeDogs()
-          .then((response: any) => {
-            expect(response.data).to.eql(EXPECTED_BODY);
-            done();
-          }, done);
-      });
-
-      // verify with Pact, and reset expectations
-      afterEach(() => provider.verify());
+    it("returns the correct response", (done) => {
+      dogService
+        .getMeDogs()
+        .then((response: any) => {
+          expect(response.data).to.eql(EXPECTED_BODY);
+          done();
+        }, done);
     });
   });
+
+  describe("get /dogs using object pattern", () => {
+    before(() => {
+      const interaction = {
+        state: "i have a list of dogs",
+        uponReceiving: "a request for all dogs",
+        withRequest: {
+          method: "GET" as HTTPMethod,
+          path: "/dogs",
+          headers: {
+            Accept: "application/json",
+          },
+        },
+        willRespondWith: {
+          status: 200,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: EXPECTED_BODY,
+        },
+      };
+
+      return provider.addInteraction(interaction);
+    });
+
+    it("returns the correct response", (done) => {
+      dogService
+        .getMeDogs()
+        .then((response: any) => {
+          expect(response.data).to.eql(EXPECTED_BODY);
+          done();
+        }, done);
+    });
+  });
+});
