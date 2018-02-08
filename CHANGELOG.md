@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="5.4.0"></a>
+# [5.4.0](https://github.com/pact-foundation/pact-js/compare/v5.3.2...v5.4.0) (2018-02-08)
+
+
+### Features
+
+* **types:** allow builder usage in Pact tests ([cb6305b](https://github.com/pact-foundation/pact-js/commit/cb6305b))
+
+
+
 <a name="5.3.2"></a>
 ## [5.3.2](https://github.com/pact-foundation/pact-js/compare/v5.3.1...v5.3.2) (2018-01-11)
 
