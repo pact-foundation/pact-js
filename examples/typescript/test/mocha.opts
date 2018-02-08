@@ -1,0 +1,11 @@
+--bail
+--compilers ts:ts-node/register
+--require ./test/helper.ts
+--require ts-node/register
+--require source-map-support/register
+--full-trace
+--reporter spec
+--colors
+--recursive
+--timeout 10000
+test/*.spec.ts

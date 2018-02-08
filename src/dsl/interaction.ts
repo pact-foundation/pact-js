@@ -118,6 +118,7 @@ export class Interaction {
       headers: responseOpts.headers || undefined,
       status: responseOpts.status,
     }, isNil) as ResponseOptions;
+    return this;
   }
 
   /**
