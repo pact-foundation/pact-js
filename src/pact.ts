@@ -93,17 +93,22 @@ export class Pact {
    * @param {Interaction} interactionObj
    * @returns {Promise}
    */
-  public addInteraction(interactionObj: InteractionObject): Promise<string> {
-    const interaction = new Interaction();
+  public addInteraction(interactionObj: InteractionObject | Interaction): Promise<string> {
+    let interaction: Interaction;
 
-    if (interactionObj.state) {
-      interaction.given(interactionObj.state);
+    // tslint:disable:no-angle-bracket-type-assertion
+    if (<InteractionObject>(<any>interactionObj).state) {
+      interaction = new Interaction();
+      if (interactionObj.state) {
+        interaction.given(interactionObj.state);
+      }
+
+      interaction
+        .uponReceiving(interactionObj.uponReceiving)
+        .withRequest(interactionObj.withRequest)
+        .willRespondWith(interactionObj.willRespondWith);
     }
 
-    interaction
-      .uponReceiving(interactionObj.uponReceiving)
-      .withRequest(interactionObj.withRequest)
-      .willRespondWith(interactionObj.willRespondWith);
 
     return this.mockService.addInteraction(interaction);
   }
