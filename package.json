@@ -80,7 +80,7 @@
     ]
   },
   "dependencies": {
-    "@pact-foundation/pact-node": "^6.7.3",
+    "@pact-foundation/pact-node": "^6.8.0",
     "cli-color": "^1.1.0",
     "es6-promise": "^4.1.1",
     "lodash": "^4.17.4",
