@@ -121,20 +121,24 @@ describe("Pact", () => {
     describe("when server is not properly configured", () => {
       describe("and pact-node is unable to start the server", () => {
         it("should return a rejected promise", () => {
+          // TODO: actually test is pact-node is failing on start with a bad config instead of stubbing it
           const startStub = sandbox.stub(PactServer.prototype, "start").throws("start");
+          startStub.rejects();
           const b = Object.create(Pact.prototype) as any as PactType;
           b.opts = fullOpts;
-          b.server = {start: startStub};
+          b.server = {start: startStub} as any;
           return expect(b.setup()).to.eventually.be.rejected;
         });
       });
     });
     describe("when server is properly configured", () => {
       it("should start the mock server in the background", () => {
+        // TODO: actually test is pact-node is starting instead of stubbing it
         const startStub = sandbox.stub(PactServer.prototype, "start");
+        startStub.resolves();
         const b = Object.create(Pact.prototype) as any as PactType;
         b.opts = fullOpts;
-        b.server = {start: startStub};
+        b.server = {start: startStub} as any;
         return expect(b.setup()).to.eventually.be.fulfilled;
       });
     });
@@ -186,10 +190,9 @@ describe("Pact", () => {
 
     describe("when pact verification is successful", () => {
       it("should return a successful promise and remove interactions", () => {
-        const verifyStub = sandbox.stub(MockService.prototype, "verify");
-        verifyStub.resolves("verified!");
-        const removeInteractionsStub = sandbox.stub(MockService.prototype, "removeInteractions");
-        removeInteractionsStub.resolves("removeInteractions");
+        const verifyStub = sandbox.stub(MockService.prototype, "verify").resolves("verified!");
+        const removeInteractionsStub = sandbox.stub(MockService.prototype, "removeInteractions")
+          .resolves("removeInteractions");
 
         const b = Object.create(Pact.prototype) as any as PactType;
         b.opts = fullOpts;
@@ -199,16 +202,15 @@ describe("Pact", () => {
         return Promise.all([
           expect(verifyPromise).to.eventually.eq("removeInteractions"),
           expect(verifyPromise).to.eventually.be.fulfilled,
-        ])
+        ]);
       });
     });
 
     describe("when pact verification is unsuccessful", () => {
       it("should throw an error", () => {
-        const verifyStub = sandbox.stub(MockService.prototype, "verify");
-        verifyStub.rejects("not verified!");
-        const removeInteractionsStub = sandbox.stub(MockService.prototype, "removeInteractions");
-        removeInteractionsStub.resolves("removeInteractions");
+        const verifyStub = sandbox.stub(MockService.prototype, "verify").rejects("not verified!");
+        const removeInteractionsStub = sandbox.stub(MockService.prototype, "removeInteractions")
+          .resolves("removeInteractions");
 
         const b = Object.create(Pact.prototype) as any as PactType;
         b.opts = fullOpts;
@@ -225,8 +227,7 @@ describe("Pact", () => {
     describe("when pact verification is successful", () => {
       describe("and an error is thrown in the cleanup", () => {
         it("should throw an error", () => {
-          const verifyStub = sandbox.stub(MockService.prototype, "verify");
-          verifyStub.resolves("verified!");
+          const verifyStub = sandbox.stub(MockService.prototype, "verify").resolves("verified!");
           const removeInteractionsStub = sandbox.stub(MockService.prototype, "removeInteractions");
           removeInteractionsStub.throws(new Error("error removing interactions"));
 
@@ -250,29 +251,25 @@ describe("Pact", () => {
         const p = Object.create(Pact.prototype) as any as PactType;
         p.opts = fullOpts;
         p.mockService = {writePact: writePactStub, removeInteractions: sandbox.stub()} as any as MockService;
-        p.server = {delete: sandbox.stub(PactServer.prototype, "delete").resolves("server deleted!")};
+        p.server = {delete: sandbox.stub(PactServer.prototype, "delete").resolves()} as any;
 
-        const writePactPromise = p.finalize();
-        return Promise.all([
-          expect(writePactPromise).to.eventually.equal("server deleted!"),
-          expect(writePactPromise).to.eventually.be.fulfilled,
-        ]);
+        return expect(p.finalize()).to.eventually.be.fulfilled;
       });
     });
 
     describe("when writing Pact is unsuccessful", () => {
       it("should throw an error and shut down the server", () => {
         const writePactStub = sandbox.stub(MockService.prototype, "writePact").rejects("pact not file written!");
-        const deleteStub = sandbox.stub(PactServer.prototype, "delete").resolves("server deleted!");
+        const deleteStub = sandbox.stub(PactServer.prototype, "delete").resolves();
 
         const p = Object.create(Pact.prototype) as any as PactType;
         p.opts = fullOpts;
         p.mockService = {writePact: writePactStub, removeInteractions: sandbox.stub()} as any as MockService;
-        p.server = {delete: deleteStub};
+        p.server = {delete: deleteStub} as any;
 
         const writePactPromise = p.finalize();
         return Promise.all([
-          expect(writePactPromise).to.eventually.be.rejectedWith(Error),
+          expect(writePactPromise).to.eventually.be.rejectedWith("pact not file written!"),
           writePactPromise.catch(() => expect(deleteStub).to.callCount(1)),
         ]);
       });
@@ -285,10 +282,9 @@ describe("Pact", () => {
         const p = Object.create(Pact.prototype) as any as PactType;
         p.opts = fullOpts;
         p.mockService = {writePact: writePactStub, removeInteractions: sandbox.stub()} as any as MockService;
-        p.server = {delete: sandbox.stub(PactServer.prototype, "delete").rejects("server not deleted!")};
+        p.server = {delete: sandbox.stub(PactServer.prototype, "delete").rejects("server not deleted!")} as any;
 
-        const writePactPromise = p.finalize();
-        return expect(writePactPromise).to.eventually.be.rejectedWith(Error, "server not deleted!");
+        return expect(p.finalize()).to.eventually.be.rejectedWith("server not deleted!");
       });
     });
   });
