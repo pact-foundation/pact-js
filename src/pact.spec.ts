@@ -1,4 +1,4 @@
-/* tslint:disable:no-unused-expression object-literal-sort-keys max-classes-per-file no-empty */
+/* tslint:disable:no-unused-expression object-literal-sort-keys max-classes-per-file no-empty no-console */
 import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import * as sinon from "sinon";
@@ -9,10 +9,11 @@ import {MockService} from "./dsl/mockService";
 import {PactOptions, PactOptionsComplete} from "./dsl/options";
 import {Pact as PactType} from "./pact";
 
-const expect = chai.expect;
-const proxyquire = require("proxyquire").noCallThru();
 chai.use(sinonChai);
 chai.use(chaiAsPromised);
+
+const expect = chai.expect;
+const proxyquire = require("proxyquire").noCallThru();
 
 // Mock out the PactNode interfaces
 class PactServer {
@@ -246,7 +247,7 @@ describe("Pact", () => {
 
     describe("when writing Pact is successful", () => {
       it("should return a successful promise and shut down down the mock server", () => {
-        const writePactStub = sandbox.stub(MockService.prototype, "writePact").resolves("pact file written!");
+        const writePactStub = sandbox.stub(MockService.prototype, "writePact").resolves();
 
         const p = Object.create(Pact.prototype) as any as PactType;
         p.opts = fullOpts;
@@ -259,7 +260,7 @@ describe("Pact", () => {
 
     describe("when writing Pact is unsuccessful", () => {
       it("should throw an error and shut down the server", () => {
-        const writePactStub = sandbox.stub(MockService.prototype, "writePact").rejects("pact not file written!");
+        const writePactStub = sandbox.stub(MockService.prototype, "writePact").rejects();
         const deleteStub = sandbox.stub(PactServer.prototype, "delete").resolves();
 
         const p = Object.create(Pact.prototype) as any as PactType;
@@ -267,24 +268,21 @@ describe("Pact", () => {
         p.mockService = {writePact: writePactStub, removeInteractions: sandbox.stub()} as any as MockService;
         p.server = {delete: deleteStub} as any;
 
-        const writePactPromise = p.finalize();
-        return Promise.all([
-          expect(writePactPromise).to.eventually.be.rejectedWith("pact not file written!"),
-          writePactPromise.catch(() => expect(deleteStub).to.callCount(1)),
-        ]);
+        return expect(p.finalize()).to.eventually.be.rejected
+          .then(() => expect(deleteStub).to.callCount(1));
       });
     });
 
     describe("when writing pact is successful and shutting down the mock server is unsuccessful", () => {
       it("should throw an error", () => {
-        const writePactStub = sandbox.stub(MockService.prototype, "writePact").resolves("pact file written!");
+        const writePactStub = sandbox.stub(MockService.prototype, "writePact").resolves();
 
         const p = Object.create(Pact.prototype) as any as PactType;
         p.opts = fullOpts;
         p.mockService = {writePact: writePactStub, removeInteractions: sandbox.stub()} as any as MockService;
-        p.server = {delete: sandbox.stub(PactServer.prototype, "delete").rejects("server not deleted!")} as any;
+        p.server = {delete: sandbox.stub(PactServer.prototype, "delete").rejects()} as any;
 
-        return expect(p.finalize()).to.eventually.be.rejectedWith("server not deleted!");
+        return expect(p.finalize()).to.eventually.be.rejected;
       });
     });
   });
