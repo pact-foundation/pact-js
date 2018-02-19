@@ -128,7 +128,7 @@ The first step is to create a test for your API Consumer. The example below uses
 1. Validate the expected interactions were made between your consumer and the Mock Service
 1. Generate the pact(s)
 
-Check out the `examples` folder for examples with Karma Jasmine, Mocha and Jest. The example below is taken from the [integration spec](https://github.com/pact-foundation/pact-js/blob/master/test/dsl/integration.spec.js).
+Check out the `examples` folder for examples with Karma Jasmine, Mocha and Jest. The example below is taken from the [integration spec](https://github.com/pact-foundation/pact-js/blob/master/src/pact.integration.spec.ts).
 
 ```javascript
 const path = require('path')
