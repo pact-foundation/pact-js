@@ -72,11 +72,11 @@
   "standard": {
     "parser": "babel-eslint",
     "ignore": [
-      "config/**",
-      "test/**",
-      "dist/**",
-      "docs/**",
-      "examples/**"
+      "config/**/*",
+      "test/**/*",
+      "dist/**/*",
+      "docs/**/*",
+      "examples/**/*"
     ]
   },
   "dependencies": {
@@ -142,8 +142,8 @@
     "sinon-chai": "^2.13.0",
     "source-map-loader": "^0.2.1",
     "source-map-support": "^0.4.18",
-    "standard": "^8.0.0",
-    "standard-version": "^4.2.0",
+    "standard": "^11.0.0",
+    "standard-version": "^4.3.0",
     "superagent": "^3.8.2",
     "ts-node": "^3.3.0",
     "tslint": "^5.8.0",
