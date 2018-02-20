@@ -51,7 +51,7 @@ describe("Interaction", () => {
     });
 
     it("throws error when path is not provided", () => {
-      expect(interaction.withRequest({method: HTTPMethod.GET} as RequestOptions))
+      expect(interaction.withRequest.bind(interaction, {method: HTTPMethod.GET}))
         .to.throw(Error, "You must provide a path.");
     });
 

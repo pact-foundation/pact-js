@@ -51,10 +51,7 @@ describe("Request", () => {
         const ERROR = "error";
         nock(URL).get("/").reply(400, ERROR);
         const p = request.send(HTTPMethod.GET, URL);
-        return Promise.all([
-          expect(p).to.be.rejected,
-          expect(p).to.eventually.be.equal(ERROR),
-        ]);
+        return expect(p).to.be.rejectedWith(ERROR);
       });
     });
     describe("Headers", () => {
@@ -66,7 +63,7 @@ describe("Request", () => {
     describe("SSL", () => {
       it("Should ignore self signed certificate errors", () => {
         nock(URLSECURE).matchHeader("X-Pact-Mock-Service", "true").get("/").reply(200);
-        return expect(request.send(HTTPMethod.GET, URL)).to.be.fulfilled;
+        return expect(request.send(HTTPMethod.GET, URLSECURE)).to.be.fulfilled;
       });
     });
   });

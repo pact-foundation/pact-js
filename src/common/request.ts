@@ -37,12 +37,11 @@ export class Request {
     return Popsicle.request(opts)
       .then((res: Response) => {
         if (res.status >= 200 && res.status < 400) {
-          logger.info("Resolving promise with: " + res.body);
+          logger.info(`Resolving promise with: ${res.body}`);
           return res.body;
         } else {
-          const msg = "Rejecting promise with: " + res.body;
-          logger.info(msg);
-          return Promise.reject(msg);
+          logger.info(`Rejecting promise with: ${res.body}`);
+          return Promise.reject(res.body);
         }
       });
   }

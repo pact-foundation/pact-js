@@ -8,4 +8,5 @@
 --colors
 --recursive
 --timeout 10000
+--exit
 src/*.spec.ts src/**/*.spec.ts
