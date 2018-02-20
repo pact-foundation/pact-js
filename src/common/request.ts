@@ -25,6 +25,7 @@ export class Request {
         "X-Pact-Mock-Service": "true",
       },
       method,
+      timeout: 10000,
       transport: Popsicle.createTransport({
         rejectUnauthorized: false, // Need to tell node to ignore bad ssl cert
         type: "text",

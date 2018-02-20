@@ -10,21 +10,14 @@ const expect = chai.expect;
 
 describe("Request", () => {
   let request: Request;
-  let PORT: number;
-  let URL: string;
-  let URLSECURE: string;
+  const PORT = 1024 + Math.floor(Math.random() * 5000);
+  const URL = `http://localhost:${PORT}`;
+  const URLSECURE = `https://localhost:${PORT}`;
 
-  beforeEach(() => {
-    request = new Request();
-    PORT = 1024 + Math.floor(Math.random() * 5000);
-    URL = `http://localhost:${PORT}`;
-    URLSECURE = `https://localhost:${PORT}`;
-  });
+  beforeEach(() => request = new Request());
 
   context("#send", () => {
-    afterEach(() => {
-      nock.cleanAll();
-    });
+    afterEach(() => nock.cleanAll());
 
     describe("Promise", () => {
       it("Should return a promise", () => {
