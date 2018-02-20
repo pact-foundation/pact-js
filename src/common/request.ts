@@ -1,6 +1,6 @@
-"use strict";
-
 import { parse, Url } from "url";
+import { Environment } from "../dsl/options";
+import { environment } from "./environment";
 import { logger } from "./logger";
 
 export type HTTPMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE" | "HEAD" | "OPTIONS";
@@ -14,22 +14,27 @@ export class Request {
   public request: any;
   public responseBody = "";
 
-  constructor() {
-    if (typeof XMLHttpRequest === "function" || typeof window !== "undefined") {
-      logger.info('Using browser "XMLHttpRequest" module');
-      this.request = new XMLHttpRequest();
-    } else if (typeof window === "undefined") {
-      logger.info('Using Node "HTTP" module');
-      this.httpRequest = require("http");
-      this.httpsRequest = require("https");
+  constructor(private env?: Environment) {
+    if (env) {
+      if (env === "node") {
+        this.createNodeRequest();
+      } else if (env === "web") {
+        this.createWebRequest();
+      }
     } else {
-      logger.info("Unable to determine runtime environment");
+      if (environment.isBrowser()) {
+        this.createWebRequest();
+      } else if (environment.isNode()) {
+        this.createNodeRequest();
+      } else {
+        logger.info("Unable to determine runtime environment");
+      }
     }
   }
 
   public send(method: HTTPMethod, url: string, body?: string): Promise<string> {
     return new Promise((resolve, reject) => {
-      if (typeof window === "undefined") {
+      if (this.httpsRequest) {
         const opts: any = parse(url);
         opts.method = method;
         opts.headers = {
@@ -66,6 +71,8 @@ export class Request {
         request.end();
       } else {
         const req = this.request;
+        req.open(method, url, true);
+
         req.onload = () => {
           if (req.status >= 200 && req.status < 400) {
             logger.info(`Resolving promise with: ${req.responseText}`);
@@ -81,11 +88,21 @@ export class Request {
           reject(err);
         };
 
-        req.open(method, url, true);
         req.setRequestHeader("X-Pact-Mock-Service", "true");
         req.setRequestHeader("Content-Type", "application/json");
         req.send(body);
       }
     });
+  }
+
+  private createNodeRequest() {
+    logger.info('Using Node "HTTP" module');
+    this.httpRequest = require("http");
+    this.httpsRequest = require("https");
+  }
+
+  private createWebRequest() {
+    logger.info('Using browser "XMLHttpRequest" module');
+    this.request = new XMLHttpRequest();
   }
 }

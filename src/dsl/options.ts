@@ -44,6 +44,8 @@ export interface PactOptions {
   // Control how the Pact files are written
   // Choices: 'overwrite' | 'update', 'none', defaults to 'overwrite'
   pactfileWriteMode?: PactfileWriteMode;
+
+  environment?: Environment;
 }
 
 export interface MandatoryPactOptions {
@@ -53,3 +55,5 @@ export interface MandatoryPactOptions {
 }
 
 export type PactOptionsComplete = PactOptions & MandatoryPactOptions;
+
+export type Environment = "node" | "web";

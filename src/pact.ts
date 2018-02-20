@@ -75,7 +75,7 @@ export class Pact {
    using mock service on Port: "${this.opts.port}"`);
 
     this.mockService = new MockService(undefined, undefined, this.opts.port, this.opts.host,
-      this.opts.ssl, this.opts.pactfileWriteMode);
+                                       this.opts.ssl, this.opts.pactfileWriteMode, this.opts.environment);
   }
 
   /**

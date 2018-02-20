@@ -117,6 +117,7 @@ The `Pact` class provides the following high-level APIs, they are listed in the 
 | `spec` | no | number | Pact specification version (defaults to 2) |
 | `cors` | no | boolean | Allow CORS OPTION requests to be accepted, defaults to false |
 | `pactfileWriteMode` | no | string | Control how the Pact files are written. Choices: 'overwrite' 'update' or 'none'. Defaults to 'overwrite'|
+| `environment` | no | string | Control which environment pact will consider itself being ran in. Choices: 'web' or 'node'. Defaults to identifying environment by checking for the existence of `window` or `XMLHttpRequest` |
 
 #### Example
 The first step is to create a test for your API Consumer. The example below uses [Mocha](https://mochajs.org), and demonstrates the basic approach:

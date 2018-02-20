@@ -142,6 +142,7 @@
     "ts-node": "^3.3.0",
     "tslint": "^5.8.0",
     "typescript": "^2.4.2",
-    "webpack": "^3.5.5"
+    "webpack": "^3.5.5",
+    "xhr-mock": "2.0.0-preview.10"
   }
 }
