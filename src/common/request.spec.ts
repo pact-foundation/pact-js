@@ -19,7 +19,6 @@ describe("Request", () => {
     PORT = 1024 + Math.floor(Math.random() * 5000);
     URL = `http://localhost:${PORT}`;
     URLSECURE = `https://localhost:${PORT}`;
-    console.log(`setting up request test with '${URL}'`);
   });
 
   context("#send", () => {
