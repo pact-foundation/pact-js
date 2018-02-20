@@ -45,7 +45,7 @@ describe("The Dog API", () => {
         .given("I have a list of dogs")
         .uponReceiving("a request for all dogs")
         .withRequest({
-          method: "GET",
+          method: HTTPMethod.GET,
           path: "/dogs",
           headers: {
             Accept: "application/json",
