@@ -7,13 +7,13 @@ import * as clc from "cli-color";
 import * as Matchers from "./dsl/matchers";
 import * as path from "path";
 import * as process from "process";
-import {Interaction, InteractionObject} from "./dsl/interaction";
-import {isEmpty} from "lodash";
-import {isPortAvailable} from "./common/net";
-import {logger} from "./common/logger";
-import {MockService} from "./dsl/mockService";
-import {PactOptions, PactOptionsComplete} from "./dsl/options";
-import {Server} from "@pact-foundation/pact-node/src/server";
+import { Interaction, InteractionObject } from "./dsl/interaction";
+import { isEmpty } from "lodash";
+import { isPortAvailable } from "./common/net";
+import { logger } from "./common/logger";
+import { MockService } from "./dsl/mockService";
+import { PactOptions, PactOptionsComplete } from "./dsl/options";
+import { Server } from "@pact-foundation/pact-node/src/server";
 
 /**
  * Creates a new {@link PactProvider}.
@@ -38,7 +38,7 @@ export class Pact {
   } as PactOptions;
 
   public static createOptionsWithDefaults(opts: PactOptions): PactOptionsComplete {
-    return {...Pact.defaults, ...opts} as PactOptionsComplete;
+    return { ...Pact.defaults, ...opts } as PactOptionsComplete;
   }
 
   public server: Server;
@@ -86,7 +86,7 @@ export class Pact {
    */
   public setup(): Promise<void> {
     return isPortAvailable(this.opts.port, this.opts.host)
-    // Need to wrap it this way until we remove q.Promise from pact-node
+      // Need to wrap it this way until we remove q.Promise from pact-node
       .then(() => new Promise<void>((resolve, reject) => this.server.start().then(() => resolve(), () => reject())));
   }
 
