@@ -6,7 +6,7 @@
  */
 import { isEmpty } from "lodash";
 import { logger } from "../common/logger";
-import {HTTPMethod, Request} from "../common/request";
+import { HTTPMethod, Request } from "../common/request";
 import { Interaction } from "./interaction";
 
 export type PactfileWriteMode = "overwrite" | "update" | "merge";

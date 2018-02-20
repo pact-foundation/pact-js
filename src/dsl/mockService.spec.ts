@@ -2,9 +2,9 @@
 import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import * as nock from "nock";
-import {HTTPMethod} from "../common/request";
-import {Interaction} from "./interaction";
-import {MockService} from "./mockService";
+import { HTTPMethod } from "../common/request";
+import { Interaction } from "./interaction";
+import { MockService } from "./mockService";
 
 chai.use(chaiAsPromised);
 const expect = chai.expect;
@@ -53,8 +53,8 @@ describe("MockService", () => {
     const interaction = new Interaction();
     interaction
       .uponReceiving("duh")
-      .withRequest({method: HTTPMethod.GET, path: "/search"})
-      .willRespondWith({status: 200});
+      .withRequest({ method: HTTPMethod.GET, path: "/search" })
+      .willRespondWith({ status: 200 });
 
     it("when Interaction added successfully", (done) => {
       nock(mock.baseUrl).post(/interactions$/).reply(200);
@@ -104,9 +104,9 @@ describe("MockService", () => {
         it("should write the consumer and provider details into the pact", (done) => {
           nock(mock.baseUrl)
             .post(/pact$/, {
-              consumer: {name: "aconsumer"},
+              consumer: { name: "aconsumer" },
               pactfile_write_mode: "overwrite",
-              provider: {name: "aprovider"},
+              provider: { name: "aprovider" },
             })
             .reply(200);
           expect(mock.writePact()).to.eventually.be.fulfilled.notify(done);

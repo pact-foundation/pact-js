@@ -3,11 +3,11 @@ import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
-import {HTTPMethod} from "./common/request";
-import {Interaction, InteractionObject} from "./dsl/interaction";
-import {MockService} from "./dsl/mockService";
-import {PactOptions, PactOptionsComplete} from "./dsl/options";
-import {PactWeb} from "./pact-web";
+import { HTTPMethod } from "./common/request";
+import { Interaction, InteractionObject } from "./dsl/interaction";
+import { MockService } from "./dsl/mockService";
+import { PactOptions, PactOptionsComplete } from "./dsl/options";
+import { PactWeb } from "./pact-web";
 
 const expect = chai.expect;
 const proxyquire = require("proxyquire").noCallThru();
@@ -46,13 +46,13 @@ describe("PactWeb", () => {
 
     it("throws Error when consumer not provided", () => {
       expect(() => {
-        new PactWeb({consumer: "", provider: "provider"});
+        new PactWeb({ consumer: "", provider: "provider" });
       }).not.to.throw(Error, "You must specify a Consumer for this pact.");
     });
 
     it("throws Error when provider not provided", () => {
       expect(() => {
-        new PactWeb({consumer: "someconsumer", provider: ""});
+        new PactWeb({ consumer: "someconsumer", provider: "" });
       }).not.to.throw(Error, "You must specify a Provider for this pact.");
     });
   });
@@ -62,13 +62,13 @@ describe("PactWeb", () => {
       state: "i have a list of projects",
       uponReceiving: "a request for projects",
       withRequest: {
-        headers: {Accept: "application/json"},
+        headers: { Accept: "application/json" },
         method: HTTPMethod.GET,
         path: "/projects",
       },
       willRespondWith: {
         body: {},
-        headers: {"Content-Type": "application/json"},
+        headers: { "Content-Type": "application/json" },
         status: 200,
       },
     };
@@ -111,7 +111,7 @@ describe("PactWeb", () => {
 
         const b = Object.create(PactWeb.prototype) as any as PactWeb;
         b.opts = fullOpts;
-        b.mockService = {verify: verifyStub, removeInteractions: removeInteractionsStub} as any as MockService;
+        b.mockService = { verify: verifyStub, removeInteractions: removeInteractionsStub } as any as MockService;
 
         const verifyPromise = b.verify();
         expect(verifyPromise).to.eventually.eq("removeInteractions");
@@ -128,7 +128,7 @@ describe("PactWeb", () => {
 
         const b = Object.create(PactWeb.prototype) as any as PactWeb;
         b.opts = fullOpts;
-        b.mockService = {verify: verifyStub, removeInteractions: removeInteractionsStub} as any as MockService;
+        b.mockService = { verify: verifyStub, removeInteractions: removeInteractionsStub } as any as MockService;
 
         const verifyPromise = b.verify();
         expect(verifyPromise).to.eventually.be.rejectedWith(Error).notify(done);
@@ -148,7 +148,7 @@ describe("PactWeb", () => {
 
           const b = Object.create(PactWeb.prototype) as any as PactWeb;
           b.opts = fullOpts;
-          b.mockService = {verify: verifyStub, removeInteractions: removeInteractionsStub} as any as MockService;
+          b.mockService = { verify: verifyStub, removeInteractions: removeInteractionsStub } as any as MockService;
 
           expect(b.verify()).to.eventually.be.rejectedWith(Error).notify(done);
         });
@@ -165,7 +165,7 @@ describe("PactWeb", () => {
 
         const p = Object.create(PactWeb.prototype) as any as PactWeb;
         p.opts = fullOpts;
-        p.mockService = {writePact: writePactStub, removeInteractions: sandbox.stub()} as any as MockService;
+        p.mockService = { writePact: writePactStub, removeInteractions: sandbox.stub() } as any as MockService;
 
         const writePactPromise = p.finalize();
         expect(writePactPromise).to.eventually.be.fulfilled.notify(done);
@@ -178,7 +178,7 @@ describe("PactWeb", () => {
 
         const p = Object.create(PactWeb.prototype) as any as PactWeb;
         p.opts = fullOpts;
-        p.mockService = {writePact: writePactStub, removeInteractions: sandbox.stub()} as any as MockService;
+        p.mockService = { writePact: writePactStub, removeInteractions: sandbox.stub() } as any as MockService;
 
         const writePactPromise = p.finalize();
         expect(writePactPromise).to.eventually.be.rejectedWith(Error).notify(done);
@@ -195,7 +195,7 @@ describe("PactWeb", () => {
 
         const p = Object.create(PactWeb.prototype) as any as PactWeb;
         p.opts = fullOpts;
-        p.mockService = {writePact: writePactStub, removeInteractions: sandbox.stub()} as any as MockService;
+        p.mockService = { writePact: writePactStub, removeInteractions: sandbox.stub() } as any as MockService;
 
         const writePactPromise = p.writePact();
         expect(writePactPromise).to.eventually.eq("pact file written!");
@@ -215,7 +215,7 @@ describe("PactWeb", () => {
 
         const p = Object.create(PactWeb.prototype) as any as PactWeb;
         p.opts = fullOpts;
-        p.mockService = {removeInteractions: removeInteractionsStub} as any as MockService;
+        p.mockService = { removeInteractions: removeInteractionsStub } as any as MockService;
 
         const removeInteractionsPromise = p.removeInteractions();
         expect(removeInteractionsPromise).to.eventually.eq("interactions removed!");

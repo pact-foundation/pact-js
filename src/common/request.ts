@@ -3,8 +3,8 @@
 require("es6-object-assign").polyfill();
 
 import * as Popsicle from "popsicle/dist/common";
-import {Response} from "popsicle/dist/response";
-import {logger} from "./logger";
+import { Response } from "popsicle/dist/response";
+import { logger } from "./logger";
 
 export enum HTTPMethod {
   GET = "GET",

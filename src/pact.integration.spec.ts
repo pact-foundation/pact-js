@@ -4,12 +4,12 @@ import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import * as path from "path";
 import * as superagent from "superagent";
-import {HTTPMethod} from "./common/request";
-import {Matchers, Pact} from "./pact";
+import { HTTPMethod } from "./common/request";
+import { Matchers, Pact } from "./pact";
 
 chai.use(chaiAsPromised);
 const expect = chai.expect;
-const {eachLike, like, term} = Matchers;
+const { eachLike, like, term } = Matchers;
 
 describe("Integration", () => {
 
@@ -169,8 +169,8 @@ describe("Integration", () => {
                   name: like("Do the laundry"),
                   done: like(true),
                 }, {
-                  min: 4,
-                }),
+                    min: 4,
+                  }),
               }],
             },
           });
@@ -180,7 +180,7 @@ describe("Integration", () => {
         it("returns the correct body", () => {
           const verificationPromise = superagent
             .get(`${PROVIDER_URL}/projects`)
-            .set({Accept: "application/json"})
+            .set({ Accept: "application/json" })
             .then((res: any) => JSON.parse(res.text)[0]);
 
           return expect(verificationPromise).to.eventually.have.property("tasks");
@@ -280,8 +280,8 @@ describe("Integration", () => {
           // TODO: fix this test, not sure what it's trying to do
           const verificationPromise =
             superagent.get(`${PROVIDER_URL}/projects`)
-              .set({Accept: "application/json"})
-              .then(() => superagent.delete(`${PROVIDER_URL}/projects/2`).catch(() => {}))
+              .set({ Accept: "application/json" })
+              .then(() => superagent.delete(`${PROVIDER_URL}/projects/2`).catch(() => { }))
               .then(() => provider.verify());
 
           return expect(verificationPromise)

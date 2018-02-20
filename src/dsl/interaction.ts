@@ -3,9 +3,9 @@
  * @module Interaction
  */
 
-import {isNil, keys, omitBy} from "lodash";
-import {HTTPMethod} from "../common/request";
-import {MatcherResult} from "./matchers";
+import { isNil, keys, omitBy } from "lodash";
+import { HTTPMethod } from "../common/request";
+import { MatcherResult } from "./matchers";
 
 export interface RequestOptions {
   method: HTTPMethod;

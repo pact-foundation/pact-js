@@ -2,7 +2,7 @@
 import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import * as nock from "nock";
-import {HTTPMethod, Request} from "./request";
+import { HTTPMethod, Request } from "./request";
 
 chai.use(chaiAsPromised);
 
