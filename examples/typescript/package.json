@@ -1,0 +1,20 @@
+{
+  "name": "typescript-pact",
+  "version": "1.0.0",
+  "description": "TypeScript Pact Example",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "nyc --check-coverage --reporter=html --reporter=text-summary mocha"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/mocha": "^2.2.41",
+    "mocha": "3.x",
+    "nyc": "^11.2.0"
+  },
+  "dependencies": {
+    "axios": "^0.17.1"
+  }
+}

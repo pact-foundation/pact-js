@@ -128,7 +128,7 @@ The first step is to create a test for your API Consumer. The example below uses
 1. Validate the expected interactions were made between your consumer and the Mock Service
 1. Generate the pact(s)
 
-Check out the `examples` folder for examples with Karma Jasmine, Mocha and Jest. The example below is taken from the [integration spec](https://github.com/pact-foundation/pact-js/blob/master/test/dsl/integration.spec.js).
+Check out the `examples` folder for examples with Karma Jasmine, Mocha and Jest. The example below is taken from the [integration spec](https://github.com/pact-foundation/pact-js/blob/master/src/pact.integration.spec.ts).
 
 ```javascript
 const path = require('path')
@@ -174,7 +174,7 @@ describe('Pact', () => {
         provider.setup()
           // (3) add interactions to the Mock Server, as many as required
           .then(() => {
-            provider.addInteraction({
+            return provider.addInteraction({
               // The 'state' field specifies a "Provider State"
               state: 'i have a list of projects',
               uponReceiving: 'a request for projects',
@@ -293,7 +293,19 @@ As you can see, this is your opportunity to modify\add to headers being sent to 
 
 ### Publishing Pacts to a Broker
 
-Sharing is caring - to simplify sharing Pacts between Consumers and Providers, checkout [sharing pacts](http://docs.pact.io/documentation/sharings_pacts.html) using the [Pact Broker](https://github.com/bethesque/pact_broker).
+Sharing is caring - to simplify sharing Pacts between Consumers and Providers, we have created the [Pact Broker](https://pact.dius.com.au).
+
+The Broker:
+
+* versions your contracts
+* tells you which versions of your applications can be deployed safely together
+* allows you to deploy your services independently
+* provides API documentation of your applications that is guaranteed to be up-to date
+* visualises the relationships between your services
+* integrates with other systems, such as Slack or your CI server, via webhooks
+* ...and much much [more](http://docs.pact.io/documentation/sharings_pacts.html).
+
+[Host your own](https://github.com/pact-foundation/pact_broker), or signup for a free hosted [Pact Broker](https://pact.dius.com.au).
 
 ```js
 let pact = require('@pact-foundation/pact-node');
@@ -310,17 +322,17 @@ pact.publishPacts(opts)).then(function () {
 
 | Parameter             | Required     | Type |Description                            |
 |-----------------------|:------------:|-------|--------------------------------------|
-| `providerBaseUrl` | true | string | Running API provider host endpoint. Required.   |
-| `pactUrls` | false | array of strings | Array of local Pact files or directories containing pact files. Path must be absolute. Required. |
-| `pactBroker` | false | string | The base URL of the Pact Broker. eg. https://test.pact.dius.com.au. Required. |
-| `pactBrokerUsername` | false | string | Username for Pact Broker basic authentication. Optional |
-| `pactBrokerPassword` | false | string | Password for Pact Broker basic authentication. Optional |
-| `consumerVersion` |false | string | A string containing a semver-style version e.g. 1.0.0. Required. |
-| `tags` |false | array of strings | Tag your pacts, often used with your branching, release or environment strategy e.g. ['prod', 'test'] |
+| `providerBaseUrl` | `true` | string | Running API provider host endpoint. Required.   |
+| `pactUrls` | `false` | array of strings | Array of local Pact files or directories containing pact files. Path must be absolute. Required. |
+| `pactBroker` | `false` | string | The base URL of the Pact Broker. eg. https://test.pact.dius.com.au. Required. |
+| `pactBrokerUsername` | `false` | string | Username for Pact Broker basic authentication. Optional |
+| `pactBrokerPassword` | `false` | string | Password for Pact Broker basic authentication. Optional |
+| `consumerVersion` | `false` | string | A string containing a semver-style version e.g. 1.0.0. Required. |
+| `tags` | `false` | array of strings | Tag your pacts, often used with your branching, release or environment strategy e.g. ['prod', 'test'] |
 
 #### Publishing Verification Results to a Pact Broker
 
-If you're using a Pact Broker (e.g. a hosted one at pact.dius.com.au), you can
+If you're using a Pact Broker (e.g. a hosted one at https://pact.dius.com.au), you can
 publish your verification results so that consumers can query if they are safe
 to release.
 
@@ -508,6 +520,7 @@ Learn everything in Pact JS in 60 minutes: https://github.com/DiUS/pact-workshop
 * [Complete Example (Node env)](https://github.com/pact-foundation/pact-js/tree/master/examples/e2e)
 * [Pact with AVA (Node env)](https://github.com/pact-foundation/pact-js/tree/master/examples/ava)
 * [Pact with Jest (Node env)](https://github.com/pact-foundation/pact-js/tree/master/examples/jest)
+* [Pact with TypeScript + Mocha](https://github.com/pact-foundation/pact-js/tree/master/examples/typescript)
 * [Pact with Mocha](https://github.com/pact-foundation/pact-js/tree/master/examples/mocha)
 * [Pact with Karma + Jasmine](https://github.com/pact-foundation/pact-js/tree/master/karma/jasmine)
 * [Pact with Karma + Mocha](https://github.com/pact-foundation/pact-js/tree/master/karma/mocha)
