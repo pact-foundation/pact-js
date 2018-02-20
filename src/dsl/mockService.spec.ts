@@ -116,7 +116,7 @@ describe("MockService", () => {
       describe("and writing fails", () => {
         it("should return a rejected promise", (done) => {
           nock(mock.baseUrl)
-            .post(/pact$/).reply(500);
+            .post(/pact$/, {}).reply(500);
           expect(mock.writePact()).to.eventually.be.rejected.notify(done);
         });
       });
@@ -126,11 +126,7 @@ describe("MockService", () => {
       const mock = new MockService(undefined, undefined, 1234);
       it("should not write the consumer and provider details into the pact", (done) => {
         nock(mock.baseUrl)
-          .post(/pact$/, {
-            consumer: undefined,
-            pactfile_write_mode: "overwrite",
-            provider: undefined,
-          }).reply(200);
+          .post(/pact$/).reply(200);
         expect(mock.writePact()).to.eventually.be.fulfilled.notify(done);
       });
     });
