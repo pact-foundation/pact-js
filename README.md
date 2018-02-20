@@ -133,7 +133,7 @@ Check out the `examples` folder for examples with Karma Jasmine, Mocha and Jest.
 ```javascript
 const path = require('path')
 const chai = require('chai')
-const { Pact } = require('pact')
+const { Pact } = require('@pact-foundation/pact')
 const chaiAsPromised = require('chai-as-promised')
 
 const expect = chai.expect
