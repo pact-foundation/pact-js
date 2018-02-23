@@ -151,17 +151,11 @@ export class Pact {
 
     return this.mockService.writePact()
       .then(() => logger.info("Pact File Written"), (e) => {
-        console.log("Pact File Write Failure");
         return Promise.reject(e);
       })
       .then(() => new Promise<void>((resolve, reject) => this.server.delete().then(() => resolve(), (e) => reject(e))))
       .catch((e: Error) => new Promise<void>((resolve, reject) => {
-        const r = () => {
-          console.log(`About to reject promise ${e}`);
-          return reject(e);
-        };
-        console.log(`promise failed, deleting server`);
-        return this.server.delete().then(r, r);
+        return this.server.delete().finally(() => reject(e));
       }));
   }
 

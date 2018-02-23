@@ -277,7 +277,6 @@ describe("Integration", () => {
         }).then(() => console.log("Adding interaction worked"), () => console.warn("Adding interaction failed.")));
 
         it("fails verification", () => {
-          // TODO: fix this test, not sure what it's trying to do
           const verificationPromise =
             superagent.get(`${PROVIDER_URL}/projects`)
               .set({ Accept: "application/json" })
