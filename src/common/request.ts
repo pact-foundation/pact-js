@@ -15,12 +15,14 @@ export enum HTTPMethod {
   OPTIONS = "OPTIONS",
 }
 
+export type methods = "GET" | "POST" | "PUT" | "PATCH" | "DELETE" | "HEAD" | "OPTIONS";
+
 export class Request {
   private readonly transport = Popsicle.createTransport({
     rejectUnauthorized: false, // Need to tell node to ignore bad ssl cert
     type: "text",
   });
-  public send(method: HTTPMethod, url: string, body?: string): Promise<string> {
+  public send(method: HTTPMethod | methods, url: string, body?: string): Promise<string> {
     const opts = {
       body,
       headers: {
