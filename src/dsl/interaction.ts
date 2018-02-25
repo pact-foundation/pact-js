@@ -80,7 +80,7 @@ export class Interaction {
       throw new Error("You must provide an HTTP method.");
     }
 
-    if (!keys(HTTPMethod).includes(requestOpts.method.toString())) {
+    if (keys(HTTPMethod).indexOf(requestOpts.method.toString()) < 0) {
       throw new Error(`You must provide a valid HTTP method: ${keys(HTTPMethod).join(", ")}.`);
     }
 
