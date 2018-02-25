@@ -42,12 +42,12 @@ describe("Interaction", () => {
     const interaction = new Interaction();
 
     it("throws error when method is not provided", () => {
-      expect(interaction.withRequest.bind(interaction, {})).to.throw(Error, "You must provide a HTTP method.");
+      expect(interaction.withRequest.bind(interaction, {})).to.throw(Error, "You must provide an HTTP method.");
     });
 
     it("throws error when method is not provided", () => {
       expect(interaction.withRequest.bind(interaction, { ath: "/" }))
-        .to.throw(Error, "You must provide a HTTP method.");
+        .to.throw(Error, "You must provide an HTTP method.");
     });
 
     it("throws error when path is not provided", () => {

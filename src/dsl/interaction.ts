@@ -4,11 +4,11 @@
  */
 
 import { isNil, keys, omitBy } from "lodash";
-import { HTTPMethod } from "../common/request";
+import { HTTPMethod, methods } from "../common/request";
 import { MatcherResult } from "./matchers";
 
 export interface RequestOptions {
-  method: HTTPMethod;
+  method: HTTPMethod | methods;
   path: string | MatcherResult;
   query?: any;
   headers?: { [name: string]: string | MatcherResult };
@@ -77,9 +77,9 @@ export class Interaction {
    */
   public withRequest(requestOpts: RequestOptions) {
     if (isNil(requestOpts.method)) {
-      throw new Error("You must provide a HTTP method.");
+      throw new Error("You must provide an HTTP method.");
     }
-    if (!HTTPMethod[requestOpts.method]) {
+    if (!keys(HTTPMethod).includes(requestOpts.method.toString())) {
       throw new Error(`You must provide a valid HTTP method: ${keys(HTTPMethod).join(", ")}`);
     }
 
