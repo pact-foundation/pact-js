@@ -81,7 +81,7 @@ export class Interaction {
     }
 
     if (!keys(HTTPMethod).includes(requestOpts.method.toString())) {
-      throw new Error(`You must provide a valid HTTP method: ${keys(HTTPMethod).join(", ")}`);
+      throw new Error(`You must provide a valid HTTP method: ${keys(HTTPMethod).join(", ")}.`);
     }
 
     if (isNil(requestOpts.path)) {

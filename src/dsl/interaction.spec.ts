@@ -45,6 +45,11 @@ describe("Interaction", () => {
       expect(interaction.withRequest.bind(interaction, {})).to.throw(Error, "You must provide an HTTP method.");
     });
 
+    it("throws error when an invalid method is provided", () => {
+      expect(interaction.withRequest.bind(interaction, { method: "FOO" }))
+        .to.throw(Error, "You must provide a valid HTTP method: GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS.");
+    });
+
     it("throws error when method is not provided", () => {
       expect(interaction.withRequest.bind(interaction, { ath: "/" }))
         .to.throw(Error, "You must provide an HTTP method.");
