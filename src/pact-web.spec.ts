@@ -1,9 +1,9 @@
-
 /* tslint:disable:no-unused-expression object-literal-sort-keys */
 import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
+import { HTTPMethod } from "./common/request";
 import { Interaction, InteractionObject } from "./dsl/interaction";
 import { MockService } from "./dsl/mockService";
 import { PactOptions, PactOptionsComplete } from "./dsl/options";
@@ -45,13 +45,15 @@ describe("PactWeb", () => {
     } as PactOptions;
 
     it("throws Error when consumer not provided", () => {
-      expect(() => { new PactWeb({ consumer: "", provider: "provider" }); }).
-        not.to.throw(Error, "You must specify a Consumer for this pact.");
+      expect(() => {
+        new PactWeb({ consumer: "", provider: "provider" });
+      }).not.to.throw(Error, "You must specify a Consumer for this pact.");
     });
 
     it("throws Error when provider not provided", () => {
-      expect(() => { new PactWeb({ consumer: "someconsumer", provider: "" }); }).
-        not.to.throw(Error, "You must specify a Provider for this pact.");
+      expect(() => {
+        new PactWeb({ consumer: "someconsumer", provider: "" });
+      }).not.to.throw(Error, "You must specify a Provider for this pact.");
     });
   });
 
@@ -61,7 +63,7 @@ describe("PactWeb", () => {
       uponReceiving: "a request for projects",
       withRequest: {
         headers: { Accept: "application/json" },
-        method: "GET",
+        method: HTTPMethod.GET,
         path: "/projects",
       },
       willRespondWith: {

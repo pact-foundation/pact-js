@@ -4,14 +4,16 @@
  */
 import serviceFactory from "@pact-foundation/pact-node";
 import * as clc from "cli-color";
-import { isEmpty } from "lodash";
+import * as Matchers from "./dsl/matchers";
 import * as path from "path";
 import * as process from "process";
-import { logger } from "./common/logger";
-import { isPortAvailable } from "./common/net";
 import { Interaction, InteractionObject } from "./dsl/interaction";
+import { isEmpty } from "lodash";
+import { isPortAvailable } from "./common/net";
+import { logger } from "./common/logger";
 import { MockService } from "./dsl/mockService";
 import { PactOptions, PactOptionsComplete } from "./dsl/options";
+import { Server } from "@pact-foundation/pact-node/src/server";
 
 /**
  * Creates a new {@link PactProvider}.
@@ -39,7 +41,7 @@ export class Pact {
     return { ...Pact.defaults, ...opts } as PactOptionsComplete;
   }
 
-  public server: any;
+  public server: Server;
   public opts: PactOptionsComplete;
   public mockService: MockService;
   private finalized: boolean;
@@ -83,7 +85,9 @@ export class Pact {
    * @returns {Promise}
    */
   public setup(): Promise<void> {
-    return isPortAvailable(this.opts.port, this.opts.host).then(() => this.server.start());
+    return isPortAvailable(this.opts.port, this.opts.host)
+      // Need to wrap it this way until we remove q.Promise from pact-node
+      .then(() => new Promise<void>((resolve, reject) => this.server.start().then(() => resolve(), () => reject())));
   }
 
   /**
@@ -146,10 +150,13 @@ export class Pact {
     this.finalized = true;
 
     return this.mockService.writePact()
-      .then(() => this.server.delete())
-      .catch((err: Error) => {
-        return Promise.all([this.server.delete(), Promise.reject(err)]);
-      });
+      .then(() => logger.info("Pact File Written"), (e) => {
+        return Promise.reject(e);
+      })
+      .then(() => new Promise<void>((resolve, reject) => this.server.delete().then(() => resolve(), (e) => reject(e))))
+      .catch((e: Error) => new Promise<void>((resolve, reject) => {
+        return this.server.delete().finally(() => reject(e));
+      }));
   }
 
   /**
@@ -189,7 +196,6 @@ export * from "./dsl/verifier";
  * @memberof Pact
  * @static
  */
-import * as Matchers from "./dsl/matchers";
 export import Matchers = Matchers;
 
 /**
