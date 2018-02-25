@@ -74,11 +74,11 @@ describe("The Dog API", () => {
 
   describe("get /dogs using object pattern", () => {
     before(() => {
-      const interaction = {
+      return provider.addInteraction({
         state: "i have a list of dogs",
         uponReceiving: "a request for all dogs",
         withRequest: {
-          method: "GET" as HTTPMethod,
+          method: "GET",
           path: "/dogs",
           headers: {
             Accept: "application/json",
@@ -91,9 +91,7 @@ describe("The Dog API", () => {
           },
           body: EXPECTED_BODY,
         },
-      };
-
-      return provider.addInteraction(interaction);
+      });
     });
 
     it("returns the correct response", (done) => {

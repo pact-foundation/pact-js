@@ -42,4 +42,4 @@ module.exports = {
     new webpack.NoEmitOnErrorsPlugin()
   ],
   devtool: 'source-map'
-}
+};

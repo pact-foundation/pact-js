@@ -5,8 +5,25 @@
   ],
   "jsRules": {},
   "rules": {
-    "interface-name": [true, "never-prefix"],
-    "no-var-requires": false
+    "interface-name": [
+      true,
+      "never-prefix"
+    ],
+    "no-var-requires": false,
+    "ordered-imports": false,
+    "whitespace": [
+      true,
+      "check-branch",
+      "check-decl",
+      "check-operator",
+      "check-module",
+      "check-separator",
+      "check-rest-spread",
+      "check-type",
+      "check-typecast",
+      "check-type-operator",
+      "check-preblock"
+    ]
   },
   "rulesDirectory": []
 }

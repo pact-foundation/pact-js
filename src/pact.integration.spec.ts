@@ -1,11 +1,14 @@
-/* tslint:disable:no-unused-expression object-literal-sort-keys no-empty */
+/* tslint:disable:no-unused-expression object-literal-sort-keys no-empty no-console */
+import * as Promise from "bluebird";
+import * as chai from "chai";
+import * as chaiAsPromised from "chai-as-promised";
+import * as path from "path";
+import * as superagent from "superagent";
+import { HTTPMethod } from "./common/request";
+import { Matchers, Pact } from "./pact";
 
-const path = require("path");
-const expect = require("chai").expect;
-const Promise = require("bluebird");
-const request = require("superagent");
-
-import { Interaction, Matchers, Pact } from "./pact";
+chai.use(chaiAsPromised);
+const expect = chai.expect;
 const { eachLike, like, term } = Matchers;
 
 describe("Integration", () => {
@@ -29,30 +32,29 @@ describe("Integration", () => {
         id: 1,
         name: "Project 1",
         due: "2016-02-11T09:46:56.023Z",
-        tasks: [{
-          id: 1,
-          name: "Do the laundry",
-          done: true,
-        },
-        {
-          id: 2,
-          name: "Do the dishes",
-          done: false,
-        },
-        {
-          id: 3,
-          name: "Do the backyard",
-          done: false,
-        },
-        {
-          id: 4,
-          name: "Do nothing",
-          done: false,
-        },
+        tasks: [
+          {
+            id: 1,
+            name: "Do the laundry",
+            done: true,
+          },
+          {
+            id: 2,
+            name: "Do the dishes",
+            done: false,
+          },
+          {
+            id: 3,
+            name: "Do the backyard",
+            done: false,
+          },
+          {
+            id: 4,
+            name: "Do nothing",
+            done: false,
+          },
         ],
       }];
-
-      const counter = 1;
 
       before(() => provider.setup());
 
@@ -62,39 +64,34 @@ describe("Integration", () => {
       context("with a single request", () => {
 
         // add interactions, as many as needed
-        before(() => {
-          return provider.addInteraction({
-            state: "i have a list of projects",
-            uponReceiving: "a request for projects",
-            withRequest: {
-              method: "GET",
-              path: "/projects",
-              headers: {
-                Accept: "application/json",
-              },
+        before(() => provider.addInteraction({
+          state: "i have a list of projects",
+          uponReceiving: "a request for projects",
+          withRequest: {
+            method: HTTPMethod.GET,
+            path: "/projects",
+            headers: {
+              Accept: "application/json",
             },
-            willRespondWith: {
-              status: 200,
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: EXPECTED_BODY,
+          },
+          willRespondWith: {
+            status: 200,
+            headers: {
+              "Content-Type": "application/json",
             },
-          });
-        });
+            body: EXPECTED_BODY,
+          },
+        }));
 
         // execute your assertions
-        it("returns the correct body", (done) => {
-          request
-            .get(`${PROVIDER_URL}/projects`)
-            .set({
-              Accept: "application/json",
-            })
-            .then((res: any) => {
-              expect(res.text).to.eql(JSON.stringify(EXPECTED_BODY));
-            })
-            .then(done);
-        });
+        it("returns the correct body", () => superagent
+          .get(`${PROVIDER_URL}/projects`)
+          .set({
+            Accept: "application/json",
+          })
+          .then((res: any) => {
+            expect(res.text).to.eql(JSON.stringify(EXPECTED_BODY));
+          }));
 
         // verify with Pact, and reset expectations
         it("successfully verifies", () => provider.verify());
@@ -108,7 +105,7 @@ describe("Integration", () => {
             state: "i have a list of projects",
             uponReceiving: "a request for projects with a filter",
             withRequest: {
-              method: "GET",
+              method: HTTPMethod.GET,
               path: "/projects",
               query: {
                 from: "today",
@@ -128,17 +125,14 @@ describe("Integration", () => {
         });
 
         // execute your assertions
-        it("returns the correct body", (done) => {
-          request
-            .get(`${PROVIDER_URL}/projects?from=today`)
-            .set({
-              Accept: "application/json",
-            })
-            .then((res: any) => {
-              expect(res.text).to.eql(JSON.stringify(EXPECTED_BODY));
-            })
-            .then(done);
-        });
+        it("returns the correct body", () => superagent
+          .get(`${PROVIDER_URL}/projects?from=today`)
+          .set({
+            Accept: "application/json",
+          })
+          .then((res: any) => {
+            expect(res.text).to.eql(JSON.stringify(EXPECTED_BODY));
+          }));
 
         // verify with Pact, and reset expectations
         it("successfully verifies", () => provider.verify());
@@ -152,7 +146,7 @@ describe("Integration", () => {
             state: "i have a list of projects but I dont know how many",
             uponReceiving: "a request for such projects",
             withRequest: {
-              method: "GET",
+              method: HTTPMethod.GET,
               path: "/projects",
               headers: {
                 Accept: "application/json",
@@ -183,17 +177,13 @@ describe("Integration", () => {
         });
 
         // execute your assertions
-        it("returns the correct body", (done) => {
-          const verificationPromise = request
+        it("returns the correct body", () => {
+          const verificationPromise = superagent
             .get(`${PROVIDER_URL}/projects`)
-            .set({
-              Accept: "application/json",
-            })
-            .then((res: any) => {
-              return JSON.parse(res.text)[0];
-            });
+            .set({ Accept: "application/json" })
+            .then((res: any) => JSON.parse(res.text)[0]);
 
-          expect(verificationPromise).to.eventually.have.property("tasks").notify(done);
+          return expect(verificationPromise).to.eventually.have.property("tasks");
         });
 
         // verify with Pact, and reset expectations
@@ -202,12 +192,12 @@ describe("Integration", () => {
 
       context("with two requests", () => {
 
-        before((done) => {
+        before(() => {
           const interaction1 = provider.addInteraction({
             state: "i have a list of projects",
             uponReceiving: "a request for projects",
             withRequest: {
-              method: "GET",
+              method: HTTPMethod.GET,
               path: "/projects",
               headers: {
                 Accept: "application/json",
@@ -226,7 +216,7 @@ describe("Integration", () => {
             state: "i have a list of projects",
             uponReceiving: "a request for a project that does not exist",
             withRequest: {
-              method: "GET",
+              method: HTTPMethod.GET,
               path: "/projects/2",
               headers: {
                 Accept: "application/json",
@@ -240,25 +230,25 @@ describe("Integration", () => {
             },
           });
 
-          Promise.all([interaction1, interaction2]).then(() => done());
+          return Promise.all([interaction1, interaction2]);
         });
 
-        it("allows two requests", (done) => {
+        it("allows two requests", () => {
           const verificationPromise =
-            request.get(`${PROVIDER_URL}/projects`)
+            superagent.get(`${PROVIDER_URL}/projects`)
               .set({
                 Accept: "application/json",
               })
-              .then((res: any) => {
-                return res.text;
-              });
-          expect(verificationPromise).to.eventually.eql(JSON.stringify(EXPECTED_BODY)).notify(done);
+              .then((res: any) => res.text);
 
           const verificationPromise404 =
-            request.get(`${PROVIDER_URL}/projects/2`).set({
+            superagent.get(`${PROVIDER_URL}/projects/2`).set({
               Accept: "application/json",
             });
-          expect(verificationPromise404).to.eventually.be.rejected;
+          return Promise.all([
+            expect(verificationPromise).to.eventually.equal(JSON.stringify(EXPECTED_BODY)),
+            expect(verificationPromise404).to.eventually.be.rejected,
+          ]);
         });
 
         // verify with Pact, and reset expectations
@@ -267,49 +257,34 @@ describe("Integration", () => {
 
       context("with an unexpected interaction", () => {
         // add interactions, as many as needed
-        before((done) => {
-          provider.addInteraction({
-            state: "i have a list of projects",
-            uponReceiving: "a request for projects",
-            withRequest: {
-              method: "GET",
-              path: "/projects",
-              headers: {
-                Accept: "application/json",
-              },
+        before(() => provider.addInteraction({
+          state: "i have a list of projects",
+          uponReceiving: "a request for projects",
+          withRequest: {
+            method: HTTPMethod.GET,
+            path: "/projects",
+            headers: {
+              Accept: "application/json",
             },
-            willRespondWith: {
-              status: 200,
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: EXPECTED_BODY,
+          },
+          willRespondWith: {
+            status: 200,
+            headers: {
+              "Content-Type": "application/json",
             },
-          }).then(() => done());
-        });
+            body: EXPECTED_BODY,
+          },
+        }).then(() => console.log("Adding interaction worked"), () => console.warn("Adding interaction failed.")));
 
-        it("fails verification", (done) => {
-          const promiseResults: Array<Promise<any>> = [];
-
+        it("fails verification", () => {
           const verificationPromise =
-            request.get(`${PROVIDER_URL}/projects`)
-              .set({
-                Accept: "application/json",
-              })
-              .then((response: any) => {
-                promiseResults.push(response);
-                return request.delete(`${PROVIDER_URL}/projects/2`);
-              })
-              .then(() => { }, (err: any) => {
-                promiseResults.push(err.response);
-              })
+            superagent.get(`${PROVIDER_URL}/projects`)
+              .set({ Accept: "application/json" })
+              .then(() => superagent.delete(`${PROVIDER_URL}/projects/2`).catch(() => { }))
               .then(() => provider.verify());
 
-          expect(verificationPromise)
-            .to
-            .be
-            .rejectedWith("Error: Pact verification failed - expected interactions did not match actual.")
-            .notify(done);
+          return expect(verificationPromise)
+            .to.be.rejectedWith("Pact verification failed - expected interactions did not match actual.");
         });
       });
     });

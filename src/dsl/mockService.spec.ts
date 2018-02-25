@@ -1,10 +1,13 @@
 /* tslint:disable:no-unused-expression */
 import * as chai from "chai";
-const expect = require("chai").expect;
-import { eachLike, somethingLike, term } from "./matchers";
-const nock = require("nock");
+import * as chaiAsPromised from "chai-as-promised";
+import * as nock from "nock";
+import { HTTPMethod } from "../common/request";
 import { Interaction } from "./interaction";
 import { MockService } from "./mockService";
+
+chai.use(chaiAsPromised);
+const expect = chai.expect;
 
 describe("MockService", () => {
 
@@ -30,12 +33,16 @@ describe("MockService", () => {
     });
 
     it("does not create a MockService when consumer is not provided", () => {
-      expect(() => { new MockService("", "provider"); })
+      expect(() => {
+        new MockService("", "provider");
+      })
         .not.to.throw(Error);
     });
 
     it("does not create a MockService when provider is not provided", () => {
-      expect(() => { new MockService("consumer", ""); })
+      expect(() => {
+        new MockService("consumer", "");
+      })
         .not.to.throw(Error);
     });
   });
@@ -44,7 +51,10 @@ describe("MockService", () => {
     const mock = new MockService("consumer", "provider", 1234);
 
     const interaction = new Interaction();
-    interaction.uponReceiving("duh").withRequest({ method: "GET", path: "/search" }).willRespondWith({ status: 200 });
+    interaction
+      .uponReceiving("duh")
+      .withRequest({ method: HTTPMethod.GET, path: "/search" })
+      .willRespondWith({ status: 200 });
 
     it("when Interaction added successfully", (done) => {
       nock(mock.baseUrl).post(/interactions$/).reply(200);
@@ -106,7 +116,7 @@ describe("MockService", () => {
       describe("and writing fails", () => {
         it("should return a rejected promise", (done) => {
           nock(mock.baseUrl)
-            .post(/pact$/).reply(500);
+            .post(/pact$/, {}).reply(500);
           expect(mock.writePact()).to.eventually.be.rejected.notify(done);
         });
       });
@@ -116,11 +126,7 @@ describe("MockService", () => {
       const mock = new MockService(undefined, undefined, 1234);
       it("should not write the consumer and provider details into the pact", (done) => {
         nock(mock.baseUrl)
-          .post(/pact$/, {
-            consumer: undefined,
-            pactfile_write_mode: "overwrite",
-            provider: undefined,
-          }).reply(200);
+          .post(/pact$/).reply(200);
         expect(mock.writePact()).to.eventually.be.fulfilled.notify(done);
       });
     });

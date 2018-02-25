@@ -1,6 +1,10 @@
 import * as chai from "chai";
-const expect = require("chai").expect;
-import { Interaction } from "./interaction";
+import * as chaiAsPromised from "chai-as-promised";
+import { HTTPMethod } from "../common/request";
+import { Interaction, RequestOptions } from "./interaction";
+
+chai.use(chaiAsPromised);
+const expect = chai.expect;
 
 describe("Interaction", () => {
   describe("#given", () => {
@@ -38,20 +42,26 @@ describe("Interaction", () => {
     const interaction = new Interaction();
 
     it("throws error when method is not provided", () => {
-      expect(interaction.withRequest.bind(interaction, {})).to.throw(Error, "You must provide a HTTP method.");
+      expect(interaction.withRequest.bind(interaction, {})).to.throw(Error, "You must provide an HTTP method.");
+    });
+
+    it("throws error when an invalid method is provided", () => {
+      expect(interaction.withRequest.bind(interaction, { method: "FOO" }))
+        .to.throw(Error, "You must provide a valid HTTP method: GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS.");
     });
 
     it("throws error when method is not provided", () => {
       expect(interaction.withRequest.bind(interaction, { ath: "/" }))
-        .to.throw(Error, "You must provide a HTTP method.");
+        .to.throw(Error, "You must provide an HTTP method.");
     });
 
     it("throws error when path is not provided", () => {
-      expect(interaction.withRequest.bind(interaction, { method: "GET" })).to.throw(Error, "You must provide a path.");
+      expect(interaction.withRequest.bind(interaction, { method: HTTPMethod.GET }))
+        .to.throw(Error, "You must provide a path.");
     });
 
     describe("with only mandatory params", () => {
-      const actual = new Interaction().withRequest({ method: "GET", path: "/search" }).json();
+      const actual = new Interaction().withRequest({ method: HTTPMethod.GET, path: "/search" }).json();
 
       it("has a state containing only the given keys", () => {
         expect(actual).to.have.keys("request");
@@ -67,7 +77,7 @@ describe("Interaction", () => {
       const actual = new Interaction().withRequest({
         body: { id: 1, name: "Test", due: "tomorrow" },
         headers: { "Content-Type": "application/json" },
-        method: "GET",
+        method: HTTPMethod.GET,
         path: "/search",
         query: "q=test",
       }).json();

@@ -6,7 +6,7 @@
  */
 import { isEmpty } from "lodash";
 import { logger } from "../common/logger";
-import { Request } from "../common/request";
+import { HTTPMethod, Request } from "../common/request";
 import { Interaction } from "./interaction";
 
 export type PactfileWriteMode = "overwrite" | "update" | "merge";
@@ -60,7 +60,7 @@ export class MockService {
    * @returns {Promise}
    */
   public addInteraction(interaction: Interaction): Promise<string> {
-    return this.request.send("POST", `${this.baseUrl}/interactions`, JSON.stringify(interaction.json()));
+    return this.request.send(HTTPMethod.POST, `${this.baseUrl}/interactions`, JSON.stringify(interaction.json()));
   }
 
   /**
@@ -68,7 +68,7 @@ export class MockService {
    * @returns {Promise}
    */
   public removeInteractions(): Promise<string> {
-    return this.request.send("DELETE", `${this.baseUrl}/interactions`);
+    return this.request.send(HTTPMethod.DELETE, `${this.baseUrl}/interactions`);
   }
 
   /**
@@ -76,7 +76,7 @@ export class MockService {
    * @returns {Promise}
    */
   public verify(): Promise<string> {
-    return this.request.send("GET", `${this.baseUrl}/interactions/verification`);
+    return this.request.send(HTTPMethod.GET, `${this.baseUrl}/interactions/verification`);
   }
 
   /**
@@ -84,7 +84,7 @@ export class MockService {
    * @returns {Promise}
    */
   public writePact(): Promise<string> {
-    return this.request.send("POST", `${this.baseUrl}/pact`, JSON.stringify(this.pactDetails));
+    return this.request.send(HTTPMethod.POST, `${this.baseUrl}/pact`, JSON.stringify(this.pactDetails));
   }
 
 }
