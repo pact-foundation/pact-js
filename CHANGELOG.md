@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="5.7.0"></a>
+# [5.7.0](https://github.com/pact-foundation/pact-js/compare/v5.6.0...v5.7.0) (2018-02-28)
+
+
+### Features
+
+* **upgrade:** update to pact-node 6.11.x. Fixes [#63](https://github.com/pact-foundation/pact-js/issues/63) ([f0063c9](https://github.com/pact-foundation/pact-js/commit/f0063c9))
+
+
+
 <a name="5.6.1"></a>
 ## [5.6.1](https://github.com/pact-foundation/pact-js/compare/v5.6.0...v5.6.1) (2018-02-25)
 
