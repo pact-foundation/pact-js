@@ -4,10 +4,9 @@ import * as chaiAsPromised from "chai-as-promised";
 import path = require("path");
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
-import pact = require("../../../dist/pact");
+import { Pact } from "../../../dist/pact";
 import { Interaction, InteractionObject } from "../../../dist/pact";
 
-const Pact = pact.Pact;
 const expect = chai.expect;
 const proxyquire = require("proxyquire").noCallThru();
 import { HTTPMethod } from "../../../dist/common/request";
