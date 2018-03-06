@@ -19,7 +19,7 @@ From the [Pact website](http://docs.pact.io/):
 
 >Pact is a testing tool that guarantees those Contracts are satisfied.
 
-Read [Getting started with Pact](https://dius.com.au/2016/02/03/pact-101-getting-started-with-pact-and-consumer-driven-contract-testing/) for more information on
+Read [Getting started with Pact](http://dius.com.au/2016/02/03/microservices-pact/) for more information on
 how to get going.
 
 **NOTE: This project supersedes [Pact Consumer JS DSL](https://github.com/DiUS/pact-consumer-js-dsl).**
