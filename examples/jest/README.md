@@ -5,7 +5,7 @@
 1. Run the tests: `npm t`
 
 ## Comments about Jest
-You will need to run jest 'in band' as it will cause state issues otherwise. If you are running a large unit test suite you'll probably want to run that separately as a result to take advantage of the concurrency of jest (it is quite a slow down). To achieve this you can get your pact tests to have a suffix of '.pact.js' and add the following to your pact task in npm:
+You will need to run jest '[in band](https://facebook.github.io/jest/docs/en/cli.html#runinband)' as it will cause state issues otherwise. If you are running a large unit test suite you'll probably want to run that separately as a result to take advantage of the concurrency of jest (it is quite a slow down). To achieve this you can get your pact tests to have a suffix of '.pact.js' and add the following to your pact task in npm:
 ```
 --testRegex \"/*(.test.pact.js)\""
 ```
