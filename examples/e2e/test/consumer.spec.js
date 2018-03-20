@@ -84,62 +84,17 @@ describe('Pact', () => {
 
   // Setup a Mock Server before unit tests run.
   // This server acts as a Test Double for the real Provider API.
-  // We call addInteraction() to configure the Mock Service to act like the Provider
+  // We then call addInteraction() for each test to configure the Mock Service
+  // to act like the Provider
   // It also sets up expectations for what requests are to come, and will fail
   // if the calls are not seen.
-  before(() => {
-    return provider.setup()
-      .then(() => {
-        provider.addInteraction({
-          state: 'Has some animals',
-          uponReceiving: 'a request for all animals',
-          withRequest: {
-            method: 'GET',
-            path: '/animals/available'
-          },
-          willRespondWith: {
-            status: 200,
-            headers: {
-              'Content-Type': 'application/json; charset=utf-8'
-            },
-            body: animalListExpectation
-          }
-        })
-      })
-      .then(() => {
-        provider.addInteraction({
-          state: 'Has no animals',
-          uponReceiving: 'a request for an animal with ID 100',
-          withRequest: {
-            method: 'GET',
-            path: '/animals/100'
-          },
-          willRespondWith: {
-            status: 404
-          }
-        })
-      })
-      .then(() => {
-        provider.addInteraction({
-          state: 'Has an animal with ID 1',
-          uponReceiving: 'a request for an animal with ID 1',
-          withRequest: {
-            method: 'GET',
-            path: '/animals/1'
-          },
-          willRespondWith: {
-            status: 200,
-            headers: {
-              'Content-Type': 'application/json; charset=utf-8'
-            },
-            body: animalBodyExpectation
-          }
-        })
-      })
-      .catch(e => {
-        throw new Error("Unable to start the Pact Server: " + e)
-      })
-  })
+  before(() => provider.setup())
+
+  // After each individual test (one or more interactions)
+  // we validate that the correct request came through.
+  // This ensures what we _expect_ from the provider, is actually
+  // what we've asked for (and is what gets captured in the contract)
+  afterEach(() => provider.verify())
 
   // Configure and import consumer API
   // Note that we update the API endpoint to point at the Mock Service
@@ -156,6 +111,23 @@ describe('Pact', () => {
   // we want to test the function that is calling the external service.
   describe('when a call to list all animals from the Animal Service is made', () => {
     describe('and there are animals in the database', () => {
+      before(() =>
+        provider.addInteraction({
+          state: 'Has some animals',
+          uponReceiving: 'a request for all animals',
+          withRequest: {
+            method: 'GET',
+            path: '/animals/available'
+          },
+          willRespondWith: {
+            status: 200,
+            headers: {
+              'Content-Type': 'application/json; charset=utf-8'
+            },
+            body: animalListExpectation
+          }
+        }))
+
       it('returns a list of animals', done => {
         const suggestedMates = suggestion(suitor)
 
@@ -164,15 +136,45 @@ describe('Pact', () => {
       })
     })
   })
+
   describe('when a call to the Animal Service is made to retreive a single animal by ID', () => {
     describe('and there is an animal in the DB with ID 1', () => {
+      before(() => provider.addInteraction({
+        state: 'Has an animal with ID 1',
+        uponReceiving: 'a request for an animal with ID 1',
+        withRequest: {
+          method: 'GET',
+          path: term({ generate: '/animals/1', matcher: '/animals/[0-9]+' })
+        },
+        willRespondWith: {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+          },
+          body: animalBodyExpectation
+        }
+      }))
+
       it('returns the animal', done => {
-        const suggestedMates = getAnimalById(1)
+        const suggestedMates = getAnimalById(11)
 
         expect(suggestedMates).to.eventually.have.deep.property('id', 1).notify(done)
       })
     })
+
     describe('and there no animals in the database', () => {
+      before(() => provider.addInteraction({
+        state: 'Has no animals',
+        uponReceiving: 'a request for an animal with ID 100',
+        withRequest: {
+          method: 'GET',
+          path: '/animals/100'
+        },
+        willRespondWith: {
+          status: 404
+        }
+      }))
+
       it('returns a 404', done => {
         // uncomment below to test a failed verify
         // const suggestedMates = getAnimalById(123)
@@ -180,11 +182,6 @@ describe('Pact', () => {
 
         expect(suggestedMates).to.eventually.be.a('null').notify(done)
       })
-    })
-  })
-  describe('when interacting with Animal Service', () => {
-    it('should validate the interactions and create a contract', () => {
-      return provider.verify()
     })
   })
 
