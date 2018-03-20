@@ -387,7 +387,7 @@ Often times, you find yourself having to re-write regular expressions for common
 #### Match based on type
 
 ```javascript
-const { like } = pact
+const { like } = Matchers
 
 provider.addInteraction({
   state: 'Has some animals',
