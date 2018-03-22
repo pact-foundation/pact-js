@@ -1,7 +1,5 @@
 'use strict'
 
-const path = require('path')
-const Pact = require('../../../dist/pact').Pact
 const getMeDogs = require('../index').getMeDogs
 
 describe("Dog's API", () => {
