@@ -1,6 +1,6 @@
 {
   "name": "@pact-foundation/pact",
-  "version": "5.7.0",
+  "version": "5.8.0",
   "description": "Pact for all things Javascript",
   "main": "./pact.js",
   "types": "./pact.d.ts",
@@ -47,7 +47,8 @@
     "consumer driven testing"
   ],
   "author": "Matt Fellows <m@onegeek.com.au> (http://twitter.com/matthewfellows)",
-  "contributors": [{
+  "contributors": [
+    {
       "name": "Tarcio Saraiva",
       "email": "tarcio@gmail.com",
       "url": "http://twitter.com/tarciosaraiva"
