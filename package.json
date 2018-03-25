@@ -47,8 +47,7 @@
     "consumer driven testing"
   ],
   "author": "Matt Fellows <m@onegeek.com.au> (http://twitter.com/matthewfellows)",
-  "contributors": [
-    {
+  "contributors": [{
       "name": "Tarcio Saraiva",
       "email": "tarcio@gmail.com",
       "url": "http://twitter.com/tarciosaraiva"
@@ -80,7 +79,7 @@
     ]
   },
   "dependencies": {
-    "@pact-foundation/pact-node": "^6.11.0",
+    "@pact-foundation/pact-node": "^6.12.0",
     "cli-color": "^1.1.0",
     "es6-object-assign": "^1.1.0",
     "es6-promise": "^4.1.1",
