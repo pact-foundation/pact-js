@@ -1,0 +1,20 @@
+{
+  "name": "pact-message-example",
+  "version": "1.0.0",
+  "description": "Example async message application",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "clean": "if [ -d 'pacts' ]; then rm -rf pacts; fi",
+    "test": "nyc --check-coverage --reporter=html --reporter=text-summary mocha **/*.spec.ts"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/mocha": "^2.2.41",
+    "axios": "^0.14.0",
+    "chai": "^3.5.0",
+    "mocha": "^3.5.3",
+    "nyc": "^11.6.0"
+  }
+}

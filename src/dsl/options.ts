@@ -4,6 +4,9 @@
  */
 import { PactfileWriteMode } from "./mockService";
 
+export type LogLevel = "trace" | "debug" | "info" | "error" | "fatal" | "warn" | undefined;
+
+// TODO: Combine types here to reduce duplication
 export interface PactOptions {
   // The name of the consumer
   consumer: string;
@@ -33,7 +36,7 @@ export interface PactOptions {
   log?: string;
 
   // Log level
-  logLevel?: "trace" | "debug" | "info" | "error" | "fatal" | "warn" | undefined;
+  logLevel?: LogLevel;
 
   // Pact specification version (defaults to 2)
   spec?: number;
@@ -53,3 +56,60 @@ export interface MandatoryPactOptions {
 }
 
 export type PactOptionsComplete = PactOptions & MandatoryPactOptions;
+export interface MessageHandlers { [name: string]: () => Promise<any>; }
+
+export interface MessageProducerOptions {
+  // The name of the consumer
+  consumer: string;
+
+  // The name of the provider
+  provider: string;
+
+  providerVersion?: string;
+
+  // Pacts to Verify
+  pactUrls?: string[];
+  // pactFilesOrDirs?: string[];
+
+  // Directory to log to
+  log?: string;
+
+  // Log level
+  logLevel?: LogLevel;
+
+  // Message producers
+  handlers: MessageHandlers;
+
+  // Choices: 'overwrite' | 'update', 'none', defaults to 'overwrite'
+  pactfileWriteMode?: PactfileWriteMode;
+
+  providerStatesSetupUrl?: string;
+  pactBrokerUsername?: string;
+  pactBrokerPassword?: string;
+  customProviderHeaders?: string[];
+  publishVerificationResult?: boolean;
+  pactBrokerUrl?: string;
+  tags?: string[];
+  timeout?: number;
+}
+
+export interface MessageConsumerOptions {
+  // The name of the consumer
+  consumer: string;
+
+  // Directory to output pact files
+  dir?: string;
+
+  // The name of the provider
+  provider: string;
+
+  // Directory to log to
+  log?: string;
+
+  // Log level
+  logLevel?: LogLevel;
+
+  // Control how the Pact files are written
+  // Choices: 'overwrite' | 'update', 'none', defaults to 'overwrite'
+  pactfileWriteMode?: PactfileWriteMode;
+}

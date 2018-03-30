@@ -3,14 +3,12 @@
  * @module ProviderVerifier
  */
 import pact from "@pact-foundation/pact-node";
+import { qToPromise } from "../common/utils";
 import { VerifierOptions } from "@pact-foundation/pact-node";
 import { Promise } from "es6-promise";
 
 export class Verifier {
-  public verifyProvider(opts: VerifierOptions): Promise<string> {
-    return new Promise((resolve, reject) => {
-      pact.verifyPacts(opts)
-        .then((value: string) => resolve(value), (error: any) => reject(error));
-    });
+  public verifyProvider(opts: VerifierOptions): Promise<any> {
+    return qToPromise<any>(pact.verifyPacts(opts));
   }
 }

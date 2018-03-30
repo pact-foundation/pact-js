@@ -1,3 +1,5 @@
+// TODO: Make this the main interface into the Pact package
+//       this will be a backwards-incompatible, breaking change
 /**
  * Pact module.
  * @module Pact
@@ -22,6 +24,7 @@ import { Server } from "@pact-foundation/pact-node/src/server";
  * @param {PactOptions} opts
  * @return {@link PactProvider}
  */
+// TODO: move this to its own module
 export class Pact {
   public static defaults = {
     consumer: "",
@@ -181,6 +184,10 @@ export class Pact {
     return this.mockService.removeInteractions();
   }
 }
+
+export * from "./message-consumer";
+export * from "./message-producer";
+export * from "./dsl/message";
 
 /**
  * Exposes {@link Verifier}
