@@ -6,7 +6,10 @@
   "scripts": {
     "build": "tsc",
     "clean": "if [ -d 'pacts' ]; then rm -rf pacts; fi",
-    "test": "nyc --check-coverage --reporter=html --reporter=text-summary mocha **/*.spec.ts"
+    "test": "npm run test:consumer && npm run test:publish && npm run test:producer",
+    "test:producer": "nyc --check-coverage --reporter=html --reporter=text-summary mocha producer/*.spec.ts",
+    "test:consumer": "nyc --check-coverage --reporter=html --reporter=text-summary mocha consumer/*.spec.ts",
+    "test:publish": "node publish.js"
   },
   "author": "",
   "license": "MIT",

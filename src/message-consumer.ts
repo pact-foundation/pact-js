@@ -105,6 +105,7 @@ export class MessageConsumer {
         dir: this.config.dir,
         pactFileWriteMode: this.config.pactfileWriteMode,
         provider: this.config.provider,
+        spec: 3,
       })));
   }
 }

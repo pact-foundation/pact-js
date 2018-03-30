@@ -109,6 +109,9 @@ export interface MessageConsumerOptions {
   // Log level
   logLevel?: LogLevel;
 
+  // Specification Version (should be 3 for messages)
+  spec?: number;
+
   // Control how the Pact files are written
   // Choices: 'overwrite' | 'update', 'none', defaults to 'overwrite'
   pactfileWriteMode?: PactfileWriteMode;

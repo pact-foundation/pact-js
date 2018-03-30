@@ -53,7 +53,11 @@ export class MessageProducer {
 
         if (!handler) {
           logger.warn(`no handler found for message ${message.description}`);
-          res.sendStatus(404);
+          res
+            .status(404)
+            .send(`No handler found for message "${message.description}".` +
+              ` Check your "handlers" configuration`);
+
           return;
         }
 
@@ -70,8 +74,6 @@ export class MessageProducer {
           ...(omit(this.config, "handlers")),
           ...{ providerBaseUrl: "http://localhost:" + server.address().port },
         } as VerifierOptions;
-
-        console.log(opts);
 
         // Run verification
         new Verifier()

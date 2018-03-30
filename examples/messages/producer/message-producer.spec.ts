@@ -17,26 +17,23 @@ config.logging = true;
 describe("Message producer (pact Provider) tests", () => {
 
   const p = new MessageProducer({
-    consumer: "myconsumer",
+    customProviderHeaders: ["Authorization: basic e5e5e5e5e5e5e5"],
     handlers: {
-      "a dog": () => {
-        return new Promise((resolve, reject) => {
-          const dog = {
-            id: 1,
-            name: "billy",
-            type: "not a thig",
-          };
-          logger.info("Returning dog:");
-          logger.info(dog);
-          resolve(dog);
-        });
-      },
+      "a request for a dog": () => dogApiClient.createDog(27),
     },
     log: path.resolve(process.cwd(), "logs"),
-    logLevel: "DEBUG",
-    pactUrls: [path.resolve(process.cwd(), "pacts", "myconsumer-myprovider.json")],
-    provider: "myprovider",
+    logLevel: "INFO",
+    provider: "MyJSMessageProvider",
     providerVersion: "1.0.0",
+
+    // For local validation
+    // pactUrls: [path.resolve(process.cwd(), "pacts", "myjsmessageconsumer-myjsmessageprovider.json")],
+    // Broker validation
+    pactBrokerUrl: "https://test.pact.dius.com.au/",
+    pactBrokerUsername: "dXfltyFMgNOFZAxr8io9wJ37iUpY42M",
+    pactBrokerPassword: "O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
+    publishVerificationResult: true,
+    tags: ["prod"],
   });
 
   describe("send a dog event", () => {

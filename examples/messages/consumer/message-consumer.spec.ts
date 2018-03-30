@@ -6,7 +6,7 @@ import * as sinon from "sinon";
 import { like, term } from "../../../src/dsl/matchers";
 import { dogApiHandler } from "./dog-handler";
 
-const { MessageConsumer, Message } = require("../../../dist/pact");
+const { MessageConsumer, Message } = require("../../../src/pact");
 const path = require("path");
 const expect = chai.expect;
 
@@ -14,21 +14,22 @@ chai.use(chaiAsPromised);
 
 describe("Message consumer (pact provider) tests", () => {
   const messagePact = new MessageConsumer({
-    consumer: "MyConsumer",
+    consumer: "MyJSMessageConsumer",
     dir: path.resolve(process.cwd(), "pacts"),
     pactfileWriteMode: "update",
-    provider: "MyProvider",
+    provider: "MyJSMessageProvider",
+    logLevel: "INFO",
   });
 
   describe("receive dog event", () => {
     it("should accept a valid dog", () => {
       return messagePact
         .given("some state")
-        .expectsToReceive("a dog")
+        .expectsToReceive("a request for a dog")
         .withContent({
           id: like(1),
           name: like("rover"),
-          type: term({ generate: "bulldog", matcher: "bulldog|sheepdog" }),
+          type: term({ generate: "bulldog", matcher: "^(bulldog|sheepdog)$" }),
         })
         .withMetadata({
           "content-type": "application/json",
@@ -42,7 +43,7 @@ describe("Message consumer (pact provider) tests", () => {
   it.skip("should not accept an invalid dog", () => {
     const promise = messagePact
       .given("some state")
-      .expectsToReceive("a dog")
+      .expectsToReceive("a request for a dog")
       .withContent({
         name: "fido",
       })
