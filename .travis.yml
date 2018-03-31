@@ -31,12 +31,12 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
-    branch: master
+    branch: feat/message-pact
     node: '8'
 - provider: script
   skip_cleanup: true
   script: ./scripts/publish.sh
   on:
     tags: true
-    branch: master
+    branch: feat/message-pact
     node: '8'
