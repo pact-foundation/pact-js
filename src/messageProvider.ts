@@ -2,12 +2,13 @@
  * @module Message
  */
 
-import { omit } from "lodash";
+import { omit, isEmpty } from "lodash";
 import { Verifier } from "./dsl/verifier";
 import { Message } from "./dsl/message";
 import { logger } from "./common/logger";
 import { VerifierOptions } from "@pact-foundation/pact-node";
 import { MessageProviderOptions } from "./dsl/options";
+import serviceFactory from "@pact-foundation/pact-node";
 import * as express from "express";
 import * as http from "http";
 import { Promise } from "es6-promise";
@@ -24,7 +25,11 @@ const bodyParser = require("body-parser");
 export class MessageProvider {
   private state: any = {};
 
-  constructor(private config: MessageProviderOptions) { }
+  constructor(private config: MessageProviderOptions) {
+    if (!isEmpty(config.logLevel)) {
+      serviceFactory.logLevel(config.logLevel);
+    }
+  }
 
   /**
    * Verify a Message Provider.

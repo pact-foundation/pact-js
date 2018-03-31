@@ -15,7 +15,6 @@
   "license": "MIT",
   "devDependencies": {
     "@types/mocha": "^2.2.41",
-    "axios": "^0.14.0",
     "chai": "^3.5.0",
     "mocha": "^3.5.3",
     "nyc": "^11.6.0"

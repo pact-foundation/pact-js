@@ -10,16 +10,16 @@ provider:
       Action:
         - "sns:*"
   environment:
-        ACCOUNT_ID: { "Ref": "AWS::AccountId" }
-        # TOPIC_ARN: { "Ref": "SNSTopicPactevents" }
-        TOPIC_ARN: { "Fn::Join":  ["", ["arn:aws:sns:us-east-1:", { "Ref": "AWS::AccountId" }, ":pact-events"] ] }
+    - TOPIC_ARN: { "Fn::Join":  ["", ["arn:aws:sns:us-east-1:", { "Ref": "AWS::AccountId" }, ":pact-events"] ] }
 
 package:
-   individually: true
+  individually: true
+  exclude:
+    - node_modules/**
 
 functions:
-  publisher:
-    handler: publisher/index.handler
+  provider:
+    handler: provider/index.handler
   consumer:
     handler: consumer/index.handler
     events:

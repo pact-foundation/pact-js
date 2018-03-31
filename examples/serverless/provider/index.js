@@ -7,13 +7,13 @@ const TOPIC_ARN = process.env.TOPIC_ARN;
 // Handler is the Lambda and SNS specific code
 // The message generation logic is separated from the handler itself
 // in the
-module.exports.handler = (event, context, callback) => {
-  const message = createEvent(event);
+const handler = (event, context, callback) => {
+  const message = createEvent();
 
   const sns = new AWS.SNS();
 
   const params = {
-    Message: message.body,
+    Message: JSON.stringify(message),
     TopicArn: TOPIC_ARN
   };
 
@@ -22,7 +22,6 @@ module.exports.handler = (event, context, callback) => {
       callback(error);
     }
 
-    console.log("Message successfully published to queue")
     callback(null, {
       message: 'Message successfully published to SNS topic "pact-events"',
       event
@@ -34,12 +33,16 @@ module.exports.handler = (event, context, callback) => {
 
 // Separate your producer code, from the lambda handler.
 // No Lambda/AWS/Protocol specific stuff in here..
-const createEvent = (event) => {
+const createEvent = (obj) => {
+  // Change 'type' to something else to test a pact failure
   return {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: 'Go Serverless v1.0! Your function executed successfully!',
-      input: event,
-    }),
+    id: parseInt(Math.random() * 100),
+    event: "an update to something useful",
+    type: "update"
   };
 };
+
+module.exports = {
+  handler,
+  createEvent,
+}

@@ -22,7 +22,11 @@ export class MessageConsumer {
   // Build up a valid Message object
   private state: any = {};
 
-  constructor(private config: MessageConsumerOptions) { }
+  constructor(private config: MessageConsumerOptions) {
+    if (!isEmpty(config.logLevel)) {
+      serviceFactory.logLevel(config.logLevel);
+    }
+  }
 
   /**
    * Gives a state the provider should be in for this Message.

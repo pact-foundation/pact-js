@@ -1,0 +1,34 @@
+{
+  "name": "serverless-pact-example",
+  "version": "1.0.0",
+  "description": "Example testing a serverless app with Pact",
+  "main": "index.js",
+  "scripts": {
+    "clean": "if [ -d 'pacts' ]; then rm -rf pacts; fi",
+    "test": "npm run test:consumer && npm run test:publish && npm run test:provider",
+    "test:consumer": "mocha consumer/*.spec.js",
+    "test:provider": "mocha -t 10000 provider/*.spec.js",
+    "test:publish": "node publish.js",
+    "can-i-deploy": "npm run can-i-deploy:consumer && npm run can-i-deploy:provider",
+    "can-i-deploy:consumer": "$(find ../../ -name pact-broker | grep -e 'bin/pact-broker$' | head -n 1) can-i-deploy --pacticipant SNSPactEventConsumer --latest --broker-base-url https://test.pact.dius.com.au --broker-username dXfltyFMgNOFZAxr8io9wJ37iUpY42M --broker-password O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
+    "can-i-deploy:provider": "$(find ../../ -name pact-broker | grep -e 'bin/pact-broker$' | head -n 1) can-i-deploy --pacticipant SNSPactEventProvider --latest --broker-base-url https://test.pact.dius.com.au --broker-username dXfltyFMgNOFZAxr8io9wJ37iUpY42M --broker-password O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
+    "deploy": "npm run deploy:consumer && npm run deploy:provider",
+    "deploy:consumer": "npm run can-i-deploy && serverless deploy -f consumer",
+    "deploy:provider": "npm run can-i-deploy && serverless deploy -f provider"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.5.3"
+  },
+  "keywords": [
+    "pact",
+    "serverless",
+    "lambda",
+    "contract-testing"
+  ],
+  "author": "Matt Fellows <matt.fellows@onegeek.com.au>",
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "^2.218.1"
+  }
+}
