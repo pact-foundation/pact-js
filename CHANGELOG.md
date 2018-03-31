@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="6.0.0-alpha.1"></a>
+# [6.0.0-alpha.1](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.0...v6.0.0-alpha.1) (2018-03-31)
+
+
+
 <a name="6.0.0-alpha.0"></a>
 # [6.0.0-alpha.0](https://github.com/pact-foundation/pact-js/compare/v5.9.0...v6.0.0-alpha.0) (2018-03-31)
 
