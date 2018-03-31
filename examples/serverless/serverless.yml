@@ -1,0 +1,26 @@
+# Serverless SNS
+service: pact-events
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  iamRoleStatements:
+    - Effect: "Allow"
+      Resource: "*"
+      Action:
+        - "sns:*"
+  environment:
+        ACCOUNT_ID: { "Ref": "AWS::AccountId" }
+        # TOPIC_ARN: { "Ref": "SNSTopicPactevents" }
+        TOPIC_ARN: { "Fn::Join":  ["", ["arn:aws:sns:us-east-1:", { "Ref": "AWS::AccountId" }, ":pact-events"] ] }
+
+package:
+   individually: true
+
+functions:
+  publisher:
+    handler: publisher/index.handler
+  consumer:
+    handler: consumer/index.handler
+    events:
+      - sns: pact-events
