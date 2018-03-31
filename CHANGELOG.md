@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="6.0.0-alpha.0"></a>
+# [6.0.0-alpha.0](https://github.com/pact-foundation/pact-js/compare/v5.9.0...v6.0.0-alpha.0) (2018-03-31)
+
+
+### Features
+
+* **messages:** initial WIP for message pacts ([fd3526e](https://github.com/pact-foundation/pact-js/commit/fd3526e))
+
+
+
 <a name="5.9.0"></a>
 # [5.9.0](https://github.com/pact-foundation/pact-js/compare/v5.8.0...v5.9.0) (2018-03-27)
 

@@ -1,6 +1,6 @@
 {
   "name": "@pact-foundation/pact",
-  "version": "6.0.0",
+  "version": "6.0.0-alpha.0",
   "description": "Pact for all things Javascript",
   "main": "./pact.js",
   "types": "./pact.d.ts",
@@ -16,7 +16,7 @@
     "postdist": "npm t",
     "posttest": "npm run test:karma",
     "predist": "npm run clean && npm run lint && npm run jscpd",
-    "release": "standard-version --prerelease alpha",
+    "release": "standard-version --prerelease alpha --release-as patch",
     "test": "nyc --check-coverage --reporter=html --reporter=text-summary mocha",
     "test:examples": "npm run test:e2e-examples && npm run test:jest-examples && npm run test:mocha-examples && npm run test:ava-examples && npm run test:ts-examples && npm run test:message-examples",
     "test:e2e-examples": "cd examples/e2e && npm i && npm t",
@@ -48,7 +48,8 @@
     "consumer driven testing"
   ],
   "author": "Matt Fellows <m@onegeek.com.au> (http://twitter.com/matthewfellows)",
-  "contributors": [{
+  "contributors": [
+    {
       "name": "Tarcio Saraiva",
       "email": "tarcio@gmail.com",
       "url": "http://twitter.com/tarciosaraiva"
