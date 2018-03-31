@@ -1,5 +1,3 @@
-const axios = require("axios");
-
 // API integration client
 exports.dogApiClient = {
   createDog: (id: number) => {

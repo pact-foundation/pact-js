@@ -6,13 +6,13 @@ import * as sinon from "sinon";
 import { like, term } from "../../../src/dsl/matchers";
 import { dogApiHandler } from "./dog-handler";
 
-const { MessageConsumer, Message } = require("../../../src/pact");
+const { MessageConsumer, Message, synchronousBodyHandler } = require("../../../src/pact");
 const path = require("path");
 const expect = chai.expect;
 
 chai.use(chaiAsPromised);
 
-describe("Message consumer (pact provider) tests", () => {
+describe("Message consumer tests", () => {
   const messagePact = new MessageConsumer({
     consumer: "MyJSMessageConsumer",
     dir: path.resolve(process.cwd(), "pacts"),
@@ -34,14 +34,14 @@ describe("Message consumer (pact provider) tests", () => {
         .withMetadata({
           "content-type": "application/json",
         })
-        .verify(dogApiHandler);
+        .verify(synchronousBodyHandler(dogApiHandler));
     });
   });
 
   // This is an example of a pact breaking
   // uncomment to see how it works!
   it.skip("should not accept an invalid dog", () => {
-    const promise = messagePact
+    return messagePact
       .given("some state")
       .expectsToReceive("a request for a dog")
       .withContent({
@@ -51,8 +51,5 @@ describe("Message consumer (pact provider) tests", () => {
         "content-type": "application/json",
       })
       .verify(dogApiHandler);
-
-    // tslint:disable: no-unused-expression
-    expect(promise).to.eventually.be.rejected;
   });
 });

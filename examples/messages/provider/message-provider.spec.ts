@@ -4,7 +4,7 @@ import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import * as sinon from "sinon";
 
-const { MessageProducer, Message } = require("../../../src/pact");
+const { MessageProvider, Message } = require("../../../src/pact");
 const { config } = require("../../../src/common/config");
 const { logger } = require("../../../src/common/logger");
 const path = require("path");
@@ -14,10 +14,9 @@ const { dogApiClient } = require("./dog-client");
 chai.use(chaiAsPromised);
 config.logging = true;
 
-describe("Message producer (pact Provider) tests", () => {
+describe("Message provider tests", () => {
 
-  const p = new MessageProducer({
-    customProviderHeaders: ["Authorization: basic e5e5e5e5e5e5e5"],
+  const p = new MessageProvider({
     handlers: {
       "a request for a dog": () => dogApiClient.createDog(27),
     },

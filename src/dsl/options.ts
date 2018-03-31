@@ -58,7 +58,7 @@ export interface MandatoryPactOptions {
 export type PactOptionsComplete = PactOptions & MandatoryPactOptions;
 export interface MessageHandlers { [name: string]: () => Promise<any>; }
 
-export interface MessageProducerOptions {
+export interface MessageProviderOptions {
   // The name of the consumer
   consumer: string;
 
@@ -77,7 +77,7 @@ export interface MessageProducerOptions {
   // Log level
   logLevel?: LogLevel;
 
-  // Message producers
+  // Message providers
   handlers: MessageHandlers;
 
   // Choices: 'overwrite' | 'update', 'none', defaults to 'overwrite'
@@ -92,7 +92,6 @@ export interface MessageProducerOptions {
   tags?: string[];
   timeout?: number;
 }
-
 export interface MessageConsumerOptions {
   // The name of the consumer
   consumer: string;
