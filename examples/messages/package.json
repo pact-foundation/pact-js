@@ -7,8 +7,8 @@
     "build": "tsc",
     "clean": "if [ -d 'pacts' ]; then rm -rf pacts; fi",
     "test": "npm run test:consumer && npm run test:publish && npm run test:provider",
-    "test:provider": "nyc --check-coverage --reporter=html --reporter=text-summary mocha provider/*.spec.ts",
     "test:consumer": "nyc --check-coverage --reporter=html --reporter=text-summary mocha consumer/*.spec.ts",
+    "test:provider": "nyc --check-coverage --reporter=html --reporter=text-summary mocha -t 10000 provider/*.spec.ts",
     "test:publish": "node publish.js"
   },
   "author": "",
