@@ -531,8 +531,8 @@ describe("Matcher", () => {
         });
       });
       describe("when given a complex nested object with matchers", () => {
-        it("should remove all matching guff", () => {
-          const o = {
+        it.only("should remove all matching guff", () => {
+          const o = somethingLike({
             stringMatcher: {
               awesomeSetting: somethingLike("a string"),
             },
@@ -545,7 +545,14 @@ describe("Matcher", () => {
             arrayMatcher: {
               lotsOfValues: eachLike("useful", { min: 3 }),
             },
-          };
+            arrayOfMatchers: {
+              lotsOfValues: eachLike(
+                {
+                  foo: "bar",
+                  baz: somethingLike("bat"),
+                }, { min: 3 }),
+            },
+          });
 
           const expected = {
             stringMatcher: {
@@ -559,6 +566,22 @@ describe("Matcher", () => {
             },
             arrayMatcher: {
               lotsOfValues: ["useful", "useful", "useful"],
+            },
+            arrayOfMatchers: {
+              lotsOfValues: [
+                {
+                  baz: "bat",
+                  foo: "bar",
+                },
+                {
+                  baz: "bat",
+                  foo: "bar",
+                },
+                {
+                  baz: "bat",
+                  foo: "bar",
+                },
+              ],
             },
           };
 
