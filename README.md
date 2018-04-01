@@ -46,6 +46,7 @@ how to get going.
   - [Asynchronous API Testing](#asynchronous-api-testing)
     - [Consumer](#consumer)
     - [Provider (Producer)](#provider-producer)
+    - [Pact Broker Integration](#pact-broker-integration)
   - [Matching](#matching)
     - [Match common formats](#match-common-formats)
     - [Match based on type](#match-based-on-type)
@@ -53,6 +54,8 @@ how to get going.
     - [Match by regular expression](#match-by-regular-expression)
   - [Tutorial (60 minutes)](#tutorial-60-minutes)
   - [Examples](#examples)
+    - [HTTP APIs](#http-apis)
+    - [Asynchronous APIs](#asynchronous-apis)
   - [Using Pact in non-Node environments](#using-pact-in-non-node-environments)
     - [Using Pact with Karma](#using-pact-with-karma)
     - [Using Pact with RequireJS](#using-pact-with-requirejs)
@@ -437,7 +440,7 @@ The following test creates a contract for a Dog API handler:
 1. Creates the MessageConsumer class
 1. Setup the expectations for the consumer - here we expect a `dog` object with three fields
 1. Pact will send the message to your message handler. If the handler returns a successful promise, the message is saved, otherwise the test fails. There are a few key things to consider:
-    * The actual request body that Pact will send, will be contained within a [Message](/Users/mfellows/development/public/pact-js/src/dsl/message.ts) object along with other context, so the body must be retrieved via `content` attribute.
+    * The actual request body that Pact will send, will be contained within a [Message](https://github.com/pact-foundation/pact-js/tree/feat/message-pact/src/dsl/message.ts) object along with other context, so the body must be retrieved via `content` attribute.
     * All handlers to be tested must be of the shape `(m: Message) => Promise<any>` - that is, they must accept a `Message` and return a `Promise`. This is how we get around all of the various protocols, and will often require a lightweight adapter function to convert it.
     * In this case, we wrap the actual dogApiHandler with a convenience function `synchronousBodyHandler` provided by Pact, which Promisifies the handler and extracts the contents.
 
@@ -491,6 +494,10 @@ describe("Message provider tests", () => {
 1. We configure Pact to stand-in for the queue. The most important bit here is the `handlers` block
     * Similar to the Consumer tests, we map the various interactions that are going to be verified as denoted by their `description` field. In this case, `a request for a dog`, maps to the `createDog` handler. Notice how this matches the original Consumer test.
 1. We can now run the verification process. Pact will read all of the interactions specified by its consumer, and invoke each function that is responsible for generating that message.
+
+### Pact Broker Integration
+
+As per HTTP APIs, you can [publish contracts and verification results to a Broker](#publishing-pacts-to-a-broker).
 
 ## Matching
 
@@ -654,6 +661,8 @@ Learn everything in Pact JS in 60 minutes: https://github.com/DiUS/pact-workshop
 
 ## Examples
 
+### HTTP APIs
+
 * [Complete Example (Node env)](https://github.com/pact-foundation/pact-js/tree/master/examples/e2e)
 * [Pact with AVA (Node env)](https://github.com/pact-foundation/pact-js/tree/master/examples/ava)
 * [Pact with Jest (Node env)](https://github.com/pact-foundation/pact-js/tree/master/examples/jest)
@@ -661,7 +670,11 @@ Learn everything in Pact JS in 60 minutes: https://github.com/DiUS/pact-workshop
 * [Pact with Mocha](https://github.com/pact-foundation/pact-js/tree/master/examples/mocha)
 * [Pact with Karma + Jasmine](https://github.com/pact-foundation/pact-js/tree/master/karma/jasmine)
 * [Pact with Karma + Mocha](https://github.com/pact-foundation/pact-js/tree/master/karma/mocha)
-* [Asynchronous messages](https://github.com/pact-foundation/pact-js/tree/master/examples/messages)
+
+### Asynchronous APIs
+
+* [Asynchronous messages](https://github.com/pact-foundation/pact-js/tree/feat/message-pact/examples/messages)
+* [Serverless](https://github.com/pact-foundation/pact-js/tree/feat/message-pact/examples/serverless)
 
 [![asciicast](https://asciinema.org/a/105793.png)](https://asciinema.org/a/105793)
 

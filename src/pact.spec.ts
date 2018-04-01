@@ -298,7 +298,7 @@ describe("Pact", () => {
       });
     });
 
-    describe("when writing pact is successful and shutting down the mock server is unsuccessful", () => {
+    describe.only("when writing pact is successful and shutting down the mock server is unsuccessful", () => {
       it("should throw an error", () => {
         const writePactStub = sandbox.stub(MockService.prototype, "writePact").resolves();
 

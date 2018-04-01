@@ -1,7 +1,14 @@
 /* tslint:disable:no-unused-expression object-literal-sort-keys max-classes-per-file no-empty */
 const consumeEvent = require("./index").consumeEvent;
-const { like, term } = require("../../../dist/dsl/matchers");
-const { MessageConsumer, Message, synchronousBodyHandler } = require("../../../dist/pact");
+const {
+  like,
+  term
+} = require("../../../dist/dsl/matchers");
+const {
+  MessageConsumer,
+  Message,
+  synchronousBodyHandler
+} = require("../../../dist/pact");
 const path = require("path");
 
 describe("Serverless consumer tests", () => {
@@ -18,7 +25,10 @@ describe("Serverless consumer tests", () => {
         .withContent({
           id: like(1),
           event: like("something important"),
-          type: term({ generate: "save", matcher: "^(save|update|cancel)$" }),
+          type: term({
+            generate: "save",
+            matcher: "^(save|update|cancel)$"
+          }),
         })
         .withMetadata({
           "content-type": "application/json",
