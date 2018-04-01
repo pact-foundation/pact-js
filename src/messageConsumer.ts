@@ -2,8 +2,8 @@
  * @module Message
  */
 
-import { isEmpty } from "lodash";
-import { MatcherResult } from "./dsl/matchers";
+import { isEmpty, cloneDeep } from "lodash";
+import { MatcherResult, extractPayload } from "./dsl/matchers";
 import { qToPromise } from "./common/utils";
 import { Metadata, Message } from "./dsl/message";
 import { logger } from "./common/logger";
@@ -108,7 +108,7 @@ export class MessageConsumer {
     logger.info("Verifying message");
 
     return this.validate()
-      .then(() => handler(this.state))
+      .then(() => handler(extractPayload(cloneDeep(this.state))))
       .then(() => qToPromise<string>(this.getServiceFactory().createMessage({
         consumer: this.config.consumer,
         content: JSON.stringify(this.state),
@@ -125,7 +125,7 @@ export class MessageConsumer {
    * @returns {Promise}
    */
   public validate(): Promise<any> {
-    if (this.isMessage(this.state)) {
+    if (isMessage(this.state)) {
       return Promise.resolve();
     }
     return Promise.reject("message has not yet been properly constructed");
@@ -135,10 +135,11 @@ export class MessageConsumer {
     return serviceFactory;
   }
 
-  private isMessage(x: Message | any): x is Message {
-    return (x as Message).content !== undefined;
-  }
 }
+
+const isMessage = (x: Message | any): x is Message => {
+  return (x as Message).content !== undefined;
+};
 
 // Consumer message handler
 export type Handler = (m: Message) => Promise<any>;

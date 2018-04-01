@@ -1,4 +1,4 @@
-/* tslint:disable:no-unused-expression no-empty */
+/* tslint:disable:no-unused-expression no-empty object-literal-sort-keys */
 import * as chai from "chai";
 const expect = require("chai").expect;
 import { Interaction } from "./interaction";
@@ -7,7 +7,10 @@ import {
   integer, ipv4Address, ipv6Address, ISO8601_DATE_FORMAT, iso8601Date,
   iso8601DateTime, iso8601DateTimeWithMillis, iso8601Time, rfc3339Timestamp, somethingLike, term, uuid,
   validateExample,
+  extractPayload,
+  isMatcher,
 } from "./matchers";
+import { json } from "express";
 
 describe("Matcher", () => {
 
@@ -53,7 +56,7 @@ describe("Matcher", () => {
           matcher: "\\w+",
         });
 
-        expect(match).to.eql(expected);
+        expect(JSON.stringify(match)).to.deep.include(JSON.stringify(expected));
       });
     });
 
@@ -101,7 +104,7 @@ describe("Matcher", () => {
         };
 
         const match = somethingLike("myspecialvalue");
-        expect(match).to.eql(expected);
+        expect(JSON.stringify(match)).to.deep.include(JSON.stringify(expected));
       });
     });
 
@@ -137,7 +140,7 @@ describe("Matcher", () => {
         };
 
         const match = eachLike(null, { min: 1 });
-        expect(match).to.eql(expected);
+        expect(JSON.stringify(match)).to.deep.include(JSON.stringify(expected));
       });
     });
 
@@ -150,7 +153,7 @@ describe("Matcher", () => {
         };
 
         const match = eachLike({ a: 1 }, { min: 1 });
-        expect(match).to.eql(expected);
+        expect(JSON.stringify(match)).to.deep.include(JSON.stringify(expected));
       });
     });
 
@@ -171,7 +174,7 @@ describe("Matcher", () => {
         };
 
         const match = eachLike([1, 2, 3], { min: 1 });
-        expect(match).to.eql(expected);
+        expect(JSON.stringify(match)).to.deep.include(JSON.stringify(expected));
       });
     });
 
@@ -184,7 +187,7 @@ describe("Matcher", () => {
         };
 
         const match = eachLike("test", { min: 1 });
-        expect(match).to.eql(expected);
+        expect(JSON.stringify(match)).to.deep.include(JSON.stringify(expected));
       });
     });
 
@@ -203,7 +206,7 @@ describe("Matcher", () => {
           };
 
           const match = eachLike({ id: somethingLike(10) }, { min: 1 });
-          expect(match).to.eql(expected);
+          expect(JSON.stringify(match)).to.deep.include(JSON.stringify(expected));
         });
       });
 
@@ -234,7 +237,7 @@ describe("Matcher", () => {
             }),
           }, { min: 1 });
 
-          expect(match).to.eql(expected);
+          expect(JSON.stringify(match)).to.deep.include(JSON.stringify(expected));
         });
       });
 
@@ -251,7 +254,7 @@ describe("Matcher", () => {
           };
 
           const match = eachLike(eachLike("blue", { min: 1 }), { min: 1 });
-          expect(match).to.eql(expected);
+          expect(JSON.stringify(match)).to.deep.include(JSON.stringify(expected));
         });
       });
 
@@ -308,7 +311,7 @@ describe("Matcher", () => {
             }, { min: 1 }),
             { min: 1 });
 
-          expect(match).to.eql(expected);
+          expect(JSON.stringify(match)).to.deep.include(JSON.stringify(expected));
         });
       });
     });
@@ -322,7 +325,7 @@ describe("Matcher", () => {
         };
 
         const match = eachLike({ a: 1 });
-        expect(match).to.eql(expected);
+        expect(JSON.stringify(match)).to.deep.include(JSON.stringify(expected));
       });
     });
 
@@ -335,7 +338,7 @@ describe("Matcher", () => {
         };
 
         const match = eachLike({ a: 1 }, { min: 3 });
-        expect(match).to.eql(expected);
+        expect(JSON.stringify(match)).to.deep.include(JSON.stringify(expected));
       });
     });
   });
@@ -508,6 +511,58 @@ describe("Matcher", () => {
           expect(() => {
             iso8601DateTimeWithMillis("abc");
           }).to.throw(Error);
+        });
+      });
+    });
+
+    describe("#extractPayload", () => {
+      describe("when given a simple matcher", () => {
+        it("should remove all matching guff", () => {
+          const expected = "myawesomeword";
+
+          const matcher = term({
+            generate: "myawesomeword",
+            matcher: "\\w+",
+          });
+
+          expect(isMatcher(matcher)).to.eq(true);
+          expect(extractPayload(matcher)).to.eql(expected);
+
+        });
+      });
+      describe("when given a complex nested object with matchers", () => {
+        it("should remove all matching guff", () => {
+          const o = {
+            stringMatcher: {
+              awesomeSetting: somethingLike("a string"),
+            },
+            anotherStringMatcher: {
+              nestedSetting: {
+                anotherStringMatcherSubSetting: somethingLike(true),
+              },
+              anotherSetting: term({ generate: "this", matcher: "this|that" }),
+            },
+            arrayMatcher: {
+              lotsOfValues: eachLike("useful", { min: 3 }),
+            },
+          };
+
+          const expected = {
+            stringMatcher: {
+              awesomeSetting: "a string",
+            },
+            anotherStringMatcher: {
+              nestedSetting: {
+                anotherStringMatcherSubSetting: true,
+              },
+              anotherSetting: "this",
+            },
+            arrayMatcher: {
+              lotsOfValues: ["useful", "useful", "useful"],
+            },
+          };
+
+          expect(extractPayload(o)).to.deep.eql(expected);
         });
       });
     });

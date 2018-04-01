@@ -11,23 +11,31 @@ The very basic architecture is as follows:
 ## Overview
 <!-- TOC -->
 
-- [Overview](#overview)
-- [Test Services with Pact](#test-services-with-pact)
-- [Deployment](#deployment)
-  - [Pact Broker integration](#pact-broker-integration)
-  - [Running deployment](#running-deployment)
-- [Running](#running)
-- [Further reading](#further-reading)
+- [Serverless example](#serverless-example)
+  - [Overview](#overview)
+  - [Test Services with Pact](#test-services-with-pact)
+  - [Deployment](#deployment)
+    - [Pact Broker integration](#pact-broker-integration)
+    - [Running deployment](#running-deployment)
+  - [Running](#running)
+  - [Cleaning up](#cleaning-up)
+  - [Further reading](#further-reading)
 
 <!-- /TOC -->
 
 **Message Producer**
 
-Small utility that when invoked, publishes an "event" message to an SQS queue.
+Small utility that when invoked, publishes an "event" message to an SNS topic.
 
 **Message Consumer**
 
-Lambda function that reads from SQS and processes the data - by incrementing a simple counter.
+Lambda function that reads from the SNS topic and processes the data - by incrementing a simple counter.
+
+**Getting Started**
+
+```
+npm i
+```
 
 ## Test Services with Pact
 
@@ -46,6 +54,12 @@ npm run test:provider
 
 ## Deployment
 
+You can run this stack in AWS. It uses services within the [free tier](https://aws.amazon.com/free/?awsf.default=categories%23alwaysfree) to reduce potential costs.
+
+To use any of the commandsn belowe, ensure you have valid [AWS credentials](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) for your environment.
+
+Serverless
+
 ### Pact Broker integration
 
 Using the test broker at https://test.pact.dius.com.au (user/pass: `dXfltyFMgNOFZAxr8io9wJ37iUpY42M` / `O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1`), we integrate the `can-i-deploy` facility, that ensure it is safe to deploy the consumer or provider before a change.
@@ -60,8 +74,6 @@ npm run can-i-deploy:provider
 ```
 
 ### Running deployment
-
-Ensure you have valid AWS credentials in your environment and have installed serverless framework (`npm i -g serverless`), and then run;
 
 ```sh
 npm run deploy
@@ -82,9 +94,47 @@ serverless deploy -f consumer
 serverless invoke -f provider -l
 ```
 
+You should see something like:
+
+```sh
+matt λ serverless invoke -f provider -l
+{
+    "id": 65,
+    "event": "an update to something useful",
+    "type": "update"
+}
+--------------------------------------------------------------------
+START RequestId: 87050842-3536-11e8-ba23-e7bc78dfd40c Version: $LATEST
+END RequestId: 87050842-3536-11e8-ba23-e7bc78dfd40c
+REPORT RequestId: 87050842-3536-11e8-ba23-e7bc78dfd40c	Duration: 169.04 ms	Billed Duration: 200 ms 	Memory Size: 1024 MB	Max Memory Used: 40 MB
+```
+
 **Watching the consumer**
 ```sh
 serverless logs -f consumer -t
+```
+
+When an event is published to the topic, your consumer should log to console something like the following:
+
+```sh
+matt λ serverless logs -f consumer -t
+START RequestId: 8784bf84-3536-11e8-be0c-038b85b513b9 Version: $LATEST
+2018-04-01 08:54:55.878 (+10:00)	8784bf84-3536-11e8-be0c-038b85b513b9	Received event from SNS
+2018-04-01 08:54:55.878 (+10:00)	8784bf84-3536-11e8-be0c-038b85b513b9	Event: { id: 65,
+  event: 'an update to something useful',
+  type: 'update' }
+...
+2018-04-01 08:54:55.881 (+10:00)	8784bf84-3536-11e8-be0c-038b85b513b9	Event count: 1
+END RequestId: 8784bf84-3536-11e8-be0c-038b85b513b9
+REPORT RequestId: 8784bf84-3536-11e8-be0c-038b85b513b9	Duration: 5.55 ms	Billed Duration: 100 ms 	Memory Size: 1024 MB	Max Memory Used: 32 MB
+```
+
+## Cleaning up
+
+When you are done with your serverless stack, simply run:
+
+```
+serverless remove -v
 ```
 
 ## Further reading
