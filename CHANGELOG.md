@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="6.0.0-alpha.3"></a>
+# [6.0.0-alpha.3](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.2...v6.0.0-alpha.3) (2018-04-01)
+
+
+### Bug Fixes
+
+* **test:** fix promise resolution in test ([ce31f31](https://github.com/pact-foundation/pact-js/commit/ce31f31))
+
+
+### Features
+
+* **example:** working serverless example with pact. [#166](https://github.com/pact-foundation/pact-js/issues/166) ([d4a49f5](https://github.com/pact-foundation/pact-js/commit/d4a49f5))
+* **message:** fix message structure sent to consumer verify(). [#166](https://github.com/pact-foundation/pact-js/issues/166) ([ee1ddf0](https://github.com/pact-foundation/pact-js/commit/ee1ddf0))
+* **serverless-example:** add basic serverless SNS example ([08cd73b](https://github.com/pact-foundation/pact-js/commit/08cd73b))
+
+
+
 <a name="6.0.0-alpha.2"></a>
 # [6.0.0-alpha.2](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.0...v6.0.0-alpha.2) (2018-03-31)
 
