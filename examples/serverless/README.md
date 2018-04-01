@@ -2,7 +2,7 @@
 
 ![serverless-logo](https://user-images.githubusercontent.com/53900/38163394-57ec9176-353f-11e8-80d1-b9f6d5f1773f.png)
 
-Fictional application running using the [Serverless](https://github.com/serverless/serverless) framework.
+Sample contract testing application running using the [Serverless](https://github.com/serverless/serverless) framework.
 
 The very basic architecture is as follows:
 
@@ -49,6 +49,7 @@ Or individually:
 
 ```
 npm run test:consumer
+npm run test:publish # publish contracts to the broker
 npm run test:provider
 ```
 
@@ -56,21 +57,32 @@ npm run test:provider
 
 You can run this stack in AWS. It uses services within the [free tier](https://aws.amazon.com/free/?awsf.default=categories%23alwaysfree) to reduce potential costs.
 
-To use any of the commandsn belowe, ensure you have valid [AWS credentials](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) for your environment.
-
-Serverless
+To use any of the commands below, ensure you have valid [AWS credentials](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) for your environment.
 
 ### Pact Broker integration
 
-Using the test broker at https://test.pact.dius.com.au (user/pass: `dXfltyFMgNOFZAxr8io9wJ37iUpY42M` / `O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1`), we integrate the `can-i-deploy` facility, that ensure it is safe to deploy the consumer or provider before a change.
+Using the test broker at https://test.pact.dius.com.au (user/pass: `dXfltyFMgNOFZAxr8io9wJ37iUpY42M` / `O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1`), we make use of the [`can-i-deploy` tool](https://github.com/pact-foundation/pact_broker/wiki/Provider-verification-results#querying) (available from the [Pact CLI suite](https://github.com/pact-foundation/pact-ruby-standalone/releases) but also bundled as part of `pact`), that ensures it is safe to deploy the consumer or provider before a releasing a change.
 
-Whenever we verify a contract with Pact, the results are shared with the broker, which is able to determine compatibility between components.
+Whenever we create, change or verify a contract with Pact, the results are shared with the broker, which is then able to determine compatibility between components at any point in time.
 
-You can see the current state of verification by running one of:
+You can see this in action by running one of the following:
 
+```sh
+npm run can-i-deploy # For both
+npm run can-i-deploy:consumer # Just consumer
+npm run can-i-deploy:provider # Yep, just the provider
 ```
-npm run can-i-deploy:consumer
-npm run can-i-deploy:provider
+
+You will see something like:
+
+```sh
+Computer says yes \o/
+
+CONSUMER             | C.VERSION | PROVIDER             | P.VERSION | SUCCESS?
+---------------------|-----------|----------------------|-----------|---------
+SNSPactEventConsumer | 1.0.1     | SNSPactEventProvider | 1.0.0     | true
+
+All verification results are published and successful
 ```
 
 ### Running deployment
@@ -81,7 +93,7 @@ npm run deploy
 
 This will first check with `can-i-deploy`. If you want to skip this process, you can simply run:
 
-```
+```sh
 serverless deploy -f provider
 serverless deploy -f consumer
 ```
