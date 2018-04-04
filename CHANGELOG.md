@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="6.0.0-alpha.5"></a>
+# [6.0.0-alpha.5](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.4...v6.0.0-alpha.5) (2018-04-04)
+
+
+### Features
+
+* **messages:** implement v3 compatible provider states ([8e113a5](https://github.com/pact-foundation/pact-js/commit/8e113a5))
+
+
+
 <a name="6.0.0-alpha.4"></a>
 # [6.0.0-alpha.4](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.2...v6.0.0-alpha.4) (2018-04-01)
 
