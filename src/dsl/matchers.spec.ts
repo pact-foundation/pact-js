@@ -531,7 +531,7 @@ describe("Matcher", () => {
         });
       });
       describe("when given a complex nested object with matchers", () => {
-        it.only("should remove all matching guff", () => {
+        it("should remove all matching guff", () => {
           const o = somethingLike({
             stringMatcher: {
               awesomeSetting: somethingLike("a string"),

@@ -17,7 +17,7 @@ export interface Metadata { [name: string]: string | MatcherResult; }
  * @module Message
  */
 export interface Message {
-  providerState?: string;
+  providerStates?: string;
   description?: string;
   metadata?: Metadata;
   content: any;

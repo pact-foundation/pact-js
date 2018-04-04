@@ -36,7 +36,12 @@ export class MessageConsumer {
    */
   public given(providerState: string) {
     if (providerState) {
-      this.state.providerState = providerState;
+      // Currently only supports a single state
+      // but the format needs to be v3 compatible for
+      // basic interoperability
+      this.state.providerStates = [{
+        name: providerState,
+      }];
     }
 
     return this;

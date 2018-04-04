@@ -47,6 +47,18 @@ describe("MessageConsumer", () => {
         return expect(consumer.validate()).to.eventually.be.fulfilled;
       });
     });
+    describe("when a valid state has been given", () => {
+      it("the state should be save id in v3 format", () => {
+        consumer
+          .given("some state")
+          .expectsToReceive("A message about something")
+          .withContent({ foo: "bar" })
+          .withMetadata({ baz: "bat" });
+
+        expect(consumer.json().providerStates).to.be.a("array");
+        expect(consumer.json().providerStates).to.deep.eq([{ name: "some state" }]);
+      });
+    });
     describe("when a valid Message has not been constructed", () => {
       it("the state should not be valid", () => {
         consumer
