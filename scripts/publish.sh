@@ -2,7 +2,7 @@
 
 mkdir -p dist-web
 
-VERSION=$(grep '\"version\"' package.json | grep -E -o "([0-9\.]+(-[a-z\.9-9]+)?)")
+VERSION=$(grep '\"version\"' package.json | grep -E -o "([0-9\.]+(-[a-z\.0-9]+)?)")
 echo "--> Releasing version ${VERSION}"
 
 echo "--> Copy key artifacts into pact and pact-web distributions"
