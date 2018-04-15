@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="6.0.0-alpha.8"></a>
+# [6.0.0-alpha.8](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.7...v6.0.0-alpha.8) (2018-04-15)
+
+
+### Features
+
+* **messages:** setup provider states in verification ([57f7352](https://github.com/pact-foundation/pact-js/commit/57f7352))
+
+
+
 <a name="6.0.0-alpha.7"></a>
 # [6.0.0-alpha.7](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.6...v6.0.0-alpha.7) (2018-04-05)
 
