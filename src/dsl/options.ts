@@ -3,8 +3,9 @@
  * @module PactOptions
  */
 import { PactfileWriteMode } from "./mockService";
+import { MessageHandlers, StateHandlers } from "pact";
 
-export type LogLevel = "trace" | "debug" | "info" | "error" | "fatal" | "warn" | undefined;
+export type LogLevel = "trace" | "debug" | "info" | "warn" | "error" | "fatal";
 
 // TODO: Combine types here to reduce duplication
 export interface PactOptions {
@@ -56,7 +57,8 @@ export interface MandatoryPactOptions {
 }
 
 export type PactOptionsComplete = PactOptions & MandatoryPactOptions;
-export interface MessageHandlers { [name: string]: () => Promise<any>; }
+// export interface MessageHandlers { [name: string]: (m: Message) => Promise<any>; }
+// export interface StateHandlers { [name: string]: (m: Message) => Promise<any>; }
 
 export interface MessageProviderOptions {
   // The name of the consumer
@@ -79,6 +81,9 @@ export interface MessageProviderOptions {
 
   // Message providers
   handlers: MessageHandlers;
+
+  // Prepare any provider states
+  stateHandlers?: StateHandlers;
 
   // Choices: 'overwrite' | 'update', 'none', defaults to 'overwrite'
   pactfileWriteMode?: PactfileWriteMode;

@@ -1,4 +1,3 @@
-
 import { MatcherResult } from "./matchers";
 
 /**
@@ -17,8 +16,14 @@ export interface Metadata { [name: string]: string | MatcherResult; }
  * @module Message
  */
 export interface Message {
-  providerStates?: string;
+  providerStates?: [{ name: string }];
   description?: string;
   metadata?: Metadata;
   content: any;
 }
+
+// Consumer message handler
+export type Handler = (m: Message) => Promise<any>;
+
+export interface MessageHandlers { [name: string]: Handler; }
+export interface StateHandlers { [name: string]: (state: string) => Promise<any>; }

@@ -1,10 +1,10 @@
+// tslint:disable:no-console
 /**
  * Pact module for Web use.
  * @module Pact Web
  */
 import { polyfill } from "es6-promise";
 import { isEmpty } from "lodash";
-import { logger } from "./common/logger";
 import { Interaction, InteractionObject } from "./dsl/interaction";
 import { MockService } from "./dsl/mockService";
 import { PactOptions, PactOptionsComplete } from "./dsl/options";
@@ -38,11 +38,11 @@ export class PactWeb {
     this.opts = { ...defaults, ...config } as PactOptionsComplete;
 
     if (!isEmpty(this.opts.consumer) || !isEmpty(this.opts.provider)) {
-      logger.warn(`Passing in consumer/provider to PactWeb is deprecated,
+      console.warn(`Passing in consumer/provider to PactWeb is deprecated,
         and will be removed in the next major version`);
     }
 
-    logger.info(`Setting up Pact using mock service on port: "${this.opts.port}"`);
+    console.info(`Setting up Pact using mock service on port: "${this.opts.port}"`);
 
     this.mockService = new MockService(this.opts.consumer, this.opts.provider, this.opts.port, this.opts.host,
       this.opts.ssl, this.opts.pactfileWriteMode);

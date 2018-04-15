@@ -37,6 +37,7 @@ module.exports = {
     ],
   },
   plugins: [
+    new webpack.ProvidePlugin({ Promise: ['es6-promise', 'Promise'] }),
     new webpack.DefinePlugin({ 'global.GENTLY': false }),
     new webpack.IgnorePlugin(/vertx/),
     new webpack.NoEmitOnErrorsPlugin()

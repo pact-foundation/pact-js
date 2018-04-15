@@ -41,6 +41,7 @@ describe("MesageProvider", () => {
         successfulRequest: () => Promise.resolve("yay"),
         unsuccessfulRequest: () => Promise.reject("nay"),
       },
+      logLevel: "error",
       provider: "myprovider",
     });
   });

@@ -12,7 +12,7 @@ import * as process from "process";
 import { Interaction, InteractionObject } from "./dsl/interaction";
 import { isEmpty } from "lodash";
 import { isPortAvailable } from "./common/net";
-import { logger } from "./common/logger";
+import logger from "./common/logger";
 import { MockService } from "./dsl/mockService";
 import { PactOptions, PactOptionsComplete } from "./dsl/options";
 import { Server } from "@pact-foundation/pact-node/src/server";

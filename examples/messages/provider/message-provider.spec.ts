@@ -5,14 +5,12 @@ import * as chaiAsPromised from "chai-as-promised";
 import * as sinon from "sinon";
 
 const { MessageProvider, Message } = require("../../../src/pact");
-const { config } = require("../../../src/common/config");
 const { logger } = require("../../../src/common/logger");
 const path = require("path");
 const expect = chai.expect;
 const { dogApiClient } = require("./dog-client");
 
 chai.use(chaiAsPromised);
-config.logging = true;
 
 describe("Message provider tests", () => {
 

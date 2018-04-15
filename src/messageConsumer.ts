@@ -5,8 +5,8 @@
 import { isEmpty, cloneDeep } from "lodash";
 import { MatcherResult, extractPayload } from "./dsl/matchers";
 import { qToPromise } from "./common/utils";
-import { Metadata, Message } from "./dsl/message";
-import { logger } from "./common/logger";
+import { Metadata, Message, Handler } from "./dsl/message";
+import logger from "./common/logger";
 import serviceFactory from "@pact-foundation/pact-node";
 import { MessageConsumerOptions } from "./dsl/options";
 
@@ -145,9 +145,6 @@ export class MessageConsumer {
 const isMessage = (x: Message | any): x is Message => {
   return (x as Message).content !== undefined;
 };
-
-// Consumer message handler
-export type Handler = (m: Message) => Promise<any>;
 
 // TODO: create basic adapters for API handlers, e.g.
 

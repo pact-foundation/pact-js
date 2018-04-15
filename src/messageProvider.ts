@@ -5,13 +5,12 @@
 import { omit, isEmpty } from "lodash";
 import { Verifier } from "./dsl/verifier";
 import { Message } from "./dsl/message";
-import { logger } from "./common/logger";
+import logger from "./common/logger";
 import { VerifierOptions } from "@pact-foundation/pact-node";
 import { MessageProviderOptions } from "./dsl/options";
 import serviceFactory from "@pact-foundation/pact-node";
 import * as express from "express";
 import * as http from "http";
-import { Promise } from "es6-promise";
 import { Handler } from "./pact";
 
 const bodyParser = require("body-parser");
@@ -26,8 +25,11 @@ export class MessageProvider {
   private state: any = {};
 
   constructor(private config: MessageProviderOptions) {
-    if (!isEmpty(config.logLevel)) {
+    if (config.logLevel && !isEmpty(config.logLevel)) {
       serviceFactory.logLevel(config.logLevel);
+      logger.level(config.logLevel);
+    } else {
+      logger.level();
     }
   }
 
@@ -78,7 +80,8 @@ export class MessageProvider {
       // Invoke the handler, and return the JSON response body
       // wrapped in a Message
       this
-        .findHandler(message)
+        .setupStates(message)
+        .then(() => this.findHandler(message))
         .then((handler) => handler(message))
         .then((o) => res.json({ content: o }))
         .catch((e) => res.status(500).send(e));
@@ -109,6 +112,24 @@ export class MessageProvider {
     return app;
   }
 
+  // Lookup the handler based on the description, or get the default handler
+  private setupStates(message: Message): Promise<any> {
+    const promises: Array<Promise<any>> = new Array();
+
+    if (message.providerStates) {
+      message.providerStates.forEach((state) => {
+        const handler = this.config.stateHandlers ? this.config.stateHandlers[state.name] : null;
+
+        if (handler) {
+          promises.push(handler(state.name));
+        } else {
+          logger.warn(`no state handler found for "${state.name}", ignorning`);
+        }
+      });
+    }
+
+    return Promise.all(promises);
+  }
   // Lookup the handler based on the description, or get the default handler
   private findHandler(message: Message): Promise<Handler> {
     const handler = this.config.handlers[message.description || ""];
