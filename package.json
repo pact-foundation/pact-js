@@ -96,12 +96,14 @@
     "lodash.isundefined": "3.0.1",
     "lodash.omit": "^4.5.0",
     "lodash.omitby": "4.6.0",
+    "packpath": "^0.1.0",
     "popsicle": "^9.2.0"
   },
   "devDependencies": {
     "@pact-foundation/karma-pact": "~2.1.5",
     "@types/bluebird": "^3.5.20",
     "@types/bunyan": "^1.8.3",
+    "bunyan-prettystream": "^0.1.3",
     "@types/chai": "^4.0.3",
     "@types/chai-as-promised": "0.0.31",
     "@types/cli-color": "^0.3.29",
