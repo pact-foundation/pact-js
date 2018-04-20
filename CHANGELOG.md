@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="6.0.0-alpha.9"></a>
+# [6.0.0-alpha.9](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.8...v6.0.0-alpha.9) (2018-04-20)
+
+
+### Bug Fixes
+
+* resolve package.json for version metadata regardless of nesting ([#174](https://github.com/pact-foundation/pact-js/issues/174)) ([9b771c6](https://github.com/pact-foundation/pact-js/commit/9b771c6))
+
+
+
 <a name="6.0.0-alpha.8"></a>
 # [6.0.0-alpha.8](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.7...v6.0.0-alpha.8) (2018-04-15)
 
