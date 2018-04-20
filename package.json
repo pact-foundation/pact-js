@@ -49,7 +49,8 @@
     "consumer driven testing"
   ],
   "author": "Matt Fellows <m@onegeek.com.au> (http://twitter.com/matthewfellows)",
-  "contributors": [{
+  "contributors": [
+    {
       "name": "Tarcio Saraiva",
       "email": "tarcio@gmail.com",
       "url": "http://twitter.com/tarciosaraiva"
@@ -95,6 +96,7 @@
     "lodash.isundefined": "3.0.1",
     "lodash.omit": "^4.5.0",
     "lodash.omitby": "4.6.0",
+    "packpath": "^0.1.0",
     "popsicle": "^9.2.0"
   },
   "devDependencies": {
