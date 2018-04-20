@@ -196,6 +196,9 @@ export * from "./dsl/message";
  */
 export * from "./dsl/verifier";
 
+
+export * from "./dsl/utils";
+
 /**
  * Exposes {@link Matchers}
  * To avoid polluting the root module's namespace, re-export
