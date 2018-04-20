@@ -1,12 +1,7 @@
 import * as bunyan from "bunyan";
 const PrettyStream = require("bunyan-prettystream");
+const pkg = require("./metadata");
 
-const path = require("path");
-const packpath = require("packpath");
-
-// Look up package.json regardless of nesting
-const manifestFile = path.join(packpath.self(), "package.json");
-const pkg = require(manifestFile);
 const prettyStdOut = new PrettyStream();
 prettyStdOut.pipe(process.stdout);
 
