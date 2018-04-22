@@ -1,11 +1,11 @@
 const pact = require('@pact-foundation/pact-node')
 const path = require('path')
 const opts = {
-  pactFilesOrDirs: [path.resolve(__dirname, 'pacts/')],
+  pactFilesOrDirs: [path.resolve(__dirname, 'pacts/graphqlconsumer-graphqlprovider.json')],
   pactBroker: 'https://test.pact.dius.com.au',
   pactBrokerUsername: 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
   pactBrokerPassword: 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
-  tags: ['latest'],
+  tags: ['prod', 'test'],
   consumerVersion: '1.0.' + ((process.env.TRAVIS_BUILD_NUMBER) ? process.env.TRAVIS_BUILD_NUMBER : Math.floor(new Date() / 1000))
 }
 

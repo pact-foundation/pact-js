@@ -6,7 +6,7 @@ const opts = {
   pactBrokerUsername: 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
   pactBrokerPassword: 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
   tags: ['prod', 'test'],
-  consumerVersion: '1.0.1'
+  consumerVersion: '1.0.' + ((process.env.TRAVIS_BUILD_NUMBER) ? process.env.TRAVIS_BUILD_NUMBER : Math.floor(new Date() / 1000))
 }
 
 pact.publishPacts(opts)

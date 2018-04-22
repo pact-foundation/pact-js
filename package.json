@@ -18,7 +18,7 @@
     "predist": "npm run clean && npm run lint && npm run jscpd",
     "release": "standard-version --prerelease alpha --release-as patch",
     "test": "nyc --check-coverage --reporter=html --reporter=text-summary mocha",
-    "test:examples": "npm run test:e2e-examples && npm run test:jest-examples && npm run test:mocha-examples && npm run test:ava-examples && npm run test:ts-examples && npm run test:message-examples && npm run test:serverless-examples",
+    "test:examples": "npm run test:e2e-examples && npm run test:jest-examples && npm run test:mocha-examples && npm run test:ava-examples && npm run test:ts-examples && npm run test:message-examples && npm run test:serverless-examples && npm run test:graphql-examples",
     "test:e2e-examples": "cd examples/e2e && npm i && npm t",
     "test:ava-examples": "cd examples/ava && npm i && npm t",
     "test:jest-examples": "cd examples/jest && npm i && npm t",
@@ -26,6 +26,7 @@
     "test:ts-examples": "cd examples/typescript && npm i && npm t",
     "test:message-examples": "cd examples/messages && npm i && npm t",
     "test:serverless-examples": "cd examples/serverless && npm i && npm t",
+    "test:graphql-examples": "cd examples/graphql && npm i && npm t",
     "test:karma": "npm run test:karma:jasmine && npm run test:karma:mocha",
     "test:karma:jasmine": "karma start ./karma/jasmine/karma.conf.js",
     "test:karma:mocha": "karma start ./karma/mocha/karma.conf.js",
@@ -49,8 +50,7 @@
     "consumer driven testing"
   ],
   "author": "Matt Fellows <m@onegeek.com.au> (http://twitter.com/matthewfellows)",
-  "contributors": [
-    {
+  "contributors": [{
       "name": "Tarcio Saraiva",
       "email": "tarcio@gmail.com",
       "url": "http://twitter.com/tarciosaraiva"
@@ -90,6 +90,8 @@
     "es6-object-assign": "^1.1.0",
     "es6-promise": "^4.1.1",
     "express": "^4.16.3",
+    "graphql": "^0.13.2",
+    "graphql-tag": "^2.9.1",
     "lodash": "^4.17.4",
     "lodash.isfunction": "3.0.8",
     "lodash.isnil": "4.0.0",

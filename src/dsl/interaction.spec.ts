@@ -61,7 +61,10 @@ describe("Interaction", () => {
     });
 
     describe("with only mandatory params", () => {
-      const actual = new Interaction().withRequest({ method: HTTPMethod.GET, path: "/search" }).json();
+      const actual = new Interaction()
+        .uponReceiving("a request")
+        .withRequest({ method: HTTPMethod.GET, path: "/search" })
+        .json();
 
       it("has a state containing only the given keys", () => {
         expect(actual).to.have.keys("request");
@@ -74,13 +77,15 @@ describe("Interaction", () => {
     });
 
     describe("with all other parameters", () => {
-      const actual = new Interaction().withRequest({
-        body: { id: 1, name: "Test", due: "tomorrow" },
-        headers: { "Content-Type": "application/json" },
-        method: HTTPMethod.GET,
-        path: "/search",
-        query: "q=test",
-      }).json();
+      const actual = new Interaction()
+        .uponReceiving("request")
+        .withRequest({
+          body: { id: 1, name: "Test", due: "tomorrow" },
+          headers: { "Content-Type": "application/json" },
+          method: HTTPMethod.GET,
+          path: "/search",
+          query: "q=test",
+        }).json();
 
       it("has a full state all available keys", () => {
         expect(actual).to.have.keys("request");
@@ -103,6 +108,7 @@ describe("Interaction", () => {
 
     describe("with only mandatory params", () => {
       interaction = new Interaction();
+      interaction.uponReceiving("request")
       interaction.willRespondWith({ status: 200 });
       const actual = interaction.json();
 
@@ -118,6 +124,7 @@ describe("Interaction", () => {
 
     describe("with all other parameters", () => {
       interaction = new Interaction();
+      interaction.uponReceiving("request")
       interaction.willRespondWith({
         body: { id: 1, name: "Test", due: "tomorrow" },
         headers: { "Content-Type": "application/json" },
