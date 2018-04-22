@@ -6,8 +6,7 @@
 import { Interaction, ResponseOptions, RequestOptions, InteractionState, Query } from "../dsl/interaction";
 import { HTTPMethod, methods } from "../common/request";
 import { MatcherResult, regex } from "./matchers";
-import { extend } from "underscore";
-import { keys, isNil } from "lodash";
+import { keys, isNil, extend } from "lodash";
 import gql from "graphql-tag";
 
 export type GraphQLOperation = "query" | "mutation" | null;
