@@ -196,7 +196,11 @@ export * from "./dsl/message";
  */
 export * from "./dsl/verifier";
 
-
+/**
+ * Exposes {@link Utils}
+ * @memberof Pact
+ * @static
+ */
 export * from "./dsl/utils";
 
 /**
