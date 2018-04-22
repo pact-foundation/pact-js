@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="6.0.0-alpha.12"></a>
+# [6.0.0-alpha.12](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.10...v6.0.0-alpha.12) (2018-04-22)
+
+
+### Features
+
+* **example:** example GraphQL pact test ([3280a81](https://github.com/pact-foundation/pact-js/commit/3280a81))
+* **graphql:** add basic GraphQL wrapper function ([641e0e7](https://github.com/pact-foundation/pact-js/commit/641e0e7))
+* **message:** tidy up Message interface and tests ([58c334c](https://github.com/pact-foundation/pact-js/commit/58c334c))
+
+
+
 <a name="6.0.0-alpha.11"></a>
 # [6.0.0-alpha.11](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.10...v6.0.0-alpha.11) (2018-04-22)
 
