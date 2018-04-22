@@ -1,9 +1,6 @@
-// POC that graphQL endpoints can be tested!
 /* tslint:disable:no-unused-expression object-literal-sort-keys max-classes-per-file no-empty */
-
 import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
-import * as sinon from "sinon";
 import { like, term } from "../../src/dsl/matchers";
 import { query } from "./consumer";
 import { Pact, GraphQLInteraction } from "../../src/pact";
@@ -51,8 +48,8 @@ describe("GraphQL example", () => {
       return provider.addInteraction(graphqlQuery);
     });
 
-    it("returns the correct response", (done) => {
-      expect(query()).to.eventually.deep.eq({ hello: "Hello world!" }).notify(done);
+    it("returns the correct response", () => {
+      return expect(query()).to.eventually.deep.eq({ hello: "Hello world!" });
     });
 
     // verify with Pact, and reset expectations

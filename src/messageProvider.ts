@@ -11,7 +11,7 @@ import { MessageProviderOptions } from "./dsl/options";
 import serviceFactory from "@pact-foundation/pact-node";
 import * as express from "express";
 import * as http from "http";
-import { Handler } from "./pact";
+import { MessageHandler } from "./pact";
 
 const bodyParser = require("body-parser");
 
@@ -131,7 +131,7 @@ export class MessageProvider {
     return Promise.all(promises);
   }
   // Lookup the handler based on the description, or get the default handler
-  private findHandler(message: Message): Promise<Handler> {
+  private findHandler(message: Message): Promise<MessageHandler> {
     const handler = this.config.handlers[message.description || ""];
 
     if (!handler) {

@@ -5,7 +5,7 @@
 import { isEmpty, cloneDeep } from "lodash";
 import { MatcherResult, extractPayload } from "./dsl/matchers";
 import { qToPromise } from "./common/utils";
-import { Metadata, Message, Handler } from "./dsl/message";
+import { Metadata, Message, MessageHandler } from "./dsl/message";
 import logger from "./common/logger";
 import serviceFactory from "@pact-foundation/pact-node";
 import { MessageConsumerOptions } from "./dsl/options";
@@ -109,7 +109,7 @@ export class MessageConsumer {
    * @param handler A message handler, that must be able to consume the given Message
    * @returns {Promise}
    */
-  public verify(handler: Handler): Promise<any> {
+  public verify(handler: MessageHandler): Promise<any> {
     logger.info("Verifying message");
 
     return this.validate()
@@ -150,7 +150,7 @@ const isMessage = (x: Message | any): x is Message => {
 
 // bodyHandler takes a synchronous function and returns
 // a wrapped function that accepts a Message and returns a Promise
-export function synchronousBodyHandler(handler: (body: any) => any): Handler {
+export function synchronousBodyHandler(handler: (body: any) => any): MessageHandler {
   return (m: Message): Promise<any> => {
     const body = m.content;
 
@@ -168,6 +168,6 @@ export function synchronousBodyHandler(handler: (body: any) => any): Handler {
 // bodyHandler takes an asynchronous (promisified) function and returns
 // a wrapped function that accepts a Message and returns a Promise
 // TODO: move this into its own package and re-export?
-export function asynchronousBodyHandler(handler: (body: any) => Promise<any>): Handler {
+export function asynchronousBodyHandler(handler: (body: any) => Promise<any>): MessageHandler {
   return (m: Message) => handler(m.content);
 }

@@ -197,11 +197,11 @@ export * from "./dsl/message";
 export * from "./dsl/verifier";
 
 /**
- * Exposes {@link Utils}
+ * Exposes {@link GraphQL}
  * @memberof Pact
  * @static
  */
-export * from "./dsl/utils";
+export * from "./dsl/graphql";
 
 /**
  * Exposes {@link Matchers}

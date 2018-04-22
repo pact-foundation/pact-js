@@ -23,15 +23,24 @@ describe("MesageProvider", () => {
   const successfulMessage: Message = {
     content: { foo: "bar" },
     description: successfulRequest,
+    providerStates: [
+      { name: "some state" },
+    ],
   };
 
   const unsuccessfulMessage: Message = {
     content: { foo: "bar" },
     description: unsuccessfulRequest,
+    providerStates: [
+      { name: "some state not found" },
+    ],
   };
   const nonExistentMessage: Message = {
     content: { foo: "bar" },
     description: "does not exist",
+    providerStates: [
+      { name: "some state not found" },
+    ],
   };
 
   beforeEach(() => {
@@ -43,11 +52,23 @@ describe("MesageProvider", () => {
       },
       logLevel: "error",
       provider: "myprovider",
+      stateHandlers: {
+        "some state": () => Promise.resolve("yay"),
+      },
     });
   });
 
   describe("#constructor", () => {
     it("creates a Provider when all mandatory parameters are provided", () => {
+      expect(provider).to.be.a("object");
+      expect(provider).to.respondTo("verify");
+    });
+    it("creates a Provider with default log level if not specified", () => {
+      provider = new MessageProvider({
+        consumer: "myconsumer",
+        handlers: {},
+        provider: "myprovider",
+      });
       expect(provider).to.be.a("object");
       expect(provider).to.respondTo("verify");
     });
@@ -94,7 +115,13 @@ describe("MesageProvider", () => {
         const req = { body: nonExistentMessage };
         const mock = sinon.stub();
         const res = {
-          status: () => done(), // Expect the status to be called with 500
+          status: (status: number) => {
+            expect(status).to.eq(500);
+
+            return {
+              send: () => done(), // Expect the status to be called with 500
+            };
+          },
         };
 
         setupVerificationHandler(req, res);
@@ -113,6 +140,27 @@ describe("MesageProvider", () => {
       it("should return a failed promise", () => {
         const findHandler = (provider as any).findHandler.bind(provider);
         return expect(findHandler("doesnotexist")).to.eventually.be.rejected;
+      });
+    });
+  });
+
+  describe("#setupStates", () => {
+    describe("when given a handler that exists", () => {
+      it("should return values of all resolved handlers", () => {
+        const findStateHandler = (provider as any).setupStates.bind(provider);
+        return expect(findStateHandler(successfulMessage)).to.eventually.deep.equal(["yay"]);
+      });
+    });
+    describe("when given a state that does not have a handler", () => {
+      it("should return an empty promise", () => {
+        provider = new MessageProvider({
+          consumer: "myconsumer",
+          handlers: {
+          },
+          provider: "myprovider",
+        });
+        const findStateHandler = (provider as any).setupStates.bind(provider);
+        return expect(findStateHandler(unsuccessfulMessage)).to.eventually.deep.equal([]);
       });
     });
   });
