@@ -322,13 +322,13 @@ pact.publishPacts(opts)).then(function () {
 
 | Parameter             | Required     | Type |Description                            |
 |-----------------------|:------------:|-------|--------------------------------------|
-| `providerBaseUrl` | `true` | string | Running API provider host endpoint. Required.   |
-| `pactUrls` | `false` | array of strings | Array of local Pact files or directories containing pact files. Path must be absolute. Required. |
-| `pactBroker` | `false` | string | The base URL of the Pact Broker. eg. https://test.pact.dius.com.au. Required. |
-| `pactBrokerUsername` | `false` | string | Username for Pact Broker basic authentication. Optional |
-| `pactBrokerPassword` | `false` | string | Password for Pact Broker basic authentication. Optional |
-| `consumerVersion` | `false` | string | A string containing a semver-style version e.g. 1.0.0. Required. |
-| `tags` | `false` | array of strings | Tag your pacts, often used with your branching, release or environment strategy e.g. ['prod', 'test'] |
+| `providerBaseUrl` | `true` | string | Running API provider host endpoint. |
+| `pactFilesOrDirs` | `true` | array of strings | Array of local Pact files or directories containing pact files. Path must be absolute. |
+| `pactBroker` | `true` | string | The URL of the Pact Broker; e.g. https://test.pact.dius.com.au. |
+| `pactBrokerUsername` | `false` | string | Username for Pact Broker basic authentication. |
+| `pactBrokerPassword` | `false` | string | Password for Pact Broker basic authentication. |
+| `consumerVersion` | `false` | string | A semantic versioning-style version for your consumer pact; e.g. '1.0.0'. |
+| `tags` | `false` | array of strings | Tags for the pact, often used with your branching, release or environment strategy; e.g. ['prod', 'test'] |
 
 #### Publishing Verification Results to a Pact Broker
 
