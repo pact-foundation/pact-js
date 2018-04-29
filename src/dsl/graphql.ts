@@ -96,7 +96,7 @@ export class GraphQLInteraction extends Interaction {
     this.state.request = extend({
       body: {
         operationName: this.operation,
-        query: regex({ generate: this.query, matcher: this.query.replace(/\s+/g, "\\s*") }),
+        query: regex({ generate: this.query, matcher: escapeGraphQlQuery(this.query) }),
         variables: this.variables,
       },
       headers: { "content-type": "application/json" },
@@ -106,3 +106,9 @@ export class GraphQLInteraction extends Interaction {
     return this.state;
   }
 }
+
+const escapeGraphQlQuery = (s: string) => escapeSpace(escapeRegexChars(s));
+
+const escapeRegexChars = (s: string) => s.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+
+const escapeSpace = (s: string) => s.replace(/\s+/g, "\\s*");

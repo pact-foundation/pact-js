@@ -73,22 +73,44 @@ describe("GraphQLInteraction", () => {
       });
     });
 
-    describe("when given a valid valid query", () => {
+    describe("when given a valid query", () => {
       it("should properly marshal the query", () => {
         const json: any = interaction.json();
         expect(isMatcher(json.request.body.query)).to.eq(true);
         expect(json.request.body.query.getValue()).to.eq("{ hello }");
       });
 
-      it("should add regular expressions for the whitespace in the query", () => {
-        const json: any = interaction.json();
+      describe("without variables", () => {
+        it("should add regular expressions for the whitespace in the query", () => {
+          const json: any = interaction.json();
 
-        expect(isMatcher(json.request.body.query)).to.eq(true);
-        const r = new RegExp(json.request.body.query.data.matcher.s, "g");
-        const lotsOfWhitespace = `{             hello
+          expect(isMatcher(json.request.body.query)).to.eq(true);
+          const r = new RegExp(json.request.body.query.data.matcher.s, "g");
+          const lotsOfWhitespace = `{             hello
 
         }`;
-        expect(r.test(lotsOfWhitespace)).to.eq(true);
+          expect(r.test(lotsOfWhitespace)).to.eq(true);
+        });
+      });
+
+      describe("and variables", () => {
+        it("should add regular expressions for the whitespace in the query", () => {
+          interaction.withQuery(`{
+            Hello(id: $id) {
+              name
+            }
+          }`);
+          interaction.withVariables({
+            name: "bar",
+          });
+          const json: any = interaction.json();
+
+          expect(isMatcher(json.request.body.query)).to.eq(true);
+          const r = new RegExp(json.request.body.query.data.matcher.s, "g");
+          const lotsOfWhitespace = `{             Hello(id: \$id) { name    } }`;
+          expect(r.test(lotsOfWhitespace)).to.eq(true);
+        });
+
       });
     });
   });
