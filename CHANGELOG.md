@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="6.0.0-alpha.13"></a>
+# [6.0.0-alpha.13](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.12...v6.0.0-alpha.13) (2018-04-29)
+
+
+### Features
+
+* **graphql:** escape queries with variables ([8b64dd4](https://github.com/pact-foundation/pact-js/commit/8b64dd4))
+
+
+
 <a name="6.0.0-alpha.12"></a>
 # [6.0.0-alpha.12](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.10...v6.0.0-alpha.12) (2018-04-22)
 
