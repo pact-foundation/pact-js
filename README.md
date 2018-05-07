@@ -738,6 +738,12 @@ The vision is to have a compatible `Pact` implementation in all the commonly use
 
 ## Contact
 
+Join us in Slack
+
+<a href="http://slack.pact.io"><img src="http://slack.pact.io/badge.svg"></a>
+
+
+or
 * Twitter: [@pact_up](https://twitter.com/pact_up)
 * Stack Overflow: https://stackoverflow.com/questions/tagged/pact
 * Google users group: https://groups.google.com/forum/#!forum/pact-support
