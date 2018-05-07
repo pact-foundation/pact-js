@@ -6,6 +6,7 @@
 [![Issue Count](https://codeclimate.com/github/pact-foundation/pact-js/badges/issue_count.svg)](https://codeclimate.com/github/pact-foundation/pact-js)
 [![Dependency Status](https://gemnasium.com/badges/github.com/pact-foundation/pact-js.svg)](https://gemnasium.com/github.com/pact-foundation/pact-js)
 [![npm](https://img.shields.io/github/license/pact-foundation/pact-js.svg?maxAge=2592000)](https://github.com/pact-foundation/pact-js/blob/master/LICENSE)
+[![slack](http://slack.pact.io/badge.svg)](http://slack.pact.io)
 
 Implementation of the consumer driven contract library [Pact](https://github.com/pact-foundation/pact-specification) for Javascript.
 
