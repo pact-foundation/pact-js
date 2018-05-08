@@ -74,7 +74,7 @@ export class MessageConsumer {
     if (isEmpty(content)) {
       throw new Error("You must provide a valid JSON document or primitive for the Message.");
     }
-    this.state.content = content;
+    this.state.contents = content;
 
     return this;
   }
@@ -143,7 +143,7 @@ export class MessageConsumer {
 }
 
 const isMessage = (x: Message | any): x is Message => {
-  return (x as Message).content !== undefined;
+  return (x as Message).contents !== undefined;
 };
 
 // TODO: create basic adapters for API handlers, e.g.
@@ -152,7 +152,7 @@ const isMessage = (x: Message | any): x is Message => {
 // a wrapped function that accepts a Message and returns a Promise
 export function synchronousBodyHandler(handler: (body: any) => any): MessageHandler {
   return (m: Message): Promise<any> => {
-    const body = m.content;
+    const body = m.contents;
 
     return new Promise((resolve, reject) => {
       try {
@@ -169,5 +169,5 @@ export function synchronousBodyHandler(handler: (body: any) => any): MessageHand
 // a wrapped function that accepts a Message and returns a Promise
 // TODO: move this into its own package and re-export?
 export function asynchronousBodyHandler(handler: (body: any) => Promise<any>): MessageHandler {
-  return (m: Message) => handler(m.content);
+  return (m: Message) => handler(m.contents);
 }

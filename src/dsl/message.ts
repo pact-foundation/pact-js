@@ -18,7 +18,7 @@ export interface Message {
   providerStates?: [{ name: string }];
   description?: string;
   metadata?: Metadata;
-  content: any;
+  contents: any;
 }
 
 // Consumer message handler

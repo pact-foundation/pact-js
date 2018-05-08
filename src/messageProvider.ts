@@ -83,7 +83,7 @@ export class MessageProvider {
         .setupStates(message)
         .then(() => this.findHandler(message))
         .then((handler) => handler(message))
-        .then((o) => res.json({ content: o }))
+        .then((o) => res.json({ contents: o }))
         .catch((e) => res.status(500).send(e));
     };
   }
