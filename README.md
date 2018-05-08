@@ -27,38 +27,38 @@ how to get going.
 
 <!-- TOC -->
 
-- [Pact JS](#pact-js)
-  - [Installation](#installation)
-    - [Latest (5.x.x)](#latest-5xx)
-    - [Stable (4.x.x)](#stable-4xx)
-  - [Using Pact JS](#using-pact-js)
-    - [Consumer Side Testing](#consumer-side-testing)
-      - [API](#api)
-      - [Constructor Options](#constructor-options)
-      - [Example](#example)
-    - [Provider API Testing](#provider-api-testing)
-      - [Verification Options](#verification-options)
-      - [API with Provider States](#api-with-provider-states)
-      - [API with Authorization](#api-with-authorization)
-    - [Publishing Pacts to a Broker](#publishing-pacts-to-a-broker)
-      - [Publishing options](#publishing-options)
-      - [Publishing Verification Results to a Pact Broker](#publishing-verification-results-to-a-pact-broker)
-    - [Matching](#matching)
-      - [Match common formats](#match-common-formats)
-      - [Match based on type](#match-based-on-type)
-      - [Match based on arrays](#match-based-on-arrays)
-      - [Match by regular expression](#match-by-regular-expression)
-  - [Tutorial (60 minutes)](#tutorial-60-minutes)
-  - [Examples](#examples)
-  - [Using Pact in non-Node environments](#using-pact-in-non-node-environments)
-    - [Using Pact with Karma](#using-pact-with-karma)
-    - [Using Pact with RequireJS](#using-pact-with-requirejs)
-  - [Troubleshooting](#troubleshooting)
-    - [Parallel tests](#parallel-tests)
-    - [Splitting tests across multiple files](#splitting-tests-across-multiple-files)
-    - [Re-run specific verification failures](#re-run-specific-verification-failures)
-    - [Timeout](#timeout)
-    - [Note on Jest](#note-on-jest)
+- [Installation](#installation)
+  - [Latest (5.x.x)](#latest-5xx)
+  - [Stable (4.x.x)](#stable-4xx)
+- [Using Pact JS](#using-pact-js)
+  - [Message and Asynchronous Support](#message-and-asynchronous-support)
+  - [Consumer Side Testing](#consumer-side-testing)
+    - [API](#api)
+    - [Constructor Options](#constructor-options)
+    - [Example](#example)
+  - [Provider API Testing](#provider-api-testing)
+    - [Verification Options](#verification-options)
+    - [API with Provider States](#api-with-provider-states)
+    - [API with Authorization](#api-with-authorization)
+  - [Publishing Pacts to a Broker](#publishing-pacts-to-a-broker)
+    - [Publishing options](#publishing-options)
+    - [Publishing Verification Results to a Pact Broker](#publishing-verification-results-to-a-pact-broker)
+  - [Matching](#matching)
+    - [Match common formats](#match-common-formats)
+    - [Match based on type](#match-based-on-type)
+    - [Match based on arrays](#match-based-on-arrays)
+    - [Match by regular expression](#match-by-regular-expression)
+- [Tutorial (60 minutes)](#tutorial-60-minutes)
+- [Examples](#examples)
+- [Using Pact in non-Node environments](#using-pact-in-non-node-environments)
+  - [Using Pact with Karma](#using-pact-with-karma)
+  - [Using Pact with RequireJS](#using-pact-with-requirejs)
+- [Troubleshooting](#troubleshooting)
+  - [Parallel tests](#parallel-tests)
+  - [Splitting tests across multiple files](#splitting-tests-across-multiple-files)
+  - [Re-run specific verification failures](#re-run-specific-verification-failures)
+  - [Timeout](#timeout)
+  - [Note on Jest](#note-on-jest)
 
 <!-- /TOC -->
 
@@ -81,6 +81,10 @@ npm install --save-dev pact
 See [`4.x.x` documentation](https://github.com/pact-foundation/pact-js/tree/4.x.x) for usage details.
 
 ## Using Pact JS
+
+### Message and Asynchronous Support
+
+Interested in trying pact on Message Queues, Lambdas, WebSockets and more? Check out our [experimental support](https://github.com/pact-foundation/pact-js/tree/feat/message-pact) and provide [feedback](https://github.com/pact-foundation/pact-js/issues/166) on the API before it is rolled into the main library.
 
 ### Consumer Side Testing
 
