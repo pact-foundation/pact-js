@@ -23,7 +23,7 @@ describe("MessageConsumer", () => {
   });
 
   const testMessage: Message = {
-    content: {
+    contents: {
       foo: "bar",
     },
   };
@@ -124,7 +124,7 @@ describe("MessageConsumer", () => {
       consumer.withContent({ foo: "bar" });
       const m = consumer.json();
 
-      expect(m.content).to.deep.eq({ foo: "bar" });
+      expect(m.contents).to.deep.eq({ foo: "bar" });
     });
   });
 

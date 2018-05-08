@@ -21,7 +21,7 @@ describe("MesageProvider", () => {
   const unsuccessfulRequest = "unsuccessfulRequest";
 
   const successfulMessage: Message = {
-    content: { foo: "bar" },
+    contents: { foo: "bar" },
     description: successfulRequest,
     providerStates: [
       { name: "some state" },
@@ -29,14 +29,14 @@ describe("MesageProvider", () => {
   };
 
   const unsuccessfulMessage: Message = {
-    content: { foo: "bar" },
+    contents: { foo: "bar" },
     description: unsuccessfulRequest,
     providerStates: [
       { name: "some state not found" },
     ],
   };
   const nonExistentMessage: Message = {
-    content: { foo: "bar" },
+    contents: { foo: "bar" },
     description: "does not exist",
     providerStates: [
       { name: "some state not found" },
