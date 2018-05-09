@@ -108,7 +108,7 @@ export class Interaction {
     }
 
     this.state.response = omitBy({
-      body: responseOpts.body || undefined,
+      body: responseOpts.body,
       headers: responseOpts.headers || undefined,
       status: responseOpts.status,
     }, isNil) as ResponseOptions;

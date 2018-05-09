@@ -92,6 +92,30 @@ describe("Interaction", () => {
         expect(actual.request).to.have.keys("method", "path", "query", "headers", "body");
       });
     });
+
+    describe("request body", () => {
+      it("is included when an empty string is specified", () => {
+        const actual = new Interaction()
+          .uponReceiving("request")
+          .withRequest({
+            body: "",
+            method: HTTPMethod.GET,
+            path: "/path",
+          }).json();
+        expect(actual.request).to.have.any.keys("body");
+      });
+
+      it("is not included when explicitly set to undefined", () => {
+        const actual = new Interaction()
+          .uponReceiving("request")
+          .withRequest({
+            body: undefined,
+            method: HTTPMethod.GET,
+            path: "/path",
+          }).json();
+        expect(actual.request).not.to.have.any.keys("body");
+      });
+    });
   });
 
   describe("#willRespondWith", () => {
@@ -136,6 +160,32 @@ describe("Interaction", () => {
       it("has a full state all available keys", () => {
         expect(actual).to.have.property("response");
         expect(actual.response).to.have.keys("status", "headers", "body");
+      });
+    });
+
+    describe("response body", () => {
+      it("is included when an empty string is specified", () => {
+        interaction = new Interaction();
+        interaction
+          .uponReceiving("request")
+          .willRespondWith({
+            body: "",
+            status: 204,
+          });
+        const actual = interaction.json();
+        expect(actual.response).to.have.any.keys("body");
+      });
+
+      it("is not included when explicitly set to undefined", () => {
+        interaction = new Interaction();
+        interaction
+          .uponReceiving("request")
+          .willRespondWith({
+            body: undefined,
+            status: 204,
+          });
+        const actual = interaction.json();
+        expect(actual.response).not.to.have.any.keys("body");
       });
     });
   });
