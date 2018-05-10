@@ -680,7 +680,7 @@ Learn everything in Pact JS in 60 minutes: https://github.com/DiUS/pact-workshop
 
 [![asciicast](https://asciinema.org/a/105793.png)](https://asciinema.org/a/105793)
 <p align="center">
-  <img width="600" src="https://cdn.rawgit.com/pact-foundation/pact-js/master/.github/pact.svg">
+  <img width="880" src="https://cdn.rawgit.com/pact-foundation/pact-js/master/.github/pact.svg">
 </p>
 
 ## Using Pact in non-Node environments
