@@ -532,7 +532,7 @@ Learn everything in Pact JS in 60 minutes: https://github.com/DiUS/pact-workshop
 * [Pact with Karma + Mocha](https://github.com/pact-foundation/pact-js/tree/master/karma/mocha)
 
 <p align="center">
-  <img width="600" src="https://cdn.rawgit.com/pact-foundation/pact-js/master/.github/pact.svg">
+  <img width="880" src="https://cdn.rawgit.com/pact-foundation/pact-js/master/.github/pact.svg">
 </p>
 
 ## Using Pact in non-Node environments
