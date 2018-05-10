@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="5.9.1"></a>
+## [5.9.1](https://github.com/pact-foundation/pact-js/compare/v5.9.0...v5.9.1) (2018-05-10)
+
+
+### Bug Fixes
+
+* **interaction:** include response body if set to empty string ([2db0f23](https://github.com/pact-foundation/pact-js/commit/2db0f23))
+
+
+
 <a name="5.9.0"></a>
 # [5.9.0](https://github.com/pact-foundation/pact-js/compare/v5.8.0...v5.9.0) (2018-03-27)
 
