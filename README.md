@@ -766,12 +766,14 @@ when configuring the `new Pact({...})` object.
 
 ### Parallel tests
 
-Pact tests are inherently stateful, as we need to keep track of the interactions on a per-test basis, to ensure each contract is validated in isolation from others. However, in larger test suites or modern test frameworks (like Ava), this can result in slower test execution.
+Pact tests are inherently stateful, as we need to keep track of the interactions on a per-test basis, to ensure each contract is validated in isolation from others. However, in larger test suites, this can result in slower test execution.
+
+Modern testing frameworks like Ava and Jest support parallel execution out-of-the-box, which
 
 The good news is, parallel test execution is possible, you need to ensure that:
 
-1. Before any test run invocation, you remove any existing pact files (otherwise you may end up with invalid interactions left over from previous test runs)
-1. Each test is fully self-contained, with its own mock server on its own port
+1. Before any test run invocation, you remove any existing pact files, to prevent invalid / stale interactions being left over from previous test runs
+1. Each test is fully self-contained, with its **own mock server** on its **own port**
 1. You set the option `pactfileWriteMode` to `"merge"`, instructing Pact to merge any pact documents with the same consumer and provider pairing at the end of all test runs.
 
 When all of your tests have completed, the result is the union of the all of the interactions from each test case in the generated pact file.
@@ -839,7 +841,6 @@ See [here](http://stackoverflow.com/questions/42496401/all-pact-js-tests-are-fai
 
 ### Note on Jest
 Jest uses JSDOM under the hood which may cause issues with libraries making HTTP request.
-Jest also can run tests in parallel, which is currently not supported as the mock server is stateful.
 
 You'll need to add the following snippet to your `package.json` to ensure it uses
 the proper Node environment:
@@ -851,6 +852,8 @@ the proper Node environment:
 ```
 
 Also, [from Jest 20](https://facebook.github.io/jest/blog/2017/05/06/jest-20-delightful-testing-multi-project-runner.html), you can add the environment to the top of the test file as a comment. This will allow your pact test to run along side the rest of your JSDOM env tests.
+
+Jest also runs tests in parallel by default, which can be problematic with Pact which is stateful. See [parallel tests](#parallel-tests) to see how to make it run in parallel, or run Jest with the `--runInBand` [option](https://facebook.github.io/jest/docs/en/cli.html#runinband) to run them sequentially.
 
 ```js
 /**
