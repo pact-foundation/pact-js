@@ -709,13 +709,14 @@ the proper Node environment:
 
 Also, [from Jest 20](https://facebook.github.io/jest/blog/2017/05/06/jest-20-delightful-testing-multi-project-runner.html), you can add the environment to the top of the test file as a comment. This will allow your pact test to run along side the rest of your JSDOM env tests.
 
-Jest also runs tests in parallel by default, which can be problematic with Pact which is stateful. See [parallel tests](#parallel-tests) to see how to make it run in parallel, or run Jest with the `--runInBand` [option](https://facebook.github.io/jest/docs/en/cli.html#runinband) to run them sequentially.
-
 ```js
 /**
  * @jest-environment node
  */
  ```
+
+Jest also runs tests in parallel by default, which can be problematic with Pact which is stateful. See [parallel tests](#parallel-tests) to see how to make it run in parallel, or run Jest with the `--runInBand` [option](https://facebook.github.io/jest/docs/en/cli.html#runinband) to run them sequentially.
+
 
 See [this issue](https://github.com/pact-foundation/pact-js/issues/10) for background,
 and the Jest [example](https://github.com/pact-foundation/pact-js/blob/master/examples/jest/package.json#L10-L12) for a working example.
