@@ -4,7 +4,6 @@
 [![Coverage Status](https://coveralls.io/repos/github/pact-foundation/pact-js/badge.svg?branch=master)](https://coveralls.io/github/pact-foundation/pact-js?branch=master)
 [![Code Climate](https://codeclimate.com/github/pact-foundation/pact-js/badges/gpa.svg)](https://codeclimate.com/github/pact-foundation/pact-js)
 [![Issue Count](https://codeclimate.com/github/pact-foundation/pact-js/badges/issue_count.svg)](https://codeclimate.com/github/pact-foundation/pact-js)
-[![Dependency Status](https://gemnasium.com/badges/github.com/pact-foundation/pact-js.svg)](https://gemnasium.com/github.com/pact-foundation/pact-js)
 [![npm](https://img.shields.io/github/license/pact-foundation/pact-js.svg?maxAge=2592000)](https://github.com/pact-foundation/pact-js/blob/master/LICENSE)
 [![slack](http://slack.pact.io/badge.svg)](http://slack.pact.io)
 
@@ -750,30 +749,31 @@ The vision is to have a compatible `Pact` implementation in all the commonly use
 
 Join us in Slack
 
-<a href="http://slack.pact.io"><img src="http://slack.pact.io/badge.svg"></a>
-
+<a href="http://slack.pact.io">
+  <img src="http://slack.pact.io/badge.svg">
+</a>
 
 or
 * Twitter: [@pact_up](https://twitter.com/pact_up)
 * Stack Overflow: https://stackoverflow.com/questions/tagged/pact
 * Google users group: https://groups.google.com/forum/#!forum/pact-support
 
-[Getting started with Pact]: (http://dius.com.au/2016/02/03/microservices-pact/)
-[v4]: (https://github.com/pact-foundation/pact-js/tree/4.x.x)
-[v5]: (https://github.com/pact-foundation/pact-js/tree/5.x.x)
-[v6]: (https://github.com/pact-foundation/pact-js/tree/6.x.x)
-[Spec]: (https://github.com/pact-foundation/pact-specification)
-[Pact Wiki]: (https://github.com/pact-foundation/pact-ruby/wiki)
-[Getting started with Pact]: (http://dius.com.au/2016/02/03/microservices-pact/)
-[Pact website]: (http://docs.pact.io/)
-[Slack channel]: (http://slack.pact.io)
-[@pact_up]: (https://twitter.com/pact_up)
-[Pact Specification v2]: (https://github.com/pact-foundation/pact-specification/tree/version-2)
-[Pact Specification v3]: (https://github.com/pact-foundation/pact-specification/tree/version-3)
-[CLI tools]: (https://github.com/pact-foundation/pact-ruby-standalone/releases)
-[Installation]: (#installation)
-[Message support]: (https://github.com/pact-foundation/pact-specification/tree/version-3#introduces-messages-for-services-that-communicate-via-event-streams-and-message-queues)
-[Changelog]: (https://github.com/pact-foundation/pact-js/blob/master/CHANGELOG.md)
-[Pact Broker]: (https://github.com/pact-foundation/pact_broker)
+[Getting started with Pact]: http://dius.com.au/2016/02/03/microservices-pact/
+[v4]: https://github.com/pact-foundation/pact-js/tree/4.x.x
+[v5]: https://github.com/pact-foundation/pact-js/tree/5.x.x
+[v6]: https://github.com/pact-foundation/pact-js/tree/6.x.x
+[Spec]: https://github.com/pact-foundation/pact-specification
+[Pact Wiki]: https://github.com/pact-foundation/pact-ruby/wiki
+[Getting started with Pact]: http://dius.com.au/2016/02/03/microservices-pact/
+[Pact website]: http://docs.pact.io/
+[Slack channel]: http://slack.pact.io
+[@pact_up]: https://twitter.com/pact_up
+[Pact Specification v2]: https://github.com/pact-foundation/pact-specification/tree/version-2
+[Pact Specification v3]: https://github.com/pact-foundation/pact-specification/tree/version-3
+[CLI tools]: https://github.com/pact-foundation/pact-ruby-standalone/releases
+[Installation]: #installation
+[Message support]: https://github.com/pact-foundation/pact-specification/tree/version-3#introduces-messages-for-services-that-communicate-via-event-streams-and-message-queues
+[Changelog]: https://github.com/pact-foundation/pact-js/blob/master/CHANGELOG.md
+[Pact Broker]: https://github.com/pact-foundation/pact_broker
 [hosted broker]: pact.dius.com.au
-[can-i-deploy tool]: (https://github.com/pact-foundation/pact_broker/wiki/Provider-verification-results)
+[can-i-deploy tool]: https://github.com/pact-foundation/pact_broker/wiki/Provider-verification-results
