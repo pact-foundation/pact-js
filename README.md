@@ -29,8 +29,7 @@ how to get going.
 
 - [Pact JS](#pact-js)
   - [Installation](#installation)
-    - [Latest (5.x.x)](#latest-5xx)
-    - [Stable (4.x.x)](#stable-4xx)
+  - [Versions](#versions)
   - [Using Pact JS](#using-pact-js)
     - [Message and Asynchronous Support](#message-and-asynchronous-support)
     - [Consumer Side Testing](#consumer-side-testing)
@@ -60,26 +59,25 @@ how to get going.
     - [Re-run specific verification failures](#re-run-specific-verification-failures)
     - [Timeout](#timeout)
     - [Note on Jest](#note-on-jest)
+    - [Debugging](#debugging)
+  - [Contributing](#contributing)
+  - [Contact](#contact)
 
 <!-- /TOC -->
 
 ## Installation
 
-### Latest (5.x.x)
+## Versions
 
-```
-npm install --save-dev @pact-foundation/pact
-```
+| Version   | Stable           | [Spec] Compatibility | Docs                | Installation                                |
+| ----------| ---------------- | -------------------- | ------------------- | --------------------------------------------|
+| `6.x.x`   | No (beta)        | `2`, `3`*            | See [v6] docs       | `npm i -S @pact-foundation/pact@prerelease` |
+| `5.x.x`   | Yes              | `2`                  | You are her         | `npm i -S @pact-foundation/pact@5.x.x`      |
+| `4.x.x`   | Yes (deprecated) | Up to `2`            | See [v4] docs       | `npm i -S pact`                             |
 
-_NOTE_: the `5.x.x` release contains several breaking changes from the previous version and will be maintained in parallel with the previous stable version. See the [`4.x.x`](https://github.com/pact-foundation/pact-js/tree/4.x.x) documentation for more details.
+See the [Changelog] for versions and their history.
 
-### Stable (4.x.x)
-
-```
-npm install --save-dev pact
-```
-
-See [`4.x.x` documentation](https://github.com/pact-foundation/pact-js/tree/4.x.x) for usage details.
+_* v3 support is limited to the subset of functionality in the v3 [spec] required to enable language inter-operable [Message support]._
 
 ## Using Pact JS
 
@@ -713,7 +711,7 @@ Also, [from Jest 20](https://facebook.github.io/jest/blog/2017/05/06/jest-20-del
 /**
  * @jest-environment node
  */
- ```
+```
 
 Jest also runs tests in parallel by default, which can be problematic with Pact which is stateful. See [parallel tests](#parallel-tests) to see how to make it run in parallel, or run Jest with the `--runInBand` [option](https://facebook.github.io/jest/docs/en/cli.html#runinband) to run them sequentially.
 
@@ -759,3 +757,23 @@ or
 * Twitter: [@pact_up](https://twitter.com/pact_up)
 * Stack Overflow: https://stackoverflow.com/questions/tagged/pact
 * Google users group: https://groups.google.com/forum/#!forum/pact-support
+
+[Getting started with Pact]: (http://dius.com.au/2016/02/03/microservices-pact/)
+[v4]: (https://github.com/pact-foundation/pact-js/tree/4.x.x)
+[v5]: (https://github.com/pact-foundation/pact-js/tree/5.x.x)
+[v6]: (https://github.com/pact-foundation/pact-js/tree/6.x.x)
+[Spec]: (https://github.com/pact-foundation/pact-specification)
+[Pact Wiki]: (https://github.com/pact-foundation/pact-ruby/wiki)
+[Getting started with Pact]: (http://dius.com.au/2016/02/03/microservices-pact/)
+[Pact website]: (http://docs.pact.io/)
+[Slack channel]: (http://slack.pact.io)
+[@pact_up]: (https://twitter.com/pact_up)
+[Pact Specification v2]: (https://github.com/pact-foundation/pact-specification/tree/version-2)
+[Pact Specification v3]: (https://github.com/pact-foundation/pact-specification/tree/version-3)
+[CLI tools]: (https://github.com/pact-foundation/pact-ruby-standalone/releases)
+[Installation]: (#installation)
+[Message support]: (https://github.com/pact-foundation/pact-specification/tree/version-3#introduces-messages-for-services-that-communicate-via-event-streams-and-message-queues)
+[Changelog]: (https://github.com/pact-foundation/pact-js/blob/master/CHANGELOG.md)
+[Pact Broker]: (https://github.com/pact-foundation/pact_broker)
+[hosted broker]: pact.dius.com.au
+[can-i-deploy tool]: (https://github.com/pact-foundation/pact_broker/wiki/Provider-verification-results)
