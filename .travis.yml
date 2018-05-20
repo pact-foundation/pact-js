@@ -5,6 +5,7 @@ node_js:
 - '6'
 - '7'
 - '8'
+- '10'
 os:
 - linux
 # - osx
