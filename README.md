@@ -71,18 +71,18 @@ how to get going.
 | Version   | Stable           | [Spec] Compatibility | Docs                | Installation                                |
 | ----------| ---------------- | -------------------- | ------------------- | --------------------------------------------|
 | `6.x.x`   | No (beta)        | `2`, `3`*            | See [v6] docs       | `npm i -S @pact-foundation/pact@prerelease` |
-| `5.x.x`   | Yes              | `2`                  | You are her         | `npm i -S @pact-foundation/pact@5.x.x`      |
+| `5.x.x`   | Yes              | `2`                  | You are here        | `npm i -S @pact-foundation/pact@5.x.x`      |
 | `4.x.x`   | Yes (deprecated) | Up to `2`            | See [v4] docs       | `npm i -S pact`                             |
 
 See the [Changelog] for versions and their history.
 
-_* v3 support is limited to the subset of functionality in the v3 [spec] required to enable language inter-operable [Message support]._
+_* v3 support is limited to the subset of functionality in the [Pact Specification v3] required to enable language inter-operable [Message support]._
 
 ## Using Pact JS
 
 ### Message and Asynchronous Support
 
-Interested in trying pact on Message Queues, Lambdas, WebSockets and more? Check out our [experimental support](https://github.com/pact-foundation/pact-js/tree/feat/message-pact) and provide [feedback](https://github.com/pact-foundation/pact-js/issues/166) on the API before it is rolled into the main library.
+Interested in trying pact on Message Queues, Lambdas, WebSockets and more? Check out our [experimental support](https://github.com/pact-foundation/pact-js/tree/6.x.x) in the `6.x.x` release and provide [feedback](https://github.com/pact-foundation/pact-js/issues/166) on the API before it is rolled into the main library.
 
 ### Consumer Side Testing
 
@@ -95,6 +95,7 @@ const { Pact } = require('pact')
 The `Pact` class provides the following high-level APIs, they are listed in the order in which they typically get called in the lifecycle of testing a consumer:
 
 #### API
+
 |API                    |Options     |Returns|Description                                       |
 |-----------------------|------------|------------------------------------------------------|---|
 |`new Pact(options)`        |See constructor options below |`Object` |Creates a Mock Server test double of your Provider API. If you need multiple Providers for a scenario, you can create as many as these as you need.                  |
@@ -122,6 +123,7 @@ The `Pact` class provides the following high-level APIs, they are listed in the 
 | `pactfileWriteMode` | no | string | Control how the Pact files are written. Choices: 'overwrite' 'update' or 'none'. Defaults to 'overwrite'|
 
 #### Example
+
 The first step is to create a test for your API Consumer. The example below uses [Mocha](https://mochajs.org), and demonstrates the basic approach:
 
 1. Create the Pact object
@@ -693,6 +695,7 @@ to review your unit testing timeout to ensure it has sufficient time to start th
 See [here](http://stackoverflow.com/questions/42496401/all-pact-js-tests-are-failing-with-same-errors/42518752) for more details.
 
 ### Note on Jest
+
 Jest uses JSDOM under the hood which may cause issues with libraries making HTTP request.
 
 You'll need to add the following snippet to your `package.json` to ensure it uses
@@ -735,6 +738,7 @@ Try starting the mock service manually and seeing if it comes up. When submittin
 ```
 
 ## Contributing
+
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
