@@ -1,13 +1,13 @@
 
 /* tslint:disable:no-unused-expression object-literal-sort-keys max-classes-per-file no-empty */
 const { like, term } = require("../../../dist/dsl/matchers");
-const { MessageProvider, Message } = require("../../../dist/pact");
+const { MessageProviderPact, Message } = require("../../../dist/pact");
 const path = require("path");
 const { createEvent } = require("./index");
 
 describe("Message provider tests", () => {
-  const p = new MessageProvider({
-    handlers: {
+  const p = new MessageProviderPact({
+    messageProviders: {
       "a request to save an event": () => createEvent(),
     },
     logLevel: "WARN",

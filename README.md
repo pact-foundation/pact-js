@@ -1,10 +1,10 @@
 # Pact JS
+
 [![Join the chat at https://gitter.im/realestate-com-au/pact](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/realestate-com-au/pact?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/pact-foundation/pact-js.svg?branch=master)](https://travis-ci.org/pact-foundation/pact-js)
 [![Coverage Status](https://coveralls.io/repos/github/pact-foundation/pact-js/badge.svg?branch=master)](https://coveralls.io/github/pact-foundation/pact-js?branch=master)
 [![Code Climate](https://codeclimate.com/github/pact-foundation/pact-js/badges/gpa.svg)](https://codeclimate.com/github/pact-foundation/pact-js)
 [![Issue Count](https://codeclimate.com/github/pact-foundation/pact-js/badges/issue_count.svg)](https://codeclimate.com/github/pact-foundation/pact-js)
-[![Dependency Status](https://gemnasium.com/badges/github.com/pact-foundation/pact-js.svg)](https://gemnasium.com/github.com/pact-foundation/pact-js)
 [![npm](https://img.shields.io/github/license/pact-foundation/pact-js.svg?maxAge=2592000)](https://github.com/pact-foundation/pact-js/blob/master/LICENSE)
 [![slack](http://slack.pact.io/badge.svg)](http://slack.pact.io)
 
@@ -12,13 +12,13 @@ Implementation of the consumer driven contract library [Pact](https://docs.pact.
 
 From the [Pact website](http://docs.pact.io/):
 
->The Pact family of frameworks provide support for [Consumer Driven Contracts](http://martinfowler.com/articles/consumerDrivenContracts.html) testing.
+> The Pact family of frameworks provide support for [Consumer Driven Contracts](http://martinfowler.com/articles/consumerDrivenContracts.html) testing.
 
->A Contract is a collection of agreements between a client (Consumer) and an API (Provider) that describes the interactions that can take place between them.
+> A Contract is a collection of agreements between a client (Consumer) and an API (Provider) that describes the interactions that can take place between them.
 
->Consumer Driven Contracts is a pattern that drives the development of the Provider from its Consumers point of view.
+> Consumer Driven Contracts is a pattern that drives the development of the Provider from its Consumers point of view.
 
->Pact is a testing tool that guarantees those Contracts are satisfied.
+> Pact is a testing tool that guarantees those Contracts are satisfied.
 
 Read [Getting started with Pact] for more information for beginners.
 
@@ -80,16 +80,15 @@ Read [Getting started with Pact] for more information for beginners.
 
 ## Versions
 
-| Version   | Stable           | [Spec] Compatibility | Docs                | Installation                                |
-| ----------| ---------------- | -------------------- | ------------------- | --------------------------------------------|
-| `6.x.x`   | No (beta)        | `2`, `3`*            | You are here        | `npm i -S @pact-foundation/pact@prerelease` |
-| `5.x.x`   | Yes              | `2`                  | See [v5] docs       | `npm i -S @pact-foundation/pact@5.x.x`      |
-| `4.x.x`   | Yes (deprecated) | Up to `2`            | See [v4] docs       | `npm i -S pact`                             |
+| Version | Stable           | [Spec] Compatibility | Docs          | Installation                                |
+| ------- | ---------------- | -------------------- | ------------- | ------------------------------------------- |
+| `6.x.x` | No (beta)        | `2`, `3`\*           | You are here  | `npm i -S @pact-foundation/pact@prerelease` |
+| `5.x.x` | Yes              | `2`                  | See [v5] docs | `npm i -S @pact-foundation/pact@5.x.x`      |
+| `4.x.x` | Yes (deprecated) | Up to `2`            | See [v4] docs | `npm i -S pact`                             |
 
 See the [Changelog] for versions and their history.
 
-_* v3 support is limited to the subset of functionality in the v3 [spec] required to enable language inter-operable [Message support]._
-
+_\* v3 support is limited to the subset of functionality in the v3 [spec] required to enable language inter-operable [Message support]._
 
 ## Using Pact JS
 
@@ -102,150 +101,154 @@ Pact supports [synchronous request-response style HTTP interactions](#http-api-t
 To use the library on your tests, add the pact dependency:
 
 ```javascript
-const { Pact } = require('pact')
+const { Pact } = require("pact");
 ```
 
 The `Pact` class provides the following high-level APIs, they are listed in the order in which they typically get called in the lifecycle of testing a consumer:
 
 #### API
-|API                    |Options     |Returns|Description                                       |
-|-----------------------|------------|------------------------------------------------------|---|
-|`new Pact(options)`        |See constructor options below |`Object` |Creates a Mock Server test double of your Provider API. If you need multiple Providers for a scenario, you can create as many as these as you need.                  |
-|`setup()`              |n/a         |`Promise`|Start the Mock Server and wait for it to be available. You would normally call this only once in a `beforeAll(...)` type clause |
-|`addInteraction()`     |`Object`    |`Promise`|Register an expectation on the Mock Server, which must be called by your test case(s). You can add multiple interactions per server, and each test would normally contain one or more of these. These will be validated and written to a pact if successful.
-|`verify()`             |n/a         |`Promise`|Verifies that all interactions specified. This should be called once per test, to ensure your expectations were correct |
-|`finalize()`           |n/a         |`Promise`|Records the interactions registered to the Mock Server into the pact file and shuts it down. You would normally call this only once in an `afterAll(...)` type clause.|
+
+| API                 | Options                       | Returns   | Description                                                                                                                                                                                                                                                  |
+| ------------------- | ----------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `new Pact(options)` | See constructor options below | `Object`  | Creates a Mock Server test double of your Provider API. If you need multiple Providers for a scenario, you can create as many as these as you need.                                                                                                          |
+| `setup()`           | n/a                           | `Promise` | Start the Mock Server and wait for it to be available. You would normally call this only once in a `beforeAll(...)` type clause                                                                                                                              |
+| `addInteraction()`  | `Object`                      | `Promise` | Register an expectation on the Mock Server, which must be called by your test case(s). You can add multiple interactions per server, and each test would normally contain one or more of these. These will be validated and written to a pact if successful. |
+| `verify()`          | n/a                           | `Promise` | Verifies that all interactions specified. This should be called once per test, to ensure your expectations were correct                                                                                                                                      |
+| `finalize()`        | n/a                           | `Promise` | Records the interactions registered to the Mock Server into the pact file and shuts it down. You would normally call this only once in an `afterAll(...)` type clause.                                                                                       |
 
 #### Constructor Options
 
-|Parameter | Required?  | Type        | Description |
-|----------|------------|-------------|--------------|
-| `consumer` | yes | string | The name of the consumer |
-| `provider` | yes | string | The name of the provider |
-| `port` | no | number | The port to run the mock service on, defaults to 1234 |
-| `host` | no | string | The host to run the mock service, defaults to 127.0.0.1 |
-| `ssl` | no | boolean | SSL flag to identify the protocol to be used (default false, HTTP) |
-| `sslcert` | no | string | Path to SSL certificate to serve on the mock service |
-| `sslkey` | no | string | Path to SSL key to serve on the mock service |
-| `dir` | no | string | Directory to output pact files |
-| `log` | no | string | Directory to log to |
-| `logLevel` | no | string | Log level: one of 'trace', 'debug', 'info', 'error', 'fatal' or 'warn' |
-| `spec` | no | number | Pact specification version (defaults to 2) |
-| `cors` | no | boolean | Allow CORS OPTION requests to be accepted, defaults to false |
-| `pactfileWriteMode` | no | string | Control how the Pact files are written. Choices: 'overwrite' 'update' or 'none'. Defaults to 'overwrite'|
+| Parameter           | Required? | Type    | Description                                                                                              |
+| ------------------- | --------- | ------- | -------------------------------------------------------------------------------------------------------- |
+| `consumer`          | yes       | string  | The name of the consumer                                                                                 |
+| `provider`          | yes       | string  | The name of the provider                                                                                 |
+| `port`              | no        | number  | The port to run the mock service on, defaults to 1234                                                    |
+| `host`              | no        | string  | The host to run the mock service, defaults to 127.0.0.1                                                  |
+| `ssl`               | no        | boolean | SSL flag to identify the protocol to be used (default false, HTTP)                                       |
+| `sslcert`           | no        | string  | Path to SSL certificate to serve on the mock service                                                     |
+| `sslkey`            | no        | string  | Path to SSL key to serve on the mock service                                                             |
+| `dir`               | no        | string  | Directory to output pact files                                                                           |
+| `log`               | no        | string  | Directory to log to                                                                                      |
+| `logLevel`          | no        | string  | Log level: one of 'trace', 'debug', 'info', 'error', 'fatal' or 'warn'                                   |
+| `spec`              | no        | number  | Pact specification version (defaults to 2)                                                               |
+| `cors`              | no        | boolean | Allow CORS OPTION requests to be accepted, defaults to false                                             |
+| `pactfileWriteMode` | no        | string  | Control how the Pact files are written. Choices: 'overwrite' 'update' or 'none'. Defaults to 'overwrite' |
 
 #### Example
+
 The first step is to create a test for your API Consumer. The example below uses [Mocha](https://mochajs.org), and demonstrates the basic approach:
 
-1. Create the Pact object
-1. Start the Mock Provider that will stand in for your actual Provider
-1. Add the interactions you expect your consumer code to make when executing the tests
-1. Write your tests - the important thing here is that you test the outbound _collaborating_ function which calls the Provider, and not just issue raw http requests to the Provider. This ensures you are testing your actual running code, just like you would in any other unit test, and that the tests will always remain up to date with what your consumer is doing.
-1. Validate the expected interactions were made between your consumer and the Mock Service
-1. Generate the pact(s)
+1.  Create the Pact object
+1.  Start the Mock Provider that will stand in for your actual Provider
+1.  Add the interactions you expect your consumer code to make when executing the tests
+1.  Write your tests - the important thing here is that you test the outbound _collaborating_ function which calls the Provider, and not just issue raw http requests to the Provider. This ensures you are testing your actual running code, just like you would in any other unit test, and that the tests will always remain up to date with what your consumer is doing.
+1.  Validate the expected interactions were made between your consumer and the Mock Service
+1.  Generate the pact(s)
 
 Check out the `examples` folder for examples with Karma Jasmine, Mocha and Jest. The example below is taken from the [integration spec](https://github.com/pact-foundation/pact-js/blob/master/src/pact.integration.spec.ts).
 
 ```javascript
-const path = require('path')
-const chai = require('chai')
-const { Pact } = require('@pact-foundation/pact')
-const chaiAsPromised = require('chai-as-promised')
+const path = require("path");
+const chai = require("chai");
+const { Pact } = require("@pact-foundation/pact");
+const chaiAsPromised = require("chai-as-promised");
 
-const expect = chai.expect
-const MOCK_SERVER_PORT = 2202
+const expect = chai.expect;
+const MOCK_SERVER_PORT = 2202;
 
 chai.use(chaiAsPromised);
 
-describe('Pact', () => {
-
+describe("Pact", () => {
   // (1) Create the Pact object to represent your provider
   const provider = new Pact({
-    consumer: 'TodoApp',
-    provider: 'TodoService',
+    consumer: "TodoApp",
+    provider: "TodoService",
     port: MOCK_SERVER_PORT,
-    log: path.resolve(process.cwd(), 'logs', 'pact.log'),
-    dir: path.resolve(process.cwd(), 'pacts'),
-    logLevel: 'INFO',
+    log: path.resolve(process.cwd(), "logs", "pact.log"),
+    dir: path.resolve(process.cwd(), "pacts"),
+    logLevel: "INFO",
     spec: 2
-  })
+  });
 
   // this is the response you expect from your Provider
-  const EXPECTED_BODY = [{
-    id: 1,
-    name: 'Project 1',
-    due: '2016-02-11T09:46:56.023Z',
-    tasks: [
-      {id: 1, name: 'Do the laundry', 'done': true},
-      {id: 2, name: 'Do the dishes', 'done': false},
-      {id: 3, name: 'Do the backyard', 'done': false},
-      {id: 4, name: 'Do nothing', 'done': false}
-    ]
-  }]
+  const EXPECTED_BODY = [
+    {
+      id: 1,
+      name: "Project 1",
+      due: "2016-02-11T09:46:56.023Z",
+      tasks: [
+        { id: 1, name: "Do the laundry", done: true },
+        { id: 2, name: "Do the dishes", done: false },
+        { id: 3, name: "Do the backyard", done: false },
+        { id: 4, name: "Do nothing", done: false }
+      ]
+    }
+  ];
 
-  context('when there are a list of projects', () => {
-    describe('and there is a valid user session', () => {
-      before((done) => {
+  context("when there are a list of projects", () => {
+    describe("and there is a valid user session", () => {
+      before(done => {
         // (2) Start the mock server
-        provider.setup()
+        provider
+          .setup()
           // (3) add interactions to the Mock Server, as many as required
           .then(() => {
             return provider.addInteraction({
               // The 'state' field specifies a "Provider State"
-              state: 'i have a list of projects',
-              uponReceiving: 'a request for projects',
+              state: "i have a list of projects",
+              uponReceiving: "a request for projects",
               withRequest: {
-                method: 'GET',
-                path: '/projects',
-                headers: { 'Accept': 'application/json' }
+                method: "GET",
+                path: "/projects",
+                headers: { Accept: "application/json" }
               },
               willRespondWith: {
                 status: 200,
-                headers: { 'Content-Type': 'application/json' },
+                headers: { "Content-Type": "application/json" },
                 body: EXPECTED_BODY
               }
-            })
+            });
           })
-          .then(() => done())
-      })
+          .then(() => done());
+      });
 
       // (4) write your test(s)
-      it('should generate a list of TODOs for the main screen', () => {
+      it("should generate a list of TODOs for the main screen", () => {
         const todoApp = new TodoApp();
-        todoApp.getProjects() // <- this method would make the remote http call
-          .then((projects) => {
-      	    expect(projects).to.be.a('array')
-            expect(projects).to.have.deep.property('projects[0].id', 1)
+        todoApp
+          .getProjects() // <- this method would make the remote http call
+          .then(projects => {
+            expect(projects).to.be.a("array");
+            expect(projects).to.have.deep.property("projects[0].id", 1);
 
             // (5) validate the interactions you've registered and expected occurred
             // this will throw an error if it fails telling you what went wrong
-      	    expect(provider.verify()).to.not.throw()
-          })
-      })
+            expect(provider.verify()).to.not.throw();
+          });
+      });
 
       // (6) write the pact file for this consumer-provider pair,
       // and shutdown the associated mock server.
       // You should do this only _once_ per Provider you are testing.
       after(() => {
-        provider.finalize()
-      })
-    })
-  })
-})
-
+        provider.finalize();
+      });
+    });
+  });
+});
 ```
 
 ### Provider API Testing
 
 Once you have created Pacts for your Consumer, you need to validate those Pacts against your Provider. The Verifier object provides the following API for you to do so:
 
-|API                    |Options       |Returns|Description                            |
-|-----------------------|:------------:|-------|---------------------------------------|
-|`verifyProvider()`     | See below    |`Promise`|Start the Mock Server                |
+| API                |  Options  | Returns   | Description           |
+| ------------------ | :-------: | --------- | --------------------- |
+| `verifyProvider()` | See below | `Promise` | Start the Mock Server |
 
-1. Start your local Provider service.
-1. Optionally, instrument your API with ability to configure [provider states](https://github.com/pact-foundation/pact-provider-verifier/)
-1. Then run the Provider side verification step
+1.  Start your local Provider service.
+1.  Optionally, instrument your API with ability to configure [provider states](https://github.com/pact-foundation/pact-provider-verifier/)
+1.  Then run the Provider side verification step
 
 ```js
 const { Verifier } = require('pact');
@@ -260,20 +263,20 @@ new Verifier().verifyProvider(opts).then(function () {
 
 #### Verification Options
 
-| Parameter             | Required     | Type |Description                            |
-|-----------------------|:------------:|-------|--------------------------------------|
-| `providerBaseUrl` | true | string | Running API provider host endpoint. Required.   |
-| `provider` | true | string | Name of the Provider. Required. |
-| `pactUrls` | true |  array of strings | Array of local Pact file paths or HTTP-based URLs (e.g. from a broker). Re`quired` if not using a Broker. |
-| `pactBrokerUrl` | false | string | URL of the Pact Broker to retrieve pacts from. Required if not using pactUrls. |
-| `tags` | false |  array of strings | Array of tags, used to filter pacts from the Broker. Optional. |
-| `providerStatesSetupUrl` | false | string | URL to send PUT requests to setup a given provider state. Optional, required only if you provide a 'state' in any consumer tests. |
-| `pactBrokerUsername` | false | string | Username for Pact Broker basic authentication |
-| `pactBrokerPassword` | false | string | Password for Pact Broker basic authentication |
-| `publishVerificationResult` | false | boolean | Publish verification result to Broker |
-| `providerVersion` | false |  boolean | Provider version, required to publish verification results to a broker|
-| `customProviderHeaders` | false |  array of strings | Header(s) to add to provider state set up and pact verification re`quests`. eg 'Authorization: Basic cGFjdDpwYWN0'.Broker. Optional otherwise. |
-| `timeout` | false | number | The duration in ms we should wait to confirm verification process was successful. Defaults to 30000, Optional. |
+| Parameter                   | Required | Type             | Description                                                                                                                                    |
+| --------------------------- | :------: | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `providerBaseUrl`           |   true   | string           | Running API provider host endpoint. Required.                                                                                                  |
+| `provider`                  |   true   | string           | Name of the Provider. Required.                                                                                                                |
+| `pactUrls`                  |   true   | array of strings | Array of local Pact file paths or HTTP-based URLs (e.g. from a broker). Re`quired` if not using a Broker.                                      |
+| `pactBrokerUrl`             |  false   | string           | URL of the Pact Broker to retrieve pacts from. Required if not using pactUrls.                                                                 |
+| `tags`                      |  false   | array of strings | Array of tags, used to filter pacts from the Broker. Optional.                                                                                 |
+| `providerStatesSetupUrl`    |  false   | string           | URL to send PUT requests to setup a given provider state. Optional, required only if you provide a 'state' in any consumer tests.              |
+| `pactBrokerUsername`        |  false   | string           | Username for Pact Broker basic authentication                                                                                                  |
+| `pactBrokerPassword`        |  false   | string           | Password for Pact Broker basic authentication                                                                                                  |
+| `publishVerificationResult` |  false   | boolean          | Publish verification result to Broker                                                                                                          |
+| `providerVersion`           |  false   | boolean          | Provider version, required to publish verification results to a broker                                                                         |
+| `customProviderHeaders`     |  false   | array of strings | Header(s) to add to provider state set up and pact verification re`quests`. eg 'Authorization: Basic cGFjdDpwYWN0'.Broker. Optional otherwise. |
+| `timeout`                   |  false   | number           | The duration in ms we should wait to confirm verification process was successful. Defaults to 30000, Optional.                                 |
 
 That's it! Read more about [Verifying Pacts](http://docs.pact.io/documentation/verifying_pacts.html).
 
@@ -305,7 +308,7 @@ return new Verifier().verifyProvider(opts).then(output => { ... })
 
 As you can see, this is your opportunity to modify\add to headers being sent to the Provider API, for example to create a valid time-bound token.
 
-*Important Note*: You should only use this feature for things that can not be persisted in the pact file. By modifying the request, you are potentially modifying the contract from the consumer tests!
+_Important Note_: You should only use this feature for things that can not be persisted in the pact file. By modifying the request, you are potentially modifying the contract from the consumer tests!
 
 ### Publishing Pacts to a Broker
 
@@ -336,15 +339,15 @@ pact.publishPacts(opts)).then(function () {
 
 #### Publishing options
 
-| Parameter             | Required     | Type |Description                            |
-|-----------------------|:------------:|-------|--------------------------------------|
-| `providerBaseUrl` | `true` | string | Running API provider host endpoint. Required.   |
-| `pactUrls` | `false` | array of strings | Array of local Pact files or directories containing pact files. Path must be absolute. Required. |
-| `pactBroker` | `false` | string | The base URL of the Pact Broker. eg. https://test.pact.dius.com.au. Required. |
-| `pactBrokerUsername` | `false` | string | Username for Pact Broker basic authentication. Optional |
-| `pactBrokerPassword` | `false` | string | Password for Pact Broker basic authentication. Optional |
-| `consumerVersion` | `false` | string | A string containing a semver-style version e.g. 1.0.0. Required. |
-| `tags` | `false` | array of strings | Tag your pacts, often used with your branching, release or environment strategy e.g. ['prod', 'test'] |
+| Parameter            | Required | Type             | Description                                                                                           |
+| -------------------- | :------: | ---------------- | ----------------------------------------------------------------------------------------------------- |
+| `providerBaseUrl`    |  `true`  | string           | Running API provider host endpoint. Required.                                                         |
+| `pactUrls`           | `false`  | array of strings | Array of local Pact files or directories containing pact files. Path must be absolute. Required.      |
+| `pactBroker`         | `false`  | string           | The base URL of the Pact Broker. eg. https://test.pact.dius.com.au. Required.                         |
+| `pactBrokerUsername` | `false`  | string           | Username for Pact Broker basic authentication. Optional                                               |
+| `pactBrokerPassword` | `false`  | string           | Password for Pact Broker basic authentication. Optional                                               |
+| `consumerVersion`    | `false`  | string           | A string containing a semver-style version e.g. 1.0.0. Required.                                      |
+| `tags`               | `false`  | array of strings | Tag your pacts, often used with your branching, release or environment strategy e.g. ['prod', 'test'] |
 
 #### Publishing Verification Results to a Pact Broker
 
@@ -372,6 +375,7 @@ let opts = {
 _NOTE_: You need to be retrieving pacts from the broker for this feature to work.
 
 ## Asynchronous API Testing
+
 _Since version `v6.0.0-alpha` or later_
 
 Modern distributed architectures are increasingly integrated in a decoupled, asynchronous fashion. Message queues such as ActiveMQ, RabbitMQ, SQS, Kafka and Kinesis are common, often integrated via small and frequent numbers of microservices (e.g. lambda.).
@@ -383,7 +387,6 @@ Pact now has experimental support for these use cases, by abstracting away the p
 For further reading and introduction into this topic, see this [article](https://dius.com.au/2017/09/22/contract-testing-serverless-and-asynchronous-applications/)
 and our [example](https://github.com/pact-foundation/pact-js/tree/master/examples/messages) for a more detailed overview of these concepts.
 
-
 ### Consumer
 
 A Consumer is the system that will be reading a message from a queue or some intermediary - like a DynamoDB table or S3 bucket -
@@ -394,32 +397,31 @@ From a Pact testing point of view, Pact takes the place of the intermediary (MQ/
 The following test creates a contract for a Dog API handler:
 
 ```js
-  const { MessageConsumer, Message, synchronousBodyHandler } = require("@pact-foundation/pact");
+const { MessageConsumerPact, Message, synchronousBodyHandler } = require("@pact-foundation/pact");
 
-  // 1 Dog API Handler
-  const dogApiHandler = function(dog) {
-    if (!dog.id && !dog.name && !dog.type) {
-      throw new Error("missing fields");
-    }
-
-    // do some other things to dog...
-    // e.g. dogRepository.save(dog)
-    return;
+// 1 Dog API Handler
+const dogApiHandler = function(dog) {
+  if (!dog.id && !dog.name && !dog.type) {
+    throw new Error("missing fields");
   }
 
-  // 2 Pact Message Consumer
-  const messagePact = new MessageConsumer({
-    consumer: "MyJSMessageConsumer",
-    dir: path.resolve(process.cwd(), "pacts"),
-    pactfileWriteMode: "update",
-    provider: "MyJSMessageProvider",
-  });
+  // do some other things to dog...
+  // e.g. dogRepository.save(dog)
+  return;
+};
 
-  describe("receive dog event", () => {
-    it("should accept a valid dog", () => {
+// 2 Pact Message Consumer
+const messagePact = new MessageConsumerPact({
+  consumer: "MyJSMessageConsumer",
+  dir: path.resolve(process.cwd(), "pacts"),
+  pactfileWriteMode: "update",
+  provider: "MyJSMessageProvider",
+});
 
-      // 3 Consumer expectations
-      return messagePact
+describe("receive dog event", () => {
+  it("should accept a valid dog", () => {
+    // 3 Consumer expectations
+    return (messagePact
         .given("some state")
         .expectsToReceive("a request for a dog")
         .withContent({
@@ -432,19 +434,20 @@ The following test creates a contract for a Dog API handler:
         })
 
         // 4 Verify consumers' ability to handle messages
-        .verify(synchronousBodyHandler(dogApiHandler));
-    });
+        .verify(synchronousBodyHandler(dogApiHandler))
+    );
   });
+});
 ```
 
 **Explanation**:
 
-1. The Dog API - a contrived API handler example. Expects a dog object and throws an `Error` if it can't handle it.
+1.  The Dog API - a contrived API handler example. Expects a dog object and throws an `Error` if it can't handle it.
     * In most applications, some form of transactionality exists and communication with a MQ/broker happens.
     * It's important we separate out the protocol bits from the message handling bits, so that we can test that in isolation.
-1. Creates the MessageConsumer class
-1. Setup the expectations for the consumer - here we expect a `dog` object with three fields
-1. Pact will send the message to your message handler. If the handler returns a successful promise, the message is saved, otherwise the test fails. There are a few key things to consider:
+1.  Creates the MessageConsumer class
+1.  Setup the expectations for the consumer - here we expect a `dog` object with three fields
+1.  Pact will send the message to your message handler. If the handler returns a successful promise, the message is saved, otherwise the test fails. There are a few key things to consider:
     * The actual request body that Pact will send, will be contained within a [Message](https://github.com/pact-foundation/pact-js/tree/feat/message-pact/src/dsl/message.ts) object along with other context, so the body must be retrieved via `content` attribute.
     * All handlers to be tested must be of the shape `(m: Message) => Promise<any>` - that is, they must accept a `Message` and return a `Promise`. This is how we get around all of the various protocols, and will often require a lightweight adapter function to convert it.
     * In this case, we wrap the actual dogApiHandler with a convenience function `synchronousBodyHandler` provided by Pact, which Promisifies the handler and extracts the contents.
@@ -465,18 +468,17 @@ const dogApiClient = {
       resolve({
         id: 1,
         name: "fido",
-        type: "bulldog",
+        type: "bulldog"
       });
     });
-  },
+  }
 };
 
 describe("Message provider tests", () => {
-
   // 2 Pact setup
-  const p = new MessageProvider({
-    handlers: {
-      "a request for a dog": () => dogApiClient.createDog(),
+  const p = new MessageProviderPact({
+    messageProviders: {
+      "a request for a dog": () => dogApiClient.createDog()
     },
     provider: "MyJSMessageProvider",
     providerVersion: "1.0.0",
@@ -490,15 +492,14 @@ describe("Message provider tests", () => {
     });
   });
 });
-
 ```
 
 **Explanation**:
 
-1. Our API client contains a single function `createDog` which is responsible for generating the message that will be sent to the consumer via some message queue
-1. We configure Pact to stand-in for the queue. The most important bit here is the `handlers` block
+1.  Our API client contains a single function `createDog` which is responsible for generating the message that will be sent to the consumer via some message queue
+1.  We configure Pact to stand-in for the queue. The most important bit here is the `messageProviders` block
     * Similar to the Consumer tests, we map the various interactions that are going to be verified as denoted by their `description` field. In this case, `a request for a dog`, maps to the `createDog` handler. Notice how this matches the original Consumer test.
-1. We can now run the verification process. Pact will read all of the interactions specified by its consumer, and invoke each function that is responsible for generating that message.
+1.  We can now run the verification process. Pact will read all of the interactions specified by its consumer, and invoke each function that is responsible for generating that message.
 
 ### Pact Broker Integration
 
@@ -518,49 +519,49 @@ _NOTE: Make sure to start the mock service via the `Pact` declaration with the o
 
 Often times, you find yourself having to re-write regular expressions for common formats. We've created a number of them for you to save you the time:
 
-| method | description |
-|--------|-------------|
-| `boolean` | Match a boolean value (using equality) |
-| `integer` | Will match all numbers that are integers (both ints and longs)|
-| `decimal` | Will match all real numbers (floating point and decimal)|
-| `hexadecimal` | Will match all hexadecimal encoded strings |
-| `iso8601Date` | Will match string containing basic ISO8601 dates (e.g. 2016-01-01)|
-| `iso8601DateTime` | Will match string containing ISO 8601 formatted dates (e.g. 2015-08-06T16:53:10+01:00)|
-| `iso8601DateTimeWithMillis` | Will match string containing ISO 8601 formatted dates, enforcing millisecond precision (e.g. 2015-08-06T16:53:10.123+01:00)|
-| `rfc3339Timestamp` | Will match a string containing an RFC3339 formatted timestapm (e.g. Mon, 31 Oct 2016 15:21:41 -0400)|
-| `iso8601Time` | Will match string containing times (e.g. T22:44:30.652Z)|
-| `ipv4Address` | Will match string containing IP4 formatted address |
-| `ipv6Address` | Will match string containing IP6 formatted address |
-| `uuid` | Will match strings containing UUIDs |
+| method                      | description                                                                                                                 |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `boolean`                   | Match a boolean value (using equality)                                                                                      |
+| `integer`                   | Will match all numbers that are integers (both ints and longs)                                                              |
+| `decimal`                   | Will match all real numbers (floating point and decimal)                                                                    |
+| `hexadecimal`               | Will match all hexadecimal encoded strings                                                                                  |
+| `iso8601Date`               | Will match string containing basic ISO8601 dates (e.g. 2016-01-01)                                                          |
+| `iso8601DateTime`           | Will match string containing ISO 8601 formatted dates (e.g. 2015-08-06T16:53:10+01:00)                                      |
+| `iso8601DateTimeWithMillis` | Will match string containing ISO 8601 formatted dates, enforcing millisecond precision (e.g. 2015-08-06T16:53:10.123+01:00) |
+| `rfc3339Timestamp`          | Will match a string containing an RFC3339 formatted timestapm (e.g. Mon, 31 Oct 2016 15:21:41 -0400)                        |
+| `iso8601Time`               | Will match string containing times (e.g. T22:44:30.652Z)                                                                    |
+| `ipv4Address`               | Will match string containing IP4 formatted address                                                                          |
+| `ipv6Address`               | Will match string containing IP6 formatted address                                                                          |
+| `uuid`                      | Will match strings containing UUIDs                                                                                         |
 
 ### Match based on type
 
 ```javascript
-const { like } = Matchers
+const { like } = Matchers;
 
 provider.addInteraction({
-  state: 'Has some animals',
-  uponReceiving: 'a request for an animal',
+  state: "Has some animals",
+  uponReceiving: "a request for an animal",
   withRequest: {
-    method: 'GET',
-    path: '/animals/1'
+    method: "GET",
+    path: "/animals/1"
   },
   willRespondWith: {
     status: 200,
     headers: {
-      'Content-Type': 'application/json; charset=utf-8'
+      "Content-Type": "application/json; charset=utf-8"
     },
     body: {
       id: 1,
-      name: like('Billy'),
+      name: like("Billy"),
       address: like({
-      	street: '123 Smith St',
-	suburb: 'Smithsville',
-	postcode: 7777
+        street: "123 Smith St",
+        suburb: "Smithsville",
+        postcode: 7777
       })
     }
   }
-})
+});
 ```
 
 Note that you can wrap a `like` around a single value or an object. When wrapped around an object, all values and child object values will be matched according to types, unless overridden by something more specific like a `term`.
@@ -572,7 +573,7 @@ Note that you can wrap a `like` around a single value or an object. When wrapped
 Matching provides the ability to specify flexible length arrays. For example:
 
 ```javascript
-pact.eachLike(obj, { min: 3 })
+pact.eachLike(obj, { min: 3 });
 ```
 
 Where `obj` can be any javascript object, value or Pact.Match. It takes optional argument (`{ min: 3 }`) where min is greater than 0 and defaults to 1 if not provided.
@@ -580,51 +581,51 @@ Where `obj` can be any javascript object, value or Pact.Match. It takes optional
 Below is an example that uses all of the Pact Matchers.
 
 ```javascript
-const { somethingLike: like, term, eachLike } = pact
+const { somethingLike: like, term, eachLike } = pact;
 
 const animalBodyExpectation = {
-  'id': 1,
-  'first_name': 'Billy',
-  'last_name': 'Goat',
-  'animal': 'goat',
-  'age': 21,
-  'gender': term({
-    matcher: 'F|M',
-    generate: 'M'
+  id: 1,
+  first_name: "Billy",
+  last_name: "Goat",
+  animal: "goat",
+  age: 21,
+  gender: term({
+    matcher: "F|M",
+    generate: "M"
   }),
-  'location': {
-    'description': 'Melbourne Zoo',
-    'country': 'Australia',
-    'post_code': 3000
+  location: {
+    description: "Melbourne Zoo",
+    country: "Australia",
+    post_code: 3000
   },
-  'eligibility': {
-    'available': true,
-    'previously_married': false
+  eligibility: {
+    available: true,
+    previously_married: false
   },
-  'children': eachLike({'name': 'Sally', 'age': 2})
-}
+  children: eachLike({ name: "Sally", age: 2 })
+};
 
 // Define animal list payload, reusing existing object matcher
 // Note that using eachLike ensure that all values are matched by type
 const animalListExpectation = eachLike(animalBodyExpectation, {
   min: MIN_ANIMALS
-})
+});
 
 provider.addInteraction({
-  state: 'Has some animals',
-  uponReceiving: 'a request for all animals',
+  state: "Has some animals",
+  uponReceiving: "a request for all animals",
   withRequest: {
-    method: 'GET',
-    path: '/animals/available'
+    method: "GET",
+    path: "/animals/available"
   },
   willRespondWith: {
     status: 200,
     headers: {
-      'Content-Type': 'application/json; charset=utf-8'
+      "Content-Type": "application/json; charset=utf-8"
     },
     body: animalListExpectation
   }
-})
+});
 ```
 
 ### Match by regular expression
@@ -634,30 +635,30 @@ If none of the above matchers or formats work, you can write your own regex matc
 The underlying mock service is written in Ruby, so the regular expression must be in a Ruby format, not a Javascript format.
 
 ```javascript
-const { term } = pact
+const { term } = pact;
 
 provider.addInteraction({
-  state: 'Has some animals',
-  uponReceiving: 'a request for an animal',
+  state: "Has some animals",
+  uponReceiving: "a request for an animal",
   withRequest: {
-    method: 'GET',
-    path: '/animals/1'
+    method: "GET",
+    path: "/animals/1"
   },
   willRespondWith: {
     status: 200,
     headers: {
-      'Content-Type': 'application/json; charset=utf-8'
+      "Content-Type": "application/json; charset=utf-8"
     },
     body: {
       id: 100,
       name: "billy",
-      'gender': term({
-        matcher: 'F|M',
-        generate: 'F'
-      }),
+      gender: term({
+        matcher: "F|M",
+        generate: "F"
+      })
     }
   }
-})
+});
 ```
 
 ## Tutorial (60 minutes)
@@ -750,14 +751,14 @@ In `test-main.js`:
 
 ```js
 require.config({
-    baseUrl: '/base',
-    paths: {
-        'Pact': 'node_modules/pact-web/pact-web',
-        'client': 'js/client'
-    },
-    deps: allTestFiles,
-    callback: window.__karma__.start
-})
+  baseUrl: "/base",
+  paths: {
+    Pact: "node_modules/pact-web/pact-web",
+    client: "js/client"
+  },
+  deps: allTestFiles,
+  callback: window.__karma__.start
+});
 ```
 
 See this [Stack Overflow](https://stackoverflow.com/a/44170373/1008568) question for background, and
@@ -776,9 +777,9 @@ Modern testing frameworks like Ava and Jest support parallel execution out-of-th
 
 The good news is, parallel test execution is possible, you need to ensure that:
 
-1. Before any test run invocation, you remove any existing pact files, to prevent invalid / stale interactions being left over from previous test runs
-1. Each test is fully self-contained, with its **own mock server** on its **own port**
-1. You set the option `pactfileWriteMode` to `"merge"`, instructing Pact to merge any pact documents with the same consumer and provider pairing at the end of all test runs.
+1.  Before any test run invocation, you remove any existing pact files, to prevent invalid / stale interactions being left over from previous test runs
+1.  Each test is fully self-contained, with its **own mock server** on its **own port**
+1.  You set the option `pactfileWriteMode` to `"merge"`, instructing Pact to merge any pact documents with the same consumer and provider pairing at the end of all test runs.
 
 When all of your tests have completed, the result is the union of the all of the interactions from each test case in the generated pact file.
 
@@ -793,21 +794,21 @@ Pact tests tend to be quite long, due to the need to be specific about request/r
 
 You have a number of options to achieve this feat:
 
-1. Consider implementing the [Parallel tests](#parallel-tests) guidelines.
+1.  Consider implementing the [Parallel tests](#parallel-tests) guidelines.
 
-1. Create a Pact test helper to orchestrate the setup and teardown of the mock service for multiple tests.
+1.  Create a Pact test helper to orchestrate the setup and teardown of the mock service for multiple tests.
 
     In larger test bases, this can significantly reduce test suite time and the amount of code you have to manage.
 
     See this [example](https://github.com/tarciosaraiva/pact-melbjs/blob/master/helper.js) and this [issue](https://github.com/pact-foundation/pact-js/issues/11) for more.
 
-1. Set `pactfileWriteMode` to `update` in the `Pact()` constructor
+1.  Set `pactfileWriteMode` to `update` in the `Pact()` constructor
 
     This will allow you to have multiple independent tests for a given Consumer-Provider pair, without it clobbering previous interactions, thereby allowing you to incrementally build up or modify your pact files.
 
     This feature addresses the use case of "my pact suite takes bloody ages to run, so I just want to replace the interactions that have been run in this test execution" and requires careful management
 
-    _NOTE_: If using this approach, you *must* be careful to clear out existing pact files (e.g. `rm ./pacts/*.json`) before you run tests to ensure you don't have left over requests that are no longer relevent.
+    _NOTE_: If using this approach, you _must_ be careful to clear out existing pact files (e.g. `rm ./pacts/*.json`) before you run tests to ensure you don't have left over requests that are no longer relevent.
 
     See this [PR](https://github.com/pact-foundation/pact-js/pull/48) for background.
 
@@ -866,7 +867,6 @@ Also, [from Jest 20](https://facebook.github.io/jest/blog/2017/05/06/jest-20-del
 
 Jest also runs tests in parallel by default, which can be problematic with Pact which is stateful. See [parallel tests](#parallel-tests) to see how to make it run in parallel, or run Jest with the `--runInBand` [option](https://facebook.github.io/jest/docs/en/cli.html#runinband) to run them sequentially.
 
-
 See [this issue](https://github.com/pact-foundation/pact-js/issues/10) for background,
 and the Jest [example](https://github.com/pact-foundation/pact-js/blob/master/examples/jest/package.json#L10-L12) for a working example.
 
@@ -888,11 +888,11 @@ Try starting the mock service manually and seeing if it comes up. When submittin
 
 ## Contributing
 
-1. Fork it
-2. Create your feature branch from the relevant tree (e.g. [v5] or [v6]) (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+1.  Fork it
+2.  Create your feature branch from the relevant tree (e.g. [v5] or [v6]) (`git checkout -b my-new-feature`)
+3.  Commit your changes (`git commit -am 'Add some feature'`)
+4.  Push to the branch (`git push origin my-new-feature`)
+5.  Create new Pull Request
 
 If you would like to implement `Pact` in another language, please check out the Pact [Spec] and have a chat to one of us on the [pact-dev Google group](https://groups.google.com/forum/#!forum/pact-support).
 
@@ -906,26 +906,26 @@ Join us in [Slack](slack.pact.io)
 
 or chat to us at
 
-- Twitter: [@pact_up](https://twitter.com/pact_up)
-- Stack Overflow: https://stackoverflow.com/questions/tagged/pact
-- Google users group: https://groups.google.com/forum/#!forum/pact-support
+* Twitter: [@pact_up](https://twitter.com/pact_up)
+* Stack Overflow: https://stackoverflow.com/questions/tagged/pact
+* Google users group: https://groups.google.com/forum/#!forum/pact-support
 
-[Getting started with Pact]: (http://dius.com.au/2016/02/03/microservices-pact/)
-[v4]: (https://github.com/pact-foundation/pact-js/tree/4.x.x)
-[v5]: (https://github.com/pact-foundation/pact-js/tree/5.x.x)
-[v6]: (https://github.com/pact-foundation/pact-js/tree/6.x.x)
-[Spec]: (https://github.com/pact-foundation/pact-specification)
-[Pact Wiki]: (https://github.com/pact-foundation/pact-ruby/wiki)
-[Getting started with Pact]: (http://dius.com.au/2016/02/03/microservices-pact/)
-[Pact website]: (http://docs.pact.io/)
-[Slack channel]: (http://slack.pact.io)
-[@pact_up]: (https://twitter.com/pact_up)
-[Pact Specification v2]: (https://github.com/pact-foundation/pact-specification/tree/version-2)
-[Pact Specification v3]: (https://github.com/pact-foundation/pact-specification/tree/version-3)
-[CLI tools]: (https://github.com/pact-foundation/pact-ruby-standalone/releases)
-[Installation]: (#installation)
-[Message support]: (https://github.com/pact-foundation/pact-specification/tree/version-3#introduces-messages-for-services-that-communicate-via-event-streams-and-message-queues)
-[Changelog]: (https://github.com/pact-foundation/pact-js/blob/master/CHANGELOG.md)
-[Pact Broker]: (https://github.com/pact-foundation/pact_broker)
+[getting started with pact]: http://dius.com.au/2016/02/03/microservices-pact/
+[v4]: https://github.com/pact-foundation/pact-js/tree/4.x.x
+[v5]: https://github.com/pact-foundation/pact-js/tree/5.x.x
+[v6]: https://github.com/pact-foundation/pact-js/tree/6.x.x
+[spec]: https://github.com/pact-foundation/pact-specification
+[pact wiki]: https://github.com/pact-foundation/pact-ruby/wiki
+[getting started with pact]: http://dius.com.au/2016/02/03/microservices-pact/
+[pact website]: http://docs.pact.io/
+[slack channel]: http://slack.pact.io
+[@pact_up]: https://twitter.com/pact_up
+[pact specification v2]: https://github.com/pact-foundation/pact-specification/tree/version-2
+[pact specification v3]: https://github.com/pact-foundation/pact-specification/tree/version-3
+[cli tools]: https://github.com/pact-foundation/pact-ruby-standalone/releases
+[installation]: #installation
+[message support]: https://github.com/pact-foundation/pact-specification/tree/version-3#introduces-messages-for-services-that-communicate-via-event-streams-and-message-queues
+[changelog]: https://github.com/pact-foundation/pact-js/blob/master/CHANGELOG.md
+[pact broker]: https://github.com/pact-foundation/pact_broker
 [hosted broker]: pact.dius.com.au
-[can-i-deploy tool]: (https://github.com/pact-foundation/pact_broker/wiki/Provider-verification-results)
+[can-i-deploy tool]: https://github.com/pact-foundation/pact_broker/wiki/Provider-verification-results

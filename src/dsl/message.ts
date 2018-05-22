@@ -21,7 +21,8 @@ export interface Message {
   contents: any;
 }
 
-// Consumer message handler
-export type MessageHandler = (m: Message) => Promise<any>;
-export interface MessageHandlers { [name: string]: MessageHandler; }
+// Message producer/handlers
+export type MessageConsumer = (m: Message) => Promise<any>;
+export type MessageProvider = (m: Message) => Promise<any>;
+export interface MessageProviders { [name: string]: MessageProvider; }
 export interface StateHandlers { [name: string]: (state: string) => Promise<any>; }

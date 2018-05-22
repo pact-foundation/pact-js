@@ -5,7 +5,12 @@
 import { isEmpty, cloneDeep } from "lodash";
 import { MatcherResult, extractPayload } from "./dsl/matchers";
 import { qToPromise } from "./common/utils";
-import { Metadata, Message, MessageHandler } from "./dsl/message";
+import {
+  Metadata,
+  Message,
+  MessageProvider,
+  MessageConsumer,
+} from "./dsl/message";
 import logger from "./common/logger";
 import serviceFactory from "@pact-foundation/pact-node";
 import { MessageConsumerOptions } from "./dsl/options";
@@ -18,7 +23,7 @@ interface PactNodeFactory {
  * It is the receiver of an interaction, and needs to be able to handle whatever
  * request was provided.
  */
-export class MessageConsumer {
+export class MessageConsumerPact {
   // Build up a valid Message object
   private state: any = {};
 
@@ -39,9 +44,11 @@ export class MessageConsumer {
       // Currently only supports a single state
       // but the format needs to be v3 compatible for
       // basic interoperability
-      this.state.providerStates = [{
-        name: providerState,
-      }];
+      this.state.providerStates = [
+        {
+          name: providerState,
+        },
+      ];
     }
 
     return this;
@@ -72,7 +79,9 @@ export class MessageConsumer {
    */
   public withContent(content: any) {
     if (isEmpty(content)) {
-      throw new Error("You must provide a valid JSON document or primitive for the Message.");
+      throw new Error(
+        "You must provide a valid JSON document or primitive for the Message.",
+      );
     }
     this.state.contents = content;
 
@@ -87,7 +96,9 @@ export class MessageConsumer {
    */
   public withMetadata(metadata: Metadata) {
     if (isEmpty(metadata)) {
-      throw new Error("You must provide valid metadata for the Message, or none at all");
+      throw new Error(
+        "You must provide valid metadata for the Message, or none at all",
+      );
     }
     this.state.metadata = metadata;
 
@@ -109,19 +120,23 @@ export class MessageConsumer {
    * @param handler A message handler, that must be able to consume the given Message
    * @returns {Promise}
    */
-  public verify(handler: MessageHandler): Promise<any> {
+  public verify(handler: MessageConsumer): Promise<any> {
     logger.info("Verifying message");
 
     return this.validate()
       .then(() => handler(extractPayload(cloneDeep(this.state))))
-      .then(() => qToPromise<string>(this.getServiceFactory().createMessage({
-        consumer: this.config.consumer,
-        content: JSON.stringify(this.state),
-        dir: this.config.dir,
-        pactFileWriteMode: this.config.pactfileWriteMode,
-        provider: this.config.provider,
-        spec: 3,
-      })));
+      .then(() =>
+        qToPromise<string>(
+          this.getServiceFactory().createMessage({
+            consumer: this.config.consumer,
+            content: JSON.stringify(this.state),
+            dir: this.config.dir,
+            pactFileWriteMode: this.config.pactfileWriteMode,
+            provider: this.config.provider,
+            spec: 3,
+          }),
+        ),
+    );
   }
 
   /**
@@ -139,7 +154,6 @@ export class MessageConsumer {
   private getServiceFactory(): PactNodeFactory {
     return serviceFactory;
   }
-
 }
 
 const isMessage = (x: Message | any): x is Message => {
@@ -150,7 +164,7 @@ const isMessage = (x: Message | any): x is Message => {
 
 // bodyHandler takes a synchronous function and returns
 // a wrapped function that accepts a Message and returns a Promise
-export function synchronousBodyHandler(handler: (body: any) => any): MessageHandler {
+export function synchronousBodyHandler(handler: (body: any) => any): MessageProvider {
   return (m: Message): Promise<any> => {
     const body = m.contents;
 
@@ -168,6 +182,6 @@ export function synchronousBodyHandler(handler: (body: any) => any): MessageHand
 // bodyHandler takes an asynchronous (promisified) function and returns
 // a wrapped function that accepts a Message and returns a Promise
 // TODO: move this into its own package and re-export?
-export function asynchronousBodyHandler(handler: (body: any) => Promise<any>): MessageHandler {
+export function asynchronousBodyHandler(handler: (body: any) => Promise<any>): MessageProvider {
   return (m: Message) => handler(m.contents);
 }

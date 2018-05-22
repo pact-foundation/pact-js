@@ -185,8 +185,8 @@ export class Pact {
   }
 }
 
-export * from "./messageConsumer";
-export * from "./messageProvider";
+export * from "./messageConsumerPact";
+export * from "./messageProviderPact";
 export * from "./dsl/message";
 
 /**

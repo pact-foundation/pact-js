@@ -11,7 +11,7 @@ import { MessageProviderOptions } from "./dsl/options";
 import serviceFactory from "@pact-foundation/pact-node";
 import * as express from "express";
 import * as http from "http";
-import { MessageHandler } from "./pact";
+import { MessageProvider } from "./pact";
 
 const bodyParser = require("body-parser");
 
@@ -21,7 +21,7 @@ const bodyParser = require("body-parser");
  * It is the initiator of an interaction, and expects something on the other end
  * of the interaction to respond - just in this case, not immediately.
  */
-export class MessageProvider {
+export class MessageProviderPact {
   private state: any = {};
 
   constructor(private config: MessageProviderOptions) {
@@ -44,9 +44,7 @@ export class MessageProvider {
     const server = this.setupProxyServer(app);
 
     // Run the verification once the proxy server is available
-    return this
-      .waitForServerReady(server)
-      .then(this.runProviderVerification());
+    return this.waitForServerReady(server).then(this.runProviderVerification());
   }
 
   // Listens for the server start event
@@ -62,7 +60,7 @@ export class MessageProvider {
   private runProviderVerification() {
     return (server: http.Server) => {
       const opts = {
-        ...(omit(this.config, "handlers")),
+        ...omit(this.config, "handlers"),
         ...{ providerBaseUrl: "http://localhost:" + server.address().port },
       } as VerifierOptions;
 
@@ -72,15 +70,17 @@ export class MessageProvider {
   }
 
   // Get the API handler for the verification CLI process to invoke on POST /*
-  private setupVerificationHandler(): (req: express.Request, res: express.Response) => void {
+  private setupVerificationHandler(): (
+    req: express.Request,
+    res: express.Response,
+  ) => void {
     return (req, res) => {
       // Extract the message request from the API
       const message: Message = req.body;
 
       // Invoke the handler, and return the JSON response body
       // wrapped in a Message
-      this
-        .setupStates(message)
+      this.setupStates(message)
         .then(() => this.findHandler(message))
         .then((handler) => handler(message))
         .then((o) => res.json({ contents: o }))
@@ -89,7 +89,9 @@ export class MessageProvider {
   }
 
   // Get the Proxy we'll pass to the CLI for verification
-  private setupProxyServer(app: (request: http.IncomingMessage, response: http.ServerResponse) => void): http.Server {
+  private setupProxyServer(
+    app: (request: http.IncomingMessage, response: http.ServerResponse) => void,
+  ): http.Server {
     return http.createServer(app).listen();
   }
 
@@ -98,9 +100,9 @@ export class MessageProvider {
     const app = express();
 
     app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({
-      extended: true,
-    }));
+    app.use(
+      bodyParser.urlencoded({ extended: true }),
+    );
     app.use((req, res, next) => {
       res.header("Content-Type", "application/json; charset=utf-8");
       next();
@@ -118,7 +120,9 @@ export class MessageProvider {
 
     if (message.providerStates) {
       message.providerStates.forEach((state) => {
-        const handler = this.config.stateHandlers ? this.config.stateHandlers[state.name] : null;
+        const handler = this.config.stateHandlers
+          ? this.config.stateHandlers[state.name]
+          : null;
 
         if (handler) {
           promises.push(handler(state.name));
@@ -131,14 +135,16 @@ export class MessageProvider {
     return Promise.all(promises);
   }
   // Lookup the handler based on the description, or get the default handler
-  private findHandler(message: Message): Promise<MessageHandler> {
-    const handler = this.config.handlers[message.description || ""];
+  private findHandler(message: Message): Promise<MessageProvider> {
+    const handler = this.config.messageProviders[message.description || ""];
 
     if (!handler) {
       logger.warn(`no handler found for message ${message.description}`);
 
-      return Promise.reject(`No handler found for message "${message.description}".` +
-        ` Check your "handlers" configuration`);
+      return Promise.reject(
+        `No handler found for message "${message.description}".` +
+        ` Check your "handlers" configuration`,
+      );
     }
 
     return Promise.resolve(handler);

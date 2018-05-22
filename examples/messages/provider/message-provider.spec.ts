@@ -4,7 +4,7 @@ import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import * as sinon from "sinon";
 
-const { MessageProvider, Message } = require("../../../src/pact");
+const { MessageProviderPact, Message } = require("../../../src/pact");
 const { logger } = require("../../../src/common/logger");
 const path = require("path");
 const expect = chai.expect;
@@ -14,8 +14,8 @@ chai.use(chaiAsPromised);
 
 describe("Message provider tests", () => {
 
-  const p = new MessageProvider({
-    handlers: {
+  const p = new MessageProviderPact({
+    messageProviders: {
       "a request for a dog": () => dogApiClient.createDog(27),
     },
     log: path.resolve(process.cwd(), "logs"),

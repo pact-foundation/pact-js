@@ -6,14 +6,14 @@ import * as sinon from "sinon";
 import { like, term } from "../../../src/dsl/matchers";
 import { dogApiHandler } from "./dog-handler";
 
-const { MessageConsumer, Message, synchronousBodyHandler } = require("../../../src/pact");
+const { MessageConsumerPact, Message, synchronousBodyHandler } = require("../../../src/pact");
 const path = require("path");
 const expect = chai.expect;
 
 chai.use(chaiAsPromised);
 
 describe("Message consumer tests", () => {
-  const messagePact = new MessageConsumer({
+  const messagePact = new MessageConsumerPact({
     consumer: "MyJSMessageConsumer",
     dir: path.resolve(process.cwd(), "pacts"),
     pactfileWriteMode: "update",

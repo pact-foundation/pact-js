@@ -1,7 +1,7 @@
 /* tslint:disable:no-unused-expression no-empty */
 import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
-import { MessageProvider } from "./messageProvider";
+import { MessageProviderPact } from "./messageProviderPact";
 import { fail } from "assert";
 import { Message } from "./dsl/message";
 import * as sinon from "sinon";
@@ -16,41 +16,35 @@ const expect = chai.expect;
 const assert = chai.assert;
 
 describe("MesageProvider", () => {
-  let provider: MessageProvider;
+  let provider: MessageProviderPact;
   const successfulRequest = "successfulRequest";
   const unsuccessfulRequest = "unsuccessfulRequest";
 
   const successfulMessage: Message = {
     contents: { foo: "bar" },
     description: successfulRequest,
-    providerStates: [
-      { name: "some state" },
-    ],
+    providerStates: [{ name: "some state" }],
   };
 
   const unsuccessfulMessage: Message = {
     contents: { foo: "bar" },
     description: unsuccessfulRequest,
-    providerStates: [
-      { name: "some state not found" },
-    ],
+    providerStates: [{ name: "some state not found" }],
   };
   const nonExistentMessage: Message = {
     contents: { foo: "bar" },
     description: "does not exist",
-    providerStates: [
-      { name: "some state not found" },
-    ],
+    providerStates: [{ name: "some state not found" }],
   };
 
   beforeEach(() => {
-    provider = new MessageProvider({
+    provider = new MessageProviderPact({
       consumer: "myconsumer",
-      handlers: {
+      logLevel: "error",
+      messageProviders: {
         successfulRequest: () => Promise.resolve("yay"),
         unsuccessfulRequest: () => Promise.reject("nay"),
       },
-      logLevel: "error",
       provider: "myprovider",
       stateHandlers: {
         "some state": () => Promise.resolve("yay"),
@@ -64,9 +58,9 @@ describe("MesageProvider", () => {
       expect(provider).to.respondTo("verify");
     });
     it("creates a Provider with default log level if not specified", () => {
-      provider = new MessageProvider({
+      provider = new MessageProviderPact({
         consumer: "myconsumer",
-        handlers: {},
+        messageProviders: {},
         provider: "myprovider",
       });
       expect(provider).to.be.a("object");
@@ -99,7 +93,9 @@ describe("MesageProvider", () => {
   describe("#setupVerificationHandler", () => {
     describe("when their is a valid setup", () => {
       it("should create a valid express handler", (done) => {
-        const setupVerificationHandler = (provider as any).setupVerificationHandler.bind(provider)();
+        const setupVerificationHandler = (provider as any).setupVerificationHandler.bind(
+          provider,
+        )();
         const req = { body: successfulMessage };
         const mock = sinon.stub();
         const res = {
@@ -111,7 +107,9 @@ describe("MesageProvider", () => {
     });
     describe("when their is an invalid setup", () => {
       it("should create a valid express handler that rejects the message", (done) => {
-        const setupVerificationHandler = (provider as any).setupVerificationHandler.bind(provider)();
+        const setupVerificationHandler = (provider as any).setupVerificationHandler.bind(
+          provider,
+        )();
         const req = { body: nonExistentMessage };
         const mock = sinon.stub();
         const res = {
@@ -148,19 +146,22 @@ describe("MesageProvider", () => {
     describe("when given a handler that exists", () => {
       it("should return values of all resolved handlers", () => {
         const findStateHandler = (provider as any).setupStates.bind(provider);
-        return expect(findStateHandler(successfulMessage)).to.eventually.deep.equal(["yay"]);
+        return expect(
+          findStateHandler(successfulMessage),
+        ).to.eventually.deep.equal(["yay"]);
       });
     });
     describe("when given a state that does not have a handler", () => {
       it("should return an empty promise", () => {
-        provider = new MessageProvider({
+        provider = new MessageProviderPact({
           consumer: "myconsumer",
-          handlers: {
-          },
+          messageProviders: {},
           provider: "myprovider",
         });
         const findStateHandler = (provider as any).setupStates.bind(provider);
-        return expect(findStateHandler(unsuccessfulMessage)).to.eventually.deep.equal([]);
+        return expect(
+          findStateHandler(unsuccessfulMessage),
+        ).to.eventually.deep.equal([]);
       });
     });
   });
@@ -187,7 +188,9 @@ describe("MesageProvider", () => {
   });
   describe("#setupProxyApplication", () => {
     it("should return a valid express app", () => {
-      const setupProxyApplication = (provider as any).setupProxyApplication.bind(provider);
+      const setupProxyApplication = (provider as any).setupProxyApplication.bind(
+        provider,
+      );
       expect(setupProxyApplication().listen).to.be.a("function");
     });
   });

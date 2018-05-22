@@ -1,11 +1,11 @@
 /* tslint:disable:no-unused-expression object-literal-sort-keys max-classes-per-file no-empty */
 const consumeEvent = require("./index").consumeEvent;
 const { like, term } = require("../../../dist/dsl/matchers");
-const { MessageConsumer, Message, synchronousBodyHandler } = require("../../../dist/pact");
+const { MessageConsumerPact, Message, synchronousBodyHandler } = require("../../../dist/pact");
 const path = require("path");
 
 describe("Serverless consumer tests", () => {
-  const messagePact = new MessageConsumer({
+  const messagePact = new MessageConsumerPact({
     consumer: "SNSPactEventConsumer",
     dir: path.resolve(process.cwd(), "pacts"),
     provider: "SNSPactEventProvider",
