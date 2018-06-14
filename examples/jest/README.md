@@ -1,6 +1,8 @@
 # Jest Example
 
-1. In the pact-js project root, change to the `examples/jest` directory
+1. In the pact-js project root, run: `npm i`
+1. Run: `npm run compile`
+1. Change to the `examples/jest` directory.
 1. Run: `npm i`
 1. Run the tests: `npm t`
 
@@ -17,4 +19,3 @@ pactfileWriteMode: 'update'
 in the provider to get pacts appended to.
 
 Also note the publish is a separate task. As there is no real afterAll it is difficult to know when to publish in normal running so I had to extract it.
-
