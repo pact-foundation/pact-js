@@ -1,5 +1,5 @@
 {
-  "name": "@pact-foundation/pact",
+  "name": "pact-js",
   "description": "Pact for all things Javascript",
   "main": "./pact.js",
   "dependencies": {
