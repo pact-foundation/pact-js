@@ -1,0 +1,40 @@
+{
+  "name": "pact-js",
+  "description": "Pact for all things Javascript",
+  "main": "./pact.js",
+  "dependencies": {
+    "@pact-foundation/pact-node": "^6.13.0",
+    "cli-color": "^1.1.0",
+    "es6-object-assign": "^1.1.0",
+    "es6-promise": "^4.1.1",
+    "lodash": "^4.17.4",
+    "lodash.isfunction": "3.0.8",
+    "lodash.isnil": "4.0.0",
+    "lodash.isundefined": "3.0.1",
+    "lodash.omitby": "4.6.0",
+    "popsicle": "^9.2.0"
+  },
+  "authors": [
+    "Matt Fellows <m@onegeek.com.au> (http://twitter.com/matthewfellows)"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "pact",
+    "pact-js",
+    "javascript",
+    "contract",
+    "testing",
+    "testing",
+    "consumer",
+    "driven",
+    "testing"
+  ],
+  "homepage": "https://github.com/davidkgp/pact-js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
