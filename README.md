@@ -802,7 +802,7 @@ You have a number of options to achieve this feat:
 
     See this [example](https://github.com/tarciosaraiva/pact-melbjs/blob/master/helper.js) and this [issue](https://github.com/pact-foundation/pact-js/issues/11) for more.
 
-1.  Set `pactfileWriteMode` to `update` in the `Pact()` constructor
+1.  Set `pactfileWriteMode` to `merge` in the `Pact()` constructor
 
     This will allow you to have multiple independent tests for a given Consumer-Provider pair, without it clobbering previous interactions, thereby allowing you to incrementally build up or modify your pact files.
 
