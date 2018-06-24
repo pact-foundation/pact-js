@@ -42,7 +42,7 @@ export interface PactOptions {
   cors?: boolean;
 
   // Control how the Pact files are written
-  // Choices: 'overwrite' | 'update', 'none', defaults to 'overwrite'
+  // (defaults to 'overwrite')
   pactfileWriteMode?: PactfileWriteMode;
 }
 
