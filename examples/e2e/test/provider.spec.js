@@ -36,8 +36,7 @@ server.listen(8081, () => {
 
 // Verify that the provider meets all consumer expectations
 describe('Pact Verification', () => {
-  it('should validate the expectations of Matching Service', function () { // lexical binding required here
-    this.timeout(10000)
+  it('should validate the expectations of Matching Service', () => {
 
     let opts = {
       provider: 'Animal Profile Service',

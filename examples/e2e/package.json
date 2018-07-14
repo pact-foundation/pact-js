@@ -6,7 +6,7 @@
     "test": "npm run test:consumer && npm run test:publish && npm run test:provider",
     "test:consumer": "./node_modules/.bin/mocha --timeout 10000 test/consumer.spec.js",
     "test:publish": "node test/publish.js",
-    "test:provider": "./node_modules/.bin/mocha --timeout 10000 test/provider.spec.js",
+    "test:provider": "./node_modules/.bin/mocha --timeout 10000 --exit test/provider.spec.js",
     "can-i-deploy": "npm run can-i-deploy:consumer && npm run can-i-deploy:provider",
     "can-i-deploy:consumer": "$(find ../../ -name pact-broker | grep -e 'bin/pact-broker$' | head -n 1) can-i-deploy --pacticipant 'Matching Service' --latest --broker-base-url https://test.pact.dius.com.au --broker-username dXfltyFMgNOFZAxr8io9wJ37iUpY42M --broker-password O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
     "can-i-deploy:provider": "$(find ../../ -name pact-broker | grep -e 'bin/pact-broker$' | head -n 1) can-i-deploy --pacticipant 'Animal Profile Service' --latest --broker-base-url https://test.pact.dius.com.au --broker-username dXfltyFMgNOFZAxr8io9wJ37iUpY42M --broker-password O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
@@ -17,18 +17,18 @@
   "author": "matt.fellows@onegeek.com.au",
   "license": "MIT",
   "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
     "cli-color": "^1.1.0",
     "concurrently": "^3.1.0",
     "eslint": "^3.13.1",
     "eslint-config-google": "^0.7.1",
-    "chai": "^3.5.0",
-    "chai-as-promised": "^6.0.0",
-    "mocha": "^3.2.0"
+    "mocha": "^5.2.0"
   },
   "dependencies": {
-    "body-parser": "^1.16.1",
+    "body-parser": "^1.18.3",
     "cors": "^2.8.1",
-    "express": "^4.14.0",
-    "superagent": "^3.3.2"
+    "express": "^4.16.3",
+    "superagent": "^3.8.3"
   }
 }
