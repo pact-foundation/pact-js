@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="6.0.0-alpha.15"></a>
+# [6.0.0-alpha.15](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.14...v6.0.0-alpha.15) (2018-07-17)
+
+
+### Bug Fixes
+
+* **interaction:** include response body if set to empty string ([abc20d4](https://github.com/pact-foundation/pact-js/commit/abc20d4))
+
+
+
 <a name="6.0.0-alpha.14"></a>
 # [6.0.0-alpha.14](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.13...v6.0.0-alpha.14) (2018-05-08)
 
