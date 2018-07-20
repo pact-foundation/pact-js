@@ -46,6 +46,27 @@ describe('Pact', () => {
     ]
   }
 
+  const animal = {
+    first_name: 'Elephant',
+    last_name: 'Cantwaittobeking',
+    animal: 'lion',
+    age: 4,
+    available_from: '2017-12-04T14:47:18.582Z',
+    gender: 'M',
+    location: {
+      description: 'Werribee Zoo',
+      country: 'Australia',
+      post_code: 3000
+    },
+    eligibility: {
+      available: true,
+      previously_married: true
+    },
+    interests: [
+      'parkour'
+    ]
+  }
+
   const MIN_ANIMALS = 2
 
   // Define animal payload, with flexible matchers
@@ -101,7 +122,9 @@ describe('Pact', () => {
   process.env.API_HOST = `http://localhost:${MOCK_SERVER_PORT}`
   const {
     suggestion,
-    getAnimalById
+    getAnimalById,
+    availableAnimals,
+    addAnimal
   } = require('../consumer')
 
   // Verify service client works as expected.
@@ -181,6 +204,32 @@ describe('Pact', () => {
         const suggestedMates = getAnimalById(100)
 
         expect(suggestedMates).to.eventually.be.a('null').notify(done)
+      })
+    })
+  })
+
+  describe('when a call to the Animal Service is made to add new animal', () => {
+    describe('and it will allow to add record', () => {
+      before(() => provider.addInteraction({
+        state: 'Has animals',
+        uponReceiving: 'a request to add new animal',
+        withRequest: {
+          method: 'POST',
+          body: animal,
+          path: term({ generate: '/animals', matcher: '/animals' })
+        },
+        willRespondWith: {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+          },
+          body: animal
+        }
+      }))
+
+      it('returns adds animal to record', done => {
+        const suggestedMates = addAnimal(animal)
+        expect(suggestedMates).to.eventually.have.deep.property('first_name', 'Elephant').notify(done)
       })
     })
   })

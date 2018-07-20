@@ -20,6 +20,15 @@ const getAnimalById = (id) => {
       () => null)
 }
 
+const addAnimal = (animal) => {
+  return request
+    .post(`${API_HOST}/animals`)
+    .set('Content-Type', 'application/json; charset=utf-8')
+    .send(animal)
+    .then(res => res.body,
+      () => [])
+}
+
 // Suggestions function:
 // Given availability and sex etc. find available suitors,
 // and give them a 'score'
@@ -74,9 +83,46 @@ server.get('/suggestions/:animalId', (req, res) => {
   })
 })
 
+const animal = {
+  first_name: 'Elephant',
+  last_name: 'Cantwaittobeking',
+  animal: 'lion',
+  age: 4,
+  available_from: '2017-12-04T14:47:18.582Z',
+  gender: 'M',
+  location: {
+    description: 'Werribee Zoo',
+    country: 'Australia',
+    post_code: 3000
+  },
+  eligibility: {
+    available: true,
+    previously_married: true
+  },
+  interests: [
+    'parkour'
+  ]
+}
+
+server.post('/suggestions', (req, res) => {
+  if (!req.body) {
+    res.writeHead(400)
+    res.end()
+  }
+  request.post(`${API_HOST}/animals`).set('Content-Type', 'application/json; charset=utf-8').send(animal).end((res) => {
+    if (res.status === 200) {
+      res.json(animal)
+    } else {
+      res.writeHead(400)
+      res.end()
+    }
+  })
+})
+
 module.exports = {
   server,
   availableAnimals,
   suggestion,
-  getAnimalById
+  getAnimalById,
+  addAnimal
 }
