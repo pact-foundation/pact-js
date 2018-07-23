@@ -52,6 +52,14 @@ const suggestion = mate => {
   })
 }
 
+// Creates a mate for suggestions
+const createMateForDates = (mate) => {
+  return request
+    .post(`${API_HOST}/animals`)
+    .send(mate)
+    .set('Content-Type', 'application/json; charset=utf-8')
+}
+
 // Suggestions API
 server.get('/suggestions/:animalId', (req, res) => {
   if (!req.params.animalId) {
@@ -77,6 +85,7 @@ server.get('/suggestions/:animalId', (req, res) => {
 module.exports = {
   server,
   availableAnimals,
+  createMateForDates,
   suggestion,
   getAnimalById
 }
