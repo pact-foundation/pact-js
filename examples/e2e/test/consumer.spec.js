@@ -100,6 +100,7 @@ describe('Pact', () => {
   // Note that we update the API endpoint to point at the Mock Service
   process.env.API_HOST = `http://localhost:${MOCK_SERVER_PORT}`
   const {
+    createMateForDates,
     suggestion,
     getAnimalById
   } = require('../consumer')
@@ -182,6 +183,31 @@ describe('Pact', () => {
 
         expect(suggestedMates).to.eventually.be.a('null').notify(done)
       })
+    })
+  })
+
+  describe('when a call to the Animal Service is made to create a new mate', () => {
+    before(() => provider.addInteraction({
+      uponReceiving: 'a request to create a new mate',
+      withRequest: {
+        method: 'POST',
+        path: '/animals',
+        body: like(suitor),
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8'
+        },
+      },
+      willRespondWith: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8'
+        },
+        body: like(suitor)
+      }
+    }))
+
+    it('should create a new mate', (done) => {
+      expect(createMateForDates(suitor)).to.eventually.be.fulfilled.notify(done)
     })
   })
 
