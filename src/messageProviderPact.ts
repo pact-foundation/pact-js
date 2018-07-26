@@ -44,7 +44,12 @@ export class MessageProviderPact {
     const server = this.setupProxyServer(app);
 
     // Run the verification once the proxy server is available
-    return this.waitForServerReady(server).then(this.runProviderVerification());
+    return this.waitForServerReady(server)
+      .then(this.runProviderVerification())
+      .then(((result) => {
+        server.close();
+        return result;
+      }));
   }
 
   // Listens for the server start event
