@@ -135,6 +135,10 @@ The first step is to create a test for your API Consumer. The example below uses
 Check out the `examples` folder for examples with Karma Jasmine, Mocha and Jest. The example below is taken from the [integration spec](https://github.com/pact-foundation/pact-js/blob/master/src/pact.integration.spec.ts).
 
 ```javascript
+/**
+ * The following example is for Pact version 5
+ */
+
 const path = require('path')
 const chai = require('chai')
 const { Pact } = require('@pact-foundation/pact')
@@ -214,8 +218,9 @@ describe('Pact', () => {
       // (6) write the pact file for this consumer-provider pair,
       // and shutdown the associated mock server.
       // You should do this only _once_ per Provider you are testing.
-      after(() => {
+      after((done) => {
         provider.finalize()
+          .then(() => done())
       })
     })
   })
