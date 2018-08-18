@@ -125,6 +125,7 @@
     "istanbul": "~0.4.5",
     "jasmine-core": "~2.9.1",
     "jscpd": "0.6.10",
+    "winston": "2.4.0",
     "json-loader": "~0.5.7",
     "karma": "~2.0.0",
     "karma-chai": "~0.1.0",
