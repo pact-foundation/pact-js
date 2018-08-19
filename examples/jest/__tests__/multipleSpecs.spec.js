@@ -9,8 +9,8 @@ describe("Dog's API", () => {
     dog: 1
   }]
 
-  afterEach(async () => {
-    await provider.verify()
+  afterEach(() => {
+    return provider.verify()
   })
 
   describe('works', () => {
