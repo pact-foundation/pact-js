@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="6.0.1"></a>
+## [6.0.1](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.15...v6.0.1) (2018-08-19)
+
+
+### Bug Fixes
+
+* **test:** add mocha.opts for mocha tests ([765f272](https://github.com/pact-foundation/pact-js/commit/765f272))
+* **test:** remove async usage in examples ([11368c8](https://github.com/pact-foundation/pact-js/commit/11368c8))
+
+
+
+<a name="5.9.1"></a>
+## [5.9.1](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.14...v5.9.1) (2018-05-10)
+
+
+### Bug Fixes
+
+* **interaction:** include response body if set to empty string ([2db0f23](https://github.com/pact-foundation/pact-js/commit/2db0f23))
+
+
+
 <a name="6.0.0-alpha.15"></a>
 # [6.0.0-alpha.15](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.14...v6.0.0-alpha.15) (2018-07-17)
 
