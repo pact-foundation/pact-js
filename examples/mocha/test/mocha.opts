@@ -1,0 +1,4 @@
+--bail
+--reporter spec
+--colors
+--timeout 10000
