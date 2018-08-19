@@ -1,6 +1,6 @@
 {
   "name": "@pact-foundation/pact",
-  "version": "6.0.0-alpha.15",
+  "version": "6.0.0",
   "description": "Pact for all things Javascript",
   "main": "./pact.js",
   "types": "./pact.d.ts",
@@ -16,7 +16,7 @@
     "postdist": "npm t",
     "posttest": "npm run test:karma",
     "predist": "npm run clean && npm run lint && npm run jscpd",
-    "release": "standard-version --prerelease alpha --release-as patch",
+    "release": "standard-version",
     "test": "nyc --check-coverage --reporter=html --reporter=text-summary mocha",
     "test:examples": "npm run test:e2e-examples && npm run test:jest-examples && npm run test:mocha-examples && npm run test:ava-examples && npm run test:ts-examples && npm run test:message-examples && npm run test:serverless-examples && npm run test:graphql-examples",
     "test:e2e-examples": "cd examples/e2e && npm i && npm t",

@@ -81,8 +81,8 @@ Read [Getting started with Pact] for more information for beginners.
 
 | Version | Stable           | [Spec] Compatibility | Docs          | Installation                                |
 | ------- | ---------------- | -------------------- | ------------- | ------------------------------------------- |
-| `6.x.x` | No (beta)        | `2`, `3`\*           | You are here  | `npm i -S @pact-foundation/pact@prerelease` |
-| `5.x.x` | Yes              | `2`                  | See [v5] docs | `npm i -S @pact-foundation/pact@5.x.x`      |
+| `6.x.x` | Yes              | `2`, `3`\*           | You are here  | `npm i -S @pact-foundation/pact@latest` |
+| `5.x.x` | Yes (deprecated) | `2`                  | See [v5] docs | `npm i -S @pact-foundation/pact@5.x.x`      |
 | `4.x.x` | Yes (deprecated) | Up to `2`            | See [v4] docs | `npm i -S pact`                             |
 
 See the [Changelog] for versions and their history.
@@ -91,7 +91,7 @@ _\* v3 support is limited to the subset of functionality in the v3 [spec] requir
 
 ## Using Pact JS
 
-Pact supports [synchronous request-response style HTTP interactions](#http-api-testing) and has experimental support for [asynchronous interactions](#asynchronous-api-testing) with JSON-formatted payloads.
+Pact supports [synchronous request-response style HTTP interactions](#http-api-testing) and [asynchronous interactions](#asynchronous-api-testing) with JSON-formatted payloads.
 
 ## HTTP API Testing
 
@@ -378,20 +378,20 @@ _NOTE_: You need to be retrieving pacts from the broker for this feature to work
 
 ## Asynchronous API Testing
 
-_Since version `v6.0.0-alpha` or later_
+_Since version `v6.0.0` or later_
 
 Modern distributed architectures are increasingly integrated in a decoupled, asynchronous fashion. Message queues such as ActiveMQ, RabbitMQ, SQS, Kafka and Kinesis are common, often integrated via small and frequent numbers of microservices (e.g. lambda.).
 
 Furthermore, the web has things like WebSockets which involve bidirectional messaging.
 
-Pact now has experimental support for these use cases, by abstracting away the protocol and focussing on the messages passing between them.
+Pact supports these use cases, by abstracting away the protocol and focussing on the messages passing between them.
 
 For further reading and introduction into this topic, see this [article](https://dius.com.au/2017/09/22/contract-testing-serverless-and-asynchronous-applications/)
-and our [example](https://github.com/pact-foundation/pact-js/tree/master/examples/messages) for a more detailed overview of these concepts.
+and our [asynchronous examples](#asynchronous-apis) for a more detailed overview of these concepts.
 
 ### Consumer
 
-A Consumer is the system that will be reading a message from a queue or some intermediary - like a DynamoDB table or S3 bucket -
+A Consumer is the system that will be reading a message from a queue or some other intermediary - like a DynamoDB table or S3 bucket -
 and be able to handle it.
 
 From a Pact testing point of view, Pact takes the place of the intermediary (MQ/broker etc.) and confirms whether or not the consumer is able to handle a request.
