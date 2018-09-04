@@ -280,7 +280,7 @@ new Verifier().verifyProvider(opts).then(function () {
 | `customProviderHeaders`     |  false   | array of strings | Header(s) to add to provider state set up and pact verification re`quests`. eg 'Authorization: Basic cGFjdDpwYWN0'.Broker. Optional otherwise. |
 | `timeout`                   |  false   | number           | The duration in ms we should wait to confirm verification process was successful. Defaults to 30000, Optional.                                 |
 
-That's it! Read more about [Verifying Pacts](http://docs.pact.io/documentation/verifying_pacts.html).
+That's it! Read more about [Verifying Pacts](https://docs.pact.io/getting_started/verifying_pacts).
 
 #### API with Provider States
 
@@ -288,7 +288,7 @@ If you have any `state`'s in your consumer tests that you need to validate durin
 to configure your provider for Provider States. This means you must specify `providerStatesSetupUrl`
 in the `verifyProvider` function and configure an extra (dynamic) API endpoint to setup provider state (`--provider-states-setup-url`) for the given test state, which sets the active pact consumer and provider state accepting two parameters: `consumer` and `state` and returns an HTTP `200` eg. `consumer=web&state=customer%20is%20logged%20in`.
 
-See this [Provider](https://github.com/pact-foundation/pact-js/blob/master/examples/e2e/test/provider.spec.js) for a working example, or read more about [Provider States](https://docs.pact.io/documentation/provider_states.html).
+See this [Provider](https://github.com/pact-foundation/pact-js/blob/master/examples/e2e/test/provider.spec.js) for a working example, or read more about [Provider States](https://docs.pact.io/getting_started/provider_states).
 
 #### API with Authorization
 
@@ -324,7 +324,7 @@ The Broker:
 * provides API documentation of your applications that is guaranteed to be up-to date
 * visualises the relationships between your services
 * integrates with other systems, such as Slack or your CI server, via webhooks
-* ...and much much [more](http://docs.pact.io/documentation/sharings_pacts.html).
+* ...and much much [more](https://docs.pact.io/getting_started/sharing_pacts).
 
 [Host your own](https://github.com/pact-foundation/pact_broker), or signup for a free hosted [Pact Broker](https://pact.dius.com.au).
 
