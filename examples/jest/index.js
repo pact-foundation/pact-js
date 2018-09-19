@@ -21,7 +21,7 @@ exports.getMeCats = (endpoint) => {
   return axios.request({
     method: 'GET',
     baseURL: `${url}:${port}`,
-    url: '/cats',
+    url: '/cats?catId[]=2&catId[]=3',
     headers: { 'Accept': 'application/json' }
-   })
+  })
 };
