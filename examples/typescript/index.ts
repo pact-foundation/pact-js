@@ -1,4 +1,5 @@
-import axios from "axios";
+import axios, { AxiosPromise } from "axios";
+
 
 export class DogService {
   private url: string;
@@ -9,7 +10,7 @@ export class DogService {
     this.port = endpoint.port;
   }
 
-  public getMeDogs = (): Promise<any> => {
+  public getMeDogs = (): AxiosPromise => {
     return axios.request({
       baseURL: `${this.url}:${this.port}`,
       headers: { Accept: "application/json" },
