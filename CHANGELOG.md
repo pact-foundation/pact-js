@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="6.0.2"></a>
+## [6.0.2](https://github.com/pact-foundation/pact-js/compare/v6.0.1...v6.0.2) (2018-10-01)
+
+
+### Bug Fixes
+
+* **examples/typescript:** fix example failing to run ([f2ed7d7](https://github.com/pact-foundation/pact-js/commit/f2ed7d7))
+* **examples/typescript:** fix the typings for getMeDogs ([42bbb9a](https://github.com/pact-foundation/pact-js/commit/42bbb9a))
+* **examples/typescript:** missing dependencies ([314119d](https://github.com/pact-foundation/pact-js/commit/314119d))
+* **vulnerabilities:** run npm audit fix on e2e tests ([934789f](https://github.com/pact-foundation/pact-js/commit/934789f))
+
+
+
 <a name="6.0.1"></a>
 ## [6.0.1](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.15...v6.0.1) (2018-08-19)
 
