@@ -4,7 +4,7 @@
  * but are fixed, to prevent contract invalidation after each run of the consumer test.
  */
 
-import { isFunction, isNil, isUndefined } from "lodash";
+import { isFunction, isNil, isEmpty, isUndefined } from "lodash";
 
 // Note: The following regexes are Ruby formatted,
 // so attempting to parse as JS without modification is probably not going to work as intended!
@@ -58,6 +58,9 @@ export function term(opts: { generate: string, matcher: string }) {
         o: 0,
         s: matcher,
       },
+    },
+    getValue: () => {
+      return generate;
     },
     json_class: "Pact::Term",
   };
@@ -203,6 +206,14 @@ export function eachLike<T>(content: T, opts?: { min: number }) {
 
   return {
     contents: content,
+    getValue: () => {
+      const data = [];
+      const min = isUndefined(opts) ? 1 : opts.min;
+      for (let i = 0; i < min; i++) {
+        data[i] = content;
+      }
+      return data;
+    },
     json_class: "Pact::ArrayLike",
     min: isUndefined(opts) ? 1 : opts.min,
   };
@@ -219,6 +230,9 @@ export function somethingLike<T>(value: T) {
 
   return {
     contents: value,
+    getValue: () => {
+      return value;
+    },
     json_class: "Pact::SomethingLike",
   };
 }
@@ -229,4 +243,34 @@ export { term as regex };
 
 export interface MatcherResult {
   json_class: string;
+  getValue(): any;
+}
+
+// Recurse the object removing any underlying matching guff, returning
+// the raw example content
+export function extractPayload(obj: any, stack: any = {}): any {
+  // special case: top level matching object
+  // we need to strip the properties
+  if (isMatcher(obj) && isEmpty(stack)) {
+    return extractPayload(obj.getValue(), obj.getValue());
+  }
+
+  // recurse the (remaining) object, replacing Matchers with their
+  // actual contents
+  for (const property in obj) {
+    if (obj.hasOwnProperty(property)) {
+      const value = obj[property];
+
+      if (isMatcher(value)) {
+        extractPayload(value.getValue(), stack[property] = value.getValue());
+      } else if (typeof value === "object") {
+        extractPayload(value, stack[property] = value);
+      }
+    }
+  }
+
+  return stack;
+}
+export function isMatcher(x: MatcherResult | any): x is MatcherResult {
+  return (x as MatcherResult).getValue !== undefined;
 }

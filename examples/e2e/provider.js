@@ -69,8 +69,7 @@ server.post('/animals', (req, res) => {
   animal.id = animalRepository.fetchAll().length
   animalRepository.insert(animal)
 
-  res.writeHead(200)
-  res.end()
+  res.json(animal)
 })
 
 module.exports = {

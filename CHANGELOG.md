@@ -2,6 +2,182 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="6.0.2"></a>
+## [6.0.2](https://github.com/pact-foundation/pact-js/compare/v6.0.1...v6.0.2) (2018-10-01)
+
+
+### Bug Fixes
+
+* **examples/typescript:** fix example failing to run ([f2ed7d7](https://github.com/pact-foundation/pact-js/commit/f2ed7d7))
+* **examples/typescript:** fix the typings for getMeDogs ([42bbb9a](https://github.com/pact-foundation/pact-js/commit/42bbb9a))
+* **examples/typescript:** missing dependencies ([314119d](https://github.com/pact-foundation/pact-js/commit/314119d))
+* **vulnerabilities:** run npm audit fix on e2e tests ([934789f](https://github.com/pact-foundation/pact-js/commit/934789f))
+
+
+
+<a name="6.0.1"></a>
+## [6.0.1](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.15...v6.0.1) (2018-08-19)
+
+
+### Bug Fixes
+
+* **test:** add mocha.opts for mocha tests ([765f272](https://github.com/pact-foundation/pact-js/commit/765f272))
+* **test:** remove async usage in examples ([11368c8](https://github.com/pact-foundation/pact-js/commit/11368c8))
+
+
+
+<a name="5.9.1"></a>
+## [5.9.1](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.14...v5.9.1) (2018-05-10)
+
+
+### Bug Fixes
+
+* **interaction:** include response body if set to empty string ([2db0f23](https://github.com/pact-foundation/pact-js/commit/2db0f23))
+
+
+
+<a name="6.0.0-alpha.15"></a>
+# [6.0.0-alpha.15](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.14...v6.0.0-alpha.15) (2018-07-17)
+
+
+### Bug Fixes
+
+* **interaction:** include response body if set to empty string ([abc20d4](https://github.com/pact-foundation/pact-js/commit/abc20d4))
+
+
+
+<a name="6.0.0-alpha.14"></a>
+# [6.0.0-alpha.14](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.13...v6.0.0-alpha.14) (2018-05-08)
+
+
+### Features
+
+* **message:** modify message: content -> contents ([38e57a8](https://github.com/pact-foundation/pact-js/commit/38e57a8))
+* **upgrade:** update to pact-node 6.16.x ([c1d938b](https://github.com/pact-foundation/pact-js/commit/c1d938b))
+
+
+
+<a name="6.0.0-alpha.13"></a>
+# [6.0.0-alpha.13](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.12...v6.0.0-alpha.13) (2018-04-29)
+
+
+### Features
+
+* **graphql:** escape queries with variables ([8b64dd4](https://github.com/pact-foundation/pact-js/commit/8b64dd4))
+
+
+
+<a name="6.0.0-alpha.12"></a>
+# [6.0.0-alpha.12](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.10...v6.0.0-alpha.12) (2018-04-22)
+
+
+### Features
+
+* **example:** example GraphQL pact test ([3280a81](https://github.com/pact-foundation/pact-js/commit/3280a81))
+* **graphql:** add basic GraphQL wrapper function ([641e0e7](https://github.com/pact-foundation/pact-js/commit/641e0e7))
+* **message:** tidy up Message interface and tests ([58c334c](https://github.com/pact-foundation/pact-js/commit/58c334c))
+
+
+
+<a name="6.0.0-alpha.11"></a>
+# [6.0.0-alpha.11](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.10...v6.0.0-alpha.11) (2018-04-22)
+
+
+### Features
+
+* **example:** example GraphQL pact test ([3280a81](https://github.com/pact-foundation/pact-js/commit/3280a81))
+* **graphql:** add basic GraphQL wrapper function ([641e0e7](https://github.com/pact-foundation/pact-js/commit/641e0e7))
+* **message:** tidy up Message interface and tests ([58c334c](https://github.com/pact-foundation/pact-js/commit/58c334c))
+
+
+
+<a name="6.0.0-alpha.10"></a>
+# [6.0.0-alpha.10](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.9...v6.0.0-alpha.10) (2018-04-20)
+
+
+### Bug Fixes
+
+* Replace packpath with pkginfo to get metadata in more reliable f… ([#175](https://github.com/pact-foundation/pact-js/issues/175)) ([5abb32e](https://github.com/pact-foundation/pact-js/commit/5abb32e))
+
+
+
+<a name="6.0.0-alpha.9"></a>
+# [6.0.0-alpha.9](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.8...v6.0.0-alpha.9) (2018-04-20)
+
+
+### Bug Fixes
+
+* resolve package.json for version metadata regardless of nesting ([#174](https://github.com/pact-foundation/pact-js/issues/174)) ([9b771c6](https://github.com/pact-foundation/pact-js/commit/9b771c6))
+
+
+
+<a name="6.0.0-alpha.8"></a>
+# [6.0.0-alpha.8](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.7...v6.0.0-alpha.8) (2018-04-15)
+
+
+### Features
+
+* **messages:** setup provider states in verification ([57f7352](https://github.com/pact-foundation/pact-js/commit/57f7352))
+
+
+
+<a name="6.0.0-alpha.7"></a>
+# [6.0.0-alpha.7](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.6...v6.0.0-alpha.7) (2018-04-05)
+
+
+
+<a name="6.0.0-alpha.6"></a>
+# [6.0.0-alpha.6](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.5...v6.0.0-alpha.6) (2018-04-05)
+
+
+
+<a name="6.0.0-alpha.5"></a>
+# [6.0.0-alpha.5](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.4...v6.0.0-alpha.5) (2018-04-04)
+
+
+### Features
+
+* **messages:** implement v3 compatible provider states ([8e113a5](https://github.com/pact-foundation/pact-js/commit/8e113a5))
+
+
+
+<a name="6.0.0-alpha.4"></a>
+# [6.0.0-alpha.4](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.2...v6.0.0-alpha.4) (2018-04-01)
+
+
+### Bug Fixes
+
+* **test:** fix promise resolution in test ([ce31f31](https://github.com/pact-foundation/pact-js/commit/ce31f31))
+
+
+### Features
+
+* **example:** working serverless example with pact. [#166](https://github.com/pact-foundation/pact-js/issues/166) ([d4a49f5](https://github.com/pact-foundation/pact-js/commit/d4a49f5))
+* **message:** fix message structure sent to consumer verify(). [#166](https://github.com/pact-foundation/pact-js/issues/166) ([ee1ddf0](https://github.com/pact-foundation/pact-js/commit/ee1ddf0))
+* **serverless-example:** add basic serverless SNS example ([08cd73b](https://github.com/pact-foundation/pact-js/commit/08cd73b))
+
+
+
+<a name="6.0.0-alpha.2"></a>
+# [6.0.0-alpha.2](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.0...v6.0.0-alpha.2) (2018-03-31)
+
+
+
+<a name="6.0.0-alpha.1"></a>
+# [6.0.0-alpha.1](https://github.com/pact-foundation/pact-js/compare/v6.0.0-alpha.0...v6.0.0-alpha.1) (2018-03-31)
+
+
+
+<a name="6.0.0-alpha.0"></a>
+# [6.0.0-alpha.0](https://github.com/pact-foundation/pact-js/compare/v5.9.0...v6.0.0-alpha.0) (2018-03-31)
+
+
+### Features
+
+* **messages:** initial WIP for message pacts ([fd3526e](https://github.com/pact-foundation/pact-js/commit/fd3526e))
+
+
+
 <a name="5.9.0"></a>
 # [5.9.0](https://github.com/pact-foundation/pact-js/compare/v5.8.0...v5.9.0) (2018-03-27)
 

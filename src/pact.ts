@@ -1,3 +1,5 @@
+// TODO: Make this the main interface into the Pact package
+//       this will be a backwards-incompatible, breaking change
 /**
  * Pact module.
  * @module Pact
@@ -10,7 +12,7 @@ import * as process from "process";
 import { Interaction, InteractionObject } from "./dsl/interaction";
 import { isEmpty } from "lodash";
 import { isPortAvailable } from "./common/net";
-import { logger } from "./common/logger";
+import logger from "./common/logger";
 import { MockService } from "./dsl/mockService";
 import { PactOptions, PactOptionsComplete } from "./dsl/options";
 import { Server } from "@pact-foundation/pact-node/src/server";
@@ -22,6 +24,7 @@ import { Server } from "@pact-foundation/pact-node/src/server";
  * @param {PactOptions} opts
  * @return {@link PactProvider}
  */
+// TODO: move this to its own module
 export class Pact {
   public static defaults = {
     consumer: "",
@@ -182,12 +185,23 @@ export class Pact {
   }
 }
 
+export * from "./messageConsumerPact";
+export * from "./messageProviderPact";
+export * from "./dsl/message";
+
 /**
  * Exposes {@link Verifier}
  * @memberof Pact
  * @static
  */
 export * from "./dsl/verifier";
+
+/**
+ * Exposes {@link GraphQL}
+ * @memberof Pact
+ * @static
+ */
+export * from "./dsl/graphql";
 
 /**
  * Exposes {@link Matchers}

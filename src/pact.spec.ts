@@ -307,7 +307,8 @@ describe("Pact", () => {
         p.mockService = { writePact: writePactStub, removeInteractions: sandbox.stub() } as any as MockService;
         p.server = { delete: sandbox.stub(PactServer.prototype, "delete").rejects() } as any;
 
-        return expect(p.finalize()).to.eventually.be.rejected;
+        return expect(p.finalize)
+          .to.throw(Error);
       });
     });
   });

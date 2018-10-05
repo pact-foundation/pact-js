@@ -9,18 +9,18 @@ const expect = chai.expect;
 describe("Interaction", () => {
   describe("#given", () => {
     it("creates Interaction with provider state", () => {
-      const actual = new Interaction().given("provider state").json();
-      expect(actual).to.eql({ providerState: "provider state" });
+      const actual = new Interaction().uponReceiving("r").given("provider state").json();
+      expect(actual).to.eql({ description: "r", providerState: "provider state" });
     });
 
     describe("without provider state", () => {
       it("creates Interaction when blank", () => {
-        const actual = new Interaction().given("").json();
-        expect(actual).to.eql({});
+        const actual = new Interaction().uponReceiving("r").given("").json();
+        expect(actual).to.eql({ description: "r" });
       });
       it("creates Interaction when nothing is passed", () => {
-        const actual = new Interaction().json();
-        expect(actual).to.eql({});
+        const actual = new Interaction().uponReceiving("r").json();
+        expect(actual).to.eql({ description: "r" });
       });
     });
   });
@@ -61,10 +61,13 @@ describe("Interaction", () => {
     });
 
     describe("with only mandatory params", () => {
-      const actual = new Interaction().withRequest({ method: HTTPMethod.GET, path: "/search" }).json();
+      const actual = new Interaction()
+        .uponReceiving("a request")
+        .withRequest({ method: HTTPMethod.GET, path: "/search" })
+        .json();
 
       it("has a state containing only the given keys", () => {
-        expect(actual).to.have.keys("request");
+        expect(actual).to.have.property("request");
         expect(actual.request).to.have.keys("method", "path");
       });
 
@@ -74,17 +77,43 @@ describe("Interaction", () => {
     });
 
     describe("with all other parameters", () => {
-      const actual = new Interaction().withRequest({
-        body: { id: 1, name: "Test", due: "tomorrow" },
-        headers: { "Content-Type": "application/json" },
-        method: HTTPMethod.GET,
-        path: "/search",
-        query: "q=test",
-      }).json();
+      const actual = new Interaction()
+        .uponReceiving("request")
+        .withRequest({
+          body: { id: 1, name: "Test", due: "tomorrow" },
+          headers: { "Content-Type": "application/json" },
+          method: HTTPMethod.GET,
+          path: "/search",
+          query: "q=test",
+        }).json();
 
       it("has a full state all available keys", () => {
-        expect(actual).to.have.keys("request");
+        expect(actual).to.have.property("request");
         expect(actual.request).to.have.keys("method", "path", "query", "headers", "body");
+      });
+    });
+
+    describe("request body", () => {
+      it("is included when an empty string is specified", () => {
+        const actual = new Interaction()
+          .uponReceiving("request")
+          .withRequest({
+            body: "",
+            method: HTTPMethod.GET,
+            path: "/path",
+          }).json();
+        expect(actual.request).to.have.any.keys("body");
+      });
+
+      it("is not included when explicitly set to undefined", () => {
+        const actual = new Interaction()
+          .uponReceiving("request")
+          .withRequest({
+            body: undefined,
+            method: HTTPMethod.GET,
+            path: "/path",
+          }).json();
+        expect(actual.request).not.to.have.any.keys("body");
       });
     });
   });
@@ -103,11 +132,12 @@ describe("Interaction", () => {
 
     describe("with only mandatory params", () => {
       interaction = new Interaction();
+      interaction.uponReceiving("request");
       interaction.willRespondWith({ status: 200 });
       const actual = interaction.json();
 
       it("has a state compacted with only present keys", () => {
-        expect(actual).to.have.keys("response");
+        expect(actual).to.have.property("response");
         expect(actual.response).to.have.keys("status");
       });
 
@@ -118,6 +148,7 @@ describe("Interaction", () => {
 
     describe("with all other parameters", () => {
       interaction = new Interaction();
+      interaction.uponReceiving("request");
       interaction.willRespondWith({
         body: { id: 1, name: "Test", due: "tomorrow" },
         headers: { "Content-Type": "application/json" },
@@ -127,8 +158,34 @@ describe("Interaction", () => {
       const actual = interaction.json();
 
       it("has a full state all available keys", () => {
-        expect(actual).to.have.keys("response");
+        expect(actual).to.have.property("response");
         expect(actual.response).to.have.keys("status", "headers", "body");
+      });
+    });
+
+    describe("response body", () => {
+      it("is included when an empty string is specified", () => {
+        interaction = new Interaction();
+        interaction
+          .uponReceiving("request")
+          .willRespondWith({
+            body: "",
+            status: 204,
+          });
+        const actual = interaction.json();
+        expect(actual.response).to.have.any.keys("body");
+      });
+
+      it("is not included when explicitly set to undefined", () => {
+        interaction = new Interaction();
+        interaction
+          .uponReceiving("request")
+          .willRespondWith({
+            body: undefined,
+            status: 204,
+          });
+        const actual = interaction.json();
+        expect(actual.response).not.to.have.any.keys("body");
       });
     });
   });

@@ -7,10 +7,12 @@ import { isNil, keys, omitBy } from "lodash";
 import { HTTPMethod, methods } from "../common/request";
 import { MatcherResult } from "./matchers";
 
+export type Query = string | { [name: string]: string | MatcherResult };
+
 export interface RequestOptions {
   method: HTTPMethod | methods;
   path: string | MatcherResult;
-  query?: any;
+  query?: Query;
   headers?: { [name: string]: string | MatcherResult };
   body?: any;
 }
@@ -36,7 +38,7 @@ export interface InteractionState {
 }
 
 export class Interaction {
-  private state: InteractionState = {};
+  protected state: InteractionState = {};
 
   /**
    * Gives a state the provider should be in for this interaction.
@@ -106,7 +108,7 @@ export class Interaction {
     }
 
     this.state.response = omitBy({
-      body: responseOpts.body || undefined,
+      body: responseOpts.body,
       headers: responseOpts.headers || undefined,
       status: responseOpts.status,
     }, isNil) as ResponseOptions;
@@ -118,6 +120,9 @@ export class Interaction {
    * @returns {Object}
    */
   public json(): InteractionState {
+    if (isNil(this.state.description)) {
+      throw new Error("You must provide a description for the Interaction");
+    }
     return this.state;
   }
 }

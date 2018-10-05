@@ -1,0 +1,22 @@
+{
+  "name": "pact-message-example",
+  "version": "1.0.0",
+  "description": "Example async message application",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "clean": "if [ -d 'pacts' ]; then rm -rf pacts; fi",
+    "test": "npm run test:consumer && npm run test:publish && npm run test:provider",
+    "test:consumer": "nyc --check-coverage --reporter=html --reporter=text-summary mocha consumer/*.spec.ts",
+    "test:provider": "nyc --check-coverage --reporter=html --reporter=text-summary mocha -t 10000 provider/*.spec.ts",
+    "test:publish": "node publish.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/mocha": "^2.2.41",
+    "chai": "^3.5.0",
+    "mocha": "^3.5.3",
+    "nyc": "^11.6.0"
+  }
+}

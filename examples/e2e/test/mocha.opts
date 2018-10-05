@@ -1,0 +1,6 @@
+--bail
+--full-trace
+--reporter spec
+--colors
+--timeout 30000
+--exit

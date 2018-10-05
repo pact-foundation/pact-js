@@ -1,5 +1,5 @@
 /* tslint:disable:no-unused-expression */
-import { logger } from "./logger";
+import logger from "./logger";
 import { isPortAvailable } from "./net";
 const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");

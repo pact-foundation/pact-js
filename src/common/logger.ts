@@ -1,24 +1,30 @@
-/* tslint:disable:no-console */
+import * as bunyan from "bunyan";
+const PrettyStream = require("bunyan-prettystream");
+const pkg = require("./metadata");
 
-/**
- * Logger module.
- * @module logger
- * @private
- */
+const prettyStdOut = new PrettyStream();
+prettyStdOut.pipe(process.stdout);
 
-import { config } from "./config";
+export class Logger extends bunyan {
+  public time(action: string, startTime: number) {
+    const time = Date.now() - startTime;
+    this.info({
+      action,
+      duration: time,
+      type: "TIMER",
+    }, `TIMER: ${action} completed in ${time} milliseconds`);
+  }
 
-const logger = {
-  info: (msg: any) => {
-    if (config.logging) {
-      console.log(msg);
-    }
-  },
-  warn: (msg: any) => {
-    if (config.logging) {
-      console.warn(msg);
-    }
-  },
-};
+  public get logLevelName(): string {
+    return bunyan.nameFromLevel[this.level()];
+  }
+}
 
-export { logger };
+export default new Logger({
+  name: `pact@${pkg.version}`,
+  streams: [{
+    level: (process.env.LOGLEVEL || "info") as bunyan.LogLevel,
+    stream: prettyStdOut,
+    type: "raw",
+  }],
+});

@@ -11,10 +11,11 @@
   "license": "MIT",
   "devDependencies": {
     "@types/mocha": "^2.2.41",
-    "mocha": "3.x",
-    "nyc": "^11.2.0"
+    "mocha": "^3.5.3",
+    "nyc": "^11.9.0"
   },
   "dependencies": {
-    "axios": "^0.17.1"
+    "axios": "^0.17.1",
+    "typescript": "^3.0.3"
   }
 }

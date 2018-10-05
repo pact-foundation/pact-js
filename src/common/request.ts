@@ -1,4 +1,3 @@
-"use strict";
 // Polyfill Object.assign since it's missing in Popsicle
 require("es6-object-assign").polyfill();
 

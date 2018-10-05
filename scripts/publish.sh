@@ -2,7 +2,7 @@
 
 mkdir -p dist-web
 
-VERSION=$(grep '\"version\"' package.json | grep -E -o "([0-9\.]+(-[a-z\.9-9]+)?)")
+VERSION=$(grep '\"version\"' package.json | grep -E -o "([0-9\.]+(-[a-z\.0-9]+)?)")
 echo "--> Releasing version ${VERSION}"
 
 echo "--> Copy key artifacts into pact and pact-web distributions"
@@ -17,7 +17,7 @@ done
 
 echo "--> Releasing artifacts"
 echo "    Publishing pact@${VERSION}..."
-npm publish dist --access public
+npm publish dist --access public --tag latest
 echo "    done!"
 
 echo "--> Creating pact-web package"
@@ -32,5 +32,5 @@ for type in "${types[@]}"; do
 done
 
 echo "    Publishing pact-web@${VERSION}..."
-npm publish dist-web --access public
+npm publish dist-web --access public --tag latest
 echo "    done!"
