@@ -1,0 +1,13 @@
+npm run dist
+
+if ("$env:nodejs_version" -match "^(6|7|8|9)|1[0-9]+(\.)?.*") {
+  cd c:\pact-js
+  Get-ChildItem ".\examples" -Directory | ForEach-Object {
+    echo "Running examples in $($_.FullName)"
+    cd $_.FullName
+    npm i
+    npm t
+  }
+} else {
+  echo "Skipping examples for older node versions"
+}

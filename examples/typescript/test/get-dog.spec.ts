@@ -2,14 +2,11 @@
 import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import path = require("path");
-import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
 import { Pact } from "../../../dist/pact";
-import { Interaction, InteractionObject } from "../../../dist/pact";
+import { Interaction } from "../../../dist/pact";
 
 const expect = chai.expect;
-const proxyquire = require("proxyquire").noCallThru();
-import { HTTPMethod } from "../../../dist/common/request";
 import { DogService } from "../index";
 
 chai.use(sinonChai);
@@ -17,7 +14,7 @@ chai.use(chaiAsPromised);
 
 describe("The Dog API", () => {
   const url = "http://localhost";
-  const port = 8989;
+  const port = 8993;
   const dogService = new DogService({ url, port });
 
   const provider = new Pact({
@@ -27,7 +24,7 @@ describe("The Dog API", () => {
     spec: 2,
     consumer: "MyConsumer",
     provider: "MyProvider",
-    pactfileWriteMode: "merge",
+    pactfileWriteMode: "merge"
   });
 
   const EXPECTED_BODY = [{ dog: 1 }, { dog: 2 }];
@@ -47,27 +44,25 @@ describe("The Dog API", () => {
           method: "GET",
           path: "/dogs",
           headers: {
-            Accept: "application/json",
-          },
+            Accept: "application/json"
+          }
         })
         .willRespondWith({
           status: 200,
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/json"
           },
-          body: EXPECTED_BODY,
+          body: EXPECTED_BODY
         });
 
       return provider.addInteraction(interaction);
     });
 
-    it("returns the correct response", (done) => {
-      dogService
-        .getMeDogs()
-        .then((response: any) => {
-          expect(response.data).to.eql(EXPECTED_BODY);
-          done();
-        }, done);
+    it("returns the correct response", done => {
+      dogService.getMeDogs().then((response: any) => {
+        expect(response.data).to.eql(EXPECTED_BODY);
+        done();
+      }, done);
     });
   });
 
@@ -80,26 +75,24 @@ describe("The Dog API", () => {
           method: "GET",
           path: "/dogs",
           headers: {
-            Accept: "application/json",
-          },
+            Accept: "application/json"
+          }
         },
         willRespondWith: {
           status: 200,
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/json"
           },
-          body: EXPECTED_BODY,
-        },
+          body: EXPECTED_BODY
+        }
       });
     });
 
-    it("returns the correct response", (done) => {
-      dogService
-        .getMeDogs()
-        .then((response: any) => {
-          expect(response.data).to.eql(EXPECTED_BODY);
-          done();
-        }, done);
+    it("returns the correct response", done => {
+      dogService.getMeDogs().then((response: any) => {
+        expect(response.data).to.eql(EXPECTED_BODY);
+        done();
+      }, done);
     });
   });
 });

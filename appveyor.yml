@@ -8,28 +8,24 @@ init:
 # Test against these versions of Node
 environment:
   matrix:
-    # - nodejs_version: "4"
-    # - nodejs_version: "5"
-    # - nodejs_version: "6"
-    # - nodejs_version: "7"
+    - nodejs_version: "4"
+    - nodejs_version: "5"
+    - nodejs_version: "6"
+    - nodejs_version: "7"
     - nodejs_version: "8"
+    - nodejs_version: "9"
+    - nodejs_version: "10"
 
 platform:
-  # - x86
   - x64
 
+skip_tags: true
+
+# Setup Node environment
 install:
-  # Install Node
   - ps: Install-Product node $env:nodejs_version $env:platform
-  # install modules
   - npm install
 
-# Post-install test scripts.
-test_script:
-  # Output useful info for debugging.
-  - node --version
-  - npm --version
-  - npm run dist
-
-# Don't actually build.
-build: off
+# Run custom build script instead of MSBuild
+build_script:
+  - powershell .\scripts\build.ps1
