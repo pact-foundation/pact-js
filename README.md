@@ -275,8 +275,8 @@ new Verifier().verifyProvider(opts).then(function () {
 | `providerStatesSetupUrl`    |  false   | string           | URL to send PUT requests to setup a given provider state. Optional, required only if you provide a 'state' in any consumer tests.              |
 | `pactBrokerUsername`        |  false   | string           | Username for Pact Broker basic authentication                                                                                                  |
 | `pactBrokerPassword`        |  false   | string           | Password for Pact Broker basic authentication                                                                                                  |
-| `publishVerificationResult` |  false   | boolean          | Publish verification result to Broker                                                                                                          |
-| `providerVersion`           |  false   | boolean          | Provider version, required to publish verification results to a broker                                                                         |
+| `publishVerificationResult` |  false   | boolean          | Publish verification result to Broker                                                                                                          |boolean
+| `providerVersion`           |  false   | string           | Provider version, required to publish verification results to a broker                                                                         |
 | `customProviderHeaders`     |  false   | array of strings | Header(s) to add to provider state set up and pact verification re`quests`. eg 'Authorization: Basic cGFjdDpwYWN0'.Broker. Optional otherwise. |
 | `timeout`                   |  false   | number           | The duration in ms we should wait to confirm verification process was successful. Defaults to 30000, Optional.                                 |
 
