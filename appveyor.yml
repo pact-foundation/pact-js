@@ -20,6 +20,7 @@ platform:
   - x64
 
 skip_tags: true
+skip_branch_with_pr: true
 
 # Setup Node environment
 install:
