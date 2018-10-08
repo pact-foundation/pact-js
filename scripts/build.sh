@@ -3,7 +3,7 @@
 npm run dist
 
 # Only run E2E examples on Node 6+
-if [[ "${TRAVIS_NODE_VERSION}" =~ ^(6|7|8|9)|1[0-9]+ ]]; then
+if [[ "${TRAVIS_NODE_VERSION}" =~ ^(6|7|8|9)|[1-9][0-9]+ ]]; then
   echo "Running e2e examples build for node version ${TRAVIS_NODE_VERSION}"
   for i in examples/*; do
     echo "------------------------------------------------"
