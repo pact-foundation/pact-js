@@ -2,8 +2,8 @@
 
 const expect = require("chai").expect;
 const path = require("path");
-const Pact = require("../../../dist/pact").Pact;
-const getMeDogs = require("../index").getMeDogs;
+const { Pact } = require("../../../dist/pact");
+const { getMeDogs, getMeDog } = require("../index");
 
 describe("The Dog API", () => {
   let url = "http://localhost";
@@ -28,9 +28,14 @@ describe("The Dog API", () => {
     }
   ];
 
+  // Setup the provider
   before(() => provider.setup());
 
+  // Write Pact when all tests done
   after(() => provider.finalize());
+
+  // verify with Pact, and reset expectations
+  afterEach(() => provider.verify());
 
   describe("get /dogs", () => {
     before(done => {
@@ -67,8 +72,44 @@ describe("The Dog API", () => {
         done();
       }, done);
     });
-
-    // verify with Pact, and reset expectations
-    afterEach(() => provider.verify());
   });
+
+  describe('get /dog/1', () => {
+    before(done => {
+      const interaction = {
+        state: 'i have a list of dogs',
+        uponReceiving: 'a request for a single dog',
+        withRequest: {
+          method: 'GET',
+          path: '/dogs/1',
+          headers: {
+            'Accept': 'application/json'
+          }
+        },
+        willRespondWith: {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: EXPECTED_BODY
+        }
+      }
+      provider.addInteraction(interaction).then(() => {
+        done()
+      })
+    })
+
+
+    it('returns the correct response', done => {
+      const urlAndPort = {
+        url: url,
+        port: port
+      }
+      getMeDog(urlAndPort)
+        .then(response => {
+          expect(response.data).to.eql(EXPECTED_BODY)
+          done()
+        }, done)
+    })
+  })
 });
