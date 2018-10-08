@@ -19,6 +19,8 @@ environment:
 platform:
   - x64
 
+matrix:
+  fast_finish: true
 skip_tags: true
 skip_branch_with_pr: true
 

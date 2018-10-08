@@ -144,7 +144,7 @@
     "karma-mocha": "~1.3.0",
     "karma-phantomjs-launcher": "^1.0.4",
     "loader-utils": "^1.1.0",
-    "mocha": "~5.0.0",
+    "mocha": "^5.1.1",
     "mocha-lcov-reporter": "^1.3.0",
     "nock": "^9.1.6",
     "nyc": "^11.2.0",
@@ -161,7 +161,6 @@
     "tslint": "^5.8.0",
     "tslint-config-prettier": "^1.15.0",
     "typescript": "^2.7.2",
-    "webpack": "^3.5.5",
-    "winston": "2.4.0"
+    "webpack": "^3.5.5"
   }
 }

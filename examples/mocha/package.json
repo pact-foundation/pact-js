@@ -4,14 +4,13 @@
   "description": "Mocha Pact example",
   "main": "index.js",
   "scripts": {
-    "test": "rimraf pacts && mocha-parallel-tests"
+    "test": "rimraf pacts && mocha"
   },
   "license": "MIT",
   "devDependencies": {
     "axios": "^0.14.0",
     "chai": "^3.5.0",
-    "mocha": "^3.5.3",
-    "mocha-parallel-tests": "^1.2.10",
+    "mocha": "^5.1.1",
     "rimraf": "^2.6.2"
   }
 }
