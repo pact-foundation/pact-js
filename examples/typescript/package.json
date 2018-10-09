@@ -4,7 +4,6 @@
   "description": "TypeScript Pact Example",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
     "test": "nyc --check-coverage --reporter=html --reporter=text-summary mocha"
   },
   "author": "",

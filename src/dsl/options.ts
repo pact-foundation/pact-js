@@ -2,119 +2,119 @@
  * Pact Options module.
  * @module PactOptions
  */
-import { PactfileWriteMode } from "./mockService";
-import { MessageProviders, StateHandlers } from "pact";
+import { PactfileWriteMode } from "./mockService"
+import { MessageProviders, StateHandlers } from "pact"
 
-export type LogLevel = "trace" | "debug" | "info" | "warn" | "error" | "fatal";
+export type LogLevel = "trace" | "debug" | "info" | "warn" | "error" | "fatal"
 
 // TODO: Combine types here to reduce duplication
 export interface PactOptions {
   // The name of the consumer
-  consumer: string;
+  consumer: string
 
   // The name of the provider
-  provider: string;
+  provider: string
 
   // The port to run the mock service on, defaults to 1234
-  port?: number;
+  port?: number
 
   // The host to run the mock service, defaults to 127.0.0.1
-  host?: string;
+  host?: string
 
   // SSL flag to identify the protocol to be used (default false, HTTP)
-  ssl?: boolean;
+  ssl?: boolean
 
   // Path to SSL certificate to serve on the mock service
-  sslcert?: string;
+  sslcert?: string
 
   // Path to SSL key to serve on the mock service
-  sslkey?: string;
+  sslkey?: string
 
   // Directory to output pact files
-  dir?: string;
+  dir?: string
 
   // Directory to log to
-  log?: string;
+  log?: string
 
   // Log level
-  logLevel?: LogLevel;
+  logLevel?: LogLevel
 
   // Pact specification version (defaults to 2)
-  spec?: number;
+  spec?: number
 
   // Allow CORS OPTION requests to be accepted, defaults to false
-  cors?: boolean;
+  cors?: boolean
 
   // Control how the Pact files are written
   // (defaults to 'overwrite')
-  pactfileWriteMode?: PactfileWriteMode;
+  pactfileWriteMode?: PactfileWriteMode
 }
 
 export interface MandatoryPactOptions {
-  port: number;
-  host: string;
-  ssl: boolean;
+  port: number
+  host: string
+  ssl: boolean
 }
 
-export type PactOptionsComplete = PactOptions & MandatoryPactOptions;
+export type PactOptionsComplete = PactOptions & MandatoryPactOptions
 
 export interface MessageProviderOptions {
   // The name of the consumer
-  consumer: string;
+  consumer: string
 
   // The name of the provider
-  provider: string;
+  provider: string
 
-  providerVersion?: string;
+  providerVersion?: string
 
   // Pacts to Verify
-  pactUrls?: string[];
+  pactUrls?: string[]
   // pactFilesOrDirs?: string[];
 
   // Directory to log to
-  log?: string;
+  log?: string
 
   // Log level
-  logLevel?: LogLevel;
+  logLevel?: LogLevel
 
   // Message providers
-  messageProviders: MessageProviders;
+  messageProviders: MessageProviders
 
   // Prepare any provider states
-  stateHandlers?: StateHandlers;
+  stateHandlers?: StateHandlers
 
   // Choices: 'overwrite' | 'update', 'none', defaults to 'overwrite'
-  pactfileWriteMode?: PactfileWriteMode;
+  pactfileWriteMode?: PactfileWriteMode
 
-  providerStatesSetupUrl?: string;
-  pactBrokerUsername?: string;
-  pactBrokerPassword?: string;
-  customProviderHeaders?: string[];
-  publishVerificationResult?: boolean;
-  pactBrokerUrl?: string;
-  tags?: string[];
-  timeout?: number;
+  providerStatesSetupUrl?: string
+  pactBrokerUsername?: string
+  pactBrokerPassword?: string
+  customProviderHeaders?: string[]
+  publishVerificationResult?: boolean
+  pactBrokerUrl?: string
+  tags?: string[]
+  timeout?: number
 }
 export interface MessageConsumerOptions {
   // The name of the consumer
-  consumer: string;
+  consumer: string
 
   // Directory to output pact files
-  dir?: string;
+  dir?: string
 
   // The name of the provider
-  provider: string;
+  provider: string
 
   // Directory to log to
-  log?: string;
+  log?: string
 
   // Log level
-  logLevel?: LogLevel;
+  logLevel?: LogLevel
 
   // Specification Version (should be 3 for messages)
-  spec?: number;
+  spec?: number
 
   // Control how the Pact files are written
   // Choices: 'overwrite' | 'update', 'none', defaults to 'overwrite'
-  pactfileWriteMode?: PactfileWriteMode;
+  pactfileWriteMode?: PactfileWriteMode
 }

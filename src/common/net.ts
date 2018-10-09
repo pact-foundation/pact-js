@@ -4,7 +4,7 @@
  * @private
  */
 
-import * as net from "net";
+import * as net from "net"
 
 const isPortAvailable = (port: number, host: string): Promise<void> => {
   return new Promise((resolve, reject) => {
@@ -16,10 +16,10 @@ const isPortAvailable = (port: number, host: string): Promise<void> => {
         (e: any) =>
           e.code === "EADDRINUSE"
             ? reject(new Error(`Port ${port} is unavailable`))
-            : reject(e)
+            : reject(e),
       )
-      .on("listening", () => server.once("close", () => resolve()).close());
-  });
-};
+      .on("listening", () => server.once("close", () => resolve()).close())
+  })
+}
 
-export { isPortAvailable };
+export { isPortAvailable }

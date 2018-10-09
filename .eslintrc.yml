@@ -3,4 +3,4 @@ env:
   node: true
   mocha: true
 extends:
-  - "plugin:prettier/recommended"
+  - plugin:prettier/recommended"

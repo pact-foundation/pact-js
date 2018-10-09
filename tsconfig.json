@@ -15,22 +15,7 @@
     "declaration": true,
     "experimentalDecorators": true,
     "target": "es5",
-    "typeRoots": [
-      "node_modules/@types",
-      "src/types/**/*"
-    ],
-    "lib": [
-      "es2016",
-      "dom"
-    ]
+    "lib": ["es2016", "dom", "esnext.asynciterable"]
   },
-  "include": [
-    "./src/**/*"
-  ],
-  "exclude": [
-    "./node_modules/**/*",
-    "./dist",
-    "./examples",
-    "**/*.spec.ts"
-  ]
+  "exclude": ["./node_modules/**", "dist"]
 }

@@ -1,8 +1,8 @@
 // Polyfill Object.assign since it's missing in Popsicle
-require("es6-object-assign").polyfill();
+require("es6-object-assign").polyfill()
 
-import * as Popsicle from "popsicle/dist/common";
-import { Response } from "popsicle/dist/response";
+import * as Popsicle from "popsicle/dist/common"
+import { Response } from "popsicle/dist/response"
 
 export enum HTTPMethod {
   GET = "GET",
@@ -11,7 +11,7 @@ export enum HTTPMethod {
   PATCH = "PATCH",
   DELETE = "DELETE",
   HEAD = "HEAD",
-  OPTIONS = "OPTIONS"
+  OPTIONS = "OPTIONS",
 }
 
 export type methods =
@@ -21,36 +21,36 @@ export type methods =
   | "PATCH"
   | "DELETE"
   | "HEAD"
-  | "OPTIONS";
+  | "OPTIONS"
 
 export class Request {
   private readonly transport = Popsicle.createTransport({
     rejectUnauthorized: false, // Need to tell node to ignore bad ssl cert
-    type: "text"
-  });
+    type: "text",
+  })
   public send(
     method: HTTPMethod | methods,
     url: string,
-    body?: string
+    body?: string,
   ): Promise<string> {
     const opts = {
       body,
       headers: {
         "Content-Type": "application/json",
-        "X-Pact-Mock-Service": "true"
+        "X-Pact-Mock-Service": "true",
       },
       method,
       timeout: 10000,
       transport: this.transport,
-      url
-    };
+      url,
+    }
 
     return Popsicle.request(opts).then((res: Response) => {
       if (res.status >= 200 && res.status < 400) {
-        return res.body;
+        return res.body
       } else {
-        return Promise.reject(res.body);
+        return Promise.reject(res.body)
       }
-    });
+    })
   }
 }

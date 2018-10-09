@@ -1,1 +1,1 @@
-require("pkginfo")(module);
+require("pkginfo")(module)

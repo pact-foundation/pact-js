@@ -3,42 +3,42 @@
  * @module Interaction
  */
 
-import { isNil, keys, omitBy } from "lodash";
-import { HTTPMethod, methods } from "../common/request";
-import { MatcherResult } from "./matchers";
+import { isNil, keys, omitBy } from "lodash"
+import { HTTPMethod, methods } from "../common/request"
+import { MatcherResult } from "./matchers"
 
-export type Query = string | { [name: string]: string | MatcherResult };
+export type Query = string | { [name: string]: string | MatcherResult }
 
 export interface RequestOptions {
-  method: HTTPMethod | methods;
-  path: string | MatcherResult;
-  query?: Query;
-  headers?: { [name: string]: string | MatcherResult };
-  body?: any;
+  method: HTTPMethod | methods
+  path: string | MatcherResult
+  query?: Query
+  headers?: { [name: string]: string | MatcherResult }
+  body?: any
 }
 
 export interface ResponseOptions {
-  status: number | MatcherResult;
-  headers?: { [name: string]: string | MatcherResult };
-  body?: any;
+  status: number | MatcherResult
+  headers?: { [name: string]: string | MatcherResult }
+  body?: any
 }
 
 export interface InteractionObject {
-  state: string | undefined;
-  uponReceiving: string;
-  withRequest: RequestOptions;
-  willRespondWith: ResponseOptions;
+  state: string | undefined
+  uponReceiving: string
+  withRequest: RequestOptions
+  willRespondWith: ResponseOptions
 }
 
 export interface InteractionState {
-  providerState?: string;
-  description?: string;
-  request?: RequestOptions;
-  response?: ResponseOptions;
+  providerState?: string
+  description?: string
+  request?: RequestOptions
+  response?: ResponseOptions
 }
 
 export class Interaction {
-  protected state: InteractionState = {};
+  protected state: InteractionState = {}
 
   /**
    * Gives a state the provider should be in for this interaction.
@@ -47,10 +47,10 @@ export class Interaction {
    */
   public given(providerState: string) {
     if (providerState) {
-      this.state.providerState = providerState;
+      this.state.providerState = providerState
     }
 
-    return this;
+    return this
   }
 
   /**
@@ -60,11 +60,11 @@ export class Interaction {
    */
   public uponReceiving(description: string) {
     if (isNil(description)) {
-      throw new Error("You must provide a description for the interaction.");
+      throw new Error("You must provide a description for the interaction.")
     }
-    this.state.description = description;
+    this.state.description = description
 
-    return this;
+    return this
   }
 
   /**
@@ -79,22 +79,22 @@ export class Interaction {
    */
   public withRequest(requestOpts: RequestOptions) {
     if (isNil(requestOpts.method)) {
-      throw new Error("You must provide an HTTP method.");
+      throw new Error("You must provide an HTTP method.")
     }
 
     if (keys(HTTPMethod).indexOf(requestOpts.method.toString()) < 0) {
       throw new Error(
-        `You must provide a valid HTTP method: ${keys(HTTPMethod).join(", ")}.`
-      );
+        `You must provide a valid HTTP method: ${keys(HTTPMethod).join(", ")}.`,
+      )
     }
 
     if (isNil(requestOpts.path)) {
-      throw new Error("You must provide a path.");
+      throw new Error("You must provide a path.")
     }
 
-    this.state.request = omitBy(requestOpts, isNil) as RequestOptions;
+    this.state.request = omitBy(requestOpts, isNil) as RequestOptions
 
-    return this;
+    return this
   }
 
   /**
@@ -109,18 +109,18 @@ export class Interaction {
       isNil(responseOpts.status) ||
       responseOpts.status.toString().trim().length === 0
     ) {
-      throw new Error("You must provide a status code.");
+      throw new Error("You must provide a status code.")
     }
 
     this.state.response = omitBy(
       {
         body: responseOpts.body,
         headers: responseOpts.headers || undefined,
-        status: responseOpts.status
+        status: responseOpts.status,
       },
-      isNil
-    ) as ResponseOptions;
-    return this;
+      isNil,
+    ) as ResponseOptions
+    return this
   }
 
   /**
@@ -129,8 +129,8 @@ export class Interaction {
    */
   public json(): InteractionState {
     if (isNil(this.state.description)) {
-      throw new Error("You must provide a description for the Interaction");
+      throw new Error("You must provide a description for the Interaction")
     }
-    return this.state;
+    return this.state
   }
 }

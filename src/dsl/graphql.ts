@@ -3,16 +3,16 @@
  *
  * @module GraphQL
  */
-import { Interaction, InteractionState } from '../dsl/interaction'
-import { regex } from './matchers'
-import { keys, isNil, extend } from 'lodash'
-import gql from 'graphql-tag'
+import { Interaction, InteractionState } from "../dsl/interaction"
+import { regex } from "./matchers"
+import { keys, isNil, extend } from "lodash"
+import gql from "graphql-tag"
 
-export type GraphQLOperation = 'query' | 'mutation' | null
+export type GraphQLOperation = "query" | "mutation" | null
 
 enum GraphQLOperations {
-  query = 'query',
-  mutation = 'mutation'
+  query = "query",
+  mutation = "mutation",
 }
 
 export interface GraphQLVariables {
@@ -30,15 +30,15 @@ export class GraphQLInteraction extends Interaction {
   /**
    * The type of GraphQL operation. Generally not required.
    */
-  public withOperation (operation: GraphQLOperation) {
+  public withOperation(operation: GraphQLOperation) {
     if (
       !operation ||
       (operation && keys(GraphQLOperations).indexOf(operation.toString()) < 0)
     ) {
       throw new Error(
         `You must provide a valid HTTP method: ${keys(GraphQLOperations).join(
-          ', '
-        )}.`
+          ", ",
+        )}.`,
       )
     }
 
@@ -50,7 +50,7 @@ export class GraphQLInteraction extends Interaction {
   /**
    * Any variables used in the Query
    */
-  public withVariables (variables: GraphQLVariables) {
+  public withVariables(variables: GraphQLVariables) {
     this.variables = variables
 
     return this
@@ -74,9 +74,9 @@ export class GraphQLInteraction extends Interaction {
    *     }"
    *  }'
    */
-  public withQuery (query: string) {
+  public withQuery(query: string) {
     if (isNil(query)) {
-      throw new Error('You must provide a GraphQL query.')
+      throw new Error("You must provide a GraphQL query.")
     }
 
     try {
@@ -93,12 +93,12 @@ export class GraphQLInteraction extends Interaction {
   /**
    * Returns the interaction object created.
    */
-  public json (): InteractionState {
+  public json(): InteractionState {
     if (isNil(this.query)) {
-      throw new Error('You must provide a GraphQL query.')
+      throw new Error("You must provide a GraphQL query.")
     }
     if (isNil(this.state.description)) {
-      throw new Error('You must provide a description for the query.')
+      throw new Error("You must provide a description for the query.")
     }
 
     this.state.request = extend(
@@ -107,14 +107,14 @@ export class GraphQLInteraction extends Interaction {
           operationName: this.operation,
           query: regex({
             generate: this.query,
-            matcher: escapeGraphQlQuery(this.query)
+            matcher: escapeGraphQlQuery(this.query),
           }),
-          variables: this.variables
+          variables: this.variables,
         },
-        headers: { 'content-type': 'application/json' },
-        method: 'POST'
+        headers: { "content-type": "application/json" },
+        method: "POST",
       },
-      this.state.request
+      this.state.request,
     )
 
     return this.state
@@ -124,6 +124,6 @@ export class GraphQLInteraction extends Interaction {
 const escapeGraphQlQuery = (s: string) => escapeSpace(escapeRegexChars(s))
 
 const escapeRegexChars = (s: string) =>
-  s.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&')
+  s.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&")
 
-const escapeSpace = (s: string) => s.replace(/\s+/g, '\\s*')
+const escapeSpace = (s: string) => s.replace(/\s+/g, "\\s*")

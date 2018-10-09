@@ -1,7 +1,7 @@
-import { ApolloClient } from "apollo-boost";
-import { InMemoryCache } from "apollo-cache-inmemory";
-import gql from "graphql-tag";
-import { createHttpLink } from "apollo-link-http";
+import { ApolloClient } from "apollo-boost"
+import { InMemoryCache } from "apollo-cache-inmemory"
+import gql from "graphql-tag"
+import { createHttpLink } from "apollo-link-http"
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
@@ -12,7 +12,7 @@ const client = new ApolloClient({
     },
     uri: "http://localhost:4000/graphql",
   }),
-});
+})
 
 export function query(): any {
   return client
@@ -26,5 +26,5 @@ export function query(): any {
         foo: "bar",
       },
     })
-    .then((result: any) => result.data);
+    .then((result: any) => result.data)
 }

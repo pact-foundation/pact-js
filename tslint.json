@@ -6,7 +6,7 @@
     "interface-name": [true, "never-prefix"],
     "no-var-requires": false,
     "ordered-imports": false,
-    "no-unused-variable": true,
+    "semicolon": [true, "never"],
     "whitespace": [
       true,
       "check-branch",

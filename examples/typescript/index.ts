@@ -1,13 +1,12 @@
-import axios, { AxiosPromise } from "axios";
-
+import axios, { AxiosPromise } from "axios"
 
 export class DogService {
-  private url: string;
-  private port: number;
+  private url: string
+  private port: number
 
   constructor(endpoint: any) {
-    this.url = endpoint.url;
-    this.port = endpoint.port;
+    this.url = endpoint.url
+    this.port = endpoint.port
   }
 
   public getMeDogs = (): AxiosPromise => {
@@ -16,6 +15,6 @@ export class DogService {
       headers: { Accept: "application/json" },
       method: "GET",
       url: "/dogs",
-    });
+    })
   }
 }

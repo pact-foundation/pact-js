@@ -1,21 +1,20 @@
 /* tslint:disable:no-unused-expression object-literal-sort-keys max-classes-per-file no-empty */
-import * as chai from "chai";
-import * as chaiAsPromised from "chai-as-promised";
-import path = require("path");
-import * as sinonChai from "sinon-chai";
-import { Pact } from "../../../dist/pact";
-import { Interaction } from "../../../dist/pact";
+import * as chai from "chai"
+import * as chaiAsPromised from "chai-as-promised"
+import path = require("path")
+import * as sinonChai from "sinon-chai"
+import { Pact, Interaction } from "../../../src/pact"
 
-const expect = chai.expect;
-import { DogService } from "../index";
+const expect = chai.expect
+import { DogService } from "../index"
 
-chai.use(sinonChai);
-chai.use(chaiAsPromised);
+chai.use(sinonChai)
+chai.use(chaiAsPromised)
 
 describe("The Dog API", () => {
-  const url = "http://localhost";
-  const port = 8993;
-  const dogService = new DogService({ url, port });
+  const url = "http://localhost"
+  const port = 8993
+  const dogService = new DogService({ url, port })
 
   const provider = new Pact({
     port,
@@ -24,16 +23,16 @@ describe("The Dog API", () => {
     spec: 2,
     consumer: "MyConsumer",
     provider: "MyProvider",
-    pactfileWriteMode: "merge"
-  });
+    pactfileWriteMode: "merge",
+  })
 
-  const EXPECTED_BODY = [{ dog: 1 }, { dog: 2 }];
+  const EXPECTED_BODY = [{ dog: 1 }, { dog: 2 }]
 
-  before(() => provider.setup());
+  before(() => provider.setup())
 
-  after(() => provider.finalize());
+  after(() => provider.finalize())
 
-  afterEach(() => provider.verify());
+  afterEach(() => provider.verify())
 
   describe("get /dogs using builder pattern", () => {
     before(() => {
@@ -44,27 +43,27 @@ describe("The Dog API", () => {
           method: "GET",
           path: "/dogs",
           headers: {
-            Accept: "application/json"
-          }
+            Accept: "application/json",
+          },
         })
         .willRespondWith({
           status: 200,
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
           },
-          body: EXPECTED_BODY
-        });
+          body: EXPECTED_BODY,
+        })
 
-      return provider.addInteraction(interaction);
-    });
+      return provider.addInteraction(interaction)
+    })
 
     it("returns the correct response", done => {
       dogService.getMeDogs().then((response: any) => {
-        expect(response.data).to.eql(EXPECTED_BODY);
-        done();
-      }, done);
-    });
-  });
+        expect(response.data).to.eql(EXPECTED_BODY)
+        done()
+      }, done)
+    })
+  })
 
   describe("get /dogs using object pattern", () => {
     before(() => {
@@ -75,24 +74,24 @@ describe("The Dog API", () => {
           method: "GET",
           path: "/dogs",
           headers: {
-            Accept: "application/json"
-          }
+            Accept: "application/json",
+          },
         },
         willRespondWith: {
           status: 200,
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
           },
-          body: EXPECTED_BODY
-        }
-      });
-    });
+          body: EXPECTED_BODY,
+        },
+      })
+    })
 
     it("returns the correct response", done => {
       dogService.getMeDogs().then((response: any) => {
-        expect(response.data).to.eql(EXPECTED_BODY);
-        done();
-      }, done);
-    });
-  });
-});
+        expect(response.data).to.eql(EXPECTED_BODY)
+        done()
+      }, done)
+    })
+  })
+})

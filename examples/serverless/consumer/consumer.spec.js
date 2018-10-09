@@ -1,15 +1,19 @@
 /* tslint:disable:no-unused-expression object-literal-sort-keys max-classes-per-file no-empty */
-const consumeEvent = require("./index").consumeEvent;
-const { like, term } = require("../../../dist/dsl/matchers");
-const { MessageConsumerPact, Message, synchronousBodyHandler } = require("../../../dist/pact");
-const path = require("path");
+const consumeEvent = require("./index").consumeEvent
+const { like, term } = require("../../../dist/dsl/matchers")
+const {
+  MessageConsumerPact,
+  Message,
+  synchronousBodyHandler,
+} = require("../../../dist/pact")
+const path = require("path")
 
 describe("Serverless consumer tests", () => {
   const messagePact = new MessageConsumerPact({
     consumer: "SNSPactEventConsumer",
     dir: path.resolve(process.cwd(), "pacts"),
     provider: "SNSPactEventProvider",
-  });
+  })
 
   describe("receive a pact event", () => {
     it("should accept a valid event", () => {
@@ -23,7 +27,7 @@ describe("Serverless consumer tests", () => {
         .withMetadata({
           "content-type": "application/json",
         })
-        .verify(synchronousBodyHandler(consumeEvent));
-    });
-  });
-});
+        .verify(synchronousBodyHandler(consumeEvent))
+    })
+  })
+})
