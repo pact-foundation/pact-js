@@ -122,7 +122,7 @@
     "@types/superagent": "^3.5.7",
     "@types/tough-cookie": "^2.3.2",
     "@types/underscore": "^1.8.5",
-    "awesome-typescript-loader": "^3.2.3",
+    "awesome-typescript-loader": "^5.2.1",
     "babel-cli": "~6.26.0",
     "babel-eslint": "~8.2.1",
     "babel-loader": "^7.1.2",
