@@ -124,7 +124,7 @@
     "@types/underscore": "^1.8.5",
     "awesome-typescript-loader": "^3.2.3",
     "babel-cli": "~6.26.0",
-    "babel-eslint": "~8.2.1",
+    "babel-eslint": "~10.0.1",
     "babel-loader": "^7.1.2",
     "babel-preset-es2015": "^6.24.1",
     "bluebird": "~3.5.1",
