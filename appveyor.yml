@@ -1,0 +1,30 @@
+# build version format
+version: "{build}"
+
+# fix lineendings in Windows
+init:
+  - git config --global core.autocrlf input
+
+# Test against these versions of Node
+environment:
+  matrix:
+    - nodejs_version: "6"
+    - nodejs_version: "8"
+    - nodejs_version: "10"
+
+platform:
+  - x64
+
+matrix:
+  fast_finish: true
+skip_tags: true
+skip_branch_with_pr: true
+
+# Setup Node environment
+install:
+  - ps: Install-Product node $env:nodejs_version $env:platform
+  - npm install
+
+# Run custom build script instead of MSBuild
+build_script:
+  - powershell .\scripts\build.ps1

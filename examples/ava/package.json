@@ -4,11 +4,12 @@
   "description": "Ava Pact example",
   "main": "index.js",
   "scripts": {
-    "test": "if [ -d 'pacts' ]; then rm -rf pacts; fi && ava"
+    "test": "rimraf pacts && ava"
   },
   "license": "MIT",
   "devDependencies": {
     "ava": "^0.21.0",
-    "axios": "^0.14.0"
+    "axios": "^0.14.0",
+    "rimraf": "^2.6.2"
   }
 }

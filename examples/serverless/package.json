@@ -4,7 +4,7 @@
   "description": "Example testing a serverless app with Pact",
   "main": "index.js",
   "scripts": {
-    "clean": "if [ -d 'pacts' ]; then rm -rf pacts; fi",
+    "clean": "rimraf pacts",
     "test": "npm run test:consumer && npm run test:publish && npm run test:provider",
     "test:consumer": "mocha consumer/*.spec.js",
     "test:provider": "mocha -t 10000 provider/*.spec.js",
@@ -19,8 +19,9 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "mocha": "^3.5.3",
-    "serverless": "^1.26.1"
+    "mocha": "^5.1.1",
+    "serverless": "^1.26.1",
+    "rimraf": "^2.6.2"
   },
   "keywords": [
     "pact",

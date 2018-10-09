@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "clean": "if [ -d 'pacts' ]; then rm -rf pacts; fi",
+    "clean": "rimraf pacts",
     "test": "npm run clean && npm run test:consumer && npm run test:publish && npm run test:provider",
     "test:consumer": "nyc --check-coverage --reporter=html --reporter=text-summary mocha consumer.spec.ts",
     "test:publish": "node publish.js",
@@ -37,6 +37,7 @@
     "@types/mocha": "^2.2.41",
     "chai": "^4.1.2",
     "mocha": "^5.1.1",
-    "nyc": "^11.6.0"
+    "nyc": "^11.6.0",
+    "rimraf": "^2.6.2"
   }
 }

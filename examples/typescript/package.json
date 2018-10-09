@@ -11,7 +11,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/mocha": "^2.2.41",
-    "mocha": "^3.5.3",
+    "mocha": "^5.1.1",
     "nyc": "^11.9.0"
   },
   "dependencies": {
