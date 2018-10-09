@@ -146,7 +146,7 @@
     "loader-utils": "^1.1.0",
     "mocha": "^5.1.1",
     "mocha-lcov-reporter": "^1.3.0",
-    "nock": "^9.1.6",
+    "nock": "^10.0.0",
     "nyc": "^11.2.0",
     "proxyquire": "^2.0.1",
     "rimraf": "^2.6.2",
