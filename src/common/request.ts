@@ -31,7 +31,7 @@ export class Request {
   public send(
     method: HTTPMethod | methods,
     url: string,
-    body?: string,
+    body?: string
   ): Promise<string> {
     const opts = {
       body,

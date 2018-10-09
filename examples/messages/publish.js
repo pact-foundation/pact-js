@@ -4,7 +4,7 @@ const opts = {
   pactFilesOrDirs: [
     path.resolve(
       __dirname,
-      "pacts/myjsmessageconsumer-myjsmessageprovider.json",
+      "pacts/myjsmessageconsumer-myjsmessageprovider.json"
     ),
   ],
   pactBroker: "https://test.pact.dius.com.au",

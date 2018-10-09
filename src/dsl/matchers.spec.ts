@@ -28,14 +28,14 @@ describe("Matcher", () => {
       describe("and a matching example", () => {
         it("should return true", () => {
           expect(validateExample("2010-01-01", ISO8601_DATE_FORMAT)).to.eql(
-            true,
+            true
           )
         })
       })
       describe("and a failing example", () => {
         it("should return false", () => {
           expect(validateExample("not a date", ISO8601_DATE_FORMAT)).to.eql(
-            false,
+            false
           )
         })
       })
@@ -220,7 +220,7 @@ describe("Matcher", () => {
 
           const match = eachLike({ id: somethingLike(10) }, { min: 1 })
           expect(JSON.stringify(match)).to.deep.include(
-            JSON.stringify(expected),
+            JSON.stringify(expected)
           )
         })
       })
@@ -252,11 +252,11 @@ describe("Matcher", () => {
                 matcher: "red|green",
               }),
             },
-            { min: 1 },
+            { min: 1 }
           )
 
           expect(JSON.stringify(match)).to.deep.include(
-            JSON.stringify(expected),
+            JSON.stringify(expected)
           )
         })
       })
@@ -275,7 +275,7 @@ describe("Matcher", () => {
 
           const match = eachLike(eachLike("blue", { min: 1 }), { min: 1 })
           expect(JSON.stringify(match)).to.deep.include(
-            JSON.stringify(expected),
+            JSON.stringify(expected)
           )
         })
       })
@@ -329,16 +329,16 @@ describe("Matcher", () => {
                 size: somethingLike(10),
                 tag: eachLike(
                   [somethingLike("jumper"), somethingLike("shirt")],
-                  { min: 2 },
+                  { min: 2 }
                 ),
               },
-              { min: 1 },
+              { min: 1 }
             ),
-            { min: 1 },
+            { min: 1 }
           )
 
           expect(JSON.stringify(match)).to.deep.include(
-            JSON.stringify(expected),
+            JSON.stringify(expected)
           )
         })
       })
@@ -408,7 +408,7 @@ describe("Matcher", () => {
       it("should not fail", () => {
         expect(ipv6Address("::1")).to.be.an("object")
         expect(ipv6Address("2001:0db8:85a3:0000:0000:8a2e:0370:7334")).to.be.an(
-          "object",
+          "object"
         )
         expect(ipv6Address()).to.be.an("object")
       })
@@ -469,7 +469,7 @@ describe("Matcher", () => {
       describe("when given a valid rfc3339Timestamp", () => {
         it("should not fail", () => {
           expect(rfc3339Timestamp("Mon, 31 Oct 2016 15:21:41 -0400")).to.be.an(
-            "object",
+            "object"
           )
           expect(rfc3339Timestamp()).to.be.an("object")
         })
@@ -519,7 +519,7 @@ describe("Matcher", () => {
       describe("when given a valid iso8601DateTime", () => {
         it("should not fail", () => {
           expect(iso8601DateTime("2015-08-06T16:53:10+01:00")).to.be.an(
-            "object",
+            "object"
           )
           expect(iso8601DateTime()).to.be.an("object")
         })
@@ -537,7 +537,7 @@ describe("Matcher", () => {
       describe("when given a valid iso8601DateTimeWithMillis", () => {
         it("should not fail", () => {
           expect(
-            iso8601DateTimeWithMillis("2015-08-06T16:53:10.123+01:00"),
+            iso8601DateTimeWithMillis("2015-08-06T16:53:10.123+01:00")
           ).to.be.an("object")
           expect(iso8601DateTimeWithMillis()).to.be.an("object")
         })
@@ -586,7 +586,7 @@ describe("Matcher", () => {
                   foo: "bar",
                   baz: somethingLike("bat"),
                 },
-                { min: 3 },
+                { min: 3 }
               ),
             },
           })

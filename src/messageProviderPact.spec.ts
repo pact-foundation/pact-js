@@ -69,7 +69,7 @@ describe("MesageProvider", () => {
     describe("when their is a valid setup", () => {
       it("should create a valid express handler", done => {
         const setupVerificationHandler = (provider as any).setupVerificationHandler.bind(
-          provider,
+          provider
         )()
         const req = { body: successfulMessage }
         const res = {
@@ -82,7 +82,7 @@ describe("MesageProvider", () => {
     describe("when their is an invalid setup", () => {
       it("should create a valid express handler that rejects the message", done => {
         const setupVerificationHandler = (provider as any).setupVerificationHandler.bind(
-          provider,
+          provider
         )()
         const req = { body: nonExistentMessage }
         const res = {
@@ -105,7 +105,7 @@ describe("MesageProvider", () => {
       it("should return a Handler object", () => {
         const findHandler = (provider as any).findHandler.bind(provider)
         return expect(findHandler(successfulMessage)).to.eventually.be.a(
-          "function",
+          "function"
         )
       })
     })
@@ -122,7 +122,7 @@ describe("MesageProvider", () => {
       it("should return values of all resolved handlers", () => {
         const findStateHandler = (provider as any).setupStates.bind(provider)
         return expect(
-          findStateHandler(successfulMessage),
+          findStateHandler(successfulMessage)
         ).to.eventually.deep.equal(["yay"])
       })
     })
@@ -135,7 +135,7 @@ describe("MesageProvider", () => {
         })
         const findStateHandler = (provider as any).setupStates.bind(provider)
         return expect(
-          findStateHandler(unsuccessfulMessage),
+          findStateHandler(unsuccessfulMessage)
         ).to.eventually.deep.equal([])
       })
     })
@@ -164,7 +164,7 @@ describe("MesageProvider", () => {
   describe("#setupProxyApplication", () => {
     it("should return a valid express app", () => {
       const setupProxyApplication = (provider as any).setupProxyApplication.bind(
-        provider,
+        provider
       )
       expect(setupProxyApplication().listen).to.be.a("function")
     })

@@ -16,7 +16,7 @@ const isPortAvailable = (port: number, host: string): Promise<void> => {
         (e: any) =>
           e.code === "EADDRINUSE"
             ? reject(new Error(`Port ${port} is unavailable`))
-            : reject(e),
+            : reject(e)
       )
       .on("listening", () => server.once("close", () => resolve()).close())
   })

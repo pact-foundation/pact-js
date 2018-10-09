@@ -154,11 +154,11 @@ describe("Pact", () => {
         pact.opts = fullOpts
         pact.mockService = ({
           addInteraction: (
-            int: InteractionObject,
+            int: InteractionObject
           ): Promise<string | undefined> => Promise.resolve(int.state),
         } as any) as MockService
         return expect(
-          pact.addInteraction(interaction),
+          pact.addInteraction(interaction)
         ).to.eventually.have.property("providerState")
       })
     })
@@ -169,12 +169,12 @@ describe("Pact", () => {
         pact.opts = fullOpts
         pact.mockService = ({
           addInteraction: (
-            int: InteractionObject,
+            int: InteractionObject
           ): Promise<string | undefined> => Promise.resolve(int.state),
         } as any) as MockService
         interaction.state = undefined
         return expect(
-          pact.addInteraction(interaction),
+          pact.addInteraction(interaction)
         ).to.eventually.not.have.property("providerState")
       })
 
@@ -201,7 +201,7 @@ describe("Pact", () => {
               Promise.resolve(int),
           } as any) as MockService
           return expect(
-            pact.addInteraction(interaction2),
+            pact.addInteraction(interaction2)
           ).to.eventually.have.property("given")
         })
       })
@@ -255,7 +255,7 @@ describe("Pact", () => {
         return Promise.all([
           expect(verifyPromise).to.eventually.be.rejectedWith(Error),
           verifyPromise.catch(() =>
-            expect(removeInteractionsStub).to.callCount(0),
+            expect(removeInteractionsStub).to.callCount(0)
           ),
         ])
       })
@@ -269,10 +269,10 @@ describe("Pact", () => {
             .resolves("verified!")
           const removeInteractionsStub = sandbox.stub(
             MockService.prototype,
-            "removeInteractions",
+            "removeInteractions"
           )
           removeInteractionsStub.throws(
-            new Error("error removing interactions"),
+            new Error("error removing interactions")
           )
 
           const b = (Object.create(Pact.prototype) as any) as PactType
@@ -329,7 +329,7 @@ describe("Pact", () => {
         p.server = { delete: deleteStub } as any
 
         return expect(p.finalize()).to.eventually.be.rejected.then(() =>
-          expect(deleteStub).to.callCount(1),
+          expect(deleteStub).to.callCount(1)
         )
       })
     })
@@ -398,7 +398,7 @@ describe("Pact", () => {
         const removeInteractionsPromise = p.removeInteractions()
         return Promise.all([
           expect(removeInteractionsPromise).to.eventually.eq(
-            "interactions removed!",
+            "interactions removed!"
           ),
           expect(removeInteractionsPromise).to.eventually.be.fulfilled,
         ])

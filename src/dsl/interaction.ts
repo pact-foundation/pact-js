@@ -84,7 +84,7 @@ export class Interaction {
 
     if (keys(HTTPMethod).indexOf(requestOpts.method.toString()) < 0) {
       throw new Error(
-        `You must provide a valid HTTP method: ${keys(HTTPMethod).join(", ")}.`,
+        `You must provide a valid HTTP method: ${keys(HTTPMethod).join(", ")}.`
       )
     }
 
@@ -118,7 +118,7 @@ export class Interaction {
         headers: responseOpts.headers || undefined,
         status: responseOpts.status,
       },
-      isNil,
+      isNil
     ) as ResponseOptions
     return this
   }

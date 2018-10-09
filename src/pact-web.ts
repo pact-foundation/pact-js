@@ -43,7 +43,7 @@ export class PactWeb {
     }
 
     console.info(
-      `Setting up Pact using mock service on port: "${this.opts.port}"`,
+      `Setting up Pact using mock service on port: "${this.opts.port}"`
     )
 
     this.mockService = new MockService(
@@ -52,7 +52,7 @@ export class PactWeb {
       this.opts.port,
       this.opts.host,
       this.opts.ssl,
-      this.opts.pactfileWriteMode,
+      this.opts.pactfileWriteMode
     )
   }
 

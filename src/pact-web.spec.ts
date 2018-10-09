@@ -73,7 +73,7 @@ describe("PactWeb", () => {
         pact.opts = fullOpts
         pact.mockService = ({
           addInteraction: (
-            int: InteractionObject,
+            int: InteractionObject
           ): Promise<string | undefined> => Promise.resolve(int.state),
         } as any) as MockService
         expect(pact.addInteraction(interaction))
@@ -88,7 +88,7 @@ describe("PactWeb", () => {
         pact.opts = fullOpts
         pact.mockService = ({
           addInteraction: (
-            int: InteractionObject,
+            int: InteractionObject
           ): Promise<string | undefined> => Promise.resolve(int.state),
         } as any) as MockService
 
@@ -108,7 +108,7 @@ describe("PactWeb", () => {
         verifyStub.resolves("verified!")
         const removeInteractionsStub = sandbox.stub(
           MockService.prototype,
-          "removeInteractions",
+          "removeInteractions"
         )
         removeInteractionsStub.resolves("removeInteractions")
 
@@ -131,7 +131,7 @@ describe("PactWeb", () => {
         verifyStub.rejects("not verified!")
         const removeInteractionsStub = sandbox.stub(
           MockService.prototype,
-          "removeInteractions",
+          "removeInteractions"
         )
         removeInteractionsStub.resolves("removeInteractions")
 
@@ -159,10 +159,10 @@ describe("PactWeb", () => {
           verifyStub.resolves("verified!")
           const removeInteractionsStub = sandbox.stub(
             MockService.prototype,
-            "removeInteractions",
+            "removeInteractions"
           )
           removeInteractionsStub.throws(
-            new Error("error removing interactions"),
+            new Error("error removing interactions")
           )
 
           const b = (Object.create(PactWeb.prototype) as any) as PactWeb
@@ -256,10 +256,10 @@ describe("PactWeb", () => {
 
         const removeInteractionsPromise = p.removeInteractions()
         expect(removeInteractionsPromise).to.eventually.eq(
-          "interactions removed!",
+          "interactions removed!"
         )
         expect(removeInteractionsPromise).to.eventually.be.fulfilled.notify(
-          done,
+          done
         )
       })
     })

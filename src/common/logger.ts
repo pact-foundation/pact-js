@@ -14,7 +14,7 @@ export class Logger extends bunyan {
         duration: time,
         type: "TIMER",
       },
-      `TIMER: ${action} completed in ${time} milliseconds`,
+      `TIMER: ${action} completed in ${time} milliseconds`
     )
   }
 

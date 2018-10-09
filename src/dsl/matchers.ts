@@ -54,7 +54,7 @@ export function term(opts: { generate: string; matcher: string }) {
 
   if (!validateExample(generate, matcher)) {
     throw new Error(
-      `Example '${generate}' does not match provided regular expression '${matcher}'`,
+      `Example '${generate}' does not match provided regular expression '${matcher}'`
     )
   }
 
@@ -206,13 +206,13 @@ export function boolean() {
 export function eachLike<T>(content: T, opts?: { min: number }) {
   if (isUndefined(content)) {
     throw new Error(
-      "Error creating a Pact eachLike. Please provide a content argument",
+      "Error creating a Pact eachLike. Please provide a content argument"
     )
   }
 
   if (opts && (isNil(opts.min) || opts.min < 1)) {
     throw new Error(
-      "Error creating a Pact eachLike. Please provide opts.min that is > 0",
+      "Error creating a Pact eachLike. Please provide opts.min that is > 0"
     )
   }
 
@@ -238,7 +238,7 @@ export function eachLike<T>(content: T, opts?: { min: number }) {
 export function somethingLike<T>(value: T) {
   if (isNil(value) || isFunction(value)) {
     throw new Error(
-      "Error creating a Pact somethingLike Match. Value cannot be a function or undefined",
+      "Error creating a Pact somethingLike Match. Value cannot be a function or undefined"
     )
   }
 

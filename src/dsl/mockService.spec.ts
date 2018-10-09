@@ -26,7 +26,7 @@ describe("MockService", () => {
         "provider",
         4443,
         "127.0.0.2",
-        true,
+        true
       )
       expect(mock.baseUrl).to.eql("https://127.0.0.2:4443")
     })

@@ -4,3 +4,5 @@ env:
   mocha: true
 extends:
   - plugin:prettier/recommended"
+rules:
+  comma-dangle: "always-multiline"

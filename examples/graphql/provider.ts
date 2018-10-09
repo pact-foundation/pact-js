@@ -21,7 +21,7 @@ app.use(
     graphiql: true,
     rootValue: root,
     schema,
-  }),
+  })
 )
 
 export function start(): any {

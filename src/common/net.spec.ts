@@ -35,7 +35,7 @@ describe("Net", () => {
             },
             (e: any) => {
               done()
-            },
+            }
           )
         })
       })

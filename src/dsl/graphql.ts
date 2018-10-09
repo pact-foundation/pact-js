@@ -37,8 +37,8 @@ export class GraphQLInteraction extends Interaction {
     ) {
       throw new Error(
         `You must provide a valid HTTP method: ${keys(GraphQLOperations).join(
-          ", ",
-        )}.`,
+          ", "
+        )}.`
       )
     }
 
@@ -114,7 +114,7 @@ export class GraphQLInteraction extends Interaction {
         headers: { "content-type": "application/json" },
         method: "POST",
       },
-      this.state.request,
+      this.state.request
     )
 
     return this.state

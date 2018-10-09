@@ -90,6 +90,7 @@
     "cli-color": "^1.1.0",
     "es6-object-assign": "^1.1.0",
     "es6-promise": "^4.1.1",
+    "eslint": "^5.6.1",
     "eslint-plugin-prettier": "^3.0.0",
     "express": "^4.16.3",
     "graphql": "^0.13.2",

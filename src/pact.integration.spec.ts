@@ -82,7 +82,7 @@ describe("Integration", () => {
               },
               body: EXPECTED_BODY,
             },
-          }),
+          })
         )
 
         // execute your assertions
@@ -175,7 +175,7 @@ describe("Integration", () => {
                     },
                     {
                       min: 4,
-                    },
+                    }
                   ),
                 },
               ],
@@ -191,7 +191,7 @@ describe("Integration", () => {
             .then((res: any) => JSON.parse(res.text)[0])
 
           return expect(verificationPromise).to.eventually.have.property(
-            "tasks",
+            "tasks"
           )
         })
 
@@ -256,7 +256,7 @@ describe("Integration", () => {
             })
           return Promise.all([
             expect(verificationPromise).to.eventually.equal(
-              JSON.stringify(EXPECTED_BODY),
+              JSON.stringify(EXPECTED_BODY)
             ),
             expect(verificationPromise404).to.eventually.be.rejected,
           ])
@@ -290,8 +290,8 @@ describe("Integration", () => {
             })
             .then(
               () => console.log("Adding interaction worked"),
-              () => console.warn("Adding interaction failed."),
-            ),
+              () => console.warn("Adding interaction failed.")
+            )
         )
 
         it("fails verification", () => {
@@ -299,12 +299,12 @@ describe("Integration", () => {
             .get(`${PROVIDER_URL}/projects`)
             .set({ Accept: "application/json" })
             .then(() =>
-              superagent.delete(`${PROVIDER_URL}/projects/2`).catch(() => {}),
+              superagent.delete(`${PROVIDER_URL}/projects/2`).catch(() => {})
             )
             .then(() => provider.verify())
 
           return expect(verificationPromise).to.be.rejectedWith(
-            "Pact verification failed - expected interactions did not match actual.",
+            "Pact verification failed - expected interactions did not match actual."
           )
         })
       })

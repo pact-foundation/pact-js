@@ -75,7 +75,7 @@ export class MessageProviderPact {
   // Get the API handler for the verification CLI process to invoke on POST /*
   private setupVerificationHandler(): (
     req: express.Request,
-    res: express.Response,
+    res: express.Response
   ) => void {
     return (req, res) => {
       // Extract the message request from the API
@@ -93,7 +93,7 @@ export class MessageProviderPact {
 
   // Get the Proxy we'll pass to the CLI for verification
   private setupProxyServer(
-    app: (request: http.IncomingMessage, response: http.ServerResponse) => void,
+    app: (request: http.IncomingMessage, response: http.ServerResponse) => void
   ): http.Server {
     return http.createServer(app).listen()
   }
@@ -144,7 +144,7 @@ export class MessageProviderPact {
 
       return Promise.reject(
         `No handler found for message "${message.description}".` +
-          ` Check your "handlers" configuration`,
+          ` Check your "handlers" configuration`
       )
     }
 

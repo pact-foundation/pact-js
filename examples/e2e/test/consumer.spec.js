@@ -124,7 +124,7 @@ describe("Pact", () => {
             },
             body: animalListExpectation,
           },
-        }),
+        })
       )
 
       it("returns a list of animals", done => {
@@ -132,7 +132,7 @@ describe("Pact", () => {
 
         expect(suggestedMates).to.eventually.have.deep.property(
           "suggestions[0].score",
-          94,
+          94
         )
         expect(suggestedMates)
           .to.eventually.have.property("suggestions")
@@ -159,7 +159,7 @@ describe("Pact", () => {
             },
             body: animalBodyExpectation,
           },
-        }),
+        })
       )
 
       it("returns the animal", done => {
@@ -183,7 +183,7 @@ describe("Pact", () => {
           willRespondWith: {
             status: 404,
           },
-        }),
+        })
       )
 
       it("returns a 404", done => {
@@ -217,7 +217,7 @@ describe("Pact", () => {
           },
           body: like(suitor),
         },
-      }),
+      })
     )
 
     it("should create a new mate", done => {

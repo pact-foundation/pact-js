@@ -118,7 +118,7 @@ describe("MessageConsumer", () => {
           .withMetadata({ baz: "bat" })
 
         return expect(
-          stubbedConsumer.verify((m: Message) => Promise.resolve("yay!")),
+          stubbedConsumer.verify((m: Message) => Promise.resolve("yay!"))
         ).to.eventually.be.fulfilled
       })
     })

@@ -51,7 +51,7 @@ export class MockService {
     private port = 1234,
     private host = "127.0.0.1",
     private ssl = false,
-    private pactfileWriteMode: PactfileWriteMode = "overwrite",
+    private pactfileWriteMode: PactfileWriteMode = "overwrite"
   ) {
     this.request = new Request()
     this.baseUrl = `${this.ssl ? "https" : "http"}://${this.host}:${this.port}`
@@ -71,7 +71,7 @@ export class MockService {
     return this.request.send(
       HTTPMethod.POST,
       `${this.baseUrl}/interactions`,
-      JSON.stringify(interaction.json()),
+      JSON.stringify(interaction.json())
     )
   }
 
@@ -90,7 +90,7 @@ export class MockService {
   public verify(): Promise<string> {
     return this.request.send(
       HTTPMethod.GET,
-      `${this.baseUrl}/interactions/verification`,
+      `${this.baseUrl}/interactions/verification`
     )
   }
 
@@ -102,7 +102,7 @@ export class MockService {
     return this.request.send(
       HTTPMethod.POST,
       `${this.baseUrl}/pact`,
-      JSON.stringify(this.pactDetails),
+      JSON.stringify(this.pactDetails)
     )
   }
 }

@@ -40,7 +40,7 @@ describe("Interaction", () => {
     it("throws error when no description provided", () => {
       expect(interaction.uponReceiving).to.throw(
         Error,
-        "You must provide a description for the interaction.",
+        "You must provide a description for the interaction."
       )
     })
 
@@ -58,29 +58,29 @@ describe("Interaction", () => {
     it("throws error when method is not provided", () => {
       expect(interaction.withRequest.bind(interaction, {})).to.throw(
         Error,
-        "You must provide an HTTP method.",
+        "You must provide an HTTP method."
       )
     })
 
     it("throws error when an invalid method is provided", () => {
       expect(
-        interaction.withRequest.bind(interaction, { method: "FOO" }),
+        interaction.withRequest.bind(interaction, { method: "FOO" })
       ).to.throw(
         Error,
-        "You must provide a valid HTTP method: GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS.",
+        "You must provide a valid HTTP method: GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS."
       )
     })
 
     it("throws error when method is not provided", () => {
       expect(interaction.withRequest.bind(interaction, { ath: "/" })).to.throw(
         Error,
-        "You must provide an HTTP method.",
+        "You must provide an HTTP method."
       )
     })
 
     it("throws error when path is not provided", () => {
       expect(
-        interaction.withRequest.bind(interaction, { method: HTTPMethod.GET }),
+        interaction.withRequest.bind(interaction, { method: HTTPMethod.GET })
       ).to.throw(Error, "You must provide a path.")
     })
 
@@ -119,7 +119,7 @@ describe("Interaction", () => {
           "path",
           "query",
           "headers",
-          "body",
+          "body"
         )
       })
     })
@@ -157,13 +157,13 @@ describe("Interaction", () => {
     it("throws error when status is not provided", () => {
       expect(interaction.willRespondWith.bind(interaction, {})).to.throw(
         Error,
-        "You must provide a status code.",
+        "You must provide a status code."
       )
     })
 
     it("throws error when status is blank", () => {
       expect(
-        interaction.willRespondWith.bind(interaction, { status: "" }),
+        interaction.willRespondWith.bind(interaction, { status: "" })
       ).to.throw(Error, "You must provide a status code.")
     })
 
