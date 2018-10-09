@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="7.0.0"></a>
+# [7.0.0](https://github.com/pact-foundation/pact-js/compare/v6.0.2...v7.0.0) (2018-10-09)
+
+
+### Bug Fixes
+
+* **README.md:** providerVersion is a string not a boolean ([#217](https://github.com/pact-foundation/pact-js/issues/217)) ([15706cc](https://github.com/pact-foundation/pact-js/commit/15706cc))
+* **test:** fix port unavailable test on windows ([c41a934](https://github.com/pact-foundation/pact-js/commit/c41a934))
+
+
+### Chores
+
+* **deprecate:** deprecate Node version < 6 ([c778880](https://github.com/pact-foundation/pact-js/commit/c778880))
+
+
+### BREAKING CHANGES
+
+* **deprecate:** No longer supporting Node versions 4 or 5.
+
+
+
 <a name="6.0.2"></a>
 ## [6.0.2](https://github.com/pact-foundation/pact-js/compare/v6.0.1...v6.0.2) (2018-10-01)
 
