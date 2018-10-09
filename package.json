@@ -39,7 +39,7 @@
     "url": "git+https://github.com/pact-foundation/pact-js.git"
   },
   "engines": {
-    "node": ">=4"
+    "node": ">=6"
   },
   "keywords": [
     "pact",
