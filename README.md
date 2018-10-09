@@ -33,7 +33,6 @@ Read [Getting started with Pact] for more information for beginners.
 
 - [Pact JS](#pact-js)
   - [Installation](#installation)
-  - [Versions](#versions)
   - [Using Pact JS](#using-pact-js)
   - [HTTP API Testing](#http-api-testing)
     - [Consumer Side Testing](#consumer-side-testing)
@@ -77,17 +76,11 @@ Read [Getting started with Pact] for more information for beginners.
 
 ## Installation
 
-## Versions
-
-| Version | Stable           | [Spec] Compatibility | Docs          | Installation                                |
-| ------- | ---------------- | -------------------- | ------------- | ------------------------------------------- |
-| `6.x.x` | Yes              | `2`, `3`\*           | You are here  | `npm i -S @pact-foundation/pact@latest` |
-| `5.x.x` | Yes (deprecated) | `2`                  | See [v5] docs | `npm i -S @pact-foundation/pact@5.x.x`      |
-| `4.x.x` | Yes (deprecated) | Up to `2`            | See [v4] docs | `npm i -S pact`                             |
+```
+npm i -S @pact-foundation/pact@latest
+```
 
 See the [Changelog] for versions and their history.
-
-_\* v3 support is limited to the subset of functionality in the v3 [spec] required to enable language inter-operable [Message support]._
 
 ## Using Pact JS
 
