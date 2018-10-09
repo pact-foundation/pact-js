@@ -7,9 +7,9 @@ There may also be an answer to your question on [stackoverflow].
 
 Please provide the following information with your issue to enable us to respond as quickly as possible.
 
-* The relevant versions of the packages you are using.
-* The steps to recreate your issue.
-* An executable code example where possible. You can fork this repository and use one of the [examples] to quickly recreate your issue.
+- The relevant versions of the packages you are using.
+- The steps to recreate your issue.
+- An executable code example where possible. You can fork this repository and use one of the [examples] to quickly recreate your issue.
 
 ### Commit messages
 
@@ -27,12 +27,18 @@ npm i -g cz-conventional-changelog
 
 `git cz` to commit and commitizen will guide you.
 
+## Code style and formatting
+
+We use [Prettier](https://prettier.io/) for formatting, and for linting we use [TSLint](https://palantir.github.io/tslint/) (for TypeScript) and [Standard](https://standardjs.com) (for JS).
+
+Please update your editor to enable Prettier, and things should be easy 👌. If not, our lint step will catch it.
+
 ## Pull requests
 
-* Write tests for any changes
-* Follow existing code style and conventions
-* Separate unrelated changes into multiple pull requests
-* For bigger changes, make sure you start a discussion first by creating an issue and explaining the intended change
+- Write tests for any changes
+- Follow existing code style and conventions
+- Separate unrelated changes into multiple pull requests
+- For bigger changes, make sure you start a discussion first by creating an issue and explaining the intended change
 
 [stackoverflow]: https://stackoverflow.com/questions/tagged/pact
 [examples]: https://github.com/pact-foundation/pact-js/tree/master/examples

@@ -9,14 +9,20 @@ import { isFunction, isNil, isEmpty, isUndefined } from "lodash";
 // Note: The following regexes are Ruby formatted,
 // so attempting to parse as JS without modification is probably not going to work as intended!
 /* tslint:disable:max-line-length */
-export const ISO8601_DATE_FORMAT = "^([\\+-]?\\d{4}(?!\\d{2}\\b))((-?)((0[1-9]|1[0-2])(\\3([12]\\d|0[1-9]|3[01]))?|W([0-4]\\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\\d|[12]\\d{2}|3([0-5]\\d|6[1-6])))?)$";
-export const ISO8601_DATETIME_FORMAT = "^\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d([+-][0-2]\\d:[0-5]\\d|Z)$";
-export const ISO8601_DATETIME_WITH_MILLIS_FORMAT = "^\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d\\.\\d{3}([+-][0-2]\\d:[0-5]\\d|Z)$";
-export const ISO8601_TIME_FORMAT = "^(T\\d\\d:\\d\\d(:\\d\\d)?(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?)?$";
-export const RFC3339_TIMESTAMP_FORMAT = "^(Mon|Tue|Wed|Thu|Fri|Sat|Sun),\\s\\d{2}\\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\\s\\d{4}\\s\\d{2}:\\d{2}:\\d{2}\\s(\\+|-)\\d{4}$";
+export const ISO8601_DATE_FORMAT =
+  "^([\\+-]?\\d{4}(?!\\d{2}\\b))((-?)((0[1-9]|1[0-2])(\\3([12]\\d|0[1-9]|3[01]))?|W([0-4]\\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\\d|[12]\\d{2}|3([0-5]\\d|6[1-6])))?)$";
+export const ISO8601_DATETIME_FORMAT =
+  "^\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d([+-][0-2]\\d:[0-5]\\d|Z)$";
+export const ISO8601_DATETIME_WITH_MILLIS_FORMAT =
+  "^\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d\\.\\d{3}([+-][0-2]\\d:[0-5]\\d|Z)$";
+export const ISO8601_TIME_FORMAT =
+  "^(T\\d\\d:\\d\\d(:\\d\\d)?(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?)?$";
+export const RFC3339_TIMESTAMP_FORMAT =
+  "^(Mon|Tue|Wed|Thu|Fri|Sat|Sun),\\s\\d{2}\\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\\s\\d{4}\\s\\d{2}:\\d{2}:\\d{2}\\s(\\+|-)\\d{4}$";
 export const UUID_V4_FORMAT = "^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$";
 export const IPV4_FORMAT = "^(\\d{1,3}\\.)+\\d{1,3}$";
-export const IPV6_FORMAT = "^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$";
+export const IPV6_FORMAT =
+  "^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$";
 export const HEX_FORMAT = "^[0-9a-fA-F]+$";
 /* tslint:enable */
 
@@ -37,7 +43,7 @@ export function validateExample(example: string, matcher: string): boolean {
  * @param {string} opts.generate - a value to represent the matched String
  * @param {string} opts.matcher - a Regex representing the value
  */
-export function term(opts: { generate: string, matcher: string }) {
+export function term(opts: { generate: string; matcher: string }) {
   const generate = opts.generate;
   const matcher = opts.matcher;
 
@@ -47,7 +53,9 @@ export function term(opts: { generate: string, matcher: string }) {
   }
 
   if (!validateExample(generate, matcher)) {
-    throw new Error(`Example '${generate}' does not match provided regular expression '${matcher}'`);
+    throw new Error(
+      `Example '${generate}' does not match provided regular expression '${matcher}'`
+    );
   }
 
   return {
@@ -56,13 +64,13 @@ export function term(opts: { generate: string, matcher: string }) {
       matcher: {
         json_class: "Regexp",
         o: 0,
-        s: matcher,
-      },
+        s: matcher
+      }
     },
     getValue: () => {
       return generate;
     },
-    json_class: "Pact::Term",
+    json_class: "Pact::Term"
   };
 }
 
@@ -73,7 +81,7 @@ export function term(opts: { generate: string, matcher: string }) {
 export function uuid(id?: string) {
   return term({
     generate: id || "ce118b6e-d8e1-11e7-9296-cec278b6b50a",
-    matcher: UUID_V4_FORMAT,
+    matcher: UUID_V4_FORMAT
   });
 }
 
@@ -84,7 +92,7 @@ export function uuid(id?: string) {
 export function ipv4Address(ip?: string) {
   return term({
     generate: ip || "127.0.0.13",
-    matcher: IPV4_FORMAT,
+    matcher: IPV4_FORMAT
   });
 }
 
@@ -95,7 +103,7 @@ export function ipv4Address(ip?: string) {
 export function ipv6Address(ip?: string) {
   return term({
     generate: ip || "::ffff:192.0.2.128",
-    matcher: IPV6_FORMAT,
+    matcher: IPV6_FORMAT
   });
 }
 
@@ -107,7 +115,7 @@ export function ipv6Address(ip?: string) {
 export function iso8601DateTime(date?: string) {
   return term({
     generate: date || "2015-08-06T16:53:10+01:00",
-    matcher: ISO8601_DATETIME_FORMAT,
+    matcher: ISO8601_DATETIME_FORMAT
   });
 }
 
@@ -118,7 +126,7 @@ export function iso8601DateTime(date?: string) {
 export function iso8601DateTimeWithMillis(date?: string) {
   return term({
     generate: date || "2015-08-06T16:53:10.123+01:00",
-    matcher: ISO8601_DATETIME_WITH_MILLIS_FORMAT,
+    matcher: ISO8601_DATETIME_WITH_MILLIS_FORMAT
   });
 }
 
@@ -129,7 +137,7 @@ export function iso8601DateTimeWithMillis(date?: string) {
 export function iso8601Date(date?: string) {
   return term({
     generate: date || "2013-02-01",
-    matcher: ISO8601_DATE_FORMAT,
+    matcher: ISO8601_DATE_FORMAT
   });
 }
 
@@ -140,7 +148,7 @@ export function iso8601Date(date?: string) {
 export function iso8601Time(time?: string) {
   return term({
     generate: time || "T22:44:30.652Z",
-    matcher: ISO8601_TIME_FORMAT,
+    matcher: ISO8601_TIME_FORMAT
   });
 }
 
@@ -151,7 +159,7 @@ export function iso8601Time(time?: string) {
 export function rfc3339Timestamp(timestamp?: string) {
   return term({
     generate: timestamp || "Mon, 31 Oct 2016 15:21:41 -0400",
-    matcher: RFC3339_TIMESTAMP_FORMAT,
+    matcher: RFC3339_TIMESTAMP_FORMAT
   });
 }
 
@@ -162,7 +170,7 @@ export function rfc3339Timestamp(timestamp?: string) {
 export function hexadecimal(hex?: string) {
   return term({
     generate: hex || "3F",
-    matcher: HEX_FORMAT,
+    matcher: HEX_FORMAT
   });
 }
 
@@ -197,11 +205,15 @@ export function boolean() {
  */
 export function eachLike<T>(content: T, opts?: { min: number }) {
   if (isUndefined(content)) {
-    throw new Error("Error creating a Pact eachLike. Please provide a content argument");
+    throw new Error(
+      "Error creating a Pact eachLike. Please provide a content argument"
+    );
   }
 
   if (opts && (isNil(opts.min) || opts.min < 1)) {
-    throw new Error("Error creating a Pact eachLike. Please provide opts.min that is > 0");
+    throw new Error(
+      "Error creating a Pact eachLike. Please provide opts.min that is > 0"
+    );
   }
 
   return {
@@ -215,7 +227,7 @@ export function eachLike<T>(content: T, opts?: { min: number }) {
       return data;
     },
     json_class: "Pact::ArrayLike",
-    min: isUndefined(opts) ? 1 : opts.min,
+    min: isUndefined(opts) ? 1 : opts.min
   };
 }
 
@@ -225,7 +237,9 @@ export function eachLike<T>(content: T, opts?: { min: number }) {
  */
 export function somethingLike<T>(value: T) {
   if (isNil(value) || isFunction(value)) {
-    throw new Error("Error creating a Pact somethingLike Match. Value cannot be a function or undefined");
+    throw new Error(
+      "Error creating a Pact somethingLike Match. Value cannot be a function or undefined"
+    );
   }
 
   return {
@@ -233,7 +247,7 @@ export function somethingLike<T>(value: T) {
     getValue: () => {
       return value;
     },
-    json_class: "Pact::SomethingLike",
+    json_class: "Pact::SomethingLike"
   };
 }
 
@@ -262,9 +276,9 @@ export function extractPayload(obj: any, stack: any = {}): any {
       const value = obj[property];
 
       if (isMatcher(value)) {
-        extractPayload(value.getValue(), stack[property] = value.getValue());
+        extractPayload(value.getValue(), (stack[property] = value.getValue()));
       } else if (typeof value === "object") {
-        extractPayload(value, stack[property] = value);
+        extractPayload(value, (stack[property] = value));
       }
     }
   }

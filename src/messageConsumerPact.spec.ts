@@ -1,10 +1,12 @@
 /* tslint:disable:no-unused-expression no-empty */
 import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
-import { MessageConsumerPact, synchronousBodyHandler, asynchronousBodyHandler } from "./messageConsumerPact";
-import { fail } from "assert";
+import {
+  MessageConsumerPact,
+  synchronousBodyHandler,
+  asynchronousBodyHandler
+} from "./messageConsumerPact";
 import { Message } from "./dsl/message";
-import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
 
 chai.use(sinonChai);
@@ -18,14 +20,14 @@ describe("MessageConsumer", () => {
   beforeEach(() => {
     consumer = new MessageConsumerPact({
       consumer: "myconsumer",
-      provider: "myprovider",
+      provider: "myprovider"
     });
   });
 
   const testMessage: Message = {
     contents: {
-      foo: "bar",
-    },
+      foo: "bar"
+    }
   };
 
   describe("#constructor", () => {
@@ -57,7 +59,7 @@ describe("MessageConsumer", () => {
 
         expect(consumer.json().providerStates).to.be.a("array");
         expect(consumer.json().providerStates).to.deep.eq([
-          { name: "some state" },
+          { name: "some state" }
         ]);
       });
     });
@@ -99,13 +101,13 @@ describe("MessageConsumer", () => {
       it("should successfully verify the consumer message", () => {
         const stubbedConsumer = new MessageConsumerPact({
           consumer: "myconsumer",
-          provider: "myprovider",
+          provider: "myprovider"
         });
 
         // Stub out service factory
         (stubbedConsumer as any).getServiceFactory = () => {
           return {
-            createMessage: (opts: any) => Promise.resolve("message created"),
+            createMessage: (opts: any) => Promise.resolve("message created")
           };
         };
 
@@ -116,7 +118,7 @@ describe("MessageConsumer", () => {
           .withMetadata({ baz: "bat" });
 
         return expect(
-          stubbedConsumer.verify((m: Message) => Promise.resolve("yay!")),
+          stubbedConsumer.verify((m: Message) => Promise.resolve("yay!"))
         ).to.eventually.be.fulfilled;
       });
     });

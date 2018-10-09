@@ -22,8 +22,6 @@ const bodyParser = require("body-parser");
  * of the interaction to respond - just in this case, not immediately.
  */
 export class MessageProviderPact {
-  private state: any = {};
-
   constructor(private config: MessageProviderOptions) {
     if (config.logLevel && !isEmpty(config.logLevel)) {
       serviceFactory.logLevel(config.logLevel);
@@ -46,7 +44,7 @@ export class MessageProviderPact {
     // Run the verification once the proxy server is available
     return this.waitForServerReady(server)
       .then(this.runProviderVerification())
-      .then((result) => {
+      .then(result => {
         server.close();
         return result;
       });
@@ -66,7 +64,7 @@ export class MessageProviderPact {
     return (server: http.Server) => {
       const opts = {
         ...omit(this.config, "handlers"),
-        ...{ providerBaseUrl: "http://localhost:" + server.address().port },
+        ...{ providerBaseUrl: "http://localhost:" + server.address().port }
       } as VerifierOptions;
 
       // Run verification
@@ -77,7 +75,7 @@ export class MessageProviderPact {
   // Get the API handler for the verification CLI process to invoke on POST /*
   private setupVerificationHandler(): (
     req: express.Request,
-    res: express.Response,
+    res: express.Response
   ) => void {
     return (req, res) => {
       // Extract the message request from the API
@@ -87,15 +85,15 @@ export class MessageProviderPact {
       // wrapped in a Message
       this.setupStates(message)
         .then(() => this.findHandler(message))
-        .then((handler) => handler(message))
-        .then((o) => res.json({ contents: o }))
-        .catch((e) => res.status(500).send(e));
+        .then(handler => handler(message))
+        .then(o => res.json({ contents: o }))
+        .catch(e => res.status(500).send(e));
     };
   }
 
   // Get the Proxy we'll pass to the CLI for verification
   private setupProxyServer(
-    app: (request: http.IncomingMessage, response: http.ServerResponse) => void,
+    app: (request: http.IncomingMessage, response: http.ServerResponse) => void
   ): http.Server {
     return http.createServer(app).listen();
   }
@@ -105,9 +103,7 @@ export class MessageProviderPact {
     const app = express();
 
     app.use(bodyParser.json());
-    app.use(
-      bodyParser.urlencoded({ extended: true }),
-    );
+    app.use(bodyParser.urlencoded({ extended: true }));
     app.use((req, res, next) => {
       res.header("Content-Type", "application/json; charset=utf-8");
       next();
@@ -124,7 +120,7 @@ export class MessageProviderPact {
     const promises: Array<Promise<any>> = new Array();
 
     if (message.providerStates) {
-      message.providerStates.forEach((state) => {
+      message.providerStates.forEach(state => {
         const handler = this.config.stateHandlers
           ? this.config.stateHandlers[state.name]
           : null;
@@ -148,7 +144,7 @@ export class MessageProviderPact {
 
       return Promise.reject(
         `No handler found for message "${message.description}".` +
-        ` Check your "handlers" configuration`,
+          ` Check your "handlers" configuration`
       );
     }
 

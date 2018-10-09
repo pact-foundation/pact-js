@@ -8,11 +8,14 @@ prettyStdOut.pipe(process.stdout);
 export class Logger extends bunyan {
   public time(action: string, startTime: number) {
     const time = Date.now() - startTime;
-    this.info({
-      action,
-      duration: time,
-      type: "TIMER",
-    }, `TIMER: ${action} completed in ${time} milliseconds`);
+    this.info(
+      {
+        action,
+        duration: time,
+        type: "TIMER"
+      },
+      `TIMER: ${action} completed in ${time} milliseconds`
+    );
   }
 
   public get logLevelName(): string {
@@ -22,9 +25,11 @@ export class Logger extends bunyan {
 
 export default new Logger({
   name: `pact@${pkg.version}`,
-  streams: [{
-    level: (process.env.LOGLEVEL || "info") as bunyan.LogLevel,
-    stream: prettyStdOut,
-    type: "raw",
-  }],
+  streams: [
+    {
+      level: (process.env.LOGLEVEL || "info") as bunyan.LogLevel,
+      stream: prettyStdOut,
+      type: "raw"
+    }
+  ]
 });

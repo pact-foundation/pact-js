@@ -3,27 +3,43 @@ import * as chai from "chai";
 const expect = require("chai").expect;
 import { Interaction } from "./interaction";
 import {
-  boolean, decimal, eachLike, hexadecimal,
-  integer, ipv4Address, ipv6Address, ISO8601_DATE_FORMAT, iso8601Date,
-  iso8601DateTime, iso8601DateTimeWithMillis, iso8601Time, rfc3339Timestamp, somethingLike, term, uuid,
+  boolean,
+  decimal,
+  eachLike,
+  hexadecimal,
+  integer,
+  ipv4Address,
+  ipv6Address,
+  ISO8601_DATE_FORMAT,
+  iso8601Date,
+  iso8601DateTime,
+  iso8601DateTimeWithMillis,
+  iso8601Time,
+  rfc3339Timestamp,
+  somethingLike,
+  term,
+  uuid,
   validateExample,
   extractPayload,
-  isMatcher,
+  isMatcher
 } from "./matchers";
 import { json } from "express";
 
 describe("Matcher", () => {
-
   describe("#validateExample", () => {
     describe("when given a valid regex", () => {
       describe("and a matching example", () => {
         it("should return true", () => {
-          expect(validateExample("2010-01-01", ISO8601_DATE_FORMAT)).to.eql(true);
+          expect(validateExample("2010-01-01", ISO8601_DATE_FORMAT)).to.eql(
+            true
+          );
         });
       });
       describe("and a failing example", () => {
         it("should return false", () => {
-          expect(validateExample("not a date", ISO8601_DATE_FORMAT)).to.eql(false);
+          expect(validateExample("not a date", ISO8601_DATE_FORMAT)).to.eql(
+            false
+          );
         });
       });
     });
@@ -45,15 +61,15 @@ describe("Matcher", () => {
             matcher: {
               json_class: "Regexp",
               o: 0,
-              s: "\\w+",
-            },
+              s: "\\w+"
+            }
           },
-          json_class: "Pact::Term",
+          json_class: "Pact::Term"
         };
 
         const match = term({
           generate: "myawesomeword",
-          matcher: "\\w+",
+          matcher: "\\w+"
         });
 
         expect(JSON.stringify(match)).to.deep.include(JSON.stringify(expected));
@@ -88,7 +104,7 @@ describe("Matcher", () => {
         expect(() => {
           term({
             generate: "abc",
-            matcher: ISO8601_DATE_FORMAT,
+            matcher: ISO8601_DATE_FORMAT
           });
         }).to.throw(Error);
       });
@@ -100,7 +116,7 @@ describe("Matcher", () => {
       it("should return a serialized Ruby object", () => {
         const expected = {
           contents: "myspecialvalue",
-          json_class: "Pact::SomethingLike",
+          json_class: "Pact::SomethingLike"
         };
 
         const match = somethingLike("myspecialvalue");
@@ -124,7 +140,7 @@ describe("Matcher", () => {
       describe("when an invalid value is provided", () => {
         it("should throw an Error", () => {
           expect(createTheValue(undefined)).to.throw(Error);
-          expect(createTheValue(() => { })).to.throw(Error);
+          expect(createTheValue(() => {})).to.throw(Error);
         });
       });
     });
@@ -136,7 +152,7 @@ describe("Matcher", () => {
         const expected = {
           contents: null,
           json_class: "Pact::ArrayLike",
-          min: 1,
+          min: 1
         };
 
         const match = eachLike(null, { min: 1 });
@@ -149,7 +165,7 @@ describe("Matcher", () => {
         const expected = {
           contents: { a: 1 },
           json_class: "Pact::ArrayLike",
-          min: 1,
+          min: 1
         };
 
         const match = eachLike({ a: 1 }, { min: 1 });
@@ -170,7 +186,7 @@ describe("Matcher", () => {
         const expected = {
           contents: [1, 2, 3],
           json_class: "Pact::ArrayLike",
-          min: 1,
+          min: 1
         };
 
         const match = eachLike([1, 2, 3], { min: 1 });
@@ -183,7 +199,7 @@ describe("Matcher", () => {
         const expected = {
           contents: "test",
           json_class: "Pact::ArrayLike",
-          min: 1,
+          min: 1
         };
 
         const match = eachLike("test", { min: 1 });
@@ -198,15 +214,17 @@ describe("Matcher", () => {
             contents: {
               id: {
                 contents: 10,
-                json_class: "Pact::SomethingLike",
-              },
+                json_class: "Pact::SomethingLike"
+              }
             },
             json_class: "Pact::ArrayLike",
-            min: 1,
+            min: 1
           };
 
           const match = eachLike({ id: somethingLike(10) }, { min: 1 });
-          expect(JSON.stringify(match)).to.deep.include(JSON.stringify(expected));
+          expect(JSON.stringify(match)).to.deep.include(
+            JSON.stringify(expected)
+          );
         });
       });
 
@@ -220,24 +238,29 @@ describe("Matcher", () => {
                   matcher: {
                     json_class: "Regexp",
                     o: 0,
-                    s: "red|green",
-                  },
+                    s: "red|green"
+                  }
                 },
-                json_class: "Pact::Term",
-              },
+                json_class: "Pact::Term"
+              }
             },
             json_class: "Pact::ArrayLike",
-            min: 1,
+            min: 1
           };
 
-          const match = eachLike({
-            colour: term({
-              generate: "red",
-              matcher: "red|green",
-            }),
-          }, { min: 1 });
+          const match = eachLike(
+            {
+              colour: term({
+                generate: "red",
+                matcher: "red|green"
+              })
+            },
+            { min: 1 }
+          );
 
-          expect(JSON.stringify(match)).to.deep.include(JSON.stringify(expected));
+          expect(JSON.stringify(match)).to.deep.include(
+            JSON.stringify(expected)
+          );
         });
       });
 
@@ -247,14 +270,16 @@ describe("Matcher", () => {
             contents: {
               contents: "blue",
               json_class: "Pact::ArrayLike",
-              min: 1,
+              min: 1
             },
             json_class: "Pact::ArrayLike",
-            min: 1,
+            min: 1
           };
 
           const match = eachLike(eachLike("blue", { min: 1 }), { min: 1 });
-          expect(JSON.stringify(match)).to.deep.include(JSON.stringify(expected));
+          expect(JSON.stringify(match)).to.deep.include(
+            JSON.stringify(expected)
+          );
         });
       });
 
@@ -269,49 +294,55 @@ describe("Matcher", () => {
                     matcher: {
                       json_class: "Regexp",
                       o: 0,
-                      s: "red|green|blue",
-                    },
+                      s: "red|green|blue"
+                    }
                   },
-                  json_class: "Pact::Term",
+                  json_class: "Pact::Term"
                 },
                 size: {
                   contents: 10,
-                  json_class: "Pact::SomethingLike",
+                  json_class: "Pact::SomethingLike"
                 },
                 tag: {
                   contents: [
                     {
                       contents: "jumper",
-                      json_class: "Pact::SomethingLike",
+                      json_class: "Pact::SomethingLike"
                     },
                     {
                       contents: "shirt",
-                      json_class: "Pact::SomethingLike",
-                    },
+                      json_class: "Pact::SomethingLike"
+                    }
                   ],
                   json_class: "Pact::ArrayLike",
-                  min: 2,
-                },
+                  min: 2
+                }
               },
               json_class: "Pact::ArrayLike",
-              min: 1,
+              min: 1
             },
             json_class: "Pact::ArrayLike",
-            min: 1,
+            min: 1
           };
 
           const match = eachLike(
-            eachLike({
-              colour: term({ generate: "red", matcher: "red|green|blue" }),
-              size: somethingLike(10),
-              tag: eachLike([
-                somethingLike("jumper"),
-                somethingLike("shirt"),
-              ], { min: 2 }),
-            }, { min: 1 }),
-            { min: 1 });
+            eachLike(
+              {
+                colour: term({ generate: "red", matcher: "red|green|blue" }),
+                size: somethingLike(10),
+                tag: eachLike(
+                  [somethingLike("jumper"), somethingLike("shirt")],
+                  { min: 2 }
+                )
+              },
+              { min: 1 }
+            ),
+            { min: 1 }
+          );
 
-          expect(JSON.stringify(match)).to.deep.include(JSON.stringify(expected));
+          expect(JSON.stringify(match)).to.deep.include(
+            JSON.stringify(expected)
+          );
         });
       });
     });
@@ -321,7 +352,7 @@ describe("Matcher", () => {
         const expected = {
           contents: { a: 1 },
           json_class: "Pact::ArrayLike",
-          min: 1,
+          min: 1
         };
 
         const match = eachLike({ a: 1 });
@@ -334,7 +365,7 @@ describe("Matcher", () => {
         const expected = {
           contents: { a: 1 },
           json_class: "Pact::ArrayLike",
-          min: 3,
+          min: 3
         };
 
         const match = eachLike({ a: 1 }, { min: 3 });
@@ -379,7 +410,9 @@ describe("Matcher", () => {
     describe("when given a valid ipv6Address", () => {
       it("should not fail", () => {
         expect(ipv6Address("::1")).to.be.an("object");
-        expect(ipv6Address("2001:0db8:85a3:0000:0000:8a2e:0370:7334")).to.be.an("object");
+        expect(ipv6Address("2001:0db8:85a3:0000:0000:8a2e:0370:7334")).to.be.an(
+          "object"
+        );
         expect(ipv6Address()).to.be.an("object");
       });
     });
@@ -438,7 +471,9 @@ describe("Matcher", () => {
     describe("#rfc3339Timestamp", () => {
       describe("when given a valid rfc3339Timestamp", () => {
         it("should not fail", () => {
-          expect(rfc3339Timestamp("Mon, 31 Oct 2016 15:21:41 -0400")).to.be.an("object");
+          expect(rfc3339Timestamp("Mon, 31 Oct 2016 15:21:41 -0400")).to.be.an(
+            "object"
+          );
           expect(rfc3339Timestamp()).to.be.an("object");
         });
       });
@@ -486,7 +521,9 @@ describe("Matcher", () => {
     describe("#iso8601DateTime", () => {
       describe("when given a valid iso8601DateTime", () => {
         it("should not fail", () => {
-          expect(iso8601DateTime("2015-08-06T16:53:10+01:00")).to.be.an("object");
+          expect(iso8601DateTime("2015-08-06T16:53:10+01:00")).to.be.an(
+            "object"
+          );
           expect(iso8601DateTime()).to.be.an("object");
         });
       });
@@ -502,7 +539,9 @@ describe("Matcher", () => {
     describe("#iso8601DateTimeWithMillis", () => {
       describe("when given a valid iso8601DateTimeWithMillis", () => {
         it("should not fail", () => {
-          expect(iso8601DateTimeWithMillis("2015-08-06T16:53:10.123+01:00")).to.be.an("object");
+          expect(
+            iso8601DateTimeWithMillis("2015-08-06T16:53:10.123+01:00")
+          ).to.be.an("object");
           expect(iso8601DateTimeWithMillis()).to.be.an("object");
         });
       });
@@ -522,67 +561,68 @@ describe("Matcher", () => {
 
           const matcher = term({
             generate: "myawesomeword",
-            matcher: "\\w+",
+            matcher: "\\w+"
           });
 
           expect(isMatcher(matcher)).to.eq(true);
           expect(extractPayload(matcher)).to.eql(expected);
-
         });
       });
       describe("when given a complex nested object with matchers", () => {
         it("should remove all matching guff", () => {
           const o = somethingLike({
             stringMatcher: {
-              awesomeSetting: somethingLike("a string"),
+              awesomeSetting: somethingLike("a string")
             },
             anotherStringMatcher: {
               nestedSetting: {
-                anotherStringMatcherSubSetting: somethingLike(true),
+                anotherStringMatcherSubSetting: somethingLike(true)
               },
-              anotherSetting: term({ generate: "this", matcher: "this|that" }),
+              anotherSetting: term({ generate: "this", matcher: "this|that" })
             },
             arrayMatcher: {
-              lotsOfValues: eachLike("useful", { min: 3 }),
+              lotsOfValues: eachLike("useful", { min: 3 })
             },
             arrayOfMatchers: {
               lotsOfValues: eachLike(
                 {
                   foo: "bar",
-                  baz: somethingLike("bat"),
-                }, { min: 3 }),
-            },
+                  baz: somethingLike("bat")
+                },
+                { min: 3 }
+              )
+            }
           });
 
           const expected = {
             stringMatcher: {
-              awesomeSetting: "a string",
+              awesomeSetting: "a string"
             },
             anotherStringMatcher: {
               nestedSetting: {
-                anotherStringMatcherSubSetting: true,
+                anotherStringMatcherSubSetting: true
               },
-              anotherSetting: "this",
+              anotherSetting: "this"
             },
             arrayMatcher: {
-              lotsOfValues: ["useful", "useful", "useful"],
+              lotsOfValues: ["useful", "useful", "useful"]
             },
             arrayOfMatchers: {
               lotsOfValues: [
                 {
                   baz: "bat",
-                  foo: "bar",
+                  foo: "bar"
                 },
                 {
                   baz: "bat",
-                  foo: "bar",
+                  foo: "bar"
                 },
                 {
                   baz: "bat",
-                  foo: "bar",
-                },
-              ],
-            },
+                  foo: "bar"
+                }
+              ]
+            }
           };
 
           expect(extractPayload(o)).to.deep.eql(expected);

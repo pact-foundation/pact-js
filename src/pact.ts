@@ -37,10 +37,12 @@ export class Pact {
     port: 1234,
     provider: "",
     spec: 2,
-    ssl: false,
+    ssl: false
   } as PactOptions;
 
-  public static createOptionsWithDefaults(opts: PactOptions): PactOptionsComplete {
+  public static createOptionsWithDefaults(
+    opts: PactOptions
+  ): PactOptionsComplete {
     return { ...Pact.defaults, ...opts } as PactOptionsComplete;
   }
 
@@ -73,14 +75,22 @@ export class Pact {
       spec: this.opts.spec,
       ssl: this.opts.ssl,
       sslcert: this.opts.sslcert,
-      sslkey: this.opts.sslkey,
+      sslkey: this.opts.sslkey
     });
 
-    logger.info(`Setting up Pact with Consumer "${this.opts.consumer}" and Provider "${this.opts.provider}"
+    logger.info(`Setting up Pact with Consumer "${
+      this.opts.consumer
+    }" and Provider "${this.opts.provider}"
    using mock service on Port: "${this.opts.port}"`);
 
-    this.mockService = new MockService(undefined, undefined, this.opts.port, this.opts.host,
-      this.opts.ssl, this.opts.pactfileWriteMode);
+    this.mockService = new MockService(
+      undefined,
+      undefined,
+      this.opts.port,
+      this.opts.host,
+      this.opts.ssl,
+      this.opts.pactfileWriteMode
+    );
   }
 
   /**
@@ -88,9 +98,16 @@ export class Pact {
    * @returns {Promise}
    */
   public setup(): Promise<void> {
-    return isPortAvailable(this.opts.port, this.opts.host)
-      // Need to wrap it this way until we remove q.Promise from pact-node
-      .then(() => new Promise<void>((resolve, reject) => this.server.start().then(() => resolve(), () => reject())));
+    return (
+      isPortAvailable(this.opts.port, this.opts.host)
+        // Need to wrap it this way until we remove q.Promise from pact-node
+        .then(
+          () =>
+            new Promise<void>((resolve, reject) =>
+              this.server.start().then(() => resolve(), () => reject())
+            )
+        )
+    );
   }
 
   /**
@@ -100,7 +117,9 @@ export class Pact {
    * @param {Interaction} interactionObj
    * @returns {Promise}
    */
-  public addInteraction(interactionObj: InteractionObject | Interaction): Promise<string> {
+  public addInteraction(
+    interactionObj: InteractionObject | Interaction
+  ): Promise<string> {
     if (interactionObj instanceof Interaction) {
       return this.mockService.addInteraction(interactionObj);
     }
@@ -124,7 +143,8 @@ export class Pact {
    * @returns {Promise}
    */
   public verify(): Promise<string> {
-    return this.mockService.verify()
+    return this.mockService
+      .verify()
       .then(() => this.mockService.removeInteractions())
       .catch((e: any) => {
         // Properly format the error
@@ -134,7 +154,9 @@ export class Pact {
         console.error(clc.red(e));
         /* tslint:enable: */
 
-        throw new Error("Pact verification failed - expected interactions did not match actual.");
+        throw new Error(
+          "Pact verification failed - expected interactions did not match actual."
+        );
       });
   }
 
@@ -147,19 +169,33 @@ export class Pact {
    */
   public finalize(): Promise<void> {
     if (this.finalized) {
-      logger.warn("finalize() has already been called, this is probably a logic error in your test setup. " +
-        "In the future this will be an error.");
+      logger.warn(
+        "finalize() has already been called, this is probably a logic error in your test setup. " +
+          "In the future this will be an error."
+      );
     }
     this.finalized = true;
 
-    return this.mockService.writePact()
-      .then(() => logger.info("Pact File Written"), (e) => {
-        return Promise.reject(e);
-      })
-      .then(() => new Promise<void>((resolve, reject) => this.server.delete().then(() => resolve(), (e) => reject(e))))
-      .catch((e: Error) => new Promise<void>((resolve, reject) => {
-        return this.server.delete().finally(() => reject(e));
-      }));
+    return this.mockService
+      .writePact()
+      .then(
+        () => logger.info("Pact File Written"),
+        e => {
+          return Promise.reject(e);
+        }
+      )
+      .then(
+        () =>
+          new Promise<void>((resolve, reject) =>
+            this.server.delete().then(() => resolve(), e => reject(e))
+          )
+      )
+      .catch(
+        (e: Error) =>
+          new Promise<void>((resolve, reject) => {
+            return this.server.delete().finally(() => reject(e));
+          })
+      );
   }
 
   /**

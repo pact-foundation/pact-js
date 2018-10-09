@@ -32,7 +32,7 @@ export class PactWeb {
       port: 1234,
       provider: "",
       spec: 2,
-      ssl: false,
+      ssl: false
     } as PactOptions;
 
     this.opts = { ...defaults, ...config } as PactOptionsComplete;
@@ -42,10 +42,18 @@ export class PactWeb {
         and will be removed in the next major version`);
     }
 
-    console.info(`Setting up Pact using mock service on port: "${this.opts.port}"`);
+    console.info(
+      `Setting up Pact using mock service on port: "${this.opts.port}"`
+    );
 
-    this.mockService = new MockService(this.opts.consumer, this.opts.provider, this.opts.port, this.opts.host,
-      this.opts.ssl, this.opts.pactfileWriteMode);
+    this.mockService = new MockService(
+      this.opts.consumer,
+      this.opts.provider,
+      this.opts.port,
+      this.opts.host,
+      this.opts.ssl,
+      this.opts.pactfileWriteMode
+    );
   }
 
   /**
@@ -76,7 +84,8 @@ export class PactWeb {
    * @returns {Promise}
    */
   public verify(): Promise<string> {
-    return this.mockService.verify()
+    return this.mockService
+      .verify()
       .then(() => this.mockService.removeInteractions())
       .catch((e: any) => {
         throw new Error(e);
@@ -89,7 +98,9 @@ export class PactWeb {
    * @returns {Promise}
    */
   public finalize(): Promise<string> {
-    return this.mockService.writePact().then(() => this.mockService.removeInteractions());
+    return this.mockService
+      .writePact()
+      .then(() => this.mockService.removeInteractions());
   }
   /**
    * Writes the Pact file but leave interactions in.

@@ -2,7 +2,6 @@
 import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import { MessageProviderPact } from "./messageProviderPact";
-import { fail } from "assert";
 import { Message } from "./dsl/message";
 import * as sinon from "sinon";
 import * as sinonChai from "sinon-chai";
@@ -23,18 +22,18 @@ describe("MesageProvider", () => {
   const successfulMessage: Message = {
     contents: { foo: "bar" },
     description: successfulRequest,
-    providerStates: [{ name: "some state" }],
+    providerStates: [{ name: "some state" }]
   };
 
   const unsuccessfulMessage: Message = {
     contents: { foo: "bar" },
     description: unsuccessfulRequest,
-    providerStates: [{ name: "some state not found" }],
+    providerStates: [{ name: "some state not found" }]
   };
   const nonExistentMessage: Message = {
     contents: { foo: "bar" },
     description: "does not exist",
-    providerStates: [{ name: "some state not found" }],
+    providerStates: [{ name: "some state not found" }]
   };
 
   beforeEach(() => {
@@ -43,12 +42,12 @@ describe("MesageProvider", () => {
       logLevel: "error",
       messageProviders: {
         successfulRequest: () => Promise.resolve("yay"),
-        unsuccessfulRequest: () => Promise.reject("nay"),
+        unsuccessfulRequest: () => Promise.reject("nay")
       },
       provider: "myprovider",
       stateHandlers: {
-        "some state": () => Promise.resolve("yay"),
-      },
+        "some state": () => Promise.resolve("yay")
+      }
     });
   });
 
@@ -61,7 +60,7 @@ describe("MesageProvider", () => {
       provider = new MessageProviderPact({
         consumer: "myconsumer",
         messageProviders: {},
-        provider: "myprovider",
+        provider: "myprovider"
       });
       expect(provider).to.be.a("object");
       expect(provider).to.respondTo("verify");
@@ -92,23 +91,23 @@ describe("MesageProvider", () => {
 
   describe("#setupVerificationHandler", () => {
     describe("when their is a valid setup", () => {
-      it("should create a valid express handler", (done) => {
+      it("should create a valid express handler", done => {
         const setupVerificationHandler = (provider as any).setupVerificationHandler.bind(
-          provider,
+          provider
         )();
         const req = { body: successfulMessage };
         const mock = sinon.stub();
         const res = {
-          json: () => done(), // Expect a response
+          json: () => done() // Expect a response
         };
 
         setupVerificationHandler(req, res);
       });
     });
     describe("when their is an invalid setup", () => {
-      it("should create a valid express handler that rejects the message", (done) => {
+      it("should create a valid express handler that rejects the message", done => {
         const setupVerificationHandler = (provider as any).setupVerificationHandler.bind(
-          provider,
+          provider
         )();
         const req = { body: nonExistentMessage };
         const mock = sinon.stub();
@@ -117,9 +116,9 @@ describe("MesageProvider", () => {
             expect(status).to.eq(500);
 
             return {
-              send: () => done(), // Expect the status to be called with 500
+              send: () => done() // Expect the status to be called with 500
             };
-          },
+          }
         };
 
         setupVerificationHandler(req, res);
@@ -131,7 +130,9 @@ describe("MesageProvider", () => {
     describe("when given a handler that exists", () => {
       it("should return a Handler object", () => {
         const findHandler = (provider as any).findHandler.bind(provider);
-        return expect(findHandler(successfulMessage)).to.eventually.be.a("function");
+        return expect(findHandler(successfulMessage)).to.eventually.be.a(
+          "function"
+        );
       });
     });
     describe("when given a handler that does not exist", () => {
@@ -147,7 +148,7 @@ describe("MesageProvider", () => {
       it("should return values of all resolved handlers", () => {
         const findStateHandler = (provider as any).setupStates.bind(provider);
         return expect(
-          findStateHandler(successfulMessage),
+          findStateHandler(successfulMessage)
         ).to.eventually.deep.equal(["yay"]);
       });
     });
@@ -156,11 +157,11 @@ describe("MesageProvider", () => {
         provider = new MessageProviderPact({
           consumer: "myconsumer",
           messageProviders: {},
-          provider: "myprovider",
+          provider: "myprovider"
         });
         const findStateHandler = (provider as any).setupStates.bind(provider);
         return expect(
-          findStateHandler(unsuccessfulMessage),
+          findStateHandler(unsuccessfulMessage)
         ).to.eventually.deep.equal([]);
       });
     });
@@ -170,7 +171,7 @@ describe("MesageProvider", () => {
     describe("when the http server starts up", () => {
       it("should return a resolved promise", () => {
         const waitForServerReady = (provider as any).waitForServerReady;
-        const server = http.createServer(() => { }).listen();
+        const server = http.createServer(() => {}).listen();
 
         return expect(waitForServerReady(server)).to.eventually.be.fulfilled;
       });
@@ -189,7 +190,7 @@ describe("MesageProvider", () => {
   describe("#setupProxyApplication", () => {
     it("should return a valid express app", () => {
       const setupProxyApplication = (provider as any).setupProxyApplication.bind(
-        provider,
+        provider
       );
       expect(setupProxyApplication().listen).to.be.a("function");
     });

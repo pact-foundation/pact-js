@@ -83,7 +83,9 @@ export class Interaction {
     }
 
     if (keys(HTTPMethod).indexOf(requestOpts.method.toString()) < 0) {
-      throw new Error(`You must provide a valid HTTP method: ${keys(HTTPMethod).join(", ")}.`);
+      throw new Error(
+        `You must provide a valid HTTP method: ${keys(HTTPMethod).join(", ")}.`
+      );
     }
 
     if (isNil(requestOpts.path)) {
@@ -103,15 +105,21 @@ export class Interaction {
    * @param {Object} responseOpts.body
    */
   public willRespondWith(responseOpts: ResponseOptions) {
-    if (isNil(responseOpts.status) || responseOpts.status.toString().trim().length === 0) {
+    if (
+      isNil(responseOpts.status) ||
+      responseOpts.status.toString().trim().length === 0
+    ) {
       throw new Error("You must provide a status code.");
     }
 
-    this.state.response = omitBy({
-      body: responseOpts.body,
-      headers: responseOpts.headers || undefined,
-      status: responseOpts.status,
-    }, isNil) as ResponseOptions;
+    this.state.response = omitBy(
+      {
+        body: responseOpts.body,
+        headers: responseOpts.headers || undefined,
+        status: responseOpts.status
+      },
+      isNil
+    ) as ResponseOptions;
     return this;
   }
 

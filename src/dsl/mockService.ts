@@ -4,7 +4,6 @@
  * https://gist.github.com/bethesque/9d81f21d6f77650811f4.
  * @module MockService
  */
-import { isEmpty } from "lodash";
 import { HTTPMethod, Request } from "../common/request";
 import { Interaction } from "./interaction";
 
@@ -48,19 +47,18 @@ export class MockService {
     // Deprecated as at https://github.com/pact-foundation/pact-js/issues/105
     private consumer?: string,
     private provider?: string,
-
     // Valid
     private port = 1234,
     private host = "127.0.0.1",
     private ssl = false,
-    private pactfileWriteMode: PactfileWriteMode = "overwrite") {
-
+    private pactfileWriteMode: PactfileWriteMode = "overwrite"
+  ) {
     this.request = new Request();
-    this.baseUrl = `${ssl ? "https" : "http"}://${host}:${port}`;
+    this.baseUrl = `${this.ssl ? "https" : "http"}://${this.host}:${this.port}`;
     this.pactDetails = {
-      consumer: (consumer) ? { name: consumer } : undefined,
-      pactfile_write_mode: pactfileWriteMode,
-      provider: (provider) ? { name: provider } : undefined,
+      consumer: this.consumer ? { name: this.consumer } : undefined,
+      pactfile_write_mode: this.pactfileWriteMode,
+      provider: this.provider ? { name: this.provider } : undefined
     };
   }
 
@@ -70,7 +68,11 @@ export class MockService {
    * @returns {Promise}
    */
   public addInteraction(interaction: Interaction): Promise<string> {
-    return this.request.send(HTTPMethod.POST, `${this.baseUrl}/interactions`, JSON.stringify(interaction.json()));
+    return this.request.send(
+      HTTPMethod.POST,
+      `${this.baseUrl}/interactions`,
+      JSON.stringify(interaction.json())
+    );
   }
 
   /**
@@ -86,7 +88,10 @@ export class MockService {
    * @returns {Promise}
    */
   public verify(): Promise<string> {
-    return this.request.send(HTTPMethod.GET, `${this.baseUrl}/interactions/verification`);
+    return this.request.send(
+      HTTPMethod.GET,
+      `${this.baseUrl}/interactions/verification`
+    );
   }
 
   /**
@@ -94,7 +99,10 @@ export class MockService {
    * @returns {Promise}
    */
   public writePact(): Promise<string> {
-    return this.request.send(HTTPMethod.POST, `${this.baseUrl}/pact`, JSON.stringify(this.pactDetails));
+    return this.request.send(
+      HTTPMethod.POST,
+      `${this.baseUrl}/pact`,
+      JSON.stringify(this.pactDetails)
+    );
   }
-
 }

@@ -6,7 +6,9 @@ import { MatcherResult } from "./matchers";
  *
  * @module Message
  */
-export interface Metadata { [name: string]: string | MatcherResult; }
+export interface Metadata {
+  [name: string]: string | MatcherResult;
+}
 
 /**
  * A Message is an asynchronous Interaction, sent via a Provider
@@ -24,5 +26,9 @@ export interface Message {
 // Message producer/handlers
 export type MessageConsumer = (m: Message) => Promise<any>;
 export type MessageProvider = (m: Message) => Promise<any>;
-export interface MessageProviders { [name: string]: MessageProvider; }
-export interface StateHandlers { [name: string]: (state: string) => Promise<any>; }
+export interface MessageProviders {
+  [name: string]: MessageProvider;
+}
+export interface StateHandlers {
+  [name: string]: (state: string) => Promise<any>;
+}

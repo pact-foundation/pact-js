@@ -16,7 +16,7 @@ describe("GraphQL example", () => {
     log: path.resolve(process.cwd(), "logs", "mockserver-integration.log"),
     dir: path.resolve(process.cwd(), "pacts"),
     consumer: "GraphQLConsumer",
-    provider: "GraphQLProvider",
+    provider: "GraphQLProvider"
   });
 
   before(() => provider.setup());
@@ -29,21 +29,21 @@ describe("GraphQL example", () => {
         .withQuery(`{ hello }`)
         .withRequest({
           path: "/graphql",
-          method: "POST",
+          method: "POST"
         })
         .withVariables({
-          foo: "bar",
+          foo: "bar"
         })
         .willRespondWith({
           status: 200,
           headers: {
-            "Content-Type": "application/json; charset=utf-8",
+            "Content-Type": "application/json; charset=utf-8"
           },
           body: {
             data: {
-              hello: like("Hello world!"),
-            },
-          },
+              hello: like("Hello world!")
+            }
+          }
         });
       return provider.addInteraction(graphqlQuery);
     });

@@ -3,13 +3,13 @@
  */
 
 import { isEmpty, cloneDeep } from "lodash";
-import { MatcherResult, extractPayload } from "./dsl/matchers";
+import { extractPayload } from "./dsl/matchers";
 import { qToPromise } from "./common/utils";
 import {
   Metadata,
   Message,
   MessageProvider,
-  MessageConsumer,
+  MessageConsumer
 } from "./dsl/message";
 import logger from "./common/logger";
 import serviceFactory from "@pact-foundation/pact-node";
@@ -46,8 +46,8 @@ export class MessageConsumerPact {
       // basic interoperability
       this.state.providerStates = [
         {
-          name: providerState,
-        },
+          name: providerState
+        }
       ];
     }
 
@@ -80,7 +80,7 @@ export class MessageConsumerPact {
   public withContent(content: any) {
     if (isEmpty(content)) {
       throw new Error(
-        "You must provide a valid JSON document or primitive for the Message.",
+        "You must provide a valid JSON document or primitive for the Message."
       );
     }
     this.state.contents = content;
@@ -97,7 +97,7 @@ export class MessageConsumerPact {
   public withMetadata(metadata: Metadata) {
     if (isEmpty(metadata)) {
       throw new Error(
-        "You must provide valid metadata for the Message, or none at all",
+        "You must provide valid metadata for the Message, or none at all"
       );
     }
     this.state.metadata = metadata;
@@ -133,10 +133,10 @@ export class MessageConsumerPact {
             dir: this.config.dir,
             pactFileWriteMode: this.config.pactfileWriteMode,
             provider: this.config.provider,
-            spec: 3,
-          }),
-        ),
-    );
+            spec: 3
+          })
+        )
+      );
   }
 
   /**
@@ -164,7 +164,9 @@ const isMessage = (x: Message | any): x is Message => {
 
 // bodyHandler takes a synchronous function and returns
 // a wrapped function that accepts a Message and returns a Promise
-export function synchronousBodyHandler(handler: (body: any) => any): MessageProvider {
+export function synchronousBodyHandler(
+  handler: (body: any) => any
+): MessageProvider {
   return (m: Message): Promise<any> => {
     const body = m.contents;
 
@@ -182,6 +184,8 @@ export function synchronousBodyHandler(handler: (body: any) => any): MessageProv
 // bodyHandler takes an asynchronous (promisified) function and returns
 // a wrapped function that accepts a Message and returns a Promise
 // TODO: move this into its own package and re-export?
-export function asynchronousBodyHandler(handler: (body: any) => Promise<any>): MessageProvider {
+export function asynchronousBodyHandler(
+  handler: (body: any) => Promise<any>
+): MessageProvider {
   return (m: Message) => handler(m.contents);
 }

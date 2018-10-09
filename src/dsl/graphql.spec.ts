@@ -48,7 +48,7 @@ describe("GraphQLInteraction", () => {
         interaction.withOperation("query");
         interaction.withQuery("{ hello }");
         interaction.withVariables({
-          foo: "bar",
+          foo: "bar"
         });
 
         const json: any = interaction.json();
@@ -63,13 +63,15 @@ describe("GraphQLInteraction", () => {
       interaction.withOperation("query");
       interaction.withQuery("{ hello }");
       interaction.withVariables({
-        foo: "bar",
+        foo: "bar"
       });
     });
 
     describe("when given an invalid query", () => {
       it("should fail with an error", () => {
-        expect(() => interaction.withQuery("{ not properly terminated")).to.throw(Error);
+        expect(() =>
+          interaction.withQuery("{ not properly terminated")
+        ).to.throw(Error);
       });
     });
 
@@ -101,7 +103,7 @@ describe("GraphQLInteraction", () => {
             }
           }`);
           interaction.withVariables({
-            name: "bar",
+            name: "bar"
           });
           const json: any = interaction.json();
 
@@ -110,9 +112,7 @@ describe("GraphQLInteraction", () => {
           const lotsOfWhitespace = `{             Hello(id: \$id) { name    } }`;
           expect(r.test(lotsOfWhitespace)).to.eq(true);
         });
-
       });
     });
   });
-
 });
