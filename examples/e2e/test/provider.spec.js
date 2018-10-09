@@ -1,36 +1,36 @@
-const { Verifier } = require("../../../dist/pact");
-const path = require("path");
-const chai = require("chai");
-const chaiAsPromised = require("chai-as-promised");
-const expect = chai.expect;
-const { VerifierOptions } = require("@pact-foundation/pact-node");
-chai.use(chaiAsPromised);
-const { server, importData, animalRepository } = require("../provider.js");
+const { Verifier } = require("../../../dist/pact")
+const path = require("path")
+const chai = require("chai")
+const chaiAsPromised = require("chai-as-promised")
+const expect = chai.expect
+const { VerifierOptions } = require("@pact-foundation/pact-node")
+chai.use(chaiAsPromised)
+const { server, importData, animalRepository } = require("../provider.js")
 
 server.post("/setup", (req, res) => {
-  const state = req.body.state;
+  const state = req.body.state
 
-  animalRepository.clear();
+  animalRepository.clear()
   switch (state) {
     case "Has no animals":
       // do nothing
-      break;
+      break
     default:
-      importData();
+      importData()
   }
 
-  res.end();
-});
+  res.end()
+})
 
 server.listen(8081, () => {
-  console.log("Animal Profile Service listening on http://localhost:8081");
-});
+  console.log("Animal Profile Service listening on http://localhost:8081")
+})
 
 // Verify that the provider meets all consumer expectations
 describe("Pact Verification", () => {
   it("should validate the expectations of Matching Service", function() {
     // lexical binding required here
-    this.timeout(10000);
+    this.timeout(10000)
 
     let opts = {
       provider: "Animal Profile Service",
@@ -48,12 +48,12 @@ describe("Pact Verification", () => {
       pactBrokerPassword: "O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
       publishVerificationResult: true,
       providerVersion: "1.0.0",
-      customProviderHeaders: ["Authorization: basic e5e5e5e5e5e5e5"]
-    };
+      customProviderHeaders: ["Authorization: basic e5e5e5e5e5e5e5"],
+    }
 
     return new Verifier().verifyProvider(opts).then(output => {
-      console.log("Pact Verification Complete!");
-      console.log(output);
-    });
-  });
-});
+      console.log("Pact Verification Complete!")
+      console.log(output)
+    })
+  })
+})

@@ -1,19 +1,19 @@
-"use strict";
+"use strict"
 
-const getMeDogs = require("../index").getMeDogs;
+const getMeDogs = require("../index").getMeDogs
 
 describe("Dog's API", () => {
-  let url = "http://localhost";
+  let url = "http://localhost"
 
   const EXPECTED_BODY = [
     {
-      dog: 1
-    }
-  ];
+      dog: 1,
+    },
+  ]
 
   afterEach(() => {
-    return provider.verify();
-  });
+    return provider.verify()
+  })
 
   describe("works", () => {
     beforeEach(() => {
@@ -24,33 +24,33 @@ describe("Dog's API", () => {
           method: "GET",
           path: "/dogs",
           headers: {
-            Accept: "application/json"
-          }
+            Accept: "application/json",
+          },
         },
         willRespondWith: {
           status: 200,
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
           },
-          body: EXPECTED_BODY
-        }
-      };
-      return provider.addInteraction(interaction);
-    });
+          body: EXPECTED_BODY,
+        },
+      }
+      return provider.addInteraction(interaction)
+    })
 
     // add expectations
     it("returns a sucessful body", done => {
       return getMeDogs({
         url,
-        port
+        port,
       }).then(response => {
-        expect(response.headers["content-type"]).toEqual("application/json");
-        expect(response.data).toEqual(EXPECTED_BODY);
-        expect(response.status).toEqual(200);
-        done();
-      });
-    });
-  });
+        expect(response.headers["content-type"]).toEqual("application/json")
+        expect(response.data).toEqual(EXPECTED_BODY)
+        expect(response.status).toEqual(200)
+        done()
+      })
+    })
+  })
 
   describe("works again", () => {
     beforeEach(() => {
@@ -61,31 +61,31 @@ describe("Dog's API", () => {
           method: "GET",
           path: "/dogs",
           headers: {
-            Accept: "application/json"
-          }
+            Accept: "application/json",
+          },
         },
         willRespondWith: {
           status: 200,
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
           },
-          body: EXPECTED_BODY
-        }
-      };
-      return provider.addInteraction(interaction);
-    });
+          body: EXPECTED_BODY,
+        },
+      }
+      return provider.addInteraction(interaction)
+    })
 
     // add expectations
     it("returns a sucessful body", done => {
       return getMeDogs({
         url,
-        port
+        port,
       }).then(response => {
-        expect(response.headers["content-type"]).toEqual("application/json");
-        expect(response.data).toEqual(EXPECTED_BODY);
-        expect(response.status).toEqual(200);
-        done();
-      });
-    });
-  });
-});
+        expect(response.headers["content-type"]).toEqual("application/json")
+        expect(response.data).toEqual(EXPECTED_BODY)
+        expect(response.status).toEqual(200)
+        done()
+      })
+    })
+  })
+})

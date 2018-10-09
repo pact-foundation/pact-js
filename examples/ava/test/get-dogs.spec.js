@@ -1,13 +1,13 @@
-"use strict";
+"use strict"
 
-const path = require("path");
-const test = require("ava");
-const pact = require("../../../dist/pact");
-const Pact = pact.Pact;
-const getMeDogs = require("../index").getMeDogs;
+const path = require("path")
+const test = require("ava")
+const pact = require("../../../dist/pact")
+const Pact = pact.Pact
+const getMeDogs = require("../index").getMeDogs
 
-const url = "http://localhost";
-const port = 8989;
+const url = "http://localhost"
+const port = 8989
 
 const provider = new Pact({
   port: port,
@@ -16,15 +16,15 @@ const provider = new Pact({
   spec: 2,
   consumer: "MyConsumer",
   provider: "MyProvider",
-  pactfileWriteMode: "merge"
-});
+  pactfileWriteMode: "merge",
+})
 
 test.before("setting up Dog API expectations", async () => {
-  await provider.setup();
-});
+  await provider.setup()
+})
 
 test("Dog API GET /dogs", async t => {
-  t.plan(1);
+  t.plan(1)
 
   // BEGIN -
   // Setup interactions for expected API response from provider
@@ -37,47 +37,47 @@ test("Dog API GET /dogs", async t => {
       method: "GET",
       path: "/dogs",
       headers: {
-        Accept: "application/json"
-      }
+        Accept: "application/json",
+      },
     },
     willRespondWith: {
       status: 200,
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: [
         {
           dog: pact.Matchers.somethingLike(1),
           name: pact.Matchers.term({
             matcher: "(\\S+)",
-            generate: "rocky"
-          })
-        }
-      ]
-    }
-  };
+            generate: "rocky",
+          }),
+        },
+      ],
+    },
+  }
 
-  await provider.addInteraction(interaction);
+  await provider.addInteraction(interaction)
   // END
 
   const urlAndPort = {
     url: url,
-    port: port
-  };
-  const response = await getMeDogs(urlAndPort);
+    port: port,
+  }
+  const response = await getMeDogs(urlAndPort)
   t.deepEqual(response.data, [
     {
       dog: 1,
-      name: "rocky"
-    }
-  ]);
-});
+      name: "rocky",
+    },
+  ])
+})
 
 test.afterEach(async t => {
   // verify with Pact, and reset expectations
-  await t.notThrows(provider.verify());
-});
+  await t.notThrows(provider.verify())
+})
 
 test.always.after("pact.js mock server graceful shutdown", async () => {
-  await provider.finalize();
-});
+  await provider.finalize()
+})
