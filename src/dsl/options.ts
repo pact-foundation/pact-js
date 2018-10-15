@@ -3,7 +3,7 @@
  * @module PactOptions
  */
 import { PactfileWriteMode } from "./mockService";
-import { MessageProviders, StateHandlers } from "pact";
+import { MessageProviders, StateHandlers } from "../pact";
 
 export type LogLevel = "trace" | "debug" | "info" | "warn" | "error" | "fatal";
 
