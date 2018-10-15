@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="7.0.1"></a>
+## [7.0.1](https://github.com/pact-foundation/pact-js/compare/v7.0.0...v7.0.1) (2018-10-15)
+
+
+### Bug Fixes
+
+* **api:** repair incorrect absolute import to 'pact'. Fixes [#229](https://github.com/pact-foundation/pact-js/issues/229) ([aa22fae](https://github.com/pact-foundation/pact-js/commit/aa22fae))
+
+
+
 <a name="7.0.0"></a>
 # [7.0.0](https://github.com/pact-foundation/pact-js/compare/v6.0.2...v7.0.0) (2018-10-09)
 
