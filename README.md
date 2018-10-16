@@ -246,7 +246,7 @@ Once you have created Pacts for your Consumer, you need to validate those Pacts 
 1.  Then run the Provider side verification step
 
 ```js
-const { Verifier } = require('pact');
+const { Verifier } = require('@pact-foundation/pact');
 let opts = {
   ...
 };
