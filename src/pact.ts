@@ -127,6 +127,7 @@ export class Pact {
     return this.mockService.verify()
       .then(() => this.mockService.removeInteractions())
       .catch((e: any) => {
+
         // Properly format the error
         /* tslint:disable: no-console */
         console.error("");
@@ -134,8 +135,10 @@ export class Pact {
         console.error(clc.red(e));
         /* tslint:enable: */
 
-        throw new Error("Pact verification failed - expected interactions did not match actual.");
-      });
+        return this.mockService.removeInteractions().then(() => {
+          throw new Error("Pact verification failed - expected interactions did not match actual.");
+        })
+      })
   }
 
   /**

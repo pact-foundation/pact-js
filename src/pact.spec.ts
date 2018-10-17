@@ -245,7 +245,7 @@ describe("Pact", () => {
         const verifyPromise = b.verify();
         return Promise.all([
           expect(verifyPromise).to.eventually.be.rejectedWith(Error),
-          verifyPromise.catch(() => expect(removeInteractionsStub).to.callCount(0)),
+          verifyPromise.catch(() => expect(removeInteractionsStub).to.callCount(1)),
         ]);
       });
     });
