@@ -120,7 +120,7 @@ The `Pact` class provides the following high-level APIs, they are listed in the 
 | `sslcert`           | no        | string  | Path to SSL certificate to serve on the mock service                                                     |
 | `sslkey`            | no        | string  | Path to SSL key to serve on the mock service                                                             |
 | `dir`               | no        | string  | Directory to output pact files                                                                           |
-| `log`               | no        | string  | Directory to log to                                                                                      |
+| `log`               | no        | string  | File to log to                                                                                           |
 | `logLevel`          | no        | string  | Log level: one of 'trace', 'debug', 'info', 'error', 'fatal' or 'warn'                                   |
 | `spec`              | no        | number  | Pact specification version (defaults to 2)                                                               |
 | `cors`              | no        | boolean | Allow CORS OPTION requests to be accepted, defaults to false                                             |
