@@ -7,7 +7,6 @@ import { MessageProviders, StateHandlers } from "../pact";
 
 export type LogLevel = "trace" | "debug" | "info" | "warn" | "error" | "fatal";
 
-// TODO: Combine types here to reduce duplication
 export interface PactOptions {
   // The name of the consumer
   consumer: string;
@@ -69,7 +68,6 @@ export interface MessageProviderOptions {
 
   // Pacts to Verify
   pactUrls?: string[];
-  // pactFilesOrDirs?: string[];
 
   // Directory to log to
   log?: string;

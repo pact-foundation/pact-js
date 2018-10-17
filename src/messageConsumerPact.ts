@@ -160,7 +160,7 @@ const isMessage = (x: Message | any): x is Message => {
   return (x as Message).contents !== undefined;
 };
 
-// TODO: create basic adapters for API handlers, e.g.
+// TODO: create more basic adapters for API handlers
 
 // bodyHandler takes a synchronous function and returns
 // a wrapped function that accepts a Message and returns a Promise

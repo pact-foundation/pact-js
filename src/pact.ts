@@ -1,5 +1,3 @@
-// TODO: Make this the main interface into the Pact package
-//       this will be a backwards-incompatible, breaking change
 /**
  * Pact module.
  * @module Pact
@@ -24,7 +22,6 @@ import { Server } from "@pact-foundation/pact-node/src/server";
  * @param {PactOptions} opts
  * @return {@link PactProvider}
  */
-// TODO: move this to its own module
 export class Pact {
   public static defaults = {
     consumer: "",

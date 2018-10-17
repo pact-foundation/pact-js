@@ -70,7 +70,7 @@ export class MessageProviderPact {
       } as VerifierOptions;
 
       // Run verification
-      return new Verifier().verifyProvider(opts);
+      return new Verifier(opts).verifyProvider();
     };
   }
 

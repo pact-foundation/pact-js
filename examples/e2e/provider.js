@@ -35,6 +35,7 @@ const availableAnimals = () => {
 
 // Get all animals
 server.get('/animals', (req, res) => {
+  console.log('BLAH:', req.header('authorization'))
   res.json(animalRepository.fetchAll())
 })
 
@@ -56,6 +57,7 @@ server.get('/animals/:id', (req, res) => {
 
 // Register a new Animal for the service
 server.post('/animals', (req, res) => {
+  console.log('BLAH:', req.header('authorization'))
   const animal = req.body
 
   // Really basic validation
