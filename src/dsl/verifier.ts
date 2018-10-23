@@ -10,8 +10,6 @@ import * as express from "express";
 import * as http from "http";
 const HttpProxy = require('http-proxy');
 import logger from "../common/logger";
-import { isFunction } from "util";
-// import serviceFactory from "@pact-foundation/pact-node";
 
 const bodyParser = require("body-parser");
 
@@ -31,14 +29,7 @@ export type VerifierOptions = PactNodeVerifierOptions & StateOptions
 
 export class Verifier {
   constructor(private config: VerifierOptions) {
-    // TODO: properly set log level for verification process
-
-    // if (config.logLevel && !isEmpty(config.logLevel) ) {
-    //   serviceFactory.logLevel(config.logLevel);
-    //   logger.level(config.logLevel);
-    // } else {
-    //   logger.level();
-    // }
+    // TODO: properly configure logging for pact-node component
   }
 
   /**
@@ -130,29 +121,11 @@ export class Verifier {
 
     // Proxy server will respond to Verifier process
     app.all("/*", (req, res) => {
-      console.log('Proxing', req.path)
-      // TODO: Write proxy bit, it should simply forward the request to the actual serve
-      //       and return back the result without
+      logger.debug('Proxing', req.path)
       proxy.web(req, res, {
         target: this.config.providerBaseUrl,
       });
     });
-
-    // TODO: This seems a bit shit, but maybe if we use middlewares that look at the
-    //       body there's not much we can do?
-    //       UPDATE: my assumption seemed to be true - body parser was interfering with this
-    //               applying it only to the routes we intercept and take action on removes this need
-    // https://github.com/nodejitsu/node-http-proxy/issues/1142
-    // proxy.on('proxyReq', (proxyReq: any, req: any) => {
-    //   if (req.body && req.complete) {
-
-    //     // TODO: this is almost certainly not a good idea if things aren't JSON etc.
-    //     const bodyData = JSON.stringify(req.body);
-    //     proxyReq.setHeader('Content-Type', 'application/json');
-    //     proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
-    //     proxyReq.write(bodyData);
-    //   }
-    // });
 
     return app;
   }

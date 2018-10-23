@@ -5,21 +5,6 @@ chai.use(chaiAsPromised)
 const { server, importData, animalRepository } = require('../provider.js')
 const path = require('path')
 
-// server.post('/setup', (req, res) => {
-//   const state = req.body.state
-
-//   animalRepository.clear()
-//   switch (state) {
-//     case 'Has no animals':
-//       // do nothing
-//       break
-//     default:
-//       importData()
-//   }
-
-//   res.end()
-// })
-
 server.listen(8081, () => {
   console.log('Animal Profile Service listening on http://localhost:8081')
 })
@@ -40,9 +25,6 @@ describe('Pact Verification', () => {
       // a) need to be backwards compatible (i.e. still enable this mode), or
       // b) need to support the most widely used/adopted interface (pressumably the in-built http module)
       providerBaseUrl: 'http://localhost:8081',
-
-      // TODO: Could we do annotation scanning?
-
 
       // TODO: Deprecate, but allow backwards compatibility
       // providerStatesSetupUrl: 'http://localhost:8081/setup',

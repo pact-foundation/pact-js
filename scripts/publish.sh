@@ -17,20 +17,5 @@ done
 
 echo "--> Releasing artifacts"
 echo "    Publishing pact@${VERSION}..."
-npm publish dist --access public --tag latest
-echo "    done!"
-
-echo "--> Creating pact-web package"
-sed "s/VERSION/${VERSION}/g" < package.json.web > dist-web/package.json
-# Copy TS types across
-types=( $(find dist -name "*.d.ts"  | sed 's/dist\///') )
-for type in "${types[@]}"; do
-  echo "    Copying ${type} => ./dist-web/${type}"
-  echo "creating dir: " $(dirname "./dist-web/${type}")
-  mkdir -p $(dirname "./dist-web/${type}")
-  cp -r "dist/${type}" "./dist-web/${type}"
-done
-
-echo "    Publishing pact-web@${VERSION}..."
-npm publish dist-web --access public --tag latest
+npm publish dist --access public --tag proxy-spike
 echo "    done!"
