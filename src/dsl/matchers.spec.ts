@@ -421,6 +421,7 @@ describe("Matcher", () => {
       it("should not fail", () => {
         expect(decimal(10.1)).to.be.an("object");
         expect(decimal()).to.be.an("object");
+        expect(decimal(0.00).contents).to.equal(0.00);
       });
     });
   });
@@ -430,6 +431,7 @@ describe("Matcher", () => {
       it("should not fail", () => {
         expect(integer(10)).to.be.an("object");
         expect(integer()).to.be.an("object");
+        expect(integer(0).contents).to.equal(0);
       });
     });
   });
