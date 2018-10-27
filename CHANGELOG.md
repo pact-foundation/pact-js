@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="7.0.2"></a>
+## [7.0.2](https://github.com/pact-foundation/pact-js/compare/v7.0.1...v7.0.2) (2018-10-27)
+
+
+### Bug Fixes
+
+* **graphql:** allow arbitrary operation names in GraphQL interface [#235](https://github.com/pact-foundation/pact-js/issues/235) ([16df628](https://github.com/pact-foundation/pact-js/commit/16df628))
+* **interaction-failure:** clear interactions on any verify() ([fbc5ac0](https://github.com/pact-foundation/pact-js/commit/fbc5ac0)), closes [#231](https://github.com/pact-foundation/pact-js/issues/231)
+* **matchers:** allow integers/decimals to be 0 ([#236](https://github.com/pact-foundation/pact-js/issues/236)) ([c40ce32](https://github.com/pact-foundation/pact-js/commit/c40ce32))
+
+
+
 <a name="7.0.1"></a>
 ## [7.0.1](https://github.com/pact-foundation/pact-js/compare/v7.0.0...v7.0.1) (2018-10-15)
 
