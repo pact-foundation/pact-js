@@ -171,7 +171,7 @@ export function hexadecimal(hex?: string) {
  * @param {float} float - a decimal value.
  */
 export function decimal(float?: number) {
-  return somethingLike<number>(float || 13.01);
+  return somethingLike<number>(isNil(float) ? 13.01 : float);
 }
 
 /**
@@ -179,7 +179,7 @@ export function decimal(float?: number) {
  * @param {integer} int - an int value.
  */
 export function integer(int?: number) {
-  return somethingLike<number>(int || 13);
+  return somethingLike<number>(isNil(int) ? 13 : int);
 }
 
 /**
