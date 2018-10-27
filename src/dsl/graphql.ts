@@ -3,18 +3,10 @@
  *
  * @module GraphQL
  */
-import { Interaction, ResponseOptions, RequestOptions, InteractionState, Query } from "../dsl/interaction";
-import { HTTPMethod, methods } from "../common/request";
-import { MatcherResult, regex } from "./matchers";
-import { keys, isNil, extend } from "lodash";
+import { Interaction, InteractionState } from "../dsl/interaction";
+import { regex } from "./matchers";
+import { isNil, extend } from "lodash";
 import gql from "graphql-tag";
-
-export type GraphQLOperation = "query" | "mutation" | null;
-
-enum GraphQLOperations {
-  query = "query",
-  mutation = "mutation",
-}
 
 export interface GraphQLVariables { [name: string]: any; }
 
@@ -22,18 +14,14 @@ export interface GraphQLVariables { [name: string]: any; }
  * GraphQL interface
  */
 export class GraphQLInteraction extends Interaction {
-  private operation: GraphQLOperation = null;
+  private operation: string;
   private variables: GraphQLVariables = {};
   private query: string;
 
   /**
    * The type of GraphQL operation. Generally not required.
    */
-  public withOperation(operation: GraphQLOperation) {
-    if (!operation || operation && keys(GraphQLOperations).indexOf(operation.toString()) < 0) {
-      throw new Error(`You must provide a valid HTTP method: ${keys(GraphQLOperations).join(", ")}.`);
-    }
-
+  public withOperation(operation: string) {
     this.operation = operation;
 
     return this;
@@ -93,9 +81,9 @@ export class GraphQLInteraction extends Interaction {
       throw new Error("You must provide a description for the query.");
     }
 
-    this.state.request = extend({
+    this.state.request =  extend({
       body: {
-        operationName: this.operation,
+        operationName: this.operation || null,
         query: regex({ generate: this.query, matcher: escapeGraphQlQuery(this.query) }),
         variables: this.variables,
       },
