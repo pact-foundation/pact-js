@@ -265,7 +265,7 @@ new Verifier().verifyProvider(opts).then(function () {
 | `pactUrls`                  |   true   | array of strings | Array of local Pact file paths or HTTP-based URLs (e.g. from a broker). Re`quired` if not using a Broker.                                      |
 | `pactBrokerUrl`             |  false   | string           | URL of the Pact Broker to retrieve pacts from. Required if not using pactUrls.                                                                 |
 | `tags`                      |  false   | array of strings | Array of tags, used to filter pacts from the Broker. Optional.                                                                                 |
-| `providerStatesSetupUrl`    |  false   | string           | URL to send PUT requests to setup a given provider state. Optional, required only if you provide a 'state' in any consumer tests.              |
+| `providerStatesSetupUrl`    |  false   | string           | URL to send POST requests to setup a given provider state. Optional, required only if you provide a 'state' in any consumer tests.              |
 | `pactBrokerUsername`        |  false   | string           | Username for Pact Broker basic authentication                                                                                                  |
 | `pactBrokerPassword`        |  false   | string           | Password for Pact Broker basic authentication                                                                                                  |
 | `publishVerificationResult` |  false   | boolean          | Publish verification result to Broker                                                                                                          |boolean
