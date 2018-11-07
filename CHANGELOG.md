@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="7.0.3"></a>
+## [7.0.3](https://github.com/pact-foundation/pact-js/compare/v7.0.2...v7.0.3) (2018-11-07)
+
+
+### Bug Fixes
+
+* apply logLevel to local logger ([6e31407](https://github.com/pact-foundation/pact-js/commit/6e31407))
+
+
+
 <a name="7.0.2"></a>
 ## [7.0.2](https://github.com/pact-foundation/pact-js/compare/v7.0.1...v7.0.2) (2018-10-27)
 
