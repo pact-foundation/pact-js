@@ -13,6 +13,7 @@ import { Interaction, InteractionObject } from "./dsl/interaction";
 import { isEmpty } from "lodash";
 import { isPortAvailable } from "./common/net";
 import logger from "./common/logger";
+import { LogLevels } from "@pact-foundation/pact-node/src/logger";
 import { MockService } from "./dsl/mockService";
 import { PactOptions, PactOptionsComplete } from "./dsl/options";
 import { Server } from "@pact-foundation/pact-node/src/server";
@@ -60,6 +61,7 @@ export class Pact {
       throw new Error("You must specify a Provider for this pact.");
     }
 
+    logger.level(this.opts.logLevel as LogLevels);
     serviceFactory.logLevel(this.opts.logLevel);
     this.server = serviceFactory.createServer({
       consumer: this.opts.consumer,
