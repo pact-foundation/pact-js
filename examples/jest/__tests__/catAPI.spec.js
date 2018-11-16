@@ -38,7 +38,7 @@ describe("Cat's API", () => {
       return provider.addInteraction(interaction)
     })
 
-    it('returns a successful body', done => {
+    it('returns a successful body', () => {
       return getMeCats({
           url,
           port
