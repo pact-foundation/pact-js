@@ -7,13 +7,12 @@ const getMeCats = require('../').getMeCats
 describe("Cat's API", () => {
   let url = 'http://localhost'
 
+  const EXPECTED_BODY = [
+    { cat: 2 }, { cat: 3 }
+  ]
+
   describe("another works", () => {
     beforeEach(() => {
-      // add expectations
-      const EXPECTED_BODY = [
-        { cat: 2 }, { cat: 3 }
-      ]
-
       const interaction = {
         state: 'i have a list of cats',
         uponReceiving: 'a request for cats with given catId',
