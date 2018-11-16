@@ -8,7 +8,7 @@ describe("Cat's API", () => {
   let url = 'http://localhost'
 
   describe("another works", () => {
-    it('returns a successful body', () => {
+    beforeEach(() => {
       // add expectations
       const EXPECTED_BODY = [
         { cat: 2 }, { cat: 3 }
@@ -37,19 +37,22 @@ describe("Cat's API", () => {
       }
 
       return provider.addInteraction(interaction)
-        .then(function () {
-          const response = await getMeCats({
-            url,
-            port
-          })
-
-          expect(response.headers['content-type']).toEqual('application/json')
-          expect(response.data).toEqual(EXPECTED_BODY)
-          expect(response.status).toEqual(200)
-        })
-        .then(function () {
-          return provider.verify()
-        })
     })
+
+    it('returns a successful body', done => {
+      return getMeCats({
+          url,
+          port
+        })
+      .then(response => {
+        expect(response.headers['content-type']).toEqual('application/json')
+        expect(response.data).toEqual(EXPECTED_BODY)
+        expect(response.status).toEqual(200)
+      })
+      .then(() => provider.verify())
+    })
+
+    // verify with Pact, and reset expectations
+    //afterEach(() => provider.verify())
   })
 })
