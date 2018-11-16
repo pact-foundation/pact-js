@@ -8,7 +8,7 @@ describe("Cat's API", () => {
   let url = 'http://localhost'
 
   describe("another works", () => {
-    it('returns a successful body', async () => {
+    it('returns a successful body', () => {
       // add expectations
       const EXPECTED_BODY = [
         { cat: 2 }, { cat: 3 }
@@ -36,18 +36,20 @@ describe("Cat's API", () => {
         }
       }
 
-      await provider.addInteraction(interaction)
+      return provider.addInteraction(interaction)
+        .then(function () {
+          const response = await getMeCats({
+            url,
+            port
+          })
 
-      const response = await getMeCats({
-        url,
-        port
-      })
-
-      expect(response.headers['content-type']).toEqual('application/json')
-      expect(response.data).toEqual(EXPECTED_BODY)
-      expect(response.status).toEqual(200)
-
-      return provider.verify()
+          expect(response.headers['content-type']).toEqual('application/json')
+          expect(response.data).toEqual(EXPECTED_BODY)
+          expect(response.status).toEqual(200)
+        })
+        .then(function () {
+          return provider.verify()
+        })
     })
   })
 })
