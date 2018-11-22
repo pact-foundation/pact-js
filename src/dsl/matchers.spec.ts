@@ -505,6 +505,7 @@ describe("Matcher", () => {
       describe("when given a valid iso8601DateTimeWithMillis", () => {
         it("should not fail", () => {
           expect(iso8601DateTimeWithMillis("2015-08-06T16:53:10.123+01:00")).to.be.an("object");
+          expect(iso8601DateTimeWithMillis("2015-08-06T16:53:10.537357Z")).to.be.an("object");
           expect(iso8601DateTimeWithMillis()).to.be.an("object");
         });
       });
