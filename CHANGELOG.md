@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="7.0.4"></a>
+## [7.0.4](https://github.com/pact-foundation/pact-js/compare/v7.0.3...v7.0.4) (2018-11-24)
+
+
+### Bug Fixes
+
+* **graphql:** omit variables and operation name if empty. Fixes [#243](https://github.com/pact-foundation/pact-js/issues/243) ([0ac2709](https://github.com/pact-foundation/pact-js/commit/0ac2709))
+* **vulnerabilities:** upgrade version of pact-node ([#244](https://github.com/pact-foundation/pact-js/issues/244)) ([d8214e6](https://github.com/pact-foundation/pact-js/commit/d8214e6))
+
+
+
 <a name="7.0.3"></a>
 ## [7.0.3](https://github.com/pact-foundation/pact-js/compare/v7.0.2...v7.0.3) (2018-11-07)
 
