@@ -26,12 +26,12 @@ describe("GraphQLInteraction", () => {
       });
     });
     describe("when no operation is provided", () => {
-      it("should marshal to null", () => {
+      it("should not be present in unmarshaled body", () => {
         interaction.uponReceiving("a request");
         interaction.withQuery("{ hello }");
 
         const json: any = interaction.json();
-        expect(json.request.body.operationName).to.eq(null);
+        expect(json.request.body).to.not.have.property("operationName");
       });
     });
     describe("when given an invalid operation", () => {
@@ -48,11 +48,21 @@ describe("GraphQLInteraction", () => {
         interaction.withOperation("query");
         interaction.withQuery("{ hello }");
         interaction.withVariables({
-          foo: "bar",
+          foo: "bar"
         });
 
         const json: any = interaction.json();
         expect(json.request.body.variables).to.deep.eq({ foo: "bar" });
+      });
+    });
+    describe("when no variables are provided", () => {
+      it("should not add the variables property to the payload", () => {
+        interaction.uponReceiving("a request");
+        interaction.withOperation("query");
+        interaction.withQuery("{ hello }");
+
+        const json: any = interaction.json();
+        expect(json.request.body).to.not.have.property("variables");
       });
     });
   });
@@ -63,13 +73,15 @@ describe("GraphQLInteraction", () => {
       interaction.withOperation("query");
       interaction.withQuery("{ hello }");
       interaction.withVariables({
-        foo: "bar",
+        foo: "bar"
       });
     });
 
     describe("when given an invalid query", () => {
       it("should fail with an error", () => {
-        expect(() => interaction.withQuery("{ not properly terminated")).to.throw(Error);
+        expect(() =>
+          interaction.withQuery("{ not properly terminated")
+        ).to.throw(Error);
       });
     });
 
@@ -101,7 +113,7 @@ describe("GraphQLInteraction", () => {
             }
           }`);
           interaction.withVariables({
-            name: "bar",
+            name: "bar"
           });
           const json: any = interaction.json();
 
@@ -110,9 +122,7 @@ describe("GraphQLInteraction", () => {
           const lotsOfWhitespace = `{             Hello(id: \$id) { name    } }`;
           expect(r.test(lotsOfWhitespace)).to.eq(true);
         });
-
       });
     });
   });
-
 });

@@ -5,7 +5,7 @@
  */
 import { Interaction, InteractionState } from "../dsl/interaction";
 import { regex } from "./matchers";
-import { isNil, extend } from "lodash";
+import { isNil, extend, omitBy, isEmpty } from "lodash";
 import gql from "graphql-tag";
 
 export interface GraphQLVariables { [name: string]: any; }
@@ -81,12 +81,12 @@ export class GraphQLInteraction extends Interaction {
       throw new Error("You must provide a description for the query.");
     }
 
-    this.state.request =  extend({
-      body: {
+    this.state.request = extend({
+      body: omitBy({
         operationName: this.operation || null,
         query: regex({ generate: this.query, matcher: escapeGraphQlQuery(this.query) }),
         variables: this.variables,
-      },
+      }, isEmpty),
       headers: { "content-type": "application/json" },
       method: "POST",
     }, this.state.request);
