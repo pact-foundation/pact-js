@@ -262,7 +262,7 @@ new Verifier().verifyProvider(opts).then(function () {
 | --------------------------- | :------: | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
 | `providerBaseUrl`           |   true   | string           | Running API provider host endpoint. Required.                                                                                                  |
 | `provider`                  |   true   | string           | Name of the Provider. Required.                                                                                                                |
-| `pactUrls`                  |   true   | array of strings | Array of local Pact file paths or HTTP-based URLs (e.g. from a broker). Re`quired` if not using a Broker.                                      |
+| `pactUrls`                  |   true   | array of strings | Array of local Pact file paths or HTTP-based URLs (e.g. from a broker). Required if not using a Broker.                                      |
 | `pactBrokerUrl`             |  false   | string           | URL of the Pact Broker to retrieve pacts from. Required if not using pactUrls.                                                                 |
 | `tags`                      |  false   | array of strings | Array of tags, used to filter pacts from the Broker. Optional.                                                                                 |
 | `providerStatesSetupUrl`    |  false   | string           | Optional URL to call with a POST request for each `providerState` defined in a pact (see below for more info).
