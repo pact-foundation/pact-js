@@ -1,8 +1,7 @@
 import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import { GraphQLInteraction } from "./graphql";
-import { Interaction } from "../pact";
-import { isMatcher, regex } from "./matchers";
+import { isMatcher } from "./matchers";
 
 chai.use(chaiAsPromised);
 const expect = chai.expect;
@@ -63,6 +62,17 @@ describe("GraphQLInteraction", () => {
 
         const json: any = interaction.json();
         expect(json.request.body).to.not.have.property("variables");
+      });
+    });
+    describe("when an empty variables object is presented", () => {
+      it("should add the variables property to the payload", () => {
+        interaction.uponReceiving("a request");
+        interaction.withOperation("query");
+        interaction.withQuery("{ hello }");
+        interaction.withVariables({})
+
+        const json: any = interaction.json();
+        expect(json.request.body).to.have.property("variables");
       });
     });
   });

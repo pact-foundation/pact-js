@@ -5,7 +5,7 @@
  */
 import { Interaction, InteractionState } from "../dsl/interaction";
 import { regex } from "./matchers";
-import { isNil, extend, omitBy, isEmpty } from "lodash";
+import { isNil, extend, omitBy, isUndefined } from "lodash";
 import gql from "graphql-tag";
 
 export interface GraphQLVariables { [name: string]: any; }
@@ -14,9 +14,9 @@ export interface GraphQLVariables { [name: string]: any; }
  * GraphQL interface
  */
 export class GraphQLInteraction extends Interaction {
-  private operation: string;
-  private variables: GraphQLVariables = {};
-  private query: string;
+  protected operation?: string | null = undefined;
+  protected variables?: GraphQLVariables = undefined;
+  protected query: string;
 
   /**
    * The type of GraphQL operation. Generally not required.
@@ -83,10 +83,10 @@ export class GraphQLInteraction extends Interaction {
 
     this.state.request = extend({
       body: omitBy({
-        operationName: this.operation || null,
+        operationName: this.operation,
         query: regex({ generate: this.query, matcher: escapeGraphQlQuery(this.query) }),
         variables: this.variables,
-      }, isEmpty),
+      }, isUndefined),
       headers: { "content-type": "application/json" },
       method: "POST",
     }, this.state.request);

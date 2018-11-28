@@ -1,4 +1,4 @@
-import { ApolloClient, HttpLink } from "apollo-boost";
+import { ApolloClient } from "apollo-boost";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import gql from "graphql-tag";
 import { createHttpLink } from "apollo-link-http";

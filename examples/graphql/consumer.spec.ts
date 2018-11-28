@@ -3,7 +3,8 @@ import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import { like, term } from "../../src/dsl/matchers";
 import { query } from "./consumer";
-import { Pact, GraphQLInteraction } from "../../src/pact";
+import { Pact, GraphQLInteraction, ApolloGraphQLInteraction } from "../../src/pact";
+// import gql from "graphql-tag";
 
 const path = require("path");
 const expect = chai.expect;
@@ -26,7 +27,11 @@ describe("GraphQL example", () => {
     before(() => {
       const graphqlQuery = new GraphQLInteraction()
         .uponReceiving("a hello request")
-        .withQuery(`query HelloQuery { hello }`)
+        .withQuery(`
+          query HelloQuery {
+            hello
+          }
+        `)
         .withOperation('HelloQuery')
         .withRequest({
           path: "/graphql",

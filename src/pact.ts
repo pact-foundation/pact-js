@@ -207,6 +207,7 @@ export * from "./dsl/verifier";
  * @static
  */
 export * from "./dsl/graphql";
+export * from "./dsl/apolloGraphql";
 
 /**
  * Exposes {@link Matchers}
