@@ -55,6 +55,7 @@ Read [Getting started with Pact] for more information for beginners.
     - [Match based on type](#match-based-on-type)
     - [Match based on arrays](#match-based-on-arrays)
     - [Match by regular expression](#match-by-regular-expression)
+  - [GraphQL API](#graphql-api)
   - [Tutorial (60 minutes)](#tutorial-60-minutes)
   - [Examples](#examples)
     - [HTTP APIs](#http-apis)
@@ -655,6 +656,14 @@ provider.addInteraction({
   }
 });
 ```
+
+## GraphQL API
+
+GraphQL is simply an abstraction over HTTP and may be tested via Paact. There are two wrapper APIs available for GraphQL specific testing: `GraphQLInteraction` and `ApolloGraphQLInteraction`.
+
+These are both lightweight wrappers over the standard DSL in order to make GraphQL testing a bit nicer.
+
+See the [history](https://github.com/pact-foundation/pact-js/issues/254#issuecomment-442185695), and below for an example.
 
 ## Tutorial (60 minutes)
 
