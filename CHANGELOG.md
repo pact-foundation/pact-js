@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="7.1.0"></a>
+# [7.1.0](https://github.com/pact-foundation/pact-js/compare/v7.0.4...v7.1.0) (2018-11-28)
+
+
+### Features
+
+* **apollo-graphql:** add Apollo specific GraphQL interface. Fixes [#254](https://github.com/pact-foundation/pact-js/issues/254) ([cab8328](https://github.com/pact-foundation/pact-js/commit/cab8328))
+
+
+
 <a name="7.0.4"></a>
 ## [7.0.4](https://github.com/pact-foundation/pact-js/compare/v7.0.3...v7.0.4) (2018-11-24)
 
