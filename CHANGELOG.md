@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="7.2.0"></a>
+# [7.2.0](https://github.com/pact-foundation/pact-js/compare/v7.1.0...v7.2.0) (2018-11-28)
+
+
+### Bug Fixes
+
+* remove done due to async test ([81e5510](https://github.com/pact-foundation/pact-js/commit/81e5510))
+* remove test guidelines ([04206c0](https://github.com/pact-foundation/pact-js/commit/04206c0))
+* variable scope ([3e985a3](https://github.com/pact-foundation/pact-js/commit/3e985a3))
+
+
+### Features
+
+* **examples:** add array bracket notation example to jest tests ([93c1572](https://github.com/pact-foundation/pact-js/commit/93c1572))
+* **isodate-matcher:** ensure minimum 3 precision on iso data matcher ([b9144bb](https://github.com/pact-foundation/pact-js/commit/b9144bb))
+
+
+
 <a name="7.1.0"></a>
 # [7.1.0](https://github.com/pact-foundation/pact-js/compare/v7.0.4...v7.1.0) (2018-11-28)
 
