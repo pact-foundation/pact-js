@@ -15,20 +15,20 @@ describe("Net", () => {
   describe("#isPortAvailable", () => {
     context("when the port is not allowed to be bound", () => {
       it("should return a rejected promise", () => {
-        expect(isPortAvailable(specialPort, host)).to.eventually.be.rejected;
+        return expect(isPortAvailable(specialPort, host)).to.eventually.be.rejected;
       });
     });
 
     context("when the port is available", () => {
-      it("should return a fulfilled promise", () => {
-        expect(isPortAvailable(port + 1, host)).to.eventually.be.fulfilled;
+      it("should return a fulfilled promise",  () => {
+        return expect(isPortAvailable(port, host)).to.eventually.be.fulfilled;
       });
     });
 
     context("when the port is unavailable", () => {
       it("should return a rejected promise", () => {
         createServer(port).then((_: { close(): any }) => {
-          expect(isPortAvailable(port, host)).to.eventually.be.rejected;
+          return expect(isPortAvailable(port, host)).to.eventually.be.rejected;
         });
       });
     });

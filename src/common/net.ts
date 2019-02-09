@@ -21,7 +21,7 @@ const portCheck = (port: number, host: string): Promise<void> => {
       .listen({ port, host, exclusive: true })
       .on("error", (e: any) => {
         if (e.code === "EADDRINUSE") {
-          reject(new Error(`Port ${port} is unavailable`))
+          reject(new Error(`Port ${port} is unavailable on address ${host}`))
         } else {
           reject(e);
         }
