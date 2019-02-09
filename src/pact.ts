@@ -92,7 +92,7 @@ export class Pact {
   public setup(): Promise<void> {
     return isPortAvailable(this.opts.port, this.opts.host)
       // Need to wrap it this way until we remove q.Promise from pact-node
-      .then(() => new Promise<void>((resolve, reject) => this.server.start().then(() => resolve(), () => reject())));
+      .then(() => new Promise<void>((resolve, reject) => this.server.start().then(() => resolve(), (e: any) => reject(e))))
   }
 
   /**
