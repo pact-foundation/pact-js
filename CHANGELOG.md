@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="7.3.0"></a>
+# [7.3.0](https://github.com/pact-foundation/pact-js/compare/v7.2.0...v7.3.0) (2019-02-09)
+
+
+### Bug Fixes
+
+* **port-check:** make port check more resilient. Fixes [#49](https://github.com/pact-foundation/pact-js/issues/49) ([ee0aa71](https://github.com/pact-foundation/pact-js/commit/ee0aa71))
+
+
+### Features
+
+* **configuration:** return configuration from setup() ([11af9e4](https://github.com/pact-foundation/pact-js/commit/11af9e4)), closes [#259](https://github.com/pact-foundation/pact-js/issues/259)
+
+
+
 <a name="7.2.0"></a>
 # [7.2.0](https://github.com/pact-foundation/pact-js/compare/v7.1.0...v7.2.0) (2018-11-28)
 
