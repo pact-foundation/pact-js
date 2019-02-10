@@ -216,18 +216,19 @@ export function eachLike<T>(content: T, opts?: { min: number }) {
     )
   }
 
+  const min = (!isEmpty(opts) && opts) ? opts.min : 1
+
   return {
     contents: content,
     getValue: () => {
       const data = []
-      const min = isUndefined(opts) ? 1 : opts.min
       for (let i = 0; i < min; i++) {
         data[i] = content
       }
       return data
     },
     json_class: "Pact::ArrayLike",
-    min: isUndefined(opts) ? 1 : opts.min,
+    min
   }
 }
 
