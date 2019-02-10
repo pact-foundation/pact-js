@@ -1,5 +1,3 @@
-// const axios = require("axios");
-
 // This is your message handler function.
 // It expects to receive a valid "dog" object
 // and returns a failed promise if not

@@ -1,4 +1,4 @@
-import { GraphQLInteraction } from './graphql'
+import { GraphQLInteraction } from "./graphql"
 
 export class ApolloGraphQLInteraction extends GraphQLInteraction {
   constructor() {

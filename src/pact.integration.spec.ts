@@ -12,7 +12,9 @@ const expect = chai.expect
 const { eachLike, like, term } = Matchers
 
 describe("Integration", () => {
-  ["http", "https"].forEach(protocol => {
+  const protocols = ["http", "https"]
+
+  protocols.forEach(protocol => {
     describe(`Pact on ${protocol} protocol`, () => {
       const MOCK_PORT = Math.floor(Math.random() * 999) + 9000
       const PROVIDER_URL = `${protocol}://localhost:${MOCK_PORT}`

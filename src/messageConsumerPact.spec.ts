@@ -103,9 +103,10 @@ describe("MessageConsumer", () => {
           consumer: "myconsumer",
           provider: "myprovider",
         })
+        const stub = stubbedConsumer as any
 
         // Stub out service factory
-        ; (stubbedConsumer as any).getServiceFactory = () => {
+        stub.getServiceFactory = () => {
           return {
             createMessage: (opts: any) => Promise.resolve("message created"),
           }
