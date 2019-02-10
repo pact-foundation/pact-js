@@ -451,6 +451,7 @@ describe("Matcher", () => {
       it("should not fail", () => {
         expect(decimal(10.1)).to.be.an("object")
         expect(decimal()).to.be.an("object")
+        expect(decimal(0.0).contents).to.equal(0.0)
       })
     })
   })
@@ -460,6 +461,7 @@ describe("Matcher", () => {
       it("should not fail", () => {
         expect(integer(10)).to.be.an("object")
         expect(integer()).to.be.an("object")
+        expect(integer(0).contents).to.equal(0)
       })
     })
   })
@@ -538,6 +540,9 @@ describe("Matcher", () => {
         it("should not fail", () => {
           expect(
             iso8601DateTimeWithMillis("2015-08-06T16:53:10.123+01:00")
+          ).to.be.an("object")
+          expect(
+            iso8601DateTimeWithMillis("2015-08-06T16:53:10.537357Z")
           ).to.be.an("object")
           expect(iso8601DateTimeWithMillis()).to.be.an("object")
         })

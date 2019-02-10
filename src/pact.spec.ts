@@ -113,7 +113,7 @@ describe("Pact", () => {
           startStub.rejects()
           const b = (Object.create(Pact.prototype) as any) as PactType
           b.opts = fullOpts
-          b.server = { start: startStub } as any
+          b.server = { start: startStub, options: { port: 1234 } } as any
           return expect(b.setup()).to.eventually.be.rejected
         })
       })
@@ -125,8 +125,29 @@ describe("Pact", () => {
         startStub.resolves()
         const b = (Object.create(Pact.prototype) as any) as PactType
         b.opts = fullOpts
-        b.server = { start: startStub } as any
+        b.server = { start: startStub, options: { port: 1234 } } as any
         return expect(b.setup()).to.eventually.be.fulfilled
+      })
+    })
+    describe("when server is properly configured", () => {
+      it("should return the current configuration", () => {
+        // TODO: actually test is pact-node is starting instead of stubbing it
+        const startStub = sandbox.stub(PactServer.prototype, "start")
+        startStub.resolves()
+        const b = (Object.create(Pact.prototype) as any) as PactType
+        b.opts = fullOpts
+        b.server = { start: startStub, options: { port: 1234 } } as any
+        return expect(b.setup()).to.eventually.include({
+          consumer: "A",
+          provider: "B",
+          port: 1234,
+          host: "127.0.0.1",
+          ssl: false,
+          logLevel: "info",
+          spec: 2,
+          cors: false,
+          pactfileWriteMode: "overwrite",
+        })
       })
     })
   })
@@ -255,7 +276,7 @@ describe("Pact", () => {
         return Promise.all([
           expect(verifyPromise).to.eventually.be.rejectedWith(Error),
           verifyPromise.catch(() =>
-            expect(removeInteractionsStub).to.callCount(0)
+            expect(removeInteractionsStub).to.callCount(1)
           ),
         ])
       })

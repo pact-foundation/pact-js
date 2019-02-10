@@ -2,6 +2,92 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="7.3.0"></a>
+# [7.3.0](https://github.com/pact-foundation/pact-js/compare/v7.2.0...v7.3.0) (2019-02-09)
+
+
+### Bug Fixes
+
+* **port-check:** make port check more resilient. Fixes [#49](https://github.com/pact-foundation/pact-js/issues/49) ([ee0aa71](https://github.com/pact-foundation/pact-js/commit/ee0aa71))
+
+
+### Features
+
+* **configuration:** return configuration from setup() ([11af9e4](https://github.com/pact-foundation/pact-js/commit/11af9e4)), closes [#259](https://github.com/pact-foundation/pact-js/issues/259)
+
+
+
+<a name="7.2.0"></a>
+# [7.2.0](https://github.com/pact-foundation/pact-js/compare/v7.1.0...v7.2.0) (2018-11-28)
+
+
+### Bug Fixes
+
+* remove done due to async test ([81e5510](https://github.com/pact-foundation/pact-js/commit/81e5510))
+* remove test guidelines ([04206c0](https://github.com/pact-foundation/pact-js/commit/04206c0))
+* variable scope ([3e985a3](https://github.com/pact-foundation/pact-js/commit/3e985a3))
+
+
+### Features
+
+* **examples:** add array bracket notation example to jest tests ([93c1572](https://github.com/pact-foundation/pact-js/commit/93c1572))
+* **isodate-matcher:** ensure minimum 3 precision on iso data matcher ([b9144bb](https://github.com/pact-foundation/pact-js/commit/b9144bb))
+
+
+
+<a name="7.1.0"></a>
+# [7.1.0](https://github.com/pact-foundation/pact-js/compare/v7.0.4...v7.1.0) (2018-11-28)
+
+
+### Features
+
+* **apollo-graphql:** add Apollo specific GraphQL interface. Fixes [#254](https://github.com/pact-foundation/pact-js/issues/254) ([cab8328](https://github.com/pact-foundation/pact-js/commit/cab8328))
+
+
+
+<a name="7.0.4"></a>
+## [7.0.4](https://github.com/pact-foundation/pact-js/compare/v7.0.3...v7.0.4) (2018-11-24)
+
+
+### Bug Fixes
+
+* **graphql:** omit variables and operation name if empty. Fixes [#243](https://github.com/pact-foundation/pact-js/issues/243) ([0ac2709](https://github.com/pact-foundation/pact-js/commit/0ac2709))
+* **vulnerabilities:** upgrade version of pact-node ([#244](https://github.com/pact-foundation/pact-js/issues/244)) ([d8214e6](https://github.com/pact-foundation/pact-js/commit/d8214e6))
+
+
+
+<a name="7.0.3"></a>
+## [7.0.3](https://github.com/pact-foundation/pact-js/compare/v7.0.2...v7.0.3) (2018-11-07)
+
+
+### Bug Fixes
+
+* apply logLevel to local logger ([6e31407](https://github.com/pact-foundation/pact-js/commit/6e31407))
+
+
+
+<a name="7.0.2"></a>
+## [7.0.2](https://github.com/pact-foundation/pact-js/compare/v7.0.1...v7.0.2) (2018-10-27)
+
+
+### Bug Fixes
+
+* **graphql:** allow arbitrary operation names in GraphQL interface [#235](https://github.com/pact-foundation/pact-js/issues/235) ([16df628](https://github.com/pact-foundation/pact-js/commit/16df628))
+* **interaction-failure:** clear interactions on any verify() ([fbc5ac0](https://github.com/pact-foundation/pact-js/commit/fbc5ac0)), closes [#231](https://github.com/pact-foundation/pact-js/issues/231)
+* **matchers:** allow integers/decimals to be 0 ([#236](https://github.com/pact-foundation/pact-js/issues/236)) ([c40ce32](https://github.com/pact-foundation/pact-js/commit/c40ce32))
+
+
+
+<a name="7.0.1"></a>
+## [7.0.1](https://github.com/pact-foundation/pact-js/compare/v7.0.0...v7.0.1) (2018-10-15)
+
+
+### Bug Fixes
+
+* **api:** repair incorrect absolute import to 'pact'. Fixes [#229](https://github.com/pact-foundation/pact-js/issues/229) ([aa22fae](https://github.com/pact-foundation/pact-js/commit/aa22fae))
+
+
+
 <a name="7.0.0"></a>
 # [7.0.0](https://github.com/pact-foundation/pact-js/compare/v6.0.2...v7.0.0) (2018-10-09)
 

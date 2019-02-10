@@ -13,11 +13,10 @@ chai.use(chaiAsPromised)
 
 describe("The Dog API", () => {
   const url = "http://localhost"
-  const port = 8993
-  const dogService = new DogService({ url, port })
+  let dogService: DogService
 
   const provider = new Pact({
-    port,
+    // port,
     log: path.resolve(process.cwd(), "logs", "mockserver-integration.log"),
     dir: path.resolve(process.cwd(), "pacts"),
     spec: 2,
@@ -28,7 +27,11 @@ describe("The Dog API", () => {
 
   const EXPECTED_BODY = [{ dog: 1 }, { dog: 2 }]
 
-  before(() => provider.setup())
+  before(() =>
+    provider.setup().then(opts => {
+      dogService = new DogService({ url, port: opts.port })
+    })
+  )
 
   after(() => provider.finalize())
 

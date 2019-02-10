@@ -4,6 +4,7 @@ import * as chaiAsPromised from "chai-as-promised"
 import { like } from "../../src/dsl/matchers"
 import { query } from "./consumer"
 import { Pact, GraphQLInteraction } from "../../src/pact"
+// import gql from "graphql-tag";
 
 const path = require("path")
 const expect = chai.expect
@@ -26,7 +27,14 @@ describe("GraphQL example", () => {
     before(() => {
       const graphqlQuery = new GraphQLInteraction()
         .uponReceiving("a hello request")
-        .withQuery(`{ hello }`)
+        .withQuery(
+          `
+          query HelloQuery {
+            hello
+          }
+        `
+        )
+        .withOperation("HelloQuery")
         .withRequest({
           path: "/graphql",
           method: "POST",

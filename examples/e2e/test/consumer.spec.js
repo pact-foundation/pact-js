@@ -3,7 +3,6 @@ const chai = require("chai")
 const chaiAsPromised = require("chai-as-promised")
 const expect = chai.expect
 const { Pact, Matchers } = require("../../../dist/pact")
-const MOCK_SERVER_PORT = 1234
 const LOG_LEVEL = process.env.LOG_LEVEL || "WARN"
 
 chai.use(chaiAsPromised)
@@ -12,7 +11,7 @@ describe("Pact", () => {
   const provider = new Pact({
     consumer: "Matching Service",
     provider: "Animal Profile Service",
-    port: MOCK_SERVER_PORT,
+    // port: 1234, // You can set the port explicitly here or dynamically (see setup() below)
     log: path.resolve(process.cwd(), "logs", "mockserver-integration.log"),
     dir: path.resolve(process.cwd(), "pacts"),
     logLevel: LOG_LEVEL,
@@ -85,7 +84,12 @@ describe("Pact", () => {
   // to act like the Provider
   // It also sets up expectations for what requests are to come, and will fail
   // if the calls are not seen.
-  before(() => provider.setup())
+  before(() =>
+    provider.setup().then(opts => {
+      // Get a dynamic port from the runtime
+      process.env.API_HOST = `http://localhost:${opts.port}`
+    })
+  )
 
   // After each individual test (one or more interactions)
   // we validate that the correct request came through.
@@ -95,7 +99,7 @@ describe("Pact", () => {
 
   // Configure and import consumer API
   // Note that we update the API endpoint to point at the Mock Service
-  process.env.API_HOST = `http://localhost:${MOCK_SERVER_PORT}`
+
   const {
     createMateForDates,
     suggestion,

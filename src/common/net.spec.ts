@@ -8,35 +8,28 @@ const expect = chai.expect
 chai.use(chaiAsPromised)
 
 describe("Net", () => {
-  const port = 1234
+  const port = 4567
   const host = "0.0.0.0"
   const specialPort = process.platform.match("win") ? -1 : 80
 
   describe("#isPortAvailable", () => {
     context("when the port is not allowed to be bound", () => {
       it("should return a rejected promise", () => {
-        expect(isPortAvailable(specialPort, host)).to.eventually.be.rejected
+        return expect(isPortAvailable(specialPort, host)).to.eventually.be
+          .rejected
       })
     })
 
     context("when the port is available", () => {
       it("should return a fulfilled promise", () => {
-        expect(isPortAvailable(port, host)).to.eventually.be.fulfilled
+        return expect(isPortAvailable(port, host)).to.eventually.be.fulfilled
       })
     })
 
     context("when the port is unavailable", () => {
-      it("should return a rejected promise", done => {
-        createServer(port).then((server: { close(): any }) => {
-          isPortAvailable(port, host).then(
-            () => {
-              server.close()
-              done(new Error(`Port ${port} should not be available`))
-            },
-            (e: any) => {
-              done()
-            }
-          )
+      it("should return a rejected promise", () => {
+        createServer(port).then((_: { close(): any }) => {
+          return expect(isPortAvailable(port, host)).to.eventually.be.rejected
         })
       })
     })

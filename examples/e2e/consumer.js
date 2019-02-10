@@ -1,20 +1,21 @@
 const express = require("express")
 const request = require("superagent")
 const server = express()
-const API_HOST = process.env.API_HOST || "http://localhost:8081"
+
+const getApiEndpoint = () => process.env.API_HOST || "http://localhost:8081"
 
 // Fetch animals who are currently 'available' from the
 // Animal Service
 const availableAnimals = () => {
   return request
-    .get(`${API_HOST}/animals/available`)
+    .get(`${getApiEndpoint()}/animals/available`)
     .then(res => res.body, () => [])
 }
 
 // Find animals by their ID from the Animal Service
 const getAnimalById = id => {
   return request
-    .get(`${API_HOST}/animals/${id}`)
+    .get(`${getApiEndpoint()}/animals/${id}`)
     .then(res => res.body, () => null)
 }
 
@@ -53,7 +54,7 @@ const suggestion = mate => {
 // Creates a mate for suggestions
 const createMateForDates = mate => {
   return request
-    .post(`${API_HOST}/animals`)
+    .post(`${getApiEndpoint()}/animals`)
     .send(mate)
     .set("Content-Type", "application/json; charset=utf-8")
 }
@@ -65,7 +66,7 @@ server.get("/suggestions/:animalId", (req, res) => {
     res.end()
   }
 
-  request(`${API_HOST}/animals/${req.params.animalId}`, (err, r) => {
+  request(`${getApiEndpoint()}/animals/${req.params.animalId}`, (err, r) => {
     if (!err && r.statusCode === 200) {
       suggestion(r.body).then(suggestions => {
         res.json(suggestions)

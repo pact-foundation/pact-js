@@ -14,7 +14,7 @@ export const ISO8601_DATE_FORMAT =
 export const ISO8601_DATETIME_FORMAT =
   "^\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d([+-][0-2]\\d:[0-5]\\d|Z)$"
 export const ISO8601_DATETIME_WITH_MILLIS_FORMAT =
-  "^\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d\\.\\d{3}([+-][0-2]\\d:[0-5]\\d|Z)$"
+  "^\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d\\.\\d{3,}([+-][0-2]\\d:[0-5]\\d|Z)$"
 export const ISO8601_TIME_FORMAT =
   "^(T\\d\\d:\\d\\d(:\\d\\d)?(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?)?$"
 export const RFC3339_TIMESTAMP_FORMAT =
@@ -35,6 +35,61 @@ export const HEX_FORMAT = "^[0-9a-fA-F]+$"
 export function validateExample(example: string, matcher: string): boolean {
   // Note we escape the double \\ as these get sent over the wire as JSON
   return new RegExp(matcher.replace("\\\\", "\\")).test(example)
+}
+
+/**
+ * The eachLike matcher
+ * @param {any} content
+ * @param {Object} opts
+ * @param {Number} opts.min
+ */
+export function eachLike<T>(content: T, opts?: { min: number }) {
+  if (isUndefined(content)) {
+    throw new Error(
+      "Error creating a Pact eachLike. Please provide a content argument"
+    )
+  }
+
+  if (opts && (isNil(opts.min) || opts.min < 1)) {
+    throw new Error(
+      "Error creating a Pact eachLike. Please provide opts.min that is > 0"
+    )
+  }
+
+  const min = !isEmpty(opts) && opts ? opts.min : 1
+
+  return {
+    contents: content,
+    getValue: () => {
+      const data = []
+      for (let i = 0; i < min; i++) {
+        data[i] = content
+      }
+      return data
+    },
+    json_class: "Pact::ArrayLike",
+    min,
+  }
+}
+
+/**
+ * The somethingLike matcher
+ * @param {any} value - the value to be somethingLike
+ */
+export function somethingLike<T>(value: T) {
+  if (isNil(value) || isFunction(value)) {
+    throw new Error(
+      "Error creating a Pact somethingLike Match. Value cannot be a function or undefined"
+    )
+  }
+
+  return {
+    contents: value,
+    getValue: () => {
+      return value
+    },
+    json_class: "Pact::SomethingLike",
+  }
 }
 
 /**
@@ -179,7 +234,7 @@ export function hexadecimal(hex?: string) {
  * @param {float} float - a decimal value.
  */
 export function decimal(float?: number) {
-  return somethingLike<number>(float || 13.01)
+  return somethingLike<number>(isNil(float) ? 13.01 : float)
 }
 
 /**
@@ -187,7 +242,7 @@ export function decimal(float?: number) {
  * @param {integer} int - an int value.
  */
 export function integer(int?: number) {
-  return somethingLike<number>(int || 13)
+  return somethingLike<number>(isNil(int) ? 13 : int)
 }
 
 /**
@@ -197,61 +252,6 @@ export function boolean() {
   return somethingLike<boolean>(true)
 }
 
-/**
- * The eachLike matcher
- * @param {any} content
- * @param {Object} opts
- * @param {Number} opts.min
- */
-export function eachLike<T>(content: T, opts?: { min: number }) {
-  if (isUndefined(content)) {
-    throw new Error(
-      "Error creating a Pact eachLike. Please provide a content argument"
-    )
-  }
-
-  if (opts && (isNil(opts.min) || opts.min < 1)) {
-    throw new Error(
-      "Error creating a Pact eachLike. Please provide opts.min that is > 0"
-    )
-  }
-
-  const min = (!isEmpty(opts) && opts) ? opts.min : 1
-
-  return {
-    contents: content,
-    getValue: () => {
-      const data = []
-      for (let i = 0; i < min; i++) {
-        data[i] = content
-      }
-      return data
-    },
-    json_class: "Pact::ArrayLike",
-    min
-  }
-}
-
-/**
- * The somethingLike matcher
- * @param {any} value - the value to be somethingLike
- */
-export function somethingLike<T>(value: T) {
-  if (isNil(value) || isFunction(value)) {
-    throw new Error(
-      "Error creating a Pact somethingLike Match. Value cannot be a function or undefined"
-    )
-  }
-
-  return {
-    contents: value,
-    getValue: () => {
-      return value
-    },
-    json_class: "Pact::SomethingLike",
-  }
-}
-
 // Convenience alias'
 export { somethingLike as like }
 export { term as regex }
@@ -259,6 +259,10 @@ export { term as regex }
 export interface MatcherResult {
   json_class: string
   getValue(): any
+}
+
+export function isMatcher(x: MatcherResult | any): x is MatcherResult {
+  return (x as MatcherResult).getValue !== undefined
 }
 
 // Recurse the object removing any underlying matching guff, returning
@@ -285,7 +289,4 @@ export function extractPayload(obj: any, stack: any = {}): any {
   }
 
   return stack
-}
-export function isMatcher(x: MatcherResult | any): x is MatcherResult {
-  return (x as MatcherResult).getValue !== undefined
 }

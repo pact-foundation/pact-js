@@ -3,6 +3,6 @@ env:
   node: true
   mocha: true
 extends:
-  - plugin:prettier/recommended"
+  - prettier/recommended
 rules:
-  comma-dangle: "always-multiline"
+  comma-dangle: [2, "always-multiline"]

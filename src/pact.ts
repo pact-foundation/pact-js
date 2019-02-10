@@ -13,6 +13,7 @@ import { Interaction, InteractionObject } from "./dsl/interaction"
 import { isEmpty } from "lodash"
 import { isPortAvailable } from "./common/net"
 import logger from "./common/logger"
+import { LogLevels } from "@pact-foundation/pact-node/src/logger"
 import { MockService } from "./dsl/mockService"
 import { PactOptions, PactOptionsComplete } from "./dsl/options"
 import { Server } from "@pact-foundation/pact-node/src/server"
@@ -24,7 +25,6 @@ import { Server } from "@pact-foundation/pact-node/src/server"
  * @param {PactOptions} opts
  * @return {@link PactProvider}
  */
-// TODO: move this to its own module
 export class Pact {
   public static defaults = {
     consumer: "",
@@ -34,7 +34,6 @@ export class Pact {
     log: path.resolve(process.cwd(), "logs", "pact.log"),
     logLevel: "info",
     pactfileWriteMode: "overwrite",
-    port: 1234,
     provider: "",
     spec: 2,
     ssl: false,
@@ -62,6 +61,7 @@ export class Pact {
       throw new Error("You must specify a Provider for this pact.")
     }
 
+    logger.level(this.opts.logLevel as LogLevels)
     serviceFactory.logLevel(this.opts.logLevel)
     this.server = serviceFactory.createServer({
       consumer: this.opts.consumer,
@@ -70,44 +70,26 @@ export class Pact {
       host: this.opts.host,
       log: this.opts.log,
       pactFileWriteMode: this.opts.pactfileWriteMode,
-      port: this.opts.port,
+      port: config.port, // allow to be undefined
       provider: this.opts.provider,
       spec: this.opts.spec,
       ssl: this.opts.ssl,
       sslcert: this.opts.sslcert,
       sslkey: this.opts.sslkey,
     })
-
-    logger.info(`Setting up Pact with Consumer "${
-      this.opts.consumer
-    }" and Provider "${this.opts.provider}"
-   using mock service on Port: "${this.opts.port}"`)
-
-    this.mockService = new MockService(
-      undefined,
-      undefined,
-      this.opts.port,
-      this.opts.host,
-      this.opts.ssl,
-      this.opts.pactfileWriteMode
-    )
   }
 
   /**
    * Start the Mock Server.
    * @returns {Promise}
    */
-  public setup(): Promise<void> {
-    return (
-      isPortAvailable(this.opts.port, this.opts.host)
-        // Need to wrap it this way until we remove q.Promise from pact-node
-        .then(
-          () =>
-            new Promise<void>((resolve, reject) =>
-              this.server.start().then(() => resolve(), () => reject())
-            )
-        )
-    )
+  public setup(): Promise<PactOptionsComplete> {
+    return this.checkPort()
+      .then(() => this.startServer())
+      .then(opts => {
+        this.setupMockService()
+        return Promise.resolve(opts)
+      })
   }
 
   /**
@@ -154,9 +136,11 @@ export class Pact {
         console.error(clc.red(e))
         /* tslint:enable: */
 
-        throw new Error(
-          "Pact verification failed - expected interactions did not match actual."
-        )
+        return this.mockService.removeInteractions().then(() => {
+          throw new Error(
+            "Pact verification failed - expected interactions did not match actual."
+          )
+        })
       })
   }
 
@@ -219,6 +203,41 @@ export class Pact {
   public removeInteractions(): Promise<string> {
     return this.mockService.removeInteractions()
   }
+
+  private checkPort(): Promise<void> {
+    if (this.server && this.server.options.port) {
+      return isPortAvailable(this.server.options.port, this.opts.host)
+    }
+    return Promise.resolve()
+  }
+
+  private setupMockService(): void {
+    logger.info(`Setting up Pact with Consumer "${
+      this.opts.consumer
+    }" and Provider "${this.opts.provider}"
+    using mock service on Port: "${this.opts.port}"`)
+
+    this.mockService = new MockService(
+      undefined,
+      undefined,
+      this.opts.port,
+      this.opts.host,
+      this.opts.ssl,
+      this.opts.pactfileWriteMode
+    )
+  }
+
+  private startServer(): Promise<PactOptionsComplete> {
+    return new Promise<PactOptionsComplete>((resolve, reject) =>
+      this.server.start().then(
+        () => {
+          this.opts.port = this.server.options.port || this.opts.port
+          resolve(this.opts)
+        },
+        (e: any) => reject(e)
+      )
+    )
+  }
 }
 
 export * from "./messageConsumerPact"
@@ -238,6 +257,7 @@ export * from "./dsl/verifier"
  * @static
  */
 export * from "./dsl/graphql"
+export * from "./dsl/apolloGraphql"
 
 /**
  * Exposes {@link Matchers}
