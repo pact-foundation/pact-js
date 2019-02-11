@@ -2,18 +2,18 @@
  * @module Message
  */
 
-import { omit, isEmpty } from "lodash";
-import { Verifier } from "./dsl/verifier";
-import { Message } from "./dsl/message";
-import logger from "./common/logger";
-import { VerifierOptions } from "@pact-foundation/pact-node";
-import { MessageProviderOptions } from "./dsl/options";
-import serviceFactory from "@pact-foundation/pact-node";
-import * as express from "express";
-import * as http from "http";
-import { MessageProvider } from "./pact";
+import { omit, isEmpty } from "lodash"
+import { Verifier } from "./dsl/verifier"
+import { Message } from "./dsl/message"
+import logger from "./common/logger"
+import { VerifierOptions } from "@pact-foundation/pact-node"
+import { MessageProviderOptions } from "./dsl/options"
+import serviceFactory from "@pact-foundation/pact-node"
+import * as express from "express"
+import * as http from "http"
+import { MessageProvider } from "./pact"
 
-const bodyParser = require("body-parser");
+const bodyParser = require("body-parser")
 
 /**
  * A Message Provider is analagous to Consumer in the HTTP Interaction model.
@@ -22,14 +22,12 @@ const bodyParser = require("body-parser");
  * of the interaction to respond - just in this case, not immediately.
  */
 export class MessageProviderPact {
-  private state: any = {};
-
   constructor(private config: MessageProviderOptions) {
     if (config.logLevel && !isEmpty(config.logLevel)) {
-      serviceFactory.logLevel(config.logLevel);
-      logger.level(config.logLevel);
+      serviceFactory.logLevel(config.logLevel)
+      logger.level(config.logLevel)
     } else {
-      logger.level();
+      logger.level()
     }
   }
 
@@ -37,28 +35,28 @@ export class MessageProviderPact {
    * Verify a Message Provider.
    */
   public verify(): Promise<any> {
-    logger.info("Verifying message");
+    logger.info("Verifying message")
 
     // Start the verification CLI proxy server
-    const app = this.setupProxyApplication();
-    const server = this.setupProxyServer(app);
+    const app = this.setupProxyApplication()
+    const server = this.setupProxyServer(app)
 
     // Run the verification once the proxy server is available
     return this.waitForServerReady(server)
       .then(this.runProviderVerification())
-      .then((result) => {
-        server.close();
-        return result;
-      });
+      .then(result => {
+        server.close()
+        return result
+      })
   }
 
   // Listens for the server start event
   // Converts event Emitter to a Promise
   private waitForServerReady(server: http.Server): Promise<http.Server> {
     return new Promise((resolve, reject) => {
-      server.on("listening", () => resolve(server));
-      server.on("error", () => reject());
-    });
+      server.on("listening", () => resolve(server))
+      server.on("error", () => reject())
+    })
   }
 
   // Run the Verification CLI process
@@ -67,91 +65,90 @@ export class MessageProviderPact {
       const opts = {
         ...omit(this.config, "handlers"),
         ...{ providerBaseUrl: "http://localhost:" + server.address().port },
-      } as VerifierOptions;
+      } as VerifierOptions
 
       // Run verification
-      return new Verifier(opts).verifyProvider();
-    };
+      // TODO: backwards incompatible change here
+      return new Verifier(opts).verifyProvider()
+    }
   }
 
   // Get the API handler for the verification CLI process to invoke on POST /*
   private setupVerificationHandler(): (
     req: express.Request,
-    res: express.Response,
+    res: express.Response
   ) => void {
     return (req, res) => {
       // Extract the message request from the API
-      const message: Message = req.body;
+      const message: Message = req.body
 
       // Invoke the handler, and return the JSON response body
       // wrapped in a Message
       this.setupStates(message)
         .then(() => this.findHandler(message))
-        .then((handler) => handler(message))
-        .then((o) => res.json({ contents: o }))
-        .catch((e) => res.status(500).send(e));
-    };
+        .then(handler => handler(message))
+        .then(o => res.json({ contents: o }))
+        .catch(e => res.status(500).send(e))
+    }
   }
 
   // Get the Proxy we'll pass to the CLI for verification
   private setupProxyServer(
-    app: (request: http.IncomingMessage, response: http.ServerResponse) => void,
+    app: (request: http.IncomingMessage, response: http.ServerResponse) => void
   ): http.Server {
-    return http.createServer(app).listen();
+    return http.createServer(app).listen()
   }
 
   // Get the Express app that will run on the HTTP Proxy
   private setupProxyApplication(): express.Express {
-    const app = express();
+    const app = express()
 
-    app.use(bodyParser.json());
-    app.use(
-      bodyParser.urlencoded({ extended: true }),
-    );
+    app.use(bodyParser.json())
+    app.use(bodyParser.urlencoded({ extended: true }))
     app.use((req, res, next) => {
-      res.header("Content-Type", "application/json; charset=utf-8");
-      next();
-    });
+      res.header("Content-Type", "application/json; charset=utf-8")
+      next()
+    })
 
     // Proxy server will respond to Verifier process
-    app.all("/*", this.setupVerificationHandler());
+    app.all("/*", this.setupVerificationHandler())
 
-    return app;
+    return app
   }
 
   // Lookup the handler based on the description, or get the default handler
   private setupStates(message: Message): Promise<any> {
-    const promises: Array<Promise<any>> = new Array();
+    const promises: Array<Promise<any>> = new Array()
 
     if (message.providerStates) {
-      message.providerStates.forEach((state) => {
+      message.providerStates.forEach(state => {
         const handler = this.config.stateHandlers
           ? this.config.stateHandlers[state.name]
-          : null;
+          : null
 
         if (handler) {
-          promises.push(handler(state.name));
+          promises.push(handler(state.name))
         } else {
-          logger.warn(`no state handler found for "${state.name}", ignorning`);
+          logger.warn(`no state handler found for "${state.name}", ignorning`)
         }
-      });
+      })
     }
 
-    return Promise.all(promises);
+    return Promise.all(promises)
   }
   // Lookup the handler based on the description, or get the default handler
   private findHandler(message: Message): Promise<MessageProvider> {
-    const handler = this.config.messageProviders[message.description || ""];
+    const handler = this.config.messageProviders[message.description || ""]
 
     if (!handler) {
-      logger.warn(`no handler found for message ${message.description}`);
+      logger.warn(`no handler found for message ${message.description}`)
 
       return Promise.reject(
         `No handler found for message "${message.description}".` +
-        ` Check your "handlers" configuration`,
-      );
+          ` Check your "handlers" configuration`
+      )
     }
 
-    return Promise.resolve(handler);
+    return Promise.resolve(handler)
   }
 }

@@ -1,23 +1,22 @@
-const express = require('express')
-const request = require('superagent')
+const express = require("express")
+const request = require("superagent")
 const server = express()
-const API_HOST = process.env.API_HOST || 'http://localhost:8081'
+
+const getApiEndpoint = () => process.env.API_HOST || "http://localhost:8081"
 
 // Fetch animals who are currently 'available' from the
 // Animal Service
 const availableAnimals = () => {
   return request
-    .get(`${API_HOST}/animals/available`)
-    .then(res => res.body,
-      () => [])
+    .get(`${getApiEndpoint()}/animals/available`)
+    .then(res => res.body, () => [])
 }
 
 // Find animals by their ID from the Animal Service
-const getAnimalById = (id) => {
+const getAnimalById = id => {
   return request
-    .get(`${API_HOST}/animals/${id}`)
-    .then(res => res.body,
-      () => null)
+    .get(`${getApiEndpoint()}/animals/${id}`)
+    .then(res => res.body, () => null)
 }
 
 // Suggestions function:
@@ -25,17 +24,17 @@ const getAnimalById = (id) => {
 // and give them a 'score'
 const suggestion = mate => {
   const predicates = [
-    ((candidate, animal) => candidate.id !== animal.id),
-    ((candidate, animal) => candidate.gender !== animal.gender),
-    ((candidate, animal) => candidate.animal === animal.animal)
+    (candidate, animal) => candidate.id !== animal.id,
+    (candidate, animal) => candidate.gender !== animal.gender,
+    (candidate, animal) => candidate.animal === animal.animal,
   ]
 
-  const weights = [
-    ((candidate, animal) => Math.abs(candidate.age - animal.age))
-  ]
+  const weights = [(candidate, animal) => Math.abs(candidate.age - animal.age)]
 
   return availableAnimals().then(available => {
-    const eligible = available.filter(a => !predicates.map(p => p(a, mate)).includes(false))
+    const eligible = available.filter(
+      a => !predicates.map(p => p(a, mate)).includes(false)
+    )
 
     return {
       suggestions: eligible.map(candidate => {
@@ -45,29 +44,29 @@ const suggestion = mate => {
 
         return {
           score,
-          'animal': candidate
+          animal: candidate,
         }
-      })
+      }),
     }
   })
 }
 
 // Creates a mate for suggestions
-const createMateForDates = (mate) => {
+const createMateForDates = mate => {
   return request
-    .post(`${API_HOST}/animals`)
+    .post(`${getApiEndpoint()}/animals`)
     .send(mate)
-    .set('Content-Type', 'application/json; charset=utf-8')
+    .set("Content-Type", "application/json; charset=utf-8")
 }
 
 // Suggestions API
-server.get('/suggestions/:animalId', (req, res) => {
+server.get("/suggestions/:animalId", (req, res) => {
   if (!req.params.animalId) {
     res.writeHead(400)
     res.end()
   }
 
-  request(`${API_HOST}/animals/${req.params.animalId}`, (err, r) => {
+  request(`${getApiEndpoint()}/animals/${req.params.animalId}`, (err, r) => {
     if (!err && r.statusCode === 200) {
       suggestion(r.body).then(suggestions => {
         res.json(suggestions)
@@ -87,5 +86,5 @@ module.exports = {
   availableAnimals,
   createMateForDates,
   suggestion,
-  getAnimalById
+  getAnimalById,
 }

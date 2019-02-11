@@ -1,9 +1,8 @@
-
 /* tslint:disable:no-unused-expression object-literal-sort-keys max-classes-per-file no-empty */
-const { like, term } = require("../../../dist/dsl/matchers");
-const { MessageProviderPact, Message } = require("../../../dist/pact");
-const path = require("path");
-const { createEvent } = require("./index");
+const { like, term } = require("../../../dist/dsl/matchers")
+const { MessageProviderPact, Message } = require("../../../dist/pact")
+const path = require("path")
+const { createEvent } = require("./index")
 
 describe("Message provider tests", () => {
   const p = new MessageProviderPact({
@@ -25,11 +24,11 @@ describe("Message provider tests", () => {
 
     // Tag the contract
     tags: ["latest"],
-  });
+  })
 
   describe("send an event", () => {
     it("should send a valid event", () => {
-      return p.verify();
-    });
-  });
-});
+      return p.verify()
+    })
+  })
+})

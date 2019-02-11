@@ -1,4 +1,4 @@
-import { MatcherResult } from "./matchers";
+import { MatcherResult } from "./matchers"
 
 /**
  * Metadata is a map containing message context,
@@ -6,7 +6,9 @@ import { MatcherResult } from "./matchers";
  *
  * @module Message
  */
-export interface Metadata { [name: string]: string | MatcherResult; }
+export interface Metadata {
+  [name: string]: string | MatcherResult
+}
 
 /**
  * A Message is an asynchronous Interaction, sent via a Provider
@@ -15,14 +17,18 @@ export interface Metadata { [name: string]: string | MatcherResult; }
  * @module Message
  */
 export interface Message {
-  providerStates?: [{ name: string }];
-  description?: string;
-  metadata?: Metadata;
-  contents: any;
+  providerStates?: [{ name: string }]
+  description?: string
+  metadata?: Metadata
+  contents: any
 }
 
 // Message producer/handlers
-export type MessageConsumer = (m: Message) => Promise<any>;
-export type MessageProvider = (m: Message) => Promise<any>;
-export interface MessageProviders { [name: string]: MessageProvider; }
-export interface StateHandlers { [name: string]: (state: string) => Promise<any>; }
+export type MessageConsumer = (m: Message) => Promise<any>
+export type MessageProvider = (m: Message) => Promise<any>
+export interface MessageProviders {
+  [name: string]: MessageProvider
+}
+export interface StateHandlers {
+  [name: string]: (state: string) => Promise<any>
+}

@@ -4,7 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/pact-foundation/pact-js/badge.svg?branch=master)](https://coveralls.io/github/pact-foundation/pact-js?branch=master)
 [![Code Climate](https://codeclimate.com/github/pact-foundation/pact-js/badges/gpa.svg)](https://codeclimate.com/github/pact-foundation/pact-js)
 [![Issue Count](https://codeclimate.com/github/pact-foundation/pact-js/badges/issue_count.svg)](https://codeclimate.com/github/pact-foundation/pact-js)
-[![npm](https://img.shields.io/github/license/pact-foundation/pact-js.svg?maxAge=2592000)](https://github.com/pact-foundation/pact-js/blob/master/LICENSE)
+[![license](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/pact-foundation/pact-js/blob/master/LICENSE)
 [![slack](http://slack.pact.io/badge.svg)](http://slack.pact.io)
 
 Implementation of the consumer driven contract library [Pact](https://docs.pact.io) for Javascript.
@@ -55,6 +55,7 @@ Read [Getting started with Pact] for more information for beginners.
     - [Match based on type](#match-based-on-type)
     - [Match based on arrays](#match-based-on-arrays)
     - [Match by regular expression](#match-by-regular-expression)
+  - [GraphQL API](#graphql-api)
   - [Tutorial (60 minutes)](#tutorial-60-minutes)
   - [Examples](#examples)
     - [HTTP APIs](#http-apis)
@@ -120,7 +121,7 @@ The `Pact` class provides the following high-level APIs, they are listed in the 
 | `sslcert`           | no        | string  | Path to SSL certificate to serve on the mock service                                                     |
 | `sslkey`            | no        | string  | Path to SSL key to serve on the mock service                                                             |
 | `dir`               | no        | string  | Directory to output pact files                                                                           |
-| `log`               | no        | string  | Directory to log to                                                                                      |
+| `log`               | no        | string  | File to log to                                                                                           |
 | `logLevel`          | no        | string  | Log level: one of 'trace', 'debug', 'info', 'error', 'fatal' or 'warn'                                   |
 | `spec`              | no        | number  | Pact specification version (defaults to 2)                                                               |
 | `cors`              | no        | boolean | Allow CORS OPTION requests to be accepted, defaults to false                                             |
@@ -246,7 +247,7 @@ Once you have created Pacts for your Consumer, you need to validate those Pacts 
 1.  Then run the Provider side verification step
 
 ```js
-const { Verifier } = require('pact');
+const { Verifier } = require('@pact-foundation/pact');
 let opts = {
   ...
 };
@@ -262,10 +263,10 @@ new Verifier().verifyProvider(opts).then(function () {
 | --------------------------- | :------: | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
 | `providerBaseUrl`           |   true   | string           | Running API provider host endpoint. Required.                                                                                                  |
 | `provider`                  |   true   | string           | Name of the Provider. Required.                                                                                                                |
-| `pactUrls`                  |   true   | array of strings | Array of local Pact file paths or HTTP-based URLs (e.g. from a broker). Re`quired` if not using a Broker.                                      |
+| `pactUrls`                  |   true   | array of strings | Array of local Pact file paths or HTTP-based URLs (e.g. from a broker). Required if not using a Broker.                                      |
 | `pactBrokerUrl`             |  false   | string           | URL of the Pact Broker to retrieve pacts from. Required if not using pactUrls.                                                                 |
 | `tags`                      |  false   | array of strings | Array of tags, used to filter pacts from the Broker. Optional.                                                                                 |
-| `providerStatesSetupUrl`    |  false   | string           | URL to send PUT requests to setup a given provider state. Optional, required only if you provide a 'state' in any consumer tests.              |
+| `providerStatesSetupUrl`    |  false   | string           | Optional URL to call with a POST request for each `providerState` defined in a pact (see below for more info).
 | `pactBrokerUsername`        |  false   | string           | Username for Pact Broker basic authentication                                                                                                  |
 | `pactBrokerPassword`        |  false   | string           | Password for Pact Broker basic authentication                                                                                                  |
 | `publishVerificationResult` |  false   | boolean          | Publish verification result to Broker                                                                                                          |boolean
@@ -277,9 +278,9 @@ That's it! Read more about [Verifying Pacts](https://docs.pact.io/getting_starte
 
 #### API with Provider States
 
-If you have any `state`'s in your consumer tests that you need to validate during verification, you will need
-to configure your provider for Provider States. This means you must specify `providerStatesSetupUrl`
-in the `verifyProvider` function and configure an extra (dynamic) API endpoint to setup provider state (`--provider-states-setup-url`) for the given test state, which sets the active pact consumer and provider state accepting two parameters: `consumer` and `state` and returns an HTTP `200` eg. `consumer=web&state=customer%20is%20logged%20in`.
+If you have defined any `state`s in your consumer tests, the `Verifier` can put the provider into the right state right before submitting a request (for example, the provider can use the state to mock away certain database queries). To support this, the provider must provide an extra API endpoint that accepts the query parameters `consumer` and `state` and returns an HTTP `200`.
+
+You can then configure this endpoint as `providerStatesSetupUrl` in the options passed into `Verifier.verifyProvider()`. If this option is not configured, the `Verifier` will ignore the provider states defined in the pact.
 
 See this [Provider](https://github.com/pact-foundation/pact-js/blob/master/examples/e2e/test/provider.spec.js) for a working example, or read more about [Provider States](https://docs.pact.io/getting_started/provider_states).
 
@@ -337,8 +338,8 @@ pact.publishPacts(opts)).then(function () {
 | Parameter            | Required | Type             | Description                                                                                           |
 | -------------------- | :------: | ---------------- | ----------------------------------------------------------------------------------------------------- |
 | `providerBaseUrl`    | `false`  | string           | Running API provider host endpoint.                                                   |
-| `pactFilesOrDirs`    | `false`  | array of strings | Array of local Pact files or directories containing pact files. Path must be absolute. Required.      |
-| `pactBroker`         | `false`  | string           | The base URL of the Pact Broker. eg. https://test.pact.dius.com.au. Required.                         |
+| `pactFilesOrDirs`    | `true`   | array of strings | Array of local Pact files or directories containing pact files. Path must be absolute. Required.      |
+| `pactBroker`         | `true`   | string           | The base URL of the Pact Broker. eg. https://test.pact.dius.com.au. Required.                         |
 | `pactBrokerUsername` | `false`  | string           | Username for Pact Broker basic authentication. Optional                                               |
 | `pactBrokerPassword` | `false`  | string           | Password for Pact Broker basic authentication. Optional                                               |
 | `consumerVersion`    | `true`   | string           | The consumer application version; e.g. '1.0.0-cac389f'. ([See more info on versioning](https://docs.pact.io/getting_started/versioning_in_the_pact_broker)) |                |
@@ -656,6 +657,14 @@ provider.addInteraction({
 });
 ```
 
+## GraphQL API
+
+GraphQL is simply an abstraction over HTTP and may be tested via Paact. There are two wrapper APIs available for GraphQL specific testing: `GraphQLInteraction` and `ApolloGraphQLInteraction`.
+
+These are both lightweight wrappers over the standard DSL in order to make GraphQL testing a bit nicer.
+
+See the [history](https://github.com/pact-foundation/pact-js/issues/254#issuecomment-442185695), and below for an example.
+
 ## Tutorial (60 minutes)
 
 Learn everything in Pact JS in 60 minutes: https://github.com/DiUS/pact-workshop-js
@@ -669,7 +678,6 @@ Learn everything in Pact JS in 60 minutes: https://github.com/DiUS/pact-workshop
 * [Pact with Jest (Node env)](https://github.com/pact-foundation/pact-js/tree/master/examples/jest)
 * [Pact with TypeScript + Mocha](https://github.com/pact-foundation/pact-js/tree/master/examples/typescript)
 * [Pact with Mocha](https://github.com/pact-foundation/pact-js/tree/master/examples/mocha)
-* [Pact with TypeScript + Mocha](https://github.com/pact-foundation/pact-js/tree/master/examples/typescript)
 * [Pact with GraphQL](https://github.com/pact-foundation/pact-js/tree/feat/message-pact/examples/graphql)
 * [Pact with Karma + Jasmine](https://github.com/pact-foundation/pact-js/tree/master/karma/jasmine)
 * [Pact with Karma + Mocha](https://github.com/pact-foundation/pact-js/tree/master/karma/mocha)

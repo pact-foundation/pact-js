@@ -4,7 +4,6 @@ var path = require('path')
 
 module.exports = function (config) {
   config.set({
-
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: '.',
 
@@ -35,22 +34,21 @@ module.exports = function (config) {
     reporters: ['progress'],
 
     // Pact Providers
-    pact: [{
-      port: 1234,
-      consumer: 'KarmaMochaConsumer',
-      provider: 'KarmaMochaProvider',
-      logLevel: 'DEBUG',
-      log: path.resolve(process.cwd(), 'logs', 'pact.log'),
-      dir: path.resolve(process.cwd(), 'pacts')
-    }],
+    pact: [
+      {
+        port: 1234,
+        consumer: 'KarmaMochaConsumer',
+        provider: 'KarmaMochaProvider',
+        logLevel: 'DEBUG',
+        log: path.resolve(process.cwd(), 'logs', 'pact.log'),
+        dir: path.resolve(process.cwd(), 'pacts')
+      }
+    ],
 
     // web server port
     port: 9876,
 
-    plugins: [
-      'karma-*',
-      '@pact-foundation/karma-pact'
-    ],
+    plugins: ['karma-*', '@pact-foundation/karma-pact'],
 
     // enable / disable colors in the output (reporters and logs)
     colors: true,

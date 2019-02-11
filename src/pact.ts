@@ -2,18 +2,21 @@
  * Pact module.
  * @module Pact
  */
-import serviceFactory from "@pact-foundation/pact-node";
-import * as clc from "cli-color";
-import * as Matchers from "./dsl/matchers";
-import * as path from "path";
-import * as process from "process";
-import { Interaction, InteractionObject } from "./dsl/interaction";
-import { isEmpty } from "lodash";
-import { isPortAvailable } from "./common/net";
-import logger from "./common/logger";
-import { MockService } from "./dsl/mockService";
-import { PactOptions, PactOptionsComplete } from "./dsl/options";
-import { Server } from "@pact-foundation/pact-node/src/server";
+import serviceFactory from "@pact-foundation/pact-node"
+import * as clc from "cli-color"
+import * as Matchers from "./dsl/matchers"
+import * as path from "path"
+import * as process from "process"
+import { Interaction, InteractionObject } from "./dsl/interaction"
+import { isEmpty } from "lodash"
+import { isPortAvailable } from "./common/net"
+import logger from "./common/logger"
+import { LogLevels } from "@pact-foundation/pact-node/src/logger"
+import { MockService } from "./dsl/mockService"
+import { PactOptions, PactOptionsComplete } from "./dsl/options"
+import { Server } from "@pact-foundation/pact-node/src/server"
+import VerificationError from "./errors/verificationError"
+import ConfigurationError from "./errors/configurationError"
 
 /**
  * Creates a new {@link PactProvider}.
@@ -31,33 +34,35 @@ export class Pact {
     log: path.resolve(process.cwd(), "logs", "pact.log"),
     logLevel: "info",
     pactfileWriteMode: "overwrite",
-    port: 1234,
     provider: "",
     spec: 2,
     ssl: false,
-  } as PactOptions;
+  } as PactOptions
 
-  public static createOptionsWithDefaults(opts: PactOptions): PactOptionsComplete {
-    return { ...Pact.defaults, ...opts } as PactOptionsComplete;
+  public static createOptionsWithDefaults(
+    opts: PactOptions
+  ): PactOptionsComplete {
+    return { ...Pact.defaults, ...opts } as PactOptionsComplete
   }
 
-  public server: Server;
-  public opts: PactOptionsComplete;
-  public mockService: MockService;
-  private finalized: boolean;
+  public server: Server
+  public opts: PactOptionsComplete
+  public mockService: MockService
+  private finalized: boolean
 
   constructor(config: PactOptions) {
-    this.opts = Pact.createOptionsWithDefaults(config);
+    this.opts = Pact.createOptionsWithDefaults(config)
 
     if (isEmpty(this.opts.consumer)) {
-      throw new Error("You must specify a Consumer for this pact.");
+      throw new ConfigurationError("You must specify a Consumer for this pact.")
     }
 
     if (isEmpty(this.opts.provider)) {
-      throw new Error("You must specify a Provider for this pact.");
+      throw new ConfigurationError("You must specify a Provider for this pact.")
     }
 
-    serviceFactory.logLevel(this.opts.logLevel);
+    logger.level(this.opts.logLevel as LogLevels)
+    serviceFactory.logLevel(this.opts.logLevel)
     this.server = serviceFactory.createServer({
       consumer: this.opts.consumer,
       cors: this.opts.cors,
@@ -65,29 +70,26 @@ export class Pact {
       host: this.opts.host,
       log: this.opts.log,
       pactFileWriteMode: this.opts.pactfileWriteMode,
-      port: this.opts.port,
+      port: config.port, // allow to be undefined
       provider: this.opts.provider,
       spec: this.opts.spec,
       ssl: this.opts.ssl,
       sslcert: this.opts.sslcert,
       sslkey: this.opts.sslkey,
-    });
-
-    logger.info(`Setting up Pact with Consumer "${this.opts.consumer}" and Provider "${this.opts.provider}"
-   using mock service on Port: "${this.opts.port}"`);
-
-    this.mockService = new MockService(undefined, undefined, this.opts.port, this.opts.host,
-      this.opts.ssl, this.opts.pactfileWriteMode);
+    })
   }
 
   /**
    * Start the Mock Server.
    * @returns {Promise}
    */
-  public setup(): Promise<void> {
-    return isPortAvailable(this.opts.port, this.opts.host)
-      // Need to wrap it this way until we remove q.Promise from pact-node
-      .then(() => new Promise<void>((resolve, reject) => this.server.start().then(() => resolve(), () => reject())));
+  public setup(): Promise<PactOptionsComplete> {
+    return this.checkPort()
+      .then(() => this.startServer())
+      .then(opts => {
+        this.setupMockService()
+        return Promise.resolve(opts)
+      })
   }
 
   /**
@@ -97,21 +99,23 @@ export class Pact {
    * @param {Interaction} interactionObj
    * @returns {Promise}
    */
-  public addInteraction(interactionObj: InteractionObject | Interaction): Promise<string> {
+  public addInteraction(
+    interactionObj: InteractionObject | Interaction
+  ): Promise<string> {
     if (interactionObj instanceof Interaction) {
-      return this.mockService.addInteraction(interactionObj);
+      return this.mockService.addInteraction(interactionObj)
     }
-    const interaction = new Interaction();
+    const interaction = new Interaction()
     if (interactionObj.state) {
-      interaction.given(interactionObj.state);
+      interaction.given(interactionObj.state)
     }
 
     interaction
       .uponReceiving(interactionObj.uponReceiving)
       .withRequest(interactionObj.withRequest)
-      .willRespondWith(interactionObj.willRespondWith);
+      .willRespondWith(interactionObj.willRespondWith)
 
-    return this.mockService.addInteraction(interaction);
+    return this.mockService.addInteraction(interaction)
   }
 
   /**
@@ -121,18 +125,23 @@ export class Pact {
    * @returns {Promise}
    */
   public verify(): Promise<string> {
-    return this.mockService.verify()
+    return this.mockService
+      .verify()
       .then(() => this.mockService.removeInteractions())
       .catch((e: any) => {
         // Properly format the error
         /* tslint:disable: no-console */
-        console.error("");
-        console.error(clc.red("Pact verification failed!"));
-        console.error(clc.red(e));
+        console.error("")
+        console.error(clc.red("Pact verification failed!"))
+        console.error(clc.red(e))
         /* tslint:enable: */
 
-        throw new Error("Pact verification failed - expected interactions did not match actual.");
-      });
+        return this.mockService.removeInteractions().then(() => {
+          throw new VerificationError(
+            "Pact verification failed - expected interactions did not match actual."
+          )
+        })
+      })
   }
 
   /**
@@ -144,19 +153,33 @@ export class Pact {
    */
   public finalize(): Promise<void> {
     if (this.finalized) {
-      logger.warn("finalize() has already been called, this is probably a logic error in your test setup. " +
-        "In the future this will be an error.");
+      logger.warn(
+        "finalize() has already been called, this is probably a logic error in your test setup. " +
+          "In the future this will be an error."
+      )
     }
-    this.finalized = true;
+    this.finalized = true
 
-    return this.mockService.writePact()
-      .then(() => logger.info("Pact File Written"), (e) => {
-        return Promise.reject(e);
-      })
-      .then(() => new Promise<void>((resolve, reject) => this.server.delete().then(() => resolve(), (e) => reject(e))))
-      .catch((e: Error) => new Promise<void>((resolve, reject) => {
-        return this.server.delete().finally(() => reject(e));
-      }));
+    return this.mockService
+      .writePact()
+      .then(
+        () => logger.info("Pact File Written"),
+        e => {
+          return Promise.reject(e)
+        }
+      )
+      .then(
+        () =>
+          new Promise<void>((resolve, reject) =>
+            this.server.delete().then(() => resolve(), e => reject(e))
+          )
+      )
+      .catch(
+        (e: Error) =>
+          new Promise<void>((resolve, reject) => {
+            return this.server.delete().finally(() => reject(e))
+          })
+      )
   }
 
   /**
@@ -168,7 +191,7 @@ export class Pact {
    * @returns {Promise}
    */
   public writePact(): Promise<string> {
-    return this.mockService.writePact();
+    return this.mockService.writePact()
   }
 
   /**
@@ -178,27 +201,63 @@ export class Pact {
    * @returns {Promise}
    */
   public removeInteractions(): Promise<string> {
-    return this.mockService.removeInteractions();
+    return this.mockService.removeInteractions()
+  }
+
+  private checkPort(): Promise<void> {
+    if (this.server && this.server.options.port) {
+      return isPortAvailable(this.server.options.port, this.opts.host)
+    }
+    return Promise.resolve()
+  }
+
+  private setupMockService(): void {
+    logger.info(`Setting up Pact with Consumer "${
+      this.opts.consumer
+    }" and Provider "${this.opts.provider}"
+    using mock service on Port: "${this.opts.port}"`)
+
+    this.mockService = new MockService(
+      undefined,
+      undefined,
+      this.opts.port,
+      this.opts.host,
+      this.opts.ssl,
+      this.opts.pactfileWriteMode
+    )
+  }
+
+  private startServer(): Promise<PactOptionsComplete> {
+    return new Promise<PactOptionsComplete>((resolve, reject) =>
+      this.server.start().then(
+        () => {
+          this.opts.port = this.server.options.port || this.opts.port
+          resolve(this.opts)
+        },
+        (e: any) => reject(e)
+      )
+    )
   }
 }
 
-export * from "./messageConsumerPact";
-export * from "./messageProviderPact";
-export * from "./dsl/message";
+export * from "./messageConsumerPact"
+export * from "./messageProviderPact"
+export * from "./dsl/message"
 
 /**
  * Exposes {@link Verifier}
  * @memberof Pact
  * @static
  */
-export * from "./dsl/verifier";
+export * from "./dsl/verifier"
 
 /**
  * Exposes {@link GraphQL}
  * @memberof Pact
  * @static
  */
-export * from "./dsl/graphql";
+export * from "./dsl/graphql"
+export * from "./dsl/apolloGraphql"
 
 /**
  * Exposes {@link Matchers}
@@ -207,18 +266,18 @@ export * from "./dsl/graphql";
  * @memberof Pact
  * @static
  */
-export import Matchers = Matchers;
+export import Matchers = Matchers
 
 /**
  * Exposes {@link Interaction}
  * @memberof Pact
  * @static
  */
-export * from "./dsl/interaction";
+export * from "./dsl/interaction"
 
 /**
  * Exposes {@link MockService}
  * @memberof Pact
  * @static
  */
-export * from "./dsl/mockService";
+export * from "./dsl/mockService"

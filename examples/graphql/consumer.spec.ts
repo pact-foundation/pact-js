@@ -1,14 +1,15 @@
 /* tslint:disable:no-unused-expression object-literal-sort-keys max-classes-per-file no-empty */
-import * as chai from "chai";
-import * as chaiAsPromised from "chai-as-promised";
-import { like, term } from "../../src/dsl/matchers";
-import { query } from "./consumer";
-import { Pact, GraphQLInteraction } from "../../src/pact";
+import * as chai from "chai"
+import * as chaiAsPromised from "chai-as-promised"
+import { like } from "../../src/dsl/matchers"
+import { query } from "./consumer"
+import { Pact, GraphQLInteraction } from "../../src/pact"
+// import gql from "graphql-tag";
 
-const path = require("path");
-const expect = chai.expect;
+const path = require("path")
+const expect = chai.expect
 
-chai.use(chaiAsPromised);
+chai.use(chaiAsPromised)
 
 describe("GraphQL example", () => {
   const provider = new Pact({
@@ -17,16 +18,23 @@ describe("GraphQL example", () => {
     dir: path.resolve(process.cwd(), "pacts"),
     consumer: "GraphQLConsumer",
     provider: "GraphQLProvider",
-  });
+  })
 
-  before(() => provider.setup());
-  after(() => provider.finalize());
+  before(() => provider.setup())
+  after(() => provider.finalize())
 
   describe("query hello on /graphql", () => {
     before(() => {
       const graphqlQuery = new GraphQLInteraction()
         .uponReceiving("a hello request")
-        .withQuery(`{ hello }`)
+        .withQuery(
+          `
+          query HelloQuery {
+            hello
+          }
+        `
+        )
+        .withOperation("HelloQuery")
         .withRequest({
           path: "/graphql",
           method: "POST",
@@ -44,15 +52,15 @@ describe("GraphQL example", () => {
               hello: like("Hello world!"),
             },
           },
-        });
-      return provider.addInteraction(graphqlQuery);
-    });
+        })
+      return provider.addInteraction(graphqlQuery)
+    })
 
     it("returns the correct response", () => {
-      return expect(query()).to.eventually.deep.eq({ hello: "Hello world!" });
-    });
+      return expect(query()).to.eventually.deep.equal({ hello: "Hello world!" })
+    })
 
     // verify with Pact, and reset expectations
-    afterEach(() => provider.verify());
-  });
-});
+    afterEach(() => provider.verify())
+  })
+})

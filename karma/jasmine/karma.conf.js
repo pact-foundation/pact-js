@@ -4,7 +4,6 @@ var path = require('path')
 
 module.exports = function (config) {
   config.set({
-
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: '.',
 
@@ -34,19 +33,18 @@ module.exports = function (config) {
     reporters: ['progress'],
 
     // Pact Providers
-    pact: [{
-      port: 1234,
-      consumer: 'KarmaJasmineConsumer',
-      provider: 'KarmaJasmineProvider',
-      logLevel: 'DEBUG',
-      log: path.resolve(process.cwd(), 'logs', 'pact.log'),
-      dir: path.resolve(process.cwd(), 'pacts')
-    }],
-
-    plugins: [
-      'karma-*',
-      '@pact-foundation/karma-pact'
+    pact: [
+      {
+        port: 1234,
+        consumer: 'KarmaJasmineConsumer',
+        provider: 'KarmaJasmineProvider',
+        logLevel: 'DEBUG',
+        log: path.resolve(process.cwd(), 'logs', 'pact.log'),
+        dir: path.resolve(process.cwd(), 'pacts')
+      }
     ],
+
+    plugins: ['karma-*', '@pact-foundation/karma-pact'],
 
     // web server port
     port: 9876,

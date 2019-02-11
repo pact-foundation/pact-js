@@ -1,16 +1,13 @@
 /* tslint:disable:no-unused-expression object-literal-sort-keys max-classes-per-file no-empty */
 
-import * as chai from "chai";
-import * as chaiAsPromised from "chai-as-promised";
-import * as sinon from "sinon";
-import { like, term } from "../../../src/dsl/matchers";
-import { dogApiHandler } from "./dog-handler";
+import { like, term } from "../../../src/dsl/matchers"
+import { dogApiHandler } from "./dog-handler"
 
-const { MessageConsumerPact, Message, synchronousBodyHandler } = require("../../../src/pact");
-const path = require("path");
-const expect = chai.expect;
-
-chai.use(chaiAsPromised);
+const {
+  MessageConsumerPact,
+  synchronousBodyHandler,
+} = require("../../../src/pact")
+const path = require("path")
 
 describe("Message consumer tests", () => {
   const messagePact = new MessageConsumerPact({
@@ -19,7 +16,7 @@ describe("Message consumer tests", () => {
     pactfileWriteMode: "update",
     provider: "MyJSMessageProvider",
     logLevel: "INFO",
-  });
+  })
 
   describe("receive dog event", () => {
     it("should accept a valid dog", () => {
@@ -34,9 +31,9 @@ describe("Message consumer tests", () => {
         .withMetadata({
           "content-type": "application/json",
         })
-        .verify(synchronousBodyHandler(dogApiHandler));
-    });
-  });
+        .verify(synchronousBodyHandler(dogApiHandler))
+    })
+  })
 
   // This is an example of a pact breaking
   // uncomment to see how it works!
@@ -50,6 +47,6 @@ describe("Message consumer tests", () => {
       .withMetadata({
         "content-type": "application/json",
       })
-      .verify(dogApiHandler);
-  });
-});
+      .verify(dogApiHandler)
+  })
+})

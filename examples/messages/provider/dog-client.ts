@@ -1,12 +1,10 @@
 // API integration client
-exports.dogApiClient = {
-  createDog: (id: number) => {
-    return new Promise((resolve, reject) => {
-      resolve({
-        id,
-        name: "fido",
-        type: "bulldog",
-      });
-    });
-  },
-};
+export function createDog(id: number): any {
+  return new Promise((resolve, reject) => {
+    resolve({
+      id,
+      name: "fido",
+      type: "bulldog",
+    })
+  })
+}

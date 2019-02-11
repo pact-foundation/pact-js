@@ -4,9 +4,8 @@
  * https://gist.github.com/bethesque/9d81f21d6f77650811f4.
  * @module MockService
  */
-import { isEmpty } from "lodash";
-import { HTTPMethod, Request } from "../common/request";
-import { Interaction } from "./interaction";
+import { HTTPMethod, Request } from "../common/request"
+import { Interaction } from "./interaction"
 
 // Control how the Pact files are written
 //  - overwrite: Recreates the target pact file after each run of Pact,
@@ -19,22 +18,22 @@ import { Interaction } from "./interaction";
 //               so that interactions deleted from the code are not maintained in the file
 //  - update:    Appends or updates interactions in a pact file. If an interaction
 //               exists in the file, it is updated.
-export type PactfileWriteMode = "overwrite" | "update" | "merge";
+export type PactfileWriteMode = "overwrite" | "update" | "merge"
 
 export interface Pacticipant {
-  name: string;
+  name: string
 }
 
 export interface PactDetails {
-  consumer?: Pacticipant;
-  provider?: Pacticipant;
-  pactfile_write_mode: PactfileWriteMode;
+  consumer?: Pacticipant
+  provider?: Pacticipant
+  pactfile_write_mode: PactfileWriteMode
 }
 
 export class MockService {
-  public pactDetails: PactDetails;
-  public request: Request;
-  public baseUrl: string;
+  public pactDetails: PactDetails
+  public request: Request
+  public baseUrl: string
 
   /**
    * @param {string} consumer - the consumer name
@@ -48,20 +47,19 @@ export class MockService {
     // Deprecated as at https://github.com/pact-foundation/pact-js/issues/105
     private consumer?: string,
     private provider?: string,
-
     // Valid
     private port = 1234,
     private host = "127.0.0.1",
     private ssl = false,
-    private pactfileWriteMode: PactfileWriteMode = "overwrite") {
-
-    this.request = new Request();
-    this.baseUrl = `${ssl ? "https" : "http"}://${host}:${port}`;
+    private pactfileWriteMode: PactfileWriteMode = "overwrite"
+  ) {
+    this.request = new Request()
+    this.baseUrl = `${this.ssl ? "https" : "http"}://${this.host}:${this.port}`
     this.pactDetails = {
-      consumer: (consumer) ? { name: consumer } : undefined,
-      pactfile_write_mode: pactfileWriteMode,
-      provider: (provider) ? { name: provider } : undefined,
-    };
+      consumer: this.consumer ? { name: this.consumer } : undefined,
+      pactfile_write_mode: this.pactfileWriteMode,
+      provider: this.provider ? { name: this.provider } : undefined,
+    }
   }
 
   /**
@@ -70,7 +68,11 @@ export class MockService {
    * @returns {Promise}
    */
   public addInteraction(interaction: Interaction): Promise<string> {
-    return this.request.send(HTTPMethod.POST, `${this.baseUrl}/interactions`, JSON.stringify(interaction.json()));
+    return this.request.send(
+      HTTPMethod.POST,
+      `${this.baseUrl}/interactions`,
+      JSON.stringify(interaction.json())
+    )
   }
 
   /**
@@ -78,7 +80,7 @@ export class MockService {
    * @returns {Promise}
    */
   public removeInteractions(): Promise<string> {
-    return this.request.send(HTTPMethod.DELETE, `${this.baseUrl}/interactions`);
+    return this.request.send(HTTPMethod.DELETE, `${this.baseUrl}/interactions`)
   }
 
   /**
@@ -86,7 +88,10 @@ export class MockService {
    * @returns {Promise}
    */
   public verify(): Promise<string> {
-    return this.request.send(HTTPMethod.GET, `${this.baseUrl}/interactions/verification`);
+    return this.request.send(
+      HTTPMethod.GET,
+      `${this.baseUrl}/interactions/verification`
+    )
   }
 
   /**
@@ -94,7 +99,10 @@ export class MockService {
    * @returns {Promise}
    */
   public writePact(): Promise<string> {
-    return this.request.send(HTTPMethod.POST, `${this.baseUrl}/pact`, JSON.stringify(this.pactDetails));
+    return this.request.send(
+      HTTPMethod.POST,
+      `${this.baseUrl}/pact`,
+      JSON.stringify(this.pactDetails)
+    )
   }
-
 }
