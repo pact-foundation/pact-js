@@ -444,7 +444,7 @@ describe("receive dog event", () => {
 1.  Creates the MessageConsumer class
 1.  Setup the expectations for the consumer - here we expect a `dog` object with three fields
 1.  Pact will send the message to your message handler. If the handler returns a successful promise, the message is saved, otherwise the test fails. There are a few key things to consider:
-    * The actual request body that Pact will send, will be contained within a [Message](https://github.com/pact-foundation/pact-js/tree/feat/message-pact/src/dsl/message.ts) object along with other context, so the body must be retrieved via `content` attribute.
+    * The actual request body that Pact will send, will be contained within a [Message](https://github.com/pact-foundation/pact-js/tree/master/src/dsl/message.ts) object along with other context, so the body must be retrieved via `content` attribute.
     * All handlers to be tested must be of the shape `(m: Message) => Promise<any>` - that is, they must accept a `Message` and return a `Promise`. This is how we get around all of the various protocols, and will often require a lightweight adapter function to convert it.
     * In this case, we wrap the actual dogApiHandler with a convenience function `synchronousBodyHandler` provided by Pact, which Promisifies the handler and extracts the contents.
 
@@ -678,14 +678,14 @@ Learn everything in Pact JS in 60 minutes: https://github.com/DiUS/pact-workshop
 * [Pact with Jest (Node env)](https://github.com/pact-foundation/pact-js/tree/master/examples/jest)
 * [Pact with TypeScript + Mocha](https://github.com/pact-foundation/pact-js/tree/master/examples/typescript)
 * [Pact with Mocha](https://github.com/pact-foundation/pact-js/tree/master/examples/mocha)
-* [Pact with GraphQL](https://github.com/pact-foundation/pact-js/tree/feat/message-pact/examples/graphql)
+* [Pact with GraphQL](https://github.com/pact-foundation/pact-js/tree/master/examples/graphql)
 * [Pact with Karma + Jasmine](https://github.com/pact-foundation/pact-js/tree/master/karma/jasmine)
 * [Pact with Karma + Mocha](https://github.com/pact-foundation/pact-js/tree/master/karma/mocha)
 
 ### Asynchronous APIs
 
-* [Asynchronous messages](https://github.com/pact-foundation/pact-js/tree/feat/message-pact/examples/messages)
-* [Serverless](https://github.com/pact-foundation/pact-js/tree/feat/message-pact/examples/serverless)
+* [Asynchronous messages](https://github.com/pact-foundation/pact-js/tree/master/examples/messages)
+* [Serverless](https://github.com/pact-foundation/pact-js/tree/master/examples/serverless)
 
 ## Using Pact in non-Node environments
 
