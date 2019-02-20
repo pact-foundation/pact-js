@@ -169,7 +169,7 @@ const isMessage = (x: Message | any): x is Message => {
 // a wrapped function that accepts a Message and returns a Promise
 export function synchronousBodyHandler(
   handler: (body: any) => any
-): MessageProvider {
+): MessageConsumer {
   return (m: Message): Promise<any> => {
     const body = m.contents
 
@@ -189,6 +189,6 @@ export function synchronousBodyHandler(
 // TODO: move this into its own package and re-export?
 export function asynchronousBodyHandler(
   handler: (body: any) => Promise<any>
-): MessageProvider {
+): MessageConsumer {
   return (m: Message) => handler(m.contents)
 }

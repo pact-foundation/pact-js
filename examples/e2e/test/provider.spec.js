@@ -86,7 +86,7 @@ describe("Pact Verification", () => {
       // customProviderHeaders: ['Authorization: basic e5e5e5e5e5e5e5']
     }
 
-    return new Verifier().verifyProvider().then(output => {
+    return new Verifier().verifyProvider(opts).then(output => {
       console.log("Pact Verification Complete!")
       console.log(output)
     })

@@ -93,6 +93,7 @@ export interface MessageProviderOptions {
   tags?: string[]
   timeout?: number
 }
+
 export interface MessageConsumerOptions {
   // The name of the consumer
   consumer: string

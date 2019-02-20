@@ -6,7 +6,7 @@ import {
   synchronousBodyHandler,
   asynchronousBodyHandler,
 } from "./messageConsumerPact"
-import { Message } from "./dsl/message"
+import { Message, MessageDescriptor } from "./dsl/message"
 import * as sinonChai from "sinon-chai"
 
 chai.use(sinonChai)

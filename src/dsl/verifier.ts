@@ -9,41 +9,58 @@ import serviceFactory from "@pact-foundation/pact-node"
 import { omit, isEmpty } from "lodash"
 import * as express from "express"
 import * as http from "http"
-const HttpProxy = require("http-proxy")
 import logger from "../common/logger"
 import { LogLevel } from "./options"
 import ConfigurationError from "../errors/configurationError"
-
+const HttpProxy = require("http-proxy")
 const bodyParser = require("body-parser")
 
 export interface ProviderState {
   states?: [string]
 }
 
-interface StateHandlers {
+export interface StateHandlers {
+  stateHandlers: StateHandler
+}
+
+export interface StateHandler {
   [name: string]: (state: string) => Promise<any>
 }
 
-interface StateOptions {
-  requestFilter?: express.RequestHandler
-  stateHandlers?: StateHandlers
-}
-
-interface LogOptions {
+// See https://stackoverflow.com/questions/43357734/typescript-recursive-type-with-indexer/43359686
+// as to why we can't use an intersection type here
+// TL;DR - PactNodeVerifierOptions has an index type which enforces all keys to match the index type
+export interface VerifierOptions {
   logLevel?: LogLevel
+  requestFilter?: express.RequestHandler
+  stateHandlers?: StateHandler
+  providerBaseUrl: string
+  provider?: string
+  pactUrls?: string[]
+  pactBrokerBaseUrl?: string
+  providerStatesSetupUrl?: string
+  pactBrokerUsername?: string
+  pactBrokerPassword?: string
+  consumerVersionTag?: string
+  customProviderHeaders?: string[]
+  publishVerificationResult?: boolean
+  providerVersion?: string
+  pactBrokerUrl?: string
+  tags?: string[]
+  timeout?: number
+  monkeypatch?: string
+  format?: "json" | "RspecJunitFormatter"
+  out?: string
 }
-
-export type VerifierOptions = PactNodeVerifierOptions &
-  StateOptions &
-  LogOptions
 
 export class Verifier {
-  constructor(private config: VerifierOptions) {
-    if (config.logLevel && !isEmpty(config.logLevel)) {
-      serviceFactory.logLevel(config.logLevel)
-      logger.level(config.logLevel)
-    } else {
-      logger.level()
+  private address: string = "http://localhost"
+  private stateSetupPath: string = "/_pactSetup"
+  private config: VerifierOptions
+
+  constructor(config?: VerifierOptions) {
+    if (config) {
+      this.setConfig(config)
     }
   }
 
@@ -55,15 +72,18 @@ export class Verifier {
 
     // Backwards compatibility
     if (config) {
-      this.config = config
+      logger.warn(
+        "Passing options to verifyProvider() wil be deprecated in future versions, please provide to Verifier constructor instead"
+      )
+      this.setConfig(config)
     }
 
-    // TODO: use a real Error type here. Consider doing the same for all errors
     if (isEmpty(this.config)) {
       return Promise.reject(
-        new ConfigurationError("no configuration provided to verifier")
+        new ConfigurationError("No configuration provided to verifier")
       )
     }
+
     // Start the verification CLI proxy server
     const app = this.setupProxyApplication()
     const server = this.setupProxyServer(app)
@@ -91,14 +111,14 @@ export class Verifier {
     return (server: http.Server) => {
       const opts = {
         ...omit(this.config, "handlers"),
-        ...{ providerBaseUrl: "http://localhost:" + server.address().port },
+        ...{ providerBaseUrl: `${this.address}:${server.address().port}` },
         ...{
-          providerStatesSetupUrl:
-            "http://localhost:" + server.address().port + "/setup",
+          providerStatesSetupUrl: `${this.address}:${server.address().port}${
+            this.stateSetupPath
+          }`,
         },
-      } as VerifierOptions
+      } as PactNodeVerifierOptions
 
-      // Run verification
       return qToPromise<any>(pact.verifyPacts(opts))
     }
   }
@@ -136,8 +156,8 @@ export class Verifier {
 
     // TODO: these should probably only go on the routes we intercept (e.g. /setup)
     //       ...make this path configurable / dynamic or on a separate port altogether
-    app.use("/setup", bodyParser.json())
-    app.use("/setup", bodyParser.urlencoded({ extended: true }))
+    app.use(this.stateSetupPath, bodyParser.json())
+    app.use(this.stateSetupPath, bodyParser.urlencoded({ extended: true }))
 
     // Allow for request filtering
     if (this.config.requestFilter !== undefined) {
@@ -147,7 +167,7 @@ export class Verifier {
     // TODO: Set this to simply run on a specific, pre-defined path
     //       ...possibly even run it on a different port to avoid conflicts??
     //       ...make this user configurable
-    app.post("/setup", (req, res, next) => {
+    app.post(this.stateSetupPath, (req, res, next) => {
       const message: ProviderState = req.body
 
       // Invoke the handler, return an error if promise fails
@@ -168,11 +188,11 @@ export class Verifier {
   }
 
   // Lookup the handler based on the description, or get the default handler
-  private setupStates(message: ProviderState): Promise<any> {
+  private setupStates(descriptor: ProviderState): Promise<any> {
     const promises: Array<Promise<any>> = new Array()
 
-    if (message.states) {
-      message.states.forEach(state => {
+    if (descriptor.states) {
+      descriptor.states.forEach(state => {
         const handler = this.config.stateHandlers
           ? this.config.stateHandlers[state]
           : null
@@ -180,11 +200,20 @@ export class Verifier {
         if (handler) {
           promises.push(handler(state))
         } else {
-          logger.warn(`no state handler found for "${state}", ignorning`)
+          logger.warn(`No state handler found for "${state}", ignorning`)
         }
       })
     }
 
     return Promise.all(promises)
+  }
+
+  private setConfig(config: VerifierOptions) {
+    this.config = config
+
+    if (this.config.logLevel && !isEmpty(this.config.logLevel)) {
+      serviceFactory.logLevel(this.config.logLevel)
+      logger.level(this.config.logLevel)
+    }
   }
 }

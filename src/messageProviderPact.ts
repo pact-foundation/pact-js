@@ -4,7 +4,7 @@
 
 import { omit, isEmpty } from "lodash"
 import { Verifier } from "./dsl/verifier"
-import { Message } from "./dsl/message"
+import { Message, MessageDescriptor } from "./dsl/message"
 import logger from "./common/logger"
 import { VerifierOptions } from "@pact-foundation/pact-node"
 import { MessageProviderOptions } from "./dsl/options"
@@ -67,8 +67,6 @@ export class MessageProviderPact {
         ...{ providerBaseUrl: "http://localhost:" + server.address().port },
       } as VerifierOptions
 
-      // Run verification
-      // TODO: backwards incompatible change here
       return new Verifier(opts).verifyProvider()
     }
   }
@@ -79,8 +77,7 @@ export class MessageProviderPact {
     res: express.Response
   ) => void {
     return (req, res) => {
-      // Extract the message request from the API
-      const message: Message = req.body
+      const message: MessageDescriptor = req.body
 
       // Invoke the handler, and return the JSON response body
       // wrapped in a Message
@@ -117,7 +114,7 @@ export class MessageProviderPact {
   }
 
   // Lookup the handler based on the description, or get the default handler
-  private setupStates(message: Message): Promise<any> {
+  private setupStates(message: MessageDescriptor): Promise<any> {
     const promises: Array<Promise<any>> = new Array()
 
     if (message.providerStates) {
@@ -137,7 +134,7 @@ export class MessageProviderPact {
     return Promise.all(promises)
   }
   // Lookup the handler based on the description, or get the default handler
-  private findHandler(message: Message): Promise<MessageProvider> {
+  private findHandler(message: MessageDescriptor): Promise<MessageProvider> {
     const handler = this.config.messageProviders[message.description || ""]
 
     if (!handler) {

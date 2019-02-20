@@ -7,7 +7,7 @@ import { HTTPMethod } from "./common/request"
 import { Interaction, InteractionObject } from "./dsl/interaction"
 import { MockService } from "./dsl/mockService"
 import { PactOptions, PactOptionsComplete } from "./dsl/options"
-import { Pact as PactType } from "./pact"
+import { Pact as PactType } from "./httpPact"
 
 chai.use(sinonChai)
 chai.use(chaiAsPromised)
