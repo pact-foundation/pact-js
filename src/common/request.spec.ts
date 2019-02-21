@@ -10,9 +10,9 @@ const expect = chai.expect
 
 describe("Request", () => {
   let request: Request
-  const PORT = 1024 + Math.floor(Math.random() * 5000)
-  const URL = `http://localhost:${PORT}`
-  const URLSECURE = `https://localhost:${PORT}`
+  const port = 1024 + Math.floor(Math.random() * 5000)
+  const url = `http://localhost:${port}`
+  const urlSecure = `https://localhost:${port}`
 
   beforeEach(() => (request = new Request()))
 
@@ -21,10 +21,10 @@ describe("Request", () => {
 
     describe("Promise", () => {
       it("Should return a promise", () => {
-        nock(URL)
+        nock(url)
           .get("/")
           .reply(200)
-        const r = request.send(HTTPMethod.GET, URL)
+        const r = request.send(HTTPMethod.GET, url)
         return Promise.all([
           expect(r).is.ok,
           expect(r.then).is.ok,
@@ -33,41 +33,41 @@ describe("Request", () => {
         ])
       })
       it("Should resolve when request succeeds with response body", () => {
-        const BODY = "body"
-        nock(URL)
+        const body = "body"
+        nock(url)
           .get("/")
-          .reply(200, BODY)
-        const p = request.send(HTTPMethod.GET, URL)
+          .reply(200, body)
+        const p = request.send(HTTPMethod.GET, url)
         return Promise.all([
           expect(p).to.be.fulfilled,
-          expect(p).to.eventually.be.equal(BODY),
+          expect(p).to.eventually.be.equal(body),
         ])
       })
       it("Should reject when request fails with error message", () => {
-        const ERROR = "error"
-        nock(URL)
+        const error = "error"
+        nock(url)
           .get("/")
-          .reply(400, ERROR)
-        const p = request.send(HTTPMethod.GET, URL)
-        return expect(p).to.be.rejectedWith(ERROR)
+          .reply(400, error)
+        const p = request.send(HTTPMethod.GET, url)
+        return expect(p).to.be.rejectedWith(error)
       })
     })
     describe("Headers", () => {
       it("Should have Pact headers are sent with every request", () => {
-        nock(URL)
+        nock(url)
           .matchHeader("X-Pact-Mock-Service", "true")
           .get("/")
           .reply(200)
-        return expect(request.send(HTTPMethod.GET, URL)).to.be.fulfilled
+        return expect(request.send(HTTPMethod.GET, url)).to.be.fulfilled
       })
     })
     describe("SSL", () => {
       it("Should ignore self signed certificate errors", () => {
-        nock(URLSECURE)
+        nock(urlSecure)
           .matchHeader("X-Pact-Mock-Service", "true")
           .get("/")
           .reply(200)
-        return expect(request.send(HTTPMethod.GET, URLSECURE)).to.be.fulfilled
+        return expect(request.send(HTTPMethod.GET, urlSecure)).to.be.fulfilled
       })
     })
   })

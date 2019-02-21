@@ -15,7 +15,7 @@
     "lint": "npm run lint:prettier:ts && npm run lint:prettier:js && tslint -c tslint.json '{src,test,examples}/**/*.ts' -e '**/node_modules/**/*.ts'",
     "lint:fix": "prettier --parser typescript --write '{src,test,examples}/**/*.ts' && prettier --write '{src,test,examples}/**/*.js'",
     "lint:prettier:ts": "prettier --parser typescript --check '{src,test,examples}/**/*.ts'",
-    "lint:prettier:js": "prettier --parser typescript --check '{src,test,examples}/**/*.ts'",
+    "lint:prettier:js": "prettier --parser typescript --check '{src,test,examples}/**/*.js'",
     "postdist": "npm t",
     "posttest": "npm run test:karma",
     "predist": "npm run clean && npm run lint && npm run jscpd",

@@ -24,15 +24,6 @@ describe("GraphQLInteraction", () => {
         expect(json.request.body.operationName).to.eq("query")
       })
     })
-    describe("when no operation is provided", () => {
-      it("should not be present in unmarshaled body", () => {
-        interaction.uponReceiving("a request")
-        interaction.withQuery("{ hello }")
-
-        const json: any = interaction.json()
-        expect(json.request.body).to.not.have.property("operationName")
-      })
-    })
     describe("when given an invalid operation", () => {
       it("should fail with an error", () => {
         expect(interaction.withOperation.bind("aoeu")).to.throw(Error)
@@ -87,6 +78,12 @@ describe("GraphQLInteraction", () => {
       })
     })
 
+    describe("when given an empty query", () => {
+      it("should fail with an error", () => {
+        expect(() => interaction.withQuery(null as any)).to.throw()
+      })
+    })
+
     describe("when given an invalid query", () => {
       it("should fail with an error", () => {
         expect(() =>
@@ -96,12 +93,6 @@ describe("GraphQLInteraction", () => {
     })
 
     describe("when given a valid query", () => {
-      it("should properly marshal the query", () => {
-        const json: any = interaction.json()
-        expect(isMatcher(json.request.body.query)).to.eq(true)
-        expect(json.request.body.query.getValue()).to.eq("{ hello }")
-      })
-
       describe("without variables", () => {
         it("should add regular expressions for the whitespace in the query", () => {
           const json: any = interaction.json()
@@ -133,6 +124,40 @@ describe("GraphQLInteraction", () => {
           expect(r.test(lotsOfWhitespace)).to.eq(true)
         })
       })
+    })
+  })
+
+  describe("#json", () => {
+    context("when query is empty", () => {
+      it("should fail with an error", () => {
+        expect(() => interaction.json()).to.throw()
+      })
+    })
+    context("when description is empty", () => {
+      it("should fail with an error", () => {
+        interaction.withQuery("{ hello }")
+        return expect(() => interaction.json()).to.throw()
+      })
+    })
+    describe("when no operation is provided", () => {
+      it("should not be present in unmarshaled body", () => {
+        interaction.uponReceiving("a request")
+        interaction.withQuery("{ hello }")
+
+        const json: any = interaction.json()
+        expect(json.request.body).to.not.have.property("operationName")
+      })
+    })
+  })
+  context("when given a valid query", () => {
+    it("should properly marshal the query", () => {
+      interaction.uponReceiving("a request")
+      interaction.withOperation("query")
+      interaction.withQuery("{ hello }")
+
+      const json: any = interaction.json()
+      expect(isMatcher(json.request.body.query)).to.eq(true)
+      expect(json.request.body.query.getValue()).to.eq("{ hello }")
     })
   })
 })

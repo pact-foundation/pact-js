@@ -19,10 +19,6 @@ export interface ProviderState {
   states?: [string]
 }
 
-export interface StateHandlers {
-  stateHandlers: StateHandler
-}
-
 export interface StateHandler {
   [name: string]: (state: string) => Promise<any>
 }
@@ -66,6 +62,8 @@ export class Verifier {
 
   /**
    * Verify a HTTP Provider
+   *
+   * @param config
    */
   public verifyProvider(config?: VerifierOptions): Promise<any> {
     logger.info("Verifying provider")
@@ -85,8 +83,8 @@ export class Verifier {
     }
 
     // Start the verification CLI proxy server
-    const app = this.setupProxyApplication()
-    const server = this.setupProxyServer(app)
+    const app = this.createProxy()
+    const server = this.startProxy(app)
 
     // Run the verification once the proxy server is available
     return this.waitForServerReady(server)
@@ -95,15 +93,10 @@ export class Verifier {
         server.close()
         return result
       })
-  }
-
-  // Listens for the server start event
-  // Converts event Emitter to a Promise
-  private waitForServerReady(server: http.Server): Promise<http.Server> {
-    return new Promise((resolve, reject) => {
-      server.on("listening", () => resolve(server))
-      server.on("error", () => reject())
-    })
+      .catch(e => {
+        server.close()
+        throw e
+      })
   }
 
   // Run the Verification CLI process
@@ -123,39 +116,29 @@ export class Verifier {
     }
   }
 
-  // Get the API handler for the verification CLI process to invoke on POST /*
-  // TODO: setup state handler middleware
-  private setupStateHandler(
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) {
-    // Extract the message request from the API
-    const message: ProviderState = req.body
-
-    // Invoke the handler, and return the JSON response body
-    // wrapped in a Message
-    this.setupStates(message)
-      .then(o => {
-        next()
-      })
-      .catch(e => res.status(500).send(e))
+  // Listens for the server start event
+  // Converts event Emitter to a Promise
+  private waitForServerReady(server: http.Server): Promise<http.Server> {
+    return new Promise((resolve, reject) => {
+      server.on("listening", () => resolve(server))
+      server.on("error", () =>
+        reject(new Error("Unable to start verification proxy server"))
+      )
+    })
   }
 
   // Get the Proxy we'll pass to the CLI for verification
-  private setupProxyServer(
+  private startProxy(
     app: (request: http.IncomingMessage, response: http.ServerResponse) => void
   ): http.Server {
     return http.createServer(app).listen()
   }
 
   // Get the Express app that will run on the HTTP Proxy
-  private setupProxyApplication(): express.Express {
+  private createProxy(): express.Express {
     const app = express()
     const proxy = new HttpProxy()
 
-    // TODO: these should probably only go on the routes we intercept (e.g. /setup)
-    //       ...make this path configurable / dynamic or on a separate port altogether
     app.use(this.stateSetupPath, bodyParser.json())
     app.use(this.stateSetupPath, bodyParser.urlencoded({ extended: true }))
 
@@ -164,17 +147,8 @@ export class Verifier {
       app.use(this.config.requestFilter)
     }
 
-    // TODO: Set this to simply run on a specific, pre-defined path
-    //       ...possibly even run it on a different port to avoid conflicts??
-    //       ...make this user configurable
-    app.post(this.stateSetupPath, (req, res, next) => {
-      const message: ProviderState = req.body
-
-      // Invoke the handler, return an error if promise fails
-      this.setupStates(message)
-        .then(() => res.sendStatus(200))
-        .catch(e => res.status(500).send(e))
-    })
+    // Setup provider state handler
+    app.post(this.stateSetupPath, this.createProxyStateHandler())
 
     // Proxy server will respond to Verifier process
     app.all("/*", (req, res) => {
@@ -185,6 +159,16 @@ export class Verifier {
     })
 
     return app
+  }
+
+  private createProxyStateHandler() {
+    return (req: any, res: any) => {
+      const message: ProviderState = req.body
+
+      return this.setupStates(message)
+        .then(() => res.sendStatus(200))
+        .catch(e => res.status(500).send(e))
+    }
   }
 
   // Lookup the handler based on the description, or get the default handler
