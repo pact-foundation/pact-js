@@ -442,6 +442,15 @@ describe("Matcher", () => {
     describe("when used it should create a JSON object", () => {
       it("should not fail", () => {
         expect(boolean()).to.be.an("object")
+        expect(boolean().contents).to.equal(true)
+      })
+      it("should not fail with value=false", () => {
+        expect(boolean(false)).to.be.an("object")
+        expect(boolean(false).contents).to.equal(false)
+      })
+      it("should not fail with value=true", () => {
+        expect(boolean(true)).to.be.an("object")
+        expect(boolean(true).contents).to.equal(true)
       })
     })
   })
