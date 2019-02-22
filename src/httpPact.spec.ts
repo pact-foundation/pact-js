@@ -1,4 +1,4 @@
-/* tslint:disable:no-unused-expression object-literal-sort-keys max-classes-per-file no-empty no-console */
+/* tslint:disable:no-unused-expression object-literal-sort-keys max-classes-per-file no-empty no-console no-string-literal*/
 import * as chai from "chai"
 import * as chaiAsPromised from "chai-as-promised"
 import * as sinon from "sinon"
@@ -7,13 +7,9 @@ import { HTTPMethod } from "./common/request"
 import { Interaction, InteractionObject } from "./dsl/interaction"
 import { MockService } from "./dsl/mockService"
 import { PactOptions, PactOptionsComplete } from "./dsl/options"
-import { Pact as PactType } from "./httpPact"
-
-chai.use(sinonChai)
-chai.use(chaiAsPromised)
-
-const expect = chai.expect
-const proxyquire = require("proxyquire").noCallThru()
+import serviceFactory from "@pact-foundation/pact-node"
+import { Pact } from "./httpPact"
+import { ImportMock } from "ts-mock-imports"
 
 // Mock out the PactNode interfaces
 class PactServer {
@@ -22,15 +18,14 @@ class PactServer {
   public delete(): void {}
 }
 
-class PactNodeFactory {
-  public logLevel(opts: any): void {}
+chai.use(sinonChai)
+chai.use(chaiAsPromised)
 
-  public removeAllServers(): void {}
-
-  public createServer(opts: any): any {}
-}
+const expect = chai.expect
+const makePact = () => (Object.create(Pact.prototype) as any) as Pact
 
 describe("Pact", () => {
+  let pact: Pact
   const fullOpts = {
     consumer: "A",
     provider: "B",
@@ -43,27 +38,22 @@ describe("Pact", () => {
     pactfileWriteMode: "overwrite",
   } as PactOptionsComplete
 
-  const sandbox = sinon.sandbox.create({
-    injectInto: null,
-    properties: ["spy", "stub", "mock"],
-    useFakeTimers: false,
-    useFakeServer: false,
+  before(() => {
+    // Stub out pact-node
+    const manager = ImportMock.mockClass(serviceFactory, "createServer") as any
+    manager.mock("createServer", () => {})
+  })
+
+  beforeEach(() => {
+    pact = makePact()
   })
 
   afterEach(() => {
-    sandbox.restore()
+    sinon.restore()
+    // return serviceFactory.removeAllServers()
   })
 
   describe("#constructor", () => {
-    let Pact: any
-
-    beforeEach(() => {
-      const imported = proxyquire("./pact", {
-        "@pact-foundation/pact-node": sinon.createStubInstance(PactNodeFactory),
-      })
-      Pact = imported.Pact
-    })
-
     it("throws Error when consumer not provided", () => {
       expect(() => {
         new Pact({ consumer: "", provider: "provider" })
@@ -84,7 +74,7 @@ describe("Pact", () => {
     }
 
     it("merges options with sensible defaults", () => {
-      const opts = PactType.createOptionsWithDefaults(constructorOpts)
+      const opts = Pact.createOptionsWithDefaults(constructorOpts)
       expect(opts.consumer).to.eq("A")
       expect(opts.provider).to.eq("B")
       expect(opts.cors).to.eq(false)
@@ -101,43 +91,44 @@ describe("Pact", () => {
   })
 
   describe("#setup", () => {
-    const Pact = PactType
+    const serverMock = {
+      start: () => Promise.resolve(),
+      options: { port: 1234 },
+      logLevel: (a: any) => {},
+    }
 
     describe("when server is not properly configured", () => {
       describe("and pact-node is unable to start the server", () => {
-        it("returns a rejected promise", () => {
-          // TODO: actually test is pact-node is failing on start with a bad config instead of stubbing it
-          const startStub = sandbox
-            .stub(PactServer.prototype, "start")
-            .throws("start")
-          startStub.rejects()
-          const b = (Object.create(Pact.prototype) as any) as PactType
-          b.opts = fullOpts
-          b.server = { start: startStub, options: { port: 1234 } } as any
-          return expect(b.setup()).to.eventually.be.rejected
+        it("returns a rejected promise", async () => {
+          const p: any = new Pact(fullOpts)
+
+          p.server = {
+            start: () => Promise.reject("pact-node error"),
+            options: { port: 1234 },
+          }
+
+          return expect(p.setup()).to.eventually.be.rejectedWith(
+            "pact-node error"
+          )
         })
       })
     })
     describe("when server is properly configured", () => {
       it("starts the mock server in the background", () => {
-        // TODO: actually test is pact-node is starting instead of stubbing it
-        const startStub = sandbox.stub(PactServer.prototype, "start")
-        startStub.resolves()
-        const b = (Object.create(Pact.prototype) as any) as PactType
-        b.opts = fullOpts
-        b.server = { start: startStub, options: { port: 1234 } } as any
-        return expect(b.setup()).to.eventually.be.fulfilled
+        const p: any = new Pact(fullOpts)
+
+        p.server = serverMock
+
+        return expect(p.setup()).to.eventually.be.fulfilled
       })
     })
     describe("when server is properly configured", () => {
       it("returns the current configuration", () => {
-        // TODO: actually test is pact-node is starting instead of stubbing it
-        const startStub = sandbox.stub(PactServer.prototype, "start")
-        startStub.resolves()
-        const b = (Object.create(Pact.prototype) as any) as PactType
-        b.opts = fullOpts
-        b.server = { start: startStub, options: { port: 1234 } } as any
-        return expect(b.setup()).to.eventually.include({
+        const p: any = new Pact(fullOpts)
+
+        p.server = serverMock
+
+        return expect(p.setup()).to.eventually.include({
           consumer: "A",
           provider: "B",
           port: 1234,
@@ -153,7 +144,6 @@ describe("Pact", () => {
   })
 
   describe("#addInteraction", () => {
-    const Pact = PactType
     const interaction: InteractionObject = {
       state: "i have a list of projects",
       uponReceiving: "a request for projects",
@@ -171,13 +161,13 @@ describe("Pact", () => {
 
     describe("when given a provider state", () => {
       it("creates interaction with state", () => {
-        const pact = (Object.create(Pact.prototype) as any) as PactType
         pact.opts = fullOpts
-        pact.mockService = ({
+        pact.mockService = {
           addInteraction: (
             int: InteractionObject
           ): Promise<string | undefined> => Promise.resolve(int.state),
-        } as any) as MockService
+        } as any
+
         return expect(
           pact.addInteraction(interaction)
         ).to.eventually.have.property("providerState")
@@ -186,14 +176,14 @@ describe("Pact", () => {
 
     describe("when not given a provider state", () => {
       it("creates interaction with no state", () => {
-        const pact = (Object.create(Pact.prototype) as any) as PactType
         pact.opts = fullOpts
-        pact.mockService = ({
+        pact.mockService = {
           addInteraction: (
             int: InteractionObject
           ): Promise<string | undefined> => Promise.resolve(int.state),
-        } as any) as MockService
+        } as any
         interaction.state = undefined
+
         return expect(
           pact.addInteraction(interaction)
         ).to.eventually.not.have.property("providerState")
@@ -215,12 +205,12 @@ describe("Pact", () => {
               body: {},
             })
 
-          const pact = (Object.create(Pact.prototype) as any) as PactType
           pact.opts = fullOpts
-          pact.mockService = ({
+          pact.mockService = {
             addInteraction: (int: Interaction): Promise<Interaction> =>
               Promise.resolve(int),
-          } as any) as MockService
+          } as any
+
           return expect(
             pact.addInteraction(interaction2)
           ).to.eventually.have.property("given")
@@ -230,25 +220,23 @@ describe("Pact", () => {
   })
 
   describe("#verify", () => {
-    const Pact = PactType
-
     describe("when pact verification is successful", () => {
       it("returns a successful promise and remove interactions", () => {
-        const verifyStub = sandbox
+        const verifyStub = sinon
           .stub(MockService.prototype, "verify")
           .resolves("verified!")
-        const removeInteractionsStub = sandbox
+        const removeInteractionsStub = sinon
           .stub(MockService.prototype, "removeInteractions")
           .resolves("removeInteractions")
 
-        const b = (Object.create(Pact.prototype) as any) as PactType
-        b.opts = fullOpts
-        b.mockService = ({
+        pact.opts = fullOpts
+        pact.mockService = {
           verify: verifyStub,
           removeInteractions: removeInteractionsStub,
-        } as any) as MockService
+        } as any
 
-        const verifyPromise = b.verify()
+        const verifyPromise = pact.verify()
+
         return Promise.all([
           expect(verifyPromise).to.eventually.eq("removeInteractions"),
           expect(verifyPromise).to.eventually.be.fulfilled,
@@ -258,21 +246,21 @@ describe("Pact", () => {
 
     describe("when pact verification is unsuccessful", () => {
       it("throws an error", () => {
-        const verifyStub = sandbox
+        const verifyStub = sinon
           .stub(MockService.prototype, "verify")
           .rejects("not verified!")
-        const removeInteractionsStub = sandbox
+        const removeInteractionsStub = sinon
           .stub(MockService.prototype, "removeInteractions")
           .resolves("removeInteractions")
 
-        const b = (Object.create(Pact.prototype) as any) as PactType
-        b.opts = fullOpts
-        b.mockService = ({
+        pact.opts = fullOpts
+        pact.mockService = {
           verify: verifyStub,
           removeInteractions: removeInteractionsStub,
-        } as any) as MockService
+        } as any
 
-        const verifyPromise = b.verify()
+        const verifyPromise = pact.verify()
+
         return Promise.all([
           expect(verifyPromise).to.eventually.be.rejectedWith(Error),
           verifyPromise.catch(() =>
@@ -285,10 +273,10 @@ describe("Pact", () => {
     describe("when pact verification is successful", () => {
       describe("and an error is thrown in the cleanup", () => {
         it("throws an error", () => {
-          const verifyStub = sandbox
+          const verifyStub = sinon
             .stub(MockService.prototype, "verify")
             .resolves("verified!")
-          const removeInteractionsStub = sandbox.stub(
+          const removeInteractionsStub = sinon.stub(
             MockService.prototype,
             "removeInteractions"
           )
@@ -296,60 +284,53 @@ describe("Pact", () => {
             new Error("error removing interactions")
           )
 
-          const b = (Object.create(Pact.prototype) as any) as PactType
-          b.opts = fullOpts
-          b.mockService = ({
+          pact.opts = fullOpts
+          pact.mockService = {
             verify: verifyStub,
             removeInteractions: removeInteractionsStub,
-          } as any) as MockService
+          } as any
 
-          return expect(b.verify()).to.eventually.be.rejectedWith(Error)
+          return expect(pact.verify()).to.eventually.be.rejectedWith(Error)
         })
       })
     })
   })
 
   describe("#finalize", () => {
-    const Pact = PactType
-
     describe("when writing Pact is successful", () => {
       it("returns a successful promise and shut down down the mock server", () => {
-        const writePactStub = sandbox
+        const writePactStub = sinon
           .stub(MockService.prototype, "writePact")
           .resolves()
 
-        const p = (Object.create(Pact.prototype) as any) as PactType
-        p.opts = fullOpts
-        p.mockService = ({
+        pact.opts = fullOpts
+        pact.mockService = {
           writePact: writePactStub,
-          removeInteractions: sandbox.stub(),
-        } as any) as MockService
-        p.server = {
-          delete: sandbox.stub(PactServer.prototype, "delete").resolves(),
+          removeInteractions: sinon.stub(),
+        } as any
+        pact.server = {
+          delete: sinon.stub(PactServer.prototype, "delete").resolves(),
         } as any
 
-        return expect(p.finalize()).to.eventually.be.fulfilled
+        return expect(pact.finalize()).to.eventually.be.fulfilled
       })
     })
 
     describe("when writing Pact is unsuccessful", () => {
       it("throws an error and shut down the server", () => {
-        const writePactStub = sandbox
+        const writePactStub = sinon
           .stub(MockService.prototype, "writePact")
           .rejects()
-        const deleteStub = sandbox
-          .stub(PactServer.prototype, "delete")
-          .resolves()
+        const deleteStub = sinon.stub(PactServer.prototype, "delete").resolves()
 
-        const p = (Object.create(Pact.prototype) as any) as PactType
-        p.opts = fullOpts
-        p.mockService = ({
+        pact.opts = fullOpts
+        pact.mockService = {
           writePact: writePactStub,
-          removeInteractions: sandbox.stub(),
-        } as any) as MockService
-        p.server = { delete: deleteStub } as any
+          removeInteractions: sinon.stub(),
+        } as any
+        pact.server = { delete: deleteStub } as any
 
-        return expect(p.finalize()).to.eventually.be.rejected.then(() =>
+        return expect(pact.finalize()).to.eventually.be.rejected.then(() =>
           expect(deleteStub).to.callCount(1)
         )
       })
@@ -357,42 +338,39 @@ describe("Pact", () => {
 
     describe("when writing pact is successful and shutting down the mock server is unsuccessful", () => {
       it("throws an error", () => {
-        const writePactStub = sandbox
+        const writePactStub = sinon
           .stub(MockService.prototype, "writePact")
           .resolves()
 
-        const p = (Object.create(Pact.prototype) as any) as PactType
-        p.opts = fullOpts
-        p.mockService = ({
+        pact.opts = fullOpts
+        pact.mockService = {
           writePact: writePactStub,
-          removeInteractions: sandbox.stub(),
-        } as any) as MockService
-        p.server = {
-          delete: sandbox.stub(PactServer.prototype, "delete").rejects(),
+          removeInteractions: sinon.stub(),
+        } as any
+        pact.server = {
+          delete: sinon.stub(PactServer.prototype, "delete").rejects(),
         } as any
 
-        return expect(p.finalize).to.throw(Error)
+        return expect(pact.finalize).to.throw(Error)
       })
     })
   })
 
   describe("#writePact", () => {
-    const Pact = PactType
-
     describe("when writing Pact is successful", () => {
       it("returns a successful promise", () => {
-        const writePactStub = sandbox
+        const writePactStub = sinon
           .stub(MockService.prototype, "writePact")
           .resolves("pact file written!")
 
-        const p = (Object.create(Pact.prototype) as any) as PactType
-        p.opts = fullOpts
-        p.mockService = ({
+        pact.opts = fullOpts
+        pact.mockService = {
           writePact: writePactStub,
-          removeInteractions: sandbox.stub(),
-        } as any) as MockService
+          removeInteractions: sinon.stub(),
+        } as any
 
-        const writePactPromise = p.writePact()
+        const writePactPromise = pact.writePact()
+
         return Promise.all([
           expect(writePactPromise).to.eventually.eq("pact file written!"),
           expect(writePactPromise).to.eventually.be.fulfilled,
@@ -402,21 +380,19 @@ describe("Pact", () => {
   })
 
   describe("#removeInteractions", () => {
-    const Pact = PactType
-
     describe("when removing interactions is successful", () => {
       it("returns a successful promise", () => {
-        const removeInteractionsStub = sandbox
+        const removeInteractionsStub = sinon
           .stub(MockService.prototype, "removeInteractions")
           .resolves("interactions removed!")
 
-        const p = (Object.create(Pact.prototype) as any) as PactType
-        p.opts = fullOpts
-        p.mockService = ({
+        pact.opts = fullOpts
+        pact.mockService = {
           removeInteractions: removeInteractionsStub,
-        } as any) as MockService
+        } as any
 
-        const removeInteractionsPromise = p.removeInteractions()
+        const removeInteractionsPromise = pact.removeInteractions()
+
         return Promise.all([
           expect(removeInteractionsPromise).to.eventually.eq(
             "interactions removed!"

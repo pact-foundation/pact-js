@@ -58,20 +58,8 @@ export class Pact {
 
     logger.level(this.opts.logLevel as LogLevels)
     serviceFactory.logLevel(this.opts.logLevel)
-    this.server = serviceFactory.createServer({
-      consumer: this.opts.consumer,
-      cors: this.opts.cors,
-      dir: this.opts.dir,
-      host: this.opts.host,
-      log: this.opts.log,
-      pactFileWriteMode: this.opts.pactfileWriteMode,
-      port: config.port, // allow to be undefined
-      provider: this.opts.provider,
-      spec: this.opts.spec,
-      ssl: this.opts.ssl,
-      sslcert: this.opts.sslcert,
-      sslkey: this.opts.sslkey,
-    })
+
+    this.createServer(config)
   }
 
   /**
@@ -233,5 +221,22 @@ export class Pact {
         (e: any) => reject(e)
       )
     )
+  }
+
+  private createServer(config: PactOptions) {
+    this.server = serviceFactory.createServer({
+      consumer: this.opts.consumer,
+      cors: this.opts.cors,
+      dir: this.opts.dir,
+      host: this.opts.host,
+      log: this.opts.log,
+      pactFileWriteMode: this.opts.pactfileWriteMode,
+      port: config.port, // allow to be undefined
+      provider: this.opts.provider,
+      spec: this.opts.spec,
+      ssl: this.opts.ssl,
+      sslcert: this.opts.sslcert,
+      sslkey: this.opts.sslkey,
+    })
   }
 }
