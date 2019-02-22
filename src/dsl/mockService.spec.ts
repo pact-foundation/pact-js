@@ -59,55 +59,59 @@ describe("MockService", () => {
       .withRequest({ method: HTTPMethod.GET, path: "/search" })
       .willRespondWith({ status: 200 })
 
-    it("when Interaction added successfully", done => {
+    it("when Interaction added successfully", () => {
       nock(mock.baseUrl)
         .post(/interactions$/)
         .reply(200)
-      expect(mock.addInteraction(interaction)).to.eventually.notify(done)
+
+      return expect(mock.addInteraction(interaction)).to.eventually
     })
 
-    it("when Interaction fails to be added", done => {
+    it("when Interaction fails to be added", () => {
       nock(mock.baseUrl)
         .post(/interactions$/)
         .reply(500)
-      expect(mock.addInteraction(interaction)).to.eventually.be.rejected
-      done()
+      return expect(mock.addInteraction(interaction)).to.eventually.be.rejected
     })
   })
 
   describe("#removeInteractions", () => {
     const mock = new MockService("consumer", "provider", 1234)
 
-    it("when interactions are removed successfully", done => {
+    it("when interactions are removed successfully", () => {
       nock(mock.baseUrl)
         .delete(/interactions$/)
         .reply(200)
-      expect(mock.removeInteractions()).to.eventually.be.fulfilled.notify(done)
+
+      return expect(mock.removeInteractions()).to.eventually.be.fulfilled
     })
 
-    it("when interactions fail to be removed", done => {
+    it("when interactions fail to be removed", () => {
       nock(mock.baseUrl)
         .delete(/interactions$/)
         .reply(500)
-      expect(mock.removeInteractions()).to.eventually.be.rejected.notify(done)
+
+      return expect(mock.removeInteractions()).to.eventually.be.rejected
     })
   })
 
   describe("#verify", () => {
     const mock = new MockService("consumer", "provider", 1234)
 
-    it("when verification is successful", done => {
+    it("when verification is successful", () => {
       nock(mock.baseUrl)
         .get(/interactions\/verification$/)
         .reply(200)
-      expect(mock.verify()).to.eventually.be.fulfilled.notify(done)
+
+      return expect(mock.verify()).to.eventually.be.fulfilled
     })
 
-    it("when verification fails", done => {
+    it("when verification fails", () => {
       nock(mock.baseUrl)
         .get(/interactions\/verification$/)
         .reply(500)
-      expect(mock.verify()).to.eventually.be.rejected.notify(done)
+
+      return expect(mock.verify()).to.eventually.be.rejected
     })
   })
 
@@ -116,7 +120,7 @@ describe("MockService", () => {
       const mock = new MockService("aconsumer", "aprovider", 1234)
 
       describe("and writing is successful", () => {
-        it("writes the consumer and provider details into the pact", done => {
+        it("writes the consumer and provider details into the pact", () => {
           nock(mock.baseUrl)
             .post(/pact$/, {
               consumer: { name: "aconsumer" },
@@ -124,27 +128,30 @@ describe("MockService", () => {
               provider: { name: "aprovider" },
             })
             .reply(200)
-          expect(mock.writePact()).to.eventually.be.fulfilled.notify(done)
+
+          return expect(mock.writePact()).to.eventually.be.fulfilled
         })
       })
 
       describe("and writing fails", () => {
-        it("returns a rejected promise", done => {
+        it("returns a rejected promise", () => {
           nock(mock.baseUrl)
             .post(/pact$/, {})
             .reply(500)
-          expect(mock.writePact()).to.eventually.be.rejected.notify(done)
+
+          return expect(mock.writePact()).to.eventually.be.rejected
         })
       })
     })
 
     describe("when consumer and provider details are not provided", () => {
       const mock = new MockService(undefined, undefined, 1234)
-      it("does not write the consumer and provider details into the pact", done => {
+      it("does not write the consumer and provider details into the pact", () => {
         nock(mock.baseUrl)
           .post(/pact$/)
           .reply(200)
-        expect(mock.writePact()).to.eventually.be.fulfilled.notify(done)
+
+        return expect(mock.writePact()).to.eventually.be.fulfilled
       })
     })
   })

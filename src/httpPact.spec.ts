@@ -22,7 +22,6 @@ chai.use(sinonChai)
 chai.use(chaiAsPromised)
 
 const expect = chai.expect
-const makePact = () => (Object.create(Pact.prototype) as any) as Pact
 
 describe("Pact", () => {
   let pact: Pact
@@ -45,7 +44,8 @@ describe("Pact", () => {
   })
 
   beforeEach(() => {
-    pact = makePact()
+    pact = (Object.create(Pact.prototype) as any) as Pact
+    pact.opts = fullOpts
   })
 
   afterEach(() => {
@@ -113,6 +113,7 @@ describe("Pact", () => {
         })
       })
     })
+
     describe("when server is properly configured", () => {
       it("starts the mock server in the background", () => {
         const p: any = new Pact(fullOpts)
@@ -122,6 +123,7 @@ describe("Pact", () => {
         return expect(p.setup()).to.eventually.be.fulfilled
       })
     })
+
     describe("when server is properly configured", () => {
       it("returns the current configuration", () => {
         const p: any = new Pact(fullOpts)
@@ -161,7 +163,6 @@ describe("Pact", () => {
 
     describe("when given a provider state", () => {
       it("creates interaction with state", () => {
-        pact.opts = fullOpts
         pact.mockService = {
           addInteraction: (
             int: InteractionObject
@@ -176,7 +177,6 @@ describe("Pact", () => {
 
     describe("when not given a provider state", () => {
       it("creates interaction with no state", () => {
-        pact.opts = fullOpts
         pact.mockService = {
           addInteraction: (
             int: InteractionObject
@@ -205,7 +205,6 @@ describe("Pact", () => {
               body: {},
             })
 
-          pact.opts = fullOpts
           pact.mockService = {
             addInteraction: (int: Interaction): Promise<Interaction> =>
               Promise.resolve(int),
@@ -222,17 +221,9 @@ describe("Pact", () => {
   describe("#verify", () => {
     describe("when pact verification is successful", () => {
       it("returns a successful promise and remove interactions", () => {
-        const verifyStub = sinon
-          .stub(MockService.prototype, "verify")
-          .resolves("verified!")
-        const removeInteractionsStub = sinon
-          .stub(MockService.prototype, "removeInteractions")
-          .resolves("removeInteractions")
-
-        pact.opts = fullOpts
         pact.mockService = {
-          verify: verifyStub,
-          removeInteractions: removeInteractionsStub,
+          verify: () => Promise.resolve("verified!"),
+          removeInteractions: () => Promise.resolve("removeInteractions"),
         } as any
 
         const verifyPromise = pact.verify()
@@ -246,16 +237,12 @@ describe("Pact", () => {
 
     describe("when pact verification is unsuccessful", () => {
       it("throws an error", () => {
-        const verifyStub = sinon
-          .stub(MockService.prototype, "verify")
-          .rejects("not verified!")
         const removeInteractionsStub = sinon
           .stub(MockService.prototype, "removeInteractions")
           .resolves("removeInteractions")
 
-        pact.opts = fullOpts
         pact.mockService = {
-          verify: verifyStub,
+          verify: () => Promise.reject("not verified!"),
           removeInteractions: removeInteractionsStub,
         } as any
 
@@ -273,21 +260,11 @@ describe("Pact", () => {
     describe("when pact verification is successful", () => {
       describe("and an error is thrown in the cleanup", () => {
         it("throws an error", () => {
-          const verifyStub = sinon
-            .stub(MockService.prototype, "verify")
-            .resolves("verified!")
-          const removeInteractionsStub = sinon.stub(
-            MockService.prototype,
-            "removeInteractions"
-          )
-          removeInteractionsStub.throws(
-            new Error("error removing interactions")
-          )
-
-          pact.opts = fullOpts
           pact.mockService = {
-            verify: verifyStub,
-            removeInteractions: removeInteractionsStub,
+            verify: () => Promise.resolve("verified!"),
+            removeInteractions: () => {
+              throw new Error("error removing interactions")
+            },
           } as any
 
           return expect(pact.verify()).to.eventually.be.rejectedWith(Error)
@@ -298,18 +275,14 @@ describe("Pact", () => {
 
   describe("#finalize", () => {
     describe("when writing Pact is successful", () => {
-      it("returns a successful promise and shut down down the mock server", () => {
-        const writePactStub = sinon
-          .stub(MockService.prototype, "writePact")
-          .resolves()
-
-        pact.opts = fullOpts
+      it("returns a successful promise and shuts down down the mock server", () => {
         pact.mockService = {
-          writePact: writePactStub,
+          writePact: () => Promise.resolve("pact file written!"),
           removeInteractions: sinon.stub(),
         } as any
+
         pact.server = {
-          delete: sinon.stub(PactServer.prototype, "delete").resolves(),
+          delete: () => Promise.resolve(),
         } as any
 
         return expect(pact.finalize()).to.eventually.be.fulfilled
@@ -317,17 +290,14 @@ describe("Pact", () => {
     })
 
     describe("when writing Pact is unsuccessful", () => {
-      it("throws an error and shut down the server", () => {
-        const writePactStub = sinon
-          .stub(MockService.prototype, "writePact")
-          .rejects()
-        const deleteStub = sinon.stub(PactServer.prototype, "delete").resolves()
-
-        pact.opts = fullOpts
+      it("throws an error and shuts down the server", () => {
         pact.mockService = {
-          writePact: writePactStub,
+          writePact: () => Promise.reject(new Error("pact not file written!")),
           removeInteractions: sinon.stub(),
         } as any
+
+        const deleteStub = sinon.stub(PactServer.prototype, "delete").resolves()
+
         pact.server = { delete: deleteStub } as any
 
         return expect(pact.finalize()).to.eventually.be.rejected.then(() =>
@@ -338,17 +308,13 @@ describe("Pact", () => {
 
     describe("when writing pact is successful and shutting down the mock server is unsuccessful", () => {
       it("throws an error", () => {
-        const writePactStub = sinon
-          .stub(MockService.prototype, "writePact")
-          .resolves()
-
-        pact.opts = fullOpts
         pact.mockService = {
-          writePact: writePactStub,
+          writePact: sinon.stub(),
           removeInteractions: sinon.stub(),
         } as any
+
         pact.server = {
-          delete: sinon.stub(PactServer.prototype, "delete").rejects(),
+          delete: () => Promise.reject(),
         } as any
 
         return expect(pact.finalize).to.throw(Error)
@@ -359,13 +325,8 @@ describe("Pact", () => {
   describe("#writePact", () => {
     describe("when writing Pact is successful", () => {
       it("returns a successful promise", () => {
-        const writePactStub = sinon
-          .stub(MockService.prototype, "writePact")
-          .resolves("pact file written!")
-
-        pact.opts = fullOpts
         pact.mockService = {
-          writePact: writePactStub,
+          writePact: () => Promise.resolve("pact file written!"),
           removeInteractions: sinon.stub(),
         } as any
 
@@ -382,13 +343,8 @@ describe("Pact", () => {
   describe("#removeInteractions", () => {
     describe("when removing interactions is successful", () => {
       it("returns a successful promise", () => {
-        const removeInteractionsStub = sinon
-          .stub(MockService.prototype, "removeInteractions")
-          .resolves("interactions removed!")
-
-        pact.opts = fullOpts
         pact.mockService = {
-          removeInteractions: removeInteractionsStub,
+          removeInteractions: () => Promise.resolve("interactions removed!"),
         } as any
 
         const removeInteractionsPromise = pact.removeInteractions()

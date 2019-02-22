@@ -134,6 +134,7 @@ describe("Interaction", () => {
             path: "/path",
           })
           .json()
+
         expect(actual.request).to.have.any.keys("body")
       })
 
@@ -146,6 +147,7 @@ describe("Interaction", () => {
             path: "/path",
           })
           .json()
+
         expect(actual.request).not.to.have.any.keys("body")
       })
     })
@@ -207,6 +209,7 @@ describe("Interaction", () => {
           body: "",
           status: 204,
         })
+
         const actual = interaction.json()
         expect(actual.response).to.have.any.keys("body")
       })
@@ -217,6 +220,7 @@ describe("Interaction", () => {
           body: undefined,
           status: 204,
         })
+
         const actual = interaction.json()
         expect(actual.response).not.to.have.any.keys("body")
       })

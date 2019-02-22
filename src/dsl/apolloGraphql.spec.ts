@@ -26,6 +26,7 @@ describe("ApolloGraphQLInteraction", () => {
         expect(json.request.body.variables).to.deep.eq({ foo: "bar" })
       })
     })
+
     describe("when no variables are presented", () => {
       it("adds an empty variables property to the payload", () => {
         interaction.uponReceiving("a request")

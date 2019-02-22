@@ -133,12 +133,15 @@ describe("GraphQLInteraction", () => {
         expect(() => interaction.json()).to.throw()
       })
     })
+
     context("when description is empty", () => {
       it("fails with an error", () => {
         interaction.withQuery("{ hello }")
+
         return expect(() => interaction.json()).to.throw()
       })
     })
+
     describe("when no operation is provided", () => {
       it("does not be present in unmarshaled body", () => {
         interaction.uponReceiving("a request")
@@ -149,6 +152,7 @@ describe("GraphQLInteraction", () => {
       })
     })
   })
+
   context("when given a valid query", () => {
     it("marshals the query to JSON", () => {
       interaction.uponReceiving("a request")

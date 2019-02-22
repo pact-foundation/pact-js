@@ -166,7 +166,7 @@ describe("PactWeb", () => {
 
     describe("when pact verification is successful", () => {
       describe("and an error is thrown in the cleanup", () => {
-        it("throws an error", done => {
+        it("throws an error", () => {
           pact.mockService = {
             verify: () => Promise.resolve("verified!"),
             removeInteractions: () => {
@@ -174,9 +174,7 @@ describe("PactWeb", () => {
             },
           } as any
 
-          expect(pact.verify())
-            .to.eventually.be.rejectedWith(Error)
-            .notify(done)
+          return expect(pact.verify()).to.eventually.be.rejectedWith(Error)
         })
       })
     })
@@ -203,9 +201,7 @@ describe("PactWeb", () => {
           removeInteractions: sinon.stub(),
         } as any
 
-        const writePactPromise = pact.finalize()
-
-        return expect(writePactPromise).to.eventually.be.rejectedWith(Error)
+        return expect(pact.finalize()).to.eventually.be.rejectedWith(Error)
       })
     })
   })
