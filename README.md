@@ -33,6 +33,7 @@ Read [Getting started with Pact] for more information for beginners.
 
 - [Pact JS](#pact-js)
   - [Installation](#installation)
+    - [Do Not Track](#do-not-track)
   - [Using Pact JS](#using-pact-js)
   - [HTTP API Testing](#http-api-testing)
     - [Consumer Side Testing](#consumer-side-testing)
@@ -79,6 +80,21 @@ Read [Getting started with Pact] for more information for beginners.
 
 ```
 npm i -S @pact-foundation/pact@latest
+```
+
+### Do Not Track
+
+In order to get better statistics as to who is using Pact, we have an anonymous tracking event that triggers when Pact installs for the first time. The only things we [track](https://github.com/pact-foundation/pact-node/blob/master/standalone/install.ts#L132-L143) are your type of OS, and the version information for the package being installed. No PII data is sent as part of this request. To respect your privacy, you can disable tracking by simply adding a 'do not track' flag within your package.json file or setting the environment variable `PACT_DO_NOT_TRACK=1`:
+
+```json
+{
+	"name": "some-project",
+	...
+	"config": {
+		"pact_do_not_track": true
+	},
+	...
+}
 ```
 
 See the [Changelog] for versions and their history.
