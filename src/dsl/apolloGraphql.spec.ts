@@ -14,7 +14,7 @@ describe("ApolloGraphQLInteraction", () => {
 
   describe("#withVariables", () => {
     describe("when given a set of variables", () => {
-      it("should add the variables to the payload", () => {
+      it("adds the variables to the payload", () => {
         interaction.uponReceiving("a request")
         interaction.withOperation("query")
         interaction.withQuery("{ hello }")
@@ -27,7 +27,7 @@ describe("ApolloGraphQLInteraction", () => {
       })
     })
     describe("when no variables are presented", () => {
-      it("should add an empty variables property to the payload", () => {
+      it("adds an empty variables property to the payload", () => {
         interaction.uponReceiving("a request")
         interaction.withOperation("query")
         interaction.withQuery("{ hello }")
@@ -40,7 +40,7 @@ describe("ApolloGraphQLInteraction", () => {
 
   describe("#withOperation", () => {
     describe("when no operationNaame is presented", () => {
-      it("should add a null operationName property to the payload", () => {
+      it("adds a null operationName property to the payload", () => {
         interaction.uponReceiving("a request")
         interaction.withQuery("{ hello }")
 

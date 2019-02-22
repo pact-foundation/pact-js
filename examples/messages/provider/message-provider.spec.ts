@@ -24,7 +24,7 @@ describe("Message provider tests", () => {
   })
 
   describe("send a dog event", () => {
-    it("should send a valid dog", () => {
+    it("sends a valid dog", () => {
       return p.verify()
     })
   })

@@ -16,7 +16,7 @@ describe("Serverless consumer tests", () => {
   })
 
   describe("receive a pact event", () => {
-    it("should accept a valid event", () => {
+    it("accepts a valid event", () => {
       return messagePact
         .expectsToReceive("a request to save an event")
         .withContent({

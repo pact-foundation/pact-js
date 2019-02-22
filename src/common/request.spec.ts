@@ -20,7 +20,7 @@ describe("Request", () => {
     afterEach(() => nock.cleanAll())
 
     describe("Promise", () => {
-      it("Should return a promise", () => {
+      it("returns a promise", () => {
         nock(url)
           .get("/")
           .reply(200)
@@ -32,7 +32,7 @@ describe("Request", () => {
           expect(r).to.be.fulfilled,
         ])
       })
-      it("Should resolve when request succeeds with response body", () => {
+      it("resolves when request succeeds with response body", () => {
         const body = "body"
         nock(url)
           .get("/")
@@ -43,7 +43,7 @@ describe("Request", () => {
           expect(p).to.eventually.be.equal(body),
         ])
       })
-      it("Should reject when request fails with error message", () => {
+      it("rejects when request fails with error message", () => {
         const error = "error"
         nock(url)
           .get("/")
@@ -53,7 +53,7 @@ describe("Request", () => {
       })
     })
     describe("Headers", () => {
-      it("Should have Pact headers are sent with every request", () => {
+      it("sends Pact headers are sent with every request", () => {
         nock(url)
           .matchHeader("X-Pact-Mock-Service", "true")
           .get("/")
@@ -62,7 +62,7 @@ describe("Request", () => {
       })
     })
     describe("SSL", () => {
-      it("Should ignore self signed certificate errors", () => {
+      it("ignores self signed certificate errors", () => {
         nock(urlSecure)
           .matchHeader("X-Pact-Mock-Service", "true")
           .get("/")

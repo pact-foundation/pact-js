@@ -116,7 +116,7 @@ describe("MockService", () => {
       const mock = new MockService("aconsumer", "aprovider", 1234)
 
       describe("and writing is successful", () => {
-        it("should write the consumer and provider details into the pact", done => {
+        it("writes the consumer and provider details into the pact", done => {
           nock(mock.baseUrl)
             .post(/pact$/, {
               consumer: { name: "aconsumer" },
@@ -129,7 +129,7 @@ describe("MockService", () => {
       })
 
       describe("and writing fails", () => {
-        it("should return a rejected promise", done => {
+        it("returns a rejected promise", done => {
           nock(mock.baseUrl)
             .post(/pact$/, {})
             .reply(500)
@@ -140,7 +140,7 @@ describe("MockService", () => {
 
     describe("when consumer and provider details are not provided", () => {
       const mock = new MockService(undefined, undefined, 1234)
-      it("should not write the consumer and provider details into the pact", done => {
+      it("does not write the consumer and provider details into the pact", done => {
         nock(mock.baseUrl)
           .post(/pact$/)
           .reply(200)

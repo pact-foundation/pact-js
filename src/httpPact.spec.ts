@@ -83,7 +83,7 @@ describe("Pact", () => {
       provider: "B",
     }
 
-    it("should merge options with sensible defaults", () => {
+    it("merges options with sensible defaults", () => {
       const opts = PactType.createOptionsWithDefaults(constructorOpts)
       expect(opts.consumer).to.eq("A")
       expect(opts.provider).to.eq("B")
@@ -105,7 +105,7 @@ describe("Pact", () => {
 
     describe("when server is not properly configured", () => {
       describe("and pact-node is unable to start the server", () => {
-        it("should return a rejected promise", () => {
+        it("returns a rejected promise", () => {
           // TODO: actually test is pact-node is failing on start with a bad config instead of stubbing it
           const startStub = sandbox
             .stub(PactServer.prototype, "start")
@@ -119,7 +119,7 @@ describe("Pact", () => {
       })
     })
     describe("when server is properly configured", () => {
-      it("should start the mock server in the background", () => {
+      it("starts the mock server in the background", () => {
         // TODO: actually test is pact-node is starting instead of stubbing it
         const startStub = sandbox.stub(PactServer.prototype, "start")
         startStub.resolves()
@@ -130,7 +130,7 @@ describe("Pact", () => {
       })
     })
     describe("when server is properly configured", () => {
-      it("should return the current configuration", () => {
+      it("returns the current configuration", () => {
         // TODO: actually test is pact-node is starting instead of stubbing it
         const startStub = sandbox.stub(PactServer.prototype, "start")
         startStub.resolves()
@@ -233,7 +233,7 @@ describe("Pact", () => {
     const Pact = PactType
 
     describe("when pact verification is successful", () => {
-      it("should return a successful promise and remove interactions", () => {
+      it("returns a successful promise and remove interactions", () => {
         const verifyStub = sandbox
           .stub(MockService.prototype, "verify")
           .resolves("verified!")
@@ -257,7 +257,7 @@ describe("Pact", () => {
     })
 
     describe("when pact verification is unsuccessful", () => {
-      it("should throw an error", () => {
+      it("throws an error", () => {
         const verifyStub = sandbox
           .stub(MockService.prototype, "verify")
           .rejects("not verified!")
@@ -284,7 +284,7 @@ describe("Pact", () => {
 
     describe("when pact verification is successful", () => {
       describe("and an error is thrown in the cleanup", () => {
-        it("should throw an error", () => {
+        it("throws an error", () => {
           const verifyStub = sandbox
             .stub(MockService.prototype, "verify")
             .resolves("verified!")
@@ -313,7 +313,7 @@ describe("Pact", () => {
     const Pact = PactType
 
     describe("when writing Pact is successful", () => {
-      it("should return a successful promise and shut down down the mock server", () => {
+      it("returns a successful promise and shut down down the mock server", () => {
         const writePactStub = sandbox
           .stub(MockService.prototype, "writePact")
           .resolves()
@@ -333,7 +333,7 @@ describe("Pact", () => {
     })
 
     describe("when writing Pact is unsuccessful", () => {
-      it("should throw an error and shut down the server", () => {
+      it("throws an error and shut down the server", () => {
         const writePactStub = sandbox
           .stub(MockService.prototype, "writePact")
           .rejects()
@@ -356,7 +356,7 @@ describe("Pact", () => {
     })
 
     describe("when writing pact is successful and shutting down the mock server is unsuccessful", () => {
-      it("should throw an error", () => {
+      it("throws an error", () => {
         const writePactStub = sandbox
           .stub(MockService.prototype, "writePact")
           .resolves()
@@ -380,7 +380,7 @@ describe("Pact", () => {
     const Pact = PactType
 
     describe("when writing Pact is successful", () => {
-      it("should return a successful promise", () => {
+      it("returns a successful promise", () => {
         const writePactStub = sandbox
           .stub(MockService.prototype, "writePact")
           .resolves("pact file written!")
@@ -405,7 +405,7 @@ describe("Pact", () => {
     const Pact = PactType
 
     describe("when removing interactions is successful", () => {
-      it("should return a successful promise", () => {
+      it("returns a successful promise", () => {
         const removeInteractionsStub = sandbox
           .stub(MockService.prototype, "removeInteractions")
           .resolves("interactions removed!")

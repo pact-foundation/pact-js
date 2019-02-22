@@ -103,7 +103,7 @@ describe("PactWeb", () => {
 
   describe("#verify", () => {
     describe("when pact verification is successful", () => {
-      it("should return a successful promise and remove interactions", done => {
+      it("returns a successful promise and remove interactions", done => {
         const verifyStub = sandbox.stub(MockService.prototype, "verify")
         verifyStub.resolves("verified!")
         const removeInteractionsStub = sandbox.stub(
@@ -126,7 +126,7 @@ describe("PactWeb", () => {
     })
 
     describe("when pact verification is unsuccessful", () => {
-      it("should throw an error", done => {
+      it("throws an error", done => {
         const verifyStub = sandbox.stub(MockService.prototype, "verify")
         verifyStub.rejects("not verified!")
         const removeInteractionsStub = sandbox.stub(
@@ -154,7 +154,7 @@ describe("PactWeb", () => {
 
     describe("when pact verification is successful", () => {
       describe("and an error is thrown in the cleanup", () => {
-        it("should throw an error", done => {
+        it("throws an error", done => {
           const verifyStub = sandbox.stub(MockService.prototype, "verify")
           verifyStub.resolves("verified!")
           const removeInteractionsStub = sandbox.stub(
@@ -182,7 +182,7 @@ describe("PactWeb", () => {
 
   describe("#finalize", () => {
     describe("when writing Pact is successful", () => {
-      it("should return a successful promise and shut down down the mock server", done => {
+      it("returns a successful promise and shut down down the mock server", done => {
         const writePactStub = sandbox
           .stub(MockService.prototype, "writePact")
           .resolves("pact file written!")
@@ -200,7 +200,7 @@ describe("PactWeb", () => {
     })
 
     describe("when writing Pact is unsuccessful", () => {
-      it("should throw an error", done => {
+      it("throws an error", done => {
         const writePactStub = sandbox
           .stub(MockService.prototype, "writePact")
           .rejects("pact not file written!")
@@ -222,7 +222,7 @@ describe("PactWeb", () => {
 
   describe("#writePact", () => {
     describe("when writing Pact is successful", () => {
-      it("should return a successful promise", done => {
+      it("returns a successful promise", done => {
         const writePactStub = sandbox
           .stub(MockService.prototype, "writePact")
           .resolves("pact file written!")
@@ -243,7 +243,7 @@ describe("PactWeb", () => {
 
   describe("#removeInteractions", () => {
     describe("when removing interactions is successful", () => {
-      it("should return a successful promise", done => {
+      it("returns a successful promise", done => {
         const removeInteractionsStub = sandbox
           .stub(MockService.prototype, "removeInteractions")
           .resolves("interactions removed!")

@@ -19,7 +19,7 @@ describe("Message consumer tests", () => {
   })
 
   describe("receive dog event", () => {
-    it("should accept a valid dog", () => {
+    it("accepts a valid dog", () => {
       return messagePact
         .given("some state")
         .expectsToReceive("a request for a dog")
@@ -37,7 +37,7 @@ describe("Message consumer tests", () => {
 
   // This is an example of a pact breaking
   // uncomment to see how it works!
-  it.skip("should not accept an invalid dog", () => {
+  it.skip("Does not accept an invalid dog", () => {
     return messagePact
       .given("some state")
       .expectsToReceive("a request for a dog")

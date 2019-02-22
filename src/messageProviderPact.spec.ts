@@ -67,7 +67,7 @@ describe("MesageProvider", () => {
 
   describe("#setupVerificationHandler", () => {
     describe("when their is a valid setup", () => {
-      it("should create a valid express handler", done => {
+      it("creates a valid express handler", done => {
         const setupVerificationHandler = (provider as any).setupVerificationHandler.bind(
           provider
         )()
@@ -80,7 +80,7 @@ describe("MesageProvider", () => {
       })
     })
     describe("when their is an invalid setup", () => {
-      it("should create a valid express handler that rejects the message", done => {
+      it("creates a valid express handler that rejects the message", done => {
         const setupVerificationHandler = (provider as any).setupVerificationHandler.bind(
           provider
         )()
@@ -102,7 +102,7 @@ describe("MesageProvider", () => {
 
   describe("#findHandler", () => {
     describe("when given a handler that exists", () => {
-      it("should return a Handler object", () => {
+      it("returns a Handler object", () => {
         const findHandler = (provider as any).findHandler.bind(provider)
         return expect(findHandler(successfulMessage)).to.eventually.be.a(
           "function"
@@ -110,7 +110,7 @@ describe("MesageProvider", () => {
       })
     })
     describe("when given a handler that does not exist", () => {
-      it("should return a failed promise", () => {
+      it("returns a failed promise", () => {
         const findHandler = (provider as any).findHandler.bind(provider)
         return expect(findHandler("doesnotexist")).to.eventually.be.rejected
       })
@@ -119,7 +119,7 @@ describe("MesageProvider", () => {
 
   describe("#setupStates", () => {
     describe("when given a handler that exists", () => {
-      it("should return values of all resolved handlers", () => {
+      it("returns values of all resolved handlers", () => {
         const findStateHandler = (provider as any).setupStates.bind(provider)
         return expect(
           findStateHandler(successfulMessage)
@@ -127,7 +127,7 @@ describe("MesageProvider", () => {
       })
     })
     describe("when given a state that does not have a handler", () => {
-      it("should return an empty promise", () => {
+      it("returns an empty promise", () => {
         provider = new MessageProviderPact({
           consumer: "myconsumer",
           messageProviders: {},
@@ -143,7 +143,7 @@ describe("MesageProvider", () => {
 
   describe("#waitForServerReady", () => {
     describe("when the http server starts up", () => {
-      it("should return a resolved promise", () => {
+      it("returns a resolved promise", () => {
         const waitForServerReady = (provider as any).waitForServerReady
         const server = http.createServer(() => {}).listen()
 
@@ -153,7 +153,7 @@ describe("MesageProvider", () => {
   })
   describe("#setupProxyServer", () => {
     describe("when the http server starts up", () => {
-      it("should return a resolved promise", () => {
+      it("returns a resolved promise", () => {
         const setupProxyServer = (provider as any).setupProxyServer
         const app = express()
 
@@ -162,7 +162,7 @@ describe("MesageProvider", () => {
     })
   })
   describe("#setupProxyApplication", () => {
-    it("should return a valid express app", () => {
+    it("returns a valid express app", () => {
       const setupProxyApplication = (provider as any).setupProxyApplication.bind(
         provider
       )

@@ -26,14 +26,14 @@ describe("Matcher", () => {
   describe("#validateExample", () => {
     describe("when given a valid regex", () => {
       describe("and a matching example", () => {
-        it("should return true", () => {
+        it("returns true", () => {
           expect(validateExample("2010-01-01", ISO8601_DATE_FORMAT)).to.eql(
             true
           )
         })
       })
       describe("and a failing example", () => {
-        it("should return false", () => {
+        it("returns false", () => {
           expect(validateExample("not a date", ISO8601_DATE_FORMAT)).to.eql(
             false
           )
@@ -41,7 +41,7 @@ describe("Matcher", () => {
       })
     })
     describe("when given an invalid regex", () => {
-      it("should return an error", () => {
+      it("returns an error", () => {
         expect(() => {
           validateExample("", "abc(")
         }).to.throw(Error)
@@ -51,7 +51,7 @@ describe("Matcher", () => {
 
   describe("#term", () => {
     describe("when given a valid regular expression and example", () => {
-      it("should return a serialized Ruby object", () => {
+      it("returns a serialized Ruby object", () => {
         const expected = {
           data: {
             generate: "myawesomeword",
@@ -81,13 +81,13 @@ describe("Matcher", () => {
       }
 
       describe("when no term is provided", () => {
-        it("should throw an Error", () => {
+        it("throws an Error", () => {
           expect(createTheTerm.call({})).to.throw(Error)
         })
       })
 
       describe("when an invalid term is provided", () => {
-        it("should throw an Error", () => {
+        it("throws an Error", () => {
           expect(createTheTerm({})).to.throw(Error)
           expect(createTheTerm("")).to.throw(Error)
           expect(createTheTerm({ generate: "foo" })).to.throw(Error)
@@ -97,7 +97,7 @@ describe("Matcher", () => {
     })
 
     describe("when given an example that doesn't match the regular expression", () => {
-      it("should fail with an error", () => {
+      it("fails with an error", () => {
         expect(() => {
           term({
             generate: "abc",
@@ -110,7 +110,7 @@ describe("Matcher", () => {
 
   describe("#somethingLike", () => {
     describe("when provided a value", () => {
-      it("should return a serialized Ruby object", () => {
+      it("returns a serialized Ruby object", () => {
         const expected = {
           contents: "myspecialvalue",
           json_class: "Pact::SomethingLike",
@@ -129,13 +129,13 @@ describe("Matcher", () => {
       }
 
       describe("when no value is provided", () => {
-        it("`should throw an Error", () => {
+        it("`throws an Error", () => {
           expect(createTheValue.call({})).to.throw(Error)
         })
       })
 
       describe("when an invalid value is provided", () => {
-        it("should throw an Error", () => {
+        it("throws an Error", () => {
           expect(createTheValue(undefined)).to.throw(Error)
           expect(createTheValue(() => {})).to.throw(Error)
         })
@@ -145,7 +145,7 @@ describe("Matcher", () => {
 
   describe("#eachLike", () => {
     describe("when content is null", () => {
-      it("should provide null as contents", () => {
+      it("provides null as contents", () => {
         const expected = {
           contents: null,
           json_class: "Pact::ArrayLike",
@@ -158,7 +158,7 @@ describe("Matcher", () => {
     })
 
     describe("when an object is provided", () => {
-      it("should provide the object as contents", () => {
+      it("provides the object as contents", () => {
         const expected = {
           contents: { a: 1 },
           json_class: "Pact::ArrayLike",
@@ -171,7 +171,7 @@ describe("Matcher", () => {
     })
 
     describe("when object.min is invalid", () => {
-      it("should throw an error message", () => {
+      it("throws an Error message", () => {
         expect(() => {
           eachLike({ a: 1 }, { min: 0 })
         }).to.throw(Error)
@@ -179,7 +179,7 @@ describe("Matcher", () => {
     })
 
     describe("when an array is provided", () => {
-      it("should provide the array as contents", () => {
+      it("provides the array as contents", () => {
         const expected = {
           contents: [1, 2, 3],
           json_class: "Pact::ArrayLike",
@@ -192,7 +192,7 @@ describe("Matcher", () => {
     })
 
     describe("when a value is provided", () => {
-      it("should add the value in contents", () => {
+      it("adds the value in contents", () => {
         const expected = {
           contents: "test",
           json_class: "Pact::ArrayLike",
@@ -206,7 +206,7 @@ describe("Matcher", () => {
 
     describe("when the content has Pact.Macters", () => {
       describe("of type somethingLike", () => {
-        it("should nest somethingLike correctly", () => {
+        it("nests somethingLike correctly", () => {
           const expected = {
             contents: {
               id: {
@@ -226,7 +226,7 @@ describe("Matcher", () => {
       })
 
       describe("of type term", () => {
-        it("should nest term correctly", () => {
+        it("nests term correctly", () => {
           const expected = {
             contents: {
               colour: {
@@ -262,7 +262,7 @@ describe("Matcher", () => {
       })
 
       describe("of type eachLike", () => {
-        it("should nest eachlike in contents", () => {
+        it("nests eachlike in contents", () => {
           const expected = {
             contents: {
               contents: "blue",
@@ -281,7 +281,7 @@ describe("Matcher", () => {
       })
 
       describe("complex object with multiple Pact.Matchers", () => {
-        it("should nest objects correctly", () => {
+        it("nests objects correctly", () => {
           const expected = {
             contents: {
               contents: {
@@ -345,7 +345,7 @@ describe("Matcher", () => {
     })
 
     describe("When no options.min is not provided", () => {
-      it("should default to a min of 1", () => {
+      it("defaults to a min of 1", () => {
         const expected = {
           contents: { a: 1 },
           json_class: "Pact::ArrayLike",
@@ -358,7 +358,7 @@ describe("Matcher", () => {
     })
 
     describe("When a options.min is provided", () => {
-      it("should provide the object as contents", () => {
+      it("provides the object as contents", () => {
         const expected = {
           contents: { a: 1 },
           json_class: "Pact::ArrayLike",
@@ -373,13 +373,13 @@ describe("Matcher", () => {
 
   describe("#uuid", () => {
     describe("when given a valid UUID", () => {
-      it("should not fail", () => {
+      it("creates a valid matcher", () => {
         expect(uuid("ce118b6e-d8e1-11e7-9296-cec278b6b50a")).to.be.an("object")
         expect(uuid()).to.be.an("object")
       })
     })
     describe("when given an invalid UUID", () => {
-      it("should return an error", () => {
+      it("returns an error", () => {
         expect(() => {
           uuid("abc")
         }).to.throw(Error)
@@ -389,13 +389,13 @@ describe("Matcher", () => {
 
   describe("#ipv4Address", () => {
     describe("when given a valid ipv4Address", () => {
-      it("should not fail", () => {
+      it("creates a valid matcher", () => {
         expect(ipv4Address("127.0.0.1")).to.be.an("object")
         expect(ipv4Address()).to.be.an("object")
       })
     })
     describe("when given an invalid ipv4Address", () => {
-      it("should return an error", () => {
+      it("returns an error", () => {
         expect(() => {
           ipv4Address("abc")
         }).to.throw(Error)
@@ -405,7 +405,7 @@ describe("Matcher", () => {
 
   describe("#ipv6Address", () => {
     describe("when given a valid ipv6Address", () => {
-      it("should not fail", () => {
+      it("creates a valid matcher", () => {
         expect(ipv6Address("::1")).to.be.an("object")
         expect(ipv6Address("2001:0db8:85a3:0000:0000:8a2e:0370:7334")).to.be.an(
           "object"
@@ -414,7 +414,7 @@ describe("Matcher", () => {
       })
     })
     describe("when given an invalid ipv6Address", () => {
-      it("should return an error", () => {
+      it("returns an error", () => {
         expect(() => {
           ipv6Address("abc")
         }).to.throw(Error)
@@ -424,13 +424,13 @@ describe("Matcher", () => {
 
   describe("#hexadecimal", () => {
     describe("when given a valid hexadecimal", () => {
-      it("should not fail", () => {
+      it("creates a valid matcher", () => {
         expect(hexadecimal("6F")).to.be.an("object")
         expect(hexadecimal()).to.be.an("object")
       })
     })
     describe("when given an invalid hexadecimal", () => {
-      it("should return an error", () => {
+      it("returns an error", () => {
         expect(() => {
           hexadecimal("x1")
         }).to.throw(Error)
@@ -440,7 +440,7 @@ describe("Matcher", () => {
 
   describe("#boolean", () => {
     describe("when used it should create a JSON object", () => {
-      it("should not fail", () => {
+      it("creates a valid matcher", () => {
         expect(boolean()).to.be.an("object")
       })
     })
@@ -448,7 +448,7 @@ describe("Matcher", () => {
 
   describe("#decimal", () => {
     describe("when given a valid decimal", () => {
-      it("should not fail", () => {
+      it("creates a valid matcher", () => {
         expect(decimal(10.1)).to.be.an("object")
         expect(decimal()).to.be.an("object")
         expect(decimal(0.0).contents).to.equal(0.0)
@@ -458,7 +458,7 @@ describe("Matcher", () => {
 
   describe("#integer", () => {
     describe("when given a valid integer", () => {
-      it("should not fail", () => {
+      it("creates a valid matcher", () => {
         expect(integer(10)).to.be.an("object")
         expect(integer()).to.be.an("object")
         expect(integer(0).contents).to.equal(0)
@@ -469,7 +469,7 @@ describe("Matcher", () => {
   describe("Date Matchers", () => {
     describe("#rfc3339Timestamp", () => {
       describe("when given a valid rfc3339Timestamp", () => {
-        it("should not fail", () => {
+        it("creates a valid matcher", () => {
           expect(rfc3339Timestamp("Mon, 31 Oct 2016 15:21:41 -0400")).to.be.an(
             "object"
           )
@@ -477,7 +477,7 @@ describe("Matcher", () => {
         })
       })
       describe("when given an invalid rfc3339Timestamp", () => {
-        it("should return an error", () => {
+        it("returns an error", () => {
           expect(() => {
             rfc3339Timestamp("abc")
           }).to.throw(Error)
@@ -487,13 +487,13 @@ describe("Matcher", () => {
 
     describe("#iso8601Time", () => {
       describe("when given a valid iso8601Time", () => {
-        it("should not fail", () => {
+        it("creates a valid matcher", () => {
           expect(iso8601Time("T22:44:30.652Z")).to.be.an("object")
           expect(iso8601Time()).to.be.an("object")
         })
       })
       describe("when given an invalid iso8601Time", () => {
-        it("should return an error", () => {
+        it("returns an error", () => {
           expect(() => {
             iso8601Time("abc")
           }).to.throw(Error)
@@ -503,13 +503,13 @@ describe("Matcher", () => {
 
     describe("#iso8601Date", () => {
       describe("when given a valid iso8601Date", () => {
-        it("should not fail", () => {
+        it("creates a valid matcher", () => {
           expect(iso8601Date("2017-12-05")).to.be.an("object")
           expect(iso8601Date()).to.be.an("object")
         })
       })
       describe("when given an invalid iso8601Date", () => {
-        it("should return an error", () => {
+        it("returns an error", () => {
           expect(() => {
             iso8601Date("abc")
           }).to.throw(Error)
@@ -519,7 +519,7 @@ describe("Matcher", () => {
 
     describe("#iso8601DateTime", () => {
       describe("when given a valid iso8601DateTime", () => {
-        it("should not fail", () => {
+        it("creates a valid matcher", () => {
           expect(iso8601DateTime("2015-08-06T16:53:10+01:00")).to.be.an(
             "object"
           )
@@ -527,7 +527,7 @@ describe("Matcher", () => {
         })
       })
       describe("when given an invalid iso8601DateTime", () => {
-        it("should return an error", () => {
+        it("returns an error", () => {
           expect(() => {
             iso8601DateTime("abc")
           }).to.throw(Error)
@@ -537,7 +537,7 @@ describe("Matcher", () => {
 
     describe("#iso8601DateTimeWithMillis", () => {
       describe("when given a valid iso8601DateTimeWithMillis", () => {
-        it("should not fail", () => {
+        it("creates a valid matcher", () => {
           expect(
             iso8601DateTimeWithMillis("2015-08-06T16:53:10.123+01:00")
           ).to.be.an("object")
@@ -548,7 +548,7 @@ describe("Matcher", () => {
         })
       })
       describe("when given an invalid iso8601DateTimeWithMillis", () => {
-        it("should return an error", () => {
+        it("returns an error", () => {
           expect(() => {
             iso8601DateTimeWithMillis("abc")
           }).to.throw(Error)
@@ -558,7 +558,7 @@ describe("Matcher", () => {
 
     describe("#extractPayload", () => {
       describe("when given a simple matcher", () => {
-        it("should remove all matching guff", () => {
+        it("removes all matching guff", () => {
           const expected = "myawesomeword"
 
           const matcher = term({
@@ -571,7 +571,7 @@ describe("Matcher", () => {
         })
       })
       describe("when given a complex nested object with matchers", () => {
-        it("should remove all matching guff", () => {
+        it("removes all matching guff", () => {
           const o = somethingLike({
             stringMatcher: {
               awesomeSetting: somethingLike("a string"),

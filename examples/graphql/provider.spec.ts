@@ -11,7 +11,7 @@ describe("Pact Verification", () => {
     })
   })
 
-  it("should validate the expectations of Matching Service", () => {
+  it("validates the expectations of Matching Service", () => {
     // lexical binding required here
     const opts = {
       // Local pacts

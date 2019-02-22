@@ -11,11 +11,12 @@ server.listen(8081, () => {
 
 // Verify that the provider meets all consumer expectations
 describe("Pact Verification", () => {
-  it("should validate the expectations of Matching Service", () => {
+  it("validates the expectations of Matching Service", () => {
     let token = "INVALID TOKEN"
 
     let opts = {
       provider: "Animal Profile Service",
+      logLevel: "DEBUG",
 
       // TODO: Rather than provide a running endpoint, could we simply pass in
       //       an "application" to invoke, rather than fully HTTP start/stop context?

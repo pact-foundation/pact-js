@@ -98,7 +98,7 @@ describe("MessageConsumer", () => {
 
   describe("#verify", () => {
     describe("when given a valid handler and message", () => {
-      it("should successfully verify the consumer message", () => {
+      it("verifies the consumer message", () => {
         const stubbedConsumer = new MessageConsumerPact({
           consumer: "myconsumer",
           provider: "myprovider",
@@ -145,7 +145,7 @@ describe("MessageConsumer", () => {
   describe("handler transformers", () => {
     describe("#asynchronousbodyHandler", () => {
       describe("when given a function that succeeds", () => {
-        it("should return a Handler object that returns a completed promise", () => {
+        it("returns a Handler object that returns a completed promise", () => {
           const failFn = (obj: any) => Promise.resolve("yay!")
           const hFn = asynchronousBodyHandler(failFn)
 
@@ -153,7 +153,7 @@ describe("MessageConsumer", () => {
         })
       })
       describe("when given a function that throws an Exception", () => {
-        it("should return a Handler object that returns a rejected promise", () => {
+        it("returns a Handler object that returns a rejected promise", () => {
           const failFn = (obj: any) => Promise.reject("fail")
           const hFn = asynchronousBodyHandler(failFn)
 
@@ -164,7 +164,7 @@ describe("MessageConsumer", () => {
 
     describe("#synchronousbodyHandler", () => {
       describe("when given a function that succeeds", () => {
-        it("should return a Handler object that returns a completed promise", () => {
+        it("returns a Handler object that returns a completed promise", () => {
           const failFn = (obj: any) => {
             /* do nothing! */
           }
@@ -175,7 +175,7 @@ describe("MessageConsumer", () => {
       })
 
       describe("when given a function that throws an Exception", () => {
-        it("should return a Handler object that returns a rejected promise", () => {
+        it("returns a Handler object that returns a rejected promise", () => {
           const failFn = (obj: any) => {
             throw new Error("fail")
           }

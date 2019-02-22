@@ -224,7 +224,7 @@ describe("Pact", () => {
       })
     )
 
-    it("should create a new mate", done => {
+    it("creates a new mate", done => {
       expect(createMateForDates(suitor)).to.eventually.be.fulfilled.notify(done)
     })
   })

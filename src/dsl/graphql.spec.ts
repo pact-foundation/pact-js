@@ -15,7 +15,7 @@ describe("GraphQLInteraction", () => {
 
   describe("#withOperation", () => {
     describe("when given a valid operation", () => {
-      it("should not fail", () => {
+      it("creates a GraphQL Interaction", () => {
         interaction.uponReceiving("a request")
         interaction.withOperation("query")
         interaction.withQuery("{ hello }")
@@ -25,7 +25,7 @@ describe("GraphQLInteraction", () => {
       })
     })
     describe("when given an invalid operation", () => {
-      it("should fail with an error", () => {
+      it("fails with an error", () => {
         expect(interaction.withOperation.bind("aoeu")).to.throw(Error)
       })
     })
@@ -33,7 +33,7 @@ describe("GraphQLInteraction", () => {
 
   describe("#withVariables", () => {
     describe("when given a set of variables", () => {
-      it("should add the variables to the payload", () => {
+      it("adds the variables to the payload", () => {
         interaction.uponReceiving("a request")
         interaction.withOperation("query")
         interaction.withQuery("{ hello }")
@@ -46,7 +46,7 @@ describe("GraphQLInteraction", () => {
       })
     })
     describe("when no variables are provided", () => {
-      it("should not add the variables property to the payload", () => {
+      it("does not add the variables property to the payload", () => {
         interaction.uponReceiving("a request")
         interaction.withOperation("query")
         interaction.withQuery("{ hello }")
@@ -56,7 +56,7 @@ describe("GraphQLInteraction", () => {
       })
     })
     describe("when an empty variables object is presented", () => {
-      it("should add the variables property to the payload", () => {
+      it("adds the variables property to the payload", () => {
         interaction.uponReceiving("a request")
         interaction.withOperation("query")
         interaction.withQuery("{ hello }")
@@ -79,13 +79,13 @@ describe("GraphQLInteraction", () => {
     })
 
     describe("when given an empty query", () => {
-      it("should fail with an error", () => {
+      it("fails with an error", () => {
         expect(() => interaction.withQuery(null as any)).to.throw()
       })
     })
 
     describe("when given an invalid query", () => {
-      it("should fail with an error", () => {
+      it("fails with an error", () => {
         expect(() =>
           interaction.withQuery("{ not properly terminated")
         ).to.throw(Error)
@@ -94,7 +94,7 @@ describe("GraphQLInteraction", () => {
 
     describe("when given a valid query", () => {
       describe("without variables", () => {
-        it("should add regular expressions for the whitespace in the query", () => {
+        it("adds regular expressions for the whitespace in the query", () => {
           const json: any = interaction.json()
 
           expect(isMatcher(json.request.body.query)).to.eq(true)
@@ -107,7 +107,7 @@ describe("GraphQLInteraction", () => {
       })
 
       describe("and variables", () => {
-        it("should add regular expressions for the whitespace in the query", () => {
+        it("adds regular expressions for the whitespace in the query", () => {
           interaction.withQuery(`{
             Hello(id: $id) {
               name
@@ -129,18 +129,18 @@ describe("GraphQLInteraction", () => {
 
   describe("#json", () => {
     context("when query is empty", () => {
-      it("should fail with an error", () => {
+      it("fails with an error", () => {
         expect(() => interaction.json()).to.throw()
       })
     })
     context("when description is empty", () => {
-      it("should fail with an error", () => {
+      it("fails with an error", () => {
         interaction.withQuery("{ hello }")
         return expect(() => interaction.json()).to.throw()
       })
     })
     describe("when no operation is provided", () => {
-      it("should not be present in unmarshaled body", () => {
+      it("does not be present in unmarshaled body", () => {
         interaction.uponReceiving("a request")
         interaction.withQuery("{ hello }")
 
@@ -150,7 +150,7 @@ describe("GraphQLInteraction", () => {
     })
   })
   context("when given a valid query", () => {
-    it("should properly marshal the query", () => {
+    it("marshals the query to JSON", () => {
       interaction.uponReceiving("a request")
       interaction.withOperation("query")
       interaction.withQuery("{ hello }")
