@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="7.4.0"></a>
+# [7.4.0](https://github.com/pact-foundation/pact-js/compare/v7.3.0...v7.4.0) (2019-02-22)
+
+
+### Bug Fixes
+
+* **matchers:** remove hardcoded true value from a boolean matcher ([499c02c](https://github.com/pact-foundation/pact-js/commit/499c02c))
+* **portcheck:** feedback from PR 266#discussion_r255314895 ([c583224](https://github.com/pact-foundation/pact-js/commit/c583224)), closes [266#discussion_r255314895](https://github.com/266/issues/discussion_r255314895)
+
+
+### Features
+
+* pact-web provider.addInteraction to allow Interaction instance [[#270](https://github.com/pact-foundation/pact-js/issues/270)] ([0814d68](https://github.com/pact-foundation/pact-js/commit/0814d68))
+
+
+
 <a name="7.3.0"></a>
 # [7.3.0](https://github.com/pact-foundation/pact-js/compare/v7.2.0...v7.3.0) (2019-02-09)
 
