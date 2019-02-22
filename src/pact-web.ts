@@ -63,7 +63,9 @@ export class PactWeb {
    * @param {Interaction} interactionObj
    * @returns {Promise}
    */
-  public addInteraction(interactionObj: InteractionObject | Interaction): Promise<string> {
+  public addInteraction(
+    interactionObj: InteractionObject | Interaction
+  ): Promise<string> {
     if (interactionObj instanceof Interaction) {
       return this.mockService.addInteraction(interactionObj)
     }
