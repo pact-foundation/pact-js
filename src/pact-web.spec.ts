@@ -4,7 +4,7 @@ import * as chaiAsPromised from "chai-as-promised"
 import * as sinon from "sinon"
 import * as sinonChai from "sinon-chai"
 import { HTTPMethod } from "./common/request"
-import { InteractionObject } from "./dsl/interaction"
+import { Interaction, InteractionObject } from "./dsl/interaction"
 import { MockService } from "./dsl/mockService"
 import { PactOptionsComplete } from "./dsl/options"
 import { PactWeb } from "./pact-web"
@@ -97,6 +97,34 @@ describe("PactWeb", () => {
         expect(pact.addInteraction(interaction))
           .to.eventually.not.have.property("providerState")
           .notify(done)
+      })
+
+      describe("when given an Interaction as a builder", () => {
+        it("creates interaction", () => {
+          const interaction2 = new Interaction()
+            .given("i have a list of projects")
+            .uponReceiving("a request for projects")
+            .withRequest({
+              method: HTTPMethod.GET,
+              path: "/projects",
+              headers: { Accept: "application/json" },
+            })
+            .willRespondWith({
+              status: 200,
+              headers: { "Content-Type": "application/json" },
+              body: {},
+            })
+
+          const pact = (Object.create(PactWeb.prototype) as any) as PactWeb
+          pact.opts = fullOpts
+          pact.mockService = ({
+            addInteraction: (int: Interaction): Promise<Interaction> =>
+              Promise.resolve(int),
+          } as any) as MockService
+          return expect(
+            pact.addInteraction(interaction2)
+          ).to.eventually.have.property("given")
+        })
       })
     })
   })

@@ -442,6 +442,15 @@ describe("Matcher", () => {
     describe("when used it should create a JSON object", () => {
       it("creates a valid matcher", () => {
         expect(boolean()).to.be.an("object")
+        expect(boolean().contents).to.equal(true)
+      })
+      it("sets value=false", () => {
+        expect(boolean(false)).to.be.an("object")
+        expect(boolean(false).contents).to.equal(false)
+      })
+      it("sets value=true", () => {
+        expect(boolean(true)).to.be.an("object")
+        expect(boolean(true).contents).to.equal(true)
       })
     })
   })

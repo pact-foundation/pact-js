@@ -32,36 +32,32 @@ From a Pact testing point of view, Pact takes the place of the intermediary (MQ/
 The following test creates a contract for a Dog API handler:
 
 ```js
-const {
-  MessageConsumer,
-  Message,
-  synchronousBodyHandler,
-} = require("@pact-foundation/pact")
+  const { MessageConsumerPact, Message, synchronousBodyHandler } = require("@pact-foundation/pact");
 
-// 1 Dog API Handler
-const dogApiHandler = function(dog) {
-  if (!dog.id && !dog.name && !dog.type) {
-    throw new Error("missing fields")
+  // 1 Dog API Handler
+  const dogApiHandler = function(dog) {
+    if (!dog.id && !dog.name && !dog.type) {
+      throw new Error("missing fields");
+    }
+
+    // do some other things to dog...
+    // e.g. dogRepository.save(dog)
+    return;
   }
 
-  // do some other things to dog...
-  // e.g. dogRepository.save(dog)
-  return
-}
+  // 2 Pact Message Consumer
+  const messagePact = new MessageConsumerPact({
+    consumer: "MyJSMessageConsumer",
+    dir: path.resolve(process.cwd(), "pacts"),
+    pactfileWriteMode: "update",
+    provider: "MyJSMessageProvider",
+  });
 
-// 2 Pact Message Consumer
-const messagePact = new MessageConsumer({
-  consumer: "MyJSMessageConsumer",
-  dir: path.resolve(process.cwd(), "pacts"),
-  pactfileWriteMode: "update",
-  provider: "MyJSMessageProvider",
-})
+  describe("receive dog event", () => {
+    it("accepts a valid dog", () => {
 
-describe("receive dog event", () => {
-  it("accepts a valid dog", () => {
-    // 3 Consumer expectations
-    return (
-      messagePact
+      // 3 Consumer expectations
+      return messagePact
         .given("some state")
         .expectsToReceive("a request for a dog")
         .withContent({
@@ -99,7 +95,7 @@ A Provider (Producer in messaging parlance) is the system that will be putting a
 As per the Consumer case, Pact takes the position of the intermediary (MQ/broker) and checks to see whether or not the Provider sends a message that matches the Consumer's expectations.
 
 ```js
-const { MessageProvider, Message } = require("@pact-foundation/pact")
+const { MessageProviderPact, Message } = require("@pact-foundation/pact")
 
 // 1 Messaging integration client
 const dogApiClient = {
@@ -116,8 +112,8 @@ const dogApiClient = {
 
 describe("Message provider tests", () => {
   // 2 Pact setup
-  const p = new MessageProvider({
-    handlers: {
+  const p = new MessageProviderPact({
+    messageProviders: {
       "a request for a dog": () => dogApiClient.createDog(),
     },
     provider: "MyJSMessageProvider",

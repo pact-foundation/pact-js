@@ -9,6 +9,13 @@ exemptLabels:
   - ready
   - good first issue
   - bug
+  - enhancement
+  - help wanted
+  - blocked
+  - Verified
+  - question
+  - Documentation
+  - Triage
 
 # Label to use when marking an issue as stale
 staleLabel: wontfix

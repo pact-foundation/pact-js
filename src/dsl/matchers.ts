@@ -249,8 +249,8 @@ export function integer(int?: number) {
 /**
  * Boolean Matcher.
  */
-export function boolean() {
-  return somethingLike<boolean>(true)
+export function boolean(value: boolean = true) {
+  return somethingLike<boolean>(value)
 }
 
 // Convenience alias'
