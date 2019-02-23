@@ -255,6 +255,7 @@ describe("Pact", () => {
 ### Provider API Testing
 
 <details><summary>Provider API</summary>
+
 Once you have created Pacts for your Consumer, you need to validate those Pacts against your Provider. The Verifier object provides the following API for you to do so:
 
 | API                |  Options  | Returns   | Description           |
@@ -280,7 +281,7 @@ new Verifier().verifyProvider(opts).then(function () {
 
 #### Verification Options
 
-<details><summary>Verificatio Options</summary>
+<details><summary>Verification Options</summary>
 
 | Parameter                   | Required | Type             | Description                                                                                                                                                                                                                                      |
 | --------------------------- | :------: | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -607,6 +608,7 @@ _NOTE: Make sure to start the mock service via the `Pact` declaration with the o
 Often times, you find yourself having to re-write regular expressions for common formats. We've created a number of them for you to save you the time:
 
 <details><summary>Matchers API</summary>
+
 | method                      | description                                                                                                                 |
 | --------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | `boolean`                   | Match a boolean value (using equality)                                                                                      |
@@ -621,6 +623,7 @@ Often times, you find yourself having to re-write regular expressions for common
 | `ipv4Address`               | Will match string containing IP4 formatted address                                                                          |
 | `ipv6Address`               | Will match string containing IP6 formatted address                                                                          |
 | `uuid`                      | Will match strings containing UUIDs                                                                                         |
+
 </details>
 
 ### Match based on type
