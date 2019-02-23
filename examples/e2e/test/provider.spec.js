@@ -50,22 +50,26 @@ describe("Pact Verification", () => {
           Promise.resolve(`Valid bearer token generated`)
         },
       },
+
       // Fetch pacts from broker
-      // pactBrokerUrl: 'https://test.pact.dius.com.au/',
+      pactBrokerUrl: "https://test.pact.dius.com.au/",
+
       // Fetch from broker with given tags
-      // tags: ['prod', 'sit5'],
+      tags: ["prod"],
+
       // Specific Remote pacts (doesn't need to be a broker)
       // pactFilesOrDirs: ['https://test.pact.dius.com.au/pacts/provider/Animal%20Profile%20Service/consumer/Matching%20Service/latest'],
       // Local pacts
-      pactUrls: [
-        path.resolve(
-          process.cwd(),
-          "./pacts/matching_service-animal_profile_service.json"
-        ),
-      ],
-      // pactBrokerUsername: 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
-      // pactBrokerPassword: 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
-      // publishVerificationResult: true,
+      // pactUrls: [
+      //   path.resolve(
+      //     process.cwd(),
+      //     "./pacts/matching_service-animal_profile_service.json"
+      //   ),
+      // ],
+
+      pactBrokerUsername: "dXfltyFMgNOFZAxr8io9wJ37iUpY42M",
+      pactBrokerPassword: "O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
+      publishVerificationResult: true,
       providerVersion: "1.0.0",
     }
 
