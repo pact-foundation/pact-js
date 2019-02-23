@@ -17,25 +17,11 @@ describe("Pact Verification", () => {
     let opts = {
       provider: "Animal Profile Service",
       logLevel: "DEBUG",
-
-      // TODO: Rather than provide a running endpoint, could we simply pass in
-      //       an "application" to invoke, rather than fully HTTP start/stop context?
-      // Maybe, albeit we probably would both
-      // a) need to be backwards compatible (i.e. still enable this mode), or
-      // b) need to support the most widely used/adopted interface (pressumably the in-built http module)
       providerBaseUrl: "http://localhost:8081",
 
-      // TODO: Deprecate, but allow backwards compatibility
-      // providerStatesSetupUrl: 'http://localhost:8081/setup',
-
-      // Optional middleware
-      // TODO:  Use standard Express middleware style here?
-      //        What if "pact" context (e.g. provider state required/wanted here)
-      // TODO2: Wrap the middleware in Pact context (e.g. state/description/pact available also)
-      // TODO: docs on what can/can't/should/shouldn't be done here (test parsing body to see if it interferes with proxy)
       requestFilter: (req, res, next) => {
         console.log(
-          "Middleware invoked before provider API - chance to modify request"
+          "Middleware invoked before provider API - injecting Authorization token"
         )
         req.headers["MY_SPECIAL_HEADER"] = "my special value"
 
@@ -44,23 +30,20 @@ describe("Pact Verification", () => {
         next()
       },
 
-      // TODO: could we use decorators as an alternative to this?
-      //       Decorator could register the function as a state handler
-      //       to the framework
       stateHandlers: {
-        "Has no animals": state => {
+        "Has no animals": () => {
           animalRepository.clear()
-          return Promise.resolve(`${state}: Animals added to the db`)
+          return Promise.resolve(`Animals removed to the db`)
         },
-        "Has some animals": state => {
+        "Has some animals": () => {
           importData()
-          return Promise.resolve(`${state}: Animals added to the db`)
+          return Promise.resolve(`Animals added to the db`)
         },
-        "Has an animal with ID 1": state => {
+        "Has an animal with ID 1": () => {
           importData()
-          return Promise.resolve(`${state}: Animals added to the db`)
+          return Promise.resolve(`Animals added to the db`)
         },
-        "is authenticated": state => {
+        "is authenticated": () => {
           token = "generate a valid token for this state"
           Promise.resolve(`Valid bearer token generated`)
         },
@@ -82,9 +65,6 @@ describe("Pact Verification", () => {
       // pactBrokerPassword: 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
       // publishVerificationResult: true,
       providerVersion: "1.0.0",
-
-      // TODO: deprecate this in favour of requestFilter
-      // customProviderHeaders: ['Authorization: basic e5e5e5e5e5e5e5']
     }
 
     return new Verifier().verifyProvider(opts).then(output => {

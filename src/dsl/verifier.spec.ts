@@ -100,6 +100,17 @@ describe("Verifier", () => {
         expect(spy.callCount).to.eql(0)
       })
     })
+    context("when a deprecated field is provided", () => {
+      it("logs a warning", () => {
+        spy = sinon.spy(logger, "warn")
+        v["setConfig"]({
+          ...opts,
+          providerStatesSetupUrl: "http://foo.com",
+        })
+
+        expect(spy.callCount).to.eql(1)
+      })
+    })
   })
 
   describe("#setupStates", () => {

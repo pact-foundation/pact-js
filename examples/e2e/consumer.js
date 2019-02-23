@@ -3,19 +3,24 @@ const request = require("superagent")
 const server = express()
 
 const getApiEndpoint = () => process.env.API_HOST || "http://localhost:8081"
+const authHeader = {
+  Authorization: "Bearer token",
+}
 
 // Fetch animals who are currently 'available' from the
 // Animal Service
 const availableAnimals = () => {
   return request
     .get(`${getApiEndpoint()}/animals/available`)
-    .then(res => res.body, () => [])
+    .set(authHeader)
+    .then(res => res.body)
 }
 
 // Find animals by their ID from the Animal Service
 const getAnimalById = id => {
   return request
     .get(`${getApiEndpoint()}/animals/${id}`)
+    .set(authHeader)
     .then(res => res.body, () => null)
 }
 

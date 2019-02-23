@@ -43,7 +43,7 @@ Read [Getting started with Pact] for more information for beginners.
     - [Provider API Testing](#provider-api-testing)
       - [Verification Options](#verification-options)
       - [API with Provider States](#api-with-provider-states)
-      - [API with Authorization](#api-with-authorization)
+      - [Modify Requests Prior to Verification (Request Filters)](#modify-requests-prior-to-verification-request-filters)
     - [Publishing Pacts to a Broker](#publishing-pacts-to-a-broker)
       - [Publishing options](#publishing-options)
       - [Publishing Verification Results to a Pact Broker](#publishing-verification-results-to-a-pact-broker)
@@ -157,9 +157,6 @@ The first step is to create a test for your API Consumer. The example below uses
 Check out the `examples` folder for examples with Karma Jasmine, Mocha and Jest. The example below is taken from the [integration spec](https://github.com/pact-foundation/pact-js/blob/master/src/pact.integration.spec.ts).
 
 ```javascript
-/**
- * The following example is for Pact version 5
- */
 const path = require("path")
 const chai = require("chai")
 const { Pact } = require("@pact-foundation/pact")
@@ -275,47 +272,98 @@ new Verifier().verifyProvider(opts).then(function () {
 
 #### Verification Options
 
-| Parameter                   | Required | Type             | Description                                                                                                                                    |
-| --------------------------- | :------: | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| `providerBaseUrl`           |   true   | string           | Running API provider host endpoint. Required.                                                                                                  |
-| `provider`                  |   true   | string           | Name of the Provider. Required.                                                                                                                |
-| `pactUrls`                  |   true   | array of strings | Array of local Pact file paths or HTTP-based URLs (e.g. from a broker). Required if not using a Broker.                                        |
-| `pactBrokerUrl`             |  false   | string           | URL of the Pact Broker to retrieve pacts from. Required if not using pactUrls.                                                                 |
-| `tags`                      |  false   | array of strings | Array of tags, used to filter pacts from the Broker. Optional.                                                                                 |
-| `providerStatesSetupUrl`    |  false   | string           | Optional URL to call with a POST request for each `providerState` defined in a pact (see below for more info).                                 |
-| `pactBrokerUsername`        |  false   | string           | Username for Pact Broker basic authentication                                                                                                  |
-| `pactBrokerPassword`        |  false   | string           | Password for Pact Broker basic authentication                                                                                                  |
-| `publishVerificationResult` |  false   | boolean          | Publish verification result to Broker                                                                                                          | boolean |
-| `providerVersion`           |  false   | string           | Provider version, required to publish verification results to a broker                                                                         |
-| `customProviderHeaders`     |  false   | array of strings | Header(s) to add to provider state set up and pact verification re`quests`. eg 'Authorization: Basic cGFjdDpwYWN0'.Broker. Optional otherwise. |
-| `timeout`                   |  false   | number           | The duration in ms we should wait to confirm verification process was successful. Defaults to 30000, Optional.                                 |
+| Parameter                   | Required | Type             | Description                                                                                                                                                                                                                                      |
+| --------------------------- | :------: | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `providerBaseUrl`           |   true   | string           | Running API provider host endpoint. Required.                                                                                                                                                                                                    |
+| `provider`                  |   true   | string           | Name of the Provider. Required.                                                                                                                                                                                                                  |
+| `pactUrls`                  |   true   | array of strings | Array of local Pact file paths or HTTP-based URLs (e.g. from a broker). Required if not using a Broker.                                                                                                                                          |
+| `pactBrokerUrl`             |  false   | string           | URL of the Pact Broker to retrieve pacts from. Required if not using pactUrls.                                                                                                                                                                   |
+| `tags`                      |  false   | array of strings | Array of tags, used to filter pacts from the Broker.                                                                                                                                                                                             |
+| `providerStatesSetupUrl`    |  false   | string           | DEPRECATED (see `stateHandlers`). URL to call with a POST request for each `providerState` defined in a pact (see below for more info).                                                                                                          |
+| `pactBrokerUsername`        |  false   | string           | Username for Pact Broker basic authentication                                                                                                                                                                                                    |
+| `pactBrokerPassword`        |  false   | string           | Password for Pact Broker basic authentication                                                                                                                                                                                                    |
+| `publishVerificationResult` |  false   | boolean          | Publish verification result to Broker                                                                                                                                                                                                            | boolean |
+| `providerVersion`           |  false   | string           | Provider version, required to publish verification results to a broker                                                                                                                                                                           |
+| `customProviderHeaders`     |  false   | array of strings | Header(s) to add to any requests to the provider service. eg `Authorization: Basic cGFjdDpwYWN0`. All interactions will receive the header. See `requestFilter` for when more flexiblility is required in modifying the request to the provider. |
+| `timeout`                   |  false   | number           | The duration in ms we should wait to confirm verification process was successful. Defaults to 30000.                                                                                                                                             |
+| `requestFilter`             |  false   | object           | An Express middleware handler (See https://expressjs.com/en/guide/writing-middleware.html) to modify requests and responses from the provider. See below for more details.                                                                       |
+| `stateHandlers`             |  false   | object           | Provider state handlers. A map of `string` -> `() => Promise`, where each string is the state to setup, and the function is used to configure the state in the Provider. See below for detail.                                                   |
 
 That's it! Read more about [Verifying Pacts](https://docs.pact.io/getting_started/verifying_pacts).
 
 #### API with Provider States
 
-If you have defined any `state`s in your consumer tests, the `Verifier` can put the provider into the right state right before submitting a request (for example, the provider can use the state to mock away certain database queries). To support this, the provider must provide an extra API endpoint that accepts the query parameters `consumer` and `state` and returns an HTTP `200`.
-
-You can then configure this endpoint as `providerStatesSetupUrl` in the options passed into `Verifier.verifyProvider()`. If this option is not configured, the `Verifier` will ignore the provider states defined in the pact.
-
-See this [Provider](https://github.com/pact-foundation/pact-js/blob/master/examples/e2e/test/provider.spec.js) for a working example, or read more about [Provider States](https://docs.pact.io/getting_started/provider_states).
-
-#### API with Authorization
-
-Sometimes you may need to add things to the requests that can't be persisted in a pact file. Examples of these would be authentication tokens, which have a small life span. e.g. an OAuth bearer token: `Authorization: Bearer 0b79bab50daca910b000d4f1a2b675d604257e42`.
-
-For this case, we have a facility that should be carefully used during verification - the ability to specificy custom headers to be sent during provider verification. The flag to achieve this is `customProviderHeaders`.
-
-For example, to have two headers sent as part of the verification request, modify the `verifyProvider` options as per below:
+If you have defined any `state`s in your consumer tests, the `Verifier` can put the provider into the right state prior to sending the request. For example, the provider can use the state to mock away certain database queries. To support this, set up a handler for each `state` using hooks on the `stateHandlers` property. Here is an example from our [e2e suite](https://github.com/pact-foundation/pact-js/blob/master/examples/e2e/test/provider.spec.js):
 
 ```js
 let opts = {
-  provider: 'Animal Profile Service',
   ...
-  customProviderHeaders: ['Authorization: Bearer e5e5e5e5e5e5e5', 'SomeSpecialHeader: some specialvalue']
+  stateHandlers: {
+    "Has no animals": () => {
+      animalRepository.clear()
+      return Promise.resolve(`Animals removed from the db`)
+    },
+    "Has some animals": () => {
+      importData()
+      return Promise.resolve(`Animals added to the db`)
+    },
+    "Has an animal with ID 1": () => {
+      importData()
+      return Promise.resolve(`Animals added to the db`)
+    }
+  }
 }
 
-return new Verifier().verifyProvider(opts).then(output => { ... })
+return new Verifier(opts).verifyProvider().then(...)
+```
+
+As you can see, for each state ("Has no animals", ...), we configure the local datastore differently. If this option is not configured, the `Verifier` will ignore the provider states defined in the pact and log a warning.
+
+Read more about [Provider States](https://docs.pact.io/getting_started/provider_states).
+
+#### Modify Requests Prior to Verification (Request Filters)
+
+Sometimes you may need to add things to the requests that can't be persisted in a pact file. Examples of these are authentication tokens with a small life span. e.g. an OAuth bearer token: `Authorization: Bearer 0b79bab50daca910b000d4f1a2b675d604257e42`.
+
+For these cases, we have two facilities that should be carefully used during verification:
+
+1. the ability to specify custom headers to be sent during provider verification. The flag to achieve this is `customProviderHeaders`.
+1. the ability to modify a request/response and modify the payload. The flag to achieve this is `requestFilter`.
+
+**Example API with Authorization**
+
+For example, to have an `Authorization` bearer token header sent as part of the verification request, set the `verifyProvider` options as per below:
+
+```js
+let token
+let opts = {
+  provider: 'Animal Profile Service',
+  ...
+  stateHandlers: {
+    "is authenticated": () => {
+      token = "1234"
+      Promise.resolve(`Valid bearer token generated`)
+    },
+    "is not authenticated": () => {
+      token = ""
+      Promise.resolve(`Expired bearer token generated`)
+    }
+  },
+
+  // this middleware is executed for each request, allowing `token` to change between invocations
+  // it is common to pair this with `stateHandlers` as per above, that can set/expire the token
+  // for different test cases
+  requestFilter: (req, res, next) => {
+    req.headers["Authorization"] = `Bearer: ${token}`
+    next()
+  },
+
+  // This header will always be sent for each and every request, and can't be dynamic
+  // (i.e. passing a variable instead of the bearer token)
+  customProviderHeaders: ["Authorization: Bearer 1234"]
+}
+
+return new Verifier(opts).verifyProvider().then(...)
 ```
 
 As you can see, this is your opportunity to modify\add to headers being sent to the Provider API, for example to create a valid time-bound token.

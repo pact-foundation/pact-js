@@ -16,6 +16,17 @@ server.use((req, res, next) => {
   next()
 })
 
+server.use((req, res, next) => {
+  const token = req.headers["authorization"] || ""
+
+  if (token == "1234") {
+    console.log("ERRRR")
+    res.sendStatus(401).send()
+  } else {
+    next()
+  }
+})
+
 const animalRepository = new Repository()
 
 // Load default data into a repository

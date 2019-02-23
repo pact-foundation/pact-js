@@ -20,7 +20,7 @@ export interface ProviderState {
 }
 
 export interface StateHandler {
-  [name: string]: (state: string) => Promise<any>
+  [name: string]: () => Promise<any>
 }
 
 // See https://stackoverflow.com/questions/43357734/typescript-recursive-type-with-indexer/43359686
@@ -53,6 +53,7 @@ export class Verifier {
   private address: string = "http://localhost"
   private stateSetupPath: string = "/_pactSetup"
   private config: VerifierOptions
+  private deprecatedFields: string[] = ["providerStatesSetupUrl"]
 
   constructor(config?: VerifierOptions) {
     if (config) {
@@ -182,7 +183,7 @@ export class Verifier {
           : null
 
         if (handler) {
-          promises.push(handler(state))
+          promises.push(handler())
         } else {
           logger.warn(`No state handler found for "${state}", ignorning`)
         }
@@ -194,6 +195,14 @@ export class Verifier {
 
   private setConfig(config: VerifierOptions) {
     this.config = config
+
+    this.deprecatedFields.forEach(f => {
+      if ((this.config as any)[f]) {
+        logger.warn(
+          `${f} is deprecated, and will be removed in future versions`
+        )
+      }
+    })
 
     if (this.config.logLevel && !isEmpty(this.config.logLevel)) {
       serviceFactory.logLevel(this.config.logLevel)

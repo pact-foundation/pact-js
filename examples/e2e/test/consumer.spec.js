@@ -99,7 +99,6 @@ describe("Pact", () => {
 
   // Configure and import consumer API
   // Note that we update the API endpoint to point at the Mock Service
-
   const {
     createMateForDates,
     suggestion,
@@ -112,36 +111,63 @@ describe("Pact", () => {
   // use unit-style tests that test the collaborating function behaviour -
   // we want to test the function that is calling the external service.
   describe("when a call to list all animals from the Animal Service is made", () => {
-    describe("and there are animals in the database", () => {
+    describe("and the user is not authenticated", () => {
       before(() =>
         provider.addInteraction({
-          state: "Has some animals",
+          state: "is not authenticated",
           uponReceiving: "a request for all animals",
           withRequest: {
             method: "GET",
             path: "/animals/available",
           },
           willRespondWith: {
-            status: 200,
+            status: 401,
             headers: {
               "Content-Type": "application/json; charset=utf-8",
             },
-            body: animalListExpectation,
           },
         })
       )
 
-      it("returns a list of animals", done => {
-        const suggestedMates = suggestion(suitor)
-
-        expect(suggestedMates).to.eventually.have.deep.property(
-          "suggestions[0].score",
-          94
+      it("returns a 401 unauthorized", () => {
+        return expect(suggestion(suitor)).to.eventually.be.rejectedWith(
+          "Unauthorized"
         )
-        expect(suggestedMates)
-          .to.eventually.have.property("suggestions")
-          .with.lengthOf(MIN_ANIMALS)
-          .notify(done)
+      })
+    })
+    describe("and the user is authenticated", () => {
+      describe("and there are animals in the database", () => {
+        before(() =>
+          provider.addInteraction({
+            state: "Has some animals",
+            uponReceiving: "a request for all animals",
+            withRequest: {
+              method: "GET",
+              path: "/animals/available",
+              headers: { Authorization: "Bearer token" },
+            },
+            willRespondWith: {
+              status: 200,
+              headers: {
+                "Content-Type": "application/json; charset=utf-8",
+              },
+              body: animalListExpectation,
+            },
+          })
+        )
+
+        it("returns a list of animals", done => {
+          const suggestedMates = suggestion(suitor)
+
+          expect(suggestedMates).to.eventually.have.deep.property(
+            "suggestions[0].score",
+            94
+          )
+          expect(suggestedMates)
+            .to.eventually.have.property("suggestions")
+            .with.lengthOf(MIN_ANIMALS)
+            .notify(done)
+        })
       })
     })
   })
@@ -155,6 +181,7 @@ describe("Pact", () => {
           withRequest: {
             method: "GET",
             path: term({ generate: "/animals/1", matcher: "/animals/[0-9]+" }),
+            headers: { Authorization: "Bearer token" },
           },
           willRespondWith: {
             status: 200,
@@ -183,6 +210,7 @@ describe("Pact", () => {
           withRequest: {
             method: "GET",
             path: "/animals/100",
+            headers: { Authorization: "Bearer token" },
           },
           willRespondWith: {
             status: 404,
