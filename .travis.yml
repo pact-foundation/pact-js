@@ -9,6 +9,7 @@ os:
   - linux
 matrix:
   fast_finish: true
+cache: npm
 env:
   matrix:
     - CXX=g++-4.8
