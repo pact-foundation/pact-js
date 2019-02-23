@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="8.0.0"></a>
+# [8.0.0](https://github.com/pact-foundation/pact-js/compare/v7.4.0...v8.0.0) (2019-02-23)
+
+
+### Bug Fixes
+
+* **npm:** npm lock got out of sync ([a9bed4f](https://github.com/pact-foundation/pact-js/commit/a9bed4f))
+* rename error classes to lowercase ([16b7686](https://github.com/pact-foundation/pact-js/commit/16b7686))
+
+
+### Features
+
+* **dynamic-proxy:** working dynamic proxy code with tests ([d8e2eec](https://github.com/pact-foundation/pact-js/commit/d8e2eec))
+* **proxy:** add docs and e2e examples of filters and stateHandlers ([5561980](https://github.com/pact-foundation/pact-js/commit/5561980))
+* **proxy:** cleanup verifier interface ([63a661b](https://github.com/pact-foundation/pact-js/commit/63a661b))
+
+
+
 <a name="7.4.0"></a>
 # [7.4.0](https://github.com/pact-foundation/pact-js/compare/v7.3.0...v7.4.0) (2019-02-22)
 
