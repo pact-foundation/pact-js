@@ -38,7 +38,6 @@ Read [Getting started with Pact] for more information for beginners.
   - [HTTP API Testing](#http-api-testing)
     - [Consumer Side Testing](#consumer-side-testing)
       - [API](#api)
-      - [Constructor Options](#constructor-options)
       - [Example](#example)
     - [Provider API Testing](#provider-api-testing)
       - [Verification Options](#verification-options)
@@ -117,6 +116,8 @@ The `Pact` class provides the following high-level APIs, they are listed in the 
 
 #### API
 
+<details><summary>Consumer API</summary>
+
 | API                 | Options                       | Returns   | Description                                                                                                                                                                                                                                                  |
 | ------------------- | ----------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `new Pact(options)` | See constructor options below | `Object`  | Creates a Mock Server test double of your Provider API. If you need multiple Providers for a scenario, you can create as many as these as you need.                                                                                                          |
@@ -125,7 +126,9 @@ The `Pact` class provides the following high-level APIs, they are listed in the 
 | `verify()`          | n/a                           | `Promise` | Verifies that all interactions specified. This should be called once per test, to ensure your expectations were correct                                                                                                                                      |
 | `finalize()`        | n/a                           | `Promise` | Records the interactions registered to the Mock Server into the pact file and shuts it down. You would normally call this only once in an `afterAll(...)` type clause.                                                                                       |
 
-#### Constructor Options
+</details>
+
+<details><summary>Constructor</summary>
 
 | Parameter           | Required? | Type    | Description                                                                                              |
 | ------------------- | --------- | ------- | -------------------------------------------------------------------------------------------------------- |
@@ -142,6 +145,8 @@ The `Pact` class provides the following high-level APIs, they are listed in the 
 | `spec`              | no        | number  | Pact specification version (defaults to 2)                                                               |
 | `cors`              | no        | boolean | Allow CORS OPTION requests to be accepted, defaults to false                                             |
 | `pactfileWriteMode` | no        | string  | Control how the Pact files are written. Choices: 'overwrite' 'update' or 'none'. Defaults to 'overwrite' |
+
+</details>
 
 #### Example
 
@@ -249,11 +254,14 @@ describe("Pact", () => {
 
 ### Provider API Testing
 
+<details><summary>Provider API</summary>
 Once you have created Pacts for your Consumer, you need to validate those Pacts against your Provider. The Verifier object provides the following API for you to do so:
 
 | API                |  Options  | Returns   | Description           |
 | ------------------ | :-------: | --------- | --------------------- |
 | `verifyProvider()` | See below | `Promise` | Start the Mock Server |
+
+</details>
 
 1.  Start your local Provider service.
 1.  Optionally, instrument your API with ability to configure [provider states](https://github.com/pact-foundation/pact-provider-verifier/)
@@ -272,6 +280,8 @@ new Verifier().verifyProvider(opts).then(function () {
 
 #### Verification Options
 
+<details><summary>Verificatio Options</summary>
+
 | Parameter                   | Required | Type             | Description                                                                                                                                                                                                                                      |
 | --------------------------- | :------: | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `providerBaseUrl`           |   true   | string           | Running API provider host endpoint. Required.                                                                                                                                                                                                    |
@@ -289,7 +299,9 @@ new Verifier().verifyProvider(opts).then(function () {
 | `requestFilter`             |  false   | object           | An Express middleware handler (See https://expressjs.com/en/guide/writing-middleware.html) to modify requests and responses from the provider. See below for more details.                                                                       |
 | `stateHandlers`             |  false   | object           | Provider state handlers. A map of `string` -> `() => Promise`, where each string is the state to setup, and the function is used to configure the state in the Provider. See below for detail.                                                   |
 
-That's it! Read more about [Verifying Pacts](https://docs.pact.io/getting_started/verifying_pacts).
+</details>
+
+Read more about [Verifying Pacts](https://docs.pact.io/getting_started/verifying_pacts).
 
 #### API with Provider States
 
@@ -399,6 +411,8 @@ pact.publishPacts(opts)).then(function () {
 
 #### Publishing options
 
+<details><summary>Publishing Options</summary>
+
 | Parameter            | Required | Type             | Description                                                                                                                                                 |
 | -------------------- | :------: | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `providerBaseUrl`    | `false`  | string           | Running API provider host endpoint.                                                                                                                         |
@@ -408,6 +422,8 @@ pact.publishPacts(opts)).then(function () {
 | `pactBrokerPassword` | `false`  | string           | Password for Pact Broker basic authentication. Optional                                                                                                     |
 | `consumerVersion`    |  `true`  | string           | The consumer application version; e.g. '1.0.0-cac389f'. ([See more info on versioning](https://docs.pact.io/getting_started/versioning_in_the_pact_broker)) |  |
 | `tags`               | `false`  | array of strings | Tag your pacts, often used with your branching, release or environment strategy e.g. ['prod', 'test']                                                       |
+
+</details>
 
 #### Publishing Verification Results to a Pact Broker
 
@@ -590,6 +606,7 @@ _NOTE: Make sure to start the mock service via the `Pact` declaration with the o
 
 Often times, you find yourself having to re-write regular expressions for common formats. We've created a number of them for you to save you the time:
 
+<details><summary>Matchers API</summary>
 | method                      | description                                                                                                                 |
 | --------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | `boolean`                   | Match a boolean value (using equality)                                                                                      |
@@ -604,6 +621,7 @@ Often times, you find yourself having to re-write regular expressions for common
 | `ipv4Address`               | Will match string containing IP4 formatted address                                                                          |
 | `ipv6Address`               | Will match string containing IP6 formatted address                                                                          |
 | `uuid`                      | Will match strings containing UUIDs                                                                                         |
+</details>
 
 ### Match based on type
 
