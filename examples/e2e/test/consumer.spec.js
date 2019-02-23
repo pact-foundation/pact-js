@@ -122,9 +122,6 @@ describe("Pact", () => {
           },
           willRespondWith: {
             status: 401,
-            headers: {
-              "Content-Type": "application/json; charset=utf-8",
-            },
           },
         })
       )

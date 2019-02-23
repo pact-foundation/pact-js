@@ -26,25 +26,27 @@ describe("Pact Verification", () => {
         req.headers["MY_SPECIAL_HEADER"] = "my special value"
 
         // e.g. ADD Bearer token
-        req.headers["Authorization"] = `Bearer: ${token}`
+        req.headers["authorization"] = `Bearer ${token}`
         next()
       },
 
       stateHandlers: {
         "Has no animals": () => {
           animalRepository.clear()
+          token = "1234"
           return Promise.resolve(`Animals removed to the db`)
         },
         "Has some animals": () => {
+          token = "1234"
           importData()
           return Promise.resolve(`Animals added to the db`)
         },
         "Has an animal with ID 1": () => {
+          token = "1234"
           importData()
           return Promise.resolve(`Animals added to the db`)
         },
-        "is authenticated": () => {
-          token = "generate a valid token for this state"
+        "is not authenticated": () => {
           Promise.resolve(`Valid bearer token generated`)
         },
       },
