@@ -1,4 +1,4 @@
-/* tslint:disable:no-unused-expression object-literal-sort-keys max-classes-per-file no-empty */
+/* tslint:disable:no-unused-expression object-literal-sort-keys max-classes-per-file no-empty no-console*/
 const { MessageProviderPact } = require("../../../src/pact")
 import path = require("path")
 const { createDog } = require("./dog-client")
