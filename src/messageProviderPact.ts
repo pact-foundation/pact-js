@@ -3,8 +3,7 @@
  */
 
 import { omit, isEmpty } from "lodash"
-import { Verifier } from "./dsl/verifier"
-import { Message, MessageDescriptor } from "./dsl/message"
+import { MessageDescriptor } from "./dsl/message"
 import logger from "./common/logger"
 import { VerifierOptions } from "@pact-foundation/pact-node"
 import { MessageProviderOptions } from "./dsl/options"
@@ -12,6 +11,7 @@ import serviceFactory from "@pact-foundation/pact-node"
 import * as express from "express"
 import * as http from "http"
 import { MessageProvider } from "./pact"
+import { qToPromise } from "./common/utils"
 
 const bodyParser = require("body-parser")
 
@@ -67,7 +67,7 @@ export class MessageProviderPact {
         ...{ providerBaseUrl: "http://localhost:" + server.address().port },
       } as VerifierOptions
 
-      return new Verifier(opts).verifyProvider()
+      return qToPromise<any>(serviceFactory.verifyPacts(opts))
     }
   }
 

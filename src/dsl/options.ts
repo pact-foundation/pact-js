@@ -84,7 +84,6 @@ export interface MessageProviderOptions {
   // Choices: 'overwrite' | 'update', 'none', defaults to 'overwrite'
   pactfileWriteMode?: PactfileWriteMode
 
-  providerStatesSetupUrl?: string
   pactBrokerUsername?: string
   pactBrokerPassword?: string
   customProviderHeaders?: string[]

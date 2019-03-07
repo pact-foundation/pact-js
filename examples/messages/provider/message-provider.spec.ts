@@ -8,6 +8,13 @@ describe("Message provider tests", () => {
     messageProviders: {
       "a request for a dog": () => createDog(27),
     },
+    stateHandlers: {
+      "some state": () => {
+        // TODO: prepare system useful in order to create a dog
+        console.log('State handler: setting up "some state" for interaction')
+        return Promise.resolve(`state set to create a dog`)
+      },
+    },
     log: path.resolve(process.cwd(), "logs"),
     logLevel: "INFO",
     provider: "MyJSMessageProvider",
