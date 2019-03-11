@@ -1,12 +1,12 @@
 {
   "name": "@pact-foundation/pact",
-  "version": "8.0.2",
+  "version": "8.0.3",
   "description": "Pact for all things Javascript",
   "main": "./pact.js",
   "types": "./pact.d.ts",
   "scripts": {
     "build": "npm run lint && npm run compile",
-    "compile": "rimraf dist && tsc",
+    "compile": "tsc",
     "clean": "rimraf docs dist dist-web coverage .nyc_output logs pacts jscpd.json",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "deploy:prepare": "./scripts/create_npmrc_file.sh",
