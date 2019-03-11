@@ -47,6 +47,7 @@ export interface VerifierOptions {
   monkeypatch?: string
   format?: "json" | "RspecJunitFormatter"
   out?: string
+  validateSSL?: boolean
 }
 
 export class Verifier {
@@ -155,6 +156,7 @@ export class Verifier {
     app.all("/*", (req, res) => {
       logger.debug("Proxing", req.path)
       proxy.web(req, res, {
+        secure: this.config.validateSSL === true,
         target: this.config.providerBaseUrl,
       })
     })
@@ -203,6 +205,10 @@ export class Verifier {
         )
       }
     })
+
+    if (this.config.validateSSL === undefined) {
+      this.config.validateSSL = true
+    }
 
     if (this.config.logLevel && !isEmpty(this.config.logLevel)) {
       serviceFactory.logLevel(this.config.logLevel)
