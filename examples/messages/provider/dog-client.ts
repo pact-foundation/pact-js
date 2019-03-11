@@ -2,9 +2,13 @@
 export function createDog(id: number): any {
   return new Promise((resolve, reject) => {
     resolve({
-      id,
-      name: "fido",
-      type: "bulldog",
+      identifier: {},
+      body: {
+        projectId: 1,
+        projectPath: "path",
+        movPath: "path",
+        mp4Path: "path",
+      },
     })
   })
 }

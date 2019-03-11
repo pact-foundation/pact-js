@@ -1,0 +1,37 @@
+{
+  "consumer": {
+    "name": "render"
+  },
+  "provider": {
+    "name": "prestac"
+  },
+  "messages": [
+    {
+      "description": "a request for rendering",
+      "providerStates": [
+        {
+          "name": "message is valid",
+          "params": null
+        }
+      ],
+      "contents": {
+        "identifier": {},
+        "body": {
+          "projectId": 1,
+          "projectPath": "path",
+          "movPath": "path",
+          "mp4Path": "path"
+        }
+      },
+      "matchingRules": {
+        "body": {}
+      },
+      "metaData": {}
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "3.0.0"
+    }
+  }
+}

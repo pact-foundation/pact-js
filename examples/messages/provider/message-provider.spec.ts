@@ -6,14 +6,7 @@ const { createDog } = require("./dog-client")
 describe("Message provider tests", () => {
   const p = new MessageProviderPact({
     messageProviders: {
-      "a request for a dog": () => createDog(27),
-    },
-    stateHandlers: {
-      "some state": () => {
-        // TODO: prepare system useful in order to create a dog
-        console.log('State handler: setting up "some state" for interaction')
-        return Promise.resolve(`state set to create a dog`)
-      },
+      "a request for rendering": () => createDog(27),
     },
     log: path.resolve(process.cwd(), "logs"),
     logLevel: "INFO",
@@ -21,17 +14,16 @@ describe("Message provider tests", () => {
     providerVersion: "1.0.0",
 
     // For local validation
-    // pactUrls: [path.resolve(process.cwd(), "pacts", "myjsmessageconsumer-myjsmessageprovider.json")],
-    // Broker validation
-    pactBrokerUrl: "https://test.pact.dius.com.au/",
-    pactBrokerUsername: "dXfltyFMgNOFZAxr8io9wJ37iUpY42M",
-    pactBrokerPassword: "O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
-    publishVerificationResult: true,
-    tags: ["prod"],
+    pactUrls: [
+      path.resolve(
+        process.cwd(),
+        "myjsmessageconsumer-myjsmessageprovider.json"
+      ),
+    ],
   })
 
-  describe("send a dog event", () => {
-    it("sends a valid dog", () => {
+  describe("renders", () => {
+    it("sends a rendering event", () => {
       return p.verify()
     })
   })
