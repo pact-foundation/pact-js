@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="8.0.3"></a>
+## [8.0.3](https://github.com/pact-foundation/pact-js/compare/v8.0.2...v8.0.3) (2019-03-11)
+
+
+### Bug Fixes
+
+* **messages:** prevent message proxy from running twice ([50219b1](https://github.com/pact-foundation/pact-js/commit/50219b1))
+* **veriry:** allow self-signed certificates in provider verification. Fixes [#280](https://github.com/pact-foundation/pact-js/issues/280) ([122eb24](https://github.com/pact-foundation/pact-js/commit/122eb24))
+
+
+
 <a name="8.0.2"></a>
 ## [8.0.2](https://github.com/pact-foundation/pact-js/compare/v8.0.1...v8.0.2) (2019-02-23)
 
