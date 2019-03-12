@@ -48,6 +48,7 @@ export interface VerifierOptions {
   format?: "json" | "RspecJunitFormatter"
   out?: string
   validateSSL?: boolean
+  changeOrigin?: boolean
 }
 
 export class Verifier {
@@ -156,6 +157,7 @@ export class Verifier {
     app.all("/*", (req, res) => {
       logger.debug("Proxing", req.path)
       proxy.web(req, res, {
+        changeOrigin: this.config.changeOrigin === true,
         secure: this.config.validateSSL === true,
         target: this.config.providerBaseUrl,
       })
@@ -208,6 +210,9 @@ export class Verifier {
 
     if (this.config.validateSSL === undefined) {
       this.config.validateSSL = true
+    }
+    if (this.config.changeOrigin === undefined) {
+      this.config.changeOrigin = false
     }
 
     if (this.config.logLevel && !isEmpty(this.config.logLevel)) {
