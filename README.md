@@ -299,6 +299,8 @@ new Verifier().verifyProvider(opts).then(function () {
 | `timeout`                   |  false   | number           | The duration in ms we should wait to confirm verification process was successful. Defaults to 30000.                                                                                                                                             |
 | `requestFilter`             |  false   | object           | An Express middleware handler (See https://expressjs.com/en/guide/writing-middleware.html) to modify requests and responses from the provider. See below for more details.                                                                       |
 | `stateHandlers`             |  false   | object           | Provider state handlers. A map of `string` -> `() => Promise`, where each string is the state to setup, and the function is used to configure the state in the Provider. See below for detail.                                                   |
+| `validateSSL`               |  false   | boolean          | Allow self-signed certificates. Defaults to true, if not set.                                                                                                                                                                                     |
+| `changeOrigin`              |  false   | boolean          | Changes the origin of the host header to the target URL. Defaults to false, if not set.                                                                                                                                                                                    |
 
 </details>
 
@@ -341,7 +343,7 @@ Sometimes you may need to add things to the requests that can't be persisted in 
 For these cases, we have two facilities that should be carefully used during verification:
 
 1. the ability to specify custom headers to be sent during provider verification. The flag to achieve this is `customProviderHeaders`.
-1. the ability to modify a request/response and modify the payload. The flag to achieve this is `requestFilter`.
+2. the ability to modify a request/response and modify the payload. The flag to achieve this is `requestFilter`.
 
 **Example API with Authorization**
 
