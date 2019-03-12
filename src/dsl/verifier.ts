@@ -157,7 +157,7 @@ export class Verifier {
     app.all("/*", (req, res) => {
       logger.debug("Proxing", req.path)
       proxy.web(req, res, {
-        changeOrigin: this.config.changeOrigin === false,
+        changeOrigin: this.config.changeOrigin === true,
         secure: this.config.validateSSL === true,
         target: this.config.providerBaseUrl,
       })
