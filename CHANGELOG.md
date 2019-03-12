@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="8.0.5"></a>
+## [8.0.5](https://github.com/pact-foundation/pact-js/compare/v8.0.4...v8.0.5) (2019-03-12)
+
+
+### Bug Fixes
+
+* **verifier:** add changeOrigin flag for http-proxy ([4536be5](https://github.com/pact-foundation/pact-js/commit/4536be5)), closes [#282](https://github.com/pact-foundation/pact-js/issues/282)
+
+
+
 <a name="8.0.4"></a>
 ## [8.0.4](https://github.com/pact-foundation/pact-js/compare/v8.0.2...v8.0.4) (2019-03-11)
 
