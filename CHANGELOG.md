@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="8.1.0"></a>
+# [8.1.0](https://github.com/pact-foundation/pact-js/compare/v8.0.5...v8.1.0) (2019-03-29)
+
+
+### Features
+
+* upgrade to [@pact-foundation](https://github.com/pact-foundation)/pact-node@^8.1.1 ([087d79d](https://github.com/pact-foundation/pact-js/commit/087d79d)), closes [#287](https://github.com/pact-foundation/pact-js/issues/287)
+
+
+
 <a name="8.0.5"></a>
 ## [8.0.5](https://github.com/pact-foundation/pact-js/compare/v8.0.4...v8.0.5) (2019-03-12)
 
