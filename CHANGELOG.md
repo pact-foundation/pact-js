@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="8.2.0"></a>
+# [8.2.0](https://github.com/pact-foundation/pact-js/compare/v8.1.2...v8.2.0) (2019-04-12)
+
+
+### Features
+
+* **graphql:** export graphql apis for pact web. Fixes [#283](https://github.com/pact-foundation/pact-js/issues/283) ([36ea8d1](https://github.com/pact-foundation/pact-js/commit/36ea8d1))
+
+
+
 <a name="8.1.2"></a>
 ## [8.1.2](https://github.com/pact-foundation/pact-js/compare/v8.1.1...v8.1.2) (2019-04-12)
 
