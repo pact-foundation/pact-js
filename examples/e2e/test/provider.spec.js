@@ -47,7 +47,8 @@ describe("Pact Verification", () => {
           return Promise.resolve(`Animals added to the db`)
         },
         "is not authenticated": () => {
-          Promise.resolve(`Valid bearer token generated`)
+          token = ""
+          Promise.resolve(`Invalid bearer token generated`)
         },
       },
 
