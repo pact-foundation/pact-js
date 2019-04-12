@@ -151,3 +151,16 @@ export * from "./dsl/interaction"
  * @static
  */
 export * from "./dsl/mockService"
+
+/**
+ * Exposes {@link GraphQL}
+ * @memberof Pact
+ * @static
+ */
+export * from "./dsl/graphql"
+/**
+ * Exposes {@link ApolloGraphQL}
+ * @memberof Pact
+ * @static
+ */
+export * from "./dsl/apolloGraphql"
