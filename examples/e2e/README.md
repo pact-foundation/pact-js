@@ -3,8 +3,8 @@
 Using a simple animal dating API, we demonstrate the following Pact features:
 
 - Consumer testing and pact file generation, including advanced features like:
-  - [Flexible matching](https://docs.pact.io/documentation/javascript/flexible_matching.html)
-  - [Provider states](https://docs.pact.io/documentation/provider_states.html)
+  - [Flexible matching](https://docs.pact.io/getting_started/matching#flexible-matching)
+  - [Provider states](https://docs.pact.io/getting_started/provider_states)
 - Sharing Pacts by publishing to and retrieving from a [Pact Broker](https://github.com/pact-foundation/pact_broker)
 - Provider side verification
 
