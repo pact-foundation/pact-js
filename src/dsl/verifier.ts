@@ -106,13 +106,11 @@ export class Verifier {
   private runProviderVerification() {
     return (server: http.Server) => {
       const opts = {
+        providerStatesSetupUrl: `${this.address}:${server.address().port}${
+          this.stateSetupPath
+        }`,
         ...omit(this.config, "handlers"),
-        ...{ providerBaseUrl: `${this.address}:${server.address().port}` },
-        ...{
-          providerStatesSetupUrl: `${this.address}:${server.address().port}${
-            this.stateSetupPath
-          }`,
-        },
+        providerBaseUrl: `${this.address}:${server.address().port}`,
       } as PactNodeVerifierOptions
 
       return qToPromise<any>(pact.verifyPacts(opts))
