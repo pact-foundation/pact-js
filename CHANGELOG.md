@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="8.2.1"></a>
+## [8.2.1](https://github.com/pact-foundation/pact-js/compare/v8.2.0...v8.2.1) (2019-04-26)
+
+
+### Bug Fixes
+
+* **verifier:** providerStateSetupUrl passed to Verifier constructor should take precedence ([#295](https://github.com/pact-foundation/pact-js/issues/295)) ([9d118a8](https://github.com/pact-foundation/pact-js/commit/9d118a8))
+
+
+
 <a name="8.2.0"></a>
 # [8.2.0](https://github.com/pact-foundation/pact-js/compare/v8.1.2...v8.2.0) (2019-04-12)
 
