@@ -69,6 +69,7 @@ Read [Getting started with Pact] for more information for beginners.
     - [Re-run specific verification failures](#re-run-specific-verification-failures)
     - [Timeout](#timeout)
     - [Note on Jest](#note-on-jest)
+    - [Note on Angular](#note-on-angular)
     - [Debugging](#debugging)
   - [Contributing](#contributing)
   - [Contact](#contact)
@@ -970,6 +971,24 @@ Jest also runs tests in parallel by default, which can be problematic with Pact 
 
 See [this issue](https://github.com/pact-foundation/pact-js/issues/10) for background,
 and the Jest [example](https://github.com/pact-foundation/pact-js/blob/master/examples/jest/package.json#L10-L12) for a working example.
+
+### Note on Angular
+
+Angular's HttpClient filters out many headers from the response object, this may cause issues when validating a response in tests.
+
+You'll need to add the additional header `Access-Control-Expose-Headers`, this will allow specified headers to be passed to the response object. This can be done by declaring the header in the `willRespondWith` section of your interaction:
+
+```js
+"willRespondWith": {
+  "headers": {
+    "Access-Control-Expose-Headers": like("My-Header"),
+    "My-Header": "..."
+  },
+  ...
+}
+```
+
+See [this issue](https://github.com/angular/angular/issues/13554) for background.
 
 ### Debugging
 
