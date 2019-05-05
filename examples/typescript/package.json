@@ -4,7 +4,9 @@
   "description": "TypeScript Pact Example",
   "main": "index.js",
   "scripts": {
-    "test": "nyc --check-coverage --reporter=html --reporter=text-summary mocha"
+    "test": "nyc --check-coverage --reporter=html --reporter=text-summary mocha",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "author": "",
   "license": "MIT",
@@ -15,6 +17,8 @@
   },
   "dependencies": {
     "axios": "^0.17.1",
-    "typescript": "^3.0.3"
-  }
+    "typescript": "^3.0.3",
+    "snyk": "^1.161.1"
+  },
+  "snyk": true
 }
