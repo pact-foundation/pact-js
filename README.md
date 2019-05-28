@@ -292,17 +292,17 @@ new Verifier().verifyProvider(opts).then(function () {
 | `pactBrokerUrl`             |  false   | string           | URL of the Pact Broker to retrieve pacts from. Required if not using pactUrls.                                                                                                                                                                   |
 | `tags`                      |  false   | array of strings | Array of tags, used to filter pacts from the Broker.                                                                                                                                                                                             |
 | `providerStatesSetupUrl`    |  false   | string           | DEPRECATED (see `stateHandlers`). URL to call with a POST request for each `providerState` defined in a pact (see below for more info).                                                                                                          |
-| `pactBrokerUsername`        |  false   | string           | Username for Pact Broker basic authentication                                                                                                                                                                                                    |
-| `pactBrokerPassword`        |  false   | string           | Password for Pact Broker basic authentication                                                                                                                                                                                                    |
-| `pactBrokerToken`   |  false   | string           | Bearer token for Pact Broker authentication                                                                                                                                                                                                    |
+| `pactBrokerToken`           |  false   | string           | Bearer token for Pact Broker authentication. If using Pactflow, you likely need this option.                                                                                                                                                     |
+| `pactBrokerUsername`        |  false   | string           | Username for Pact Broker basic authentication. If using Pactflow, you most likely need to use `pactBrokerToken`                                                                                                                                  |
+| `pactBrokerPassword`        |  false   | string           | Password for Pact Broker basic authentication. If using Pactflow, you most likely need to use `pactBrokerToken`                                                                                                                                  |
 | `publishVerificationResult` |  false   | boolean          | Publish verification result to Broker                                                                                                                                                                                                            | boolean |
 | `providerVersion`           |  false   | string           | Provider version, required to publish verification results to a broker                                                                                                                                                                           |
 | `customProviderHeaders`     |  false   | array of strings | Header(s) to add to any requests to the provider service. eg `Authorization: Basic cGFjdDpwYWN0`. All interactions will receive the header. See `requestFilter` for when more flexiblility is required in modifying the request to the provider. |
 | `timeout`                   |  false   | number           | The duration in ms we should wait to confirm verification process was successful. Defaults to 30000.                                                                                                                                             |
 | `requestFilter`             |  false   | object           | An Express middleware handler (See https://expressjs.com/en/guide/writing-middleware.html) to modify requests and responses from the provider. See below for more details.                                                                       |
 | `stateHandlers`             |  false   | object           | Provider state handlers. A map of `string` -> `() => Promise`, where each string is the state to setup, and the function is used to configure the state in the Provider. See below for detail.                                                   |
-| `validateSSL`               |  false   | boolean          | Allow self-signed certificates. Defaults to true, if not set.                                                                                                                                                                                     |
-| `changeOrigin`              |  false   | boolean          | Changes the origin of the host header to the target URL. Defaults to false, if not set.                                                                                                                                                                                    |
+| `validateSSL`               |  false   | boolean          | Allow self-signed certificates. Defaults to true, if not set.                                                                                                                                                                                    |
+| `changeOrigin`              |  false   | boolean          | Changes the origin of the host header to the target URL. Defaults to false, if not set.                                                                                                                                                          |
 
 </details>
 
@@ -418,17 +418,17 @@ pact.publishPacts(opts)).then(function () {
 
 <details><summary>Publishing Options</summary>
 
-| Parameter            | Required | Type             | Description                                                                                                                                                 |
-| -------------------- | :------: | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `providerBaseUrl`    | `false`  | string           | Running API provider host endpoint.                                                                                                                         |
-| `pactFilesOrDirs`    |  `true`  | array of strings | Array of local Pact files or directories containing pact files. Path must be absolute. Required.                                                            |
-| `pactBroker`         |  `true`  | string           | The base URL of the Pact Broker. eg. https://test.pact.dius.com.au. Required.                                                                               |
-| `pactBrokerUsername` | `false`  | string           | Username for Pact Broker basic authentication. Optional                                                                                                     |
-| `pactBrokerPassword` | `false`  | string           | Password for Pact Broker basic authentication. Optional                                                                                                     |
-| `pactBrokerToken`    | `false`  | string           | Bearer token for Pact Broker authentication. Optional                                                                                                     |
+| Parameter            | Required | Type             | Description                                                                                                               |
+| -------------------- | :------: | ---------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `providerBaseUrl`    | `false`  | string           | Running API provider host endpoint.                                                                                       |
+| `pactFilesOrDirs`    |  `true`  | array of strings | Array of local Pact files or directories containing pact files. Path must be absolute. Required.                          |
+| `pactBroker`         |  `true`  | string           | The base URL of the Pact Broker. eg. https://test.pact.dius.com.au. Required.                                             |
+| `pactBrokerToken`    | `false`  | string           | Bearer token for Pact Broker authentication. Optional. If using Pactflow, you likely need this option                     |
+| `pactBrokerUsername` | `false`  | string           | Username for Pact Broker basic authentication. Optional. If using Pactflow, you most likely need to use `pactBrokerToken` |
+| `pactBrokerPassword` | `false`  | string           | Password for Pact Broker basic authentication. Optional. If using Pactflow, you most likely need to use `pactBrokerToken` |
 
-| `consumerVersion`    |  `true`  | string           | The consumer application version; e.g. '1.0.0-cac389f'. ([See more info on versioning](https://docs.pact.io/getting_started/versioning_in_the_pact_broker)) |  |
-| `tags`               | `false`  | array of strings | Tag your pacts, often used with your branching, release or environment strategy e.g. ['prod', 'test']                                                       |
+| `consumerVersion` | `true` | string | The consumer application version; e.g. '1.0.0-cac389f'. ([See more info on versioning](https://docs.pact.io/getting_started/versioning_in_the_pact_broker)) | |
+| `tags` | `false` | array of strings | Tag your pacts, often used with your branching, release or environment strategy e.g. ['prod', 'test'] |
 
 </details>
 
