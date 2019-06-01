@@ -19,7 +19,7 @@ label in our issue tracker. If you have an idea that you think would be great, c
 ## Commit messages
 
 Pact JS uses the [Conventional Changelog](https://github.com/bcoe/conventional-changelog-standard/blob/master/convention.md)
-commit message conventions. Please ensure you follow the guidelines, we don't want to _that person_, but the commit messages
+commit message conventions. Please ensure you follow the guidelines, we don't want to _be that person_, but the commit messages
 are very important to the automation of our release process.
 
 Take a look at the git history (`git log`) to get the gist of it.

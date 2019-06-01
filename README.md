@@ -418,17 +418,16 @@ pact.publishPacts(opts)).then(function () {
 
 <details><summary>Publishing Options</summary>
 
-| Parameter            | Required | Type             | Description                                                                                                               |
-| -------------------- | :------: | ---------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| `providerBaseUrl`    | `false`  | string           | Running API provider host endpoint.                                                                                       |
-| `pactFilesOrDirs`    |  `true`  | array of strings | Array of local Pact files or directories containing pact files. Path must be absolute. Required.                          |
-| `pactBroker`         |  `true`  | string           | The base URL of the Pact Broker. eg. https://test.pact.dius.com.au. Required.                                             |
-| `pactBrokerToken`    | `false`  | string           | Bearer token for Pact Broker authentication. Optional. If using Pactflow, you likely need this option                     |
-| `pactBrokerUsername` | `false`  | string           | Username for Pact Broker basic authentication. Optional. If using Pactflow, you most likely need to use `pactBrokerToken` |
-| `pactBrokerPassword` | `false`  | string           | Password for Pact Broker basic authentication. Optional. If using Pactflow, you most likely need to use `pactBrokerToken` |
-
-| `consumerVersion` | `true` | string | The consumer application version; e.g. '1.0.0-cac389f'. ([See more info on versioning](https://docs.pact.io/getting_started/versioning_in_the_pact_broker)) | |
-| `tags` | `false` | array of strings | Tag your pacts, often used with your branching, release or environment strategy e.g. ['prod', 'test'] |
+| Parameter            | Required | Type             | Description                                                                                                                                                   |
+| -------------------- | :------: | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `providerBaseUrl`    | `false`  | string           | Running API provider host endpoint.                                                                                                                           |
+| `pactFilesOrDirs`    |  `true`  | array of strings | Array of local Pact files or directories containing pact files. Path must be absolute. Required.                                                              |
+| `pactBroker`         |  `true`  | string           | The base URL of the Pact Broker. eg. https://test.pact.dius.com.au. Required.                                                                                 |
+| `pactBrokerToken`    | `false`  | string           | Bearer token for Pact Broker authentication. Optional. If using Pactflow, you likely need this option                                                         |
+| `pactBrokerUsername` | `false`  | string           | Username for Pact Broker basic authentication. Optional. If using Pactflow, you most likely need to use `pactBrokerToken`                                     |
+| `pactBrokerPassword` | `false`  | string           | Password for Pact Broker basic authentication. Optional. If using Pactflow, you most likely need to use `pactBrokerToken`                                     |
+| `consumerVersion`    | `true`   | string           | The consumer application version; e.g. '1.0.0-cac389f'. ([See more info on versioning](https://docs.pact.io/getting_started/versioning_in_the_pact_broker))   |
+| `tags`               | `false`  | array of strings | Tag your pacts, often used with your branching, release or environment strategy e.g. ['prod', 'test']                                                         |
 
 </details>
 
