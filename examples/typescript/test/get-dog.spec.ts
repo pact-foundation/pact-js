@@ -3,10 +3,11 @@ import * as chai from "chai"
 import * as chaiAsPromised from "chai-as-promised"
 import path = require("path")
 import * as sinonChai from "sinon-chai"
-import { Pact, Interaction } from "../../../src/pact"
+import { Pact, Interaction, Matchers } from "../../../src/pact"
 
 const expect = chai.expect
 import { DogService } from "../index"
+const { eachLike } = Matchers
 
 chai.use(sinonChai)
 chai.use(chaiAsPromised)
@@ -25,7 +26,8 @@ describe("The Dog API", () => {
     pactfileWriteMode: "merge",
   })
 
-  const EXPECTED_BODY = [{ dog: 1 }, { dog: 2 }]
+  const dogExample = { dog: 1 }
+  const EXPECTED_BODY = eachLike(dogExample)
 
   before(() =>
     provider.setup().then(opts => {
@@ -41,7 +43,7 @@ describe("The Dog API", () => {
     before(() => {
       const interaction = new Interaction()
         .given("I have a list of dogs")
-        .uponReceiving("a request for all dogs")
+        .uponReceiving("a request for all dogs with the builder pattern")
         .withRequest({
           method: "GET",
           path: "/dogs",
@@ -62,7 +64,7 @@ describe("The Dog API", () => {
 
     it("returns the correct response", done => {
       dogService.getMeDogs().then((response: any) => {
-        expect(response.data).to.eql(EXPECTED_BODY)
+        expect(response.data[0]).to.deep.eq(dogExample)
         done()
       }, done)
     })
@@ -72,7 +74,7 @@ describe("The Dog API", () => {
     before(() => {
       return provider.addInteraction({
         state: "i have a list of dogs",
-        uponReceiving: "a request for all dogs",
+        uponReceiving: "a request for all dogs with the object pattern",
         withRequest: {
           method: "GET",
           path: "/dogs",
@@ -92,7 +94,7 @@ describe("The Dog API", () => {
 
     it("returns the correct response", done => {
       dogService.getMeDogs().then((response: any) => {
-        expect(response.data).to.eql(EXPECTED_BODY)
+        expect(response.data[0]).to.deep.eq(dogExample)
         done()
       }, done)
     })
