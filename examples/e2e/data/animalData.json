@@ -1,8 +1,9 @@
-[{
+[
+  {
     "first_name": "Billy",
     "last_name": "Goat",
     "animal": "goat",
-    "age": 21,
+    "age": 21.1,
     "available_from": "2017-12-04T14:47:18.582Z",
     "gender": "M",
     "location": {
@@ -36,10 +37,7 @@
       "available": true,
       "previously_married": true
     },
-    "interests": [
-      "walks in the garden/meadow",
-      "parkour"
-    ]
+    "interests": ["walks in the garden/meadow", "parkour"]
   },
   {
     "first_name": "Simba",
@@ -57,9 +55,6 @@
       "available": true,
       "previously_married": true
     },
-    "interests": [
-      "walks in the garden/meadow",
-      "parkour"
-    ]
+    "interests": ["walks in the garden/meadow", "parkour"]
   }
 ]

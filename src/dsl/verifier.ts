@@ -14,6 +14,7 @@ import { LogLevel } from "./options"
 import ConfigurationError from "../errors/configurationError"
 const HttpProxy = require("http-proxy")
 const bodyParser = require("body-parser")
+const path = require("path")
 
 export interface ProviderState {
   states?: [string]
@@ -209,9 +210,15 @@ export class Verifier {
     if (this.config.validateSSL === undefined) {
       this.config.validateSSL = true
     }
+
     if (this.config.changeOrigin === undefined) {
       this.config.changeOrigin = false
     }
+
+    this.config.monkeypatch = path.resolve(
+      __dirname,
+      "../common/matchingMonkeyPatch.rb"
+    )
 
     if (this.config.logLevel && !isEmpty(this.config.logLevel)) {
       serviceFactory.logLevel(this.config.logLevel)

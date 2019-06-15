@@ -28,7 +28,7 @@ describe("Pact", () => {
     first_name: "Nanny",
     animal: "goat",
     last_name: "Doe",
-    age: 27,
+    age: 27.3,
     gender: "F",
     location: {
       description: "Werribee Zoo",
@@ -51,24 +51,24 @@ describe("Pact", () => {
   // It is also import here to not put in expectations for parts of the
   // API we don't care about
   const animalBodyExpectation = {
-    id: like(1),
+    id: 1,
     available_from: iso8601DateTimeWithMillis(),
-    first_name: like("Billy"),
-    last_name: like("Goat"),
-    animal: like("goat"),
-    age: like(21),
+    first_name: "Billy",
+    last_name: "Goat",
+    animal: "goat",
+    age: 21.7,
     gender: term({
       matcher: "F|M",
       generate: "M",
     }),
     location: {
-      description: like("Melbourne Zoo"),
-      country: like("Australia"),
-      post_code: like(3000),
+      description: "Melbourne Zoo",
+      country: "Australia",
+      post_code: 3000,
     },
     eligibility: {
-      available: like(true),
-      previously_married: like(false),
+      available: true,
+      previously_married: false,
     },
     interests: eachLike("walks in the garden/meadow"),
   }
@@ -153,17 +153,18 @@ describe("Pact", () => {
           })
         )
 
-        it("returns a list of animals", done => {
+        it("returns a list of animals", () => {
           const suggestedMates = suggestion(suitor)
 
-          expect(suggestedMates).to.eventually.have.deep.property(
-            "suggestions[0].score",
-            94
-          )
-          expect(suggestedMates)
-            .to.eventually.have.property("suggestions")
-            .with.lengthOf(MIN_ANIMALS)
-            .notify(done)
+          return Promise.all([
+            expect(suggestedMates).to.eventually.have.deep.property(
+              "suggestions[0].score",
+              94.4
+            ),
+            expect(suggestedMates)
+              .to.eventually.have.property("suggestions")
+              .with.lengthOf(MIN_ANIMALS),
+          ])
         })
       })
     })
@@ -185,17 +186,15 @@ describe("Pact", () => {
             headers: {
               "Content-Type": "application/json; charset=utf-8",
             },
-            body: animalBodyExpectation,
+            body: like(animalBodyExpectation),
           },
         })
       )
 
-      it("returns the animal", done => {
+      it("returns the animal", () => {
         const suggestedMates = getAnimalById(11)
 
-        expect(suggestedMates)
-          .to.eventually.have.deep.property("id", 1)
-          .notify(done)
+        return expect(suggestedMates).to.eventually.have.deep.property("id", 1)
       })
     })
 
@@ -215,14 +214,12 @@ describe("Pact", () => {
         })
       )
 
-      it("returns a 404", done => {
+      it("returns a 404", () => {
         // uncomment below to test a failed verify
         // const suggestedMates = getAnimalById(123)
         const suggestedMates = getAnimalById(100)
 
-        expect(suggestedMates)
-          .to.eventually.be.a("null")
-          .notify(done)
+        return expect(suggestedMates).to.eventually.be.a("null")
       })
     })
   })
@@ -249,8 +246,8 @@ describe("Pact", () => {
       })
     )
 
-    it("creates a new mate", done => {
-      expect(createMateForDates(suitor)).to.eventually.be.fulfilled.notify(done)
+    it("creates a new mate", () => {
+      return expect(createMateForDates(suitor)).to.eventually.be.fulfilled
     })
   })
 

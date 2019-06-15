@@ -16,6 +16,7 @@
     "lint:fix": "prettier --parser typescript --write '{src,test,examples}/**/*.ts' && prettier --write '{src,test,examples}/**/*.js'",
     "lint:prettier:ts": "prettier --parser typescript --check '{src,test,examples}/**/*.ts'",
     "lint:prettier:js": "prettier --parser typescript --check '{src,test,examples}/**/*.js'",
+    "postcompile": "cp src/common/matchingMonkeyPatch.rb dist/common/matchingMonkeyPatch.rb",
     "postdist": "npm t",
     "posttest": "npm run test:karma",
     "predist": "npm run clean && npm run lint && npm run jscpd",
