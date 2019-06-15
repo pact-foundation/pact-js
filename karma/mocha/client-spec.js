@@ -5,10 +5,7 @@
 
     before(function(done) {
       client = example.createClient("http://localhost:1234")
-      provider = new Pact.PactWeb({
-        consumer: "Karma Mocha",
-        provider: "Hello",
-      })
+      provider = new Pact.PactWeb()
       // required for slower Travis CI environment
       setTimeout(function() {
         done()
