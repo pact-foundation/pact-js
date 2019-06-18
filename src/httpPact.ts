@@ -196,9 +196,7 @@ export class Pact {
   }
 
   private setupMockService(): void {
-    logger.info(`Setting up Pact with Consumer "${
-      this.opts.consumer
-    }" and Provider "${this.opts.provider}"
+    logger.info(`Setting up Pact with Consumer "${this.opts.consumer}" and Provider "${this.opts.provider}"
     using mock service on Port: "${this.opts.port}"`)
 
     this.mockService = new MockService(
