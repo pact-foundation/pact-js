@@ -17,9 +17,15 @@
     "contract-testing"
   ],
   "author": "Matt Fellows <matt.fellows@onegeek.com.au>",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
+    "@types/chai": "^4.0.3",
+    "@types/chai-as-promised": "0.0.31",
     "@types/graphql": "^14.0.2",
+    "@types/mocha": "^2.2.48",
+    "@types/node": "^8.0.24",
+    "@types/sinon": "^7.0.6",
+    "@types/sinon-chai": "^2.7.29",
     "apollo-boost": "^0.1.4",
     "apollo-client": "^2.2.8",
     "apollo-client-preset": "^1.0.8",
@@ -32,9 +38,17 @@
     "graphql-tools": "^2.24.0",
     "node-fetch": "^2.2.0",
     "nyc": "^11.6.0",
-    "rimraf": "^2.6.2"
+    "rimraf": "^2.6.2",
+    "ts-node": "^3.3.0",
+    "ts-mock-imports": "^1.2.2",
+    "typescript": "^3.3.3"
   },
   "dependencies": {
+    "@pact-foundation/pact": "^8.2.6",
+    "@types/express-graphql": "^0.8.0",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "lodash": "^4.17.11",
     "mocha": "^5.1.1"
   }
 }

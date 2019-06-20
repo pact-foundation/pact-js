@@ -32,6 +32,8 @@
   "author": "Matt Fellows <matt.fellows@onegeek.com.au>",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.218.1"
+    "@pact-foundation/pact": "^8.2.6",
+    "aws-sdk": "^2.218.1",
+    "lodash": "^4.17.11"
   }
 }

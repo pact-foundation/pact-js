@@ -1,7 +1,7 @@
 "use strict"
 
 const path = require("path")
-const { Pact, Matchers } = require("../../../dist/pact")
+const { Matchers } = require("@pact-foundation/pact")
 const getMeCats = require("../").getMeCats
 
 describe("Cat's API", () => {

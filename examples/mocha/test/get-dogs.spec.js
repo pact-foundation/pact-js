@@ -2,7 +2,7 @@
 
 const expect = require("chai").expect
 const path = require("path")
-const { Pact } = require("../../../dist/pact")
+const { Pact } = require("@pact-foundation/pact")
 const { getMeDogs, getMeDog } = require("../index")
 
 describe("The Dog API", () => {

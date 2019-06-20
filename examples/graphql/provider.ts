@@ -1,5 +1,5 @@
-const express = require("express")
-const graphqlHTTP = require("express-graphql")
+import * as express from "express"
+import * as graphqlHTTP from "express-graphql"
 import { buildSchema } from "graphql"
 
 const schema = buildSchema(`

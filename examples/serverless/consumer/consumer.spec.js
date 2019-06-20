@@ -1,11 +1,11 @@
 /* tslint:disable:no-unused-expression object-literal-sort-keys max-classes-per-file no-empty */
 const consumeEvent = require("./index").consumeEvent
-const { like, term } = require("../../../dist/dsl/matchers")
 const {
   MessageConsumerPact,
-  Message,
+  Matchers,
   synchronousBodyHandler,
-} = require("../../../dist/pact")
+} = require("@pact-foundation/pact")
+const { like, term } = Matchers
 const path = require("path")
 
 describe("Serverless consumer tests", () => {

@@ -1,4 +1,4 @@
-import { Verifier } from "../../src/pact"
+import { Verifier } from "@pact-foundation/pact"
 import app from "./provider"
 
 let server: any

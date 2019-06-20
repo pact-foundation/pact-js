@@ -1,7 +1,11 @@
 /* tslint:disable:no-unused-expression object-literal-sort-keys max-classes-per-file no-empty */
-const { like, term } = require("../../../dist/dsl/matchers")
-const { MessageProviderPact, Message } = require("../../../dist/pact")
+const {
+  MessageProviderPact,
+  Message,
+  Matchers,
+} = require("@pact-foundation/pact")
 const path = require("path")
+const { like, term } = Matchers
 const { createEvent } = require("./index")
 
 describe("Message provider tests", () => {

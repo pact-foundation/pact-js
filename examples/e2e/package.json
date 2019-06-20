@@ -26,6 +26,7 @@
     "mocha": "^5.2.0"
   },
   "dependencies": {
+    "@pact-foundation/pact": "^8.2.6",
     "body-parser": "^1.18.3",
     "cors": "^2.8.1",
     "express": "^4.16.3",

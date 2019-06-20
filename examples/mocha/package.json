@@ -12,5 +12,8 @@
     "chai": "^3.5.0",
     "mocha": "^5.1.1",
     "rimraf": "^2.6.2"
+  },
+  "dependencies": {
+    "@pact-foundation/pact": "^8.2.6"
   }
 }
