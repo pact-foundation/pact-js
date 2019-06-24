@@ -18,10 +18,13 @@
     "deploy:provider": "npm run can-i-deploy && serverless deploy -f provider"
   },
   "devDependencies": {
+    "@pact-foundation/pact": "^8.2.6",
     "chai": "^3.5.0",
     "mocha": "^5.1.1",
     "serverless": "^1.26.1",
-    "rimraf": "^2.6.2"
+    "rimraf": "^2.6.2",
+    "aws-sdk": "^2.218.1",
+    "lodash": "^4.17.11"
   },
   "keywords": [
     "pact",
@@ -30,10 +33,5 @@
     "contract-testing"
   ],
   "author": "Matt Fellows <matt.fellows@onegeek.com.au>",
-  "license": "MIT",
-  "dependencies": {
-    "@pact-foundation/pact": "^8.2.6",
-    "aws-sdk": "^2.218.1",
-    "lodash": "^4.17.11"
-  }
+  "license": "MIT"
 }

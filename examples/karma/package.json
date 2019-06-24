@@ -10,7 +10,7 @@
   },
   "author": "",
   "license": "MIT",
-  "dependencies": {
+  "devDependencies": {
     "@pact-foundation/karma-pact": "~2.1.9",
     "@pact-foundation/pact-node": "^8.6.0",
     "@pact-foundation/pact-web": "^8.2.6",

@@ -59,7 +59,7 @@ describe("Pact Verification", () => {
       tags: ["prod"],
 
       // Specific Remote pacts (doesn't need to be a broker)
-      // pactFilesOrDirs: ['https://test.pact.dius.com.au/pacts/provider/Animal%20Profile%20Service/consumer/Matching%20Service/latest'],
+      // pactUrls: ['https://test.pact.dius.com.au/pacts/provider/Animal%20Profile%20Service/consumer/Matching%20Service/latest'],
       // Local pacts
       // pactUrls: [
       //   path.resolve(
