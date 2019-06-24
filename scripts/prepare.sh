@@ -9,9 +9,9 @@ artifacts=(LICENSE *md package.json)
 
 for artifact in "${artifacts[@]}"; do
   echo "    Copying ${artifact} => ./dist/${artifact}"
-  cp ${artifact} ./dist/${artifact}
+  cp "${artifact}" "./dist/${artifact}"
   echo "    Copying ${artifact} => ./dist-web/${artifact}"
-  cp ${artifact} ./dist-web/${artifact}
+  cp "${artifact}" "./dist-web/${artifact}"
 done
 
 echo "--> Creating pact-web package"
@@ -21,7 +21,7 @@ sed "s/VERSION/${VERSION}/g" < package.json.web > dist-web/package.json
 types=( $(find dist -name "*.d.ts" | grep -v node_modules | sed 's/dist\///') )
 for type in "${types[@]}"; do
   echo "    Copying ${type} => ./dist-web/${type}"
-  echo "creating dir: " $(dirname "./dist-web/${type}")
-  mkdir -p $(dirname "./dist-web/${type}")
+  echo "creating dir: $(dirname "./dist-web/${type}")"
+  mkdir -p "$(dirname "./dist-web/${type}")"
   cp -r "dist/${type}" "./dist-web/${type}"
 done

@@ -2,7 +2,7 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-${DIR}/prepare.sh
+"${DIR}"/prepare.sh
 
 VERSION=$(grep '\"version\"' package.json | grep -E -o "([0-9\.]+(-[a-z\.0-9]+)?)")
 echo "--> Releasing version ${VERSION}"
