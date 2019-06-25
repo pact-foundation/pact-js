@@ -7,6 +7,7 @@ node_js:
   - "10"
 os:
   - linux
+sudo: required
 matrix:
   fast_finish: true
 cache: npm
@@ -20,7 +21,7 @@ script: ./scripts/build.sh
 after_success:
   - npm run coverage
 before_install:
-  - sysctl -w net.ipv6.conf.all.disable_ipv6=0
+  - sudo sysctl -w net.ipv6.conf.all.disable_ipv6=0
 before_deploy:
   - npm prune --production
   - tar -czvf pactjs.tar.gz config dist src package.json README.md LICENSE
