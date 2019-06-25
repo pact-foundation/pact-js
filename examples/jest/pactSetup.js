@@ -1,5 +1,5 @@
 const path = require("path")
-const Pact = require("../../dist/pact").Pact
+const Pact = require("@pact-foundation/pact").Pact
 
 global.port = 8991
 global.provider = new Pact({

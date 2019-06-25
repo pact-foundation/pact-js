@@ -1,17 +1,17 @@
 // Karma configuration
 // Generated on Thu Nov 20 2014 14:51:15 GMT+1100 (AEDT)
 
-module.exports = function (config) {
+module.exports = function(config) {
   config.set({
     // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: '.',
+    basePath: ".",
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jasmine', 'pact'],
+    frameworks: ["jasmine", "pact"],
 
     // list of files / patterns to load in the browser
-    files: ['../../dist/pact.web.js', 'client.js', 'client-spec.js'],
+    files: ["../../dist/pact.web.js", "client.js", "client-spec.js"],
 
     // list of files to exclude
     exclude: [],
@@ -23,7 +23,7 @@ module.exports = function (config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
+    reporters: ["progress"],
 
     // web server port
     port: 9876,
@@ -40,21 +40,21 @@ module.exports = function (config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome_without_security'],
+    browsers: ["Chrome_without_security"],
 
     customLaunchers: {
       Chrome_without_security: {
-        base: 'Chrome',
-        flags: ['--disable-web-security']
+        base: "Chrome",
+        flags: ["--disable-web-security"],
       },
       PhantomJS_without_security: {
-        base: 'PhantomJS',
-        flags: ['--web-security=no']
-      }
+        base: "PhantomJS",
+        flags: ["--web-security=no"],
+      },
     },
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: false
+    singleRun: false,
   })
 }

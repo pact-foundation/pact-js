@@ -1,12 +1,12 @@
 /* tslint:disable:no-unused-expression object-literal-sort-keys max-classes-per-file no-empty */
 import * as chai from "chai"
+import * as path from "path"
 import * as chaiAsPromised from "chai-as-promised"
-import { like } from "../../src/dsl/matchers"
 import { query } from "./consumer"
-import { Pact, GraphQLInteraction } from "../../src/pact"
+import { Pact, GraphQLInteraction, Matchers } from "@pact-foundation/pact"
+const { like } = Matchers
 // import gql from "graphql-tag";
 
-const path = require("path")
 const expect = chai.expect
 
 chai.use(chaiAsPromised)

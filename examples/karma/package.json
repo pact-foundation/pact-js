@@ -1,0 +1,25 @@
+{
+  "name": "pact-js-karma",
+  "version": "1.0.0",
+  "description": "Pact Web Karma Examples",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test:mocha && npm run test:jasmine",
+    "test:mocha": "karma start ./mocha/karma.conf.js",
+    "test:jasmine": "karma start ./mocha/karma.conf.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@pact-foundation/karma-pact": "~2.1.9",
+    "@pact-foundation/pact-node": "^8.6.0",
+    "@pact-foundation/pact-web": "^8.2.6",
+    "chai": "^4.2.0",
+    "karma": "^3.0.0",
+    "karma-chai": "~0.1.0",
+    "karma-jasmine": "^1.1.0",
+    "karma-mocha": "~1.3.0",
+    "karma-phantomjs-launcher": "^1.0.4",
+    "mocha": "^6.1.4"
+  }
+}

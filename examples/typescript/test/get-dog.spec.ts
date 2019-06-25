@@ -3,7 +3,7 @@ import * as chai from "chai"
 import * as chaiAsPromised from "chai-as-promised"
 import path = require("path")
 import * as sinonChai from "sinon-chai"
-import { Pact, Interaction, Matchers } from "../../../src/pact"
+import { Pact, Interaction, Matchers } from "@pact-foundation/pact"
 
 const expect = chai.expect
 import { DogService } from "../index"
@@ -23,7 +23,6 @@ describe("The Dog API", () => {
     spec: 2,
     consumer: "MyConsumer",
     provider: "MyProvider",
-    pactfileWriteMode: "merge",
   })
 
   const dogExample = { dog: 1 }

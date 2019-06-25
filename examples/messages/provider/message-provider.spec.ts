@@ -1,5 +1,5 @@
 /* tslint:disable:no-unused-expression object-literal-sort-keys max-classes-per-file no-empty no-console*/
-const { MessageProviderPact } = require("../../../src/pact")
+import { MessageProviderPact } from "@pact-foundation/pact"
 import path = require("path")
 const { createDog } = require("./dog-client")
 
@@ -15,8 +15,9 @@ describe("Message provider tests", () => {
         return Promise.resolve(`state set to create a dog`)
       },
     },
+    consumer: "MyJSMessageConsumer",
     log: path.resolve(process.cwd(), "logs"),
-    logLevel: "INFO",
+    logLevel: "info",
     provider: "MyJSMessageProvider",
     providerVersion: "1.0.0",
 

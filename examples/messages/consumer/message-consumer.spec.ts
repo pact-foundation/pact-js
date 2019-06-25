@@ -1,12 +1,13 @@
 /* tslint:disable:no-unused-expression object-literal-sort-keys max-classes-per-file no-empty */
 
-import { like, term } from "../../../src/dsl/matchers"
-import { dogApiHandler } from "./dog-handler"
-
-const {
+import {
+  Matchers,
   MessageConsumerPact,
   synchronousBodyHandler,
-} = require("../../../src/pact")
+} from "@pact-foundation/pact"
+const { like, term } = Matchers
+import { dogApiHandler } from "./dog-handler"
+
 const path = require("path")
 
 describe("Message consumer tests", () => {
@@ -15,7 +16,7 @@ describe("Message consumer tests", () => {
     dir: path.resolve(process.cwd(), "pacts"),
     pactfileWriteMode: "update",
     provider: "MyJSMessageProvider",
-    logLevel: "INFO",
+    logLevel: "info",
   })
 
   describe("receive dog event", () => {
@@ -47,6 +48,6 @@ describe("Message consumer tests", () => {
       .withMetadata({
         "content-type": "application/json",
       })
-      .verify(dogApiHandler)
+      .verify(synchronousBodyHandler(dogApiHandler))
   })
 })
