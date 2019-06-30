@@ -230,7 +230,7 @@ describe("Pact", () => {
       // (4) write your test(s)
       it("generates a list of TODOs for the main screen", () => {
         const todoApp = new TodoApp()
-        todoApp
+        return todoApp
           .getProjects() // <- this method would make the remote http call
           .then(projects => {
             expect(projects).to.be.a("array")
