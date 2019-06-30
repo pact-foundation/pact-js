@@ -238,7 +238,7 @@ describe("Pact", () => {
 
             // (5) validate the interactions you've registered and expected occurred
             // this will throw an error if it fails telling you what went wrong
-            expect(provider.verify()).to.not.throw()
+            expect(() => provider.verify()).to.not.throw()
           })
       })
 
