@@ -230,7 +230,7 @@ describe("Pact", () => {
       // (4) write your test(s)
       it("generates a list of TODOs for the main screen", () => {
         const todoApp = new TodoApp()
-        todoApp
+        return todoApp
           .getProjects() // <- this method would make the remote http call
           .then(projects => {
             expect(projects).to.be.a("array")
@@ -238,7 +238,7 @@ describe("Pact", () => {
 
             // (5) validate the interactions you've registered and expected occurred
             // this will throw an error if it fails telling you what went wrong
-            expect(provider.verify()).to.not.throw()
+            expect(() => provider.verify()).to.not.throw()
           })
       })
 
