@@ -167,9 +167,7 @@ const path = require("path")
 const chai = require("chai")
 const { Pact } = require("@pact-foundation/pact")
 const chaiAsPromised = require("chai-as-promised")
-
 const expect = chai.expect
-const MOCK_SERVER_PORT = 2202
 
 chai.use(chaiAsPromised)
 
@@ -178,11 +176,10 @@ describe("Pact", () => {
   const provider = new Pact({
     consumer: "TodoApp",
     provider: "TodoService",
-    port: MOCK_SERVER_PORT,
+    port: 1234,
     log: path.resolve(process.cwd(), "logs", "pact.log"),
     dir: path.resolve(process.cwd(), "pacts"),
     logLevel: "INFO",
-    spec: 2,
   })
 
   // this is the response you expect from your Provider
@@ -200,15 +197,15 @@ describe("Pact", () => {
     },
   ]
 
+  const todoApp = new TodoApp()
+
   context("when there are a list of projects", () => {
     describe("and there is a valid user session", () => {
-      before(done => {
-        // (2) Start the mock server
-        provider
+      before(() => provider
+          // (2) Start the mock server
           .setup()
           // (3) add interactions to the Mock Server, as many as required
-          .then(() => {
-            return provider.addInteraction({
+          .then(() => provider.addInteraction({
               // The 'state' field specifies a "Provider State"
               state: "i have a list of projects",
               uponReceiving: "a request for projects",
@@ -224,31 +221,26 @@ describe("Pact", () => {
               },
             })
           })
-          .then(() => done())
       })
 
       // (4) write your test(s)
-      it("generates a list of TODOs for the main screen", () => {
-        const todoApp = new TodoApp()
-        return todoApp
-          .getProjects() // <- this method would make the remote http call
-          .then(projects => {
-            expect(projects).to.be.a("array")
-            expect(projects).to.have.deep.property("projects[0].id", 1)
-
-            // (5) validate the interactions you've registered and expected occurred
-            // this will throw an error if it fails telling you what went wrong
-            expect(() => provider.verify()).to.not.throw()
-          })
+      it("generates a list of TODOs for the main screen", async () => {
+        const projects = await todoApp.getProjects() // <- this method would make the remote http call
+        expect(projects).to.be.a("array")
+        expect(projects).to.have.deep.property("projects[0].id", 1)
       })
 
-      // (6) write the pact file for this consumer-provider pair,
-      // and shutdown the associated mock server.
-      // You should do this only _once_ per Provider you are testing.
-      after(() => {
-        return provider.finalize()
-      })
+      // (5) validate the interactions you've registered and expected occurred
+      // this will throw an error if it fails telling you what went wrong
+      // This should be performed once per interaction test
+      afterEach(() => provider.verify())
     })
+
+    // (6) write the pact file for this consumer-provider pair,
+    // and shutdown the associated mock server.
+    // You should do this only _once_ per Provider you are testing,
+    // and after _all_ tests have run for that suite
+    after(() =>  provider.finalize())
   })
 })
 ```
@@ -418,16 +410,16 @@ pact.publishPacts(opts)).then(function () {
 
 <details><summary>Publishing Options</summary>
 
-| Parameter            | Required | Type             | Description                                                                                                                                                   |
-| -------------------- | :------: | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `providerBaseUrl`    | `false`  | string           | Running API provider host endpoint.                                                                                                                           |
-| `pactFilesOrDirs`    |  `true`  | array of strings | Array of local Pact files or directories containing pact files. Path must be absolute. Required.                                                              |
-| `pactBroker`         |  `true`  | string           | The base URL of the Pact Broker. eg. https://test.pact.dius.com.au. Required.                                                                                 |
-| `pactBrokerToken`    | `false`  | string           | Bearer token for Pact Broker authentication. Optional. If using Pactflow, you likely need this option                                                         |
-| `pactBrokerUsername` | `false`  | string           | Username for Pact Broker basic authentication. Optional. If using Pactflow, you most likely need to use `pactBrokerToken`                                     |
-| `pactBrokerPassword` | `false`  | string           | Password for Pact Broker basic authentication. Optional. If using Pactflow, you most likely need to use `pactBrokerToken`                                     |
-| `consumerVersion`    | `true`   | string           | The consumer application version; e.g. '1.0.0-cac389f'. ([See more info on versioning](https://docs.pact.io/getting_started/versioning_in_the_pact_broker))   |
-| `tags`               | `false`  | array of strings | Tag your pacts, often used with your branching, release or environment strategy e.g. ['prod', 'test']                                                         |
+| Parameter            | Required | Type             | Description                                                                                                                                                 |
+| -------------------- | :------: | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `providerBaseUrl`    | `false`  | string           | Running API provider host endpoint.                                                                                                                         |
+| `pactFilesOrDirs`    |  `true`  | array of strings | Array of local Pact files or directories containing pact files. Path must be absolute. Required.                                                            |
+| `pactBroker`         |  `true`  | string           | The base URL of the Pact Broker. eg. https://test.pact.dius.com.au. Required.                                                                               |
+| `pactBrokerToken`    | `false`  | string           | Bearer token for Pact Broker authentication. Optional. If using Pactflow, you likely need this option                                                       |
+| `pactBrokerUsername` | `false`  | string           | Username for Pact Broker basic authentication. Optional. If using Pactflow, you most likely need to use `pactBrokerToken`                                   |
+| `pactBrokerPassword` | `false`  | string           | Password for Pact Broker basic authentication. Optional. If using Pactflow, you most likely need to use `pactBrokerToken`                                   |
+| `consumerVersion`    |  `true`  | string           | The consumer application version; e.g. '1.0.0-cac389f'. ([See more info on versioning](https://docs.pact.io/getting_started/versioning_in_the_pact_broker)) |
+| `tags`               | `false`  | array of strings | Tag your pacts, often used with your branching, release or environment strategy e.g. ['prod', 'test']                                                       |
 
 </details>
 
