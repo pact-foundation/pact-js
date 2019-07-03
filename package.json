@@ -34,7 +34,9 @@
     "test:karma:mocha": "cd examples/karma && npm i && npm run test:mocha",
     "travis": "./scripts/build.sh",
     "appveyor": "./scripts/build.ps1",
-    "webpack": "webpack --config ./config/webpack.web.config.js"
+    "webpack": "webpack --config ./config/webpack.web.config.js",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -97,7 +99,8 @@
     "lodash.omit": "^4.5.0",
     "lodash.omitby": "4.6.0",
     "pkginfo": "^0.4.1",
-    "popsicle": "^9.2.0"
+    "popsicle": "^9.2.0",
+    "snyk": "^1.189.0"
   },
   "devDependencies": {
     "@types/chai": "^4.0.3",
@@ -153,5 +156,6 @@
     "tslint-config-prettier": "^1.15.0",
     "typescript": "^3.3.3",
     "webpack": "^3.5.5"
-  }
+  },
+  "snyk": true
 }
