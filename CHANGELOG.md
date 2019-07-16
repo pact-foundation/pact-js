@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="9.0.0"></a>
+# [9.0.0](https://github.com/pact-foundation/pact-js/compare/v8.2.6...v9.0.0) (2019-07-16)
+
+
+### Bug Fixes
+
+* readme example ([#320](https://github.com/pact-foundation/pact-js/issues/320)) ([e57ef2b](https://github.com/pact-foundation/pact-js/commit/e57ef2b))
+
+
+### deps
+
+* **pact-node:** bump version of pact-node to 9.0.0 ([cede852](https://github.com/pact-foundation/pact-js/commit/cede852))
+
+
+### BREAKING CHANGES
+
+* **pact-node:** pact-node 9.0.0 removes the pact-cli wrapper in favour of exposing the pact-standalone binaries as binstubs. Scripts using the pact cli will need to be updated to use the standalone binaries.
+
+
+
 <a name="8.2.6"></a>
 ## [8.2.6](https://github.com/pact-foundation/pact-js/compare/v8.2.5...v8.2.6) (2019-06-18)
 
