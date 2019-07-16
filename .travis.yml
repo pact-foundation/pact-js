@@ -21,7 +21,7 @@ after_success:
   - npm run coverage
 before_deploy:
   - npm prune --production
-  - tar -czvf pactjs.tar.gz config dist src package.json README.md LICENSE
+  - tar -czf pactjs.tar.gz config dist src package.json README.md LICENSE
   - npm run deploy:prepare
 deploy:
   - provider: releases
