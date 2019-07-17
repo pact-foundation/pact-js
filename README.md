@@ -609,6 +609,7 @@ Often times, you find yourself having to re-write regular expressions for common
 | method                      | description                                                                                                                 |
 | --------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | `boolean`                   | Match a boolean value (using equality)                                                                                      |
+| `string`                    | Match a string value                                                                                                        |
 | `integer`                   | Will match all numbers that are integers (both ints and longs)                                                              |
 | `decimal`                   | Will match all real numbers (floating point and decimal)                                                                    |
 | `hexadecimal`               | Will match all hexadecimal encoded strings                                                                                  |
@@ -626,7 +627,7 @@ Often times, you find yourself having to re-write regular expressions for common
 ### Match based on type
 
 ```javascript
-const { like } = Matchers
+const { like, string } = Matchers
 
 provider.addInteraction({
   state: "Has some animals",
@@ -642,7 +643,7 @@ provider.addInteraction({
     },
     body: {
       id: 1,
-      name: like("Billy"),
+      name: string("Billy"),
       address: like({
         street: "123 Smith St",
         suburb: "Smithsville",
