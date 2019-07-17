@@ -37,6 +37,7 @@ export interface VerifierOptions {
   providerStatesSetupUrl?: string
   pactBrokerUsername?: string
   pactBrokerPassword?: string
+  pactBrokerToken?: string
   consumerVersionTag?: string
   customProviderHeaders?: string[]
   publishVerificationResult?: boolean
