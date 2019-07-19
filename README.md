@@ -865,6 +865,10 @@ this [gist](https://gist.github.com/mefellows/15c9fcb052c2aa9d8951f91d48d6da54) 
 If you are having issues, a good place to start is setting `logLevel: 'DEBUG'`
 when configuring the `new Pact({...})` object.
 
+## Alpine + Docker
+
+See https://docs.pact.io/docker/.
+
 ### Parallel tests
 
 Pact tests are inherently stateful, as we need to keep track of the interactions on a per-test basis, to ensure each contract is validated in isolation from others. However, in larger test suites, this can result in slower test execution.
