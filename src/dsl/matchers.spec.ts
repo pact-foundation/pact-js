@@ -15,6 +15,7 @@ import {
   iso8601Time,
   rfc3339Timestamp,
   somethingLike,
+  string,
   term,
   uuid,
   validateExample,
@@ -451,6 +452,16 @@ describe("Matcher", () => {
       it("sets value=true", () => {
         expect(boolean(true)).to.be.an("object")
         expect(boolean(true).contents).to.equal(true)
+      })
+    })
+  })
+
+  describe("#string", () => {
+    describe("when given a valid string", () => {
+      it("creates a valid matcher", () => {
+        expect(string('test')).to.be.an("object")
+        expect(integer()).to.be.an("object")
+        expect(integer('test').contents).to.equal('test')
       })
     })
   })

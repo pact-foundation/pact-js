@@ -253,6 +253,13 @@ export function boolean(value: boolean = true) {
   return somethingLike<boolean>(value)
 }
 
+/**
+ * String Matcher.
+ */
+export function string(value: string = 'iloveorange') {
+  return somethingLike<string>(value);
+}
+
 // Convenience alias'
 export { somethingLike as like }
 export { term as regex }
