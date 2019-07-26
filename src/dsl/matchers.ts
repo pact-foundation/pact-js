@@ -256,8 +256,8 @@ export function boolean(value: boolean = true) {
 /**
  * String Matcher.
  */
-export function string(value: string = 'iloveorange') {
-  return somethingLike<string>(value);
+export function string(value: string = "iloveorange") {
+  return somethingLike<string>(value)
 }
 
 // Convenience alias'
