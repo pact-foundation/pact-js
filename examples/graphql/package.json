@@ -47,6 +47,6 @@
     "graphql-tag": "^2.9.1",
     "graphql-tools": "^2.24.0",
     "node-fetch": "^2.2.0",
-    "lodash": "^4.17.11"
+    "lodash": "^4.17.13"
   }
 }
