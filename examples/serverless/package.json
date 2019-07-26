@@ -24,7 +24,7 @@
     "serverless": "^1.26.1",
     "rimraf": "^2.6.2",
     "aws-sdk": "^2.218.1",
-    "lodash": "^4.17.11"
+    "lodash": "^4.17.13"
   },
   "keywords": [
     "pact",
