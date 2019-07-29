@@ -208,14 +208,25 @@ describe("Verifier", () => {
       })
 
       it("default values are used", () => {
-        const stub = sinon.stub(serviceFactory, "verifyPacts" as any).callsFake(() => Promise.resolve())
+        const stub = sinon
+          .stub(serviceFactory, "verifyPacts" as any)
+          .callsFake(() => Promise.resolve())
         const verify = v["runProviderVerification"]()
 
         return verify({
-          address: () => ({ port: 3333 })
+          address: () => ({ port: 3333 }),
         } as http.Server).then(() => {
-          sinon.assert.calledWith(stub, sinon.match.has("providerStatesSetupUrl", "http://localhost:3333/_pactSetup"))
-          sinon.assert.calledWith(stub, sinon.match.has("providerBaseUrl", "http://localhost:3333"))
+          sinon.assert.calledWith(
+            stub,
+            sinon.match.has(
+              "providerStatesSetupUrl",
+              "http://localhost:3333/_pactSetup"
+            )
+          )
+          sinon.assert.calledWith(
+            stub,
+            sinon.match.has("providerBaseUrl", "http://localhost:3333")
+          )
         })
       })
     })
@@ -224,18 +235,26 @@ describe("Verifier", () => {
       context("with providerStatesSetupUrl", () => {
         beforeEach(() => {
           v = new Verifier({
-            providerStatesSetupUrl: 'http://not.exist/setup'
+            providerStatesSetupUrl: "http://not.exist/setup",
           } as VerifierOptions)
         })
-  
+
         it("uses the configured value", () => {
-          const stub = sinon.stub(serviceFactory, "verifyPacts" as any).callsFake(() => Promise.resolve())
+          const stub = sinon
+            .stub(serviceFactory, "verifyPacts" as any)
+            .callsFake(() => Promise.resolve())
           const verify = v["runProviderVerification"]()
-  
+
           return verify({
-            address: () => ({ port: 3333 })
+            address: () => ({ port: 3333 }),
           } as http.Server).then(() => {
-            sinon.assert.calledWith(stub, sinon.match.has("providerStatesSetupUrl", "http://not.exist/setup"))
+            sinon.assert.calledWith(
+              stub,
+              sinon.match.has(
+                "providerStatesSetupUrl",
+                "http://not.exist/setup"
+              )
+            )
           })
         })
       })
@@ -243,18 +262,23 @@ describe("Verifier", () => {
       context("with providerBaseUrl", () => {
         beforeEach(() => {
           v = new Verifier({
-            providerBaseUrl
+            providerBaseUrl,
           } as VerifierOptions)
         })
 
         it("uses the configured value", () => {
-          const stub = sinon.stub(serviceFactory, "verifyPacts" as any).callsFake(() => Promise.resolve())
+          const stub = sinon
+            .stub(serviceFactory, "verifyPacts" as any)
+            .callsFake(() => Promise.resolve())
           const verify = v["runProviderVerification"]()
-  
+
           return verify({
-            address: () => ({ port: 3333 })
+            address: () => ({ port: 3333 }),
           } as http.Server).then(() => {
-            sinon.assert.calledWith(stub, sinon.match.has("providerBaseUrl", providerBaseUrl))
+            sinon.assert.calledWith(
+              stub,
+              sinon.match.has("providerBaseUrl", providerBaseUrl)
+            )
           })
         })
       })
