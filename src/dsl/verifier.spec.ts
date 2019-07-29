@@ -201,6 +201,66 @@ describe("Verifier", () => {
     })
   })
 
+  describe("#runProviderVerification", () => {
+    describe("when no configuration has been given", () => {
+      beforeEach(() => {
+        v = new Verifier()
+      })
+
+      it("default values are used", () => {
+        const stub = sinon.stub(serviceFactory, "verifyPacts" as any).callsFake(() => Promise.resolve())
+        const verify = v["runProviderVerification"]()
+
+        return verify({
+          address: () => ({ port: 3333 })
+        } as http.Server).then(() => {
+          sinon.assert.calledWith(stub, sinon.match.has("providerStatesSetupUrl", "http://localhost:3333/_pactSetup"))
+          sinon.assert.calledWith(stub, sinon.match.has("providerBaseUrl", "http://localhost:3333"))
+        })
+      })
+    })
+
+    describe("when the verifier has been configured", () => {
+      context("with providerStatesSetupUrl", () => {
+        beforeEach(() => {
+          v = new Verifier({
+            providerStatesSetupUrl: 'http://not.exist/setup'
+          } as VerifierOptions)
+        })
+  
+        it("uses the configured value", () => {
+          const stub = sinon.stub(serviceFactory, "verifyPacts" as any).callsFake(() => Promise.resolve())
+          const verify = v["runProviderVerification"]()
+  
+          return verify({
+            address: () => ({ port: 3333 })
+          } as http.Server).then(() => {
+            sinon.assert.calledWith(stub, sinon.match.has("providerStatesSetupUrl", "http://not.exist/setup"))
+          })
+        })
+      })
+
+      context("with providerBaseUrl", () => {
+        beforeEach(() => {
+          v = new Verifier({
+            providerBaseUrl
+          } as VerifierOptions)
+        })
+
+        it("uses the configured value", () => {
+          const stub = sinon.stub(serviceFactory, "verifyPacts" as any).callsFake(() => Promise.resolve())
+          const verify = v["runProviderVerification"]()
+  
+          return verify({
+            address: () => ({ port: 3333 })
+          } as http.Server).then(() => {
+            sinon.assert.calledWith(stub, sinon.match.has("providerBaseUrl", providerBaseUrl))
+          })
+        })
+      })
+    })
+  })
+
   describe("#waitForServerReady", () => {
     beforeEach(() => {
       v = new Verifier()
