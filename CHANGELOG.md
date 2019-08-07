@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="9.1.0"></a>
+# [9.1.0](https://github.com/pact-foundation/pact-js/compare/v9.0.1...v9.1.0) (2019-08-07)
+
+
+### Bug Fixes
+
+* **tests:** correct test that would not compile ([8cafbbf](https://github.com/pact-foundation/pact-js/commit/8cafbbf))
+* **types:** correct consumerVersionTag in verifier type (fixes [#341](https://github.com/pact-foundation/pact-js/issues/341)) ([7f6a87d](https://github.com/pact-foundation/pact-js/commit/7f6a87d))
+
+
+### Features
+
+* **matching:** add string type matcher. See https://github.com/pact-foundation/pact-js/issues/323 ([#335](https://github.com/pact-foundation/pact-js/issues/335)) ([9f49588](https://github.com/pact-foundation/pact-js/commit/9f49588))
+
+
+
 <a name="9.0.1"></a>
 ## [9.0.1](https://github.com/pact-foundation/pact-js/compare/v9.0.0...v9.0.1) (2019-07-17)
 
