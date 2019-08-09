@@ -110,7 +110,7 @@ Pact supports [synchronous request-response style HTTP interactions](#http-api-t
 To use the library on your tests, add the pact dependency:
 
 ```javascript
-const { Pact } = require("pact")
+const { Pact } = require("@pact-foundation/pact")
 ```
 
 The `Pact` class provides the following high-level APIs, they are listed in the order in which they typically get called in the lifecycle of testing a consumer:
