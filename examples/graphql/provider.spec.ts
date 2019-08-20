@@ -26,7 +26,7 @@ describe("Pact Verification", () => {
       tags: ["prod"],
     }
 
-    return new Verifier().verifyProvider(opts).then(output => {
+    return new Verifier(opts).verifyProvider().then(output => {
       server.close()
     })
   })
