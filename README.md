@@ -267,7 +267,7 @@ let opts = {
   ...
 };
 
-new Verifier().verifyProvider(opts).then(function () {
+new Verifier(opts).verifyProvider().then(function () {
 	// do something
 });
 ```
