@@ -29,7 +29,7 @@
     "rimraf": "^2.6.2",
     "ts-node": "^3.3.0",
     "ts-mock-imports": "^1.2.2",
-    "axios": "^0.17.1",
+    "axios": "^0.18.1",
     "sinon-chai": "^3.3.0",
     "typescript": "^3.3.3"
   }

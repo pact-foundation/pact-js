@@ -38,7 +38,7 @@ export interface VerifierOptions {
   pactBrokerUsername?: string
   pactBrokerPassword?: string
   pactBrokerToken?: string
-  consumerVersionTag?: string
+  consumerVersionTag?: string | string[]
   customProviderHeaders?: string[]
   publishVerificationResult?: boolean
   providerVersion?: string

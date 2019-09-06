@@ -1,5 +1,6 @@
 --bail
 --require ts-node/register
+--require ./test/helper.ts
 --require source-map-support/register
 --require ./test/helper.ts
 --full-trace
