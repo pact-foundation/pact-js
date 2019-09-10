@@ -1,0 +1,28 @@
+[package]
+name = "pact-js-v3"
+version = "0.0.0"
+authors = ["Ronald Holshausen <uglyog@gmail.com>"]
+license = "MIT"
+build = "build.rs"
+exclude = ["artifacts.json", "index.node"]
+
+[lib]
+name = "pact_js_v3"
+crate-type = ["cdylib"]
+
+[build-dependencies]
+neon-build = "0.3.1"
+
+[dependencies]
+neon = "0.3.1"
+pact_mock_server = { version = "0.5.2", path = "/Users/mfellows/development/public/pact-reference/rust/pact_mock_server" }
+pact_matching = { version = "0.5.4", path = "/Users/mfellows/development/public/pact-reference/rust/pact_matching" }
+env_logger = "0.6.1"
+log = "0.4.6"
+uuid = { version = "0.6", features = ["v4"] }
+# neon-serde = "0.1.1"
+serde_derive = "1.0.80"
+serde = "1.0.80"
+serde_json = "1.0"
+lazy_static = "1.3.0"
+maplit = "1.0.1"

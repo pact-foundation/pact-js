@@ -1,0 +1,20 @@
+{
+  "name": "pact-js-v3",
+  "version": "0.0.0",
+  "description": "Node bindings for Pact-Rust",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/uglyog/pact-js-v3-poc"
+  },
+  "author": "Ronald Holshausen <uglyog@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "bluebird": "^3.5.5",
+    "neon-cli": "^0.3.1",
+    "ramda": "^0.26.1"
+  },
+  "scripts": {
+    "install": "neon build"
+  }
+}
