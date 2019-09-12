@@ -8,6 +8,25 @@
   },
   "author": "",
   "license": "MIT",
+  "nyc": {
+    "extension": [
+      ".ts"
+    ],
+    "include": [
+      "**/*.ts"
+    ],
+    "exclude": [
+      "**/*.d.ts"
+    ],
+    "reporter": [
+      "html"
+    ],
+    "all": true,
+    "branches": 80,
+    "lines": 80,
+    "functions": 80,
+    "statements": 80
+  },
   "devDependencies": {
     "@pact-foundation/pact": "^8.2.6",
     "@types/chai": "^4.0.3",
