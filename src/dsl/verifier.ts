@@ -12,6 +12,8 @@ import * as http from "http"
 import logger from "../common/logger"
 import { LogLevel } from "./options"
 import ConfigurationError from "../errors/configurationError"
+import { localAddresses } from "../common/net"
+import * as url from "url"
 const HttpProxy = require("http-proxy")
 const bodyParser = require("body-parser")
 
@@ -199,6 +201,11 @@ export class Verifier {
   private setConfig(config: VerifierOptions) {
     this.config = config
 
+    if (this.config.logLevel && !isEmpty(this.config.logLevel)) {
+      serviceFactory.logLevel(this.config.logLevel)
+      logger.level(this.config.logLevel)
+    }
+
     this.deprecatedFields.forEach(f => {
       if ((this.config as any)[f]) {
         logger.warn(
@@ -210,13 +217,23 @@ export class Verifier {
     if (this.config.validateSSL === undefined) {
       this.config.validateSSL = true
     }
+
     if (this.config.changeOrigin === undefined) {
       this.config.changeOrigin = false
-    }
 
-    if (this.config.logLevel && !isEmpty(this.config.logLevel)) {
-      serviceFactory.logLevel(this.config.logLevel)
-      logger.level(this.config.logLevel)
+      if (!this.isLocalVerification()) {
+        this.config.changeOrigin = true
+        logger.debug(
+          `non-local provider address ${this.config.providerBaseUrl} detected, setting 'changeOrigin' to 'true'. This property can be overridden.`
+        )
+      }
     }
+  }
+
+  private isLocalVerification() {
+    const u = new url.URL(this.config.providerBaseUrl)
+    return (
+      localAddresses.includes(u.host) || localAddresses.includes(u.hostname)
+    )
   }
 }

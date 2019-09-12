@@ -7,12 +7,12 @@
 import * as net from "net"
 import { Promise as bluebird } from "bluebird"
 
+export const localAddresses = ["127.0.0.1", "localhost", "0.0.0.0", "::1"]
+
 const isPortAvailable = (port: number, host: string): Promise<void> =>
   Promise.resolve(
     bluebird
-      .each([host, "127.0.0.1", "localhost", "0.0.0.0"], h =>
-        portCheck(port, h)
-      )
+      .each([host, ...localAddresses], h => portCheck(port, h))
       .then(() => Promise.resolve(undefined))
       .catch(e => Promise.reject(e))
   )
