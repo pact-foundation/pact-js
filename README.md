@@ -1030,20 +1030,5 @@ or chat to us at
 - Google users group: https://groups.google.com/forum/#!forum/pact-support
 
 [getting started with pact]: https://docs.pact.io/getting_started
-[v4]: https://github.com/pact-foundation/pact-js/tree/4.x.x
-[v5]: https://github.com/pact-foundation/pact-js/tree/5.x.x
-[v6]: https://github.com/pact-foundation/pact-js/tree/6.x.x
 [spec]: https://github.com/pact-foundation/pact-specification
-[pact wiki]: https://github.com/pact-foundation/pact-ruby/wiki
-[pact website]: http://docs.pact.io/
-[slack channel]: http://slack.pact.io
-[@pact_up]: https://twitter.com/pact_up
-[pact specification v2]: https://github.com/pact-foundation/pact-specification/tree/version-2
-[pact specification v3]: https://github.com/pact-foundation/pact-specification/tree/version-3
-[cli tools]: https://github.com/pact-foundation/pact-ruby-standalone/releases
-[installation]: #installation
-[message support]: https://github.com/pact-foundation/pact-specification/tree/version-3#introduces-messages-for-services-that-communicate-via-event-streams-and-message-queues
 [changelog]: https://github.com/pact-foundation/pact-js/blob/master/CHANGELOG.md
-[pact broker]: https://github.com/pact-foundation/pact_broker
-[hosted broker]: pact.dius.com.au
-[can-i-deploy tool]: https://github.com/pact-foundation/pact_broker/wiki/Provider-verification-results
