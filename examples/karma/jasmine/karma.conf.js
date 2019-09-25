@@ -15,7 +15,7 @@ module.exports = function(config) {
     files: [
       // Local development
       // '../../dist-web/pact-web.js',
-      "node_modules/@pact-foundation/pact-web/pact-web.js",
+      "../node_modules/@pact-foundation/pact-web/pact-web.js",
       "client.js",
       "client-spec.js",
     ],
