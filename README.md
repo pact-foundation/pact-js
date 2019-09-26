@@ -753,7 +753,7 @@ provider.addInteraction({
 
 ## GraphQL API
 
-GraphQL is simply an abstraction over HTTP and may be tested via Paact. There are two wrapper APIs available for GraphQL specific testing: `GraphQLInteraction` and `ApolloGraphQLInteraction`.
+GraphQL is simply an abstraction over HTTP and may be tested via Pact. There are two wrapper APIs available for GraphQL specific testing: `GraphQLInteraction` and `ApolloGraphQLInteraction`.
 
 These are both lightweight wrappers over the standard DSL in order to make GraphQL testing a bit nicer.
 
