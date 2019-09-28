@@ -81,12 +81,12 @@ describe("Pact V3", () => {
       })
     })
 
-    describe('with XML requests', () => {
+    describe("with XML requests", () => {
       const provider = new PactV3({
         consumer: "TodoApp",
         provider: "TodoServiceV3",
         dir: path.resolve(process.cwd(), "pacts"),
-        logLevel: "INFO"
+        logLevel: "INFO",
       })
 
       before(() => {
@@ -100,9 +100,9 @@ describe("Pact V3", () => {
             headers: { Accept: "application/xml" },
           })
           .willRespondWith({
-              status: 200,
-              headers: { "Content-Type": "application/xml" },
-              body: `<?xml version="1.0" encoding="UTF-8"?>
+            status: 200,
+            headers: { "Content-Type": "application/xml" },
+            body: `<?xml version="1.0" encoding="UTF-8"?>
                 <projects>
                   <project id="1" name="Project 1" due="2016-02-11T09:46:56.023Z">
                     <tasks>
@@ -114,20 +114,23 @@ describe("Pact V3", () => {
                   </project>
                   <project/>
                 </projects>
-              `
+              `,
           })
       })
 
       it("generates a list of TODOs for the main screen", () => {
         let result = provider.executeTest(mockserver => {
           console.log("In Test Function", mockserver)
-          return TodoApp
-            .setUrl(mockserver.url)
-            .getProjects('xml')
+          return TodoApp.setUrl(mockserver.url)
+            .getProjects("xml")
             .then(projects => {
-              expect(projects).to.be.an("array").with.length(2)
-              expect(projects[0].id).to.be.equal('1')
-              expect(projects[0].tasks.task).to.be.an("array").with.length(4)
+              expect(projects)
+                .to.be.an("array")
+                .with.length(2)
+              expect(projects[0].id).to.be.equal("1")
+              expect(projects[0].tasks.task)
+                .to.be.an("array")
+                .with.length(4)
             })
         })
         console.log("result from runTest", result)
