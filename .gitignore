@@ -51,4 +51,8 @@ pacts/
 .nvmrc
 .envrc
 
+# Rust output
 pact-foundation-pact-*.tgz
+src/v3/native/index.node
+src/v3/native/target/
+
