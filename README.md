@@ -753,7 +753,7 @@ provider.addInteraction({
 
 ## GraphQL API
 
-GraphQL is simply an abstraction over HTTP and may be tested via Paact. There are two wrapper APIs available for GraphQL specific testing: `GraphQLInteraction` and `ApolloGraphQLInteraction`.
+GraphQL is simply an abstraction over HTTP and may be tested via Pact. There are two wrapper APIs available for GraphQL specific testing: `GraphQLInteraction` and `ApolloGraphQLInteraction`.
 
 These are both lightweight wrappers over the standard DSL in order to make GraphQL testing a bit nicer.
 
@@ -1029,22 +1029,6 @@ or chat to us at
 - Stack Overflow: https://stackoverflow.com/questions/tagged/pact
 - Google users group: https://groups.google.com/forum/#!forum/pact-support
 
-[getting started with pact]: http://dius.com.au/2016/02/03/microservices-pact/
-[v4]: https://github.com/pact-foundation/pact-js/tree/4.x.x
-[v5]: https://github.com/pact-foundation/pact-js/tree/5.x.x
-[v6]: https://github.com/pact-foundation/pact-js/tree/6.x.x
+[getting started with pact]: https://docs.pact.io/getting_started
 [spec]: https://github.com/pact-foundation/pact-specification
-[pact wiki]: https://github.com/pact-foundation/pact-ruby/wiki
-[getting started with pact]: http://dius.com.au/2016/02/03/microservices-pact/
-[pact website]: http://docs.pact.io/
-[slack channel]: http://slack.pact.io
-[@pact_up]: https://twitter.com/pact_up
-[pact specification v2]: https://github.com/pact-foundation/pact-specification/tree/version-2
-[pact specification v3]: https://github.com/pact-foundation/pact-specification/tree/version-3
-[cli tools]: https://github.com/pact-foundation/pact-ruby-standalone/releases
-[installation]: #installation
-[message support]: https://github.com/pact-foundation/pact-specification/tree/version-3#introduces-messages-for-services-that-communicate-via-event-streams-and-message-queues
 [changelog]: https://github.com/pact-foundation/pact-js/blob/master/CHANGELOG.md
-[pact broker]: https://github.com/pact-foundation/pact_broker
-[hosted broker]: pact.dius.com.au
-[can-i-deploy tool]: https://github.com/pact-foundation/pact_broker/wiki/Provider-verification-results

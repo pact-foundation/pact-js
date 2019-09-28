@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="9.1.1"></a>
+## [9.1.1](https://github.com/pact-foundation/pact-js/compare/v9.1.0...v9.1.1) (2019-09-05)
+
+
+### Bug Fixes
+
+* Upgrade pact-node minimum version to bring in broker auth with token ([41844fe](https://github.com/pact-foundation/pact-js/commit/41844fe))
+
+
+
 <a name="9.1.0"></a>
 # [9.1.0](https://github.com/pact-foundation/pact-js/compare/v9.0.1...v9.1.0) (2019-08-07)
 
