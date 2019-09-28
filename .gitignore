@@ -51,3 +51,4 @@ pacts/
 .nvmrc
 .envrc
 
+pact-foundation-pact-*.tgz

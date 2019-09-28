@@ -4,7 +4,6 @@ extern crate pact_mock_server;
 #[macro_use] extern crate log;
 extern crate env_logger;
 extern crate uuid;
-// #[macro_use] extern crate neon_serde;
 #[macro_use] extern crate serde_derive;
 #[macro_use] extern crate lazy_static;
 #[macro_use] extern crate serde_json;

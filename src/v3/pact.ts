@@ -1,5 +1,5 @@
 import logger from "../common/logger"
-const PactNative = require("./native")
+const PactNative = require("../../src/v3/native")
 
 PactNative.init()
 
