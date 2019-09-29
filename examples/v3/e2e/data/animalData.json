@@ -1,0 +1,65 @@
+[{
+    "first_name": "Billy",
+    "last_name": "Goat",
+    "animal": "goat",
+    "age": 21,
+    "available_from": "2017-12-04T14:47:18.582Z",
+    "gender": "M",
+    "location": {
+      "description": "Melbourne Zoo",
+      "country": "Australia",
+      "post_code": 3000
+    },
+    "eligibility": {
+      "available": true,
+      "previously_married": false
+    },
+    "interests": [
+      "walks in the garden/meadow",
+      "munching on a paddock bomb",
+      "parkour"
+    ]
+  },
+  {
+    "first_name": "Nanny",
+    "animal": "goat",
+    "last_name": "Doe",
+    "age": 27,
+    "available_from": "2017-12-04T14:47:18.582Z",
+    "gender": "F",
+    "location": {
+      "description": "Werribee Zoo",
+      "country": "Australia",
+      "post_code": 3000
+    },
+    "eligibility": {
+      "available": true,
+      "previously_married": true
+    },
+    "interests": [
+      "walks in the garden/meadow",
+      "parkour"
+    ]
+  },
+  {
+    "first_name": "Simba",
+    "last_name": "Cantwaittobeking",
+    "animal": "lion",
+    "age": 4,
+    "available_from": "2017-12-04T14:47:18.582Z",
+    "gender": "M",
+    "location": {
+      "description": "Werribee Zoo",
+      "country": "Australia",
+      "post_code": 3000
+    },
+    "eligibility": {
+      "available": true,
+      "previously_married": true
+    },
+    "interests": [
+      "walks in the garden/meadow",
+      "parkour"
+    ]
+  }
+]

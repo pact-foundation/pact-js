@@ -41,11 +41,24 @@ export function atLeastOneLike(template: any, count: number = 1) {
  * @param min Minimum number of elements required in the array
  * @param count Number of examples to generate, defaults to one
  */
-export function atLeastLike(template: any, min: number, count: number = 1) {
+export function atLeastLike(template: any, min: number, count?: number) {
+  let elements = count
+  if (count && count < min) {
+    throw new Error(
+      "atLeastLike has a minimum of " +
+        min +
+        " but " +
+        count +
+        " elements where requested." +
+        " Make sure the count is greater than or equal to the min."
+    )
+  } else if (!count) {
+    elements = min
+  }
   return {
     min,
     "pact:matcher:type": "type",
-    value: R.times(() => template, count),
+    value: R.times(() => template, elements),
   }
 }
 
@@ -55,11 +68,24 @@ export function atLeastLike(template: any, min: number, count: number = 1) {
  * @param max Maximum number of elements required in the array
  * @param count Number of examples to generate, defaults to one
  */
-export function atMostLike(template: any, max: number, count: number = 1) {
+export function atMostLike(template: any, max: number, count?: number) {
+  let elements = count
+  if (count && count > max) {
+    throw new Error(
+      "atMostLike has a maximum of " +
+        max +
+        " but " +
+        count +
+        " elements where requested." +
+        " Make sure the count is less than or equal to the max."
+    )
+  } else if (!count) {
+    elements = 1
+  }
   return {
     max,
     "pact:matcher:type": "type",
-    value: R.times(() => template, count),
+    value: R.times(() => template, elements),
   }
 }
 
@@ -74,13 +100,37 @@ export function constrainedArrayLike(
   template: any,
   min: number,
   max: number,
-  count: number
+  count?: number
 ) {
+  let elements = count
+  if (count) {
+    if (count < min) {
+      throw new Error(
+        "constrainedArrayLike has a minimum of " +
+          min +
+          " but " +
+          count +
+          " elements where requested." +
+          " Make sure the count is greater than or equal to the min."
+      )
+    } else if (count > max) {
+      throw new Error(
+        "constrainedArrayLike has a maximum of " +
+          max +
+          " but " +
+          count +
+          " elements where requested." +
+          " Make sure the count is less than or equal to the max."
+      )
+    }
+  } else if (!count) {
+    elements = min
+  }
   return {
     min,
     max,
     "pact:matcher:type": "type",
-    value: R.times(() => template, count),
+    value: R.times(() => template, elements),
   }
 }
 

@@ -61,8 +61,7 @@ export class PactV3 {
             }
             return Promise.reject(
               new Error(
-                "Mock server failed with the following mismatches: " +
-                  testResult.mockServerMismatches
+                "Mock server failed with the following mismatches: " + error
               )
             )
           } else {

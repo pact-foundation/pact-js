@@ -29,46 +29,56 @@ lazy_static! {
 }
 
 fn init(mut cx: FunctionContext) -> JsResult<JsUndefined> {
-    let mut builder = Builder::from_default_env();
+    let mut builder = Builder::from_env("LOG_LEVEL");
     builder.target(Target::Stdout);
     builder.init();
     Ok(cx.undefined())
 }
 
-fn process_array(array: &Vec<Value>, matching_rules: &mut Category, generators: &mut Generators, path: &String) -> Value {
+fn process_array(array: &Vec<Value>, matching_rules: &mut Category, generators: &mut Generators, path: &String, type_matcher: bool) -> Value {
   Value::Array(array.iter().enumerate().map(|(index, val)| {
+    let updated_path = if type_matcher {
+      path.to_owned() + "[*]"
+    } else {
+      path.to_owned() + "[" + &index.to_string() + "]"
+    };
     match val {
-      Value::Object(ref map) => process_object(map, matching_rules, generators, &(path.to_owned() + "[" + &index.to_string() + "]")),
-      Value::Array(ref array) => process_array(array, matching_rules, generators, &(path.to_owned() + "[" + &index.to_string() + "]")),
+      Value::Object(ref map) => process_object(map, matching_rules, generators, &updated_path, false),
+      Value::Array(ref array) => process_array(array, matching_rules, generators, &updated_path, false),
       _ => val.clone()  
     }
   }).collect())
 }
 
-fn process_object(obj: &Map<String, Value>, matching_rules: &mut Category, generators: &mut Generators, path: &String) -> Value {
+fn process_object(obj: &Map<String, Value>, matching_rules: &mut Category, generators: &mut Generators, path: &String, type_matcher: bool) -> Value {
   if obj.contains_key("pact:matcher:type") {
     if let Some(rule) = MatchingRule::from_integration_json(obj) {
-      matching_rules.add_rule(path, rule, &RuleLogic::And)
+      matching_rules.add_rule(path, rule, &RuleLogic::And);
     }
     if let Some(gen) = obj.get("pact:generator:type") {
       match Generator::from_map(&json_to_string(gen), obj) {
         Some(generator) => generators.add_generator_with_subcategory(&GeneratorCategory::BODY, path, generator),
         _ => ()
-      }
+      };
     }
     match obj.get("value") {
       Some(val) => match val {
-        Value::Object(ref map) => process_object(map, matching_rules, generators, path),
-        Value::Array(array) => process_array(array, matching_rules, generators, path),
-        _ => val.clone()  
+        Value::Object(ref map) => process_object(map, matching_rules, generators, path, true),
+        Value::Array(array) => process_array(array, matching_rules, generators, path, true),
+        _ => val.clone()
       },
       None => Value::Null
     }
   } else {
     Value::Object(obj.iter().map(|(key, val)| {
+      let updated_path = if type_matcher {
+        path.to_owned() + ".*"
+      } else {
+        path.to_owned() + "." + key
+      };
       (key.clone(), match val {
-        Value::Object(ref map) => process_object(map, matching_rules, generators, &(path.to_owned() + "." + key)),
-        Value::Array(ref array) => process_array(array, matching_rules, generators, &(path.to_owned() + "." + key)),
+        Value::Object(ref map) => process_object(map, matching_rules, generators, &updated_path, false),
+        Value::Array(ref array) => process_array(array, matching_rules, generators, &updated_path, false),
         _ => val.clone()
       })
     }).collect())
@@ -78,25 +88,60 @@ fn process_object(obj: &Map<String, Value>, matching_rules: &mut Category, gener
 fn process_json(body: String, matching_rules: &mut Category, generators: &mut Generators) -> String {
   match serde_json::from_str(&body) {
     Ok(json) => match json { 
-      Value::Object(ref map) => process_object(map, matching_rules, generators, &"$".to_string()).to_string(),
-      Value::Array(ref array) => process_array(array, matching_rules, generators, &"$".to_string()).to_string(),
+      Value::Object(ref map) => process_object(map, matching_rules, generators, &"$".to_string(), false).to_string(),
+      Value::Array(ref array) => process_array(array, matching_rules, generators, &"$".to_string(), false).to_string(),
       _ => body
     },
     Err(_) => body
   }
 }
 
-fn process_body(body: String, content_type: DetectedContentType) -> (OptionalBody, MatchingRules, Generators) {
-  let mut matching_rules = MatchingRules::default();
+fn process_body(body: String, content_type: DetectedContentType, matching_rules: &mut MatchingRules, generators: &mut Generators) -> OptionalBody {
   let mut category = matching_rules.add_category("body");
-  let mut generators = Generators::default();
-
   let processed_body = match content_type {
-    DetectedContentType::Json => process_json(body, &mut category, &mut generators),
+    DetectedContentType::Json => process_json(body, category, generators),
     _ => body
   };
 
-  (OptionalBody::from(processed_body), matching_rules, generators)
+  OptionalBody::from(processed_body)
+}
+
+fn matching_rule_from_js_object<'a>(obj: Handle<JsObject>, ctx: &mut CallContext<JsPact>) -> Option<MatchingRule> {
+  let mut matcher_vals = serde_json::map::Map::new();
+  let props = obj.get_own_property_names(ctx).unwrap();
+  for prop in props.to_vec(ctx).unwrap() {
+    let prop_name = prop.downcast::<JsString>().unwrap().value();
+    let prop_val = props.get(ctx, prop_name.as_str()).unwrap();
+    if let Ok(val) = prop_val.downcast::<JsString>() {
+      matcher_vals.insert(prop_name, json!(val.value()));
+    } else if let Ok(val) = prop_val.downcast::<JsNumber>() {
+      matcher_vals.insert(prop_name, json!(val.value()));
+    }
+  }
+  MatchingRule::from_integration_json(&matcher_vals)
+}
+
+fn generator_from_js_object<'a>(obj: Handle<JsObject>, ctx: &mut CallContext<JsPact>) -> Option<Generator> {
+  let mut vals = serde_json::map::Map::new();
+  let mut gen_type = None;
+  let props = obj.get_own_property_names(ctx).unwrap();
+  for prop in props.to_vec(ctx).unwrap() {
+    let prop_name = prop.downcast::<JsString>().unwrap().value();
+    let prop_val = props.get(ctx, prop_name.as_str()).unwrap();
+    if let Ok(val) = prop_val.downcast::<JsString>() {
+      if prop_name == "pact:generator:type" {
+        gen_type = Some(val.value())
+      }
+      vals.insert(prop_name, json!(val.value()));
+    } else if let Ok(val) = prop_val.downcast::<JsNumber>() {
+      vals.insert(prop_name, json!(val.value()));
+    }
+  }
+
+  match gen_type {
+    Some(val) => Generator::from_map(&val, &vals),
+    None => None
+  }
 }
 
 declare_types! {
@@ -142,6 +187,35 @@ declare_types! {
 
       let js_method = request.get(&mut cx, "method");
       let js_path = request.get(&mut cx, "path");
+      let path = match js_path {
+        Ok(path) => match path.downcast::<JsString>() {
+          Ok(path) => Some((path.value().to_string(), None, None)),
+          Err(err) => {
+            match path.downcast::<JsObject>() {
+              Ok(path) => {
+                let prop_val = path.get(&mut cx, "value").unwrap();
+                match prop_val.downcast::<JsString>() {
+                  Ok(val) => {
+                    let rule = matching_rule_from_js_object(path, &mut cx);
+                    let gen = generator_from_js_object(path, &mut cx);
+                    Some((val.value(), rule, gen))
+                  },
+                  Err(err2) => {
+                    warn!("Request path matcher must contain a string value - {}, {}", err, err2);
+                    None
+                  }
+                }
+              },
+              Err(err2) => {
+                warn!("Request path is not a string value or a matcher - {}, {}", err, err2);
+                None
+              }
+            }
+          }
+        },
+        _ => None
+      };
+
       let js_query = request.get(&mut cx, "query");
       let js_query_props = js_query.map(|val| {
         let mut map = hashmap!{};
@@ -192,10 +266,14 @@ declare_types! {
               Err(err) => warn!("Request method is not a string value - {}", err)
             }
           }
-          if let Ok(path) = js_path {
-            match path.downcast::<JsString>() {
-              Ok(path) => last.request.path = path.value().to_string(),
-              Err(err) => warn!("Request path is not a string value - {}", err)
+          if let Some((path, rule, gen)) = path {
+            last.request.path = path;
+            if let Some(rule) = rule {
+              let category = last.request.matching_rules.add_category("path");
+              category.add_rule(&"".to_string(), rule, &RuleLogic::And)
+            }
+            if let Some(gen) = gen {
+              last.request.generators.add_generator(&GeneratorCategory::PATH, gen)
             }
           }
           if let Ok(query_props) = js_query_props {
@@ -205,10 +283,8 @@ declare_types! {
             last.request.headers = Some(header_props)
           }
           if let Some(body) = js_body {
-            let (val, matching_rules, generators) = process_body(body, last.request.content_type_enum());
-            last.request.body = val;
-            last.request.matching_rules = matching_rules;
-            last.request.generators = generators;
+            last.request.body = process_body(body, last.request.content_type_enum(), &mut last.request.matching_rules,
+              &mut last.request.generators)
           }
         }
       }
@@ -234,7 +310,7 @@ declare_types! {
       });
       let js_body = match cx.argument::<JsValue>(1) {
         Ok(body) => body.downcast::<JsString>().map(|val| val.value()).ok(),
-        Err(err) => None
+        Err(_) => None
       };
 
       let mut this = cx.this();
@@ -253,10 +329,8 @@ declare_types! {
               last.response.headers = Some(header_props)
             }
             if let Some(body) = js_body {
-              let (val, matching_rules, generators) = process_body(body, last.response.content_type_enum());
-              last.response.body = val;
-              last.response.matching_rules = matching_rules;
-              last.response.generators = generators;
+              last.response.body = process_body(body, last.response.content_type_enum(), &mut last.response.matching_rules,
+                &mut last.response.generators))
             }
         }
       }

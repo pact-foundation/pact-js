@@ -1,0 +1,34 @@
+{
+  "name": "e2e",
+  "version": "1.0.0",
+  "description": "Pact JS E2E Example",
+  "scripts": {
+    "test": "npm run test:consumer && npm run test:publish && npm run test:provider",
+    "test:consumer": "LOG_LEVEL=debug ./node_modules/.bin/mocha test/consumer.spec.js",
+    "test:publish": "node test/publish.js",
+    "test:provider": "./node_modules/.bin/mocha test/provider.spec.js",
+    "can-i-deploy": "npm run can-i-deploy:consumer && npm run can-i-deploy:provider",
+    "can-i-deploy:consumer": "$(find ../../ -name pact-broker | grep -e 'bin/pact-broker$' | head -n 1) can-i-deploy --pacticipant 'Matching Service' --latest --broker-base-url https://test.pact.dius.com.au --broker-username dXfltyFMgNOFZAxr8io9wJ37iUpY42M --broker-password O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
+    "can-i-deploy:provider": "$(find ../../ -name pact-broker | grep -e 'bin/pact-broker$' | head -n 1) can-i-deploy --pacticipant 'Animal Profile Service' --latest --broker-base-url https://test.pact.dius.com.au --broker-username dXfltyFMgNOFZAxr8io9wJ37iUpY42M --broker-password O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
+    "api": "concurrently 'npm run provider' 'npm run consumer'",
+    "consumer": "node ./consumerService.js",
+    "provider": "node ./providerService.js"
+  },
+  "author": "matt.fellows@onegeek.com.au",
+  "license": "MIT",
+  "devDependencies": {
+    "@pact-foundation/pact": "file:../../../pact-foundation-pact-10.0.0-beta.0.tgz",
+    "body-parser": "^1.18.3",
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "cli-color": "^1.1.0",
+    "concurrently": "^3.1.0",
+    "cors": "^2.8.1",
+    "eslint": "^3.13.1",
+    "eslint-config-google": "^0.7.1",
+    "express": "^4.16.3",
+    "express-http-proxy": "^1.4.0",
+    "mocha": "^5.2.0",
+    "superagent": "^3.8.3"
+  }
+}
