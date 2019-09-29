@@ -139,20 +139,25 @@ declare_types! {
 
     method addRequest(mut cx) {
       let request = cx.argument::<JsObject>(0)?;
+
       let js_method = request.get(&mut cx, "method");
       let js_path = request.get(&mut cx, "path");
       let js_query = request.get(&mut cx, "query");
       let js_query_props = js_query.map(|val| {
         let mut map = hashmap!{};
-        let query_map = val.downcast::<JsObject>().unwrap();
-        let props = query_map.get_own_property_names(&mut cx).unwrap();
-        for prop in props.to_vec(&mut cx).unwrap() {
-          let prop_name = prop.downcast::<JsString>().unwrap().value();
-          let prop_val = query_map.get(&mut cx, prop_name.as_str()).unwrap();
-          if let Ok(array) = prop_val.downcast::<JsArray>() {
-            // convert the array to a vec
-          } else {
-            map.insert(prop_name, vec![prop_val.downcast::<JsString>().unwrap().value()]);
+        if let Ok(query_map) = val.downcast::<JsObject>() {
+          let props = query_map.get_own_property_names(&mut cx).unwrap();
+          for prop in props.to_vec(&mut cx).unwrap() {
+            let prop_name = prop.downcast::<JsString>().unwrap().value();
+            let prop_val = query_map.get(&mut cx, prop_name.as_str()).unwrap();
+            if let Ok(array) = prop_val.downcast::<JsArray>() {
+              let vec = array.to_vec(&mut cx).unwrap();
+              map.insert(prop_name, vec.iter().map(|item| {
+                item.downcast::<JsString>().unwrap().value()
+              }).collect());
+            } else {
+              map.insert(prop_name, vec![prop_val.downcast::<JsString>().unwrap().value()]);
+            }
           }
         }
         map
@@ -160,16 +165,20 @@ declare_types! {
       let js_headers = request.get(&mut cx, "headers");
       let js_header_props = js_headers.map(|val| {
         let mut map = hashmap!{};
-        let header_map = val.downcast::<JsObject>().unwrap();
-        let props = header_map.get_own_property_names(&mut cx).unwrap();
-        for prop in props.to_vec(&mut cx).unwrap() {
-          let prop_name = prop.downcast::<JsString>().unwrap().value();
-          let prop_val = header_map.get(&mut cx, prop_name.as_str()).unwrap();
-          map.insert(prop_name, vec![prop_val.downcast::<JsString>().unwrap().value()]);
+        if let Ok(header_map) = val.downcast::<JsObject>() {
+          let props = header_map.get_own_property_names(&mut cx).unwrap();
+          for prop in props.to_vec(&mut cx).unwrap() {
+            let prop_name = prop.downcast::<JsString>().unwrap().value();
+            let prop_val = header_map.get(&mut cx, prop_name.as_str()).unwrap();
+            map.insert(prop_name, vec![prop_val.downcast::<JsString>().unwrap().value()]);
+          }
         }
         map
       });
-      let js_body = cx.argument::<JsValue>(1)?.downcast::<JsString>().map(|val| OptionalBody::from(val.value()));
+      let js_body = match cx.argument::<JsValue>(1) {
+        Ok(body) => body.downcast::<JsString>().map(|val| val.value()).ok(),
+        Err(_) => None
+      };
 
       let mut this = cx.this();
 
@@ -178,10 +187,16 @@ declare_types! {
         let mut pact = this.borrow_mut(&guard);
         if let Some(last) = pact.interactions.last_mut() {
           if let Ok(method) = js_method {
-            last.request.method = method.downcast::<JsString>().unwrap().value().to_string();
+            match method.downcast::<JsString>() {
+              Ok(method) => last.request.method = method.value().to_string(),
+              Err(err) => warn!("Request method is not a string value - {}", err)
+            }
           }
           if let Ok(path) = js_path {
-            last.request.path = path.downcast::<JsString>().unwrap().value().to_string();
+            match path.downcast::<JsString>() {
+              Ok(path) => last.request.path = path.value().to_string(),
+              Err(err) => warn!("Request path is not a string value - {}", err)
+            }
           }
           if let Ok(query_props) = js_query_props {
             last.request.query = Some(query_props)
@@ -189,8 +204,11 @@ declare_types! {
           if let Ok(header_props) = js_header_props {
             last.request.headers = Some(header_props)
           }
-          if let Ok(body) = js_body {
-            last.request.body = body
+          if let Some(body) = js_body {
+            let (val, matching_rules, generators) = process_body(body, last.request.content_type_enum());
+            last.request.body = val;
+            last.request.matching_rules = matching_rules;
+            last.request.generators = generators;
           }
         }
       }
@@ -204,16 +222,20 @@ declare_types! {
       let js_headers = response.get(&mut cx, "headers");
       let js_header_props = js_headers.map(|val| {
         let mut map = hashmap!{};
-        let header_map = val.downcast::<JsObject>().unwrap();
-        let props = header_map.get_own_property_names(&mut cx).unwrap();
-        for prop in props.to_vec(&mut cx).unwrap() {
-          let prop_name = prop.downcast::<JsString>().unwrap().value();
-          let prop_val = header_map.get(&mut cx, prop_name.as_str()).unwrap();
-          map.insert(prop_name, vec![prop_val.downcast::<JsString>().unwrap().value()]);
+        if let Ok(header_map) = val.downcast::<JsObject>() {
+          let props = header_map.get_own_property_names(&mut cx).unwrap();
+          for prop in props.to_vec(&mut cx).unwrap() {
+            let prop_name = prop.downcast::<JsString>().unwrap().value();
+            let prop_val = header_map.get(&mut cx, prop_name.as_str()).unwrap();
+            map.insert(prop_name, vec![prop_val.downcast::<JsString>().unwrap().value()]);
+          }
         }
         map
       });
-      let js_body = cx.argument::<JsValue>(1)?.downcast::<JsString>().map(|val| val.value());
+      let js_body = match cx.argument::<JsValue>(1) {
+        Ok(body) => body.downcast::<JsString>().map(|val| val.value()).ok(),
+        Err(err) => None
+      };
 
       let mut this = cx.this();
 
@@ -222,12 +244,15 @@ declare_types! {
         let mut pact = this.borrow_mut(&guard);
         if let Some(last) = pact.interactions.last_mut() {
             if let Ok(status) = js_status {
-              last.response.status = status.downcast::<JsNumber>().unwrap().value() as u16;
+              match status.downcast::<JsNumber>() {
+                Ok(status) => last.response.status = status.value() as u16,
+                Err(err) => warn!("Response status is not a number - {}", err)
+              }
             }
             if let Ok(header_props) = js_header_props {
               last.response.headers = Some(header_props)
             }
-            if let Ok(body) = js_body {
+            if let Some(body) = js_body {
               let (val, matching_rules, generators) = process_body(body, last.response.content_type_enum());
               last.response.body = val;
               last.response.matching_rules = matching_rules;
