@@ -44,10 +44,16 @@ export class MessageProviderPact {
     // Run the verification once the proxy server is available
     return this.waitForServerReady(server)
       .then(this.runProviderVerification())
-      .then(result => {
-        server.close()
-        return result
-      })
+      .then(
+        result => {
+          server.close()
+          return result
+        },
+        err => {
+          server.close()
+          throw err
+        }
+      )
   }
 
   // Listens for the server start event
