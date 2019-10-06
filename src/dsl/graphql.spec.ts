@@ -29,6 +29,16 @@ describe("GraphQLInteraction", () => {
         expect(interaction.withOperation.bind("aoeu")).to.throw(Error)
       })
     })
+    describe("when given a null operation", () => {
+      it("creates a GrphQL Interaction", () => {
+        interaction.uponReceiving("a request")
+        interaction.withOperation(null)
+        interaction.withQuery("{ hello }")
+
+        const json: any = interaction.json()
+        expect(json.request.body.operationName).to.eq(null)
+      })
+    })
   })
 
   describe("#withVariables", () => {
