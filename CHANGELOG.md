@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="9.2.0"></a>
+# [9.2.0](https://github.com/pact-foundation/pact-js/compare/v9.1.1...v9.2.0) (2019-10-08)
+
+
+### Bug Fixes
+
+* **examples:** correct karma/jasmine example to use jasmine instead of mocha ([#365](https://github.com/pact-foundation/pact-js/issues/365)) ([96a0758](https://github.com/pact-foundation/pact-js/commit/96a0758))
+* **MessageProvider:** Shut down test environment even if message provider throws an error ([#366](https://github.com/pact-foundation/pact-js/issues/366)) ([3d66117](https://github.com/pact-foundation/pact-js/commit/3d66117))
+* upgrade vulnerable dependencies ([2380b75](https://github.com/pact-foundation/pact-js/commit/2380b75))
+
+
+### Features
+
+* Automatically set `changeOrigin: true` for non-local verifications  ([#319](https://github.com/pact-foundation/pact-js/issues/319)) ([60f2dc3](https://github.com/pact-foundation/pact-js/commit/60f2dc3)), closes [#280](https://github.com/pact-foundation/pact-js/issues/280) [#281](https://github.com/pact-foundation/pact-js/issues/281) [#282](https://github.com/pact-foundation/pact-js/issues/282)
+* **grahpql:** allow operation to have null ([88acdc0](https://github.com/pact-foundation/pact-js/commit/88acdc0))
+
+
+
 <a name="9.1.1"></a>
 ## [9.1.1](https://github.com/pact-foundation/pact-js/compare/v9.1.0...v9.1.1) (2019-09-05)
 
