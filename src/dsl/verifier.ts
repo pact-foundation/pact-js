@@ -25,34 +25,15 @@ export interface StateHandler {
   [name: string]: () => Promise<any>
 }
 
-// See https://stackoverflow.com/questions/43357734/typescript-recursive-type-with-indexer/43359686
-// as to why we can't use an intersection type here
-// TL;DR - PactNodeVerifierOptions has an index type which enforces all keys to match the index type
-export interface VerifierOptions {
+interface ProxyOptions {
   logLevel?: LogLevel
   requestFilter?: express.RequestHandler
   stateHandlers?: StateHandler
-  providerBaseUrl: string
-  provider?: string
-  pactUrls?: string[]
-  pactBrokerBaseUrl?: string
-  providerStatesSetupUrl?: string
-  pactBrokerUsername?: string
-  pactBrokerPassword?: string
-  pactBrokerToken?: string
-  consumerVersionTag?: string | string[]
-  customProviderHeaders?: string[]
-  publishVerificationResult?: boolean
-  providerVersion?: string
-  pactBrokerUrl?: string
-  tags?: string[]
-  timeout?: number
-  monkeypatch?: string
-  format?: "json" | "RspecJunitFormatter"
-  out?: string
   validateSSL?: boolean
   changeOrigin?: boolean
 }
+
+export type VerifierOptions = ProxyOptions & PactNodeVerifierOptions
 
 export class Verifier {
   private address: string = "http://localhost"
@@ -114,7 +95,7 @@ export class Verifier {
         }`,
         ...omit(this.config, "handlers"),
         providerBaseUrl: `${this.address}:${server.address().port}`,
-      } as PactNodeVerifierOptions
+      }
 
       return qToPromise<any>(pact.verifyPacts(opts))
     }
