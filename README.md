@@ -996,13 +996,13 @@ If your standard tricks don't get you anywhere, setting the logLevel to `DEBUG` 
 Try starting the mock service manually and seeing if it comes up. When submitting a bug report, it would be worth running these commands before hand as it will greatly help us:
 
 ```
-./node_modules/@pact-foundation/pact-standalone/platforms/<platform>/bin/pact-mock-service
+./node_modules/.bin/pact-mock-service
 ```
 
 ...and also the verifier (it will whinge about missing params, but that means it works):
 
 ```
-./node_modules/@pact-foundation/pact-standalone/platforms/darwin/bin/pact-provider-verifier
+./node_modules/.bin/pact-provider-verifier
 ```
 
 ## Contributing
