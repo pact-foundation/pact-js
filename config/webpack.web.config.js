@@ -31,7 +31,7 @@ module.exports = {
         test: APP,
         exclude: /node_modules/,
         query: {
-          presets: ['es2015']
+          presets: ['@babel/preset-env']
         }
       }
     ],
