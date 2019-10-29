@@ -24,6 +24,8 @@ skip_branch_with_pr: true
 # Setup Node environment
 install:
   - ps: Install-Product node $env:nodejs_version $env:platform
+  - node --version
+  - npm --version
   - npm install
 
 # Run custom build script instead of MSBuild
