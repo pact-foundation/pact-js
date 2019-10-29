@@ -1,3 +1,5 @@
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+
 beforeAll(done => {
   provider.setup().then(() => done())
 })
