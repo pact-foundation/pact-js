@@ -41,33 +41,31 @@ describe("Net", () => {
       afterEach(done => closeFn(done))
     })
 
-    // this test uses the test port on all ipv4 and ipv6 hosts via the respective broadcast
-    // addresses (0.0.0.0 and ::)
+    // in all node versions (at time of writing), using the IpV6 broadcast address (::) will
+    // listen on all IpV6 *and* IpV4 addresses (for the specified port) (AKA dual-stacking).
+    // unless `ipv6Only: true` is used in `server.listen({})`. We cannot use this flag as it
+    // has been introduced in node v11.X.
+    // Dual-stacking is configurable at the OS level, but we should not rely on that for the
+    // tests.
     context("when the no local hosts are available", () => {
-      let closeIpV4ServerFn = (cb: any) => cb()
-      let closeIpV6ServerFn = (cb: any) => cb()
+      let closeFn = (cb: any) => cb()
 
-      it("return a rejected promise", () =>
-        createServer(port, defaultHost).then((ipv4Server: { close(): any }) => {
-          closeIpV4ServerFn = ipv4Server.close.bind(ipv4Server)
-
-          return createServer(port, "::").then(
-            (ipv6Server: { close(): any }) => {
-              closeIpV6ServerFn = ipv6Server.close.bind(ipv6Server)
-              return expect(isPortAvailable(port, "127.0.0.1")).to.eventually.be
-                .rejected
-            }
-          )
+      it("returns a rejected promise", () =>
+        // cover all IpV6 and IpV4 hosts for the port, so all the checks will fail
+        createServer(port, "::").then((ipv6Server: { close(): any }) => {
+          closeFn = ipv6Server.close.bind(ipv6Server)
+          return expect(isPortAvailable(port, "127.0.0.1")).to.eventually.be
+            .rejected
         }))
 
       // close the servers used in this test as to not conflict with other tests
-      afterEach(done => closeIpV4ServerFn(() => closeIpV6ServerFn(done)))
+      afterEach(done => closeFn(done))
     })
 
     context("when a single host is unavailable", () => {
       let closeFn = (cb: any) => cb()
 
-      it("return a fulfilled promise", () =>
+      it("returns a fulfilled promise", () =>
         // simulate ::1 being unavailable
         createServer(port, "::1").then((server: { close(): any }) => {
           closeFn = server.close.bind(server)
@@ -89,7 +87,7 @@ describe("Net", () => {
       server.on("error", (err: any) => reject(err))
       server.on("listening", () => resolve(server))
 
-      server.listen({ port: p, host, exclusive: true, ipv6Only: true }, () => {
+      server.listen({ port: p, host, exclusive: true }, () => {
         logger.info(`test server is up on ${host}:${p}`)
       })
     })

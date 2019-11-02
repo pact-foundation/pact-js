@@ -38,7 +38,7 @@ const portCheck = (port: number, host: string): Promise<void> => {
   return new Promise((resolve, reject) => {
     const server: any = net
       .createServer()
-      .listen({ port, host, exclusive: true, ipv6Only: true })
+      .listen({ port, host, exclusive: true })
       .on("error", (e: any) => {
         if (e.code === "EADDRINUSE") {
           reject(new Error(`Port ${port} is unavailable on address ${host}`))
