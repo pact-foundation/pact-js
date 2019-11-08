@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="9.2.3"></a>
+## [9.2.3](https://github.com/pact-foundation/pact-js/compare/v9.2.2...v9.2.3) (2019-11-08)
+
+
+### Bug Fixes
+
+* **deps:** Upgrade vulnerable dependencies and correct peer dependencies ([#388](https://github.com/pact-foundation/pact-js/issues/388)) ([4a19161](https://github.com/pact-foundation/pact-js/commit/4a19161))
+* **examples:** Set jasmine timeout in Jest example, preventing brittle tests (fixes [#383](https://github.com/pact-foundation/pact-js/issues/383)) ([#386](https://github.com/pact-foundation/pact-js/issues/386)) ([5f76433](https://github.com/pact-foundation/pact-js/commit/5f76433))
+* **net:** stop port check from failing due to ipv6 unavailability ([#381](https://github.com/pact-foundation/pact-js/issues/381)) ([#389](https://github.com/pact-foundation/pact-js/issues/389)) ([9ae53c2](https://github.com/pact-foundation/pact-js/commit/9ae53c2))
+
+
+
 <a name="9.2.2"></a>
 ## [9.2.2](https://github.com/pact-foundation/pact-js/compare/v9.2.1...v9.2.2) (2019-10-28)
 
