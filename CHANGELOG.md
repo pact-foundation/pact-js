@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="9.3.0"></a>
+# [9.3.0](https://github.com/pact-foundation/pact-js/compare/v9.2.4...v9.3.0) (2019-11-08)
+
+
+### Features
+
+* update pact-node to ^10.2.0 ([f64cf69](https://github.com/pact-foundation/pact-js/commit/f64cf69))
+
+
+
 <a name="9.2.4"></a>
 ## [9.2.4](https://github.com/pact-foundation/pact-js/compare/v9.2.3...v9.2.4) (2019-11-08)
 
