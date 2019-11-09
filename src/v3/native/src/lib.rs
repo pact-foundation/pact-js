@@ -111,7 +111,7 @@ fn matching_rule_from_js_object<'a>(obj: Handle<JsObject>, ctx: &mut CallContext
   let props = obj.get_own_property_names(ctx).unwrap();
   for prop in props.to_vec(ctx).unwrap() {
     let prop_name = prop.downcast::<JsString>().unwrap().value();
-    let prop_val = props.get(ctx, prop_name.as_str()).unwrap();
+    let prop_val = obj.get(ctx, prop_name.as_str()).unwrap();
     if let Ok(val) = prop_val.downcast::<JsString>() {
       matcher_vals.insert(prop_name, json!(val.value()));
     } else if let Ok(val) = prop_val.downcast::<JsNumber>() {
@@ -127,7 +127,7 @@ fn generator_from_js_object<'a>(obj: Handle<JsObject>, ctx: &mut CallContext<JsP
   let props = obj.get_own_property_names(ctx).unwrap();
   for prop in props.to_vec(ctx).unwrap() {
     let prop_name = prop.downcast::<JsString>().unwrap().value();
-    let prop_val = props.get(ctx, prop_name.as_str()).unwrap();
+    let prop_val = obj.get(ctx, prop_name.as_str()).unwrap();
     if let Ok(val) = prop_val.downcast::<JsString>() {
       if prop_name == "pact:generator:type" {
         gen_type = Some(val.value())

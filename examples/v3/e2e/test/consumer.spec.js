@@ -119,7 +119,7 @@ describe("Pact V3", () => {
         const provider = new PactV3({
           consumer: "Matching Service",
           provider: "Animal Profile Service",
-          dir: path.resolve(process.cwd(), "pacts")
+          dir: path.resolve(process.cwd(), "pacts"),
         })
 
         before(() => {
@@ -162,7 +162,7 @@ describe("Pact V3", () => {
       const provider = new PactV3({
         consumer: "Matching Service",
         provider: "Animal Profile Service",
-        dir: path.resolve(process.cwd(), "pacts")
+        dir: path.resolve(process.cwd(), "pacts"),
       })
 
       before(() =>
@@ -178,15 +178,15 @@ describe("Pact V3", () => {
             headers: {
               "Content-Type": "application/json; charset=utf-8",
             },
-            body: animalListExpectation,
+            body: animalBodyExpectation,
           })
       )
 
       it("returns the animal", () => {
         return provider.executeTest(mockserver => {
-          const suggestedMates = getAnimalById(11, () => mockserver.url)
+          const animal = getAnimalById(1, () => mockserver.url)
 
-          return expect(suggestedMates).to.eventually.have.deep.property(
+          return expect(animal).to.eventually.have.deep.property(
             "id",
             1
           )
@@ -205,10 +205,10 @@ describe("Pact V3", () => {
       before(() =>
         provider
           .given("Has no animals")
-          .uponReceiving("a request for an animal with ID 100")
+          .uponReceiving("a request for an animal by ID")
           .withRequest({
             method: "GET",
-            path: "/animals/100",
+            path: regex("/animals/[0-9]+", "/animals/100"),
             headers: { Authorization: "Bearer token" },
           })
           .willRespondWith({
@@ -218,11 +218,9 @@ describe("Pact V3", () => {
 
       it("returns a 404", () => {
         return provider.executeTest(mockserver => {
-          // uncomment below to test a failed verify
-          // const suggestedMates = getAnimalById(123, () => mockserver.url)
-          const suggestedMates = getAnimalById(100, () => mockserver.url)
+          const animal = getAnimalById(123, () => mockserver.url)
 
-          return expect(suggestedMates).to.eventually.be.a("null")
+          return expect(animal).to.eventually.be.a("null")
         })
       })
     })
@@ -232,8 +230,7 @@ describe("Pact V3", () => {
     const provider = new PactV3({
       consumer: "Matching Service",
       provider: "Animal Profile Service",
-      dir: path.resolve(process.cwd(), "pacts"),
-      logLevel: LOG_LEVEL,
+      dir: path.resolve(process.cwd(), "pacts")
     })
 
     before(() =>
@@ -244,7 +241,7 @@ describe("Pact V3", () => {
           path: "/animals",
           body: like(suitor),
           headers: {
-            "Content-Type": "application/json; charset=utf-8",
+            "Content-Type": "application/json",
           },
         })
         .willRespondWith({

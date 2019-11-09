@@ -58,9 +58,9 @@ const suggestion = (mate, api) => {
 }
 
 // Creates a mate for suggestions
-const createMateForDates = mate => {
+const createMateForDates = (mate, api = getApiEndpoint) => {
   return request
-    .post(`${getApiEndpoint()}/animals`)
+    .post(`${api()}/animals`)
     .send(mate)
     .set("Content-Type", "application/json; charset=utf-8")
 }

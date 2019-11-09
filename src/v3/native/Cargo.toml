@@ -11,10 +11,10 @@ name = "pact_js_v3"
 crate-type = ["cdylib"]
 
 [build-dependencies]
-neon-build = "0.3.1"
+neon-build = "0.3.3"
 
 [dependencies]
-neon = "0.3.1"
+neon = "0.3.3"
 pact_mock_server = "0.6.1"
 pact_matching = "0.5.5"
 env_logger = "0.7"
