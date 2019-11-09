@@ -45,7 +45,6 @@ export class PactV3 {
     if (result.testResult) {
       return result.testResult
         .then((val: any) => {
-          logger.info("In Then", val)
           const testResult = this.pact.getTestResult(result.mockServer.id)
           if (testResult.mockServerError) {
             return Promise.reject(
@@ -70,7 +69,6 @@ export class PactV3 {
           }
         })
         .catch((err: any) => {
-          logger.info("In Catch", err.message)
           const testResult = this.pact.getTestResult(result.mockServer.id)
           let error = "Test failed for the following reasons:"
           error += "\n\tTest code failed with an error: " + err.message
@@ -88,11 +86,9 @@ export class PactV3 {
           return Promise.reject(new Error(error))
         })
         .finally(() => {
-          logger.info("In Finally")
           this.pact.shutdownTest(result)
         })
     } else {
-      logger.info("In Test Failed")
       this.pact.shutdownTest(result)
       return Promise.reject(result.testError)
     }

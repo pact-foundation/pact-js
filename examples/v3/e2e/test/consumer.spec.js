@@ -186,10 +186,7 @@ describe("Pact V3", () => {
         return provider.executeTest(mockserver => {
           const animal = getAnimalById(1, () => mockserver.url)
 
-          return expect(animal).to.eventually.have.deep.property(
-            "id",
-            1
-          )
+          return expect(animal).to.eventually.have.deep.property("id", 1)
         })
       })
     })
@@ -230,7 +227,7 @@ describe("Pact V3", () => {
     const provider = new PactV3({
       consumer: "Matching Service",
       provider: "Animal Profile Service",
-      dir: path.resolve(process.cwd(), "pacts")
+      dir: path.resolve(process.cwd(), "pacts"),
     })
 
     before(() =>
