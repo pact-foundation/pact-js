@@ -1,10 +1,10 @@
-#[macro_use] extern crate neon;
-#[macro_use] extern crate pact_matching;
+extern crate neon;
+extern crate pact_matching;
 extern crate pact_mock_server;
 #[macro_use] extern crate log;
 extern crate env_logger;
 extern crate uuid;
-#[macro_use] extern crate serde_derive;
+extern crate serde_derive;
 #[macro_use] extern crate lazy_static;
 #[macro_use] extern crate serde_json;
 #[macro_use] extern crate maplit;
@@ -15,13 +15,11 @@ use pact_matching::models::provider_states::ProviderState;
 use pact_matching::models::json_utils::json_to_string;
 use pact_matching::models::matchingrules::{MatchingRules, MatchingRule, Category, RuleLogic};
 use pact_matching::models::generators::{Generators, GeneratorCategory, Generator};
-use pact_mock_server::*;
 use pact_mock_server::server_manager::ServerManager;
-use std::env;
 use env_logger::{Builder, Target};
 use uuid::Uuid;
 use std::sync::Mutex;
-use serde_json::{Result, Value};
+use serde_json::Value;
 use serde_json::map::Map;
 
 lazy_static! {
@@ -97,7 +95,7 @@ fn process_json(body: String, matching_rules: &mut Category, generators: &mut Ge
 }
 
 fn process_body(body: String, content_type: DetectedContentType, matching_rules: &mut MatchingRules, generators: &mut Generators) -> OptionalBody {
-  let mut category = matching_rules.add_category("body");
+  let category = matching_rules.add_category("body");
   let processed_body = match content_type {
     DetectedContentType::Json => process_json(body, category, generators),
     _ => body
@@ -339,7 +337,7 @@ declare_types! {
     }
 
     method executeTest(mut cx) {
-      let testFn = cx.argument::<JsFunction>(0)?;
+      let test_fn = cx.argument::<JsFunction>(0)?;
       let this = cx.this();
 
       let mock_server_id = Uuid::new_v4().simple().to_string();
@@ -363,7 +361,7 @@ declare_types! {
       js_mock_server.set(&mut cx, "id", js_id)?;
       let args: Vec<Handle<JsObject>> = vec![js_mock_server];
       let null = cx.null();
-      let result = testFn.call(&mut cx, null, args);
+      let result = test_fn.call(&mut cx, null, args);
 
       let js_result = JsObject::new(&mut cx);
       js_result.set(&mut cx, "mockServer", js_mock_server)?;
@@ -382,7 +380,6 @@ declare_types! {
     }
 
     method shutdownTest(mut cx) {
-      let this = cx.this();
       let test_result = cx.argument::<JsObject>(0)?;
       let mock_server = test_result.get(&mut cx, "mockServer")?.downcast::<JsObject>().unwrap();
       let mock_server_id = mock_server.get(&mut cx, "id")?.downcast::<JsString>().unwrap().value();
