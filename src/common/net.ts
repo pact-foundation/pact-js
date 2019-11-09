@@ -9,13 +9,30 @@ import { Promise as bluebird } from "bluebird"
 
 export const localAddresses = ["127.0.0.1", "localhost", "0.0.0.0", "::1"]
 
-const isPortAvailable = (port: number, host: string): Promise<void> =>
-  Promise.resolve(
+const isPortAvailable = (port: number, host: string): Promise<void> => {
+  return Promise.resolve(
     bluebird
-      .each([host, ...localAddresses], h => portCheck(port, h))
-      .then(() => Promise.resolve(undefined))
-      .catch(e => Promise.reject(e))
+      .map(
+        localAddresses,
+        // we meed to wrap the built-in Promise with bluebird.reflect() so we can
+        // test the result of the promise without failing bluebird.map()
+        h => bluebird.resolve(portCheck(port, h)).reflect(),
+        // do each port check sequentially (as localhost & 127.0.0.1 will conflict on most default environments)
+        { concurrency: 1 }
+      )
+      .then(inspections => {
+        // if every port check failed, then fail the `isPortAvailable` check
+        if (inspections.every(inspection => !inspection.isFulfilled())) {
+          return Promise.reject(
+            new Error(`Cannot open port ${port} on ipv4 or ipv6 interfaces`)
+          )
+        }
+
+        // the local addresses passed - now check the host that the user has specified
+        return portCheck(port, host)
+      })
   )
+}
 
 const portCheck = (port: number, host: string): Promise<void> => {
   return new Promise((resolve, reject) => {

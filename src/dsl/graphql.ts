@@ -25,7 +25,7 @@ export class GraphQLInteraction extends Interaction {
   /**
    * The type of GraphQL operation. Generally not required.
    */
-  public withOperation(operation: string) {
+  public withOperation(operation: string | null) {
     this.operation = operation
 
     return this

@@ -330,7 +330,7 @@ declare_types! {
             }
             if let Some(body) = js_body {
               last.response.body = process_body(body, last.response.content_type_enum(), &mut last.response.matching_rules,
-                &mut last.response.generators))
+                &mut last.response.generators)
             }
         }
       }

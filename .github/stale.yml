@@ -18,7 +18,7 @@ exemptLabels:
   - Triage
 
 # Label to use when marking an issue as stale
-staleLabel: wontfix
+staleLabel: needs attention
 
 # Comment to post when marking an issue as stale. Set to `false` to disable
 markComment: >

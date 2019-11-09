@@ -4,6 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/pact-foundation/pact-js/badge.svg?branch=master)](https://coveralls.io/github/pact-foundation/pact-js?branch=master)
 [![Code Climate](https://codeclimate.com/github/pact-foundation/pact-js/badges/gpa.svg)](https://codeclimate.com/github/pact-foundation/pact-js)
 [![Issue Count](https://codeclimate.com/github/pact-foundation/pact-js/badges/issue_count.svg)](https://codeclimate.com/github/pact-foundation/pact-js)
+[![Known Vulnerabilities](https://snyk.io/test/github/pact-foundation/pact-js/badge.svg?targetFile=package.json)](https://snyk.io/test/github/pact-foundation/pact-js?targetFile=package.json)
 [![license](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/pact-foundation/pact-js/blob/master/LICENSE)
 [![slack](http://slack.pact.io/badge.svg)](http://slack.pact.io)
 
@@ -909,7 +910,7 @@ You have a number of options to achieve this feat:
 
     This feature addresses the use case of "my pact suite takes bloody ages to run, so I just want to replace the interactions that have been run in this test execution" and requires careful management
 
-    _NOTE_: If using this approach, you _must_ be careful to clear out existing pact files (e.g. `rm ./pacts/*.json`) before you run tests to ensure you don't have left over requests that are no longer relevent.
+    _NOTE_: If using this approach, you _must_ be careful to clear out existing pact files (e.g. `rm ./pacts/*.json`) before you run tests to ensure you don't have left over requests that are no longer relevant.
 
     See this [PR](https://github.com/pact-foundation/pact-js/pull/48) for background.
 
@@ -996,13 +997,13 @@ If your standard tricks don't get you anywhere, setting the logLevel to `DEBUG` 
 Try starting the mock service manually and seeing if it comes up. When submitting a bug report, it would be worth running these commands before hand as it will greatly help us:
 
 ```
-./node_modules/@pact-foundation/pact-standalone/platforms/<platform>/bin/pact-mock-service
+./node_modules/.bin/pact-mock-service
 ```
 
 ...and also the verifier (it will whinge about missing params, but that means it works):
 
 ```
-./node_modules/@pact-foundation/pact-standalone/platforms/darwin/bin/pact-provider-verifier
+./node_modules/.bin/pact-provider-verifier
 ```
 
 ## Contributing
