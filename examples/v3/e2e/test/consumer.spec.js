@@ -195,8 +195,7 @@ describe("Pact V3", () => {
       const provider = new PactV3({
         consumer: "Matching Service",
         provider: "Animal Profile Service",
-        dir: path.resolve(process.cwd(), "pacts"),
-        logLevel: LOG_LEVEL,
+        dir: path.resolve(process.cwd(), "pacts")
       })
 
       before(() =>

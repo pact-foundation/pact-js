@@ -37,7 +37,6 @@ const suggestion = (mate, api) => {
   const weights = [(candidate, animal) => Math.abs(candidate.age - animal.age)]
 
   return availableAnimals(api).then(available => {
-    console.log(available)
     const eligible = available.filter(
       a => !predicates.map(p => p(a, mate)).includes(false)
     )
