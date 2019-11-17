@@ -10,4 +10,4 @@ let opts = {
   consumerVersion: "2.0.0",
 }
 
-publisher.publishPacts(opts).then(() => done())
+publisher.publishPacts(opts)
