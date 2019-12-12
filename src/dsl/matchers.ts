@@ -10,6 +10,8 @@ import MatcherError from "../errors/matcherError"
 // Note: The following regexes are Ruby formatted,
 // so attempting to parse as JS without modification is probably not going to work as intended!
 /* tslint:disable:max-line-length */
+export const EMAIL_FORMAT =
+  "^([\\w+\\-].?)+@[a-z\\d\\-]+(\\.[a-z]+)*\\.[a-z]{2,}$"
 export const ISO8601_DATE_FORMAT =
   "^([\\+-]?\\d{4}(?!\\d{2}\\b))((-?)((0[1-9]|1[0-2])(\\3([12]\\d|0[1-9]|3[01]))?|W([0-4]\\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\\d|[12]\\d{2}|3([0-5]\\d|6[1-6])))?)$"
 export const ISO8601_DATETIME_FORMAT =
@@ -128,6 +130,17 @@ export function term(opts: { generate: string; matcher: string }) {
     },
     json_class: "Pact::Term",
   }
+}
+
+/**
+ * Email address matcher.
+ * @param {string} address - a email address to use as an example
+ */
+export function email(address?: string) {
+  return term({
+    generate: address || "hello@pact.io",
+    matcher: EMAIL_FORMAT,
+  })
 }
 
 /**
