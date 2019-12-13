@@ -1,6 +1,13 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [9.5.1](https://github.com/pact-foundation/pact-js/compare/v9.5.0...v9.5.1) (2019-12-13)
+
+
+### Bug Fixes
+
+* **pact-node:** Bump pact-node to ^10.2.3, which allows quotes in provider/consumer names (fixes [#160](https://github.com/pact-foundation/pact-js/issues/160)) ([acc5e7f](https://github.com/pact-foundation/pact-js/commit/acc5e7f8e7b2be0a2ce3f5476b164bcb2cf2f731))
 
 <a name="9.5.0"></a>
 # [9.5.0](https://github.com/pact-foundation/pact-js/compare/v9.4.0...v9.5.0) (2019-11-10)
