@@ -3,7 +3,14 @@ const PrettyStream = require("bunyan-prettystream")
 const pkg = require("./metadata")
 
 const prettyStdOut = new PrettyStream()
-prettyStdOut.pipe(process.stdout)
+
+prettyStdOut.on("data", (data: string) => {
+  process.stdout.write(data)
+})
+
+prettyStdOut.on("error", (e: Error) => {
+  process.stdout.write(e.toString())
+})
 
 export class Logger extends bunyan {
   public time(action: string, startTime: number) {
