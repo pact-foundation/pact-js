@@ -270,7 +270,7 @@ export interface MatcherResult {
 }
 
 export function isMatcher(x: MatcherResult | any): x is MatcherResult {
-  return (x as MatcherResult).getValue !== undefined
+  return x != null && (x as MatcherResult).getValue !== undefined
 }
 
 // Recurse the object removing any underlying matching guff, returning
