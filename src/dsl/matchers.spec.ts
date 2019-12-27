@@ -383,7 +383,7 @@ describe("Matcher", () => {
     describe("when given an invalid Email address", () => {
       it("returns an error", () => {
         expect(() => {
-          email("hello@world.c")
+          email("hello.world.c")
         }).to.throw(Error)
       })
     })
