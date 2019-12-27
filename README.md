@@ -622,6 +622,7 @@ Often times, you find yourself having to re-write regular expressions for common
 | `ipv4Address`               | Will match string containing IP4 formatted address                                                                          |
 | `ipv6Address`               | Will match string containing IP6 formatted address                                                                          |
 | `uuid`                      | Will match strings containing UUIDs                                                                                         |
+| `email`                     | Will match strings containing Email address                                                                                 |
 
 </details>
 
