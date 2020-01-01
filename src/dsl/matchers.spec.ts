@@ -377,6 +377,8 @@ describe("Matcher", () => {
     describe("when given a valid Email address", () => {
       it("creates a valid matcher", () => {
         expect(email("hello@world.com")).to.be.an("object")
+        expect(email("hello@world.com.au")).to.be.an("object")
+        expect(email("hello@a.co")).to.be.an("object")
         expect(email()).to.be.an("object")
       })
     })
