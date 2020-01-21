@@ -763,7 +763,7 @@ See the [history](https://github.com/pact-foundation/pact-js/issues/254#issuecom
 
 ## Tutorial (60 minutes)
 
-Learn everything in Pact JS in 60 minutes: https://github.com/DiUS/pact-workshop-js
+Learn everything in Pact JS in 60 minutes: https://github.com/pact-foundation/pact-workshop-js
 
 ## Examples
 
