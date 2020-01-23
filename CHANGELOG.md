@@ -1,6 +1,13 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [9.6.1](https://github.com/pact-foundation/pact-js/compare/v9.6.0...v9.6.1) (2020-01-23)
+
+
+### Bug Fixes
+
+* **dependencies:** Move bunyan-prettystream to a dependency instead of a dev dependency ([805ed11](https://github.com/pact-foundation/pact-js/commit/805ed11daf57a11ae120ea1eaa3227dd0176e4c1))
 
 <a name="9.6.0"></a>
 # [9.6.0](https://github.com/pact-foundation/pact-js/compare/v9.5.1...v9.6.0) (2020-01-01)
