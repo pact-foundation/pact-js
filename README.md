@@ -401,7 +401,7 @@ let opts = {
    ...
 };
 
-pact.publishPacts(opts)).then(function () {
+pact.publishPacts(opts).then(function () {
 	// do something
 });
 ```
