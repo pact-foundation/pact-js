@@ -319,6 +319,11 @@ let opts = {
     "Has an animal with ID 1": () => {
       importData()
       return Promise.resolve(`Animals added to the db`)
+    },
+    "Has a newly created animal": () => {
+      return createData().then(animal => ({
+        id: animal.id
+      }));
     }
   }
 }

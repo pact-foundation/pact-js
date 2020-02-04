@@ -18,6 +18,7 @@ const HttpProxy = require("http-proxy")
 const bodyParser = require("body-parser")
 
 export interface ProviderState {
+  state?: string
   states?: [string]
 }
 
@@ -92,7 +93,7 @@ export class Verifier {
       const opts = {
         providerStatesSetupUrl: `${this.address}:${server.address().port}${
           this.stateSetupPath
-        }`,
+          }`,
         ...omit(this.config, "handlers"),
         providerBaseUrl: `${this.address}:${server.address().port}`,
       }
@@ -153,7 +154,12 @@ export class Verifier {
       const message: ProviderState = req.body
 
       return this.setupStates(message)
-        .then(() => res.sendStatus(200))
+        .then((params) => res.status(200).json({
+          state: message.state,
+          params: {
+            ...params.filter((returnParam: any) => typeof returnParam === 'object')
+          }
+        }))
         .catch(e => res.status(500).send(e))
     }
   }
