@@ -65,6 +65,7 @@ Read [Getting started with Pact] for more information for beginners.
     - [Using Pact with Karma](#using-pact-with-karma)
     - [Using Pact with RequireJS](#using-pact-with-requirejs)
   - [Troubleshooting](#troubleshooting)
+  - [Alpine + Docker](#alpine--docker)
     - [Parallel tests](#parallel-tests)
     - [Splitting tests across multiple files](#splitting-tests-across-multiple-files)
     - [Re-run specific verification failures](#re-run-specific-verification-failures)
