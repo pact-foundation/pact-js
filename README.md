@@ -115,8 +115,6 @@ TL;DR - you almost always want Pact JS.
 
 \* The "I need to run it in the browser" question comes up occasionally. The question is this - for your JS code to be able to make a call to another API, is this dependent on browser-specific code? In most cases, people use tools like React/Angular which have libraries that work on the server and client side, in which case, these tests don't need to run in a browser and could instead be executed in a Node.js environment.
 
-See - [Using Pact in non-Node environments](#using-pact-in-non-node-environments) for
-
 ## Using Pact JS
 
 Pact supports [synchronous request-response style HTTP interactions](#http-api-testing) and [asynchronous interactions](#asynchronous-api-testing) with JSON-formatted payloads.
