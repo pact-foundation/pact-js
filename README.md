@@ -22,8 +22,6 @@ From the [Pact website](http://docs.pact.io/):
 
 Read [Getting started with Pact] for more information for beginners.
 
-**NOTE: This project supersedes [Pact Consumer JS DSL](https://github.com/DiUS/pact-consumer-js-dsl).**
-
 <p align="center">
   <a href="https://asciinema.org/a/105793">
     <img width="880" src="https://raw.githubusercontent.com/pact-foundation/pact-js/master/.github/pact.svg?sanitize=true&t=1">
@@ -35,6 +33,7 @@ Read [Getting started with Pact] for more information for beginners.
 - [Pact JS](#pact-js)
   - [Installation](#installation)
     - [Do Not Track](#do-not-track)
+  - [Which Library/Package should I use?](#which-librarypackage-should-i-use)
   - [Using Pact JS](#using-pact-js)
   - [HTTP API Testing](#http-api-testing)
     - [Consumer Side Testing](#consumer-side-testing)
@@ -65,7 +64,7 @@ Read [Getting started with Pact] for more information for beginners.
     - [Using Pact with Karma](#using-pact-with-karma)
     - [Using Pact with RequireJS](#using-pact-with-requirejs)
   - [Troubleshooting](#troubleshooting)
-  - [Alpine + Docker](#alpine--docker)
+    - [Alpine + Docker](#alpine--docker)
     - [Parallel tests](#parallel-tests)
     - [Splitting tests across multiple files](#splitting-tests-across-multiple-files)
     - [Re-run specific verification failures](#re-run-specific-verification-failures)
@@ -100,6 +99,23 @@ In order to get better statistics as to who is using Pact, we have an anonymous 
 ```
 
 See the [Changelog] for versions and their history.
+
+## Which Library/Package should I use?
+
+TL;DR - you almost always want Pact JS.
+
+| Purpose                   | Library   | Comments                                                                                                            |
+| ------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------- |
+| Synchronous / HTTP APIs   | Pact JS   |                                                                                                                     |
+| Asynchronous APIs         | Pact JS   |                                                                                                                     |
+| Node.js                   | Pact JS   |                                                                                                                     |
+| Browser testing           | Pact Web  | You probably still want Pact JS. See [Using Pact in non-Node environments](#using-pact-in-non-node-environments) \* |
+| Isomorphic testing        | Pact Web  | You probably still want Pact JS. See [Using Pact in non-Node environments](#using-pact-in-non-node-environments) \* |
+| Publishing to Pact Broker | Pact Node | Included in Pact JS distribution                                                                                    |
+
+\* The "I need to run it in the browser" question comes up occasionally. The question is this - for your JS code to be able to make a call to another API, is this dependent on browser-specific code? In most cases, people use tools like React/Angular which have libraries that work on the server and client side, in which case, these tests don't need to run in a browser and could instead be executed in a Node.js environment.
+
+See - [Using Pact in non-Node environments](#using-pact-in-non-node-environments) for
 
 ## Using Pact JS
 
@@ -203,25 +219,28 @@ describe("Pact", () => {
 
   context("when there are a list of projects", () => {
     describe("and there is a valid user session", () => {
-      before(() =>  provider
-        // (2) Start the mock server
-        .setup()
-        // (3) add interactions to the Mock Server, as many as required
-        .then(() => provider.addInteraction({
-          // The 'state' field specifies a "Provider State"
-          state: "i have a list of projects",
-          uponReceiving: "a request for projects",
-          withRequest: {
-            method: "GET",
-            path: "/projects",
-            headers: { Accept: "application/json" },
-          },
-          willRespondWith: {
-            status: 200,
-            headers: { "Content-Type": "application/json" },
-            body: EXPECTED_BODY,
-          },
-        }))
+      before(() =>
+        provider
+          // (2) Start the mock server
+          .setup()
+          // (3) add interactions to the Mock Server, as many as required
+          .then(() =>
+            provider.addInteraction({
+              // The 'state' field specifies a "Provider State"
+              state: "i have a list of projects",
+              uponReceiving: "a request for projects",
+              withRequest: {
+                method: "GET",
+                path: "/projects",
+                headers: { Accept: "application/json" },
+              },
+              willRespondWith: {
+                status: 200,
+                headers: { "Content-Type": "application/json" },
+                body: EXPECTED_BODY,
+              },
+            })
+          )
       )
     })
 
@@ -281,8 +300,8 @@ new Verifier(opts).verifyProvider().then(function () {
 | --------------------------- | :------: | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `providerBaseUrl`           |   true   | string           | Running API provider host endpoint. Required.                                                                                                                                                                                                    |
 | `provider`                  |   true   | string           | Name of the Provider. Required.                                                                                                                                                                                                                  |
-| `consumerVersionTag`        | false     | string\|array  | Retrieve the latest pacts with given tag(s)                                                        |
-| `providerVersionTag`        | false     | string\|array  |  Tag(s) to apply to the provider application |
+| `consumerVersionTag`        |  false   | string\|array    | Retrieve the latest pacts with given tag(s)                                                                                                                                                                                                      |
+| `providerVersionTag`        |  false   | string\|array    | Tag(s) to apply to the provider application                                                                                                                                                                                                      |
 | `pactUrls`                  |   true   | array of strings | Array of local Pact file paths or HTTP-based URLs (e.g. from a broker). Required if not using a Broker.                                                                                                                                          |
 | `pactBrokerUrl`             |  false   | string           | URL of the Pact Broker to retrieve pacts from. Required if not using pactUrls.                                                                                                                                                                   |
 | `tags`                      |  false   | array of strings | Array of tags, used to filter pacts from the Broker.                                                                                                                                                                                             |
@@ -870,7 +889,7 @@ this [gist](https://gist.github.com/mefellows/15c9fcb052c2aa9d8951f91d48d6da54) 
 If you are having issues, a good place to start is setting `logLevel: 'DEBUG'`
 when configuring the `new Pact({...})` object.
 
-## Alpine + Docker
+### Alpine + Docker
 
 See https://docs.pact.io/docker/.
 
