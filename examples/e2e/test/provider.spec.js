@@ -71,8 +71,13 @@ describe("Pact Verification", () => {
       //   ),
       // ],
 
+      // If you're NOT using Pactflow, use the username/password option as per below
       pactBrokerUsername: "dXfltyFMgNOFZAxr8io9wJ37iUpY42M",
       pactBrokerPassword: "O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
+
+      // if you're using Pactflow, you must authenticate using the bearer token option
+      // You can obtain the token from https://<your broker>.pact.dius.com.au/settings/api-tokens
+      // pactBrokerToken: "<insert your token here"
       publishVerificationResult: true,
       providerVersion: "1.0.0",
     }
