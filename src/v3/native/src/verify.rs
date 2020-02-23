@@ -1,5 +1,6 @@
 use neon::prelude::*;
 use pact_verifier::{ProviderInfo, VerificationOptions, FilterInfo, PactSource};
+use pact_verifier::callback_executors::RequestFilterExecutor;
 use pact_matching::models::http_utils::HttpAuth;
 use pact_matching::models::Request;
 use tokio::prelude::*;
@@ -19,12 +20,27 @@ fn get_string_value(cx: &mut FunctionContext, obj: &JsObject, name: &str) -> Opt
   }
 }
 
+#[derive(Clone)]
+struct RequestFilterCallback {
+  callback_handler: EventHandler
+}
+
+impl RequestFilterExecutor for RequestFilterCallback {
+  fn call(&self, request: &Request) -> Request {
+    let request = request.clone();
+    let result = self.callback_handler.schedule(|cx| {
+      vec![cx.string("number")]
+    });
+    request
+  }
+}
+
 struct BackgroundTask {
   pub provider_info: ProviderInfo,
   pub pacts: Vec<PactSource>,
   pub filter_info: FilterInfo,
   pub consumers_filter: Vec<String>,
-  pub options: VerificationOptions
+  pub options: VerificationOptions<RequestFilterCallback>
 }
 
 impl Task for BackgroundTask {
@@ -40,11 +56,7 @@ impl Task for BackgroundTask {
       .unwrap();
 
     runtime.block_on(async {
-      if pact_verifier::verify_provider(self.provider_info.clone(), self.pacts.clone(), self.filter_info.clone(), self.consumers_filter.clone(), self.options.clone()).await {
-        Ok(true)
-      } else {
-        Err("Pact verification failed".to_string())
-      }
+      Ok(pact_verifier::verify_provider(self.provider_info.clone(), self.pacts.clone(), self.filter_info.clone(), self.consumers_filter.clone(), self.options.clone()).await)
     })
   }
 
@@ -55,24 +67,6 @@ impl Task for BackgroundTask {
     }
   }
 }
-
-// impl <'a> RequestExecutor for BackgroundTaskRequestExecutor<'a> {
-//   fn schedule_request<R, E>(&mut self, request: impl Future<Item=R, Error=E>) -> Result<R, E> {
-//     // self.runtime.block_on(request)
-//     // BackgroundTask.schedule(f)
-//     todo!()
-//   }
-
-//   fn execute_request_filter(&mut self, request: &mut Request) {
-//     if let Some(f) = self.request_filter {
-//       let object = JsObject::new(&mut self.cx);
-//       let args: Vec<Handle<JsObject>> = vec![object];
-//       let null = self.cx.null();
-
-//       f.call(&mut self.cx, null, args);
-//     }
-//   }
-// }
 
 pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
   let config = cx.argument::<JsObject>(0)?;
@@ -138,9 +132,12 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
     None => ()
   };
 
-  let requestFilter = match config.get(&mut cx, "requestFilter") {
+  let request_filter = match config.get(&mut cx, "requestFilter") {
     Ok(requestFilter) => match requestFilter.downcast::<JsFunction>() {
-      Ok(val) => Some(val),
+      Ok(val) => {
+        let mut this = cx.this();
+        Some(Box::new(RequestFilterCallback { callback_handler: EventHandler::new(&cx, this, val) }))
+      },
       Err(_) => None
     },
     _ => None
@@ -151,7 +148,8 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
   let options = VerificationOptions {
     publish: false,
     provider_version: None,
-    build_url: None
+    build_url: None,
+    request_filter
   };
 
   BackgroundTask { provider_info, pacts, filter_info, consumers_filter, options }.schedule(callback);

@@ -73,7 +73,7 @@ export class VerifierV3 {
 
       try {
         PactNative.verify_provider(this.config, (err: any, val: any) => {
-          console.log("====>", err, val)
+          console.log("===========>", err, val)
           if (err) {
             reject(err)
           } else {
