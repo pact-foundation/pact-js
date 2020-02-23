@@ -1,4 +1,4 @@
-const { Verifier } = require("@pact-foundation/pact")
+const { VerifierV3 } = require("@pact-foundation/pact/dist/v3")
 const chai = require("chai")
 const chaiAsPromised = require("chai-as-promised")
 chai.use(chaiAsPromised)
@@ -16,10 +16,9 @@ describe("Pact Verification", () => {
 
     let opts = {
       provider: "Animal Profile Service",
-      logLevel: "DEBUG",
       providerBaseUrl: "http://localhost:8081",
 
-      requestFilter: (req, res, next) => {
+      requestFilter: req => {
         console.log(
           "Middleware invoked before provider API - injecting Authorization token"
         )
@@ -27,7 +26,6 @@ describe("Pact Verification", () => {
 
         // e.g. ADD Bearer token
         req.headers["authorization"] = `Bearer ${token}`
-        next()
       },
 
       stateHandlers: {
@@ -74,7 +72,7 @@ describe("Pact Verification", () => {
       providerVersion: "1.0.0",
     }
 
-    return new Verifier(opts).verifyProvider().then(output => {
+    return new VerifierV3(opts).verifyProvider().then(output => {
       console.log("Pact Verification Complete!")
       console.log(output)
     })

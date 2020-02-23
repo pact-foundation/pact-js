@@ -1,8 +1,6 @@
 import logger from "../common/logger"
 const PactNative = require("../../src/v3/native")
 
-PactNative.init()
-
 export interface PactV3Options {
   dir: string
   consumer: string
