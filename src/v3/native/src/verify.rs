@@ -7,8 +7,8 @@ use tokio::prelude::*;
 use tokio::task;
 use ansi_term::Colour::*;
 use url::Url;
-use std::sync::Arc;
-use std::sync::Mutex;
+use std::sync::mpsc;
+use std::time::Duration;
 
 fn get_string_value(cx: &mut FunctionContext, obj: &JsObject, name: &str) -> Option<String> {
   match obj.get(cx, name) {
@@ -27,11 +27,108 @@ struct RequestFilterCallback {
 
 impl RequestFilterExecutor for RequestFilterCallback {
   fn call(&self, request: &Request) -> Request {
-    let request = request.clone();
-    let result = self.callback_handler.schedule(|cx| {
-      vec![cx.string("number")]
+    let (sender, receiver) = mpsc::channel();
+    let request_copy = request.clone();
+    let result = self.callback_handler.schedule_with(move |cx, this, callback| {
+      let js_method = cx.string(request_copy.method);
+      let js_path = cx.string(request_copy.path);
+      let js_query = JsObject::new(cx);
+      let js_headers = JsObject::new(cx);
+      let js_request = JsObject::new(cx);
+      let js_body = cx.string(request_copy.body.str_value());
+
+      if let Some(query) = request_copy.query {
+        query.iter().for_each(|(k, v)| {
+          let vars = JsArray::new(cx, v.len() as u32);
+          v.iter().enumerate().for_each(|(i, val)| {
+            let qval = cx.string(val);
+            vars.set(cx, i as u32, qval);
+          });
+          js_query.set(cx, k.as_str(), vars);
+        });
+      };
+
+      if let Some(headers) = request_copy.headers {
+        headers.iter().for_each(|(k, v)| {
+          let vars = JsArray::new(cx, v.len() as u32);
+          v.iter().enumerate().for_each(|(i, val)| {
+            let hval = cx.string(val);
+            vars.set(cx, i as u32, hval);
+          });
+          js_headers.set(cx, k.as_str(), vars);
+        });
+      };
+
+      js_request.set(cx, "method", js_method);
+      js_request.set(cx, "path", js_path);
+      js_request.set(cx, "headers", js_headers);
+      js_request.set(cx, "query", js_query);
+      js_request.set(cx, "body", js_body);
+      let args = vec![js_request];
+      let result = callback.call(cx, this, args);
+
+      match result {
+        Ok(val) => {
+          if let Ok(js_obj) = val.downcast::<JsObject>() {
+            let mut request = Request::default();
+            if let Ok(val) = js_obj.get(cx, "method").unwrap().downcast::<JsString>() {
+              request.method = val.value();
+            }
+            if let Ok(val) = js_obj.get(cx, "path").unwrap().downcast::<JsString>() {
+              request.path = val.value();
+            }
+            if let Ok(val) = js_obj.get(cx, "body").unwrap().downcast::<JsString>() {
+              request.body = val.value().into();
+            }
+
+            if let Ok(query_map) = js_obj.get(cx, "query").unwrap().downcast::<JsObject>() {
+              let mut map = hashmap!{};
+              let props = query_map.get_own_property_names(cx).unwrap();
+              for prop in props.to_vec(cx).unwrap() {
+                let prop_name = prop.downcast::<JsString>().unwrap().value();
+                let prop_val = query_map.get(cx, prop_name.as_str()).unwrap();
+                if let Ok(array) = prop_val.downcast::<JsArray>() {
+                  let vec = array.to_vec(cx).unwrap();
+                  map.insert(prop_name, vec.iter().map(|item| {
+                    item.downcast::<JsString>().unwrap().value()
+                  }).collect());
+                } else {
+                  map.insert(prop_name, vec![prop_val.downcast::<JsString>().unwrap().value()]);
+                }
+              }
+              request.query = Some(map)
+            }
+
+            if let Ok(header_map) = js_obj.get(cx, "headers").unwrap().downcast::<JsObject>() {
+              let mut map = hashmap!{};
+              let props = header_map.get_own_property_names(cx).unwrap();
+              for prop in props.to_vec(cx).unwrap() {
+                let prop_name = prop.downcast::<JsString>().unwrap().value();
+                let prop_val = header_map.get(cx, prop_name.as_str()).unwrap();
+                if let Ok(array) = prop_val.downcast::<JsArray>() {
+                  let vec = array.to_vec(cx).unwrap();
+                  map.insert(prop_name, vec.iter().map(|item| {
+                    item.downcast::<JsString>().unwrap().value()
+                  }).collect());
+                } else {
+                  map.insert(prop_name, vec![prop_val.downcast::<JsString>().unwrap().value()]);
+                }
+              }
+              request.headers = Some(map)
+            }
+
+            sender.send(request);
+          } else { 
+            error!("Request filter did not return an object");
+          }
+        },
+        Err(err) => {
+          error!("Request filter threw an exception: {}", err);
+        }
+      }
     });
-    request
+
+    receiver.recv_timeout(Duration::from_millis(1000)).unwrap_or(request.clone())
   }
 }
 
