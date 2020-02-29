@@ -3,7 +3,7 @@ const chai = require("chai")
 const chaiAsPromised = require("chai-as-promised")
 chai.use(chaiAsPromised)
 const { server, importData, animalRepository } = require("../provider.js")
-const path = require("path")
+const expect = chai.expect
 
 server.listen(8081, () => {
   console.log("Animal Profile Service listening on http://localhost:8081")
@@ -14,7 +14,7 @@ describe("Pact Verification", () => {
   it("validates the expectations of Matching Service", () => {
     let token = "INVALID TOKEN"
 
-    let opts = {
+    const opts = {
       provider: "Animal Profile Service",
       logLevel: "DEBUG",
       providerBaseUrl: "http://localhost:8081",
@@ -86,5 +86,22 @@ describe("Pact Verification", () => {
       console.log("Pact Verification Complete!")
       console.log(output)
     })
+  })
+
+  // This example deliberately attempts to get a rejected promise, use the
+  // example above for a reference to the options
+  it("does not validate the expectation of Matching Service", () => {
+    const opts = {
+      provider: "Animal Profile Service",
+      logLevel: "DEBUG",
+      providerBaseUrl: "http://localhost:8081",
+      pactBrokerUrl: "https://test.pact.dius.com.au/",
+      pactBrokerUsername: "dXfltyFMgNOFZAxr8io9wJ37iUpY42M",
+      pactBrokerPassword: "O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
+      providerVersion: "1.0.0",
+    }
+
+    const res = new Verifier(opts).verifyProvider()
+    return expect(res).to.eventually.be.rejected
   })
 })
