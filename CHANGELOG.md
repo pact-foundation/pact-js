@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [9.8.0](https://github.com/pact-foundation/pact-js/compare/v9.7.0...v9.8.0) (2020-03-02)
+
+
+### Features
+
+* upgrade Pact Node to 10.5.0. Fixes [#411](https://github.com/pact-foundation/pact-js/issues/411) ([e5a50ab](https://github.com/pact-foundation/pact-js/commit/e5a50abdcf4fab972fcdf2d0ec395b17c2f320d3))
+
 ## [9.7.0](https://github.com/pact-foundation/pact-js/compare/v9.6.1...v9.7.0) (2020-02-17)
 
 
