@@ -114,18 +114,16 @@ fn create_element_from_json<'a>(doc: Document<'a>, parent: Option<Element<'a>>, 
 
 
   if let Some(parent) = parent {
-      let items = match dbg!(object.get("items")) {
+      let items = match object.get("items") {
         Some(val) => match val {
-          Number(val) => val.as_u64(),
-          _ => Some(1)
+          Number(val) => val.as_u64().unwrap(),
+          _ => 1
         }
-        None => Some(1)
+        None => 1
       };
 
-      for i in 0..items.unwrap() {
-        debug!("Looping {:?} times", items);
-        parent.append_child(element.clone());
-        parent.append_child(doc.create_element(format!("foo-{}", i).as_str()));
+      for _ in 0..items {
+        parent.append_child(duplicate_element(doc, &element));
       }
     }
 
@@ -159,6 +157,14 @@ fn add_attributes(element: &Element, attributes: &Map<String, Value>, matching_r
 
     element.set_attribute_value(k.as_str(), value.as_str());
   }
+}
+
+fn duplicate_element<'a>(doc: Document<'a>, el: &Element<'a>) -> Element<'a> {
+  let element = doc.create_element(el.name());
+  for attr in el.attributes() {
+    element.set_attribute_value(attr.name(), attr.value());
+  }
+  element
 }
 
 /*
