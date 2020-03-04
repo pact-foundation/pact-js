@@ -7,7 +7,7 @@
   "scripts": {
     "build": "npm run build:v2 && npm run build:v3",
     "build:v2": "npm run lint && npm run compile",
-    "build:v3": "neon build -p ./src/v3 --release",
+    "build:v3": "neon build -p ./src/v3",
     "compile": "rimraf dist && tsc",
     "clean": "rimraf docs dist dist-web coverage .nyc_output logs pacts jscpd.json && neon clean -p src/v3",
     "coverage": "nyc report --reporter=text-lcov | coveralls",

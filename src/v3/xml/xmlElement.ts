@@ -40,7 +40,7 @@ export class XmlElement extends XmlNode {
   public eachLike(name: string, attributes: XmlAttributes, callback: (n: XmlElement) => void): XmlElement {
     const el = new XmlElement(name).setAttributes(attributes)
     callback(el)
-    this.children.push({ "pact:matcher:type": "type", value: el })
+    this.children.push({ "pact:matcher:type": "type", value: el, "items": 5 })
 
     return this
   }
