@@ -1,6 +1,7 @@
 const axios = require("axios")
 const parser = require("xml2json")
 const eyes = require("eyes")
+const R = require('ramda')
 
 let serverUrl = "http://localhost:2203"
 
@@ -17,10 +18,9 @@ module.exports = {
         eyes.inspect(response.data)
         if (format === "xml") {
           const result = JSON.parse(parser.toJson(response.data))
-          return result.projects.project
-        } else {
-          return response.data
+          return R.path(['projects', 'project'], result)
         }
+        return response.data
       })
       .catch(error => {
         console.log("todo error", error.message)

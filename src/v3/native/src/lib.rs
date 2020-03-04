@@ -31,6 +31,7 @@ use serde_json::Value;
 use serde_json::map::Map;
 
 mod verify;
+mod xml;
 
 lazy_static! {
   static ref MANAGER: Mutex<ServerManager> = Mutex::new(ServerManager::new());
@@ -53,7 +54,7 @@ fn process_array(array: &Vec<Value>, matching_rules: &mut Category, generators: 
     match val {
       Value::Object(ref map) => process_object(map, matching_rules, generators, &updated_path, false),
       Value::Array(ref array) => process_array(array, matching_rules, generators, &updated_path, false),
-      _ => val.clone()  
+      _ => val.clone()
     }
   }).collect())
 }
@@ -95,7 +96,7 @@ fn process_object(obj: &Map<String, Value>, matching_rules: &mut Category, gener
 
 fn process_json(body: String, matching_rules: &mut Category, generators: &mut Generators) -> String {
   match serde_json::from_str(&body) {
-    Ok(json) => match json { 
+    Ok(json) => match json {
       Value::Object(ref map) => process_object(map, matching_rules, generators, &"$".to_string(), false).to_string(),
       Value::Array(ref array) => process_array(array, matching_rules, generators, &"$".to_string(), false).to_string(),
       _ => body
@@ -104,14 +105,23 @@ fn process_json(body: String, matching_rules: &mut Category, generators: &mut Ge
   }
 }
 
-fn process_body(body: String, content_type: DetectedContentType, matching_rules: &mut MatchingRules, generators: &mut Generators) -> OptionalBody {
-  let category = matching_rules.add_category("body");
-  let processed_body = match content_type {
-    DetectedContentType::Json => process_json(body, category, generators),
-    _ => body
-  };
+fn process_xml(body: String, matching_rules: &mut Category, generators: &mut Generators) -> Result<Vec<u8>, String> {
+  match serde_json::from_str(&body) {
+    Ok(json) => match json {
+      Value::Object(ref map) => xml::generate_xml_body(map, matching_rules, generators),
+      _ => Err(format!("JSON document is invalid (expected an Object), have {}", json))
+    },
+    Err(err) => Err(format!("Failed to parse XML builder document: {}", err))
+  }
+}
 
-  OptionalBody::from(processed_body)
+fn process_body(body: String, content_type: DetectedContentType, matching_rules: &mut MatchingRules, generators: &mut Generators) -> Result<OptionalBody, String> {
+  let category = matching_rules.add_category("body");
+  match dbg!(content_type) {
+    DetectedContentType::Json => Ok(OptionalBody::from(process_json(body, category, generators))),
+    DetectedContentType::Xml => Ok(OptionalBody::Present(process_xml(body, category, generators)?)),
+    _ => Ok(OptionalBody::from(body))
+  }
 }
 
 fn matching_rule_from_js_object<'a>(obj: Handle<JsObject>, ctx: &mut CallContext<JsPact>) -> Option<MatchingRule> {
@@ -158,10 +168,10 @@ declare_types! {
       let consumer: String = cx.argument::<JsString>(0)?.value();
       let provider: String = cx.argument::<JsString>(1)?.value();
 
-      let pact = Pact { 
+      let pact = Pact {
         consumer: Consumer { name: consumer },
         provider: Provider { name: provider },
-        .. Pact::default() 
+        .. Pact::default()
       };
 
       Ok(pact)
@@ -291,8 +301,11 @@ declare_types! {
             last.request.headers = Some(header_props)
           }
           if let Some(body) = js_body {
-            last.request.body = process_body(body, last.request.content_type_enum(), &mut last.request.matching_rules,
-              &mut last.request.generators)
+            match process_body(body, last.request.content_type_enum(), &mut last.request.matching_rules,
+              &mut last.request.generators) {
+              Ok(body) => last.request.body = body,
+              Err(err) => panic!(err)
+            }
           }
         }
       }
@@ -336,9 +349,13 @@ declare_types! {
             if let Ok(header_props) = js_header_props {
               last.response.headers = Some(header_props)
             }
+
             if let Some(body) = js_body {
-              last.response.body = process_body(body, last.response.content_type_enum(), &mut last.response.matching_rules,
-                &mut last.response.generators)
+              match process_body(body, last.response.content_type_enum(), &mut last.response.matching_rules,
+                &mut last.response.generators) {
+                Ok(body) => last.response.body = body,
+                Err(err) => panic!(err)
+              }
             }
         }
       }

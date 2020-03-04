@@ -1,5 +1,4 @@
-import logger from "../common/logger"
-import { isEmpty } from "lodash"
+import { isEmpty } from "ramda"
 import ConfigurationError from "../errors/configurationError"
 
 const PactNative = require("../../src/v3/native")

@@ -20,3 +20,11 @@ export import Matchers = Matchers
  * @static
  */
 export * from "./verifier"
+
+/**
+ * Exposes {@link xml}
+ * @memberof Pact
+ * @static
+ */
+export * from "./xml/xmlBuilder"
+export * from "./xml/xmlElement"

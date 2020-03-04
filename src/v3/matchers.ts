@@ -42,7 +42,7 @@ export function atLeastOneLike(template: any, count: number = 1) {
  * @param count Number of examples to generate, defaults to one
  */
 export function atLeastLike(template: any, min: number, count?: number) {
-  let elements = count
+  const elements = count || min
   if (count && count < min) {
     throw new Error(
       "atLeastLike has a minimum of " +
@@ -52,9 +52,8 @@ export function atLeastLike(template: any, min: number, count?: number) {
         " elements where requested." +
         " Make sure the count is greater than or equal to the min."
     )
-  } else if (!count) {
-    elements = min
   }
+
   return {
     min,
     "pact:matcher:type": "type",
@@ -69,7 +68,7 @@ export function atLeastLike(template: any, min: number, count?: number) {
  * @param count Number of examples to generate, defaults to one
  */
 export function atMostLike(template: any, max: number, count?: number) {
-  let elements = count
+  const elements = count || 1
   if (count && count > max) {
     throw new Error(
       "atMostLike has a maximum of " +
@@ -79,9 +78,8 @@ export function atMostLike(template: any, max: number, count?: number) {
         " elements where requested." +
         " Make sure the count is less than or equal to the max."
     )
-  } else if (!count) {
-    elements = 1
   }
+
   return {
     max,
     "pact:matcher:type": "type",
@@ -102,7 +100,7 @@ export function constrainedArrayLike(
   max: number,
   count?: number
 ) {
-  let elements = count
+  const elements = count || min
   if (count) {
     if (count < min) {
       throw new Error(
@@ -123,9 +121,8 @@ export function constrainedArrayLike(
           " Make sure the count is less than or equal to the max."
       )
     }
-  } else if (!count) {
-    elements = min
   }
+
   return {
     min,
     max,
@@ -244,7 +241,7 @@ export function equal(value: any) {
  */
 export function timestamp(format: string, example: string) {
   return {
-    format,
+    format, // TODO: do we need this and "timestamp: format" ?
     "pact:generator:type": "DateTime",
     "pact:matcher:type": "timestamp",
     timestamp: format,
@@ -274,10 +271,10 @@ export function time(format: string, example: string) {
  */
 export function date(format: any, example: any) {
   return {
+    date: format,
     format,
     "pact:generator:type": "Date",
     "pact:matcher:type": "date",
-    date: format,
     value: example,
   }
 }

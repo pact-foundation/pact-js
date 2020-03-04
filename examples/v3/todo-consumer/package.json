@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "test": "mocha"
+    "test": "LOG_LEVEL=DEBUG mocha"
   },
   "author": "",
   "license": "ISC",
@@ -13,7 +13,6 @@
     "pact_do_not_track": true
   },
   "dependencies": {
-    "@pact-foundation/pact": "file:../../../pact-foundation-pact-10.0.0-beta.0.tgz",
     "axios": "^0.19.0",
     "bluebird": "^3.5.5",
     "chai": "^4.2.0",
@@ -23,7 +22,12 @@
     "lodash": ">=4.17.13",
     "mocha": "^6.1.4",
     "ramda": "^0.26.1",
+    "typescript": "^3.8.3",
     "xml2json": "^0.11.2"
+  },
+  "devDependencies": {
+    "@pact-foundation/pact": "file:../../..",
+    "ts-node": "^3.3.0"
   },
   "mocha": {
     "slow": "0"

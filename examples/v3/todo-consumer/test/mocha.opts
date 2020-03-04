@@ -1,6 +1,5 @@
 --bail
 --require ts-node/register
---require ./test/helper.ts
 --require source-map-support/register
 --full-trace
 --reporter spec
@@ -8,3 +7,4 @@
 --recursive
 --timeout 30000
 --exit
+test/*.js

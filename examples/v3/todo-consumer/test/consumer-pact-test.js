@@ -1,7 +1,8 @@
 const path = require("path")
 const chai = require("chai")
 const chaiAsPromised = require("chai-as-promised")
-const { PactV3, Matchers } = require("@pact-foundation/pact/dist/v3")
+// const { PactV3, Matchers } = require("@pact-foundation/pact/dist/v3")
+const { PactV3, Matchers, XmlBuilder } = require("../../../../src/v3")
 const {
   string,
   eachLike,
@@ -102,19 +103,35 @@ describe("Pact V3", () => {
           .willRespondWith({
             status: 200,
             headers: { "Content-Type": "application/xml" },
-            body: `<?xml version="1.0" encoding="UTF-8"?>
-                <projects>
-                  <project id="1" name="Project 1" due="2016-02-11T09:46:56.023Z">
-                    <tasks>
-                      <task id="1" name="Do the laundry" done="true"/>
-                      <task id="2" name="Do the dishes" done="false"/>
-                      <task id="3" name="Do the backyard" done="false"/>
-                      <task id="4" name="Do nothing" done="false"/>
-                    </tasks>  
-                  </project>
-                  <project/>
-                </projects>
-              `,
+            body: new XmlBuilder("1.0", "UTF-8", "projects").build(
+              el => {
+                el.setAttributes({
+                  foo: "bar",
+                })
+                el.eachLike("project", {
+                  id: integer(1),
+                  type: "activity",
+                  name: string("Project 1"),
+                  due: timestamp(
+                    "yyyy-MM-dd'T'HH:mm:ss.SZ",
+                    "2016-02-11T09:46:56.023Z"
+                  ),
+                }, project => {})
+              }
+            ),
+            // body: `<?xml version="1.0" encoding="UTF-8"?>
+            //     <projects foo="bar">
+            //       <project id="1" name="Project 1" due="2016-02-11T09:46:56.023Z">
+            //         <tasks>
+            //           <task id="1" name="Do the laundry" done="true"/>
+            //           <task id="2" name="Do the dishes" done="false"/>
+            //           <task id="3" name="Do the backyard" done="false"/>
+            //           <task id="4" name="Do nothing" done="false"/>
+            //         </tasks>
+            //       </project>
+            //       <project/>
+            //     </projects>
+            //   `,
           })
       })
 
