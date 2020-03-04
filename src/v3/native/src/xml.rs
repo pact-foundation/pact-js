@@ -40,6 +40,7 @@ pub fn generate_xml_body(attributes: &Map<String, Value>, matching_rules: &mut C
 }
 
 fn create_element_from_json<'a>(doc: Document<'a>, parent: Option<Element<'a>>, object: &Map<String, Value>, matching_rules: &mut Category, generators: &mut Generators, path: &String, type_matcher: bool) -> Element<'a> {
+  dbg!(path);
   dbg!(parent);
   dbg!(object);
 
@@ -54,13 +55,14 @@ fn create_element_from_json<'a>(doc: Document<'a>, parent: Option<Element<'a>>, 
       };
     }
 
+    let updated_path = path.to_owned() + ".*";
     if let Some(val) = object.get("value") {
       if let Value::Object(attr) = val {
         dbg!(val);
         let element = doc.create_element(json_to_string(attr.get("name").unwrap()).as_str());
         if let Some(attributes) = val.get("attributes") {
           match dbg!(attributes) {
-            Value::Object(attributes) => add_attributes(&element, attributes, matching_rules, generators, path),
+            Value::Object(attributes) => add_attributes(&element, attributes, matching_rules, generators, &updated_path),
             _ => ()
           }
         };
@@ -70,7 +72,7 @@ fn create_element_from_json<'a>(doc: Document<'a>, parent: Option<Element<'a>>, 
             Value::Array(children) => for child in children {
               match child {
                 Value::Object(attributes) => {
-                  create_element_from_json(doc, Some(element), attributes, matching_rules, generators, &(path.to_owned() + ".*."), true);
+                  create_element_from_json(doc, Some(element), attributes, matching_rules, generators, &updated_path, true);
                 },
                 _ => panic!("Intermediate JSON format is invalid, child is not an object: {:?}", child)
               }
@@ -112,7 +114,6 @@ fn create_element_from_json<'a>(doc: Document<'a>, parent: Option<Element<'a>>, 
     element
   };
 
-
   if let Some(parent) = parent {
       let items = match object.get("items") {
         Some(val) => match val {
@@ -130,7 +131,6 @@ fn create_element_from_json<'a>(doc: Document<'a>, parent: Option<Element<'a>>, 
   element
 }
 
-// TODO: add matchers to this
 fn add_attributes(element: &Element, attributes: &Map<String, Value>, matching_rules: &mut Category, generators: &mut Generators, path: &String) {
   for (k, v) in attributes {
     let path = format!("{}.@{}", path, k);
@@ -166,40 +166,3 @@ fn duplicate_element<'a>(doc: Document<'a>, el: &Element<'a>) -> Element<'a> {
   }
   element
 }
-
-/*
-fn process_object(obj: &Map<String, Value>, matching_rules: &mut Category, generators: &mut Generators, path: &String, type_matcher: bool) -> Value {
-  if obj.contains_key("pact:matcher:type") {
-    if let Some(rule) = MatchingRule::from_integration_json(obj) {
-      matching_rules.add_rule(path, rule, &RuleLogic::And);
-    }
-    if let Some(gen) = obj.get("pact:generator:type") {
-      match Generator::from_map(&json_to_string(gen), obj) {
-        Some(generator) => generators.add_generator_with_subcategory(&GeneratorCategory::BODY, path, generator),
-        _ => ()
-      };
-    }
-    match obj.get("value") {
-      Some(val) => match val {
-        Value::Object(ref map) => process_object(map, matching_rules, generators, path, true),
-        Value::Array(array) => process_array(array, matching_rules, generators, path, true),
-        _ => val.clone()
-      },
-      None => Value::Null
-    }
-  } else {
-    Value::Object(obj.iter().map(|(key, val)| {
-      let updated_path = if type_matcher {
-        path.to_owned() + ".*"
-      } else {
-        path.to_owned() + "." + key
-      };
-      (key.clone(), match val {
-        Value::Object(ref map) => process_object(map, matching_rules, generators, &updated_path, false),
-        Value::Array(ref array) => process_array(array, matching_rules, generators, &updated_path, false),
-        _ => val.clone()
-      })
-    }).collect())
-  }
-}
-*/
