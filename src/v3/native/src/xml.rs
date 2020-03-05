@@ -133,7 +133,7 @@ fn create_element_from_json<'a>(doc: Document<'a>, parent: Option<Element<'a>>, 
 
 fn add_attributes(element: &Element, attributes: &Map<String, Value>, matching_rules: &mut Category, generators: &mut Generators, path: &String) {
   for (k, v) in attributes {
-    let path = format!("{}.@{}", path, k);
+    let path = format!("{}['@{}']", path, k);
 
     let value = match v {
       Value::Object(matcher_definition) => if matcher_definition.contains_key("pact:matcher:type") {

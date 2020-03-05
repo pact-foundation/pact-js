@@ -7,4 +7,3 @@
 --recursive
 --timeout 30000
 --exit
-test/*.js

@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "test": "LOG_LEVEL=DEBUG mocha"
+    "test:consumer": "LOG_LEVEL=DEBUG mocha test/consumer.spec.js",
+    "test:provider": "LOG_LEVEL=DEBUG mocha test/provider.spec.js"
   },
   "author": "",
   "license": "ISC",

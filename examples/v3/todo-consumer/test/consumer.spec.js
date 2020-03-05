@@ -82,7 +82,7 @@ describe("Pact V3", () => {
       })
     })
 
-    describe("with XML requests", () => {
+    describe.only("with XML requests", () => {
       const provider = new PactV3({
         consumer: "TodoApp",
         provider: "TodoServiceV3",

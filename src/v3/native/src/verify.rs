@@ -118,7 +118,7 @@ impl RequestFilterExecutor for RequestFilterCallback {
             }
 
             sender.send(request);
-          } else { 
+          } else {
             error!("Request filter did not return an object");
           }
         },
@@ -158,8 +158,8 @@ impl Task for BackgroundTask {
   }
 
   fn complete(self, mut cx: TaskContext, result: Result<Self::Output, Self::Error>) -> JsResult<Self::JsEvent> {
-    match result {
-      Ok(_) => Ok(cx.boolean(true)),
+    match dbg!(result) {
+      Ok(res) => Ok(cx.boolean(res)), // TODO: send a data structure back so we can do things with it (e.g. sub tests)
       Err(err) => cx.throw_error(err)
     }
   }
@@ -170,12 +170,27 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
   let callback = cx.argument::<JsFunction>(1)?;
 
   let provider = config.get(&mut cx, "provider").unwrap().downcast::<JsString>().unwrap().value();
-  
+
   let mut pacts: Vec<PactSource> = vec![];
   match config.get(&mut cx, "pactUrls") {
-    Ok(urls) => (),
+    Ok(urls) => match urls.downcast::<JsArray>() {
+      Ok(urls) => {
+        if let Ok(urls) = urls.to_vec(&mut cx) {
+          for url in urls {
+            match url.downcast::<JsString>() {
+              Ok(url) => pacts.push(PactSource::File(url.value())),
+              _ => println!("    {}", Yellow.paint ("WARN: pactUrls does not contain a valid list of URL strings"))
+            }
+          }
+        }
+      },
+      _ => println!("    {}", Yellow.paint ("WARN: pactUrls is not a list of URLs"))
+    },
     _ => ()
   };
+
+  debug!("{:?}", pacts);
+
   match config.get(&mut cx, "pactBrokerUrl") {
     Ok(url) => match url.downcast::<JsString>() {
       Ok(url) => {
@@ -189,7 +204,10 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
         }
       },
       Err(_) => {
-        println!("    {}", Red.paint("ERROR: pactBrokerUrl must be a string value"));
+        if !url.is_a::<JsUndefined>() {
+          println!("    {}", Red.paint("ERROR: pactBrokerUrl must be a string value"));
+          cx.throw_error("pactBrokerUrl must be a string value")?;
+        }
       }
     },
     _ => ()
