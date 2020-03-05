@@ -106,19 +106,26 @@ describe("Pact V3", () => {
             body: new XmlBuilder("1.0", "UTF-8", "projects").build(
               el => {
                 el.setAttributes({
-                  foo: "bar",
+                  id: "1234",
                 })
                 el.eachLike("project", {
                   id: integer(1),
                   type: "activity",
                   name: string("Project 1"),
-
-                  // I think this panics/breaks something somewhere!
+                  // TODO: implement XML generators
                   // due: timestamp(
                   //   "yyyy-MM-dd'T'HH:mm:ss.SZ",
                   //   "2016-02-11T09:46:56.023Z"
                   // ),
-                }, project => {})
+                }, project => {
+                  project.appendElement("tasks", {}, task => {
+                    task.eachLike("task", {
+                      id: integer(1),
+                      name: string("Task 1"),
+                      done: boolean(true),
+                    }, null, { examples: 5 })
+                  })
+                }, { examples: 2 })
               }
             ),
             // body: `<?xml version="1.0" encoding="UTF-8"?>

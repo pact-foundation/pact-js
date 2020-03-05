@@ -3,6 +3,8 @@ import { XmlText } from "./xmlText"
 
 type XmlAttributes = Map<string, string>
 
+type Callback = (n: XmlElement) => void
+
 export class XmlElement extends XmlNode {
   private attributes: XmlAttributes
   private children: XmlNode[] = []
@@ -23,9 +25,9 @@ export class XmlElement extends XmlNode {
     return this
   }
 
-  public appendElement(name: string, attributes: XmlAttributes, callback: (n: XmlElement) => void): XmlElement {
+  public appendElement(name: string, attributes: XmlAttributes, cb?: Callback): XmlElement {
     const el = new XmlElement(name).setAttributes(attributes)
-    callback(el)
+    this.executeCallback(el, cb)
     this.children.push(el)
 
     return this
@@ -37,11 +39,25 @@ export class XmlElement extends XmlNode {
     return this
   }
 
-  public eachLike(name: string, attributes: XmlAttributes, callback: (n: XmlElement) => void): XmlElement {
+
+  public eachLike(name: string, attributes: XmlAttributes, cb?: Callback, options: EachLikeOptions = {examples: 1}): XmlElement {
     const el = new XmlElement(name).setAttributes(attributes)
-    callback(el)
-    this.children.push({ "pact:matcher:type": "type", value: el, "items": 5 })
+    this.executeCallback(el, cb)
+    this.children.push({ "pact:matcher:type": "type", value: el, examples: options.examples})
 
     return this
   }
+
+  private executeCallback(el: XmlElement, cb?: Callback) {
+    if (cb) {
+      cb(el)
+    }
+  }
+}
+
+
+interface EachLikeOptions {
+  min?: number,
+  max?: number,
+  examples?: number
 }

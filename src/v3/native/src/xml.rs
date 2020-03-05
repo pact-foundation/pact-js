@@ -1,13 +1,13 @@
 //! XML handling
 use serde_json::Value::Number;
-use pact_matching::models::json_utils::json_to_num;
 use sxd_document::dom::Document;
 use sxd_document::dom::Element;
+use sxd_document::dom::ChildOfElement;
 use serde_json::Value;
 use serde_json::map::Map;
 use sxd_document::Package;
 use sxd_document::writer::format_document;
-use pact_matching::models::matchingrules::{MatchingRules, MatchingRule, Category, RuleLogic};
+use pact_matching::models::matchingrules::{MatchingRule, Category, RuleLogic};
 use pact_matching::models::generators::{Generators, GeneratorCategory, Generator};
 use pact_matching::models::json_utils::json_to_string;
 
@@ -115,7 +115,7 @@ fn create_element_from_json<'a>(doc: Document<'a>, parent: Option<Element<'a>>, 
   };
 
   if let Some(parent) = parent {
-      let items = match object.get("items") {
+      let examples = match object.get("examples") {
         Some(val) => match val {
           Number(val) => val.as_u64().unwrap(),
           _ => 1
@@ -123,7 +123,7 @@ fn create_element_from_json<'a>(doc: Document<'a>, parent: Option<Element<'a>>, 
         None => 1
       };
 
-      for _ in 0..items {
+      for _ in 0..examples {
         parent.append_child(duplicate_element(doc, &element));
       }
     }
@@ -163,6 +163,13 @@ fn duplicate_element<'a>(doc: Document<'a>, el: &Element<'a>) -> Element<'a> {
   let element = doc.create_element(el.name());
   for attr in el.attributes() {
     element.set_attribute_value(attr.name(), attr.value());
+  }
+  for child in el.children() {
+    match child {
+      ChildOfElement::Element(el) => element.append_child(duplicate_element(doc, &el)),
+      ChildOfElement::Text(txt) => element.append_child(txt),
+      _ => ()
+    }
   }
   element
 }

@@ -18,7 +18,8 @@ module.exports = {
         eyes.inspect(response.data)
         if (format === "xml") {
           const result = JSON.parse(parser.toJson(response.data))
-          return R.path(['projects', 'project'], result)
+          console.dir(result, {depth: 10})
+          return R.path(['projects'], result)
         }
         return response.data
       })
