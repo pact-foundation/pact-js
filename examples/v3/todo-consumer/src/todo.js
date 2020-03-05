@@ -19,7 +19,7 @@ module.exports = {
         if (format === "xml") {
           const result = JSON.parse(parser.toJson(response.data))
           console.dir(result, {depth: 10})
-          return R.path(['projects'], result)
+          return R.path(['ns1:projects'], result)
         }
         return response.data
       })

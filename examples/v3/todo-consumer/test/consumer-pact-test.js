@@ -103,12 +103,13 @@ describe("Pact V3", () => {
           .willRespondWith({
             status: 200,
             headers: { "Content-Type": "application/xml" },
-            body: new XmlBuilder("1.0", "UTF-8", "projects").build(
+            body: new XmlBuilder("1.0", "UTF-8", "ns1:projects").build(
               el => {
                 el.setAttributes({
                   id: "1234",
+                  "xmlns:ns1": "http://some.namespace/and/more/stuff"
                 })
-                el.eachLike("project", {
+                el.eachLike("ns1:project", {
                   id: integer(1),
                   type: "activity",
                   name: string("Project 1"),
@@ -118,8 +119,8 @@ describe("Pact V3", () => {
                   //   "2016-02-11T09:46:56.023Z"
                   // ),
                 }, project => {
-                  project.appendElement("tasks", {}, task => {
-                    task.eachLike("task", {
+                  project.appendElement("ns1:tasks", {}, task => {
+                    task.eachLike("ns1:task", {
                       id: integer(1),
                       name: string("Task 1"),
                       done: boolean(true),
@@ -150,13 +151,13 @@ describe("Pact V3", () => {
           return TodoApp.setUrl(mockserver.url)
             .getProjects("xml")
             .then(projects => {
-              expect(projects)
+              expect(projects["ns1:project"])
                 .to.be.an("array")
                 .with.length(2)
-              expect(projects[0].id).to.be.equal("1")
-              expect(projects[0].tasks.task)
+              expect(projects["ns1:project"][0].id).to.be.equal("1")
+              expect(projects["ns1:project"][0]["ns1:tasks"]["ns1:task"])
                 .to.be.an("array")
-                .with.length(4)
+                .with.length(5)
             })
         })
         console.log("result from runTest", result)
