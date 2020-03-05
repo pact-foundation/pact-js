@@ -1,6 +1,48 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [9.8.0](https://github.com/pact-foundation/pact-js/compare/v9.7.0...v9.8.0) (2020-03-02)
+
+
+### Features
+
+* upgrade Pact Node to 10.5.0. Fixes [#411](https://github.com/pact-foundation/pact-js/issues/411) ([e5a50ab](https://github.com/pact-foundation/pact-js/commit/e5a50abdcf4fab972fcdf2d0ec395b17c2f320d3))
+
+## [9.7.0](https://github.com/pact-foundation/pact-js/compare/v9.6.1...v9.7.0) (2020-02-17)
+
+
+### Features
+
+* upgrade Pact Node to 10.3.1 ([4503b32](https://github.com/pact-foundation/pact-js/commit/4503b32a6a434a21f0ba22520117c2dbb7967ad8))
+
+### [9.6.1](https://github.com/pact-foundation/pact-js/compare/v9.6.0...v9.6.1) (2020-01-23)
+
+
+### Bug Fixes
+
+* **dependencies:** Move bunyan-prettystream to a dependency instead of a dev dependency ([805ed11](https://github.com/pact-foundation/pact-js/commit/805ed11daf57a11ae120ea1eaa3227dd0176e4c1))
+
+<a name="9.6.0"></a>
+# [9.6.0](https://github.com/pact-foundation/pact-js/compare/v9.5.1...v9.6.0) (2020-01-01)
+
+
+### Features
+
+* add email address matcher ([14e8974](https://github.com/pact-foundation/pact-js/commit/14e8974))
+* **email:** add simplified email address format ([f5ea38e](https://github.com/pact-foundation/pact-js/commit/f5ea38e))
+
+
+
+<a name="9.5.0"></a>
+# [9.5.0](https://github.com/pact-foundation/pact-js/compare/v9.4.0...v9.5.0) (2019-11-10)
+
+
+### Features
+
+* update pact-node to ^10.2.1 ([100914f](https://github.com/pact-foundation/pact-js/commit/100914f))
+
+
 
 <a name="9.4.0"></a>
 # [9.4.0](https://github.com/pact-foundation/pact-js/compare/v9.3.0...v9.4.0) (2019-11-08)

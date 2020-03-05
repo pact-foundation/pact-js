@@ -35,7 +35,7 @@ describe("Dog's API", () => {
     })
 
     // add expectations
-    it("returns a sucessful body", done => {
+    it("returns a sucessful body", () => {
       return getMeDogs({
         url,
         port,
@@ -44,7 +44,6 @@ describe("Dog's API", () => {
           expect(response.headers["content-type"]).toEqual("application/json")
           expect(response.data).toEqual(EXPECTED_BODY)
           expect(response.status).toEqual(200)
-          done()
         })
         .then(() => provider.verify())
     })

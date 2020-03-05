@@ -17,6 +17,7 @@ import {
   somethingLike,
   string,
   term,
+  email,
   uuid,
   validateExample,
   extractPayload,
@@ -368,6 +369,24 @@ describe("Matcher", () => {
 
         const match = eachLike({ a: 1 }, { min: 3 })
         expect(JSON.stringify(match)).to.deep.include(JSON.stringify(expected))
+      })
+    })
+  })
+
+  describe("#email", () => {
+    describe("when given a valid Email address", () => {
+      it("creates a valid matcher", () => {
+        expect(email("hello@world.com")).to.be.an("object")
+        expect(email("hello@world.com.au")).to.be.an("object")
+        expect(email("hello@a.co")).to.be.an("object")
+        expect(email()).to.be.an("object")
+      })
+    })
+    describe("when given an invalid Email address", () => {
+      it("returns an error", () => {
+        expect(() => {
+          email("hello.world.c")
+        }).to.throw(Error)
       })
     })
   })
