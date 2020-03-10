@@ -25,7 +25,11 @@ export class XmlElement extends XmlNode {
     return this
   }
 
-  public appendElement(name: string, attributes: XmlAttributes, cb?: Callback): XmlElement {
+  public appendElement(
+    name: string,
+    attributes: XmlAttributes,
+    cb?: Callback
+  ): XmlElement {
     const el = new XmlElement(name).setAttributes(attributes)
     this.executeCallback(el, cb)
     this.children.push(el)
@@ -39,11 +43,19 @@ export class XmlElement extends XmlNode {
     return this
   }
 
-
-  public eachLike(name: string, attributes: XmlAttributes, cb?: Callback, options: EachLikeOptions = {examples: 1}): XmlElement {
+  public eachLike(
+    name: string,
+    attributes: XmlAttributes,
+    cb?: Callback,
+    options: EachLikeOptions = { examples: 1 }
+  ): XmlElement {
     const el = new XmlElement(name).setAttributes(attributes)
     this.executeCallback(el, cb)
-    this.children.push({ "pact:matcher:type": "type", value: el, examples: options.examples})
+    this.children.push({
+      "pact:matcher:type": "type",
+      value: el,
+      examples: options.examples,
+    })
 
     return this
   }
@@ -55,9 +67,8 @@ export class XmlElement extends XmlNode {
   }
 }
 
-
 interface EachLikeOptions {
-  min?: number,
-  max?: number,
+  min?: number
+  max?: number
   examples?: number
 }

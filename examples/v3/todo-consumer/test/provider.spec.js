@@ -1,4 +1,9 @@
-const { PactV3, Matchers, XmlBuilder, VerifierV3 } = require("../../../../src/v3")
+const {
+  PactV3,
+  Matchers,
+  XmlBuilder,
+  VerifierV3,
+} = require("../../../../src/v3")
 const chai = require("chai")
 const chaiAsPromised = require("chai-as-promised")
 chai.use(chaiAsPromised)
@@ -15,8 +20,8 @@ describe("Pact XML Verification", () => {
       provider: "XML Service",
       providerBaseUrl: "http://localhost:8081",
       pactUrls: [
-        "/Users/matthewfellows/development/public/pact-js/examples/v3/todo-consumer/pacts/TodoApp-TodoServiceV3.json"
-      ]
+        "/Users/matthewfellows/development/public/pact-js/examples/v3/todo-consumer/pacts/TodoApp-TodoServiceV3.json",
+      ],
       // pactUrls: [
       //   path.resolve(
       //     process.cwd(),

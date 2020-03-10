@@ -103,13 +103,14 @@ describe("Pact V3", () => {
           .willRespondWith({
             status: 200,
             headers: { "Content-Type": "application/xml" },
-            body: new XmlBuilder("1.0", "UTF-8", "ns1:projects").build(
-              el => {
-                el.setAttributes({
-                  id: "1234",
-                  "xmlns:ns1": "http://some.namespace/and/more/stuff"
-                })
-                el.eachLike("ns1:project", {
+            body: new XmlBuilder("1.0", "UTF-8", "ns1:projects").build(el => {
+              el.setAttributes({
+                id: "1234",
+                "xmlns:ns1": "http://some.namespace/and/more/stuff",
+              })
+              el.eachLike(
+                "ns1:project",
+                {
                   id: integer(1),
                   type: "activity",
                   name: string("Project 1"),
@@ -118,17 +119,24 @@ describe("Pact V3", () => {
                   //   "yyyy-MM-dd'T'HH:mm:ss.SZ",
                   //   "2016-02-11T09:46:56.023Z"
                   // ),
-                }, project => {
+                },
+                project => {
                   project.appendElement("ns1:tasks", {}, task => {
-                    task.eachLike("ns1:task", {
-                      id: integer(1),
-                      name: string("Task 1"),
-                      done: boolean(true),
-                    }, null, { examples: 5 })
+                    task.eachLike(
+                      "ns1:task",
+                      {
+                        id: integer(1),
+                        name: string("Task 1"),
+                        done: boolean(true),
+                      },
+                      null,
+                      { examples: 5 }
+                    )
                   })
-                }, { examples: 2 })
-              }
-            ),
+                },
+                { examples: 2 }
+              )
+            }),
             // body: `<?xml version="1.0" encoding="UTF-8"?>
             //     <projects foo="bar">
             //       <project id="1" name="Project 1" due="2016-02-11T09:46:56.023Z">
