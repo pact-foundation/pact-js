@@ -237,7 +237,7 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
       Ok(url) => {
         provider_info.protocol = url.scheme().into();
         provider_info.host = url.host_str().unwrap_or("localhost").into();
-        provider_info.port = url.port().unwrap_or(8080);
+        provider_info.port = url.port();
         provider_info.path = url.path().into();
       },
       Err(err) => {
@@ -264,7 +264,8 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
     publish: false,
     provider_version: None,
     build_url: None,
-    request_filter
+    request_filter,
+    provider_tags: vec![]
   };
 
   BackgroundTask { provider_info, pacts, filter_info, consumers_filter, options }.schedule(callback);

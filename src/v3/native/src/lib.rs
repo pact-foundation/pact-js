@@ -117,7 +117,7 @@ fn process_xml(body: String, matching_rules: &mut Category, generators: &mut Gen
 
 fn process_body(body: String, content_type: DetectedContentType, matching_rules: &mut MatchingRules, generators: &mut Generators) -> Result<OptionalBody, String> {
   let category = matching_rules.add_category("body");
-  match dbg!(content_type) {
+  match content_type {
     DetectedContentType::Json => Ok(OptionalBody::from(process_json(body, category, generators))),
     DetectedContentType::Xml => Ok(OptionalBody::Present(process_xml(body, category, generators)?)),
     _ => Ok(OptionalBody::from(body))
@@ -182,8 +182,38 @@ declare_types! {
       let states: Handle<JsArray> = cx.argument(1)?;
       let provider_states = states.to_vec(&mut cx)?.iter()
         .map(|state| {
-            let state_desc = state.downcast::<JsString>().unwrap().value();
-            ProviderState::default(&state_desc.clone())
+            let js_state = state.downcast::<JsObject>().unwrap();
+            let description = js_state.get(&mut cx, "description").unwrap().downcast::<JsString>().unwrap().value();
+            let js_parameters = js_state.get(&mut cx, "parameters");
+            match js_parameters {
+              Ok(parameters) => match parameters.downcast::<JsObject>() {
+                Ok(parameters) => {
+                  let js_props = parameters.get_own_property_names(&mut cx).unwrap();
+                  let props = js_props.to_vec(&mut cx).unwrap().iter().map(|prop| {
+                    let prop_name = prop.downcast::<JsString>().unwrap().value();
+                    let prop_val = parameters.get(&mut cx, prop_name.as_str()).unwrap();
+                    if let Ok(val) = prop_val.downcast::<JsString>() {
+                      (prop_name, json!(val.value()))
+                    } else if let Ok(val) = prop_val.downcast::<JsNumber>() {
+                      (prop_name, json!(val.value()))
+                    } else if let Ok(val) = prop_val.downcast::<JsBoolean>() {
+                      (prop_name, json!(val.value()))
+                    } else {
+                      error!("Ignoring value for provider state parameter '{}'", prop_name);
+                      (prop_name, Value::Null)
+                    }
+                  }).collect();
+                  ProviderState { name: description.clone(), params: props }
+                },
+                Err(_) => {
+                  if !parameters.is_a::<JsUndefined>() && !!parameters.is_a::<JsNull>() {
+                    error!("Expected an Object for state change parameters '{}'", description);
+                  }
+                  ProviderState::default(&description.clone())
+                }
+              },
+              _ => ProviderState::default(&description.clone())
+            }
         }).collect();
 
       let mut this = cx.this();

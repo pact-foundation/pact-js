@@ -7,9 +7,14 @@ export interface PactV3Options {
   provider: string
 }
 
+export interface V3ProviderState {
+  description: string
+  parameters?: any
+}
+
 export class PactV3 {
   private opts: any
-  private states: any[] = []
+  private states: V3ProviderState[] = []
   private pact: any
 
   constructor(opts: PactV3Options & {}) {
@@ -17,8 +22,8 @@ export class PactV3 {
     this.pact = new PactNative.Pact(opts.consumer, opts.provider)
   }
 
-  public given(providerState: any) {
-    this.states.push(providerState)
+  public given(providerState: any, parameters?: any) {
+    this.states.push({ description: providerState, parameters })
     return this
   }
 

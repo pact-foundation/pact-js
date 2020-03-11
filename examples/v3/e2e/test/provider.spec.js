@@ -35,21 +35,22 @@ describe("Pact Verification", () => {
         "Has no animals": () => {
           animalRepository.clear()
           token = "1234"
-          return Promise.resolve(`Animals removed to the db`)
+          return Promise.resolve({description: `Animals removed to the db`})
         },
         "Has some animals": () => {
           token = "1234"
           importData()
-          return Promise.resolve(`Animals added to the db`)
+          return Promise.resolve({description: `Animals added to the db`, count: animalRepository.count()})
         },
-        "Has an animal with ID 1": () => {
+        "Has an animal with ID": (parameters) => {
           token = "1234"
           importData()
-          return Promise.resolve(`Animals added to the db`)
+          animalRepository.first().id = parameters.id
+          return Promise.resolve({description: `Animal with ID ${parameters.id} added to the db`, id: parameters.id})
         },
         "is not authenticated": () => {
           token = ""
-          Promise.resolve(`Invalid bearer token generated`)
+          return Promise.resolve({description: `Invalid bearer token generated`})
         },
       },
 

@@ -19,6 +19,14 @@ class Repository {
   clear() {
     this.entities = []
   }
+
+  first() {
+    return this.entities[0]
+  }
+
+  count() {
+    return this.entities.length
+  }
 }
 
 module.exports = Repository

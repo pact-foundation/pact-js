@@ -167,7 +167,9 @@ describe("Pact V3", () => {
 
       before(() =>
         provider
-          .given("Has an animal with ID 1")
+          .given("Has an animal with ID", {
+            id: 100,
+          })
           .uponReceiving("a request for an animal with ID 1")
           .withRequest({
             path: regex("/animals/[0-9]+", "/animals/1"),
