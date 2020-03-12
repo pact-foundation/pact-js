@@ -1,14 +1,18 @@
 use neon::prelude::*;
 use pact_verifier::{ProviderInfo, VerificationOptions, FilterInfo, PactSource};
-use pact_verifier::callback_executors::RequestFilterExecutor;
+use pact_verifier::callback_executors::{RequestFilterExecutor, ProviderStateExecutor, ProviderStateError};
 use pact_matching::models::http_utils::HttpAuth;
 use pact_matching::models::Request;
-use tokio::prelude::*;
-use tokio::task;
 use ansi_term::Colour::*;
 use url::Url;
 use std::sync::mpsc;
 use std::time::Duration;
+use async_trait::async_trait;
+use pact_matching::models::provider_states::ProviderState;
+use maplit::*;
+use std::collections::HashMap;
+use crate::utils::serde_value_to_js_object_attr;
+use log::*;
 
 fn get_string_value(cx: &mut FunctionContext, obj: &JsObject, name: &str) -> Option<String> {
   match obj.get(cx, name) {
@@ -132,12 +136,51 @@ impl RequestFilterExecutor for RequestFilterCallback {
   }
 }
 
+#[derive(Clone)]
+struct ProviderStateCallback<'a> {
+  callback_handlers: &'a HashMap<String, EventHandler>
+}
+
+#[async_trait]
+impl ProviderStateExecutor for ProviderStateCallback<'_> {
+  async fn call(&self, interaction_id: Option<String>, provider_state: &ProviderState, setup: bool, client: Option<&reqwest::Client>) -> Result<HashMap<String, serde_json::Value>, ProviderStateError> {
+    match self.callback_handlers.get(&provider_state.name) {
+      Some(callback) => {
+        let (sender, receiver) = mpsc::channel();
+        let state = provider_state.clone();
+        let result = callback.schedule_with(move |cx, this, callback| {
+          let args = if state.params.is_empty() {
+            vec![]
+          } else {
+            let js_parameter = JsObject::new(cx);
+            for (ref parameter, ref value) in state.params {
+              serde_value_to_js_object_attr(cx, &js_parameter, parameter, value);
+            };
+            vec![js_parameter]
+          };
+          let result = callback.call(cx, this, args);
+
+        });
+        match receiver.recv_timeout(Duration::from_millis(1000)) {
+          Ok(result) => Ok(result),
+          Err(_) => Err(ProviderStateError { description: format!("Provider state callback for '{}' timed out after 1000 ms", provider_state.name), interaction_id })
+        }
+      },
+      None => {
+        error!("No provider state callback defined for '{}'", provider_state.name);
+        Err(ProviderStateError { description: format!("No provider state callback defined for '{}'", provider_state.name), interaction_id })
+      }
+    }
+  }
+}
+
 struct BackgroundTask {
   pub provider_info: ProviderInfo,
   pub pacts: Vec<PactSource>,
   pub filter_info: FilterInfo,
   pub consumers_filter: Vec<String>,
-  pub options: VerificationOptions<RequestFilterCallback>
+  pub options: VerificationOptions<RequestFilterCallback>,
+  pub state_handlers: HashMap<String, EventHandler>
 }
 
 impl Task for BackgroundTask {
@@ -153,7 +196,8 @@ impl Task for BackgroundTask {
       .unwrap();
 
     runtime.block_on(async {
-      Ok(pact_verifier::verify_provider(self.provider_info.clone(), self.pacts.clone(), self.filter_info.clone(), self.consumers_filter.clone(), self.options.clone()).await)
+      let provider_state_executor = ProviderStateCallback { callback_handlers: &self.state_handlers };
+      Ok(pact_verifier::verify_provider(self.provider_info.clone(), self.pacts.clone(), self.filter_info.clone(), self.consumers_filter.clone(), self.options.clone(), &provider_state_executor).await)
     })
   }
 
@@ -223,12 +267,6 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
 
   let mut provider_info = ProviderInfo {
     name: provider.clone(),
-    // /// URL to post state change requests to
-    // pub state_change_url: Option<String>,
-    // /// If teardown state change requests should be made (default is false)
-    // pub state_change_teardown: bool,
-    // /// If state change request data should be sent in the body (true) or as query parameters (false)
-    // pub state_change_body: bool,
     .. ProviderInfo::default()
   };
 
@@ -258,6 +296,25 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
     _ => None
   };
 
+  let mut callbacks = hashmap![];
+  match config.get(&mut cx, "stateHandlers") {
+    Ok(state_handlers) => match state_handlers.downcast::<JsObject>() {
+      Ok(state_handlers) => {
+        let mut this = cx.this();
+        let props = state_handlers.get_own_property_names(&mut cx).unwrap();
+        for prop in props.to_vec(&mut cx).unwrap() {
+          let prop_name = prop.downcast::<JsString>().unwrap().value();
+          let prop_val = state_handlers.get(&mut cx, prop_name.as_str()).unwrap();
+          if let Ok(callback) = prop_val.downcast::<JsFunction>() {
+            callbacks.insert(prop_name, EventHandler::new(&cx, this, callback));
+          }
+        };
+      },
+      Err(_) => ()
+    },
+    _ => ()
+  };
+
   let filter_info = FilterInfo::None;
   let consumers_filter: Vec<String> = vec![];
   let options = VerificationOptions {
@@ -268,7 +325,7 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
     provider_tags: vec![]
   };
 
-  BackgroundTask { provider_info, pacts, filter_info, consumers_filter, options }.schedule(callback);
+  BackgroundTask { provider_info, pacts, filter_info, consumers_filter, options, state_handlers: callbacks }.schedule(callback);
   
   Ok(cx.undefined())
 }

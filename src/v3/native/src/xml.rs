@@ -10,6 +10,7 @@ use sxd_document::writer::format_document;
 use pact_matching::models::matchingrules::{MatchingRule, Category, RuleLogic};
 use pact_matching::models::generators::{Generators, GeneratorCategory, Generator};
 use pact_matching::models::json_utils::json_to_string;
+use log::*;
 
 pub fn generate_xml_body(attributes: &Map<String, Value>, matching_rules: &mut Category, generators: &mut Generators) -> Result<Vec<u8>, String> {
   let package = Package::new();

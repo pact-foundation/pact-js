@@ -1,20 +1,9 @@
 // Due to large generated future for async fns
 #![type_length_limit="10000000"]
 
-extern crate neon;
-extern crate pact_matching;
-extern crate pact_mock_server;
-extern crate pact_verifier;
-#[macro_use] extern crate log;
-extern crate env_logger;
-extern crate uuid;
-extern crate serde_derive;
 #[macro_use] extern crate lazy_static;
 #[macro_use] extern crate serde_json;
 #[macro_use] extern crate maplit;
-extern crate tokio;
-extern crate ansi_term;
-extern crate url;
 
 use neon::prelude::*;
 use pact_matching::models::*;
@@ -23,15 +12,16 @@ use pact_matching::models::json_utils::json_to_string;
 use pact_matching::models::matchingrules::{MatchingRules, MatchingRule, Category, RuleLogic};
 use pact_matching::models::generators::{Generators, GeneratorCategory, Generator};
 use pact_mock_server::server_manager::ServerManager;
-use pact_verifier::{ProviderInfo, VerificationOptions};
 use env_logger::{Builder, Target};
 use uuid::Uuid;
 use std::sync::Mutex;
 use serde_json::Value;
 use serde_json::map::Map;
+use log::*;
 
 mod verify;
 mod xml;
+mod utils;
 
 lazy_static! {
   static ref MANAGER: Mutex<ServerManager> = Mutex::new(ServerManager::new());
