@@ -56,3 +56,5 @@ pact-foundation-pact-*.tgz
 src/v3/native/index.node
 src/v3/native/target/
 build/
+src/v3/native/artifacts.json
+
