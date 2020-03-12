@@ -46,9 +46,9 @@ impl RequestFilterExecutor for RequestFilterCallback {
           let vars = JsArray::new(cx, v.len() as u32);
           v.iter().enumerate().for_each(|(i, val)| {
             let qval = cx.string(val);
-            vars.set(cx, i as u32, qval);
+            vars.set(cx, i as u32, qval).unwrap();
           });
-          js_query.set(cx, k.as_str(), vars);
+          js_query.set(cx, k.as_str(), vars).unwrap();
         });
       };
 
@@ -57,17 +57,17 @@ impl RequestFilterExecutor for RequestFilterCallback {
           let vars = JsArray::new(cx, v.len() as u32);
           v.iter().enumerate().for_each(|(i, val)| {
             let hval = cx.string(val);
-            vars.set(cx, i as u32, hval);
+            vars.set(cx, i as u32, hval).unwrap();
           });
-          js_headers.set(cx, k.as_str(), vars);
+          js_headers.set(cx, k.as_str(), vars).unwrap();
         });
       };
 
-      js_request.set(cx, "method", js_method);
-      js_request.set(cx, "path", js_path);
-      js_request.set(cx, "headers", js_headers);
-      js_request.set(cx, "query", js_query);
-      js_request.set(cx, "body", js_body);
+      js_request.set(cx, "method", js_method).unwrap();
+      js_request.set(cx, "path", js_path).unwrap();
+      js_request.set(cx, "headers", js_headers).unwrap();
+      js_request.set(cx, "query", js_query).unwrap();
+      js_request.set(cx, "body", js_body).unwrap();
       let args = vec![js_request];
       let result = callback.call(cx, this, args);
 
@@ -121,7 +121,7 @@ impl RequestFilterExecutor for RequestFilterCallback {
               request.headers = Some(map)
             }
 
-            sender.send(request);
+            sender.send(request).unwrap();
           } else {
             error!("Request filter did not return an object");
           }
@@ -148,21 +148,37 @@ impl ProviderStateExecutor for ProviderStateCallback<'_> {
       Some(callback) => {
         let (sender, receiver) = mpsc::channel();
         let state = provider_state.clone();
+        let iid = interaction_id.clone();
         let result = callback.schedule_with(move |cx, this, callback| {
-          let args = if state.params.is_empty() {
-            vec![]
-          } else {
+          let args = if !state.params.is_empty() {
             let js_parameter = JsObject::new(cx);
             for (ref parameter, ref value) in state.params {
-              serde_value_to_js_object_attr(cx, &js_parameter, parameter, value);
+              serde_value_to_js_object_attr(cx, &js_parameter, parameter, value).unwrap();
             };
-            vec![js_parameter]
+            vec![cx.boolean(setup).upcast::<JsValue>(), js_parameter.upcast::<JsValue>()]
+          } else {
+            vec![cx.boolean(setup).upcast::<JsValue>()]
           };
-          let result = callback.call(cx, this, args);
-
+          let callback_result = callback.call(cx, this, args);
+          match callback_result {
+            Ok(val) => {
+              sender.send(Ok(hashmap!{})).unwrap();
+            },
+            Err(err) => {
+              error!("Provider state callback for '{}' failed: {}", state.name, err);
+              let error = ProviderStateError { description: format!("Provider state callback for '{}' failed: {}", state.name, err), interaction_id: iid };
+              sender.send(Result::<HashMap<String, serde_json::Value>, ProviderStateError>::Err(error)).unwrap();
+            }
+          };
         });
         match receiver.recv_timeout(Duration::from_millis(1000)) {
-          Ok(result) => Ok(result),
+          Ok(result) => {
+            debug!("Received {:?} from callback", result);
+            match result {
+              Ok(result) => Ok(hashmap!{}),
+              Err(err) => Err(err)
+            }
+          },
           Err(_) => Err(ProviderStateError { description: format!("Provider state callback for '{}' timed out after 1000 ms", provider_state.name), interaction_id })
         }
       },
@@ -286,9 +302,9 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
   };
 
   let request_filter = match config.get(&mut cx, "requestFilter") {
-    Ok(requestFilter) => match requestFilter.downcast::<JsFunction>() {
+    Ok(request_filter) => match request_filter.downcast::<JsFunction>() {
       Ok(val) => {
-        let mut this = cx.this();
+        let this = cx.this();
         Some(Box::new(RequestFilterCallback { callback_handler: EventHandler::new(&cx, this, val) }))
       },
       Err(_) => None
@@ -300,7 +316,7 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
   match config.get(&mut cx, "stateHandlers") {
     Ok(state_handlers) => match state_handlers.downcast::<JsObject>() {
       Ok(state_handlers) => {
-        let mut this = cx.this();
+        let this = cx.this();
         let props = state_handlers.get_own_property_names(&mut cx).unwrap();
         for prop in props.to_vec(&mut cx).unwrap() {
           let prop_name = prop.downcast::<JsString>().unwrap().value();

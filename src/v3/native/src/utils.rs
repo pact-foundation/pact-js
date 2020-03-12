@@ -1,6 +1,5 @@
 use serde_json::Value;
 use neon::prelude::*;
-use neon::handle::Managed;
 
 pub fn serde_value_to_js_object_attr<'a>(cx: &mut TaskContext, obj: &Handle<'a, JsObject>, key: &String, value: &Value) -> Result<bool, neon::result::Throw> {
   match value {
