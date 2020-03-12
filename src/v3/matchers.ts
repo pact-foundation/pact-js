@@ -1,4 +1,5 @@
 import * as R from "ramda"
+const PactNative = require("../../src/v3/native")
 
 /**
  * Value must match the given template
@@ -239,13 +240,12 @@ export function equal(value: any) {
  * @param format Datetime format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html)
  * @param example Example value to use. If omitted a value using the current system date and time will be generated.
  */
-export function timestamp(format: string, example: string) {
+export function timestamp(format: string, example?: string) {
   return {
-    format, // TODO: do we need this and "timestamp: format" ?
     "pact:generator:type": "DateTime",
     "pact:matcher:type": "timestamp",
     timestamp: format,
-    value: example,
+    value: example || PactNative.generate_datetime_string(format),
   }
 }
 
@@ -254,13 +254,12 @@ export function timestamp(format: string, example: string) {
  * @param format Time format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html)
  * @param example Example value to use. If omitted a value using the current system time will be generated.
  */
-export function time(format: string, example: string) {
+export function time(format: string, example?: string) {
   return {
-    format,
     "pact:generator:type": "Time",
     "pact:matcher:type": "time",
     time: format,
-    value: example,
+    value: example || PactNative.generate_datetime_string(format),
   }
 }
 
@@ -269,13 +268,12 @@ export function time(format: string, example: string) {
  * @param format Date format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html)
  * @param example Example value to use. If omitted a value using the current system date will be generated.
  */
-export function date(format: any, example: any) {
+export function date(format: any, example?: string) {
   return {
     date: format,
-    format,
     "pact:generator:type": "Date",
     "pact:matcher:type": "date",
-    value: example,
+    value: example || PactNative.generate_datetime_string(format),
   }
 }
 

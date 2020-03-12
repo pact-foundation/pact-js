@@ -32,32 +32,40 @@ describe("Pact Verification", () => {
       },
 
       stateHandlers: {
-        "Has no animals": (setup) => {
+        "Has no animals": setup => {
           if (setup) {
             animalRepository.clear()
-            return Promise.resolve({description: `Animals removed to the db`})
+            return Promise.resolve({ description: `Animals removed to the db` })
           }
         },
-        "Has some animals": (setup) => {
+        "Has some animals": setup => {
           if (setup) {
             importData()
-            return Promise.resolve({description: `Animals added to the db`, count: animalRepository.count()})
+            return Promise.resolve({
+              description: `Animals added to the db`,
+              count: animalRepository.count(),
+            })
           }
         },
         "Has an animal with ID": (setup, parameters) => {
           if (setup) {
             importData()
             animalRepository.first().id = parameters.id
-            return Promise.resolve({description: `Animal with ID ${parameters.id} added to the db`, id: parameters.id})
+            return Promise.resolve({
+              description: `Animal with ID ${parameters.id} added to the db`,
+              id: parameters.id,
+            })
           }
         },
         "is not authenticated": () => {
           token = ""
-          return Promise.resolve({description: `Invalid bearer token generated`})
+          return Promise.resolve({
+            description: `Invalid bearer token generated`,
+          })
         },
         "is authenticated": () => {
           token = "1234"
-          return Promise.resolve({description: `Bearer token generated`})
+          return Promise.resolve({ description: `Bearer token generated` })
         },
       },
 

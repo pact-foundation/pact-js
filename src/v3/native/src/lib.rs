@@ -11,6 +11,7 @@ use pact_matching::models::provider_states::ProviderState;
 use pact_matching::models::json_utils::json_to_string;
 use pact_matching::models::matchingrules::{MatchingRules, MatchingRule, Category, RuleLogic};
 use pact_matching::models::generators::{Generators, GeneratorCategory, Generator};
+use pact_matching::time_utils::generate_string;
 use pact_mock_server::server_manager::ServerManager;
 use env_logger::{Builder, Target};
 use uuid::Uuid;
@@ -149,6 +150,15 @@ fn generator_from_js_object<'a>(obj: Handle<JsObject>, ctx: &mut CallContext<JsP
   match gen_type {
     Some(val) => Generator::from_map(&val, &vals),
     None => None
+  }
+}
+
+fn generate_datetime_string(mut cx: FunctionContext) -> JsResult<JsString> {
+  let format = cx.argument::<JsString>(0)?;
+  let result = generate_string(&format.value());
+  match result {
+    Ok(value) => Ok(cx.string(value)),
+    Err(err) => cx.throw_error(err)
   }
 }
 
@@ -481,5 +491,6 @@ register_module!(mut m, {
     m.export_function("init", init)?;
     m.export_class::<JsPact>("Pact")?;
     m.export_function("verify_provider", verify::verify_provider)?;
+    m.export_function("generate_datetime_string", generate_datetime_string)?;
     Ok(())
 });
