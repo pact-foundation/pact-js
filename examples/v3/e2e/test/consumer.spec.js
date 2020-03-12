@@ -124,6 +124,7 @@ describe("Pact V3", () => {
 
         before(() => {
           provider
+            .given("is authenticated")
             .given("Has some animals")
             .uponReceiving("a request for all animals")
             .withRequest({
@@ -167,10 +168,11 @@ describe("Pact V3", () => {
 
       before(() =>
         provider
+          .given("is authenticated")
           .given("Has an animal with ID", {
             id: 100,
           })
-          .uponReceiving("a request for an animal with ID 1")
+          .uponReceiving("a request for an animal with an ID")
           .withRequest({
             path: regex("/animals/[0-9]+", "/animals/1"),
             headers: { Authorization: "Bearer token" },
@@ -202,6 +204,7 @@ describe("Pact V3", () => {
 
       before(() =>
         provider
+          .given("is authenticated")
           .given("Has no animals")
           .uponReceiving("a request for an animal by ID")
           .withRequest({
@@ -233,6 +236,7 @@ describe("Pact V3", () => {
 
     before(() =>
       provider
+        .given("is authenticated")
         .uponReceiving("a request to create a new mate")
         .withRequest({
           method: "POST",

@@ -33,7 +33,7 @@ impl RequestFilterExecutor for RequestFilterCallback {
   fn call(&self, request: &Request) -> Request {
     let (sender, receiver) = mpsc::channel();
     let request_copy = request.clone();
-    let result = self.callback_handler.schedule_with(move |cx, this, callback| {
+    self.callback_handler.schedule_with(move |cx, this, callback| {
       let js_method = cx.string(request_copy.method);
       let js_path = cx.string(request_copy.path);
       let js_query = JsObject::new(cx);
@@ -59,7 +59,7 @@ impl RequestFilterExecutor for RequestFilterCallback {
             let hval = cx.string(val);
             vars.set(cx, i as u32, hval).unwrap();
           });
-          js_headers.set(cx, k.as_str(), vars).unwrap();
+          js_headers.set(cx, k.to_lowercase().as_str(), vars).unwrap();
         });
       };
 
@@ -143,13 +143,13 @@ struct ProviderStateCallback<'a> {
 
 #[async_trait]
 impl ProviderStateExecutor for ProviderStateCallback<'_> {
-  async fn call(&self, interaction_id: Option<String>, provider_state: &ProviderState, setup: bool, client: Option<&reqwest::Client>) -> Result<HashMap<String, serde_json::Value>, ProviderStateError> {
+  async fn call(&self, interaction_id: Option<String>, provider_state: &ProviderState, setup: bool, _client: Option<&reqwest::Client>) -> Result<HashMap<String, serde_json::Value>, ProviderStateError> {
     match self.callback_handlers.get(&provider_state.name) {
       Some(callback) => {
         let (sender, receiver) = mpsc::channel();
         let state = provider_state.clone();
         let iid = interaction_id.clone();
-        let result = callback.schedule_with(move |cx, this, callback| {
+        callback.schedule_with(move |cx, this, callback| {
           let args = if !state.params.is_empty() {
             let js_parameter = JsObject::new(cx);
             for (ref parameter, ref value) in state.params {
@@ -295,6 +295,7 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
         provider_info.path = url.path().into();
       },
       Err(err) => {
+        error!("Failed to parse pactBrokerUrl: {}", err);
         println!("    {}", Red.paint("ERROR: pactBrokerUrl is not a valid URL"));
       }
     },
