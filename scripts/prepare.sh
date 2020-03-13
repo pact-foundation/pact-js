@@ -30,3 +30,4 @@ done
 echo "    Copying src/v3/native => dist/src/v3/native"
 mkdir -p dist/src/v3/native && cp -r src/v3/native dist/src/v3/
 find dist/src/v3/native
+cat dist/src/v3/native/artifacts.json
