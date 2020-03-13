@@ -7,10 +7,13 @@ node_js:
   - "13"
 os:
   - linux
+  # - osx
 sudo: required
 matrix:
   fast_finish: true
-cache: npm
+cache: 
+  - npm
+  - cargo
 env:
   matrix:
     - CXX=g++-5
@@ -56,3 +59,9 @@ deploy:
       tags: true
       branch: master
       node: "12"
+  - provider: script
+    skip_cleanup: true
+    script: ./scripts/publish_native.sh
+    on:
+      tags: true
+      branch: master

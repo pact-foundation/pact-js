@@ -12,7 +12,7 @@
     "clean": "rimraf docs dist dist-web coverage .nyc_output logs pacts jscpd.json && neon clean -p src/v3",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "deploy:prepare": "./scripts/create_npmrc_file.sh",
-    "dist": "npm run compile && webpack --config ./config/webpack.web.config.js && mkdir -p dist/src/v3/native && cp -r src/v3/native dist/src/v3/native",
+    "dist": "npm run compile && webpack --config ./config/webpack.web.config.js",
     "jscpd": "jscpd -p src -r json -o jscpd.json",
     "lint": "npm run lint:prettier:ts && npm run lint:prettier:js #&& tslint -c tslint.json '{src,test,examples}/**/*.ts' -e '**/node_modules/**/*.ts'",
     "lint:fix": "prettier --parser typescript --write \"{src,test,examples}/**/*.ts\" && prettier --write \"{src,test,examples}/**/*.js\"",
@@ -38,7 +38,8 @@
     "appveyor": "./scripts/build.ps1",
     "webpack": "webpack --config ./config/webpack.web.config.js",
     "install": "node-pre-gyp install --fallback-to-build=false || neon build --release -p src/v3",
-    "package": "node-pre-gyp package"
+    "package": "node-pre-gyp package",
+    "upload-binary": "node-pre-gyp package && node-pre-gyp-github publish"
   },
   "repository": {
     "type": "git",
@@ -103,6 +104,7 @@
     "lodash.omit": "^4.5.0",
     "lodash.omitby": "4.6.0",
     "node-pre-gyp": "^0.13.0",
+    "node-pre-gyp-github": "^1.4.3",
     "pkginfo": "^0.4.1",
     "popsicle": "^9.2.0",
     "ramda": "^0.26.1"
