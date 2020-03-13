@@ -1,4 +1,4 @@
-const PactNative = require("../../src/v3/native")
+const PactNative = require("../../native")
 
 PactNative.init()
 

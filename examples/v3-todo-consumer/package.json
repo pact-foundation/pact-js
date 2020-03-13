@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
+    "test": "npm run test:consumer && npm run test:provider",
     "test:consumer": "LOG_LEVEL=error mocha test/consumer.spec.js",
     "test:provider": "LOG_LEVEL=error mocha test/provider.spec.js"
   },

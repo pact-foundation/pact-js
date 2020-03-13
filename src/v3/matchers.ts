@@ -1,5 +1,5 @@
 import * as R from "ramda"
-const PactNative = require("../../src/v3/native")
+const PactNative = require("../../native")
 
 /**
  * Value must match the given template

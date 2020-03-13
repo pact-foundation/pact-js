@@ -3,7 +3,7 @@ const {
   Matchers,
   XmlBuilder,
   VerifierV3,
-} = require("@pact-foundation/pact/src/v3")
+} = require("@pact-foundation/pact/v3")
 const chai = require("chai")
 const chaiAsPromised = require("chai-as-promised")
 chai.use(chaiAsPromised)

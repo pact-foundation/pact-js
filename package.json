@@ -170,7 +170,7 @@
     "host": "https://github.com/pact-foundation/pact-js/releases/download/",
     "remote_path": "{version}",
     "package_name": "{node_abi}-{platform}-{arch}.tar.gz",
-    "module_path": "./src/v3/native",
+    "module_path": "./native",
     "pkg_path": "."
   }
 }

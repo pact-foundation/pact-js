@@ -27,5 +27,5 @@ for type in "${types[@]}"; do
 done
 
 # Copy Rust source
-echo "    Copying src/v3/native => dist/src/v3/native"
-mkdir -p dist/src/v3/native && cp -r src/v3/native dist/src/v3/
+echo "    Copying ./native => dist/native"
+mkdir -p dist/native && cp -r native dist/
