@@ -1,8 +1,7 @@
 const path = require("path")
 const chai = require("chai")
 const chaiAsPromised = require("chai-as-promised")
-// const { PactV3, Matchers } = require("@pact-foundation/pact/dist/v3")
-const { PactV3, Matchers, XmlBuilder } = require("../../../../src/v3")
+const { PactV3, Matchers, XmlBuilder } = require("@pact-foundation/pact/src/v3")
 const {
   string,
   eachLike,
@@ -46,7 +45,7 @@ describe("Pact V3", () => {
                 id: integer(1),
                 name: string("Project 1"),
                 due: timestamp(
-                  "yyyy-MM-dd'T'HH:mm:ss.SZ",
+                  "yyyy-MM-dd'T'HH:mm:ss.SSSX",
                   "2016-02-11T09:46:56.023Z"
                 ),
                 tasks: atLeastOneLike(

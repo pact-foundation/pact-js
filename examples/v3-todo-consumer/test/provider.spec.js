@@ -3,7 +3,7 @@ const {
   Matchers,
   XmlBuilder,
   VerifierV3,
-} = require("../../../../src/v3")
+} = require("@pact-foundation/pact/src/v3")
 const chai = require("chai")
 const chaiAsPromised = require("chai-as-promised")
 chai.use(chaiAsPromised)
@@ -20,7 +20,7 @@ describe("Pact XML Verification", () => {
       provider: "XML Service",
       providerBaseUrl: "http://localhost:8081",
       pactUrls: [
-        "/Users/matthewfellows/development/public/pact-js/examples/v3/todo-consumer/pacts/TodoApp-TodoServiceV3.json",
+        "./pacts/TodoApp-TodoServiceV3.json",
       ],
       // pactUrls: [
       //   path.resolve(
@@ -28,6 +28,11 @@ describe("Pact XML Verification", () => {
       //     "./pacts/matching_service-animal_profile_service.json"
       //   ),
       // ],
+      stateHandlers: {
+        "i have a list of projects": setup => {
+          
+        },
+      }
     }
 
     return new VerifierV3(opts).verifyProvider().then(output => {

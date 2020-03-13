@@ -5,8 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "test:consumer": "LOG_LEVEL=DEBUG mocha test/consumer.spec.js",
-    "test:provider": "LOG_LEVEL=DEBUG mocha test/provider.spec.js"
+    "test:consumer": "LOG_LEVEL=error mocha test/consumer.spec.js",
+    "test:provider": "LOG_LEVEL=error mocha test/provider.spec.js"
   },
   "author": "",
   "license": "ISC",
@@ -27,7 +27,7 @@
     "xml2json": "^0.11.2"
   },
   "devDependencies": {
-    "@pact-foundation/pact": "file:../../..",
+    "@pact-foundation/pact": "^9.8.0",
     "ts-node": "^3.3.0"
   },
   "mocha": {

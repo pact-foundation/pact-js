@@ -2,7 +2,7 @@ const path = require("path")
 const chai = require("chai")
 const chaiAsPromised = require("chai-as-promised")
 const expect = chai.expect
-const { PactV3, Matchers } = require("@pact-foundation/pact/dist/v3")
+const { PactV3, Matchers } = require("@pact-foundation/pact/src/v3")
 const LOG_LEVEL = process.env.LOG_LEVEL || "WARN"
 
 chai.use(chaiAsPromised)

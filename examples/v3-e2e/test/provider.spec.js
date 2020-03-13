@@ -1,4 +1,4 @@
-const { VerifierV3 } = require("@pact-foundation/pact/dist/v3")
+const { VerifierV3 } = require("@pact-foundation/pact/src/v3")
 const chai = require("chai")
 const chaiAsPromised = require("chai-as-promised")
 chai.use(chaiAsPromised)
