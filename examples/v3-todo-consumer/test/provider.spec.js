@@ -19,9 +19,7 @@ describe("Pact XML Verification", () => {
     const opts = {
       provider: "XML Service",
       providerBaseUrl: "http://localhost:8081",
-      pactUrls: [
-        "./pacts/TodoApp-TodoServiceV3.json",
-      ],
+      pactUrls: ["./pacts/TodoApp-TodoServiceV3.json"],
       // pactUrls: [
       //   path.resolve(
       //     process.cwd(),
@@ -29,10 +27,8 @@ describe("Pact XML Verification", () => {
       //   ),
       // ],
       stateHandlers: {
-        "i have a list of projects": setup => {
-          
-        },
-      }
+        "i have a list of projects": setup => {},
+      },
     }
 
     return new VerifierV3(opts).verifyProvider().then(output => {
