@@ -7,7 +7,7 @@ npm run dist
 
 # Link the build so that the examples are always testing the
 # current build, in it's properly exported format
-(cd dist && npm run build:v3 && npm link)
+(cd dist && npm i neon-cli && npm run build:v3 && npm link)
 (cd dist-web && npm link)
 
 echo "Running e2e examples build for node version ${TRAVIS_NODE_VERSION}"
