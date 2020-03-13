@@ -26,8 +26,8 @@ install:
   - ps: Install-Product node $env:nodejs_version $env:platform
   - node --version
   - npm --version
-  - appveyor-retry appveyor DownloadFile "https://static.rust-lang.org/rustup/dist/%TARGET%/rustup-init.exe" -FileName rustup-init.exe
-  - rustup-init.exe -y --default-host %TARGET%
+  - appveyor-retry appveyor DownloadFile "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe" -FileName rustup-init.exe
+  - rustup-init.exe -y --default-host x86_64-pc-windows-msvc
   - set PATH=%PATH%;C:\Users\appveyor\.cargo\bin;C:\msys64\mingw64\bin;C:\Program Files\LLVM\bin
   - rustup show
   - rustc -V
