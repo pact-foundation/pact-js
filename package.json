@@ -7,7 +7,7 @@
   "scripts": {
     "build": "npm run build:v2 && npm run build:v3",
     "build:v2": "npm run lint && npm run compile",
-    "build:v3": "neon build -p ./native --release",
+    "build:v3": "neon build --release",
     "compile": "rimraf dist && tsc",
     "clean": "rimraf docs dist dist-web coverage .nyc_output logs pacts jscpd.json",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
@@ -37,7 +37,7 @@
     "travis": "./scripts/build.sh",
     "appveyor": "./scripts/build.ps1",
     "webpack": "webpack --config ./config/webpack.web.config.js",
-    "install": "node-pre-gyp install --fallback-to-build=false || neon build --release -p native",
+    "install": "node-pre-gyp install --fallback-to-build=false || neon build --release",
     "package": "node-pre-gyp package",
     "upload-binary": "node-pre-gyp package && node-pre-gyp-github publish"
   },
