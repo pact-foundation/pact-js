@@ -34,7 +34,7 @@ script: ./scripts/build.sh
 after_success:
   - npm run coverage
 before_install:
-  - sudo sysctl -w net.ipv6.conf.all.disable_ipv6=0
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo sysctl -w net.ipv6.conf.all.disable_ipv6=0; fi
   - curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
   - export PATH="$PATH:$HOME/.cargo/bin"
   - source "$HOME/.cargo/env"
@@ -53,16 +53,15 @@ deploy:
     on:
       tags: true
       branch: master
-      node: "12"
+      node_js: "12"
   - provider: script
     skip_cleanup: true
     script: ./scripts/publish.sh
     on:
       tags: true
       branch: master
-      node: "12"
+      node_js: "12"
   - provider: script
-    skip_cleanup: true
     script: ./scripts/publish_native.sh
     on:
       tags: true
