@@ -3,8 +3,8 @@ npm link
 npm run build:v3
 
 Get-ChildItem ".\examples" -Directory | ForEach-Object {
-  Write-Output "Running examples in $($_.FullName)"
-  if ($_.FullName -ne "v3") {
+  Write-Output "Running examples in $($_.Name)"
+  if ($_.Name -ne "v3") {
     cd $_.FullName
     npm link @pact-foundation/pact
     npm i
