@@ -7,4 +7,5 @@ NODE_VERSION=$(node --version)
 echo "--> Releasing native library for version ${VERSION} and Node version ${NODE_VERSION}"
 
 npm install node-pre-gyp node-pre-gyp-github
+npm run build:v3
 npm run upload-binary
