@@ -10,6 +10,7 @@
     "build:v3": "neon build --release",
     "compile": "rimraf dist && tsc",
     "clean": "rimraf docs dist dist-web coverage .nyc_output logs pacts jscpd.json",
+    "clean:native": "rm -rf native/target",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "deploy:prepare": "./scripts/create_npmrc_file.sh",
     "dist": "npm run compile && webpack --config ./config/webpack.web.config.js",
@@ -39,7 +40,7 @@
     "webpack": "webpack --config ./config/webpack.web.config.js",
     "install": "node-pre-gyp install --fallback-to-build=false || neon build --release",
     "package": "node-pre-gyp package",
-    "upload-binary": "node-pre-gyp package && node-pre-gyp-github publish"
+    "upload-binary": "npm run package && node-pre-gyp-github publish"
   },
   "repository": {
     "type": "git",

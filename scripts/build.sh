@@ -5,6 +5,10 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 npm run dist
 "${DIR}"/prepare.sh
 
+# Copy Rust source
+echo "    Copying ./native => dist/native"
+mkdir -p dist/native && cp -r native dist/
+
 # Link the build so that the examples are always testing the
 # current build, in it's properly exported format
 (cd dist && npm link)

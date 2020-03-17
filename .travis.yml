@@ -68,6 +68,7 @@ deploy:
       condition: "$TRAVIS_OS_NAME = linux"
   - provider: script
     script: ./scripts/publish_native.sh
+    skip_cleanup: true
     on:
       tags: true
       branch: master

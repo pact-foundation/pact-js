@@ -8,4 +8,5 @@ echo "--> Releasing native library for version ${VERSION} and Node version ${NOD
 
 npm install node-pre-gyp node-pre-gyp-github
 npm run build:v3
+rm -rf native/target
 npm run upload-binary

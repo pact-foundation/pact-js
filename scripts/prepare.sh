@@ -25,7 +25,3 @@ for type in "${types[@]}"; do
   mkdir -p "$(dirname "./dist-web/${type}")"
   cp -r "dist/${type}" "./dist-web/${type}"
 done
-
-# Copy Rust source
-echo "    Copying ./native => dist/native"
-mkdir -p dist/native && cp -r native dist/
