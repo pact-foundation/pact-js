@@ -57,6 +57,7 @@ deploy:
       tags: true
       branch: master
       node_js: "12"
+      condition: "$TRAVIS_OS_NAME = linux"
   - provider: script
     skip_cleanup: true
     script: ./scripts/publish.sh
@@ -64,6 +65,7 @@ deploy:
       tags: true
       branch: master
       node_js: "12"
+      condition: "$TRAVIS_OS_NAME = linux"
   - provider: script
     script: ./scripts/publish_native.sh
     on:
