@@ -14,9 +14,8 @@ Get-ChildItem ".\examples" -Directory | ForEach-Object {
   }
 }
 
-Write-Output "Done"
+Write-Output "Done with E2E tests"
 
-<#
 Get-ChildItem ".\examples\v3" -Directory | ForEach-Object {
   Write-Output "Running V3 examples in $($_.Name)"
   pushd $_.FullName
@@ -26,4 +25,5 @@ Get-ChildItem ".\examples\v3" -Directory | ForEach-Object {
   if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode)  }
   popd
 }
-#>
+
+Write-Output "Done with V3 E2E tests"
