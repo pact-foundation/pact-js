@@ -37,3 +37,6 @@ install:
 # Run custom build script instead of MSBuild
 build_script:
   - powershell .\scripts\build.ps1
+
+deploy_script:
+  - powershell .\scripts\deploy.ps1
