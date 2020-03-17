@@ -15,7 +15,7 @@ for i in examples/*; do
   [ -e "$i" ] || [$i == "v3"] || continue # prevent failure if there are no examples
   echo "------------------------------------------------"
   echo "------------> continuing to test example project: $i"
-  cd "$i"
+  pushd "$i"
   if [[ "$i" =~ "karma" ]]; then
     echo "linking pact-web"
     npm link @pact-foundation/pact-web
@@ -24,5 +24,18 @@ for i in examples/*; do
     npm link @pact-foundation/pact
   fi
   npm it
-  cd ../../
+  popd
+done
+
+echo "Running V3 e2e examples build for node version ${TRAVIS_NODE_VERSION}"
+for i in examples/v3/*; do
+  [ -e "$i" ] || continue # prevent failure if there are no examples
+  echo "------------------------------------------------"
+  echo "------------> continuing to test V3 example project: $i"
+  pushd "$i"
+  npm i
+  echo "linking pact"
+  npm link @pact-foundation/pact
+  npm t
+  popd
 done

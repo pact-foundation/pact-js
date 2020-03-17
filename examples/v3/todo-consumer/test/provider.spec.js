@@ -1,6 +1,6 @@
 const {
   PactV3,
-  Matchers,
+  MatchersV3,
   XmlBuilder,
   VerifierV3,
 } = require("@pact-foundation/pact/v3")

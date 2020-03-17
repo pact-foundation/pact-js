@@ -1,7 +1,7 @@
 const path = require("path")
 const chai = require("chai")
 const chaiAsPromised = require("chai-as-promised")
-const { PactV3, Matchers, XmlBuilder } = require("@pact-foundation/pact/v3")
+const { PactV3, MatchersV3, XmlBuilder } = require("@pact-foundation/pact/v3")
 const {
   string,
   eachLike,
@@ -9,7 +9,7 @@ const {
   boolean,
   atLeastOneLike,
   timestamp,
-} = Matchers
+} = MatchersV3
 
 const TodoApp = require("../src/todo")
 

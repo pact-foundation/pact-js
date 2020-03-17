@@ -74,3 +74,5 @@ export * from "./dsl/interaction"
  * @static
  */
 export * from "./dsl/mockService"
+
+export * from "./v3"
