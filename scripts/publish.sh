@@ -9,6 +9,7 @@ echo "--> Releasing version ${VERSION}"
 
 echo "--> Releasing artifacts"
 echo "    Publishing pact@${VERSION}..."
+rm -rf native/target
 npm publish dist --access public --tag latest
 echo "    done!"
 
