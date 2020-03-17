@@ -1,7 +1,7 @@
 import { isEmpty } from "ramda"
 import ConfigurationError from "../errors/configurationError"
 
-const PactNative = require("../../native")
+const PactNative = require("../native")
 
 export interface VerifierV3Options {
   provider: string

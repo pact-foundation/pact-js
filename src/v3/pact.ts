@@ -1,5 +1,5 @@
 import logger from "../common/logger"
-const PactNative = require("../../native")
+const PactNative = require("../native")
 
 export interface PactV3Options {
   dir: string
