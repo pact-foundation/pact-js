@@ -7,6 +7,8 @@ init:
 
 # Test against these versions of Node
 environment:
+  NODE_PRE_GYP_GITHUB_TOKEN:
+    secure: BCo6IijmTRMD//YVU2SQwDf24qmtrXUZIGL4PhpYJEPdaj9EGDccKYlDwElOWoxY
   matrix:
     - nodejs_version: "10"
     - nodejs_version: "12"
