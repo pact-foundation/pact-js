@@ -10,9 +10,9 @@ echo "--> Releasing version ${VERSION}"
 echo "--> Releasing artifacts"
 echo "    Publishing pact@${VERSION}..."
 rm -rf native/target
-npm publish dist --access public --tag latest
+npm publish dist --access public --tag beta
 echo "    done!"
 
 echo "    Publishing pact-web@${VERSION}..."
-npm publish dist-web --access public --tag latest
+npm publish dist-web --access public --tag beta
 echo "    done!"
