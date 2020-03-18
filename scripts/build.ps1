@@ -16,7 +16,6 @@ Get-ChildItem ".\examples" -Directory | ForEach-Object {
 
 Write-Output "Done with E2E tests"
 
-<#
 Get-ChildItem ".\examples\v3" -Directory | ForEach-Object {
   Write-Output "Running V3 examples in $($_.Name)"
   pushd $_.FullName
@@ -28,4 +27,3 @@ Get-ChildItem ".\examples\v3" -Directory | ForEach-Object {
 }
 
 Write-Output "Done with V3 E2E tests"
-#>
