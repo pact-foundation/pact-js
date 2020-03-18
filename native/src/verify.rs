@@ -244,7 +244,7 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
           }
         }
       },
-      _ => if !url.is_a::<JsUndefined>() && !url.is_a::<JsNull>() { 
+      _ => if !urls.is_a::<JsUndefined>() && !urls.is_a::<JsNull>() { 
         println!("    {}", Yellow.paint ("WARN: pactUrls is not a list of URLs, ignoring"));
       }
     },
