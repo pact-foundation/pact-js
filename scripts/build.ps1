@@ -1,8 +1,6 @@
 npm run dist
 npm run build:v3
-pushd dist
 npm link
-popd
 
 Get-ChildItem ".\examples" -Directory | ForEach-Object {
   if ($_.Name -ne "v3") {
@@ -21,8 +19,8 @@ Write-Output "Done with E2E tests"
 Get-ChildItem ".\examples\v3" -Directory | ForEach-Object {
   Write-Output "Running V3 examples in $($_.Name)"
   pushd $_.FullName
-  npm link @pact-foundation/pact
   npm i
+  npm link @pact-foundation/pact
   npm t
   if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode)  }
   popd
