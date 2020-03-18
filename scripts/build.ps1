@@ -4,6 +4,7 @@ npm run dist
 npm run build:v3
 Copy-Item "package.json" -Destination "dist"
 Copy-Item "package-lock.json" -Destination "dist"
+Copy-Item -Path "native" -Destination "dist" -Recurse
 dir dist
 pushd dist
 npm link
