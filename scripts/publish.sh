@@ -9,7 +9,7 @@ echo "--> Releasing version ${VERSION}"
 
 echo "--> Releasing artifacts"
 echo "    Publishing pact@${VERSION}..."
-rm -rf native/target dist/native/target
+rm -rf native/target dist/native native/index.node
 npm publish dist --access public --tag beta
 echo "    done!"
 
