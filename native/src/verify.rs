@@ -244,8 +244,8 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
           }
         }
       },
-      _ => if !url.is_a::<JsUndefined>() { 
-        println!("    {}", Yellow.paint ("WARN: pactUrls is not a list of URLs"));
+      _ => if !url.is_a::<JsUndefined>() && !url.is_a::<JsNull>() { 
+        println!("    {}", Yellow.paint ("WARN: pactUrls is not a list of URLs, ignoring"));
       }
     },
     _ => ()
@@ -274,6 +274,10 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
   };
 
   debug!("pacts = {:?}", pacts);
+  if pacts.is_empty() {
+    println!("    {}", Red.paint("ERROR: No pacts were found to verify!"));
+    cx.throw_error("No pacts were found to verify!")?;
+  }
 
   // providerStatesSetupUrl?: string
   // consumerVersionTag?: string | string[]
