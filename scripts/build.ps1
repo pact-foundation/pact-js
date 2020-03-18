@@ -26,9 +26,11 @@ Write-Output "Done with E2E tests"
 Get-ChildItem ".\examples\v3" -Directory | ForEach-Object {
   Write-Output "Running V3 examples in $($_.Name)"
   pushd $_.FullName
-  npm i
   del node_modules\@pact-foundation\pact\native\index.node
   npm link @pact-foundation/pact
+  dir node_modules/@pact-foundation/pact
+  dir node_modules/@pact-foundation/pact/native
+  npm i
   dir node_modules/@pact-foundation/pact
   dir node_modules/@pact-foundation/pact/native
   npm t

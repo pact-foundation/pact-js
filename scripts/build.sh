@@ -37,9 +37,9 @@ for i in examples/v3/*; do
   echo "------------------------------------------------"
   echo "------------> continuing to test V3 example project: $i"
   pushd "$i"
-  npm i
   echo "linking pact"
   npm link @pact-foundation/pact
+  npm i
   npm t
   popd
 done
