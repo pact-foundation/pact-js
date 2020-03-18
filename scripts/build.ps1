@@ -25,7 +25,9 @@ Get-ChildItem ".\examples\v3" -Directory | ForEach-Object {
   del node_modules\@pact-foundation\pact\native\index.node
   npm link @pact-foundation/pact
   dir node_modules
+  dir node_modules/@pact-foundation
   dir node_modules/@pact-foundation/pact
+  dir node_modules/@pact-foundation/pact/native
   npm t
   if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode)  }
   popd
