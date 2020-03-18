@@ -2,9 +2,12 @@ Set-PSDebug -Trace 1
 del native\index.node
 npm run dist
 npm run build:v3
-cp package.json package-lock.json dist
-pushd dist; npm link; popd
-pwd
+Copy-Item "package.json" -Destination "dist"
+Copy-Item "package-lock.json" -Destination "dist"
+dir dist
+pushd dist
+npm link
+popd
 
 Get-ChildItem ".\examples" -Directory | ForEach-Object {
   if ($_.Name -ne "v3") {
@@ -26,8 +29,6 @@ Get-ChildItem ".\examples\v3" -Directory | ForEach-Object {
   npm i
   del node_modules\@pact-foundation\pact\native\index.node
   npm link @pact-foundation/pact
-  dir node_modules
-  dir node_modules/@pact-foundation
   dir node_modules/@pact-foundation/pact
   dir node_modules/@pact-foundation/pact/native
   npm t
