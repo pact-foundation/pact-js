@@ -244,12 +244,12 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
           }
         }
       },
-      _ => println!("    {}", Yellow.paint ("WARN: pactUrls is not a list of URLs"))
+      _ => if !url.is_a::<JsUndefined>() { 
+        println!("    {}", Yellow.paint ("WARN: pactUrls is not a list of URLs"));
+      }
     },
     _ => ()
   };
-
-  debug!("{:?}", pacts);
 
   match config.get(&mut cx, "pactBrokerUrl") {
     Ok(url) => match url.downcast::<JsString>() {
@@ -272,6 +272,8 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
     },
     _ => ()
   };
+
+  debug!("pacts = {:?}", pacts);
 
   // providerStatesSetupUrl?: string
   // consumerVersionTag?: string | string[]
