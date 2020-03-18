@@ -2,7 +2,7 @@ Set-PSDebug -Trace 1
 del native\index.node
 npm run dist
 npm run build:v3
-cd dist && npm link
+cd dist; npm link
 pwd
 
 Get-ChildItem ".\examples" -Directory | ForEach-Object {
