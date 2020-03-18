@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.2](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.1...v10.0.0-beta.2) (2020-03-18)
+
+
+### Bug Fixes
+
+* correct the path to the native lib in the NPM package ([300d915](https://github.com/pact-foundation/pact-js/commit/300d91516afebeefe979039566b02162e09992c0))
+
 ## [10.0.0-beta.1](https://github.com/pact-foundation/pact-js/compare/v9.8.1...v10.0.0-beta.1) (2020-03-17)
 
 
