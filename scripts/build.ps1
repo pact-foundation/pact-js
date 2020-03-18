@@ -1,6 +1,8 @@
 npm run dist
-npm link
 npm run build:v3
+pushd dist
+npm link
+popd
 
 Get-ChildItem ".\examples" -Directory | ForEach-Object {
   if ($_.Name -ne "v3") {
