@@ -4,6 +4,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 npm run dist
 npm run build:v3
+ls -lh native
 "${DIR}"/prepare.sh
 
 # Copy Rust source
@@ -42,6 +43,9 @@ for i in examples/v3/*; do
   rm -rf "@pact-foundation/pact"
   echo "linking pact"
   npm link @pact-foundation/pact
+  ls -lh ./node_modules/@pact-foundation/pact
+  ls -lh ./node_modules/@pact-foundation/pact/native
+  file ./node_modules/@pact-foundation/pact/native/index.node
   npm t
   popd
 done
