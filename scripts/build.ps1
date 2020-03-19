@@ -1,7 +1,7 @@
 Set-PSDebug -Trace 1
-del native\index.node
 npm run dist
 npm run build:v3
+dir native
 Copy-Item "package.json" -Destination "dist"
 Copy-Item "package-lock.json" -Destination "dist"
 Copy-Item -Path "native" -Destination "dist" -Recurse
@@ -27,11 +27,9 @@ Write-Output "Done with E2E tests"
 Get-ChildItem ".\examples\v3" -Directory | ForEach-Object {
   Write-Output "Running V3 examples in $($_.Name)"
   pushd $_.FullName
-  del node_modules\@pact-foundation\pact\native\index.node
-  npm link @pact-foundation/pact
-  dir node_modules/@pact-foundation/pact
-  dir node_modules/@pact-foundation/pact/native
   npm i
+  Get-ChildItem "@pact-foundation/pact" -Recurse | Remove-Item
+  npm link @pact-foundation/pact
   dir node_modules/@pact-foundation/pact
   dir node_modules/@pact-foundation/pact/native
   npm t
