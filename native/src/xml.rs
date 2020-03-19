@@ -21,7 +21,6 @@ pub fn generate_xml_body(attributes: &Map<String, Value>, matching_rules: &mut C
     Some(val) => match val {
       Value::Object(obj) => {
         let node = create_element_from_json(doc, None, obj, matching_rules, generators, &"$".to_string(), false);
-        dbg!(node);
         doc.root().append_child(node);
       },
       _ => {
@@ -41,10 +40,6 @@ pub fn generate_xml_body(attributes: &Map<String, Value>, matching_rules: &mut C
 }
 
 fn create_element_from_json<'a>(doc: Document<'a>, parent: Option<Element<'a>>, object: &Map<String, Value>, matching_rules: &mut Category, generators: &mut Generators, path: &String, type_matcher: bool) -> Element<'a> {
-  dbg!(path);
-  dbg!(parent);
-  dbg!(object);
-
   let element = if object.contains_key("pact:matcher:type") {
     if let Some(rule) = MatchingRule::from_integration_json(object) {
       matching_rules.add_rule(path, rule, &RuleLogic::And);
@@ -59,10 +54,9 @@ fn create_element_from_json<'a>(doc: Document<'a>, parent: Option<Element<'a>>, 
     let updated_path = path.to_owned() + ".*";
     if let Some(val) = object.get("value") {
       if let Value::Object(attr) = val {
-        dbg!(val);
         let element = doc.create_element(json_to_string(attr.get("name").unwrap()).as_str());
         if let Some(attributes) = val.get("attributes") {
-          match dbg!(attributes) {
+          match attributes {
             Value::Object(attributes) => add_attributes(&element, attributes, matching_rules, generators, &updated_path),
             _ => ()
           }
@@ -82,7 +76,7 @@ fn create_element_from_json<'a>(doc: Document<'a>, parent: Option<Element<'a>>, 
           }
         };
 
-        dbg!(element)
+        element
       } else {
         panic!("Intermediate JSON format is invalid, corresponding value for the given matcher was not an object: {:?}", object)
       }
@@ -93,7 +87,7 @@ fn create_element_from_json<'a>(doc: Document<'a>, parent: Option<Element<'a>>, 
     let name = json_to_string(object.get("name").unwrap());
     let element = doc.create_element(name.as_str());
     if let Some(attributes) = object.get("attributes") {
-      match dbg!(attributes) {
+      match attributes {
         Value::Object(attributes) => add_attributes(&element, attributes, matching_rules, generators, path),
         _ => ()
       }
@@ -102,7 +96,7 @@ fn create_element_from_json<'a>(doc: Document<'a>, parent: Option<Element<'a>>, 
     if let Some(children) = object.get("children") {
       match children {
         Value::Array(children) => for child in children {
-          match dbg!(child) {
+          match child {
             Value::Object(attributes) => {
               create_element_from_json(doc, Some(element), attributes, matching_rules, generators,  &(path.to_owned() + "." + name.as_str()), false);
             },

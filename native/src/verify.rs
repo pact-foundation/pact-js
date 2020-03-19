@@ -218,7 +218,7 @@ impl Task for BackgroundTask {
   }
 
   fn complete(self, mut cx: TaskContext, result: Result<Self::Output, Self::Error>) -> JsResult<Self::JsEvent> {
-    match dbg!(result) {
+    match result {
       Ok(res) => Ok(cx.boolean(res)), // TODO: send a data structure back so we can do things with it (e.g. sub tests)
       Err(err) => cx.throw_error(err)
     }
