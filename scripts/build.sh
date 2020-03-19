@@ -3,6 +3,7 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 npm run dist
+npm run build:v3
 "${DIR}"/prepare.sh
 
 # Copy Rust source
@@ -37,9 +38,10 @@ for i in examples/v3/*; do
   echo "------------------------------------------------"
   echo "------------> continuing to test V3 example project: $i"
   pushd "$i"
+  npm i
+  rm -rf "@pact-foundation/pact"
   echo "linking pact"
   npm link @pact-foundation/pact
-  npm i
   npm t
   popd
 done
