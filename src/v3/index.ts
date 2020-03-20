@@ -1,6 +1,8 @@
 const PactNative = require("../native")
+import logger from "../common/logger"
 
-PactNative.init()
+const version = PactNative.init()
+logger.debug("Initialised native library " + version)
 
 export * from "./pact"
 

@@ -28,11 +28,14 @@ lazy_static! {
   static ref MANAGER: Mutex<ServerManager> = Mutex::new(ServerManager::new());
 }
 
-fn init(mut cx: FunctionContext) -> JsResult<JsUndefined> {
+fn init(mut cx: FunctionContext) -> JsResult<JsString> {
     let mut builder = Builder::from_env("LOG_LEVEL");
     builder.target(Target::Stdout);
     builder.init();
-    Ok(cx.undefined())
+
+    debug!("Initialising Pact native library version {}", env!("CARGO_PKG_VERSION"));
+
+    Ok(cx.string(env!("CARGO_PKG_VERSION")))
 }
 
 fn process_array(array: &Vec<Value>, matching_rules: &mut Category, generators: &mut Generators, path: &String, type_matcher: bool) -> Value {
@@ -206,7 +209,7 @@ declare_types! {
                   ProviderState { name: description.clone(), params: props }
                 },
                 Err(_) => {
-                  if !parameters.is_a::<JsUndefined>() && !!parameters.is_a::<JsNull>() {
+                  if !parameters.is_a::<JsUndefined>() && !parameters.is_a::<JsNull>() {
                     error!("Expected an Object for state change parameters '{}'", description);
                   }
                   ProviderState::default(&description.clone())
@@ -311,7 +314,9 @@ declare_types! {
           if let Ok(method) = js_method {
             match method.downcast::<JsString>() {
               Ok(method) => last.request.method = method.value().to_string(),
-              Err(err) => warn!("Request method is not a string value - {}", err)
+              Err(err) => if !method.is_a::<JsUndefined>() && !method.is_a::<JsNull>() {
+                warn!("Request method is not a string value - {}", err)
+              }
             }
           }
           if let Some((path, rule, gen)) = path {
