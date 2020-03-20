@@ -6,18 +6,19 @@ pwd
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 npm run dist
-npm run build:v3
-ls -lh native
 "${DIR}"/prepare.sh
-
-# Copy Rust source
-echo "    Copying ./native => dist/native"
-mkdir -p dist/native && cp -r native dist/
 
 # Link the build so that the examples are always testing the
 # current build, in it's properly exported format
 (cd dist && npm link)
 (cd dist-web && npm link)
+
+cat native/Cargo.toml
+npm run build:v3
+ls -lh native
+# Copy Rust native lib
+echo "    Copying ./native => dist/native"
+mkdir -p dist/native && cp -r native dist/
 
 echo "Running e2e examples build for node version ${TRAVIS_NODE_VERSION}"
 for i in examples/*; do
@@ -51,6 +52,7 @@ for i in examples/v3/*; do
   ls -l ./node_modules/@pact-foundation/pact/native
   file ./node_modules/@pact-foundation/pact/native/index.node
   objdump -p node_modules/@pact-foundation/pact/native/index.node
+  cat node_modules/@pact-foundation/pact/native/Cargo.toml
   npm t
   popd
 done
