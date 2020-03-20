@@ -13,6 +13,8 @@ npm run dist
 (cd dist && npm link)
 (cd dist-web && npm link)
 
+git status
+git checkout native
 cat native/Cargo.toml
 npm run build:v3
 ls -lh native
