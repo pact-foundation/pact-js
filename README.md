@@ -63,6 +63,7 @@ Read [Getting started with Pact] for more information for beginners.
   - [Using Pact in non-Node environments](#using-pact-in-non-node-environments)
     - [Using Pact with Karma](#using-pact-with-karma)
     - [Using Pact with RequireJS](#using-pact-with-requirejs)
+  - [V3 Specification support and XML](#pact-js-v3)
   - [Troubleshooting](#troubleshooting)
     - [Alpine + Docker](#alpine--docker)
     - [Parallel tests](#parallel-tests)
@@ -881,6 +882,182 @@ require.config({
 
 See this [Stack Overflow](https://stackoverflow.com/a/44170373/1008568) question for background, and
 this [gist](https://gist.github.com/mefellows/15c9fcb052c2aa9d8951f91d48d6da54) with a working example.
+
+## Pact JS V3
+
+An initial beta version of Pact-JS with support for V3 specification features and XML matching has 
+been released. Current support is for Node 10, 12 and 13. Thanks to the folks at [Align Tech](https://www.aligntech.com/) for
+sponsoring this work.
+
+** NOTE: the current version has an issue with the native binary and requires the `--update-binary` argument to install.**
+
+To install it:
+
+```console
+npm i @pact-foundation/pact@10.0.0-beta.2 --update-binary
+```
+
+For examples on how to use it, see [examples/v3/e2e](examples/v3/e2e) and [examples/v3/todo-consumer](examples/v3/todo-consumer).
+
+### Using the V3 matching rules
+
+There are a number of new matchers that can be used, like `integer` and `timestamp`. There are defined in the `MatchersV3` class that needs to be used with `PactV3` DSL.
+
+For example:
+
+```javascript
+const { PactV3, MatchersV3 } = require("@pact-foundation/pact/v3")
+const {
+    eachLike,
+    atLeastLike,
+    integer,
+    timestamp,
+    boolean,
+    string,
+    regex,
+    like,
+  } = MatchersV3
+
+const animalBodyExpectation = {
+  id: integer(1),
+  available_from: timestamp("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
+  first_name: string("Billy"),
+  last_name: string("Goat"),
+  animal: string("goat"),
+  age: integer(21),
+  gender: regex("F|M", "M"),
+  location: {
+    description: string("Melbourne Zoo"),
+    country: string("Australia"),
+    post_code: integer(3000),
+  },
+  eligibility: {
+    available: boolean(true),
+    previously_married: boolean(false),
+  },
+  interests: eachLike("walks in the garden/meadow"),
+}
+```
+
+|Matcher|Parameters|Description|
+|=======|==========|===========|
+|`like` |template  |Applies the `type` matcher to value, which requires values to have the same type as the template|
+|`eachLike`|template|Applies the `type` matcher to each value in an array, ensuring they match the template. Note that this matcher does not validate the length of the array, and the items within it|
+|`atLeastOneLike`|template, count: number = 1|Behaves like the `eachLike` matcher, but also applies a minimum length validation of one on the length of the array. The optional `count` parameter controls the number of examples generated.|
+|`atLeastLike`|template, min: number, count?: number|Just like `atLeastOneLike`, but the minimum length is configurable.|
+|`atMostLike`|template, max: number, count?: number|Behaves like the `eachLike` matcher, but also applies a maximum length validation on the length of the array. The optional `count` parameter controls the number of examples generated.|
+|`constrainedArrayLike`|template, min: number, max: number, count?: number|Behaves like the `eachLike` matcher, but also applies a minimum and maximum length validation on the length of the array. The optional `count` parameter controls the number of examples generated.|
+|`boolean`|example: boolean|Matches boolean values (true, false)|
+|`integer`|example?: number|Value that must be an integer (must be a number and have no decimal places). If the example value is omitted, a V3 Random number generator will be used.|
+|`decimal`|example?: number|Value that must be a decimal number (must be a number and have at least one digit in the decimal places). If the example value is omitted, a V3 Random number generator will be used.|
+|`number`|example?: number|Value that must be a number. If the example value is omitted, a V3 Random number generator will be used.|
+|`string`|example: string|Value that must be a string.|
+|`regex`|pattern, example: string|Value that must match the given regular expression.|
+|`equal`|example|Value that must be equal to the example. This is mainly used to reset the matching rules which cascade.|
+|`timestamp`|format: string, example?: string|String value that must match the provided datetime format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) for details on the format string. If the example value is omitted, a value will be generated using a Timestamp generator and the current system date and time.|
+|`time`|format: string, example?: string|String value that must match the provided time format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) for details on the format string. If the example value is omitted, a value will be generated using a Time generator and the current system time.|
+|`date`|format: string, example?: string|String value that must match the provided date format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) for details on the format string. If the example value is omitted, a value will be generated using a Date generator and the current system date.|
+|`includes`|value: string|Value that must include the example value as a substring.|
+|`nullValue`||Value that must be null. This will only match the JSON Null value. For other content types, it will match if the attribute is missing.|
+
+### Using Pact with XML
+
+You can write both consumer and provider verification tests with XML requests or responses. For an example, see [examples/v3/todo-consumer/test/consumer.spec.js](examples/v3/todo-consumer/test/consumer.spec.js).
+There is an `XmlBuilder` class that provides a DSL to help construct XML bodies with matching rules and generators (NOTE that generators are not supported for XML at this time).
+
+for example:
+
+```javascript
+body: new XmlBuilder("1.0", "UTF-8", "ns1:projects").build(el => {
+    el.setAttributes({
+      id: "1234",
+      "xmlns:ns1": "http://some.namespace/and/more/stuff",
+    })
+    el.eachLike(
+      "ns1:project",
+      {
+        id: integer(1),
+        type: "activity",
+        name: string("Project 1"),
+        due: timestamp(
+          "yyyy-MM-dd'T'HH:mm:ss.SZ",
+          "2016-02-11T09:46:56.023Z"
+        ),
+      },
+      project => {
+        project.appendElement("ns1:tasks", {}, task => {
+          task.eachLike(
+            "ns1:task",
+            {
+              id: integer(1),
+              name: string("Task 1"),
+              done: boolean(true),
+            },
+            null,
+            { examples: 5 }
+          )
+        })
+      },
+      { examples: 2 }
+    )
+  })
+```
+
+### Verifying providers with VerifierV3
+
+The `VerifierV3` class can verify your provider in a similar way to the existing one.
+
+#### Request Filters
+
+Request filters now take a request object as a parameter, and need to return the mutated one.
+
+```javascript
+requestFilter: req => {
+    req.headers["MY_SPECIAL_HEADER"] = "my special value"
+
+    // e.g. ADD Bearer token
+    req.headers["authorization"] = `Bearer ${token}`
+
+    // Need to return the request back again
+    return req
+},
+```
+
+#### Provider state callbacks
+
+Provider state callbacks have been updated to support parameters and return values. The first parameter is a boolean indicating whether it is a setup call 
+(run before the verification) or a tear down call (run afterwards). The second optional parameter is a key-value map of any parameters defined in the 
+pact file. Provider state callbacks can also return a map of key-value values. These are used with provider-state injected values, but support for that
+will be added in a later release.
+
+```javascript
+stateHandlers: {
+  "Has no animals": setup => {
+    if (setup) {
+      animalRepository.clear()
+      return Promise.resolve({ description: `Animals removed to the db` })
+    }
+  },
+  "Has some animals": setup => {
+    if (setup) {
+      importData()
+      return Promise.resolve({
+        description: `Animals added to the db`,
+        count: animalRepository.count(),
+      })
+    }
+  },
+  "Has an animal with ID": (setup, parameters) => {
+    if (setup) {
+      importData()
+      animalRepository.first().id = parameters.id
+      return Promise.resolve({
+        description: `Animal with ID ${parameters.id} added to the db`,
+        id: parameters.id,
+      })
+    }
+  },
+```
 
 ## Troubleshooting
 
