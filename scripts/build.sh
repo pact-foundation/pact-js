@@ -38,14 +38,16 @@ for i in examples/v3/*; do
   [ -e "$i" ] || continue # prevent failure if there are no examples
   echo "------------------------------------------------"
   echo "------------> continuing to test V3 example project: $i"
+  node --version
   pushd "$i"
   npm i
   rm -rf "@pact-foundation/pact"
   echo "linking pact"
   npm link @pact-foundation/pact
-  ls -lh ./node_modules/@pact-foundation/pact
-  ls -lh ./node_modules/@pact-foundation/pact/native
+  ls -l ../../../dist/native
+  ls -l ./node_modules/@pact-foundation/pact/native
   file ./node_modules/@pact-foundation/pact/native/index.node
+  objdump -p node_modules/@pact-foundation/pact/native/index.node
   npm t
   popd
 done
