@@ -24,7 +24,7 @@ export class PactWeb {
   public server: any
   public opts: PactOptionsComplete
 
-  constructor(config: PactOptions) {
+  constructor(config?: PactOptions) {
     const defaults = {
       consumer: "",
       cors: false,
