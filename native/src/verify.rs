@@ -13,6 +13,7 @@ use maplit::*;
 use std::collections::HashMap;
 use crate::utils::serde_value_to_js_object_attr;
 use log::*;
+use std::panic;
 
 fn get_string_value(cx: &mut FunctionContext, obj: &JsObject, name: &str) -> Option<String> {
   match obj.get(cx, name) {
@@ -205,19 +206,25 @@ impl Task for BackgroundTask {
   type JsEvent = JsBoolean;
 
   fn perform(&self) -> Result<Self::Output, Self::Error> {
-    let mut runtime = tokio::runtime::Builder::new()
+    debug!("Background verification task started");
+    panic::catch_unwind(|| {
+      let mut runtime = tokio::runtime::Builder::new()
       .threaded_scheduler()
       .enable_all()
       .build()
       .unwrap();
-
-    runtime.block_on(async {
-      let provider_state_executor = ProviderStateCallback { callback_handlers: &self.state_handlers };
-      Ok(pact_verifier::verify_provider(self.provider_info.clone(), self.pacts.clone(), self.filter_info.clone(), self.consumers_filter.clone(), self.options.clone(), &provider_state_executor).await)
+      runtime.block_on(async {
+        let provider_state_executor = ProviderStateCallback { callback_handlers: &self.state_handlers };
+        pact_verifier::verify_provider(self.provider_info.clone(), self.pacts.clone(), self.filter_info.clone(), self.consumers_filter.clone(), self.options.clone(), &provider_state_executor).await
+      })
+    }).map_err(|err| {
+      error!("Verify process failed with a panic: {:?}", err);
+      format!("Verify process failed with a panic")
     })
   }
 
   fn complete(self, mut cx: TaskContext, result: Result<Self::Output, Self::Error>) -> JsResult<Self::JsEvent> {
+    debug!("Background verification task complete: {:?}", result);
     match result {
       Ok(res) => Ok(cx.boolean(res)), // TODO: send a data structure back so we can do things with it (e.g. sub tests)
       Err(err) => cx.throw_error(err)

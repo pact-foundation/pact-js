@@ -1,5 +1,6 @@
 import { isEmpty } from "ramda"
 import ConfigurationError from "../errors/configurationError"
+import logger from "common/logger"
 
 const PactNative = require("../native")
 
@@ -20,28 +21,7 @@ export interface VerifierV3Options {
   providerVersion?: string
   tags?: string[]
   requestFilter?: (req: any) => any
-
-  // stateHandlers: {
-  //   "Has no animals": () => {
-  //     animalRepository.clear()
-  //     token = "1234"
-  //     return Promise.resolve(`Animals removed to the db`)
-  //   },
-  //   "Has some animals": () => {
-  //     token = "1234"
-  //     importData()
-  //     return Promise.resolve(`Animals added to the db`)
-  //   },
-  //   "Has an animal with ID 1": () => {
-  //     token = "1234"
-  //     importData()
-  //     return Promise.resolve(`Animals added to the db`)
-  //   },
-  //   "is not authenticated": () => {
-  //     token = ""
-  //     Promise.resolve(`Invalid bearer token generated`)
-  //   },
-  // },
+  stateHandlers?: any
 }
 
 export class VerifierV3 {
@@ -79,6 +59,7 @@ export class VerifierV3 {
             resolve(val)
           }
         })
+        logger.debug("Submitted verify_provider")
       } catch (e) {
         reject(e)
       }
