@@ -889,7 +889,7 @@ An initial beta version of Pact-JS with support for V3 specification features an
 been released. Current support is for Node 10, 12 and 13. Thanks to the folks at [Align Tech](https://www.aligntech.com/) for
 sponsoring this work.
 
-** NOTE: the current version has an issue with the native binary and requires the `--update-binary` argument to install.**
+**NOTE: the current version has an issue with the native binary and requires the `--update-binary` argument to install.**
 
 To install it:
 
@@ -939,26 +939,26 @@ const animalBodyExpectation = {
 }
 ```
 
-|Matcher|Parameters|Description|
-|=======|==========|===========|
-|`like` |template  |Applies the `type` matcher to value, which requires values to have the same type as the template|
-|`eachLike`|template|Applies the `type` matcher to each value in an array, ensuring they match the template. Note that this matcher does not validate the length of the array, and the items within it|
-|`atLeastOneLike`|template, count: number = 1|Behaves like the `eachLike` matcher, but also applies a minimum length validation of one on the length of the array. The optional `count` parameter controls the number of examples generated.|
-|`atLeastLike`|template, min: number, count?: number|Just like `atLeastOneLike`, but the minimum length is configurable.|
-|`atMostLike`|template, max: number, count?: number|Behaves like the `eachLike` matcher, but also applies a maximum length validation on the length of the array. The optional `count` parameter controls the number of examples generated.|
-|`constrainedArrayLike`|template, min: number, max: number, count?: number|Behaves like the `eachLike` matcher, but also applies a minimum and maximum length validation on the length of the array. The optional `count` parameter controls the number of examples generated.|
-|`boolean`|example: boolean|Matches boolean values (true, false)|
-|`integer`|example?: number|Value that must be an integer (must be a number and have no decimal places). If the example value is omitted, a V3 Random number generator will be used.|
-|`decimal`|example?: number|Value that must be a decimal number (must be a number and have at least one digit in the decimal places). If the example value is omitted, a V3 Random number generator will be used.|
-|`number`|example?: number|Value that must be a number. If the example value is omitted, a V3 Random number generator will be used.|
-|`string`|example: string|Value that must be a string.|
-|`regex`|pattern, example: string|Value that must match the given regular expression.|
-|`equal`|example|Value that must be equal to the example. This is mainly used to reset the matching rules which cascade.|
-|`timestamp`|format: string, example?: string|String value that must match the provided datetime format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) for details on the format string. If the example value is omitted, a value will be generated using a Timestamp generator and the current system date and time.|
-|`time`|format: string, example?: string|String value that must match the provided time format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) for details on the format string. If the example value is omitted, a value will be generated using a Time generator and the current system time.|
-|`date`|format: string, example?: string|String value that must match the provided date format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) for details on the format string. If the example value is omitted, a value will be generated using a Date generator and the current system date.|
-|`includes`|value: string|Value that must include the example value as a substring.|
-|`nullValue`||Value that must be null. This will only match the JSON Null value. For other content types, it will match if the attribute is missing.|
+| Matcher | Parameters | Description |
+| ------- | ---------- | ----------- |
+| `like` | template  | Applies the `type` matcher to value, which requires values to have the same type as the template |
+| `eachLike` | template| Applies the `type` matcher to each value in an array, ensuring they match the template. Note that this matcher does not validate the length of the array, and the items within it |
+| `atLeastOneLike` | template, count: number = 1 | Behaves like the `eachLike` matcher, but also applies a minimum length validation of one on the length of the array. The optional `count` parameter controls the number of examples generated. |
+| `atLeastLike` | template, min: number, count?: number | Just like `atLeastOneLike`, but the minimum length is configurable. |
+| `atMostLike` | template, max: number, count?: number | Behaves like the `eachLike` matcher, but also applies a maximum length validation on the length of the array. The optional `count` parameter controls the number of examples generated. |
+| `constrainedArrayLike` | template, min: number, max: number, count?: number | Behaves like the `eachLike` matcher, but also applies a minimum and maximum length validation on the length of the array. The optional `count` parameter controls the number of examples generated. |
+| `boolean` | example: boolean | Matches boolean values (true, false) |
+| `integer` | example?: number | Value that must be an integer (must be a number and have no decimal places). If the example value is omitted, a V3 Random number generator will be used. |
+| `decimal` | example?: number | Value that must be a decimal number (must be a number and have at least one digit in the decimal places). If the example value is omitted, a V3 Random number generator will be used. |
+| `number` | example?: number | Value that must be a number. If the example value is omitted, a V3 Random number generator will be used. |
+| `string` | example: string | Value that must be a string. |
+| `regex` | pattern, example: string | Value that must match the given regular expression. |
+| `equal` | example | Value that must be equal to the example. This is mainly used to reset the matching rules which cascade. |
+| `timestamp` | format: string, example?: string | String value that must match the provided datetime format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) for details on the format string. If the example value is omitted, a value will be generated using a Timestamp generator and the current system date and time. |
+| `time` | format: string, example?: string | String value that must match the provided time format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) for details on the format string. If the example value is o mitted, a value will be generated using a Time generator and the current system time. |
+| `date` | format: string, example?: string | String value that must match the provided date format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) for details on the format string. If the example value is o mitted, a value will be generated using a Date generator and the current system date. |
+| `includes` | value: string | Value that must include the example value as a substring. |
+| `nullValue` | | Value that must be null. This will only match the JSON Null value. For other content types, it will match if the attribute is missing. |
 
 ### Using Pact with XML
 
