@@ -1,6 +1,6 @@
 import { isEmpty } from "ramda"
 import ConfigurationError from "../errors/configurationError"
-import logger from "common/logger"
+import logger from "../common/logger"
 
 const PactNative = require("../native")
 
