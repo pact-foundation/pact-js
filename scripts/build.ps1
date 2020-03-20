@@ -14,7 +14,10 @@ Get-ChildItem ".\examples" -Directory | ForEach-Object {
     npm link @pact-foundation/pact
     npm i
     npm t
-    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode)  }
+    if ($LastExitCode -ne 0) { 
+      Write-Output "Non-zero exit code!"
+      $host.SetShouldExit($LastExitCode) 
+    }
     popd
   }
 }
@@ -28,7 +31,10 @@ Get-ChildItem ".\examples\v3" -Directory | ForEach-Object {
   Get-ChildItem "@pact-foundation/pact" -Recurse | Remove-Item
   npm link @pact-foundation/pact
   npm t
-  if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode)  }
+  if ($LastExitCode -ne 0) {
+    Write-Output "Non-zero exit code!"
+    $host.SetShouldExit($LastExitCode)  
+  }
   popd
 }
 

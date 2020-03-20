@@ -308,6 +308,8 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
     None => ()
   };
 
+  debug!("provider_info = {:?}", provider_info);
+
   let request_filter = match config.get(&mut cx, "requestFilter") {
     Ok(request_filter) => match request_filter.downcast::<JsFunction>() {
       Ok(val) => {
@@ -318,6 +320,8 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
     },
     _ => None
   };
+
+  debug!("request_filter done");
 
   let mut callbacks = hashmap![];
   match config.get(&mut cx, "stateHandlers") {
@@ -348,7 +352,9 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
     provider_tags: vec![]
   };
 
+  debug!("Starting background task");
   BackgroundTask { provider_info, pacts, filter_info, consumers_filter, options, state_handlers: callbacks }.schedule(callback);
   
+  debug!("Done");
   Ok(cx.undefined())
 }
