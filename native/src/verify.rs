@@ -218,8 +218,16 @@ impl Task for BackgroundTask {
         pact_verifier::verify_provider(self.provider_info.clone(), self.pacts.clone(), self.filter_info.clone(), self.consumers_filter.clone(), self.options.clone(), &provider_state_executor).await
       })
     }).map_err(|err| {
-      error!("Verify process failed with a panic: {:?}", err);
-      format!("Verify process failed with a panic")
+      match err.downcast_ref::<&str>() {
+        Some(err) => {
+          error!("Verify process failed with a panic: {}", err);
+          format!("Verify process failed with a panic: {}", err)
+        },
+        None => {
+          error!("Verify process failed with a panic");
+          format!("Verify process failed with a panic")
+        }
+      }
     })
   }
 
