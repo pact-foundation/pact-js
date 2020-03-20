@@ -147,7 +147,7 @@ export function boolean(b: boolean) {
  * Value must be an integer (must be a number and have no decimal places)
  * @param int Example value. If omitted a random value will be generated.
  */
-export function integer(int: number) {
+export function integer(int?: number) {
   if (int) {
     return {
       "pact:matcher:type": "integer",
@@ -166,7 +166,7 @@ export function integer(int: number) {
  * Value must be a decimal number (must be a number and have decimal places)
  * @param num Example value. If omitted a random value will be generated.
  */
-export function decimal(num: number) {
+export function decimal(num?: number) {
   if (num) {
     return {
       "pact:matcher:type": "decimal",
@@ -185,7 +185,7 @@ export function decimal(num: number) {
  * Value must be a number
  * @param num Example value. If omitted a random integer value will be generated.
  */
-export function number(num: number) {
+export function number(num?: number) {
   if (num) {
     return {
       "pact:matcher:type": "number",
