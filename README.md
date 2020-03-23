@@ -1,6 +1,7 @@
 # Pact JS
 
 [![Build Status](https://travis-ci.org/pact-foundation/pact-js.svg?branch=master)](https://travis-ci.org/pact-foundation/pact-js)
+[![npm](https://img.shields.io/npm/v/@pact-foundation/pact-js.svg)](https://www.npmjs.com/package/@pact-foundation/pact)
 [![Coverage Status](https://coveralls.io/repos/github/pact-foundation/pact-js/badge.svg?branch=master)](https://coveralls.io/github/pact-foundation/pact-js?branch=master)
 [![Code Climate](https://codeclimate.com/github/pact-foundation/pact-js/badges/gpa.svg)](https://codeclimate.com/github/pact-foundation/pact-js)
 [![Issue Count](https://codeclimate.com/github/pact-foundation/pact-js/badges/issue_count.svg)](https://codeclimate.com/github/pact-foundation/pact-js)
@@ -885,7 +886,7 @@ this [gist](https://gist.github.com/mefellows/15c9fcb052c2aa9d8951f91d48d6da54) 
 
 ## Pact JS V3
 
-An initial beta version of Pact-JS with support for V3 specification features and XML matching has 
+An initial beta version of Pact-JS with support for V3 specification features and XML matching has
 been released. Current support is for Node 10, 12 and 13. Thanks to the folks at [Align Tech](https://www.aligntech.com/) for
 sponsoring this work.
 
@@ -1025,8 +1026,8 @@ requestFilter: req => {
 
 #### Provider state callbacks
 
-Provider state callbacks have been updated to support parameters and return values. The first parameter is a boolean indicating whether it is a setup call 
-(run before the verification) or a tear down call (run afterwards). The second optional parameter is a key-value map of any parameters defined in the 
+Provider state callbacks have been updated to support parameters and return values. The first parameter is a boolean indicating whether it is a setup call
+(run before the verification) or a tear down call (run afterwards). The second optional parameter is a key-value map of any parameters defined in the
 pact file. Provider state callbacks can also return a map of key-value values. These are used with provider-state injected values, but support for that
 will be added in a later release.
 
