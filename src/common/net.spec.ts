@@ -41,27 +41,6 @@ describe("Net", () => {
       afterEach(done => closeFn(done))
     })
 
-    // in all node versions (at time of writing), using the IpV6 broadcast address (::) will
-    // listen on all IpV6 *and* IpV4 addresses (for the specified port) (AKA dual-stacking).
-    // unless `ipv6Only: true` is used in `server.listen({})`. We cannot use this flag as it
-    // has been introduced in node v11.X.
-    // Dual-stacking is configurable at the OS level, but we should not rely on that for the
-    // tests.
-    context("when the no local hosts are available", () => {
-      let closeFn = (cb: any) => cb()
-
-      it("returns a rejected promise", () =>
-        // cover all IpV6 and IpV4 hosts for the port, so all the checks will fail
-        createServer(port, "::").then((ipv6Server: { close(): any }) => {
-          closeFn = ipv6Server.close.bind(ipv6Server)
-          return expect(isPortAvailable(port, "127.0.0.1")).to.eventually.be
-            .rejected
-        }))
-
-      // close the servers used in this test as to not conflict with other tests
-      afterEach(done => closeFn(done))
-    })
-
     context("when a single host is unavailable", () => {
       let closeFn = (cb: any) => cb()
 
