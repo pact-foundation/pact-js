@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [9.9.0](https://github.com/pact-foundation/pact-js/compare/v9.8.2...v9.9.0) (2020-03-26)
+
+
+### Features
+
+* support pending pacts and version selectors ([51aacc3](https://github.com/pact-foundation/pact-js/commit/51aacc36f3ee5360fd7a5c10176fc40d2e953e53))
+
+
+### Bug Fixes
+
+* **deps:** Update vulnerable dependencies ([cae591e](https://github.com/pact-foundation/pact-js/commit/cae591e8290dc03dad61f5456e640ce1652e0abe))
+* **pact-node:** Bump pact-node to ^10.7.0, bringing a couple of fixes useful for debugging ([25ecd71](https://github.com/pact-foundation/pact-js/commit/25ecd713cadd60318d2238a643843783683f1789))
+
 ### [9.8.2](https://github.com/pact-foundation/pact-js/compare/v9.8.1...v9.8.2) (2020-03-20)
 
 ### [9.8.1](https://github.com/pact-foundation/pact-js/compare/v9.8.0...v9.8.1) (2020-03-16)
