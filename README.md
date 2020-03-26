@@ -43,6 +43,8 @@ Read [Getting started with Pact] for more information for beginners.
     - [Provider API Testing](#provider-api-testing)
       - [Verification Options](#verification-options)
       - [API with Provider States](#api-with-provider-states)
+      - [Pending Pacts](#pending-pacts)
+      - [Verifying multiple contracts with the same tag (e.g. for Mobile use cases)](#verifying-multiple-contracts-with-the-same-tag-eg-for-mobile-use-cases)
       - [Modify Requests Prior to Verification (Request Filters)](#modify-requests-prior-to-verification-request-filters)
     - [Publishing Pacts to a Broker](#publishing-pacts-to-a-broker)
       - [Publishing options](#publishing-options)
@@ -64,7 +66,12 @@ Read [Getting started with Pact] for more information for beginners.
   - [Using Pact in non-Node environments](#using-pact-in-non-node-environments)
     - [Using Pact with Karma](#using-pact-with-karma)
     - [Using Pact with RequireJS](#using-pact-with-requirejs)
-  - [V3 Specification support and XML](#pact-js-v3)
+  - [Pact JS V3](#pact-js-v3)
+    - [Using the V3 matching rules](#using-the-v3-matching-rules)
+    - [Using Pact with XML](#using-pact-with-xml)
+    - [Verifying providers with VerifierV3](#verifying-providers-with-verifierv3)
+      - [Request Filters](#request-filters)
+      - [Provider state callbacks](#provider-state-callbacks)
   - [Troubleshooting](#troubleshooting)
     - [Alpine + Docker](#alpine--docker)
     - [Parallel tests](#parallel-tests)
@@ -317,6 +324,8 @@ new Verifier(opts).verifyProvider().then(function () {
 | `stateHandlers`             |  false   | object           | Provider state handlers. A map of `string` -> `() => Promise`, where each string is the state to setup, and the function is used to configure the state in the Provider. See below for detail.                                                   |
 | `validateSSL`               |  false   | boolean          | Allow self-signed certificates. Defaults to true, if not set.                                                                                                                                                                                    |
 | `changeOrigin`              |  false   | boolean          | Changes the origin of the host header to the target URL. Defaults to false, if not set.                                                                                                                                                          |
+| `enablePending`                   | false     | boolean  | Enable the [pending pacts](https://docs.pact.io/pending) feature.       |
+| `consumerVersionSelectors`        | false     | ConsumerVersionSelector\|array  | Use [Selectors](https://docs.pact.io/selectors) to is a way we specify which pacticipants and versions we want to use when configuring verifications.                                                         |
 
 </details>
 
@@ -351,6 +360,35 @@ return new Verifier(opts).verifyProvider().then(...)
 As you can see, for each state ("Has no animals", ...), we configure the local datastore differently. If this option is not configured, the `Verifier` will ignore the provider states defined in the pact and log a warning.
 
 Read more about [Provider States](https://docs.pact.io/getting_started/provider_states).
+
+#### Pending Pacts
+
+Pending pacts is a feature that allows consumers to publish new contracts or changes to existing contracts without breaking Provider's builds. It does so by flagging the contract as "unverified" in the Pact Broker the first time a contract is published. A Provider can then enable a behaviour (via `enablePending: true`) that will still perform a verification (and thus share the results back to the broker) but _not_ fail the verification step itself.
+
+This enables safe introduction of new contracts into the system, without breaking Provider builds, whilst still providing feedback to Consumers as per before.
+
+See the [docs](https://docs.pact.io/pending) and this [article](http://blog.pact.io/2020/02/24/how-we-have-fixed-the-biggest-problem-with-the-pact-workflow/) for more background.
+
+#### Verifying multiple contracts with the same tag (e.g. for Mobile use cases)
+
+Tags may be used to indicate a particular version of an application has been deployed to an environment - e.g. `prod`, and are critical in configuring can-i-deploy checks for CI/CD pipelines. In the majority of cases, only one version of an application is deployed to an environment at a time. For example, an API and a Website are usually deployed in replacement of an existing system, and any transition period is quite short lived.
+
+Mobile is an exception to this rule - it is common to have multiple versions of an application that are in "production" simultaneously. To support this workflow, we have a feature known as [consumer version selectors](https://docs.pact.io/selectors). Using selectors, we can verify that _all_ pacts with a given tag should be verified. The following selectors ask the broker to "find all pacts with tag 'prod' and the latest pact for 'master'":
+
+```js
+      consumerVersionSelectors: [{
+          tag: "prod",
+          all: true
+        },
+        {
+          tag: "master",
+          latest: true
+        }
+      ]
+```
+
+_NOTE: Using the `all` flag requires you to ensure you delete any tags associated with application versions that are no longer in production (e.g. if decommissioned from the app store)_
+
 
 #### Modify Requests Prior to Verification (Request Filters)
 
