@@ -2,6 +2,11 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+if [ "${TRAVIS_BUILD_STAGE_NAME}" =~ "publish" ]; then
+  echo "Skipping build for publish step"
+  exit 0
+fi
+
 npm run dist
 
 # Link the build so that the examples are always testing the
