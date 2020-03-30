@@ -155,7 +155,10 @@ export class Pact {
       .then(
         () =>
           new Promise<void>((resolve, reject) =>
-            this.server.delete().then(() => resolve(), e => reject(e))
+            this.server.delete().then(
+              () => resolve(),
+              e => reject(e)
+            )
           )
       )
       .catch(
