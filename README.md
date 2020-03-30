@@ -822,7 +822,9 @@ See the [history](https://github.com/pact-foundation/pact-js/issues/254#issuecom
 
 ## Tutorial (60 minutes)
 
-Learn everything in Pact JS in 60 minutes: https://github.com/pact-foundation/pact-workshop-js
+Learn everything in Pact JS in 60 minutes: https://github.com/pact-foundation/pact-workshop-js.
+
+The workshop takes you through all of the key concepts using a React consumer and an Express API.
 
 ## Examples
 
@@ -836,6 +838,7 @@ Learn everything in Pact JS in 60 minutes: https://github.com/pact-foundation/pa
 - [Pact with GraphQL](https://github.com/pact-foundation/pact-js/tree/master/examples/graphql)
 - [Pact with Karma + Jasmine](https://github.com/pact-foundation/pact-js/tree/master/karma/jasmine)
 - [Pact with Karma + Mocha](https://github.com/pact-foundation/pact-js/tree/master/karma/mocha)
+- [Pact with React + Jest](https://github.com/pact-foundation/pact-workshop-js)
 
 ### Asynchronous APIs
 
