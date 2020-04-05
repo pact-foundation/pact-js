@@ -72,14 +72,14 @@ Read [Getting started with Pact] for more information for beginners.
     - [Verifying providers with VerifierV3](#verifying-providers-with-verifierv3)
       - [Request Filters](#request-filters)
       - [Provider state callbacks](#provider-state-callbacks)
-  - [Troubleshooting](#troubleshooting)
+  - [Troubleshooting / FAQs](#troubleshooting--faqs)
     - [Alpine + Docker](#alpine--docker)
     - [Parallel tests](#parallel-tests)
     - [Splitting tests across multiple files](#splitting-tests-across-multiple-files)
     - [Re-run specific verification failures](#re-run-specific-verification-failures)
     - [Timeout](#timeout)
-    - [Note on Jest](#note-on-jest)
-    - [Note on Angular](#note-on-angular)
+    - [Usage with Jest](#usage-with-jest)
+    - [Usage with Angular](#usage-with-angular)
     - [Debugging](#debugging)
   - [Contributing](#contributing)
   - [Contact](#contact)
@@ -303,29 +303,27 @@ new Verifier(opts).verifyProvider().then(function () {
 
 <details><summary>Verification Options</summary>
 
-| Parameter                   | Required | Type             | Description                                                                                                                                                                                                                                      |
-| --------------------------- | :------: | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `providerBaseUrl`           |   true   | string           | Running API provider host endpoint. Required.                                                                                                                                                                                                    |
-| `provider`                  |   true   | string           | Name of the Provider. Required.                                                                                                                                                                                                                  |
-| `consumerVersionTag`        |  false   | string\|array    | Retrieve the latest pacts with given tag(s)                                                                                                                                                                                                      |
-| `providerVersionTag`        |  false   | string\|array    | Tag(s) to apply to the provider application                                                                                                                                                                                                      |
-| `pactUrls`                  |   true   | array of strings | Array of local Pact file paths or HTTP-based URLs (e.g. from a broker). Required if not using a Broker.                                                                                                                                          |
-| `pactBrokerUrl`             |  false   | string           | URL of the Pact Broker to retrieve pacts from. Required if not using pactUrls.                                                                                                                                                                   |
-| `tags`                      |  false   | array of strings | Array of tags, used to filter pacts from the Broker.                                                                                                                                                                                             |
-| `providerStatesSetupUrl`    |  false   | string           | DEPRECATED (see `stateHandlers`). URL to call with a POST request for each `providerState` defined in a pact (see below for more info).                                                                                                          |
-| `pactBrokerToken`           |  false   | string           | Bearer token for Pact Broker authentication. If using Pactflow, you likely need this option.                                                                                                                                                     |
-| `pactBrokerUsername`        |  false   | string           | Username for Pact Broker basic authentication. If using Pactflow, you most likely need to use `pactBrokerToken`                                                                                                                                  |
-| `pactBrokerPassword`        |  false   | string           | Password for Pact Broker basic authentication. If using Pactflow, you most likely need to use `pactBrokerToken`                                                                                                                                  |
-| `publishVerificationResult` |  false   | boolean          | Publish verification result to Broker                                                                                                                                                                                                            | boolean |
-| `providerVersion`           |  false   | string           | Provider version, required to publish verification results to a broker                                                                                                                                                                           |
-| `customProviderHeaders`     |  false   | array of strings | Header(s) to add to any requests to the provider service. eg `Authorization: Basic cGFjdDpwYWN0`. All interactions will receive the header. See `requestFilter` for when more flexiblility is required in modifying the request to the provider. |
-| `timeout`                   |  false   | number           | The duration in ms we should wait to confirm verification process was successful. Defaults to 30000.                                                                                                                                             |
-| `requestFilter`             |  false   | object           | An Express middleware handler (See https://expressjs.com/en/guide/writing-middleware.html) to modify requests and responses from the provider. See below for more details.                                                                       |
-| `stateHandlers`             |  false   | object           | Provider state handlers. A map of `string` -> `() => Promise`, where each string is the state to setup, and the function is used to configure the state in the Provider. See below for detail.                                                   |
-| `validateSSL`               |  false   | boolean          | Allow self-signed certificates. Defaults to true, if not set.                                                                                                                                                                                    |
-| `changeOrigin`              |  false   | boolean          | Changes the origin of the host header to the target URL. Defaults to false, if not set.                                                                                                                                                          |
-| `enablePending`                   | false     | boolean  | Enable the [pending pacts](https://docs.pact.io/pending) feature.       |
+| Parameter                   | Required? | Type    | Description                                                                                                |
+| --------------------------- | --------- | ------- | ---------------------------------------------------------------------------------------------------------- |
+| `providerBaseUrl`           | true      | string  | Running API provider host endpoint.                                                                        |
+| `pactBrokerUrl`         | false     | string  | Base URL of the Pact Broker from which to retrieve the pacts. Required if `pactUrls` not given.                                                                        |
+| `provider`                  | false     | string  | Name of the provider if fetching from a Broker                                                             |
 | `consumerVersionSelectors`        | false     | ConsumerVersionSelector\|array  | Use [Selectors](https://docs.pact.io/selectors) to is a way we specify which pacticipants and versions we want to use when configuring verifications.                                                         |
+| `consumerVersionTag`        | false     | string\|array  | Retrieve the latest pacts with given tag(s)                                                        |
+| `providerVersionTag`        | false     | string\|array  |  Tag(s) to apply to the provider application |
+| `pactUrls`                  | false     | array   | Array of local pact file paths or HTTP-based URLs. Required if _not_ using a Pact Broker.                  |
+| `providerStatesSetupUrl`    | false     | string  | URL to send PUT requests to setup a given provider state                                                   |
+| `pactBrokerUsername`        | false     | string  | Username for Pact Broker basic authentication                                                              |
+| `pactBrokerPassword`        | false     | string  | Password for Pact Broker basic authentication                                                              |
+| `pactBrokerToken`           | false     | string  | Bearer token for Pact Broker authentication                                                              |
+| `publishVerificationResult` | false     | boolean | Publish verification result to Broker (_NOTE_: you should only enable this during CI builds)               |
+| `customProviderHeaders`     | false     | array   | Header(s) to add to provider state set up and pact verification                                            |  | `requests`. eg 'Authorization: Basic cGFjdDpwYWN0'. |
+| `providerVersion`           | false     | string  | Provider version, required to publish verification result to Broker. Optional otherwise.                   |
+| `enablePending`                   | false     | boolean  | Enable the [pending pacts](https://docs.pact.io/pending) feature.       |
+| `timeout`                   | false     | number  | The duration in ms we should wait to confirm verification process was successful. Defaults to 30000.       |
+| `format`                    | false     | string  | What format the verification results are printed in. Options are `json`, `xml`, `progress` and `RspecJunitFormatter` (which is a synonym for `xml`) |
+| `verbose`            | false     | boolean        | Enables verbose output for underlying pact binary. |
+
 
 </details>
 
@@ -1101,7 +1099,7 @@ stateHandlers: {
   },
 ```
 
-## Troubleshooting
+## Troubleshooting / FAQs
 
 If you are having issues, a good place to start is setting `logLevel: 'DEBUG'`
 when configuring the `new Pact({...})` object.
@@ -1185,7 +1183,7 @@ to review your unit testing timeout to ensure it has sufficient time to start th
 
 See [here](http://stackoverflow.com/questions/42496401/all-pact-js-tests-are-failing-with-same-errors/42518752) for more details.
 
-### Note on Jest
+### Usage with Jest
 
 Jest uses JSDOM under the hood which may cause issues with libraries making HTTP request.
 
@@ -1211,7 +1209,9 @@ Jest also runs tests in parallel by default, which can be problematic with Pact 
 See [this issue](https://github.com/pact-foundation/pact-js/issues/10) for background,
 and the Jest [example](https://github.com/pact-foundation/pact-js/blob/master/examples/jest/package.json#L10-L12) for a working example.
 
-### Note on Angular
+### Usage with Angular
+
+You way want to consider using this starter schematic: https://github.com/niklas-wortmann/ngx-pact
 
 Angular's HttpClient filters out many headers from the response object, this may cause issues when validating a response in tests.
 
