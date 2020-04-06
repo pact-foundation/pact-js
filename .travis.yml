@@ -6,11 +6,10 @@ node_js:
 os:
   - linux
   - osx
-sudo: required
+dist: bionic
 matrix:
   include:
     - os: linux
-      dist: bionic
       addons:
         apt:
           sources:

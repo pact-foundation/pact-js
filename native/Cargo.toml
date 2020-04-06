@@ -34,3 +34,4 @@ futures = "0.3"
 sxd-document = "0.3.2"
 async-trait = "0.1.24"
 reqwest = "0.10"
+native-tls = { version = "0.2.4" }
