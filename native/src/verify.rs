@@ -208,25 +208,26 @@ impl Task for BackgroundTask {
   fn perform(&self) -> Result<Self::Output, Self::Error> {
     debug!("Background verification task started");
     panic::catch_unwind(|| {
-      let mut runtime = tokio::runtime::Builder::new()
-      .threaded_scheduler()
-      .enable_all()
-      .build()
-      .unwrap();
-      runtime.block_on(async {
-        let provider_state_executor = ProviderStateCallback { callback_handlers: &self.state_handlers };
-        pact_verifier::verify_provider(self.provider_info.clone(), self.pacts.clone(), self.filter_info.clone(), self.consumers_filter.clone(), self.options.clone(), &provider_state_executor).await
-      })
-    }).map_err(|err| {
-      match err.downcast_ref::<&str>() {
-        Some(err) => {
-          error!("Verify process failed with a panic: {}", err);
-          format!("Verify process failed with a panic: {}", err)
-        },
-        None => {
-          error!("Verify process failed with a panic");
-          format!("Verify process failed with a panic")
+      match tokio::runtime::Builder::new().threaded_scheduler().enable_all().build() {
+        Ok(mut runtime) => runtime.block_on(async {
+          let provider_state_executor = ProviderStateCallback { callback_handlers: &self.state_handlers };
+          pact_verifier::verify_provider(self.provider_info.clone(), self.pacts.clone(), self.filter_info.clone(), self.consumers_filter.clone(), self.options.clone(), &provider_state_executor).await
+        }),
+        Err(err) => {
+          error!("Verify process failed to start the tokio runtime: {}", err);
+          false
         }
+      }
+    }).map_err(|err| {
+      if let Some(err) = err.downcast_ref::<&str>() {
+        error!("Verify process failed with a panic: {}", err);
+        format!("Verify process failed with a panic: {}", err)
+      } else if let Some(err) = err.downcast_ref::<String>() {
+        error!("Verify process failed with a panic: {}", err);
+        format!("Verify process failed with a panic: {}", err)
+      } else {
+        error!("Verify process failed with a panic");
+        format!("Verify process failed with a panic")
       }
     })
   }
@@ -259,7 +260,7 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
           }
         }
       },
-      _ => if !urls.is_a::<JsUndefined>() && !urls.is_a::<JsNull>() { 
+      _ => if !urls.is_a::<JsUndefined>() && !urls.is_a::<JsNull>() {
         println!("    {}", Yellow.paint ("WARN: pactUrls is not a list of URLs, ignoring"));
       }
     },
@@ -369,7 +370,7 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
 
   debug!("Starting background task");
   BackgroundTask { provider_info, pacts, filter_info, consumers_filter, options, state_handlers: callbacks }.schedule(callback);
-  
+
   debug!("Done");
   Ok(cx.undefined())
 }
