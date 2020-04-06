@@ -28,7 +28,7 @@ mkdir -p dist/native && cp -r native dist/
 
 echo "Running e2e examples build for node version ${TRAVIS_NODE_VERSION}"
 for i in examples/*; do
-  [ -e "$i" ] || [ $(basename $i) == "v3" ] || continue # prevent failure if there are no examples
+  [ $(basename $i) == "v3" ] || [ -e "$i" ] || continue # prevent failure if there are no examples
   echo "--> running tests for: $i"
   if [[ "$i" =~ "karma" ]]; then
     echo "    linking pact-web"
