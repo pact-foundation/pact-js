@@ -61,6 +61,16 @@ describe("Pact Verification", () => {
       // Tag provider with given tags
       providerVersionTag: ["prod"],
 
+      // Find _all_ pacts (not just latest) with tag prod
+      //   consumerVersionSelectors: [{
+      //     tag: "prod",
+      //     all: true
+      //   }
+      // ],
+
+      // Enables "pending pacts" feature
+      enablePending: true,
+
       // Specific Remote pacts (doesn't need to be a broker)
       // pactUrls: ['https://test.pact.dius.com.au/pacts/provider/Animal%20Profile%20Service/consumer/Matching%20Service/latest'],
       // Local pacts

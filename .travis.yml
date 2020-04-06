@@ -5,9 +5,8 @@ node_js:
   - "13"
 os:
   - linux
-  - osx
+sudo: required
 matrix:
-  fast_finish: true
   include:
     - os: linux
       addons:
@@ -21,7 +20,7 @@ matrix:
     - os: osx
       env:
         - MATRIX_EVAL="brew install gcc5 && CC=gcc-5 && CXX=g++-5"
-cache: 
+cache:
   - npm
   - cargo
 env:
@@ -32,9 +31,6 @@ env:
     - secure: TdijSKFc60H8i06ukDVYYOCCkVRqeAa/O6esBSKDBsqj5rPyEGuowksshOd36T0PQWi15SkgpOpNOhHqi0wbcw0t5iSkyRvwiFvR6s8A4GadstcSByZJO3IiuSclGaMVXivoSQUVjmbEgXH/FQJMVFLkNHov9NqdRScNgbiLGSpgHsXAGaUL1ehoAXkh5scwjeQuH5fepypMT9qpgg/fKn90d9etzlgT5S5lYgslZdQ6QN15WvE6xKvqFA6Jpf8PXRaH5SFAlvJIJyxFkCLl5QhMM7OT+LTeXfBEjDMpNgsU6eqADbn3m7G6Mlgac20Mx1Q5dw94ubWCV3fopONpnVnqrMBigKviromWQiV69nBJr+Cvgalau/cGX0oAbDbljZCAbhnknrJwPciYLD8uPy/NYyETj0VkSyGi1weGFyuLgjK0mD8lOxQ1IRbVsIC8CaunyZ7566RNPHNI0BD9eyXqGekrvGecCvRW87oCFLxqwhgrPSUxU5aaE1PGMbHI7YYCljRpdaF2ubN8YLB0uCZV+XN7qXzCF+BARLfi5dKjuf5kF1sfVnPQVD+x/OMEvihiSns+lBeWi6cNOl3oRVVJeo0vghqNCiJwLjKEv9UiSSDaY8JmrzvhOWnVdkQVKd6yDDt+5CipjfSI72eEcgJUvOGYmczdS+eEb5pr51c=
     - LOG_LEVEL=debug
 
-script: ./scripts/build.sh
-after_success:
-  - npm run coverage
 before_install:
   - eval "${MATRIX_EVAL}"
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo sysctl -w net.ipv6.conf.all.disable_ipv6=0; fi
@@ -44,31 +40,38 @@ before_install:
   - rustc --version
   - cargo --version
 before_deploy:
-  - npm prune --production
-  - tar -czf pactjs.tar.gz config dist src package.json README.md LICENSE
   - npm run deploy:prepare
-deploy:
-  - provider: releases
-    api_key:
-      secure: FmoLJnO8GNxyztR2P433ZCumYPrxiZdBCfVhmhTGYlXhOfVaAECm0gUVPLZuBQRUaqsef5ekg+OSIA5xbrnNoOQ9qlmnF2n+5yiwqG6o35XLA4L6lB5pL+x8xoAAgpaj9dTD184HKGdub3heQStTPRd2ll3nNRwxhfyIyBaMX3elDTH3mkV2QxNhG1RTgJe322PQrwoU2sWkghTWNr4t+h/G+oYu364xwZuxFX1hrFpAW+IEmbDSuhmCe24lMU96ntIiciRU3eBYR7s3KlktOFgMORXMRw3H/qaGmx7rKtpJ892XGRuVbw+tPB3A1jbFvOwJwzpnsWG5REu3PkZ6oiWpnX+5riN3jPyvFpWd+LLfH1KdZeBnF/anEfl+mSPdrDROOWotV3Xt5zOiEwx2j4BRbDNfa6wXzX0zK31AMf0IFmw7KZJkzcyWjNRluxTn3r2bbjNoi+gBojQuX27R3AQz5G0E0yZUk5ujmcd+85WOgNh/zVwsZLHYVQxDyULkbDTCDAulBsJLyxUFRs0JixyHCvA6srrUdpcO0NdyDfvULk9e/g/c9aD56Rk4xT4/Xa7K1fAHLjLkV6CA4H9Of96Zl2BK8r6LAlw382hO7FaZH+A3YShObEeTiZsDbfSQrFl5x8aimvc9oeYopvvQ+EdZxHvvwxHQIp/MWOybdJ4=
-    file: pactjs.tar.gz
-    skip_cleanup: true
-    on:
-      tags: true
-      branch: master
-      node_js: "12"
-      condition: "$TRAVIS_OS_NAME = linux"
-  - provider: script
-    skip_cleanup: true
-    script: ./scripts/publish.sh
-    on:
-      tags: true
-      branch: master
-      node_js: "12"
-      condition: "$TRAVIS_OS_NAME = linux"
-  - provider: script
-    script: ./scripts/publish_native.sh
-    skip_cleanup: true
-    on:
-      tags: true
-      branch: master
+
+script: ./scripts/build.sh
+
+jobs:
+  include:
+  - stage: 🚀 publish to npm 🚀
+    node_js: "12"
+    if: (tag IS present) AND (branch = master)
+    deploy:
+      - provider: script
+        skip_cleanup: true
+        script: ./scripts/publish.sh
+        on:
+          tags: true
+          branch: master
+          condition: "$TRAVIS_OS_NAME = linux"
+      - provider: releases
+        api_key:
+          secure: FmoLJnO8GNxyztR2P433ZCumYPrxiZdBCfVhmhTGYlXhOfVaAECm0gUVPLZuBQRUaqsef5ekg+OSIA5xbrnNoOQ9qlmnF2n+5yiwqG6o35XLA4L6lB5pL+x8xoAAgpaj9dTD184HKGdub3heQStTPRd2ll3nNRwxhfyIyBaMX3elDTH3mkV2QxNhG1RTgJe322PQrwoU2sWkghTWNr4t+h/G+oYu364xwZuxFX1hrFpAW+IEmbDSuhmCe24lMU96ntIiciRU3eBYR7s3KlktOFgMORXMRw3H/qaGmx7rKtpJ892XGRuVbw+tPB3A1jbFvOwJwzpnsWG5REu3PkZ6oiWpnX+5riN3jPyvFpWd+LLfH1KdZeBnF/anEfl+mSPdrDROOWotV3Xt5zOiEwx2j4BRbDNfa6wXzX0zK31AMf0IFmw7KZJkzcyWjNRluxTn3r2bbjNoi+gBojQuX27R3AQz5G0E0yZUk5ujmcd+85WOgNh/zVwsZLHYVQxDyULkbDTCDAulBsJLyxUFRs0JixyHCvA6srrUdpcO0NdyDfvULk9e/g/c9aD56Rk4xT4/Xa7K1fAHLjLkV6CA4H9Of96Zl2BK8r6LAlw382hO7FaZH+A3YShObEeTiZsDbfSQrFl5x8aimvc9oeYopvvQ+EdZxHvvwxHQIp/MWOybdJ4=
+        file: pactjs.tar.gz
+        skip_cleanup: true
+        on:
+          tags: true
+          branch: master
+          condition: "$TRAVIS_OS_NAME = linux"
+  - stage: publish native lib to Github
+    if: (tag IS present) AND (branch = master)
+    deploy:
+      - provider: script
+        script: ./scripts/publish_native.sh
+        skip_cleanup: true
+        on:
+          tags: true
+          branch: master

@@ -208,9 +208,9 @@ describe("Verifier", () => {
 
     context("when the server starts successfully", () => {
       it("returns a successful promise", () => {
-        const res = v["waitForServerReady"](fakeServer(
-          "listening"
-        ) as http.Server)
+        const res = v["waitForServerReady"](
+          fakeServer("listening") as http.Server
+        )
 
         return expect(res).to.eventually.be.fulfilled
       })
