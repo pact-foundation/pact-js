@@ -1,3 +1,5 @@
+Set-PSDebug -Trace 1
+
 npm run dist
 npm run build:v3
 Copy-Item "package.json" -Destination "dist"
@@ -14,9 +16,9 @@ Get-ChildItem ".\examples" -Directory | ForEach-Object {
     npm link @pact-foundation/pact
     npm i
     npm t
-    if ($LastExitCode -ne 0) { 
+    if ($LastExitCode -ne 0) {
       Write-Output "Non-zero exit code!"
-      $host.SetShouldExit($LastExitCode) 
+      $host.SetShouldExit($LastExitCode)
     }
     popd
   }
@@ -33,7 +35,7 @@ Get-ChildItem ".\examples\v3" -Directory | ForEach-Object {
   npm t
   if ($LastExitCode -ne 0) {
     Write-Output "Non-zero exit code!"
-    $host.SetShouldExit($LastExitCode)  
+    $host.SetShouldExit($LastExitCode)
   }
   popd
 }
