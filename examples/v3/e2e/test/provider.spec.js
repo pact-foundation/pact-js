@@ -15,7 +15,7 @@ describe("Pact Verification", () => {
     let token = "INVALID TOKEN"
 
     let opts = {
-      provider: "Animal Profile Service",
+      provider: "Animal Profile Service V3",
       providerBaseUrl: "http://localhost:8081",
 
       requestFilter: req => {

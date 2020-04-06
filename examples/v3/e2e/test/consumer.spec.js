@@ -88,8 +88,8 @@ describe("Pact V3", () => {
   describe("when a call to list all animals from the Animal Service is made", () => {
     describe("and the user is not authenticated", () => {
       const provider = new PactV3({
-        consumer: "Matching Service",
-        provider: "Animal Profile Service",
+        consumer: "Matching Service V3",
+        provider: "Animal Profile Service V3",
         dir: path.resolve(process.cwd(), "pacts"),
         logLevel: LOG_LEVEL,
       })
@@ -117,8 +117,8 @@ describe("Pact V3", () => {
     describe("and the user is authenticated", () => {
       describe("and there are animals in the database", () => {
         const provider = new PactV3({
-          consumer: "Matching Service",
-          provider: "Animal Profile Service",
+          consumer: "Matching Service V3",
+          provider: "Animal Profile Service V3",
           dir: path.resolve(process.cwd(), "pacts"),
         })
 
@@ -161,8 +161,8 @@ describe("Pact V3", () => {
   describe("when a call to the Animal Service is made to retrieve a single animal by ID", () => {
     describe("and there is an animal in the DB with ID 1", () => {
       const provider = new PactV3({
-        consumer: "Matching Service",
-        provider: "Animal Profile Service",
+        consumer: "Matching Service V3",
+        provider: "Animal Profile Service V3",
         dir: path.resolve(process.cwd(), "pacts"),
       })
 
@@ -197,8 +197,8 @@ describe("Pact V3", () => {
 
     describe("and there no animals in the database", () => {
       const provider = new PactV3({
-        consumer: "Matching Service",
-        provider: "Animal Profile Service",
+        consumer: "Matching Service V3",
+        provider: "Animal Profile Service V3",
         dir: path.resolve(process.cwd(), "pacts"),
       })
 
@@ -229,8 +229,8 @@ describe("Pact V3", () => {
 
   describe("when a call to the Animal Service is made to create a new mate", () => {
     const provider = new PactV3({
-      consumer: "Matching Service",
-      provider: "Animal Profile Service",
+      consumer: "Matching Service V3",
+      provider: "Animal Profile Service V3",
       dir: path.resolve(process.cwd(), "pacts"),
     })
 
