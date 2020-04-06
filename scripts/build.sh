@@ -11,6 +11,7 @@ if [ "${TRAVIS_BUILD_STAGE_NAME}" =~ "publish" ]; then
 fi
 
 npm run dist
+"${DIR}"/prepare.sh
 
 # Link the build so that the examples are always testing the
 # current build, in it's properly exported format
