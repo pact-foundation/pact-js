@@ -5,6 +5,7 @@ node_js:
   - "13"
 os:
   - linux
+  - osx
 sudo: required
 matrix:
   include:
