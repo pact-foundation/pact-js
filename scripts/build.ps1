@@ -28,7 +28,7 @@ Get-ChildItem ".\examples\v3" -Directory | ForEach-Object {
   Write-Output "Running V3 examples in $($_.Name)"
   pushd $_.FullName
   npm i
-  Get-ChildItem "@pact-foundation/pact" -Recurse | Remove-Item
+  Get-ChildItem "node_modules\@pact-foundation\pact" -Recurse | Remove-Item
   npm link @pact-foundation/pact
   npm t
   if ($LastExitCode -ne 0) {
