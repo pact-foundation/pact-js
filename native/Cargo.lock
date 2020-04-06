@@ -910,7 +910,7 @@ dependencies = [
 
 [[package]]
 name = "pact-js-v3"
-version = "0.0.1"
+version = "0.0.2"
 dependencies = [
  "ansi_term 0.12.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "async-trait 0.1.24 (registry+https://github.com/rust-lang/crates.io-index)",
