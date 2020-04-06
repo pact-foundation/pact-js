@@ -7,6 +7,7 @@ os:
   - linux
   - osx
 dist: bionic
+sudo: required
 matrix:
   include:
     - os: linux
@@ -30,7 +31,7 @@ env:
     - secure: "dadftjIY7w+KRucMDOqflXYTvWI1WYvtLtvGnbJuoFrgviax5zhwI7rSi6PTvW7mqV05FtqfVVb8Mgkwp1GNhv9byzuPCKnX6zN/tnl3mC++ivMA3BI7KhNp6VinzVeHWN+9BSYAQs1RQbslIK6IJ3oQJ9azp1MnxMQ1s0w5hqo0ojPWRJsm/IN57/pSiR4U0yyvONdwVg7Q8RQmyMZtovA2QzrR3ij6IxBwiJ7RQXsWIYkPL1SzaIqNNhMOdXK3m1iCESmtNc1BG9oEoaZc0ZzowT/O5VVPWe+bUfdSaAHjkTauaMCU2OAk6J89yd7pSCT5fe1YYYPgTIZiPkG0wQH8k7dKqqeaxBo+tN7uCfkYlTMNZmjv+qVBafoP8wBV97g3UugDqqIXaFknTUDnSNaigcJjFRWhCHBtltR+hzF6pCl3H1o1dDnmJWrgEb01qJ0lZonmaK/anZGNpUWE6qndOKBwnd0XiR1LnvzL/7tdflNb4DPy+lWdDEj4HWZR3lFA009m651qHBN+117ousZFXJ1866JywkAM2GrEWD4umzKknXDhulMG/Q32DS01BgW1pMenzQkH5WE+O0T3W/8BPw0Ev//bqZIg0gDckppUexHZ+pMhAFMaJfCzYVhrA0fhwLb+1EW7VDEcQIc0QHGXOb3Vclja7qB4yDuAJxk="
     # travis encrypt NODE_PRE_GYP_GITHUB_TOKEN=<key>
     - secure: TdijSKFc60H8i06ukDVYYOCCkVRqeAa/O6esBSKDBsqj5rPyEGuowksshOd36T0PQWi15SkgpOpNOhHqi0wbcw0t5iSkyRvwiFvR6s8A4GadstcSByZJO3IiuSclGaMVXivoSQUVjmbEgXH/FQJMVFLkNHov9NqdRScNgbiLGSpgHsXAGaUL1ehoAXkh5scwjeQuH5fepypMT9qpgg/fKn90d9etzlgT5S5lYgslZdQ6QN15WvE6xKvqFA6Jpf8PXRaH5SFAlvJIJyxFkCLl5QhMM7OT+LTeXfBEjDMpNgsU6eqADbn3m7G6Mlgac20Mx1Q5dw94ubWCV3fopONpnVnqrMBigKviromWQiV69nBJr+Cvgalau/cGX0oAbDbljZCAbhnknrJwPciYLD8uPy/NYyETj0VkSyGi1weGFyuLgjK0mD8lOxQ1IRbVsIC8CaunyZ7566RNPHNI0BD9eyXqGekrvGecCvRW87oCFLxqwhgrPSUxU5aaE1PGMbHI7YYCljRpdaF2ubN8YLB0uCZV+XN7qXzCF+BARLfi5dKjuf5kF1sfVnPQVD+x/OMEvihiSns+lBeWi6cNOl3oRVVJeo0vghqNCiJwLjKEv9UiSSDaY8JmrzvhOWnVdkQVKd6yDDt+5CipjfSI72eEcgJUvOGYmczdS+eEb5pr51c=
-    - LOG_LEVEL=debug
+    #- LOG_LEVEL=debug
 
 before_install:
   - eval "${MATRIX_EVAL}"
