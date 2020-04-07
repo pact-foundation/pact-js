@@ -19,7 +19,7 @@ platform:
 
 matrix:
   fast_finish: true
-skip_tags: true
+skip_tags: false
 skip_branch_with_pr: true
 
 # Setup Node environment
