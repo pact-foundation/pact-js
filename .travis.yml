@@ -3,9 +3,6 @@ node_js:
   - "10"
   - "12"
   - "13"
-os:
-  - linux
-  - osx
 dist: bionic
 cache:
   - npm
@@ -14,8 +11,6 @@ env:
   global:
     # travis encrypt NPM_KEY=<key>
     - secure: "dadftjIY7w+KRucMDOqflXYTvWI1WYvtLtvGnbJuoFrgviax5zhwI7rSi6PTvW7mqV05FtqfVVb8Mgkwp1GNhv9byzuPCKnX6zN/tnl3mC++ivMA3BI7KhNp6VinzVeHWN+9BSYAQs1RQbslIK6IJ3oQJ9azp1MnxMQ1s0w5hqo0ojPWRJsm/IN57/pSiR4U0yyvONdwVg7Q8RQmyMZtovA2QzrR3ij6IxBwiJ7RQXsWIYkPL1SzaIqNNhMOdXK3m1iCESmtNc1BG9oEoaZc0ZzowT/O5VVPWe+bUfdSaAHjkTauaMCU2OAk6J89yd7pSCT5fe1YYYPgTIZiPkG0wQH8k7dKqqeaxBo+tN7uCfkYlTMNZmjv+qVBafoP8wBV97g3UugDqqIXaFknTUDnSNaigcJjFRWhCHBtltR+hzF6pCl3H1o1dDnmJWrgEb01qJ0lZonmaK/anZGNpUWE6qndOKBwnd0XiR1LnvzL/7tdflNb4DPy+lWdDEj4HWZR3lFA009m651qHBN+117ousZFXJ1866JywkAM2GrEWD4umzKknXDhulMG/Q32DS01BgW1pMenzQkH5WE+O0T3W/8BPw0Ev//bqZIg0gDckppUexHZ+pMhAFMaJfCzYVhrA0fhwLb+1EW7VDEcQIc0QHGXOb3Vclja7qB4yDuAJxk="
-    # travis encrypt NODE_PRE_GYP_GITHUB_TOKEN=<key>
-    - secure: TdijSKFc60H8i06ukDVYYOCCkVRqeAa/O6esBSKDBsqj5rPyEGuowksshOd36T0PQWi15SkgpOpNOhHqi0wbcw0t5iSkyRvwiFvR6s8A4GadstcSByZJO3IiuSclGaMVXivoSQUVjmbEgXH/FQJMVFLkNHov9NqdRScNgbiLGSpgHsXAGaUL1ehoAXkh5scwjeQuH5fepypMT9qpgg/fKn90d9etzlgT5S5lYgslZdQ6QN15WvE6xKvqFA6Jpf8PXRaH5SFAlvJIJyxFkCLl5QhMM7OT+LTeXfBEjDMpNgsU6eqADbn3m7G6Mlgac20Mx1Q5dw94ubWCV3fopONpnVnqrMBigKviromWQiV69nBJr+Cvgalau/cGX0oAbDbljZCAbhnknrJwPciYLD8uPy/NYyETj0VkSyGi1weGFyuLgjK0mD8lOxQ1IRbVsIC8CaunyZ7566RNPHNI0BD9eyXqGekrvGecCvRW87oCFLxqwhgrPSUxU5aaE1PGMbHI7YYCljRpdaF2ubN8YLB0uCZV+XN7qXzCF+BARLfi5dKjuf5kF1sfVnPQVD+x/OMEvihiSns+lBeWi6cNOl3oRVVJeo0vghqNCiJwLjKEv9UiSSDaY8JmrzvhOWnVdkQVKd6yDDt+5CipjfSI72eEcgJUvOGYmczdS+eEb5pr51c=
     #- LOG_LEVEL=debug
 
 before_install:
@@ -40,11 +35,6 @@ jobs:
             - ubuntu-toolchain-r-test
           packages:
             - g++-5
-      env:
-        - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
-    - os: osx
-      env:
-        - MATRIX_EVAL="brew install gcc5 && CC=gcc-5 && CXX=g++-5"
     - stage: 🚀 publish to npm 🚀
       node_js: "12"
       if: tag IS present
@@ -54,7 +44,6 @@ jobs:
           script: ./scripts/publish.sh
           on:
             tags: true
-            condition: "$TRAVIS_OS_NAME = linux"
         - provider: releases
           api_key:
             secure: FmoLJnO8GNxyztR2P433ZCumYPrxiZdBCfVhmhTGYlXhOfVaAECm0gUVPLZuBQRUaqsef5ekg+OSIA5xbrnNoOQ9qlmnF2n+5yiwqG6o35XLA4L6lB5pL+x8xoAAgpaj9dTD184HKGdub3heQStTPRd2ll3nNRwxhfyIyBaMX3elDTH3mkV2QxNhG1RTgJe322PQrwoU2sWkghTWNr4t+h/G+oYu364xwZuxFX1hrFpAW+IEmbDSuhmCe24lMU96ntIiciRU3eBYR7s3KlktOFgMORXMRw3H/qaGmx7rKtpJ892XGRuVbw+tPB3A1jbFvOwJwzpnsWG5REu3PkZ6oiWpnX+5riN3jPyvFpWd+LLfH1KdZeBnF/anEfl+mSPdrDROOWotV3Xt5zOiEwx2j4BRbDNfa6wXzX0zK31AMf0IFmw7KZJkzcyWjNRluxTn3r2bbjNoi+gBojQuX27R3AQz5G0E0yZUk5ujmcd+85WOgNh/zVwsZLHYVQxDyULkbDTCDAulBsJLyxUFRs0JixyHCvA6srrUdpcO0NdyDfvULk9e/g/c9aD56Rk4xT4/Xa7K1fAHLjLkV6CA4H9Of96Zl2BK8r6LAlw382hO7FaZH+A3YShObEeTiZsDbfSQrFl5x8aimvc9oeYopvvQ+EdZxHvvwxHQIp/MWOybdJ4=
@@ -62,17 +51,3 @@ jobs:
           skip_cleanup: true
           on:
             tags: true
-            condition: "$TRAVIS_OS_NAME = linux"
-    - stage: publish native lib to Github
-      if: tag IS present
-      node_js:
-        - "10"
-        - "12"
-        - "13"
-      deploy:
-        - provider: script
-          script: ./scripts/publish_native.sh
-          skip_cleanup: true
-          on:
-            tags: true
-

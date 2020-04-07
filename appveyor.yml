@@ -7,8 +7,6 @@ init:
 
 # Test against these versions of Node
 environment:
-  NODE_PRE_GYP_GITHUB_TOKEN:
-    secure: BCo6IijmTRMD//YVU2SQwDf24qmtrXUZIGL4PhpYJEPdaj9EGDccKYlDwElOWoxY
   matrix:
     - nodejs_version: "10"
     - nodejs_version: "12"
@@ -19,7 +17,7 @@ platform:
 
 matrix:
   fast_finish: true
-skip_tags: false
+skip_tags: true
 skip_branch_with_pr: true
 
 # Setup Node environment
@@ -39,6 +37,3 @@ install:
 # Run custom build script instead of MSBuild
 build_script:
   - powershell .\scripts\build.ps1
-
-deploy_script:
-  - powershell .\scripts\deploy.ps1
