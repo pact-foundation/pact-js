@@ -65,6 +65,10 @@ jobs:
             condition: "$TRAVIS_OS_NAME = linux"
     - stage: publish native lib to Github
       if: tag IS present
+      node_js:
+        - "10"
+        - "12"
+        - "13"
       deploy:
         - provider: script
           script: ./scripts/publish_native.sh
