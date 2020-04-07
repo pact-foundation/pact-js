@@ -7,21 +7,6 @@ os:
   - linux
   - osx
 dist: bionic
-sudo: required
-matrix:
-  include:
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-5
-      env:
-        - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
-    - os: osx
-      env:
-        - MATRIX_EVAL="brew install gcc5 && CC=gcc-5 && CXX=g++-5"
 cache:
   - npm
   - cargo
@@ -44,8 +29,22 @@ before_install:
 before_deploy:
   - npm run deploy:prepare
 
+script: ./scripts/build.sh
+
 jobs:
   include:
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+      env:
+        - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
+    - os: osx
+      env:
+        - MATRIX_EVAL="brew install gcc5 && CC=gcc-5 && CXX=g++-5"
     - stage: 🚀 publish to npm 🚀
       node_js: "12"
       if: (tag IS present) AND (branch = master)
