@@ -13,19 +13,20 @@ fi
 npm run dist
 "${DIR}"/prepare.sh
 
-# Link the build so that the examples are always testing the
-# current build, in it's properly exported format
-(cd dist && npm link)
-(cd dist-web && npm link)
-
 git status
 git checkout native
 cat native/Cargo.toml
 npm run build:v3
 ls -lh native
+rm -rf native/target
 # Copy Rust native lib
 echo "    Copying ./native => dist/native"
 mkdir -p dist/native && cp -r native dist/
+
+# Link the build so that the examples are always testing the
+# current build, in it's properly exported format
+(cd dist && npm link)
+(cd dist-web && npm link)
 
 echo "Running e2e examples build for node version ${TRAVIS_NODE_VERSION}"
 for i in examples/*; do
