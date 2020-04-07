@@ -44,36 +44,34 @@ before_install:
 before_deploy:
   - npm run deploy:prepare
 
-script: ./scripts/build.sh
-
 jobs:
   include:
-  - stage: 🚀 publish to npm 🚀
-    node_js: "12"
-    if: (tag IS present) AND (branch = master)
-    deploy:
-      - provider: script
-        skip_cleanup: true
-        script: ./scripts/publish.sh
-        on:
-          tags: true
-          branch: master
-          condition: "$TRAVIS_OS_NAME = linux"
-      - provider: releases
-        api_key:
-          secure: FmoLJnO8GNxyztR2P433ZCumYPrxiZdBCfVhmhTGYlXhOfVaAECm0gUVPLZuBQRUaqsef5ekg+OSIA5xbrnNoOQ9qlmnF2n+5yiwqG6o35XLA4L6lB5pL+x8xoAAgpaj9dTD184HKGdub3heQStTPRd2ll3nNRwxhfyIyBaMX3elDTH3mkV2QxNhG1RTgJe322PQrwoU2sWkghTWNr4t+h/G+oYu364xwZuxFX1hrFpAW+IEmbDSuhmCe24lMU96ntIiciRU3eBYR7s3KlktOFgMORXMRw3H/qaGmx7rKtpJ892XGRuVbw+tPB3A1jbFvOwJwzpnsWG5REu3PkZ6oiWpnX+5riN3jPyvFpWd+LLfH1KdZeBnF/anEfl+mSPdrDROOWotV3Xt5zOiEwx2j4BRbDNfa6wXzX0zK31AMf0IFmw7KZJkzcyWjNRluxTn3r2bbjNoi+gBojQuX27R3AQz5G0E0yZUk5ujmcd+85WOgNh/zVwsZLHYVQxDyULkbDTCDAulBsJLyxUFRs0JixyHCvA6srrUdpcO0NdyDfvULk9e/g/c9aD56Rk4xT4/Xa7K1fAHLjLkV6CA4H9Of96Zl2BK8r6LAlw382hO7FaZH+A3YShObEeTiZsDbfSQrFl5x8aimvc9oeYopvvQ+EdZxHvvwxHQIp/MWOybdJ4=
-        file: pactjs.tar.gz
-        skip_cleanup: true
-        on:
-          tags: true
-          branch: master
-          condition: "$TRAVIS_OS_NAME = linux"
-  - stage: publish native lib to Github
-    if: (tag IS present) AND (branch = master)
-    deploy:
-      - provider: script
-        script: ./scripts/publish_native.sh
-        skip_cleanup: true
-        on:
-          tags: true
-          branch: master
+    - stage: 🚀 publish to npm 🚀
+      node_js: "12"
+      if: (tag IS present) AND (branch = master)
+      deploy:
+        - provider: script
+          skip_cleanup: true
+          script: ./scripts/publish.sh
+          on:
+            tags: true
+            branch: master
+            condition: "$TRAVIS_OS_NAME = linux"
+        - provider: releases
+          api_key:
+            secure: FmoLJnO8GNxyztR2P433ZCumYPrxiZdBCfVhmhTGYlXhOfVaAECm0gUVPLZuBQRUaqsef5ekg+OSIA5xbrnNoOQ9qlmnF2n+5yiwqG6o35XLA4L6lB5pL+x8xoAAgpaj9dTD184HKGdub3heQStTPRd2ll3nNRwxhfyIyBaMX3elDTH3mkV2QxNhG1RTgJe322PQrwoU2sWkghTWNr4t+h/G+oYu364xwZuxFX1hrFpAW+IEmbDSuhmCe24lMU96ntIiciRU3eBYR7s3KlktOFgMORXMRw3H/qaGmx7rKtpJ892XGRuVbw+tPB3A1jbFvOwJwzpnsWG5REu3PkZ6oiWpnX+5riN3jPyvFpWd+LLfH1KdZeBnF/anEfl+mSPdrDROOWotV3Xt5zOiEwx2j4BRbDNfa6wXzX0zK31AMf0IFmw7KZJkzcyWjNRluxTn3r2bbjNoi+gBojQuX27R3AQz5G0E0yZUk5ujmcd+85WOgNh/zVwsZLHYVQxDyULkbDTCDAulBsJLyxUFRs0JixyHCvA6srrUdpcO0NdyDfvULk9e/g/c9aD56Rk4xT4/Xa7K1fAHLjLkV6CA4H9Of96Zl2BK8r6LAlw382hO7FaZH+A3YShObEeTiZsDbfSQrFl5x8aimvc9oeYopvvQ+EdZxHvvwxHQIp/MWOybdJ4=
+          file: pactjs.tar.gz
+          skip_cleanup: true
+          on:
+            tags: true
+            branch: master
+            condition: "$TRAVIS_OS_NAME = linux"
+    - stage: publish native lib to Github
+      if: (tag IS present) AND (branch = master)
+      deploy:
+        - provider: script
+          script: ./scripts/publish_native.sh
+          skip_cleanup: true
+          on:
+            tags: true
+            branch: master
