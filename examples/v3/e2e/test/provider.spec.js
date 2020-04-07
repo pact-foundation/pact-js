@@ -93,7 +93,7 @@ describe("Pact Verification", () => {
 
     return new VerifierV3(opts).verifyProvider().then(output => {
       console.log("Pact Verification Complete!")
-      console.log(output)
+      console.log("Result:", output)
     })
   })
 })

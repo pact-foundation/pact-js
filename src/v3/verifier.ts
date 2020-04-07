@@ -52,14 +52,14 @@ export class VerifierV3 {
 
       try {
         PactNative.verify_provider(this.config, (err: any, val: any) => {
-          console.log("===========>", err, val)
+          logger.debug("In verify_provider callback:", err, val)
           if (err || !val) {
             reject(err)
           } else {
             resolve(val)
           }
         })
-        logger.debug("Submitted verify_provider")
+        logger.debug("Submitted test to verify_provider")
       } catch (e) {
         reject(e)
       }

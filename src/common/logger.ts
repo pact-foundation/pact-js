@@ -27,7 +27,9 @@ export default new Logger({
   name: `pact@${pkg.version}`,
   streams: [
     {
-      level: (process.env.LOGLEVEL || "info") as bunyan.LogLevel,
+      level: (process.env.LOG_LEVEL ||
+        process.env.LOGLEVEL ||
+        "info") as bunyan.LogLevel,
       stream: prettyStdOut,
       type: "raw",
     },
