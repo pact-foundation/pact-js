@@ -2,6 +2,62 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.3](https://github.com/pact-foundation/pact-js/compare/v9.9.2...v10.0.0-beta.3) (2020-04-07)
+
+
+### Bug Fixes
+
+* update pact matching crate to 0.5.10 to fix invalid path matcher format ([ecce929](https://github.com/pact-foundation/pact-js/commit/ecce929af3d9aa51c3163d58e119924137a15195))
+* **build:** travis formatting ([41afa50](https://github.com/pact-foundation/pact-js/commit/41afa50c88a38113fdc7d49d734997fd92538448))
+* correct invalid logger import ([5d4ba5b](https://github.com/pact-foundation/pact-js/commit/5d4ba5be629693b6608ea5f671b116a2ec3dad14))
+* don't bundle the native lib in the NPM package ([24f43f3](https://github.com/pact-foundation/pact-js/commit/24f43f36f78269aef935381999dfe1e5802ea185))
+* guard against panics in background thread ([b35aecd](https://github.com/pact-foundation/pact-js/commit/b35aecd2e907f4cb80ac4ba8ec3d99c9801f8c15))
+* integer, decimal and number parameters are optional ([69f3983](https://github.com/pact-foundation/pact-js/commit/69f398333a10b649be4bf5a929234620d13d68d8))
+* throw a JS error if there are no pacts to verify ([3bfd9da](https://github.com/pact-foundation/pact-js/commit/3bfd9dac007320e3ff14e476851d2f0aabef7ca0))
+* try get the cause of any Rust panic ([f1f3d4a](https://github.com/pact-foundation/pact-js/commit/f1f3d4a4e287ec2c78a5b8f8eacfda459540dd5a))
+* typo ([5d8dd37](https://github.com/pact-foundation/pact-js/commit/5d8dd37cf338478cc2a16532b9f2664e301294bf))
+
+## [10.0.0-beta.2](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.1...v10.0.0-beta.2) (2020-03-18)
+
+
+### Bug Fixes
+
+* correct the path to the native lib in the NPM package ([300d915](https://github.com/pact-foundation/pact-js/commit/300d91516afebeefe979039566b02162e09992c0))
+
+## [10.0.0-beta.1](https://github.com/pact-foundation/pact-js/compare/v9.8.1...v10.0.0-beta.1) (2020-03-17)
+
+
+### Features
+
+* got E2E consumer test passing ([904ed0b](https://github.com/pact-foundation/pact-js/commit/904ed0ba1115c81a07229e6a27c9e2d103c2dc36))
+* got request filters working. Yay! ([de16880](https://github.com/pact-foundation/pact-js/commit/de16880171ee76fdb134593a7fc78725c81158ec))
+* got the example V3 test working ([9ab43cc](https://github.com/pact-foundation/pact-js/commit/9ab43cc3541600653195c701b770dbdf1f44d5b0))
+* handle the parameters and results from provider state callbacks [#372](https://github.com/pact-foundation/pact-js/issues/372) ([d3f73e5](https://github.com/pact-foundation/pact-js/commit/d3f73e5845023aa5168647daf711829a2d90f9ce))
+* implement provider state parameters in consumer tests [#372](https://github.com/pact-foundation/pact-js/issues/372) ([af8bf32](https://github.com/pact-foundation/pact-js/commit/af8bf32f15551a7b86dc73682272074347143ffc))
+* implemented provider state callbacks with parameters [#372](https://github.com/pact-foundation/pact-js/issues/372) ([50e4e61](https://github.com/pact-foundation/pact-js/commit/50e4e6199b6d9ce37cca8f10bdcd0d403cc1ad5d))
+* Introduce an authenticated state [#372](https://github.com/pact-foundation/pact-js/issues/372) ([debebd7](https://github.com/pact-foundation/pact-js/commit/debebd73cce92a3988f99afbccc4d0091af4a3c9))
+
+
+### Bug Fixes
+
+* changes needed for the E2E consumer test ([6022f8b](https://github.com/pact-foundation/pact-js/commit/6022f8b33fce1cea1f60ba1cf62625f557a00572))
+* correct the paths for the attribute matchers ([7629c92](https://github.com/pact-foundation/pact-js/commit/7629c9232308e1e51730f1567a2e6010ce852aac))
+* correct the v3-todo example tests ([de205c7](https://github.com/pact-foundation/pact-js/commit/de205c7e5ca7c1922b187e29a6d44f0010afb27b))
+* datetime matchers now generate a value if one is not given ([a910840](https://github.com/pact-foundation/pact-js/commit/a910840001f0e86201e82b2ca5759841392c9cca))
+* fucking lint ([cdb72db](https://github.com/pact-foundation/pact-js/commit/cdb72db91eb1283423d21e3841ed3329a128a0af))
+* Gah! Lint Nazis ([79082fd](https://github.com/pact-foundation/pact-js/commit/79082fddafbb7e76293103a3457292b02b8dfc95))
+* got eachlike with number of examples working ([88c9a72](https://github.com/pact-foundation/pact-js/commit/88c9a72a8e11456d0afe94bbfc6ce212bd22153e))
+* lint ([772224d](https://github.com/pact-foundation/pact-js/commit/772224d4d7eeaa7beafe27b55816e441a5d1ddb4))
+* lint ([9717b47](https://github.com/pact-foundation/pact-js/commit/9717b47e2bc06087f0d8eafdeb86f73bdca46683))
+* neon build should point to native directory ([fdea3eb](https://github.com/pact-foundation/pact-js/commit/fdea3eb6619f9281a377300b39d281b342ab588d))
+* neon build should point to native directory ([16957a2](https://github.com/pact-foundation/pact-js/commit/16957a2dff8a7669ad848437591a02f306038dca))
+* neon requires a C++ compiler ([bb8731f](https://github.com/pact-foundation/pact-js/commit/bb8731fae1dcf8797bbfa1ecfd0ad3a95a7ef3d5))
+* removed node 6 and 7 because ancient ([2b45cfc](https://github.com/pact-foundation/pact-js/commit/2b45cfcca9adc92834cdfe74bf1dda5550f4d0ec))
+* rustup: Unable to run interactively. Run with -y to accept defaults ([abfa9c9](https://github.com/pact-foundation/pact-js/commit/abfa9c9151eb27c3b5c503131bda4907a809c677))
+* travis build needs the Rust source in dist ([e64402e](https://github.com/pact-foundation/pact-js/commit/e64402eae49ed2d5e290686860b357f1b4748812))
+* travis build needs the Rust source in dist ([519fee5](https://github.com/pact-foundation/pact-js/commit/519fee59d6798771e6fc7aaf6fcde8babd340356))
+* use 0.5.6 of matching lib to avoid dup rules ([d30d7b9](https://github.com/pact-foundation/pact-js/commit/d30d7b974bcdcf25cfd73fd93ade68fbcd73ecdb))
+
 ### [9.9.2](https://github.com/pact-foundation/pact-js/compare/v9.9.1...v9.9.2) (2020-03-30)
 
 ### [9.9.1](https://github.com/pact-foundation/pact-js/compare/v9.9.0...v9.9.1) (2020-03-30)
