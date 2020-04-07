@@ -47,7 +47,6 @@ jobs:
         - MATRIX_EVAL="brew install gcc5 && CC=gcc-5 && CXX=g++-5"
     - stage: 🚀 publish to npm 🚀
       node_js: "12"
-      # if: (tag IS present) AND (branch = master)
       if: tag IS present
       deploy:
         - provider: script
@@ -65,7 +64,6 @@ jobs:
             tags: true
             condition: "$TRAVIS_OS_NAME = linux"
     - stage: publish native lib to Github
-      # if: (tag IS present) AND (branch = feat/v3.0.0)
       if: tag IS present
       deploy:
         - provider: script
