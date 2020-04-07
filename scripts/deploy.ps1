@@ -1,5 +1,7 @@
+Set-PSDebug -Trace 1
 dir env:
-if ($APPVEYOR_REPO_TAG) {
+$APPVEYOR_REPO_TAG -eq true
+if ($APPVEYOR_REPO_TAG -eq true) {
   Write-Output "Running deploy (APPVEYOR_REPO_TAG) is $APPVEYOR_REPO_TAG"
   npm install node-pre-gyp node-pre-gyp-github
   npm run build:v3
