@@ -1,3 +1,4 @@
+dir env:
 if ($APPVEYOR_REPO_TAG) {
   Write-Output "Running deploy (APPVEYOR_REPO_TAG) is $APPVEYOR_REPO_TAG"
   npm install node-pre-gyp node-pre-gyp-github
