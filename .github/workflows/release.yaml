@@ -31,7 +31,7 @@ jobs:
       - if: runner.os != 'windows'
         run: rm -rf native/target
       - if: runner.os == 'windows'
-        run: rmdir /s native\target
+        run: Remove-Item 'native\target' -Recurse -Force
       - run: npm run upload-binary
         env:
           NODE_PRE_GYP_GITHUB_TOKEN: ${{ secrets.ReleaseDeployKey }}
