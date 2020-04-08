@@ -4,6 +4,12 @@ node_js:
   - "12"
   - "13"
 dist: bionic
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-5
 cache:
   - npm
   - cargo
@@ -28,13 +34,6 @@ script: ./scripts/build.sh
 
 jobs:
   include:
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-5
     - stage: 🚀 publish to npm 🚀
       node_js: "12"
       if: tag IS present
