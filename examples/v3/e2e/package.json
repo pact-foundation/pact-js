@@ -17,7 +17,7 @@
   "author": "matt.fellows@onegeek.com.au",
   "license": "MIT",
   "devDependencies": {
-    "@pact-foundation/pact": "^10.0.0-beta.2",
+    "@pact-foundation/pact": "^10.0.0-beta.3",
     "body-parser": "^1.18.3",
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
@@ -29,7 +29,9 @@
     "express": "^4.16.3",
     "express-http-proxy": "^1.4.0",
     "mocha": "^5.2.0",
-    "superagent": "^3.8.3"
+    "superagent": "^3.8.3",
+    "ts-node": "^8.8.2",
+    "typescript": "^3.8.3"
   },
   "dependencies": {}
 }
