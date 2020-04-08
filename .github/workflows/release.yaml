@@ -23,6 +23,9 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
+      - name: Install LLVM
+        run: choco install -y llvm
+        if: runner.os == 'Windows'
       - run: npm install node-pre-gyp node-pre-gyp-github
       - run: npm run build:v3
       - if: runner.os != 'windows'
