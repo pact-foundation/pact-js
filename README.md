@@ -47,7 +47,7 @@ Read [Getting started with Pact] for more information for beginners.
       - [Verifying multiple contracts with the same tag (e.g. for Mobile use cases)](#verifying-multiple-contracts-with-the-same-tag-eg-for-mobile-use-cases)
       - [Modify Requests Prior to Verification (Request Filters)](#modify-requests-prior-to-verification-request-filters)
     - [Publishing Pacts to a Broker](#publishing-pacts-to-a-broker)
-      - [Publishing options](#publishing-options)
+      - [Publishing options](#pact-publishing-options)
       - [Publishing Verification Results to a Pact Broker](#publishing-verification-results-to-a-pact-broker)
   - [Asynchronous API Testing](#asynchronous-api-testing)
     - [Consumer](#consumer)
@@ -324,8 +324,37 @@ new Verifier(opts).verifyProvider().then(function () {
 | `format`                    | false     | string  | What format the verification results are printed in. Options are `json`, `xml`, `progress` and `RspecJunitFormatter` (which is a synonym for `xml`) |
 | `verbose`            | false     | boolean        | Enables verbose output for underlying pact binary. |
 
-
 </details>
+
+To dynamically retrieve pacts from a Pact Broker for a provider, provide the broker URL, the name of the provider, and the consumer version tags that you want to verify:
+
+```js
+let opts = {
+  pactBroker: 'http://my-broker',
+  provider: 'Animal Profile Service',
+  consumerVersionTag: ['master', 'prod']
+}
+```
+
+To verify a pact at a specific URL (eg. when running a pact verification triggered by a 'contract content changed' webhook, or when verifying a pact from your local machine, or a network location that's not the Pact Broker, set just the `pactUrls`, eg:
+
+```js
+let opts = {
+  pactUrls: [process.env.PACT_URL]
+}
+```
+
+To publish the verification results back to the Pact Broker, you need to enable the 'publish' flag, set the provider version and optional provider version tags:
+
+```js
+let opts = {
+  publishVerificationResult: true, //generally you'd do something like `process.env.CI === 'true'`
+  providerVersion: 'version', //recommended to be the git sha
+  providerVersionTag: 'tag'   //optional, recommended to be the git branch
+ }
+```
+
+If your broker has a self signed certificate, set the environment variable `SSL_CERT_FILE` (or `SSL_CERT_DIR`) pointing to a copy of your certificate.
 
 Read more about [Verifying Pacts](https://docs.pact.io/getting_started/verifying_pacts).
 
@@ -464,7 +493,7 @@ pact.publishPacts(opts).then(function () {
 });
 ```
 
-#### Publishing options
+#### Pact publishing options
 
 <details><summary>Publishing Options</summary>
 
@@ -481,6 +510,8 @@ pact.publishPacts(opts).then(function () {
 
 </details>
 
+If your broker has a self signed certificate, set the environment variable `SSL_CERT_FILE` (or `SSL_CERT_DIR`) pointing to a copy of your certificate.
+
 #### Publishing Verification Results to a Pact Broker
 
 If you're using a Pact Broker (e.g. a hosted one at https://pact.dius.com.au), you can
@@ -491,20 +522,15 @@ It looks like this:
 
 ![screenshot of verification result](https://cloud.githubusercontent.com/assets/53900/25884085/2066d98e-3593-11e7-82af-3b41a20af8e5.png)
 
-You need to specify the following when constructing the pact object:
+To publish the verification results back to the Pact Broker, you need to enable the 'publish' flag, set the provider version and optional provider version tags:
 
 ```js
 let opts = {
-  provider: 'Animal Profile Service',
-  ...
-  publishVerificationResult: true,
-  providerVersion: "1.0.0",
-  provider: "Foo",
-
-}
+  publishVerificationResult: true, //recommended to only publish from CI by setting the value to `process.env.CI === 'true'`
+  providerVersion: 'version',      //recommended to be the git sha eg. process.env.MY_CI_COMMIT
+  providerVersionTag: 'tag'        //optional, recommended to be the git branch eg. process.env.MY_CI_BRANCH
+ }
 ```
-
-_NOTE_: You need to be retrieving pacts from the broker for this feature to work.
 
 ## Asynchronous API Testing
 
