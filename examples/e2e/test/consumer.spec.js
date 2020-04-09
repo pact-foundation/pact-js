@@ -2,7 +2,13 @@ const path = require("path")
 const chai = require("chai")
 const chaiAsPromised = require("chai-as-promised")
 const expect = chai.expect
-const { Pact, Matchers } = require("@pact-foundation/pact")
+const { Pact, Matchers, Publisher } = require("@pact-foundation/pact")
+const pact = require("@pact-foundation/pact")
+
+console.log("pact: ", pact)
+console.log("pact.Publisher: ", pact.Publisher)
+console.log("Publisher: ", Publisher)
+
 const LOG_LEVEL = process.env.LOG_LEVEL || "WARN"
 
 chai.use(chaiAsPromised)
