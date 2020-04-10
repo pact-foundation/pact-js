@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [9.9.3](https://github.com/pact-foundation/pact-js/compare/v9.9.2...v9.9.3) (2020-04-10)
+
+
+### Bug Fixes
+
+* **build:** travis formatting ([41afa50](https://github.com/pact-foundation/pact-js/commit/41afa50c88a38113fdc7d49d734997fd92538448))
+* **pact-node:** Bump dependency on pact-node to get support for wip pacts ([5e165fb](https://github.com/pact-foundation/pact-js/commit/5e165fb4824e9b21be13a8f0884225cea0040962))
+
 ### [9.9.2](https://github.com/pact-foundation/pact-js/compare/v9.9.1...v9.9.2) (2020-03-30)
 
 ### [9.9.1](https://github.com/pact-foundation/pact-js/compare/v9.9.0...v9.9.1) (2020-03-30)
