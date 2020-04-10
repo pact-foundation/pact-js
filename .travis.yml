@@ -20,11 +20,16 @@ before_deploy:
 
 script: ./scripts/build.sh
 
+# .travis.yml or API request config payload
+stages:
+  - test
+  - name: deploy
+    if: tag IS present AND branch = master
+
 jobs:
   include:
     - stage: 🚀 publish to npm 🚀
       node_js: "12"
-      if: tag IS present AND branch = master
       deploy:
         - provider: script
           skip_cleanup: true
