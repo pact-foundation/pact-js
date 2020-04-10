@@ -28,7 +28,8 @@ stages:
 
 jobs:
   include:
-    - stage: 🚀 publish to npm 🚀
+    - stage: deploy
+      name: "🚀 publish to npm 🚀"
       node_js: "12"
       deploy:
         - provider: script
