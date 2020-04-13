@@ -76,6 +76,8 @@ Read [Getting started with Pact] for more information for beginners.
     - [Alpine + Docker](#alpine--docker)
     - [Parallel tests](#parallel-tests)
     - [Splitting tests across multiple files](#splitting-tests-across-multiple-files)
+    - [Test fails when it should pass](#test-fails-when-it-should-pass)
+    - [Test intermittent failures](#test-intermittent-failures)
     - [Re-run specific verification failures](#re-run-specific-verification-failures)
     - [Timeout](#timeout)
     - [Usage with Jest](#usage-with-jest)
@@ -1176,6 +1178,47 @@ You have a number of options to achieve this feat:
     _NOTE_: If using this approach, you _must_ be careful to clear out existing pact files (e.g. `rm ./pacts/*.json`) before you run tests to ensure you don't have left over requests that are no longer relevant.
 
     See this [PR](https://github.com/pact-foundation/pact-js/pull/48) for background.
+
+### Test fails when it should pass
+
+TL;DR - you almost certainly have not properly handled (returned) a Promise.
+
+We see this sort of thing all of the time:
+
+```
+it("returns a successful thing", () => {
+  executeApiCallThatIsAPromise()
+    .then((response) => {
+      expect(response.data).to.eq({...})
+    })
+    .then(() => {
+      provider.verify()
+    })
+  })
+```
+
+There are several problems with this:
+
+1. in the "returns a successful thing", the call to `executeApiCallThatIsAPromise()` is a function that returns a Promise, but is not returned by the function (`it` block) - this leaves a dangling, unhandled Promise. In your case it fails, but by the time it does the `it` block has already completed without problems - and returns a green result ✅.
+1. In the `then` block, the call to `provider.verify()` is also not returned, and will suffer the same fate as (1)
+
+_Side note_: Jasmine and other test frameworks may detect an unhandled promise rejection and report on it.
+
+The correct code for the above is:
+
+```
+it("returns a successful thing", () => {
+  return executeApiCallThatIsAPromise()
+    .then((response) => {
+      expect(response.data).to.eq({...})
+    })
+    .then(() => provider.verify())
+  })
+```
+
+### Test intermittent failures
+
+See above - you probably have not returned a Promise when you should have.
 
 ### Re-run specific verification failures
 
