@@ -36,7 +36,6 @@ describe("MesageProvider", () => {
 
   beforeEach(() => {
     provider = new MessageProviderPact({
-      consumer: "myconsumer",
       logLevel: "error",
       messageProviders: {
         successfulRequest: () => Promise.resolve("yay"),
@@ -56,7 +55,6 @@ describe("MesageProvider", () => {
     })
     it("creates a Provider with default log level if not specified", () => {
       provider = new MessageProviderPact({
-        consumer: "myconsumer",
         messageProviders: {},
         provider: "myprovider",
       })
@@ -129,7 +127,6 @@ describe("MesageProvider", () => {
     describe("when given a state that does not have a handler", () => {
       it("returns an empty promise", () => {
         provider = new MessageProviderPact({
-          consumer: "myconsumer",
           messageProviders: {},
           provider: "myprovider",
         })
