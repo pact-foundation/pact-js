@@ -1,4 +1,4 @@
-const pact = require("@pact-foundation/pact-node")
+const { Publisher } = require("@pact-foundation/pact")
 const path = require("path")
 const opts = {
   pactFilesOrDirs: [
@@ -18,8 +18,8 @@ const opts = {
       : Math.floor(new Date() / 1000)),
 }
 
-pact
-  .publishPacts(opts)
+new Publisher(opts)
+  .publishPacts()
   .then(() => {
     console.log("Pact contract publishing complete!")
     console.log("")

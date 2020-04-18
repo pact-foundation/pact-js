@@ -1,4 +1,4 @@
-let publisher = require("@pact-foundation/pact-node")
+let { Publisher } = require("@pact-foundation/pact")
 let path = require("path")
 
 let opts = {
@@ -9,4 +9,4 @@ let opts = {
   consumerVersion: "2.0.0",
 }
 
-publisher.publishPacts(opts)
+new Publisher(opts).publishPacts()
