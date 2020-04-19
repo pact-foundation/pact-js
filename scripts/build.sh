@@ -2,11 +2,6 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-if [ "${TRAVIS_BUILD_STAGE_NAME}" = "deploy" ]; then
-  echo "Skipping build for deploy step"
-  exit 0
-fi
-
 npm run dist
 
 # Link the build so that the examples are always testing the
