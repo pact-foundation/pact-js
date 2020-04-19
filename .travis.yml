@@ -21,7 +21,7 @@ before_deploy:
 stages:
   - test # all tests
   - name: deploy
-    if: (tag =~ ^v[0-0]+) AND (type = push)
+    if: (tag is present) AND (type = push)
 
 jobs:
   include:
