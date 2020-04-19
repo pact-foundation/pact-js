@@ -2,8 +2,8 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-if [ "${TRAVIS_BUILD_STAGE_NAME}" =~ "publish" ]; then
-  echo "Skipping build for publish step"
+if [ "${TRAVIS_BUILD_STAGE_NAME}" = "deploy" ]; then
+  echo "Skipping build for deploy step"
   exit 0
 fi
 
