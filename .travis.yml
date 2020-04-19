@@ -21,7 +21,7 @@ before_deploy:
 stages:
   - test # all tests
   - name: deploy
-    if: (tag =~ ^v[0-9]+) AND (branch = master)
+    if: (tag =~ ^v) AND (branch = master)
 
 jobs:
   include:
