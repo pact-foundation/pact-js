@@ -38,6 +38,10 @@ fn init(mut cx: FunctionContext) -> JsResult<JsString> {
     Ok(cx.string(env!("CARGO_PKG_VERSION")))
 }
 
+#[deprecated(
+  since = "0.0.2",
+  note = "Moved to Pact-Rust FFI crate"
+)]
 fn process_array(array: &Vec<Value>, matching_rules: &mut Category, generators: &mut Generators, path: &String, type_matcher: bool) -> Value {
   Value::Array(array.iter().enumerate().map(|(index, val)| {
     let updated_path = if type_matcher {
@@ -53,6 +57,10 @@ fn process_array(array: &Vec<Value>, matching_rules: &mut Category, generators: 
   }).collect())
 }
 
+#[deprecated(
+  since = "0.0.2",
+  note = "Moved to Pact-Rust FFI crate"
+)]
 fn process_object(obj: &Map<String, Value>, matching_rules: &mut Category, generators: &mut Generators, path: &String, type_matcher: bool) -> Value {
   if obj.contains_key("pact:matcher:type") {
     if let Some(rule) = MatchingRule::from_integration_json(obj) {
@@ -88,6 +96,10 @@ fn process_object(obj: &Map<String, Value>, matching_rules: &mut Category, gener
   }
 }
 
+#[deprecated(
+  since = "0.0.2",
+  note = "Moved to Pact-Rust FFI crate"
+)]
 fn process_json(body: String, matching_rules: &mut Category, generators: &mut Generators) -> String {
   match serde_json::from_str(&body) {
     Ok(json) => match json {
