@@ -3,8 +3,9 @@ if (process.env.CI !== 'true') {
   process.exit(0)
 }
 
-const childProcess = require('child_process')
 const pact = require('@pact-foundation/pact-node');
+const childProcess = require('child_process')
+
 const exec = command => childProcess.execSync(command).toString().trim();
 
 //Usually, you would just use the CI env vars, but to allow these examples to run from
