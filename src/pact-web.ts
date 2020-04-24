@@ -62,14 +62,12 @@ export class PactWeb {
   public server: any
   public opts: PactWebOptionsComplete
 
-  constructor(config?: PactOptions) {
+  constructor(config?: PactWebOptions) {
     const defaults = {
-      consumer: "",
       cors: false,
       host: "127.0.0.1",
       pactfileWriteMode: "overwrite",
       port: 1234,
-      provider: "",
       spec: 2,
       ssl: false,
     } as PactOptions

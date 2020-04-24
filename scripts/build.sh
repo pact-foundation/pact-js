@@ -4,6 +4,8 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 npm run dist
 
+${DIR}/prepare.sh
+
 # Link the build so that the examples are always testing the
 # current build, in it's properly exported format
 (cd dist && npm link)
@@ -14,11 +16,9 @@ for i in examples/*; do
   [ -e "$i" ] || continue # prevent failure if there are no examples
   echo "--> running tests for: $i"
   if [[ "$i" =~ "karma" ]]; then
-    echo "    linking pact-web"
-    (cd "$i" && npm link @pact-foundation/pact-web && npm it)
+    (cd "$i" && npm i && npm link @pact-foundation/pact-web && npm t)
   else
-    echo "    linking pact"
-    (cd "$i" && npm link @pact-foundation/pact && npm it)
+    (cd "$i" && npm i && npm link @pact-foundation/pact && npm t)
   fi
 done
 

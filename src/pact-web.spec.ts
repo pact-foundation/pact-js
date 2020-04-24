@@ -16,13 +16,11 @@ chai.use(chaiAsPromised)
 describe("PactWeb", () => {
   let pact: PactWeb
   const fullOpts = {
-    consumer: "A",
     cors: false,
     host: "127.0.0.1",
     logLevel: "info",
     pactfileWriteMode: "overwrite",
     port: 1234,
-    provider: "B",
     spec: 2,
     ssl: false,
   } as PactOptionsComplete
@@ -34,20 +32,6 @@ describe("PactWeb", () => {
 
   afterEach(() => {
     sinon.restore()
-  })
-
-  describe("#constructor", () => {
-    it("throws Error when consumer not provided", () => {
-      expect(() => {
-        new PactWeb({ consumer: "", provider: "provider" })
-      }).not.to.throw(Error, "You must specify a Consumer for this pact.")
-    })
-
-    it("throws Error when provider not provided", () => {
-      expect(() => {
-        new PactWeb({ consumer: "someconsumer", provider: "" })
-      }).not.to.throw(Error, "You must specify a Provider for this pact.")
-    })
   })
 
   describe("#addInteraction", () => {

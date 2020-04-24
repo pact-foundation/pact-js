@@ -123,7 +123,7 @@ TL;DR - you almost always want Pact JS.
 | Node.js                   | Pact JS   |                                                                                                                     |
 | Browser testing           | Pact Web  | You probably still want Pact JS. See [Using Pact in non-Node environments](#using-pact-in-non-node-environments) \* |
 | Isomorphic testing        | Pact Web  | You probably still want Pact JS. See [Using Pact in non-Node environments](#using-pact-in-non-node-environments) \* |
-| Publishing to Pact Broker | Pact Node | Included in Pact JS distribution                                                                                    |
+| Publishing to Pact Broker | Pact JS |          |
 
 \* The "I need to run it in the browser" question comes up occasionally. The question is this - for your JS code to be able to make a call to another API, is this dependent on browser-specific code? In most cases, people use tools like React/Angular which have libraries that work on the server and client side, in which case, these tests don't need to run in a browser and could instead be executed in a Node.js environment.
 
@@ -478,7 +478,7 @@ _Important Note_: You should only use this feature for things that can not be pe
 
 ### Publishing Pacts to a Broker
 
-Sharing is caring - to simplify sharing Pacts between Consumers and Providers, we have created the [Pact Broker](https://pact.dius.com.au).
+Sharing is caring - to simplify sharing Pacts between Consumers and Providers, we have created the [Pact Broker](https://pactflow.io).
 
 The Broker:
 
@@ -490,17 +490,19 @@ The Broker:
 - integrates with other systems, such as Slack or your CI server, via webhooks
 - ...and much much [more](https://docs.pact.io/getting_started/sharing_pacts).
 
-[Host your own](https://github.com/pact-foundation/pact_broker), or signup for a free hosted [Pact Broker](https://pact.dius.com.au).
+[Host your own](https://github.com/pact-foundation/pact_broker), or signup for a free hosted [Pact Broker](https://pactflow.io).
 
 ```js
-let pact = require('@pact-foundation/pact-node');
-let opts = {
+const { Publisher } = require("@pact-foundation/pact")
+const opts = {
    ...
 };
 
-pact.publishPacts(opts).then(function () {
-	// do something
-});
+new Publisher(opts)
+  .publishPacts()
+  .then(() => {
+    // ...
+  })
 ```
 
 #### Pact publishing options
@@ -524,7 +526,7 @@ If your broker has a self signed certificate, set the environment variable `SSL_
 
 #### Publishing Verification Results to a Pact Broker
 
-If you're using a Pact Broker (e.g. a hosted one at https://pact.dius.com.au), you can
+If you're using a Pact Broker (e.g. a hosted one at https://pactflow.io), you can
 publish your verification results so that consumers can query if they are safe
 to release.
 
@@ -566,8 +568,7 @@ The following test creates a contract for a Dog API handler:
 
 ```js
 const {
-  MessageConsumerPact,
-  Message,
+  MessageConsumerPact,  
   synchronousBodyHandler,
 } = require("@pact-foundation/pact")
 
@@ -632,7 +633,7 @@ A Provider (Producer in messaging parlance) is the system that will be putting a
 As per the Consumer case, Pact takes the position of the intermediary (MQ/broker) and checks to see whether or not the Provider sends a message that matches the Consumer's expectations.
 
 ```js
-const { MessageProvider, Message } = require("@pact-foundation/pact")
+const { MessageProviderPact } = require("@pact-foundation/pact")
 
 // 1 Messaging integration client
 const dogApiClient = {

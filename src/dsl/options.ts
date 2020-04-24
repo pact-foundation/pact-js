@@ -4,6 +4,7 @@
  */
 import { PactfileWriteMode } from "./mockService"
 import { MessageProviders, StateHandlers } from "../pact"
+import { VerifierOptions as PactNodeVerifierOptions } from "@pact-foundation/pact-node"
 
 export type LogLevel = "trace" | "debug" | "info" | "warn" | "error" | "fatal"
 
@@ -58,20 +59,6 @@ export interface MandatoryPactOptions {
 export type PactOptionsComplete = PactOptions & MandatoryPactOptions
 
 export interface MessageProviderOptions {
-  // The name of the consumer
-  consumer: string
-
-  // The name of the provider
-  provider: string
-
-  providerVersion?: string
-
-  // Pacts to Verify
-  pactUrls?: string[]
-
-  // Directory to log to
-  log?: string
-
   // Log level
   logLevel?: LogLevel
 
@@ -80,18 +67,19 @@ export interface MessageProviderOptions {
 
   // Prepare any provider states
   stateHandlers?: StateHandlers
-
-  // Choices: 'overwrite' | 'update', 'none', defaults to 'overwrite'
-  pactfileWriteMode?: PactfileWriteMode
-
-  pactBrokerUsername?: string
-  pactBrokerPassword?: string
-  customProviderHeaders?: string[]
-  publishVerificationResult?: boolean
-  pactBrokerUrl?: string
-  tags?: string[]
-  timeout?: number
 }
+
+type ExcludedPactNodeVerifierKeys = Exclude<
+  keyof PactNodeVerifierOptions,
+  "providerBaseUrl"
+>
+export type PactNodeVerificationExcludedOptions = Pick<
+  PactNodeVerifierOptions,
+  ExcludedPactNodeVerifierKeys
+>
+
+export type PactMessageProviderOptions = PactNodeVerificationExcludedOptions &
+  MessageProviderOptions
 
 export interface MessageConsumerOptions {
   // The name of the consumer
