@@ -15,8 +15,6 @@ describe("Message provider tests", () => {
         return Promise.resolve(`state set to create a dog`)
       },
     },
-    consumer: "MyJSMessageConsumer",
-    log: path.resolve(process.cwd(), "logs"),
     logLevel: "info",
     provider: "MyJSMessageProvider",
     providerVersion: "1.0.0",
