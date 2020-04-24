@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [9.10.0](https://github.com/pact-foundation/pact-js/compare/v9.9.12...v9.10.0) (2020-04-24)
+
+
+### Features
+
+* remove need for pact-node in almost all uses, including examples ([4e22828](https://github.com/pact-foundation/pact-js/commit/4e228282bbf1f31d8dae35e3cc00e4a6347110ba))
+* remove need for pact-node in almost all uses, including examples ([83a91aa](https://github.com/pact-foundation/pact-js/commit/83a91aaf5ab0592279a6c60f12de719c218e3cd9))
+* update PactWeb and MessageProviderPact interface ([b82976f](https://github.com/pact-foundation/pact-js/commit/b82976f34b607535bf9deb07987140b487ab87e7))
+
 ### [9.9.12](https://github.com/pact-foundation/pact-js/compare/v9.9.11...v9.9.12) (2020-04-19)
 
 ### [9.9.11](https://github.com/pact-foundation/pact-js/compare/v9.9.10...v9.9.11) (2020-04-19)
