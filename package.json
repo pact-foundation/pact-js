@@ -11,7 +11,7 @@
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "deploy:package": "tar -czf pactjs.tar.gz config dist src package.json README.md LICENSE",
     "deploy:prepare": "npm i --production && npm run deploy:package && ./scripts/create_npmrc_file.sh",
-    "dist": "npm run compile && webpack --config ./config/webpack.web.config.js",
+    "dist": "npm run compile && webpack --config ./config/webpack.web.config.js && cp package.json ./dist",
     "jscpd": "jscpd -p src -r json -o jscpd.json",
     "lint": "npm run lint:prettier:ts && npm run lint:prettier:js && tslint -c tslint.json '{src,test,examples}/**/*.ts' -e '**/node_modules/**/*.ts'",
     "lint:fix": "prettier --parser typescript --write \"{src,test,examples}/**/*.ts\" && prettier --write \"{src,test,examples}/**/*.js\"",
