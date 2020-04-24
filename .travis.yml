@@ -1,8 +1,6 @@
+# defaults
 language: node_js
-node_js:
-  - "10"
-  - "12"
-  - "13"
+node_js: "12"
 os:
   - linux
 sudo: required
@@ -15,20 +13,30 @@ env:
     - secure: "dadftjIY7w+KRucMDOqflXYTvWI1WYvtLtvGnbJuoFrgviax5zhwI7rSi6PTvW7mqV05FtqfVVb8Mgkwp1GNhv9byzuPCKnX6zN/tnl3mC++ivMA3BI7KhNp6VinzVeHWN+9BSYAQs1RQbslIK6IJ3oQJ9azp1MnxMQ1s0w5hqo0ojPWRJsm/IN57/pSiR4U0yyvONdwVg7Q8RQmyMZtovA2QzrR3ij6IxBwiJ7RQXsWIYkPL1SzaIqNNhMOdXK3m1iCESmtNc1BG9oEoaZc0ZzowT/O5VVPWe+bUfdSaAHjkTauaMCU2OAk6J89yd7pSCT5fe1YYYPgTIZiPkG0wQH8k7dKqqeaxBo+tN7uCfkYlTMNZmjv+qVBafoP8wBV97g3UugDqqIXaFknTUDnSNaigcJjFRWhCHBtltR+hzF6pCl3H1o1dDnmJWrgEb01qJ0lZonmaK/anZGNpUWE6qndOKBwnd0XiR1LnvzL/7tdflNb4DPy+lWdDEj4HWZR3lFA009m651qHBN+117ousZFXJ1866JywkAM2GrEWD4umzKknXDhulMG/Q32DS01BgW1pMenzQkH5WE+O0T3W/8BPw0Ev//bqZIg0gDckppUexHZ+pMhAFMaJfCzYVhrA0fhwLb+1EW7VDEcQIc0QHGXOb3Vclja7qB4yDuAJxk="
 before_install:
   - sudo sysctl -w net.ipv6.conf.all.disable_ipv6=0
+install: npm ci --ignore-scripts
 before_deploy:
+  - npm run dist
   - npm run deploy:prepare
 
-script: ./scripts/build.sh
-
-# .travis.yml or API request config payload
+# these are executed in order.  each must pass for the next to be run
 stages:
-  - test
+  - test # all tests
   - name: deploy
-    if: tag IS present AND branch = master
+    if: (tag is present) AND (type = push)
 
 jobs:
   include:
-    - stage: 🚀 publish to npm 🚀
+    - &test
+      script: ./scripts/build.sh
+      node_js: "10"
+
+    - <<: *test
+      node_js: "12"
+
+    - <<: *test
+      node_js: "13"
+
+    - stage: deploy
       node_js: "12"
       deploy:
         - provider: script

@@ -568,8 +568,7 @@ The following test creates a contract for a Dog API handler:
 
 ```js
 const {
-  MessageConsumerPact,
-  Message,
+  MessageConsumerPact,  
   synchronousBodyHandler,
 } = require("@pact-foundation/pact")
 
@@ -634,7 +633,7 @@ A Provider (Producer in messaging parlance) is the system that will be putting a
 As per the Consumer case, Pact takes the position of the intermediary (MQ/broker) and checks to see whether or not the Provider sends a message that matches the Consumer's expectations.
 
 ```js
-const { MessageProvider, Message } = require("@pact-foundation/pact")
+const { MessageProviderPact } = require("@pact-foundation/pact")
 
 // 1 Messaging integration client
 const dogApiClient = {

@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [9.9.12](https://github.com/pact-foundation/pact-js/compare/v9.9.11...v9.9.12) (2020-04-19)
+
+### [9.9.11](https://github.com/pact-foundation/pact-js/compare/v9.9.10...v9.9.11) (2020-04-19)
+
+### [9.9.10](https://github.com/pact-foundation/pact-js/compare/v9.9.9...v9.9.10) (2020-04-19)
+
+### [9.9.9](https://github.com/pact-foundation/pact-js/compare/v9.9.8...v9.9.9) (2020-04-19)
+
+### [9.9.8](https://github.com/pact-foundation/pact-js/compare/v9.9.7...v9.9.8) (2020-04-19)
+
+### [9.9.7](https://github.com/pact-foundation/pact-js/compare/v9.9.6...v9.9.7) (2020-04-19)
+
+### [9.9.6](https://github.com/pact-foundation/pact-js/compare/v9.9.5...v9.9.6) (2020-04-19)
+
 ### [9.9.5](https://github.com/pact-foundation/pact-js/compare/v9.9.4...v9.9.5) (2020-04-16)
 
 ### [9.9.4](https://github.com/pact-foundation/pact-js/compare/v9.9.3...v9.9.4) (2020-04-16)
