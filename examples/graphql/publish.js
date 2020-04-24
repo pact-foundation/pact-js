@@ -3,8 +3,8 @@ if (process.env.CI !== "true") {
   process.exit(0)
 }
 
-const pact = require("@pact-foundation/pact-node")
-const childProcess = require("child_process")
+const { Publisher } = require("@pact-foundation/pact")
+const path = require("path")
 
 const exec = command =>
   childProcess
@@ -19,7 +19,7 @@ const branch =
   process.env.TRAVIS_BRANCH || exec("git rev-parse --abbrev-ref HEAD")
 
 const opts = {
-  pactFilesOrDirs: ["./pacts/"],
+  pactFilesOrDirs: [path.resolve(process.cwd(), "pacts")],
   pactBroker: "https://test.pact.dius.com.au",
   pactBrokerUsername: "dXfltyFMgNOFZAxr8io9wJ37iUpY42M",
   pactBrokerPassword: "O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
@@ -27,8 +27,8 @@ const opts = {
   tags: [branch],
 }
 
-pact
-  .publishPacts(opts)
+new Publisher(opts)
+  .publishPacts()
   .then(() => {
     console.log("Pact contract publishing complete!")
     console.log("")
