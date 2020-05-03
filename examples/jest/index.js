@@ -4,11 +4,10 @@ const axios = require("axios")
 
 exports.getMeDogs = endpoint => {
   const url = endpoint.url
-  const port = endpoint.port
 
   return axios.request({
     method: "GET",
-    baseURL: `${url}:${port}`,
+    baseURL: url,
     url: "/dogs",
     headers: { Accept: "application/json" },
   })
@@ -16,11 +15,10 @@ exports.getMeDogs = endpoint => {
 
 exports.getMeCats = endpoint => {
   const url = endpoint.url
-  const port = endpoint.port
 
   return axios.request({
     method: "GET",
-    baseURL: `${url}:${port}`,
+    baseURL: url,
     url: "/cats?catId[]=2&catId[]=3",
     headers: { Accept: "application/json" },
   })
