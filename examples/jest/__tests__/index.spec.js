@@ -1,17 +1,17 @@
 "use strict"
 
+const { pactWith } = require("jest-pact")
+
 const getMeDogs = require("../index").getMeDogs
 
-describe("Dog's API", () => {
-  let url = "http://localhost"
+pactWith({ consumer: "MyConsumer", provider: "MyProvider" }, provider => {
+  describe("Dogs API", () => {
+    const EXPECTED_BODY = [
+      {
+        dog: 1,
+      },
+    ]
 
-  const EXPECTED_BODY = [
-    {
-      dog: 1,
-    },
-  ]
-
-  describe("works", () => {
     beforeEach(() => {
       const interaction = {
         state: "i have a list of projects",
@@ -37,8 +37,7 @@ describe("Dog's API", () => {
     // add expectations
     it("returns a sucessful body", () => {
       return getMeDogs({
-        url,
-        port,
+        url: provider.mockService.baseUrl,
       })
         .then(response => {
           expect(response.headers["content-type"]).toEqual("application/json")
