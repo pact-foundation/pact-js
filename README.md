@@ -116,14 +116,14 @@ See the [Changelog] for versions and their history.
 
 TL;DR - you almost always want Pact JS.
 
-| Purpose                   | Library   | Comments                                                                                                            |
-| ------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------- |
-| Synchronous / HTTP APIs   | Pact JS   |                                                                                                                     |
-| Asynchronous APIs         | Pact JS   |                                                                                                                     |
-| Node.js                   | Pact JS   |                                                                                                                     |
-| Browser testing           | Pact Web  | You probably still want Pact JS. See [Using Pact in non-Node environments](#using-pact-in-non-node-environments) \* |
-| Isomorphic testing        | Pact Web  | You probably still want Pact JS. See [Using Pact in non-Node environments](#using-pact-in-non-node-environments) \* |
-| Publishing to Pact Broker | Pact JS |          |
+| Purpose                   | Library  | Comments                                                                                                            |
+| ------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------- |
+| Synchronous / HTTP APIs   | Pact JS  |                                                                                                                     |
+| Asynchronous APIs         | Pact JS  |                                                                                                                     |
+| Node.js                   | Pact JS  |                                                                                                                     |
+| Browser testing           | Pact Web | You probably still want Pact JS. See [Using Pact in non-Node environments](#using-pact-in-non-node-environments) \* |
+| Isomorphic testing        | Pact Web | You probably still want Pact JS. See [Using Pact in non-Node environments](#using-pact-in-non-node-environments) \* |
+| Publishing to Pact Broker | Pact JS  |                                                                                                                     |
 
 \* The "I need to run it in the browser" question comes up occasionally. The question is this - for your JS code to be able to make a call to another API, is this dependent on browser-specific code? In most cases, people use tools like React/Angular which have libraries that work on the server and client side, in which case, these tests don't need to run in a browser and could instead be executed in a Node.js environment.
 
@@ -316,7 +316,9 @@ new Verifier(opts).verifyProvider().then(function () {
 | `providerVersionTag`        | false     | string\|array                  | Tag(s) to apply to the provider application                                                                                                           |
 | `includeWipPactsSince`      | false     | string                         | Includes pact marked as WIP since this date. String in the format %Y-%m-%d or %Y-%m-%dT%H:%M:%S.000%:z                                                |
 | `pactUrls`                  | false     | array                          | Array of local pact file paths or HTTP-based URLs. Required if _not_ using a Pact Broker.                                                             |
-| `providerStatesSetupUrl`    | false     | string                         | URL to send PUT requests to setup a given provider state                                                                                              |
+| `providerStatesSetupUrl`    | false     | string                         | Deprecated (use URL to send PUT requests to setup a given provider state                                                                              |
+| `stateHandlers`             | false     | object                         | Map of "state" to a function that sets up a given provider state. See docs below for more information                                                 |
+| `requestFilter`             | false     | function                       | Function that may be used to alter the incoming request or outgoing response from the verification process. See belot for use.                        |
 | `pactBrokerUsername`        | false     | string                         | Username for Pact Broker basic authentication                                                                                                         |
 | `pactBrokerPassword`        | false     | string                         | Password for Pact Broker basic authentication                                                                                                         |
 | `pactBrokerToken`           | false     | string                         | Bearer token for Pact Broker authentication                                                                                                           |
@@ -568,12 +570,12 @@ The following test creates a contract for a Dog API handler:
 
 ```js
 const {
-  MessageConsumerPact,  
+  MessageConsumerPact,
   synchronousBodyHandler,
 } = require("@pact-foundation/pact")
 
 // 1 Dog API Handler
-const dogApiHandler = function(dog) {
+const dogApiHandler = function (dog) {
   if (!dog.id && !dog.name && !dog.type) {
     throw new Error("missing fields")
   }
@@ -1045,7 +1047,7 @@ There is an `XmlBuilder` class that provides a DSL to help construct XML bodies 
 for example:
 
 ```javascript
-body: new XmlBuilder("1.0", "UTF-8", "ns1:projects").build(el => {
+body: new XmlBuilder("1.0", "UTF-8", "ns1:projects").build((el) => {
   el.setAttributes({
     id: "1234",
     "xmlns:ns1": "http://some.namespace/and/more/stuff",
@@ -1058,8 +1060,8 @@ body: new XmlBuilder("1.0", "UTF-8", "ns1:projects").build(el => {
       name: string("Project 1"),
       due: timestamp("yyyy-MM-dd'T'HH:mm:ss.SZ", "2016-02-11T09:46:56.023Z"),
     },
-    project => {
-      project.appendElement("ns1:tasks", {}, task => {
+    (project) => {
+      project.appendElement("ns1:tasks", {}, (task) => {
         task.eachLike(
           "ns1:task",
           {
