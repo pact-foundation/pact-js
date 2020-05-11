@@ -95,7 +95,10 @@ export class Interaction {
       throw new ConfigurationError("You must provide a path.")
     }
 
-    if (requestOpts.query !== undefined && typeof requestOpts.query !== 'string') {
+    if (
+      requestOpts.query !== undefined &&
+      typeof requestOpts.query !== "string"
+    ) {
       throw new ConfigurationError("Query must be a string.")
     }
 

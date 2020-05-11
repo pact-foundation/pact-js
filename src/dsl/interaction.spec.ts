@@ -86,7 +86,11 @@ describe("Interaction", () => {
 
     it("throws error when query is not a string", () => {
       expect(
-        interaction.withRequest.bind(interaction, { method: HTTPMethod.GET, path: '/', query: false })
+        interaction.withRequest.bind(interaction, {
+          method: HTTPMethod.GET,
+          path: "/",
+          query: false,
+        })
       ).to.throw(Error, "Query must be a string.")
     })
 
