@@ -396,6 +396,8 @@ Read more about [Provider States](https://docs.pact.io/getting_started/provider_
 
 #### Pending Pacts
 
+_NOTE_: This feature is currently only available on [Pactflow]
+
 Pending pacts is a feature that allows consumers to publish new contracts or changes to existing contracts without breaking Provider's builds. It does so by flagging the contract as "unverified" in the Pact Broker the first time a contract is published. A Provider can then enable a behaviour (via `enablePending: true`) that will still perform a verification (and thus share the results back to the broker) but _not_ fail the verification step itself.
 
 This enables safe introduction of new contracts into the system, without breaking Provider builds, whilst still providing feedback to Consumers as per before.
@@ -403,6 +405,8 @@ This enables safe introduction of new contracts into the system, without breakin
 See the [docs](https://docs.pact.io/pending) and this [article](http://blog.pact.io/2020/02/24/how-we-have-fixed-the-biggest-problem-with-the-pact-workflow/) for more background.
 
 #### WIP Pacts
+
+_NOTE_: This feature is currently only available on [Pactflow]
 
 WIP Pacts builds upon pending pacts, enabling provider tests to pull in _any_ contracts applicable to the provider regardless of the `tag` it was given. This is useful, because often times consumers won't follow the exact same tagging convention and so their workflow would be interrupted. This feature enables any pacts determined to be "work in progress" to be verified by the Provider, without causing a build failure. You can enable this behaviour by specifying a valid timestamp for `includeWipPactsSince`. This sets the start window for which new WIP pacts will be pulled down for verification, regardless of the tag.
 
@@ -1349,3 +1353,4 @@ or chat to us at
 [getting started with pact]: https://docs.pact.io/getting_started
 [spec]: https://github.com/pact-foundation/pact-specification
 [changelog]: https://github.com/pact-foundation/pact-js/blob/master/CHANGELOG.md
+[pactflow]: https://pactflow.io
