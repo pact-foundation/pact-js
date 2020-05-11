@@ -72,7 +72,7 @@ describe("Interaction", () => {
     })
 
     it("throws error when method is not provided", () => {
-      expect(interaction.withRequest.bind(interaction, { ath: "/" })).to.throw(
+      expect(interaction.withRequest.bind(interaction, { path: "/" })).to.throw(
         Error,
         "You must provide an HTTP method."
       )
@@ -82,6 +82,12 @@ describe("Interaction", () => {
       expect(
         interaction.withRequest.bind(interaction, { method: HTTPMethod.GET })
       ).to.throw(Error, "You must provide a path.")
+    })
+
+    it("throws error when query is not a string", () => {
+      expect(
+        interaction.withRequest.bind(interaction, { method: HTTPMethod.GET, path: '/', query: false })
+      ).to.throw(Error, "Query must be a string.")
     })
 
     describe("with only mandatory params", () => {
