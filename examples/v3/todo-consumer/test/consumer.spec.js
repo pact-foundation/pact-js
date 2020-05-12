@@ -21,14 +21,13 @@ describe("Pact V3", () => {
   context("when there are a list of projects", () => {
     describe("and there is a valid user session", () => {
       describe("with JSON request", () => {
-        const provider = new PactV3({
-          consumer: "TodoApp",
-          provider: "TodoServiceV3",
-          dir: path.resolve(process.cwd(), "pacts"),
-          logLevel: "INFO",
-        })
-
         before(() => {
+          provider = new PactV3({
+            consumer: "TodoApp",
+            provider: "TodoServiceV3",
+            dir: path.resolve(process.cwd(), "pacts"),
+            logLevel: "INFO",
+          })
           provider
             .given("i have a list of projects")
             .uponReceiving("a request for projects")
@@ -81,15 +80,14 @@ describe("Pact V3", () => {
       })
     })
 
-    describe.only("with XML requests", () => {
-      const provider = new PactV3({
-        consumer: "TodoApp",
-        provider: "TodoServiceV3",
-        dir: path.resolve(process.cwd(), "pacts"),
-        logLevel: "INFO",
-      })
-
+    describe("with XML requests", () => {
       before(() => {
+        provider = new PactV3({
+          consumer: "TodoApp",
+          provider: "TodoServiceV3",
+          dir: path.resolve(process.cwd(), "pacts"),
+          logLevel: "INFO",
+        })
         provider
           .given("i have a list of projects")
           .uponReceiving("a request for projects in XML")
@@ -168,6 +166,39 @@ describe("Pact V3", () => {
             })
         })
         console.log("result from runTest", result)
+        return result
+      })
+    })
+
+    describe("with image uploads", () => {
+      before(() => {
+        provider = new PactV3({
+          consumer: "TodoApp",
+          provider: "TodoServiceV3",
+          dir: path.resolve(process.cwd(), "pacts"),
+          logLevel: "INFO",
+        })
+        provider
+          .given("i have a project", { id: "1001", name: "Home Chores" })
+          .uponReceiving("a request to store an image against the project")
+          .withRequestBinaryFile(
+            { method: "POST", path: "/projects/1001/images" },
+            "image/jpeg",
+            path.resolve(__dirname, "example.jpg")
+          )
+          .willRespondWith({ status: 201 })
+      })
+
+      it("stores the image against the project", async () => {
+        let result = await provider.executeTest(mockserver => {
+          console.log("In Test Function", mockserver)
+          return TodoApp.setUrl(mockserver.url).postImage(
+            1001,
+            path.resolve(__dirname, "example.jpg")
+          )
+        })
+        console.log("result from runTest", result.status)
+        expect(result.status).to.be.eq(201)
         return result
       })
     })

@@ -37,9 +37,19 @@ export class PactV3 {
     return this
   }
 
+  public withRequestBinaryFile(req: any, contentType: string, file: string) {
+    this.pact.addRequestBinaryFile(req, contentType, file)
+    return this
+  }
+
   public willRespondWith(res: any) {
     this.pact.addResponse(res, res.body && JSON.stringify(res.body))
     this.states = []
+    return this
+  }
+
+  public withResponseBinaryFile(res: any, contentType: string, file: string) {
+    this.pact.addResponseBinaryFile(res, contentType, file)
     return this
   }
 
