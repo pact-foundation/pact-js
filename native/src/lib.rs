@@ -318,31 +318,39 @@ declare_types! {
 
       let mut this = cx.this();
 
-      {
+      let result = {
         let guard = cx.lock();
         let mut pact = this.borrow_mut(&guard);
         if let Some(last) = pact.interactions.last_mut() {
-            if let Ok(status) = js_status {
-              match status.downcast::<JsNumber>() {
-                Ok(status) => last.response.status = status.value() as u16,
-                Err(err) => warn!("Response status is not a number - {}", err)
-              }
+          if let Ok(status) = js_status {
+            match status.downcast::<JsNumber>() {
+              Ok(status) => last.response.status = status.value() as u16,
+              Err(err) => warn!("Response status is not a number - {}", err)
             }
-            if let Ok(header_props) = js_header_props {
-              last.response.headers = Some(header_props)
-            }
+          }
+          if let Ok(header_props) = js_header_props {
+            last.response.headers = Some(header_props)
+          }
 
-            if let Some(body) = js_body {
-              match process_body(body, last.response.content_type_enum(), &mut last.response.matching_rules,
-                &mut last.response.generators) {
-                Ok(body) => last.response.body = body,
-                Err(err) => panic!(err)
-              }
+          if let Some(body) = js_body {
+            match process_body(body, last.response.content_type_enum(), &mut last.response.matching_rules,
+              &mut last.response.generators) {
+              Ok(body) => last.response.body = body,
+              Err(err) => panic!(err)
             }
+          }
+          Ok(())
+        } else if pact.interactions.is_empty() {
+          Err("You need to define a new interaction with the uponReceiving method before you can define a new response with the willRespondWith method")
+        } else {
+          Ok(())
         }
-      }
+      };
 
-      Ok(cx.undefined().upcast())
+      match result {
+        Ok(_) => Ok(cx.undefined().upcast()),
+        Err(message) => cx.throw_error(message)
+      }
     }
 
     method executeTest(mut cx) {
