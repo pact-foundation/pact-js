@@ -6,7 +6,7 @@ import { omit, isEmpty } from "lodash"
 import { MessageDescriptor } from "./dsl/message"
 import logger from "./common/logger"
 import { VerifierOptions } from "@pact-foundation/pact-node"
-import { MessageProviderOptions } from "./dsl/options"
+import { PactMessageProviderOptions } from "./dsl/options"
 import serviceFactory from "@pact-foundation/pact-node"
 import * as express from "express"
 import * as http from "http"
@@ -22,7 +22,7 @@ const bodyParser = require("body-parser")
  * of the interaction to respond - just in this case, not immediately.
  */
 export class MessageProviderPact {
-  constructor(private config: MessageProviderOptions) {
+  constructor(private config: PactMessageProviderOptions) {
     if (config.logLevel && !isEmpty(config.logLevel)) {
       serviceFactory.logLevel(config.logLevel)
       logger.level(config.logLevel)

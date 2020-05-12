@@ -1,3 +1,4 @@
+# defaults
 language: node_js
 node_js:
   - "10"
@@ -28,9 +29,14 @@ before_install:
   - rustc --version
   - cargo --version
 before_deploy:
+  - npm run dist
   - npm run deploy:prepare
 
-script: ./scripts/build.sh
+# these are executed in order.  each must pass for the next to be run
+stages:
+  - test # all tests
+  - name: deploy
+    if: (tag is present) AND (type = push)
 
 jobs:
   include:

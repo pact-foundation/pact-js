@@ -76,3 +76,10 @@ export * from "./dsl/interaction"
 export * from "./dsl/mockService"
 
 export * from "./v3"
+
+/**
+ * Exposes {@link Publisher}
+ * @memberof Pact
+ * @static
+ */
+export * from "./dsl/publisher"

@@ -45,10 +45,11 @@ Read [Getting started with Pact] for more information for beginners.
       - [Verification Options](#verification-options)
       - [API with Provider States](#api-with-provider-states)
       - [Pending Pacts](#pending-pacts)
+      - [WIP Pacts](#wip-pacts)
       - [Verifying multiple contracts with the same tag (e.g. for Mobile use cases)](#verifying-multiple-contracts-with-the-same-tag-eg-for-mobile-use-cases)
       - [Modify Requests Prior to Verification (Request Filters)](#modify-requests-prior-to-verification-request-filters)
     - [Publishing Pacts to a Broker](#publishing-pacts-to-a-broker)
-      - [Publishing options](#publishing-options)
+      - [Pact publishing options](#pact-publishing-options)
       - [Publishing Verification Results to a Pact Broker](#publishing-verification-results-to-a-pact-broker)
   - [Asynchronous API Testing](#asynchronous-api-testing)
     - [Consumer](#consumer)
@@ -77,6 +78,8 @@ Read [Getting started with Pact] for more information for beginners.
     - [Alpine + Docker](#alpine--docker)
     - [Parallel tests](#parallel-tests)
     - [Splitting tests across multiple files](#splitting-tests-across-multiple-files)
+    - [Test fails when it should pass](#test-fails-when-it-should-pass)
+    - [Test intermittent failures](#test-intermittent-failures)
     - [Re-run specific verification failures](#re-run-specific-verification-failures)
     - [Timeout](#timeout)
     - [Usage with Jest](#usage-with-jest)
@@ -114,14 +117,14 @@ See the [Changelog] for versions and their history.
 
 TL;DR - you almost always want Pact JS.
 
-| Purpose                   | Library   | Comments                                                                                                            |
-| ------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------- |
-| Synchronous / HTTP APIs   | Pact JS   |                                                                                                                     |
-| Asynchronous APIs         | Pact JS   |                                                                                                                     |
-| Node.js                   | Pact JS   |                                                                                                                     |
-| Browser testing           | Pact Web  | You probably still want Pact JS. See [Using Pact in non-Node environments](#using-pact-in-non-node-environments) \* |
-| Isomorphic testing        | Pact Web  | You probably still want Pact JS. See [Using Pact in non-Node environments](#using-pact-in-non-node-environments) \* |
-| Publishing to Pact Broker | Pact Node | Included in Pact JS distribution                                                                                    |
+| Purpose                   | Library  | Comments                                                                                                            |
+| ------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------- |
+| Synchronous / HTTP APIs   | Pact JS  |                                                                                                                     |
+| Asynchronous APIs         | Pact JS  |                                                                                                                     |
+| Node.js                   | Pact JS  |                                                                                                                     |
+| Browser testing           | Pact Web | You probably still want Pact JS. See [Using Pact in non-Node environments](#using-pact-in-non-node-environments) \* |
+| Isomorphic testing        | Pact Web | You probably still want Pact JS. See [Using Pact in non-Node environments](#using-pact-in-non-node-environments) \* |
+| Publishing to Pact Broker | Pact JS  |                                                                                                                     |
 
 \* The "I need to run it in the browser" question comes up occasionally. The question is this - for your JS code to be able to make a call to another API, is this dependent on browser-specific code? In most cases, people use tools like React/Angular which have libraries that work on the server and client side, in which case, these tests don't need to run in a browser and could instead be executed in a Node.js environment.
 
@@ -304,29 +307,61 @@ new Verifier(opts).verifyProvider().then(function () {
 
 <details><summary>Verification Options</summary>
 
-| Parameter                   | Required? | Type    | Description                                                                                                |
-| --------------------------- | --------- | ------- | ---------------------------------------------------------------------------------------------------------- |
-| `providerBaseUrl`           | true      | string  | Running API provider host endpoint.                                                                        |
-| `pactBrokerUrl`         | false     | string  | Base URL of the Pact Broker from which to retrieve the pacts. Required if `pactUrls` not given.                                                                        |
-| `provider`                  | false     | string  | Name of the provider if fetching from a Broker                                                             |
-| `consumerVersionSelectors`        | false     | ConsumerVersionSelector\|array  | Use [Selectors](https://docs.pact.io/selectors) to is a way we specify which pacticipants and versions we want to use when configuring verifications.                                                         |
-| `consumerVersionTag`        | false     | string\|array  | Retrieve the latest pacts with given tag(s)                                                        |
-| `providerVersionTag`        | false     | string\|array  |  Tag(s) to apply to the provider application |
-| `pactUrls`                  | false     | array   | Array of local pact file paths or HTTP-based URLs. Required if _not_ using a Pact Broker.                  |
-| `providerStatesSetupUrl`    | false     | string  | URL to send PUT requests to setup a given provider state                                                   |
-| `pactBrokerUsername`        | false     | string  | Username for Pact Broker basic authentication                                                              |
-| `pactBrokerPassword`        | false     | string  | Password for Pact Broker basic authentication                                                              |
-| `pactBrokerToken`           | false     | string  | Bearer token for Pact Broker authentication                                                              |
-| `publishVerificationResult` | false     | boolean | Publish verification result to Broker (_NOTE_: you should only enable this during CI builds)               |
-| `customProviderHeaders`     | false     | array   | Header(s) to add to provider state set up and pact verification                                            |  | `requests`. eg 'Authorization: Basic cGFjdDpwYWN0'. |
-| `providerVersion`           | false     | string  | Provider version, required to publish verification result to Broker. Optional otherwise.                   |
-| `enablePending`                   | false     | boolean  | Enable the [pending pacts](https://docs.pact.io/pending) feature.       |
-| `timeout`                   | false     | number  | The duration in ms we should wait to confirm verification process was successful. Defaults to 30000.       |
-| `format`                    | false     | string  | What format the verification results are printed in. Options are `json`, `xml`, `progress` and `RspecJunitFormatter` (which is a synonym for `xml`) |
-| `verbose`            | false     | boolean        | Enables verbose output for underlying pact binary. |
-
+| Parameter                   | Required? | Type                           | Description                                                                                                                                           |
+| --------------------------- | --------- | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `providerBaseUrl`           | true      | string                         | Running API provider host endpoint.                                                                                                                   |
+| `pactBrokerUrl`             | false     | string                         | Base URL of the Pact Broker from which to retrieve the pacts. Required if `pactUrls` not given.                                                       |
+| `provider`                  | false     | string                         | Name of the provider if fetching from a Broker                                                                                                        |
+| `consumerVersionSelectors`  | false     | ConsumerVersionSelector\|array | Use [Selectors](https://docs.pact.io/selectors) to is a way we specify which pacticipants and versions we want to use when configuring verifications. |
+| `consumerVersionTag`        | false     | string\|array                  | Retrieve the latest pacts with given tag(s)                                                                                                           |
+| `providerVersionTag`        | false     | string\|array                  | Tag(s) to apply to the provider application                                                                                                           |
+| `includeWipPactsSince`      | false     | string                         | Includes pact marked as WIP since this date. String in the format %Y-%m-%d or %Y-%m-%dT%H:%M:%S.000%:z                                                |
+| `pactUrls`                  | false     | array                          | Array of local pact file paths or HTTP-based URLs. Required if _not_ using a Pact Broker.                                                             |
+| `providerStatesSetupUrl`    | false     | string                         | Deprecated (use URL to send PUT requests to setup a given provider state                                                                              |
+| `stateHandlers`             | false     | object                         | Map of "state" to a function that sets up a given provider state. See docs below for more information                                                 |
+| `requestFilter`             | false     | function                       | Function that may be used to alter the incoming request or outgoing response from the verification process. See belot for use.                        |
+| `pactBrokerUsername`        | false     | string                         | Username for Pact Broker basic authentication                                                                                                         |
+| `pactBrokerPassword`        | false     | string                         | Password for Pact Broker basic authentication                                                                                                         |
+| `pactBrokerToken`           | false     | string                         | Bearer token for Pact Broker authentication                                                                                                           |
+| `publishVerificationResult` | false     | boolean                        | Publish verification result to Broker (_NOTE_: you should only enable this during CI builds)                                                          |
+| `customProviderHeaders`     | false     | array                          | Header(s) to add to provider state set up and pact verification                                                                                       |  | `requests`. eg 'Authorization: Basic cGFjdDpwYWN0'. |
+| `providerVersion`           | false     | string                         | Provider version, required to publish verification result to Broker. Optional otherwise.                                                              |
+| `enablePending`             | false     | boolean                        | Enable the [pending pacts](https://docs.pact.io/pending) feature.                                                                                     |
+| `timeout`                   | false     | number                         | The duration in ms we should wait to confirm verification process was successful. Defaults to 30000.                                                  |
+| `format`                    | false     | string                         | What format the verification results are printed in. Options are `json`, `xml`, `progress` and `RspecJunitFormatter` (which is a synonym for `xml`)   |
+| `verbose`                   | false     | boolean                        | Enables verbose output for underlying pact binary.                                                                                                    |
 
 </details>
+
+To dynamically retrieve pacts from a Pact Broker for a provider, provide the broker URL, the name of the provider, and the consumer version tags that you want to verify:
+
+```js
+let opts = {
+  pactBroker: "http://my-broker",
+  provider: "Animal Profile Service",
+  consumerVersionTag: ["master", "prod"],
+}
+```
+
+To verify a pact at a specific URL (eg. when running a pact verification triggered by a 'contract content changed' webhook, or when verifying a pact from your local machine, or a network location that's not the Pact Broker, set just the `pactUrls`, eg:
+
+```js
+let opts = {
+  pactUrls: [process.env.PACT_URL],
+}
+```
+
+To publish the verification results back to the Pact Broker, you need to enable the 'publish' flag, set the provider version and optional provider version tags:
+
+```js
+let opts = {
+  publishVerificationResult: true, //generally you'd do something like `process.env.CI === 'true'`
+  providerVersion: "version", //recommended to be the git sha
+  providerVersionTag: "tag", //optional, recommended to be the git branch
+}
+```
+
+If your broker has a self signed certificate, set the environment variable `SSL_CERT_FILE` (or `SSL_CERT_DIR`) pointing to a copy of your certificate.
 
 Read more about [Verifying Pacts](https://docs.pact.io/getting_started/verifying_pacts).
 
@@ -362,11 +397,21 @@ Read more about [Provider States](https://docs.pact.io/getting_started/provider_
 
 #### Pending Pacts
 
+_NOTE_: This feature is currently only available on [Pactflow]
+
 Pending pacts is a feature that allows consumers to publish new contracts or changes to existing contracts without breaking Provider's builds. It does so by flagging the contract as "unverified" in the Pact Broker the first time a contract is published. A Provider can then enable a behaviour (via `enablePending: true`) that will still perform a verification (and thus share the results back to the broker) but _not_ fail the verification step itself.
 
 This enables safe introduction of new contracts into the system, without breaking Provider builds, whilst still providing feedback to Consumers as per before.
 
 See the [docs](https://docs.pact.io/pending) and this [article](http://blog.pact.io/2020/02/24/how-we-have-fixed-the-biggest-problem-with-the-pact-workflow/) for more background.
+
+#### WIP Pacts
+
+_NOTE_: This feature is currently only available on [Pactflow]
+
+WIP Pacts builds upon pending pacts, enabling provider tests to pull in _any_ contracts applicable to the provider regardless of the `tag` it was given. This is useful, because often times consumers won't follow the exact same tagging convention and so their workflow would be interrupted. This feature enables any pacts determined to be "work in progress" to be verified by the Provider, without causing a build failure. You can enable this behaviour by specifying a valid timestamp for `includeWipPactsSince`. This sets the start window for which new WIP pacts will be pulled down for verification, regardless of the tag.
+
+See the [docs](https://docs.pact.io/wip) and this [article](http://blog.pact.io/2020/02/24/introducing-wip-pacts/) for more background.
 
 #### Verifying multiple contracts with the same tag (e.g. for Mobile use cases)
 
@@ -375,19 +420,19 @@ Tags may be used to indicate a particular version of an application has been dep
 Mobile is an exception to this rule - it is common to have multiple versions of an application that are in "production" simultaneously. To support this workflow, we have a feature known as [consumer version selectors](https://docs.pact.io/selectors). Using selectors, we can verify that _all_ pacts with a given tag should be verified. The following selectors ask the broker to "find all pacts with tag 'prod' and the latest pact for 'master'":
 
 ```js
-      consumerVersionSelectors: [{
-          tag: "prod",
-          all: true
-        },
-        {
-          tag: "master",
-          latest: true
-        }
-      ]
+consumerVersionSelectors: [
+  {
+    tag: "prod",
+    all: true,
+  },
+  {
+    tag: "master",
+    latest: true,
+  },
+]
 ```
 
 _NOTE: Using the `all` flag requires you to ensure you delete any tags associated with application versions that are no longer in production (e.g. if decommissioned from the app store)_
-
 
 #### Modify Requests Prior to Verification (Request Filters)
 
@@ -440,7 +485,7 @@ _Important Note_: You should only use this feature for things that can not be pe
 
 ### Publishing Pacts to a Broker
 
-Sharing is caring - to simplify sharing Pacts between Consumers and Providers, we have created the [Pact Broker](https://pact.dius.com.au).
+Sharing is caring - to simplify sharing Pacts between Consumers and Providers, we have created the [Pact Broker](https://pactflow.io).
 
 The Broker:
 
@@ -452,20 +497,22 @@ The Broker:
 - integrates with other systems, such as Slack or your CI server, via webhooks
 - ...and much much [more](https://docs.pact.io/getting_started/sharing_pacts).
 
-[Host your own](https://github.com/pact-foundation/pact_broker), or signup for a free hosted [Pact Broker](https://pact.dius.com.au).
+[Host your own](https://github.com/pact-foundation/pact_broker), or signup for a free hosted [Pact Broker](https://pactflow.io).
 
 ```js
-let pact = require('@pact-foundation/pact-node');
-let opts = {
+const { Publisher } = require("@pact-foundation/pact")
+const opts = {
    ...
 };
 
-pact.publishPacts(opts).then(function () {
-	// do something
-});
+new Publisher(opts)
+  .publishPacts()
+  .then(() => {
+    // ...
+  })
 ```
 
-#### Publishing options
+#### Pact publishing options
 
 <details><summary>Publishing Options</summary>
 
@@ -482,9 +529,11 @@ pact.publishPacts(opts).then(function () {
 
 </details>
 
+If your broker has a self signed certificate, set the environment variable `SSL_CERT_FILE` (or `SSL_CERT_DIR`) pointing to a copy of your certificate.
+
 #### Publishing Verification Results to a Pact Broker
 
-If you're using a Pact Broker (e.g. a hosted one at https://pact.dius.com.au), you can
+If you're using a Pact Broker (e.g. a hosted one at https://pactflow.io), you can
 publish your verification results so that consumers can query if they are safe
 to release.
 
@@ -492,20 +541,15 @@ It looks like this:
 
 ![screenshot of verification result](https://cloud.githubusercontent.com/assets/53900/25884085/2066d98e-3593-11e7-82af-3b41a20af8e5.png)
 
-You need to specify the following when constructing the pact object:
+To publish the verification results back to the Pact Broker, you need to enable the 'publish' flag, set the provider version and optional provider version tags:
 
 ```js
 let opts = {
-  provider: 'Animal Profile Service',
-  ...
-  publishVerificationResult: true,
-  providerVersion: "1.0.0",
-  provider: "Foo",
-
+  publishVerificationResult: true, //recommended to only publish from CI by setting the value to `process.env.CI === 'true'`
+  providerVersion: "version", //recommended to be the git sha eg. process.env.MY_CI_COMMIT
+  providerVersionTag: "tag", //optional, recommended to be the git branch eg. process.env.MY_CI_BRANCH
 }
 ```
-
-_NOTE_: You need to be retrieving pacts from the broker for this feature to work.
 
 ## Asynchronous API Testing
 
@@ -532,12 +576,11 @@ The following test creates a contract for a Dog API handler:
 ```js
 const {
   MessageConsumerPact,
-  Message,
   synchronousBodyHandler,
 } = require("@pact-foundation/pact")
 
 // 1 Dog API Handler
-const dogApiHandler = function(dog) {
+const dogApiHandler = function (dog) {
   if (!dog.id && !dog.name && !dog.type) {
     throw new Error("missing fields")
   }
@@ -597,7 +640,7 @@ A Provider (Producer in messaging parlance) is the system that will be putting a
 As per the Consumer case, Pact takes the position of the intermediary (MQ/broker) and checks to see whether or not the Provider sends a message that matches the Consumer's expectations.
 
 ```js
-const { MessageProvider, Message } = require("@pact-foundation/pact")
+const { MessageProviderPact } = require("@pact-foundation/pact")
 
 // 1 Messaging integration client
 const dogApiClient = {
@@ -949,15 +992,15 @@ For example:
 ```javascript
 const { PactV3, MatchersV3 } = require("@pact-foundation/pact/v3")
 const {
-    eachLike,
-    atLeastLike,
-    integer,
-    timestamp,
-    boolean,
-    string,
-    regex,
-    like,
-  } = MatchersV3
+  eachLike,
+  atLeastLike,
+  integer,
+  timestamp,
+  boolean,
+  string,
+  regex,
+  like,
+} = MatchersV3
 
 const animalBodyExpectation = {
   id: integer(1),
@@ -980,26 +1023,26 @@ const animalBodyExpectation = {
 }
 ```
 
-| Matcher | Parameters | Description |
-| ------- | ---------- | ----------- |
-| `like` | template  | Applies the `type` matcher to value, which requires values to have the same type as the template |
-| `eachLike` | template| Applies the `type` matcher to each value in an array, ensuring they match the template. Note that this matcher does not validate the length of the array, and the items within it |
-| `atLeastOneLike` | template, count: number = 1 | Behaves like the `eachLike` matcher, but also applies a minimum length validation of one on the length of the array. The optional `count` parameter controls the number of examples generated. |
-| `atLeastLike` | template, min: number, count?: number | Just like `atLeastOneLike`, but the minimum length is configurable. |
-| `atMostLike` | template, max: number, count?: number | Behaves like the `eachLike` matcher, but also applies a maximum length validation on the length of the array. The optional `count` parameter controls the number of examples generated. |
-| `constrainedArrayLike` | template, min: number, max: number, count?: number | Behaves like the `eachLike` matcher, but also applies a minimum and maximum length validation on the length of the array. The optional `count` parameter controls the number of examples generated. |
-| `boolean` | example: boolean | Matches boolean values (true, false) |
-| `integer` | example?: number | Value that must be an integer (must be a number and have no decimal places). If the example value is omitted, a V3 Random number generator will be used. |
-| `decimal` | example?: number | Value that must be a decimal number (must be a number and have at least one digit in the decimal places). If the example value is omitted, a V3 Random number generator will be used. |
-| `number` | example?: number | Value that must be a number. If the example value is omitted, a V3 Random number generator will be used. |
-| `string` | example: string | Value that must be a string. |
-| `regex` | pattern, example: string | Value that must match the given regular expression. |
-| `equal` | example | Value that must be equal to the example. This is mainly used to reset the matching rules which cascade. |
-| `timestamp` | format: string, example?: string | String value that must match the provided datetime format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) for details on the format string. If the example value is omitted, a value will be generated using a Timestamp generator and the current system date and time. |
-| `time` | format: string, example?: string | String value that must match the provided time format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) for details on the format string. If the example value is o mitted, a value will be generated using a Time generator and the current system time. |
-| `date` | format: string, example?: string | String value that must match the provided date format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) for details on the format string. If the example value is o mitted, a value will be generated using a Date generator and the current system date. |
-| `includes` | value: string | Value that must include the example value as a substring. |
-| `nullValue` | | Value that must be null. This will only match the JSON Null value. For other content types, it will match if the attribute is missing. |
+| Matcher                | Parameters                                         | Description                                                                                                                                                                                                                                                                                                                             |
+| ---------------------- | -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `like`                 | template                                           | Applies the `type` matcher to value, which requires values to have the same type as the template                                                                                                                                                                                                                                        |
+| `eachLike`             | template                                           | Applies the `type` matcher to each value in an array, ensuring they match the template. Note that this matcher does not validate the length of the array, and the items within it                                                                                                                                                       |
+| `atLeastOneLike`       | template, count: number = 1                        | Behaves like the `eachLike` matcher, but also applies a minimum length validation of one on the length of the array. The optional `count` parameter controls the number of examples generated.                                                                                                                                          |
+| `atLeastLike`          | template, min: number, count?: number              | Just like `atLeastOneLike`, but the minimum length is configurable.                                                                                                                                                                                                                                                                     |
+| `atMostLike`           | template, max: number, count?: number              | Behaves like the `eachLike` matcher, but also applies a maximum length validation on the length of the array. The optional `count` parameter controls the number of examples generated.                                                                                                                                                 |
+| `constrainedArrayLike` | template, min: number, max: number, count?: number | Behaves like the `eachLike` matcher, but also applies a minimum and maximum length validation on the length of the array. The optional `count` parameter controls the number of examples generated.                                                                                                                                     |
+| `boolean`              | example: boolean                                   | Matches boolean values (true, false)                                                                                                                                                                                                                                                                                                    |
+| `integer`              | example?: number                                   | Value that must be an integer (must be a number and have no decimal places). If the example value is omitted, a V3 Random number generator will be used.                                                                                                                                                                                |
+| `decimal`              | example?: number                                   | Value that must be a decimal number (must be a number and have at least one digit in the decimal places). If the example value is omitted, a V3 Random number generator will be used.                                                                                                                                                   |
+| `number`               | example?: number                                   | Value that must be a number. If the example value is omitted, a V3 Random number generator will be used.                                                                                                                                                                                                                                |
+| `string`               | example: string                                    | Value that must be a string.                                                                                                                                                                                                                                                                                                            |
+| `regex`                | pattern, example: string                           | Value that must match the given regular expression.                                                                                                                                                                                                                                                                                     |
+| `equal`                | example                                            | Value that must be equal to the example. This is mainly used to reset the matching rules which cascade.                                                                                                                                                                                                                                 |
+| `timestamp`            | format: string, example?: string                   | String value that must match the provided datetime format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) for details on the format string. If the example value is omitted, a value will be generated using a Timestamp generator and the current system date and time. |
+| `time`                 | format: string, example?: string                   | String value that must match the provided time format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) for details on the format string. If the example value is o mitted, a value will be generated using a Time generator and the current system time.                  |
+| `date`                 | format: string, example?: string                   | String value that must match the provided date format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) for details on the format string. If the example value is o mitted, a value will be generated using a Date generator and the current system date.                  |
+| `includes`             | value: string                                      | Value that must include the example value as a substring.                                                                                                                                                                                                                                                                               |
+| `nullValue`            |                                                    | Value that must be null. This will only match the JSON Null value. For other content types, it will match if the attribute is missing.                                                                                                                                                                                                  |
 
 ### Using Pact with XML
 
@@ -1009,39 +1052,36 @@ There is an `XmlBuilder` class that provides a DSL to help construct XML bodies 
 for example:
 
 ```javascript
-body: new XmlBuilder("1.0", "UTF-8", "ns1:projects").build(el => {
-    el.setAttributes({
-      id: "1234",
-      "xmlns:ns1": "http://some.namespace/and/more/stuff",
-    })
-    el.eachLike(
-      "ns1:project",
-      {
-        id: integer(1),
-        type: "activity",
-        name: string("Project 1"),
-        due: timestamp(
-          "yyyy-MM-dd'T'HH:mm:ss.SZ",
-          "2016-02-11T09:46:56.023Z"
-        ),
-      },
-      project => {
-        project.appendElement("ns1:tasks", {}, task => {
-          task.eachLike(
-            "ns1:task",
-            {
-              id: integer(1),
-              name: string("Task 1"),
-              done: boolean(true),
-            },
-            null,
-            { examples: 5 }
-          )
-        })
-      },
-      { examples: 2 }
-    )
+body: new XmlBuilder("1.0", "UTF-8", "ns1:projects").build((el) => {
+  el.setAttributes({
+    id: "1234",
+    "xmlns:ns1": "http://some.namespace/and/more/stuff",
   })
+  el.eachLike(
+    "ns1:project",
+    {
+      id: integer(1),
+      type: "activity",
+      name: string("Project 1"),
+      due: timestamp("yyyy-MM-dd'T'HH:mm:ss.SZ", "2016-02-11T09:46:56.023Z"),
+    },
+    (project) => {
+      project.appendElement("ns1:tasks", {}, (task) => {
+        task.eachLike(
+          "ns1:task",
+          {
+            id: integer(1),
+            name: string("Task 1"),
+            done: boolean(true),
+          },
+          null,
+          { examples: 5 }
+        )
+      })
+    },
+    { examples: 2 }
+  )
+})
 ```
 
 ### Verifying providers with VerifierV3
@@ -1151,6 +1191,47 @@ You have a number of options to achieve this feat:
     _NOTE_: If using this approach, you _must_ be careful to clear out existing pact files (e.g. `rm ./pacts/*.json`) before you run tests to ensure you don't have left over requests that are no longer relevant.
 
     See this [PR](https://github.com/pact-foundation/pact-js/pull/48) for background.
+
+### Test fails when it should pass
+
+TL;DR - you almost certainly have not properly handled (returned) a Promise.
+
+We see this sort of thing all of the time:
+
+```
+it("returns a successful thing", () => {
+  executeApiCallThatIsAPromise()
+    .then((response) => {
+      expect(response.data).to.eq({...})
+    })
+    .then(() => {
+      provider.verify()
+    })
+  })
+```
+
+There are several problems with this:
+
+1. in the "returns a successful thing", the call to `executeApiCallThatIsAPromise()` is a function that returns a Promise, but is not returned by the function (`it` block) - this leaves a dangling, unhandled Promise. In your case it fails, but by the time it does the `it` block has already completed without problems - and returns a green result ✅.
+1. In the `then` block, the call to `provider.verify()` is also not returned, and will suffer the same fate as (1)
+
+_Side note_: Jasmine and other test frameworks may detect an unhandled promise rejection and report on it.
+
+The correct code for the above is:
+
+```
+it("returns a successful thing", () => {
+  return executeApiCallThatIsAPromise()
+    .then((response) => {
+      expect(response.data).to.eq({...})
+    })
+    .then(() => provider.verify())
+  })
+```
+
+### Test intermittent failures
+
+See above - you probably have not returned a Promise when you should have.
 
 ### Re-run specific verification failures
 
@@ -1273,3 +1354,4 @@ or chat to us at
 [getting started with pact]: https://docs.pact.io/getting_started
 [spec]: https://github.com/pact-foundation/pact-specification
 [changelog]: https://github.com/pact-foundation/pact-js/blob/master/CHANGELOG.md
+[pactflow]: https://pactflow.io

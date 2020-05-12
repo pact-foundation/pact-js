@@ -18,6 +18,34 @@ All notable changes to this project will be documented in this file. See [standa
 * typo ([5d8dd37](https://github.com/pact-foundation/pact-js/commit/5d8dd37cf338478cc2a16532b9f2664e301294bf))
 
 ## [10.0.0-beta.2](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.1...v10.0.0-beta.2) (2020-03-18)
+## [9.10.0](https://github.com/pact-foundation/pact-js/compare/v9.9.12...v9.10.0) (2020-04-24)
+
+
+### Features
+
+* remove need for pact-node in almost all uses, including examples ([4e22828](https://github.com/pact-foundation/pact-js/commit/4e228282bbf1f31d8dae35e3cc00e4a6347110ba))
+* remove need for pact-node in almost all uses, including examples ([83a91aa](https://github.com/pact-foundation/pact-js/commit/83a91aaf5ab0592279a6c60f12de719c218e3cd9))
+* update PactWeb and MessageProviderPact interface ([b82976f](https://github.com/pact-foundation/pact-js/commit/b82976f34b607535bf9deb07987140b487ab87e7))
+
+### [9.9.12](https://github.com/pact-foundation/pact-js/compare/v9.9.11...v9.9.12) (2020-04-19)
+
+### [9.9.11](https://github.com/pact-foundation/pact-js/compare/v9.9.10...v9.9.11) (2020-04-19)
+
+### [9.9.10](https://github.com/pact-foundation/pact-js/compare/v9.9.9...v9.9.10) (2020-04-19)
+
+### [9.9.9](https://github.com/pact-foundation/pact-js/compare/v9.9.8...v9.9.9) (2020-04-19)
+
+### [9.9.8](https://github.com/pact-foundation/pact-js/compare/v9.9.7...v9.9.8) (2020-04-19)
+
+### [9.9.7](https://github.com/pact-foundation/pact-js/compare/v9.9.6...v9.9.7) (2020-04-19)
+
+### [9.9.6](https://github.com/pact-foundation/pact-js/compare/v9.9.5...v9.9.6) (2020-04-19)
+
+### [9.9.5](https://github.com/pact-foundation/pact-js/compare/v9.9.4...v9.9.5) (2020-04-16)
+
+### [9.9.4](https://github.com/pact-foundation/pact-js/compare/v9.9.3...v9.9.4) (2020-04-16)
+
+### [9.9.3](https://github.com/pact-foundation/pact-js/compare/v9.9.2...v9.9.3) (2020-04-10)
 
 
 ### Bug Fixes
@@ -36,6 +64,18 @@ All notable changes to this project will be documented in this file. See [standa
 * implement provider state parameters in consumer tests [#372](https://github.com/pact-foundation/pact-js/issues/372) ([af8bf32](https://github.com/pact-foundation/pact-js/commit/af8bf32f15551a7b86dc73682272074347143ffc))
 * implemented provider state callbacks with parameters [#372](https://github.com/pact-foundation/pact-js/issues/372) ([50e4e61](https://github.com/pact-foundation/pact-js/commit/50e4e6199b6d9ce37cca8f10bdcd0d403cc1ad5d))
 * Introduce an authenticated state [#372](https://github.com/pact-foundation/pact-js/issues/372) ([debebd7](https://github.com/pact-foundation/pact-js/commit/debebd73cce92a3988f99afbccc4d0091af4a3c9))
+* **build:** travis formatting ([41afa50](https://github.com/pact-foundation/pact-js/commit/41afa50c88a38113fdc7d49d734997fd92538448))
+* **pact-node:** Bump dependency on pact-node to get support for wip pacts ([5e165fb](https://github.com/pact-foundation/pact-js/commit/5e165fb4824e9b21be13a8f0884225cea0040962))
+
+### [9.9.3](https://github.com/pact-foundation/pact-js/compare/v9.9.2...v9.9.3) (2020-04-10)
+
+
+### Bug Fixes
+
+* **build:** travis formatting ([41afa50](https://github.com/pact-foundation/pact-js/commit/41afa50c88a38113fdc7d49d734997fd92538448))
+* **pact-node:** Bump dependency on pact-node to get support for wip pacts ([5e165fb](https://github.com/pact-foundation/pact-js/commit/5e165fb4824e9b21be13a8f0884225cea0040962))
+
+### [9.9.3](https://github.com/pact-foundation/pact-js/compare/v9.9.2...v9.9.3) (2020-04-10)
 
 
 ### Bug Fixes
@@ -57,6 +97,8 @@ All notable changes to this project will be documented in this file. See [standa
 * travis build needs the Rust source in dist ([e64402e](https://github.com/pact-foundation/pact-js/commit/e64402eae49ed2d5e290686860b357f1b4748812))
 * travis build needs the Rust source in dist ([519fee5](https://github.com/pact-foundation/pact-js/commit/519fee59d6798771e6fc7aaf6fcde8babd340356))
 * use 0.5.6 of matching lib to avoid dup rules ([d30d7b9](https://github.com/pact-foundation/pact-js/commit/d30d7b974bcdcf25cfd73fd93ade68fbcd73ecdb))
+* **build:** travis formatting ([41afa50](https://github.com/pact-foundation/pact-js/commit/41afa50c88a38113fdc7d49d734997fd92538448))
+* **pact-node:** Bump dependency on pact-node to get support for wip pacts ([5e165fb](https://github.com/pact-foundation/pact-js/commit/5e165fb4824e9b21be13a8f0884225cea0040962))
 
 ### [9.9.2](https://github.com/pact-foundation/pact-js/compare/v9.9.1...v9.9.2) (2020-03-30)
 
