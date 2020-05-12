@@ -1,7 +1,8 @@
 import * as chai from "chai"
 import * as chaiAsPromised from "chai-as-promised"
 import { HTTPMethod } from "../common/request"
-import { Interaction } from "./interaction"
+import { Interaction, Query } from "./interaction"
+import { eachLike } from "./matchers"
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -84,14 +85,14 @@ describe("Interaction", () => {
       ).to.throw(Error, "You must provide a path.")
     })
 
-    it("throws error when query is not a string", () => {
+    it("throws error when query object is not a string", () => {
       expect(
         interaction.withRequest.bind(interaction, {
           method: HTTPMethod.GET,
           path: "/",
-          query: false,
+          query: { "string": false, "query": 'false' },
         })
-      ).to.throw(Error, "Query must be a string.")
+      ).to.throw(Error, "Query must only contain strings.")
     })
 
     describe("with only mandatory params", () => {
@@ -131,6 +132,34 @@ describe("Interaction", () => {
           "headers",
           "body"
         )
+      })
+    })
+
+    describe("query type", () => {
+      const request = {
+        body: { id: 1, name: "Test", due: "tomorrow" },
+        headers: { "Content-Type": "application/json" },
+        method: HTTPMethod.GET,
+        path: "/search",
+        query: {},
+      }
+      const interaction = new Interaction()
+        .uponReceiving("request");
+
+      it("is passed with matcher", () => {
+        request.query = {
+          "id[]": eachLike("1"),
+        };
+        interaction.withRequest(request);
+        expect(interaction.json().request).to.have.any.keys("query")
+      })
+
+      it("is passed with object", () => {
+        request.query = {
+          "id": "1",
+        };
+        interaction.withRequest(request);
+        expect(interaction.json().request).to.have.any.keys("query")
       })
     })
 

@@ -5,7 +5,7 @@
 
 import { isNil, keys, omitBy } from "lodash"
 import { HTTPMethod, methods } from "../common/request"
-import { MatcherResult } from "./matchers"
+import { MatcherResult, isMatcher } from "./matchers"
 import ConfigurationError from "../errors/configurationError"
 
 export type Query = string | { [name: string]: string | MatcherResult }
@@ -95,16 +95,22 @@ export class Interaction {
       throw new ConfigurationError("You must provide a path.")
     }
 
-    if (
-      requestOpts.query !== undefined &&
-      typeof requestOpts.query !== "string"
-    ) {
-      throw new ConfigurationError("Query must be a string.")
+    if(typeof requestOpts.query === "object") {
+      this.queryObjectIsValid(requestOpts.query as Object)
     }
 
     this.state.request = omitBy(requestOpts, isNil) as RequestOptions
 
     return this
+  }
+
+  private queryObjectIsValid(query:Object) {
+    if(Object.values(query).every(object => {
+      return !isMatcher(object) 
+      ? Object.values(query).some(string => typeof string !== "string") : false
+    })) {
+      throw new ConfigurationError(`Query must only contain strings.`)
+    }
   }
 
   /**
