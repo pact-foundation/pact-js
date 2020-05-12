@@ -21,10 +21,7 @@ const getAnimalById = id => {
   return request
     .get(`${getApiEndpoint()}/animals/${id}`)
     .set(authHeader)
-    .then(
-      res => res.body,
-      () => null
-    )
+    .then(res => res.body, () => null)
 }
 
 // Suggestions function:
