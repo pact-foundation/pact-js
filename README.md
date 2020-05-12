@@ -973,12 +973,10 @@ An initial beta version of Pact-JS with support for V3 specification features an
 been released. Current support is for Node 10, 12 and 13. Thanks to the folks at [Align Tech](https://www.aligntech.com/) for
 sponsoring this work.
 
-**NOTE: the current version has an issue with the native binary and requires the `--update-binary` argument to install.**
-
 To install it:
 
 ```console
-npm i @pact-foundation/pact@10.0.0-beta.2 --update-binary
+npm i @pact-foundation/pact@10.0.0-beta.3
 ```
 
 For examples on how to use it, see [examples/v3/e2e](examples/v3/e2e) and [examples/v3/todo-consumer](examples/v3/todo-consumer).
