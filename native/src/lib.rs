@@ -319,9 +319,10 @@ declare_types! {
 
       let mut this = cx.this();
 
-      {
+      let result = {
         let guard = cx.lock();
         let mut pact = this.borrow_mut(&guard);
+
         if let Some(last) = pact.interactions.last_mut() {
           if let Ok(method) = js_method {
             match method.downcast::<JsString>() {
@@ -354,10 +355,18 @@ declare_types! {
               Err(err) => panic!(err)
             }
           }
+          Ok(())
+        } else if pact.interactions.is_empty() {
+          Err("You need to define a new interaction with the uponReceiving method before you can define a new request with the withRequest method")
+        } else {
+          Ok(())
         }
-      }
+      };
 
-      Ok(cx.undefined().upcast())
+      match result {
+        Ok(_) => Ok(cx.undefined().upcast()),
+        Err(message) => cx.throw_error(message)
+      }
     }
 
     method addResponse(mut cx) {
