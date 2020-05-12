@@ -90,7 +90,7 @@ describe("Interaction", () => {
         interaction.withRequest.bind(interaction, {
           method: HTTPMethod.GET,
           path: "/",
-          query: { "string": false, "query": 'false' },
+          query: { string: false, query: "false" },
         })
       ).to.throw(Error, "Query must only contain strings.")
     })
@@ -143,22 +143,21 @@ describe("Interaction", () => {
         path: "/search",
         query: {},
       }
-      const interaction = new Interaction()
-        .uponReceiving("request");
+      const interaction = new Interaction().uponReceiving("request")
 
       it("is passed with matcher", () => {
         request.query = {
           "id[]": eachLike("1"),
-        };
-        interaction.withRequest(request);
+        }
+        interaction.withRequest(request)
         expect(interaction.json().request).to.have.any.keys("query")
       })
 
       it("is passed with object", () => {
         request.query = {
-          "id": "1",
-        };
-        interaction.withRequest(request);
+          id: "1",
+        }
+        interaction.withRequest(request)
         expect(interaction.json().request).to.have.any.keys("query")
       })
     })

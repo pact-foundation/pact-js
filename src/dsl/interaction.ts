@@ -95,7 +95,7 @@ export class Interaction {
       throw new ConfigurationError("You must provide a path.")
     }
 
-    if(typeof requestOpts.query === "object") {
+    if (typeof requestOpts.query === "object") {
       this.queryObjectIsValid(requestOpts.query as Object)
     }
 
@@ -104,11 +104,14 @@ export class Interaction {
     return this
   }
 
-  private queryObjectIsValid(query:Object) {
-    if(Object.values(query).every(object => {
-      return !isMatcher(object) 
-      ? Object.values(query).some(string => typeof string !== "string") : false
-    })) {
+  private queryObjectIsValid(query: Object) {
+    if (
+      Object.values(query).every(object => {
+        return !isMatcher(object)
+          ? Object.values(query).some(string => typeof string !== "string")
+          : false
+      })
+    ) {
       throw new ConfigurationError(`Query must only contain strings.`)
     }
   }
