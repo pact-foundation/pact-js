@@ -132,7 +132,7 @@ export class MessageProviderPact {
         if (handler) {
           promises.push(handler(state.name))
         } else {
-          logger.warn(`no state handler found for "${state.name}", ignorning`)
+          logger.warn(`no state handler found for "${state.name}", ignoring`)
         }
       })
     }
