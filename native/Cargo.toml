@@ -1,6 +1,6 @@
 [package]
 name = "pact-js-v3"
-version = "0.0.2"
+version = "0.0.3"
 authors = ["Ronald Holshausen <uglyog@gmail.com>"]
 license = "MIT"
 build = "build.rs"
