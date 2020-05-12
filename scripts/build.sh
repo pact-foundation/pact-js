@@ -8,17 +8,12 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 npm run dist
 "${DIR}"/prepare.sh
 
-git status
 git checkout native
-cat native/Cargo.toml
 npm run build:v3
-ls -lh native
 rm -rf native/target
 # Copy Rust native lib
 echo "    Copying ./native => dist/native"
 mkdir -p dist/native && cp -r native dist/
-
-${DIR}/prepare.sh
 
 # Link the build so that the examples are always testing the
 # current build, in it's properly exported format
@@ -47,7 +42,7 @@ for i in examples/v3/*; do
   node --version
   pushd "$i"
   npm i
-  rm -rf "@pact-foundation/pact"
+  rm -rf "node_modules/@pact-foundation/pact"
   echo "linking pact"
   npm link @pact-foundation/pact
   npm t
