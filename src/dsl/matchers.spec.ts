@@ -596,6 +596,54 @@ describe("Matcher", () => {
     })
 
     describe("#extractPayload", () => {
+      describe("when given an object with no matchers", () => {
+        const object = {
+          some: "data",
+          more: "strings",
+          an: ["array"],
+          someObject: {
+            withData: true,
+            withNumber: 1,
+          },
+        }
+
+        it("returns just that object", () => {
+          expect(extractPayload(object)).to.deep.eql(object)
+        })
+      })
+
+      describe("when given an object with some matchers", () => {
+        const someMatchers = {
+          some: somethingLike("data"),
+          more: "strings",
+          an: ["array"],
+          another: eachLike("this"),
+          someObject: {
+            withData: somethingLike(true),
+            withTerm: term({ generate: "this", matcher: "this|that" }),
+            withNumber: 1,
+            withAnotherNumber: somethingLike(2),
+          },
+        }
+
+        const expected = {
+          some: "data",
+          more: "strings",
+          an: ["array"],
+          another: ["this"],
+          someObject: {
+            withData: true,
+            withTerm: "this",
+            withNumber: 1,
+            withAnotherNumber: 2,
+          },
+        }
+
+        it("returns without matching guff", () => {
+          expect(extractPayload(someMatchers)).to.deep.eql(expected)
+        })
+      })
+
       describe("when given a simple matcher", () => {
         it("removes all matching guff", () => {
           const expected = "myawesomeword"
