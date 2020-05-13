@@ -8,7 +8,8 @@ import { HTTPMethod, methods } from "../common/request"
 import { MatcherResult, isMatcher } from "./matchers"
 import ConfigurationError from "../errors/configurationError"
 
-export type Query = string | { [name: string]: string | MatcherResult }
+type QueryObject = { [name: string]: string | MatcherResult }
+export type Query = string | QueryObject
 
 export interface RequestOptions {
   method: HTTPMethod | methods
@@ -96,7 +97,7 @@ export class Interaction {
     }
 
     if (typeof requestOpts.query === "object") {
-      this.queryObjectIsValid(requestOpts.query as Object)
+      this.queryObjectIsValid(requestOpts.query)
     }
 
     this.state.request = omitBy(requestOpts, isNil) as RequestOptions
@@ -104,7 +105,7 @@ export class Interaction {
     return this
   }
 
-  private queryObjectIsValid(query: Object) {
+  private queryObjectIsValid(query: QueryObject) {
     if (
       Object.values(query).every(object => {
         return !isMatcher(object)
