@@ -287,26 +287,23 @@ export function isMatcher(x: MatcherResult | any): x is MatcherResult {
 
 // Recurse the object removing any underlying matching guff, returning
 // the raw example content
-export function extractPayload(obj: any, stack: any = {}): any {
-  // special case: top level matching object
-  // we need to strip the properties
-  if (isMatcher(obj) && isEmpty(stack)) {
-    return extractPayload(obj.getValue(), obj.getValue())
+export function extractPayload(value: any): any {
+  if (isMatcher(value)) {
+    return extractPayload(value.getValue())
   }
 
-  // recurse the (remaining) object, replacing Matchers with their
-  // actual contents
-  for (const property in obj) {
-    if (obj.hasOwnProperty(property)) {
-      const value = obj[property]
-
-      if (isMatcher(value)) {
-        extractPayload(value.getValue(), (stack[property] = value.getValue()))
-      } else if (typeof value === "object") {
-        extractPayload(value, (stack[property] = value))
-      }
-    }
+  if (Object.prototype.toString.call(value) === "[object Array]") {
+    return value.map(extractPayload)
   }
 
-  return stack
+  if (typeof value === "object") {
+    return Object.keys(value).reduce(
+      (acc: object, propName: string) => ({
+        ...acc,
+        [propName]: extractPayload(value[propName]),
+      }),
+      {}
+    )
+  }
+  return value
 }
