@@ -2,7 +2,7 @@ const axios = require("axios")
 const parser = require("xml2json")
 const eyes = require("eyes")
 const R = require("ramda")
-const fs = require('fs')
+const fs = require("fs")
 
 let serverUrl = "http://localhost:2203"
 
@@ -37,8 +37,8 @@ module.exports = {
     const data = fs.readFileSync(image)
     return axios.post(serverUrl + "/projects/" + id + "/images", data, {
       headers: {
-        'Content-Type': 'application/octet-stream'
-      }
+        "Content-Type": "application/octet-stream",
+      },
     })
   },
 }

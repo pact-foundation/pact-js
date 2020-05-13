@@ -576,15 +576,23 @@ declare_types! {
       let mock_server_id = cx.argument::<JsString>(0)?.value();
       let dir = cx.argument::<JsValue>(1)?.downcast::<JsString>().map(|val| val.value()).ok();
       let undefined = cx.undefined().upcast();
-      MANAGER.lock().unwrap()
+      let result = MANAGER.lock().unwrap()
         .find_mock_server_by_id(&mock_server_id, &|mock_server| {
             mock_server.write_pact(&dir)
                 .map(|_| undefined)
                 .map_err(|err| {
                     error!("Failed to write pact to file - {}", err);
-                    panic!("Failed to write pact to file - {}", err)
+                    format!("Failed to write pact to file - {}", err)
                 })
-        }).unwrap()
+        });
+
+      match result {
+        Some(result) => match result {
+          Ok(v) => Ok(v),
+          Err(err) => cx.throw_error(err)
+        },
+        None => cx.throw_error(format!("Mock server was not found with ID {}", mock_server_id))
+      }
     }
   }
 }
