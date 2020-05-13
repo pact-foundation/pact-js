@@ -26,7 +26,6 @@ describe("Pact V3", () => {
             consumer: "TodoApp",
             provider: "TodoServiceV3",
             dir: path.resolve(process.cwd(), "pacts"),
-            logLevel: "INFO",
           })
           provider
             .given("i have a list of projects")
@@ -86,7 +85,6 @@ describe("Pact V3", () => {
           consumer: "TodoApp",
           provider: "TodoServiceV3",
           dir: path.resolve(process.cwd(), "pacts"),
-          logLevel: "INFO",
         })
         provider
           .given("i have a list of projects")
@@ -176,7 +174,6 @@ describe("Pact V3", () => {
           consumer: "TodoApp",
           provider: "TodoServiceV3",
           dir: path.resolve(process.cwd(), "pacts"),
-          logLevel: "INFO",
         })
         provider
           .given("i have a project", { id: "1001", name: "Home Chores" })
