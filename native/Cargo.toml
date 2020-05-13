@@ -16,10 +16,10 @@ neon-build = "0.4.0"
 
 [dependencies]
 neon = { version = "0.4.0", features = ["event-handler-api"] }
-pact_mock_server = { version =  "0.7.0", path = "/home/ronald/Development/Projects/Pact/pact-reference/rust/pact_mock_server" }
-pact_mock_server_ffi = { version =  "0.0.4", path = "/home/ronald/Development/Projects/Pact/pact-reference/rust/pact_mock_server_ffi" }
-pact_matching = { version = "0.5.10", path = "/home/ronald/Development/Projects/Pact/pact-reference/rust/pact_matching" }
-pact_verifier = { version = "0.8.0", path = "/home/ronald/Development/Projects/Pact/pact-reference/rust/pact_verifier" }
+pact_mock_server = "0.7.0"
+pact_mock_server_ffi = "0.0.4"
+pact_matching = "0.5.10"
+pact_verifier = "0.8.0"
 env_logger = "0.7"
 log = "0.4.6"
 uuid = { version = "0.6", features = ["v4"] }
