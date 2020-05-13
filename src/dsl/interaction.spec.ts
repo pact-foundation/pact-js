@@ -143,22 +143,29 @@ describe("Interaction", () => {
         path: "/search",
         query: {},
       }
-      const interaction = new Interaction().uponReceiving("request")
 
       it("is passed with matcher", () => {
         request.query = {
           "id[]": eachLike("1"),
         }
-        interaction.withRequest(request)
-        expect(interaction.json().request).to.have.any.keys("query")
+        expect(
+          new Interaction()
+            .uponReceiving("request")
+            .withRequest(request)
+            .json().request
+        ).to.have.any.keys("query")
       })
 
       it("is passed with object", () => {
         request.query = {
           id: "1",
         }
-        interaction.withRequest(request)
-        expect(interaction.json().request).to.have.any.keys("query")
+        expect(
+          new Interaction()
+            .uponReceiving("request")
+            .withRequest(request)
+            .json().request
+        ).to.have.any.keys("query")
       })
     })
 

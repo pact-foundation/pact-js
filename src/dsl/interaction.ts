@@ -8,7 +8,9 @@ import { HTTPMethod, methods } from "../common/request"
 import { MatcherResult, isMatcher } from "./matchers"
 import ConfigurationError from "../errors/configurationError"
 
-type QueryObject = { [name: string]: string | MatcherResult }
+interface QueryObject {
+  [name: string]: string | MatcherResult
+}
 export type Query = string | QueryObject
 
 export interface RequestOptions {
@@ -105,18 +107,6 @@ export class Interaction {
     return this
   }
 
-  private queryObjectIsValid(query: QueryObject) {
-    if (
-      Object.values(query).every(object => {
-        return !isMatcher(object)
-          ? Object.values(query).some(string => typeof string !== "string")
-          : false
-      })
-    ) {
-      throw new ConfigurationError(`Query must only contain strings.`)
-    }
-  }
-
   /**
    * The response expected by the consumer.
    * @param {Object} responseOpts
@@ -154,5 +144,23 @@ export class Interaction {
       )
     }
     return this.state
+  }
+
+  /**
+   * Returns valid if object or matcher only contains string values
+   * @param query
+   */
+  private queryObjectIsValid(query: QueryObject) {
+    if (
+      Object.values(query).every(object => {
+        return !isMatcher(object)
+          ? Object.values(query).some(
+              queryString => typeof queryString !== "string"
+            )
+          : false
+      })
+    ) {
+      throw new ConfigurationError(`Query must only contain strings.`)
+    }
   }
 }
