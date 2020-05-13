@@ -18,7 +18,6 @@ describe("Message provider tests", () => {
     logLevel: "info",
     provider: "MyJSMessageProvider",
     providerVersion: "1.0.0",
-    consumer: "MyJSMessageConsumer",
     // For local validation
     // pactUrls: [path.resolve(process.cwd(), "pacts", "myjsmessageconsumer-myjsmessageprovider.json")],
     // Broker validation
