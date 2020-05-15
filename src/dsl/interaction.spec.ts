@@ -1,8 +1,8 @@
 import * as chai from "chai"
 import * as chaiAsPromised from "chai-as-promised"
 import { HTTPMethod } from "../common/request"
-import { Interaction, Query } from "./interaction"
-import { eachLike } from "./matchers"
+import { Interaction } from "./interaction"
+import { eachLike, term } from "./matchers"
 
 chai.use(chaiAsPromised)
 const expect = chai.expect

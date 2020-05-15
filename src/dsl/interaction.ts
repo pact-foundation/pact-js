@@ -9,7 +9,7 @@ import { MatcherResult, isMatcher } from "./matchers"
 import ConfigurationError from "../errors/configurationError"
 
 interface QueryObject {
-  [name: string]: string | MatcherResult
+  [name: string]: string | MatcherResult | string[]
 }
 export type Query = string | QueryObject
 
@@ -151,9 +151,13 @@ export class Interaction {
    * @param query
    */
   private queryObjectIsValid(query: QueryObject) {
+    for (const [key, value] of Object.entries(query)) {
+      query[key] = Array.isArray(value) ? value.toString() : value
+    }
+
     if (
-      Object.values(query).every(object => {
-        return !isMatcher(object)
+      Object.values(query).every(value => {
+        return !isMatcher(value)
           ? Object.values(query).some(
               queryString => typeof queryString !== "string"
             )

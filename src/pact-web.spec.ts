@@ -105,6 +105,33 @@ describe("PactWeb", () => {
             pact.addInteraction(interaction2)
           ).to.eventually.have.property("given")
         })
+
+        it("creates interaction with query array", () => {
+          const interaction3 = new Interaction()
+            .uponReceiving("a request with query")
+            .withRequest({
+              method: HTTPMethod.GET,
+              path: "/queries",
+              headers: { Accept: "application/json" },
+              query: {
+                array: ["first", "second"],
+              },
+            })
+            .willRespondWith({
+              status: 200,
+              headers: { "Content-Type": "application/json" },
+              body: {},
+            })
+
+          pact.mockService = {
+            addInteraction: (int: Interaction): Promise<Interaction> =>
+              Promise.resolve(int),
+          } as any
+
+          return expect(
+            pact.addInteraction(interaction3)
+          ).to.eventually.have.property("withRequest")
+        })
       })
     })
   })
