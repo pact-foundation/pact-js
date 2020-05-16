@@ -167,6 +167,18 @@ describe("Interaction", () => {
             .json().request
         ).to.have.any.keys("query")
       })
+
+      it("is passed with array", () => {
+        request.query = {
+          id: ["1", "2"],
+        }
+        expect(
+          new Interaction()
+            .uponReceiving("request")
+            .withRequest(request)
+            .json().request?.query
+        ).to.deep.eq({ id: ["1", "2"] })
+      })
     })
 
     describe("request body", () => {

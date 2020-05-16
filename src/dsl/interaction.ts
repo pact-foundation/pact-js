@@ -151,20 +151,16 @@ export class Interaction {
    * @param query
    */
   private queryObjectIsValid(query: QueryObject) {
-    for (const [key, value] of Object.entries(query)) {
-      query[key] = Array.isArray(value) ? value.toString() : value
-    }
-
-    if (
-      Object.values(query).every(value => {
-        return !isMatcher(value)
-          ? Object.values(query).some(
-              queryString => typeof queryString !== "string"
-            )
-          : false
-      })
-    ) {
-      throw new ConfigurationError(`Query must only contain strings.`)
-    }
+    Object.values(query).every(value => {
+      if (
+        isMatcher(value) ||
+        Array.isArray(value) ||
+        typeof value === "string"
+      ) {
+        return
+      } else {
+        throw new ConfigurationError(`Query must only contain strings.`)
+      }
+    })
   }
 }
