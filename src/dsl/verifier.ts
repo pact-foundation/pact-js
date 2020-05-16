@@ -171,7 +171,7 @@ export class Verifier {
         if (handler) {
           promises.push(handler())
         } else {
-          logger.warn(`No state handler found for "${state}", ignorning`)
+          logger.warn(`No state handler found for "${state}", ignoring`)
         }
       })
     }
