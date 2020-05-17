@@ -13,7 +13,7 @@ const path = require("path")
 describe("Message consumer tests", () => {
   const messagePact = new MessageConsumerPact({
     consumer: "MyJSMessageConsumer",
-    dir: path.resolve(__dirname, "pacts"),
+    dir: path.resolve(process.cwd(), "pacts"),
     pactfileWriteMode: "update",
     provider: "MyJSMessageProvider",
     logLevel: "info",
