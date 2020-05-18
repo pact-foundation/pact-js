@@ -20,8 +20,8 @@ describe("Message consumer tests", () => {
   })
 
   describe("receive dog event", () => {
-    it("accepts a valid dog", async () => {
-      return await messagePact
+    it("accepts a valid dog", () => {
+      return messagePact
         .given("some state")
         .expectsToReceive("a request for a dog")
         .withContent({
