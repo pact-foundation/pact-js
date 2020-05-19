@@ -1,6 +1,7 @@
 // Karma configuration
 // Generated on Thu Nov 20 2014 14:51:15 GMT+1100 (AEDT)
 var path = require("path")
+process.env.CHROME_BIN = require("puppeteer").executablePath()
 
 module.exports = function(config) {
   config.set({
@@ -62,12 +63,12 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ["PhantomJS_without_security"],
+    browsers: ["Chrome_without_security"],
 
     customLaunchers: {
-      PhantomJS_without_security: {
-        base: "PhantomJS",
-        flags: ["--web-security=no"],
+      Chrome_without_security: {
+        base: "ChromeHeadless",
+        flags: ["--disable-web-security", "--disable-site-isolation-trials"],
       },
     },
 

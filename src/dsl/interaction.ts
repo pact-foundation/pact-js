@@ -5,10 +5,13 @@
 
 import { isNil, keys, omitBy } from "lodash"
 import { HTTPMethod, methods } from "../common/request"
-import { MatcherResult } from "./matchers"
+import { MatcherResult, isMatcher } from "./matchers"
 import ConfigurationError from "../errors/configurationError"
 
-export type Query = string | { [name: string]: string | MatcherResult }
+interface QueryObject {
+  [name: string]: string | MatcherResult | string[]
+}
+export type Query = string | QueryObject
 
 export interface RequestOptions {
   method: HTTPMethod | methods
@@ -95,6 +98,10 @@ export class Interaction {
       throw new ConfigurationError("You must provide a path.")
     }
 
+    if (typeof requestOpts.query === "object") {
+      this.queryObjectIsValid(requestOpts.query)
+    }
+
     this.state.request = omitBy(requestOpts, isNil) as RequestOptions
 
     return this
@@ -137,5 +144,23 @@ export class Interaction {
       )
     }
     return this.state
+  }
+
+  /**
+   * Returns valid if object or matcher only contains string values
+   * @param query
+   */
+  private queryObjectIsValid(query: QueryObject) {
+    Object.values(query).every(value => {
+      if (
+        isMatcher(value) ||
+        Array.isArray(value) ||
+        typeof value === "string"
+      ) {
+        return
+      } else {
+        throw new ConfigurationError(`Query must only contain strings.`)
+      }
+    })
   }
 }
