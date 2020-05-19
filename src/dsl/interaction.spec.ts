@@ -2,6 +2,7 @@ import * as chai from "chai"
 import * as chaiAsPromised from "chai-as-promised"
 import { HTTPMethod } from "../common/request"
 import { Interaction } from "./interaction"
+import { eachLike, term } from "./matchers"
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -72,7 +73,7 @@ describe("Interaction", () => {
     })
 
     it("throws error when method is not provided", () => {
-      expect(interaction.withRequest.bind(interaction, { ath: "/" })).to.throw(
+      expect(interaction.withRequest.bind(interaction, { path: "/" })).to.throw(
         Error,
         "You must provide an HTTP method."
       )
@@ -82,6 +83,16 @@ describe("Interaction", () => {
       expect(
         interaction.withRequest.bind(interaction, { method: HTTPMethod.GET })
       ).to.throw(Error, "You must provide a path.")
+    })
+
+    it("throws error when query object is not a string", () => {
+      expect(
+        interaction.withRequest.bind(interaction, {
+          method: HTTPMethod.GET,
+          path: "/",
+          query: { string: false, query: "false" },
+        })
+      ).to.throw(Error, "Query must only contain strings.")
     })
 
     describe("with only mandatory params", () => {
@@ -121,6 +132,52 @@ describe("Interaction", () => {
           "headers",
           "body"
         )
+      })
+    })
+
+    describe("query type", () => {
+      const request = {
+        body: { id: 1, name: "Test", due: "tomorrow" },
+        headers: { "Content-Type": "application/json" },
+        method: HTTPMethod.GET,
+        path: "/search",
+        query: {},
+      }
+
+      it("is passed with matcher", () => {
+        request.query = {
+          "id[]": eachLike("1"),
+        }
+        expect(
+          new Interaction()
+            .uponReceiving("request")
+            .withRequest(request)
+            .json().request
+        ).to.have.any.keys("query")
+      })
+
+      it("is passed with object", () => {
+        request.query = {
+          id: "1",
+        }
+        expect(
+          new Interaction()
+            .uponReceiving("request")
+            .withRequest(request)
+            .json().request
+        ).to.have.any.keys("query")
+      })
+
+      it("is passed with array", () => {
+        request.query = {
+          id: ["1", "2"],
+        }
+        expect(
+          new Interaction()
+            .uponReceiving("request")
+            .withRequest(request)
+            .json().request?.query
+        ).to.deep.eq({ id: ["1", "2"] })
       })
     })
 
