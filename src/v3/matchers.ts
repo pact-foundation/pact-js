@@ -244,7 +244,7 @@ export function timestamp(format: string, example?: string) {
   return {
     "pact:generator:type": "DateTime",
     "pact:matcher:type": "timestamp",
-    timestamp: format,
+    format,
     value: example || PactNative.generate_datetime_string(format),
   }
 }
@@ -258,7 +258,7 @@ export function time(format: string, example?: string) {
   return {
     "pact:generator:type": "Time",
     "pact:matcher:type": "time",
-    time: format,
+    format,
     value: example || PactNative.generate_datetime_string(format),
   }
 }
@@ -270,7 +270,7 @@ export function time(format: string, example?: string) {
  */
 export function date(format: any, example?: string) {
   return {
-    date: format,
+    format,
     "pact:generator:type": "Date",
     "pact:matcher:type": "date",
     value: example || PactNative.generate_datetime_string(format),

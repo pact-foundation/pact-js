@@ -556,8 +556,8 @@ declare_types! {
       });
       match mismatches {
         None => {
-          let js_str = cx.string("Could not the result from the mock server");
-          js_test_result.set(&mut cx, "mockServerResult", js_str)?;
+          let js_str = cx.string(format!("Could not get the result from the mock server: there is no mock server with id {}", mock_server_id));
+          js_test_result.set(&mut cx, "mockServerError", js_str)?;
         },
         Some(val) => if !val.is_empty() {
           let mock_server_result = JsArray::new(&mut cx, val.len() as u32);

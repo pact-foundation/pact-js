@@ -60,22 +60,13 @@ export class PactV3 {
         .then((val: any) => {
           const testResult = this.pact.getTestResult(result.mockServer.id)
           if (testResult.mockServerError) {
-            return Promise.reject(
-              new Error(
-                "Mock server failed with an error: " +
-                  testResult.mockServerResult
-              )
-            )
+            return Promise.reject(new Error(testResult.mockServerError))
           } else if (testResult.mockServerMismatches) {
             let error = "Mock server failed with the following mismatches: "
             for (const mismatch of testResult.mockServerMismatches) {
               error += "\n\t" + mismatch
             }
-            return Promise.reject(
-              new Error(
-                "Mock server failed with the following mismatches: " + error
-              )
-            )
+            return Promise.reject(new Error(error))
           } else {
             this.pact.writePactFile(result.mockServer.id, this.opts.dir)
             return val
@@ -84,16 +75,20 @@ export class PactV3 {
         .catch((err: any) => {
           const testResult = this.pact.getTestResult(result.mockServer.id)
           let error = "Test failed for the following reasons:"
-          error += "\n\tTest code failed with an error: " + err.message
+          error += "\n\n\tTest code failed with an error: " + err.message
           if (testResult.mockServerError) {
-            error +=
-              "\n\tMock server failed with an error: " +
-              testResult.mockServerResult
+            error += "\n\n\t" + testResult.mockServerError
           }
           if (testResult.mockServerMismatches) {
-            error += "\n\tMock server failed with the following mismatches: "
-            for (const mismatch of testResult.mockServerMismatches) {
-              error += "\n\t\t" + mismatch
+            error += "\n\n\tMock server failed with the following mismatches: "
+            let i = 1
+            for (const mismatchJson of testResult.mockServerMismatches) {
+              let mismatches = JSON.parse(mismatchJson)
+              for (const mismatch of mismatches.mismatches) {
+                error += `\n\t\t${i++}) ${mismatch.type} ${
+                  mismatch.path ? `(at ${mismatch.path}) ` : ""
+                }${mismatch.mismatch}`
+              }
             }
           }
           return Promise.reject(new Error(error))
