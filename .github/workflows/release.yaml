@@ -1,6 +1,7 @@
 name: Release workflow
 
 on:
+  push:
   release:
     types: [published, edited]
 
