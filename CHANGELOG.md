@@ -2,13 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [9.11.0](https://github.com/pact-foundation/pact-js/compare/v9.10.0...v9.11.0) (2020-05-20)
+
+
+### Features
+
+* error thrown when query not string ([c3ff00f](https://github.com/pact-foundation/pact-js/commit/c3ff00f3bac1a67826a9f57311e5137694c4c788))
+* support array as query param ([d140d0c](https://github.com/pact-foundation/pact-js/commit/d140d0ce8a3d3eadb1d7e05eefad0c7df6218ecb))
+* support arrays ([57288ff](https://github.com/pact-foundation/pact-js/commit/57288ffaaf876fe0c8d3c133ef3328e7182f2864))
+* validate object values are strings ([3863527](https://github.com/pact-foundation/pact-js/commit/3863527dfb0df712b537ccc46ed213338730edb9))
+
+
+### Bug Fixes
+
+* **dsl:** Fix extractPayload so that it passes through object properties that are not matchers (fixes [#454](https://github.com/pact-foundation/pact-js/issues/454)) ([c0f3d37](https://github.com/pact-foundation/pact-js/commit/c0f3d37b3a1f1843d4e92182b388bfe23d95e5c8))
+* package.json & package-lock.json to reduce vulnerabilities ([69d97e0](https://github.com/pact-foundation/pact-js/commit/69d97e0680e1d21e87ee491b0be0d1bd7e367e71))
+* package.json & package-lock.json to reduce vulnerabilities ([2184a5d](https://github.com/pact-foundation/pact-js/commit/2184a5dedd7adb2070e7094e8f1b25dc4a374696))
+
 ## [9.10.0](https://github.com/pact-foundation/pact-js/compare/v9.9.12...v9.10.0) (2020-04-24)
 
 
 ### Features
 
 * remove need for pact-node in almost all uses, including examples ([4e22828](https://github.com/pact-foundation/pact-js/commit/4e228282bbf1f31d8dae35e3cc00e4a6347110ba))
-* remove need for pact-node in almost all uses, including examples ([83a91aa](https://github.com/pact-foundation/pact-js/commit/83a91aaf5ab0592279a6c60f12de719c218e3cd9))
 * update PactWeb and MessageProviderPact interface ([b82976f](https://github.com/pact-foundation/pact-js/commit/b82976f34b607535bf9deb07987140b487ab87e7))
 
 ### [9.9.12](https://github.com/pact-foundation/pact-js/compare/v9.9.11...v9.9.12) (2020-04-19)
