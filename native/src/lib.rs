@@ -12,7 +12,7 @@ use pact_matching::models::matchingrules::{MatchingRules, MatchingRule, Category
 use pact_matching::models::generators::{Generators, GeneratorCategory, Generator};
 use pact_matching::time_utils::generate_string;
 use pact_mock_server::server_manager::ServerManager;
-use pact_mock_server_ffi::bodies::process_json;
+use pact_mock_server_ffi::bodies::{process_json, request_multipart, response_multipart, file_as_multipart_body};
 use env_logger::{Builder, Target};
 use uuid::Uuid;
 use std::sync::Mutex;
@@ -390,6 +390,75 @@ declare_types! {
       }
     }
 
+    method addRequestMultipartFileUpload(mut cx) {
+      let request = cx.argument::<JsObject>(0)?;
+      let content_type = cx.argument::<JsString>(1)?;
+      let file_path = cx.argument::<JsString>(2)?;
+      let part_name = cx.argument::<JsString>(3)?;
+
+      let js_method = request.get(&mut cx, "method");
+      let path = get_request_path(&mut cx, request);
+      let js_query_props = get_query(&mut cx, request);
+      let js_header_props = get_headers(&mut cx, request);
+
+      let mut this = cx.this();
+
+      let result = {
+        let guard = cx.lock();
+        let mut pact = this.borrow_mut(&guard);
+
+        if let Some(last) = pact.interactions.last_mut() {
+          if let Ok(method) = js_method {
+            match method.downcast::<JsString>() {
+              Ok(method) => last.request.method = method.value().to_string(),
+              Err(err) => if !method.is_a::<JsUndefined>() && !method.is_a::<JsNull>() {
+                warn!("Request method is not a string value - {}", err)
+              }
+            }
+          }
+          if let Some((path, rule, gen)) = path {
+            last.request.path = path;
+            if let Some(rule) = rule {
+              let category = last.request.matching_rules.add_category("path");
+              category.add_rule(&"".to_string(), rule, &RuleLogic::And)
+            }
+            if let Some(gen) = gen {
+              last.request.generators.add_generator(&GeneratorCategory::PATH, gen)
+            }
+          }
+
+          if let Ok(query_props) = js_query_props {
+            last.request.query = Some(query_props)
+          }
+
+          if let Ok(header_props) = js_header_props {
+            last.request.headers = Some(header_props)
+          }
+
+          let boundary = last.description.replace(" ", "_");
+          match file_as_multipart_body(&file_path.value(), &part_name.value(), &boundary) {
+            Ok(body) => {
+              request_multipart(&mut last.request, &boundary, body, &content_type.value(), &part_name.value());
+              Ok(())
+            },
+            Err(err) => {
+              error!("Could not load file {}: {}", file_path.value(), err);
+              Err(format!("Could not load file {}: {}", file_path.value(), err))
+            }
+          }
+        } else if pact.interactions.is_empty() {
+          Err("You need to define a new interaction with the uponReceiving method before you can define a new request with the withResponseMultipartFileUpload method".to_string())
+        } else {
+          Ok(())
+        }
+      };
+
+      match result {
+        Ok(_) => Ok(cx.undefined().upcast()),
+        Err(message) => cx.throw_error(message)
+      }
+    }
+
     method addResponse(mut cx) {
       let response = cx.argument::<JsObject>(0)?;
       let js_status = response.get(&mut cx, "status");
@@ -484,6 +553,56 @@ declare_types! {
           }
         } else if pact.interactions.is_empty() {
           Err("You need to define a new interaction with the uponReceiving method before you can define a new response with the withResponseBinaryFile method".to_string())
+        } else {
+          Ok(())
+        }
+      };
+
+      match result {
+        Ok(_) => Ok(cx.undefined().upcast()),
+        Err(message) => cx.throw_error(message)
+      }
+    }
+
+    method addResponseMultipartFileUpload(mut cx) {
+      let response = cx.argument::<JsObject>(0)?;
+      let content_type = cx.argument::<JsString>(1)?;
+      let file_path = cx.argument::<JsString>(2)?;
+      let part_name = cx.argument::<JsString>(3)?;
+
+      let js_status = response.get(&mut cx, "status");
+      let js_header_props = get_headers(&mut cx, response);
+
+      let mut this = cx.this();
+
+      let result = {
+        let guard = cx.lock();
+        let mut pact = this.borrow_mut(&guard);
+
+        if let Some(last) = pact.interactions.last_mut() {
+          if let Ok(status) = js_status {
+            match status.downcast::<JsNumber>() {
+              Ok(status) => last.response.status = status.value() as u16,
+              Err(err) => warn!("Response status is not a number - {}", err)
+            }
+          }
+          if let Ok(header_props) = js_header_props {
+            last.response.headers = Some(header_props)
+          }
+
+          let boundary = last.description.replace(" ", "_");
+          match file_as_multipart_body(&file_path.value(), &part_name.value(), &boundary) {
+            Ok(body) => {
+              response_multipart(&mut last.response, &boundary, body, &content_type.value(), &part_name.value());
+              Ok(())
+            },
+            Err(err) => {
+              error!("Could not load file {}: {}", file_path.value(), err);
+              Err(format!("Could not load file {}: {}", file_path.value(), err))
+            }
+          }
+        } else if pact.interactions.is_empty() {
+          Err("You need to define a new interaction with the uponReceiving method before you can define a new response with the withResponseMultipartFileUpload method".to_string())
         } else {
           Ok(())
         }

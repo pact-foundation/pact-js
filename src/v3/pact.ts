@@ -42,6 +42,16 @@ export class PactV3 {
     return this
   }
 
+  public withRequestMultipartFileUpload(
+    req: any,
+    contentType: string,
+    file: string,
+    part: string
+  ) {
+    this.pact.addRequestMultipartFileUpload(req, contentType, file, part)
+    return this
+  }
+
   public willRespondWith(res: any) {
     this.pact.addResponse(res, res.body && JSON.stringify(res.body))
     this.states = []
@@ -50,6 +60,16 @@ export class PactV3 {
 
   public withResponseBinaryFile(res: any, contentType: string, file: string) {
     this.pact.addResponseBinaryFile(res, contentType, file)
+    return this
+  }
+
+  public withResponseMultipartFileUpload(
+    req: any,
+    contentType: string,
+    file: string,
+    part: string
+  ) {
+    this.pact.addResponseMultipartFileUpload(req, contentType, file, part)
     return this
   }
 
