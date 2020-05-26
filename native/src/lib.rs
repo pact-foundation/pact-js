@@ -294,10 +294,16 @@ declare_types! {
           if let Some(body) = js_body {
             match process_body(body, last.request.content_type_enum(), &mut last.request.matching_rules,
               &mut last.request.generators) {
-              Ok(body) => last.request.body = body,
+              Ok(body) => {
+                debug!("Request body = {}", body.str_value());
+                last.request.body = body
+              },
               Err(err) => panic!(err)
             }
           }
+          debug!("Request = {}", last.request);
+          debug!("Request matching rules = {:?}", last.request.matching_rules);
+          debug!("Request generators = {:?}", last.request.generators);
           Ok(())
         } else if pact.interactions.is_empty() {
           Err("You need to define a new interaction with the uponReceiving method before you can define a new request with the withRequest method")

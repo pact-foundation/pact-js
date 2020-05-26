@@ -227,7 +227,7 @@ export function regex(pattern: any, str: string): any {
   if (pattern instanceof RegExp) {
     return {
       "pact:matcher:type": "regex",
-      regex: pattern.toString(),
+      regex: pattern.source,
       value: str,
     }
   }

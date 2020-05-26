@@ -21,6 +21,7 @@ describe("Pact V3", () => {
   context("when there are a list of projects", () => {
     describe("and there is a valid user session", () => {
       describe("with JSON request", () => {
+        let provider
         before(() => {
           provider = new PactV3({
             consumer: "TodoApp",

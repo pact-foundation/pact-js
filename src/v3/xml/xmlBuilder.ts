@@ -1,5 +1,8 @@
 import { XmlElement } from "./xmlElement"
 
+/**
+ * XML Builder class for constructing XML documents with matchers
+ */
 export class XmlBuilder {
   private root: XmlElement
 

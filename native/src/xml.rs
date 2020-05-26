@@ -16,13 +16,13 @@ pub fn generate_xml_body(attributes: &Map<String, Value>, matching_rules: &mut C
   let package = Package::new();
   let doc = package.as_document();
 
-  debug!("attributes = {:?}", attributes);
+  trace!("generate_xml_body: attributes = {:?}", attributes);
   match attributes.get("root") {
     Some(val) => match val {
       Value::Object(obj) => {
-        match create_element_from_json(doc, None, obj, matching_rules, generators, &"$".to_string(), false, &mut hashmap!{}) {
+        match create_element_from_json(doc, None, obj, matching_rules, generators, &vec!["$"], false, &mut hashmap!{}) {
           Either::Left(element) => doc.root().append_child(element),
-          Either::Right(text) => warn!("Can't append text node to the root")
+          Either::Right(_) => warn!("Can't append text node to the root")
         }
       },
       _ => {
@@ -48,39 +48,50 @@ fn create_element_from_json<'a>(
   object: &Map<String, Value>, 
   matching_rules: &mut Category, 
   generators: &mut Generators, 
-  path: &String, 
+  path: &Vec<&str>, 
   type_matcher: bool,
   namespaces: &mut HashMap<String, String>
 ) -> Either<Element<'a>, Text<'a>> {
+  trace!("create_element_from_json {:?}: object = {:?}", path, object);
   let mut element = None;
   let mut text = None;
   if object.contains_key("pact:matcher:type") {
     if let Some(rule) = MatchingRule::from_integration_json(object) {
-      matching_rules.add_rule(path, rule, &RuleLogic::And);
+      matching_rules.add_rule(path.join("."), rule, &RuleLogic::And);
     }
     if let Some(gen) = object.get("pact:generator:type") {
       match Generator::from_map(&json_to_string(gen), object) {
-        Some(generator) => generators.add_generator_with_subcategory(&GeneratorCategory::BODY, path, generator),
+        Some(generator) => generators.add_generator_with_subcategory(&GeneratorCategory::BODY, path.join("."), generator),
         _ => ()
       };
     }
 
-    let updated_path = path.to_owned() + ".*";
+    let mut updated_path = path.clone();
+    updated_path.push(".*");
     if let Some(val) = object.get("value") {
       if let Value::Object(attr) = val {
-        let new_element = doc.create_element(json_to_string(dbg!(attr).get("name").unwrap()).as_str());
+        let name = json_to_string(attr.get("name").unwrap());
+        let new_element = doc.create_element(name.as_str());
         if let Some(attributes) = val.get("attributes") {
           match attributes {
-            Value::Object(attributes) => add_attributes(&new_element, attributes, matching_rules, generators, &updated_path),
+            Value::Object(attributes) => {
+              let mut updated_path = path.clone();
+              updated_path.push(&name);
+              add_attributes(&new_element, attributes, matching_rules, generators, &updated_path);
+            },
             _ => ()
           }
         };
 
         if let Some(children) = val.get("children") {
           match children {
-            Value::Array(children) => for child in children {
+            Value::Array(children) => for (index, child) in children.iter().enumerate() {
               match child {
                 Value::Object(attributes) => {
+                  let mut updated_path = path.clone();
+                  let index = index.to_string();
+                  updated_path.push(new_element.name().local_part());
+                  updated_path.push(&index);
                   create_element_from_json(doc, Some(new_element), attributes, matching_rules, generators, &updated_path, true, namespaces);
                 },
                 _ => panic!("Intermediate JSON format is invalid, child is not an object: {:?}", child)
@@ -98,23 +109,49 @@ fn create_element_from_json<'a>(
       panic!("Intermediate JSON format is invalid, no corresponding value for the given matcher: {:?}", object)
     }
   } else if let Some(content) = object.get("content") {
-    text = Some(doc.create_text(json_to_string(content).as_str()))
+    text = Some(doc.create_text(json_to_string(content).as_str()));
+    if let Some(matcher) = object.get("matcher") {
+      let mut text_path = path.clone();
+      text_path.pop();
+      text_path.push("#text");
+      if let Value::Object(matcher) = matcher {
+        if let Some(rule) = MatchingRule::from_integration_json(matcher) {
+          matching_rules.add_rule(&text_path.join("."), rule, &RuleLogic::And);
+        }
+      }
+      if let Some(gen) = object.get("pact:generator:type") {
+        if let Value::Object(matcher) = matcher {
+          match Generator::from_map(&json_to_string(gen), matcher) {
+            Some(generator) => generators.add_generator_with_subcategory(&GeneratorCategory::BODY, &text_path.join("."), generator),
+            _ => ()
+          };
+        }
+      }
+    }
   } else if let Some(name) = object.get("name") {
     let name = json_to_string(name);
     let new_element = doc.create_element(name.as_str());
     if let Some(attributes) = object.get("attributes") {
       match attributes {
-        Value::Object(attributes) => add_attributes(&new_element, attributes, matching_rules, generators, path),
+        Value::Object(attributes) => {
+          let mut updated_path = path.clone();
+          updated_path.push(&name);
+          add_attributes(&new_element, attributes, matching_rules, generators, &updated_path);
+        },
         _ => ()
       }
     };
 
     if let Some(children) = object.get("children") {
       match children {
-        Value::Array(children) => for child in children {
+        Value::Array(children) => for (index, child) in children.iter().enumerate() {
           match child {
             Value::Object(attributes) => {
-              create_element_from_json(doc, Some(new_element), attributes, matching_rules, generators,  &(path.to_owned() + "." + name.as_str()), false, namespaces);
+              let mut updated_path = path.clone();
+              let index = index.to_string();
+              updated_path.push(&name);
+              updated_path.push(&index);
+              create_element_from_json(doc, Some(new_element), attributes, matching_rules, generators, &updated_path, false, namespaces);
             },
             _ => panic!("Intermediate JSON format is invalid, child is not an object: {:?}", child)
           }
@@ -159,10 +196,11 @@ fn add_attributes(
   attributes: &Map<String, Value>, 
   matching_rules: &mut Category, 
   generators: &mut Generators, 
-  path: &String
+  path: &Vec<&str>
 ) {
+  trace!("add_attributes: attributes = {:?}", attributes);
   for (k, v) in attributes {
-    let path = format!("{}['@{}']", path, k);
+    let path = format!("{}['@{}']", path.join("."), k);
 
     let value = match v {
       Value::Object(matcher_definition) => if matcher_definition.contains_key("pact:matcher:type") {
@@ -182,7 +220,7 @@ fn add_attributes(
       _ => json_to_string(&v)
     };
 
-    debug!("setting attribute key {}, value {}", k.as_str(), value.as_str());
+    trace!("add_attributes: setting attribute key {}, value {}", k.as_str(), value.as_str());
 
     element.set_attribute_value(k.as_str(), value.as_str());
   }
