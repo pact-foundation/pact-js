@@ -1021,6 +1021,7 @@ version = "0.0.3"
 dependencies = [
  "ansi_term 0.12.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "async-trait 0.1.31 (registry+https://github.com/rust-lang/crates.io-index)",
+ "either 1.5.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "env_logger 0.7.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "futures 0.3.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "lazy_static 1.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1032,7 +1033,7 @@ dependencies = [
  "pact_matching 0.6.1",
  "pact_mock_server 0.7.5",
  "pact_mock_server_ffi 0.0.6",
- "pact_verifier 0.8.1",
+ "pact_verifier 0.8.2",
  "reqwest 0.10.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.110 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_derive 1.0.110 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1071,7 +1072,7 @@ dependencies = [
  "semver 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.110 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_json 1.0.53 (registry+https://github.com/rust-lang/crates.io-index)",
- "sxd-document 0.2.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "sxd-document 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "tree_magic 0.2.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "uuid 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -1123,7 +1124,7 @@ dependencies = [
 
 [[package]]
 name = "pact_verifier"
-version = "0.8.1"
+version = "0.8.2"
 dependencies = [
  "ansi_term 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "async-trait 0.1.31 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1701,15 +1702,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 name = "strsim"
 version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-
-[[package]]
-name = "sxd-document"
-version = "0.2.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-dependencies = [
- "peresil 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "typed-arena 1.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
-]
 
 [[package]]
 name = "sxd-document"
@@ -2389,7 +2381,6 @@ dependencies = [
 "checksum socket2 0.3.12 (registry+https://github.com/rust-lang/crates.io-index)" = "03088793f677dce356f3ccc2edb1b314ad191ab702a5de3faf49304f7e104918"
 "checksum spin 0.5.2 (registry+https://github.com/rust-lang/crates.io-index)" = "6e63cff320ae2c57904679ba7cb63280a3dc4613885beafb148ee7bf9aa9042d"
 "checksum strsim 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)" = "8ea5119cdb4c55b55d432abb513a0429384878c15dde60cc77b1c99de1a95a6a"
-"checksum sxd-document 0.2.6 (registry+https://github.com/rust-lang/crates.io-index)" = "1e360d2575b173847506841ca97dbab96b6d27a2ec660b70932fe32a2b12e0a2"
 "checksum sxd-document 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)" = "94d82f37be9faf1b10a82c4bd492b74f698e40082f0f40de38ab275f31d42078"
 "checksum syn 1.0.23 (registry+https://github.com/rust-lang/crates.io-index)" = "95b5f192649e48a5302a13f2feb224df883b98933222369e4b3b0fe2a5447269"
 "checksum tempdir 0.3.7 (registry+https://github.com/rust-lang/crates.io-index)" = "15f2b5fb00ccdf689e0149d1b1b3c03fead81c2b37735d812fa8bddbbf41b6d8"
