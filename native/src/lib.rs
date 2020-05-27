@@ -497,6 +497,9 @@ declare_types! {
               Err(err) => panic!(err)
             }
           }
+          debug!("Response = {}", last.response);
+          debug!("Response matching rules = {:?}", last.response.matching_rules);
+          debug!("Response generators = {:?}", last.response.generators);
           Ok(())
         } else if pact.interactions.is_empty() {
           Err("You need to define a new interaction with the uponReceiving method before you can define a new response with the willRespondWith method")

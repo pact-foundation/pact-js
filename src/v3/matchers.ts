@@ -255,10 +255,20 @@ export function equal(value: any) {
  * @param example Example value to use. If omitted a value using the current system date and time will be generated.
  */
 export function timestamp(format: string, example?: string) {
+  return datetime(format, example)
+}
+
+/**
+ * String value that must match the provided datetime format string.
+ * @param format Datetime format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html)
+ * @param example Example value to use. If omitted a value using the current system date and time will be generated.
+ */
+export function datetime(format: string, example?: string) {
   return {
     "pact:generator:type": "DateTime",
     "pact:matcher:type": "timestamp",
     format,
+    timestamp: format, // This is needed due to a defect in upstream matching lib. Should be fixed in 0.6.2
     value: example || PactNative.generate_datetime_string(format),
   }
 }
@@ -273,6 +283,7 @@ export function time(format: string, example?: string) {
     "pact:generator:type": "Time",
     "pact:matcher:type": "time",
     format,
+    time: format, // This is needed due to a defect in upstream matching lib. Should be fixed in 0.6.2
     value: example || PactNative.generate_datetime_string(format),
   }
 }
@@ -287,6 +298,7 @@ export function date(format: any, example?: string) {
     format,
     "pact:generator:type": "Date",
     "pact:matcher:type": "date",
+    date: format, // This is needed due to a defect in upstream matching lib. Should be fixed in 0.6.2
     value: example || PactNative.generate_datetime_string(format),
   }
 }

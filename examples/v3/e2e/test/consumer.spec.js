@@ -13,7 +13,7 @@ describe("Pact V3", () => {
     eachLike,
     atLeastLike,
     integer,
-    timestamp,
+    datetime,
     boolean,
     string,
     regex,
@@ -51,7 +51,7 @@ describe("Pact V3", () => {
   // API we don't care about
   const animalBodyExpectation = {
     id: integer(1),
-    available_from: timestamp("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
+    available_from: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
     first_name: string("Billy"),
     last_name: string("Goat"),
     animal: string("goat"),
