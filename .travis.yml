@@ -40,6 +40,16 @@ stages:
 
 jobs:
   include:
+    - &test
+      script: ./scripts/build.sh
+      node_js: "10"
+
+    - <<: *test
+      node_js: "12"
+
+    - <<: *test
+      node_js: "13"
+
     - stage: 🚀 publish to npm 🚀
       node_js: "12"
       if: tag IS present
