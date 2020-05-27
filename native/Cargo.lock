@@ -1030,10 +1030,10 @@ dependencies = [
  "native-tls 0.2.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "neon 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "neon-build 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "pact_matching 0.6.1",
- "pact_mock_server 0.7.5",
- "pact_mock_server_ffi 0.0.6",
- "pact_verifier 0.8.2",
+ "pact_matching 0.6.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "pact_mock_server 0.7.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "pact_mock_server_ffi 0.0.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "pact_verifier 0.8.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "reqwest 0.10.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.110 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_derive 1.0.110 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1047,6 +1047,7 @@ dependencies = [
 [[package]]
 name = "pact_matching"
 version = "0.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "ansi_term 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "base64 0.12.1 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1079,7 +1080,8 @@ dependencies = [
 
 [[package]]
 name = "pact_mock_server"
-version = "0.7.5"
+version = "0.7.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "bytes 0.5.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "futures 0.3.5 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1088,7 +1090,7 @@ dependencies = [
  "lazy_static 1.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "log 0.4.8 (registry+https://github.com/rust-lang/crates.io-index)",
  "maplit 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
- "pact_matching 0.6.1",
+ "pact_matching 0.6.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "rustls 0.17.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_json 1.0.53 (registry+https://github.com/rust-lang/crates.io-index)",
  "tokio 0.2.21 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1099,6 +1101,7 @@ dependencies = [
 [[package]]
 name = "pact_mock_server_ffi"
 version = "0.0.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "cbindgen 0.14.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "chrono 0.4.11 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1113,8 +1116,8 @@ dependencies = [
  "maplit 1.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "nom 4.2.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "onig 4.3.3 (registry+https://github.com/rust-lang/crates.io-index)",
- "pact_matching 0.6.1",
- "pact_mock_server 0.7.5",
+ "pact_matching 0.6.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "pact_mock_server 0.7.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "rand 0.6.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "rand_regex 0.12.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "regex-syntax 0.6.17 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1124,7 +1127,8 @@ dependencies = [
 
 [[package]]
 name = "pact_verifier"
-version = "0.8.2"
+version = "0.8.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "ansi_term 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "async-trait 0.1.31 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1138,7 +1142,7 @@ dependencies = [
  "log 0.4.8 (registry+https://github.com/rust-lang/crates.io-index)",
  "maplit 0.1.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "mime 0.3.16 (registry+https://github.com/rust-lang/crates.io-index)",
- "pact_matching 0.6.1",
+ "pact_matching 0.6.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "regex 1.3.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "reqwest 0.10.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_json 1.0.53 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -2316,6 +2320,10 @@ dependencies = [
 "checksum openssl 0.10.29 (registry+https://github.com/rust-lang/crates.io-index)" = "cee6d85f4cb4c4f59a6a85d5b68a233d280c82e29e822913b9c8b129fbf20bdd"
 "checksum openssl-probe 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)" = "77af24da69f9d9341038eba93a073b1fdaaa1b788221b00a69bce9e762cb32de"
 "checksum openssl-sys 0.9.56 (registry+https://github.com/rust-lang/crates.io-index)" = "f02309a7f127000ed50594f0b50ecc69e7c654e16d41b4e8156d1b3df8e0b52e"
+"checksum pact_matching 0.6.1 (registry+https://github.com/rust-lang/crates.io-index)" = "fbe3d51ff87e4ca533853eef2c1ec3f3bb9899b76543ab20f5fd17e001a14252"
+"checksum pact_mock_server 0.7.4 (registry+https://github.com/rust-lang/crates.io-index)" = "2c645b9e3da753e87e2b45aed84d81e0f7c192962599212615164af0f5700bfb"
+"checksum pact_mock_server_ffi 0.0.6 (registry+https://github.com/rust-lang/crates.io-index)" = "b1dbd71b8d96aa57a57a0a4348e26249e6481b11484a61d0feac206e1db19f4a"
+"checksum pact_verifier 0.8.1 (registry+https://github.com/rust-lang/crates.io-index)" = "2f453bda174568fd6cc386a709f899022ea5165f9582cd5169b45aeae62abf7e"
 "checksum parking_lot 0.10.2 (registry+https://github.com/rust-lang/crates.io-index)" = "d3a704eb390aafdc107b0e392f56a82b668e3a71366993b5340f5833fd62505e"
 "checksum parking_lot_core 0.7.2 (registry+https://github.com/rust-lang/crates.io-index)" = "d58c7c768d4ba344e3e8d72518ac13e259d7c7ade24167003b8488e10b6740a3"
 "checksum parse-zoneinfo 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)" = "f4ee19a3656dadae35a33467f9714f1228dd34766dbe49e10e656b5296867aea"
