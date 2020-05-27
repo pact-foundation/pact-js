@@ -45,7 +45,7 @@ jobs:
       node_js: "12"
 
     - <<: *test
-      node_js: "13"
+      node_js: "14"
 
     - stage: 🚀 publish to npm 🚀
       node_js: "12"
