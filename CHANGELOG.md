@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.5](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.4...v10.0.0-beta.5) (2020-05-27)
+
+
+### Features
+
+* support MIME multipart form posts with binary files ([d72a210](https://github.com/pact-foundation/pact-js/commit/d72a2103b4fb0d348d2601e88d9a34befc4f31a7))
+* support regex matcher with a regexp object ([d92f6f5](https://github.com/pact-foundation/pact-js/commit/d92f6f5eee92667e5a3ce0ecdd44177d18a6b7ff))
+* support text nodes configured from XML builder ([a2a7f55](https://github.com/pact-foundation/pact-js/commit/a2a7f55eff4a187cbe30a3e56917745ebc40e33d))
+* support using matchers on XML text nodes ([b3b5e62](https://github.com/pact-foundation/pact-js/commit/b3b5e6231e9f0ade7be045ff117b441d0169114a))
+
+
+### Bug Fixes
+
+* correct the version of the pact_mock_server crate ([a17f2bb](https://github.com/pact-foundation/pact-js/commit/a17f2bb26d2964ac45b19704d91019ab2e7cdc4d))
+* date/time matchers were being skipped due to defect in upstream matching lib ([dcc3a7f](https://github.com/pact-foundation/pact-js/commit/dcc3a7fbf212cfce02c7d3dcf50bdb8f47baf45e))
+* travis matrix was doubled up ([fe08a70](https://github.com/pact-foundation/pact-js/commit/fe08a70769dbf7b3525b074f93731fb8d9ab3916))
+* travis was not running the E2E tests after merge from master ([73257dc](https://github.com/pact-foundation/pact-js/commit/73257dc3f43e229103aca119b3369d5d3ec228eb))
+
 ## [10.0.0-beta.4](https://github.com/pact-foundation/pact-js/compare/v9.10.0...v10.0.0-beta.4) (2020-05-20)
 
 
