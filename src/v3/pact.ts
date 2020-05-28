@@ -130,10 +130,12 @@ export class PactV3 {
             let i = 1
             for (const mismatchJson of testResult.mockServerMismatches) {
               let mismatches = JSON.parse(mismatchJson)
-              for (const mismatch of mismatches.mismatches) {
-                error += `\n\t\t${i++}) ${mismatch.type} ${
-                  mismatch.path ? `(at ${mismatch.path}) ` : ""
-                }${mismatch.mismatch}`
+              if (mismatches.mismatches) {
+                for (const mismatch of mismatches.mismatches) {
+                  error += `\n\t\t${i++}) ${mismatch.type} ${
+                    mismatch.path ? `(at ${mismatch.path}) ` : ""
+                  }${mismatch.mismatch}`
+                }
               }
             }
           }
