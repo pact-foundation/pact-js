@@ -63,7 +63,11 @@ export class PactV3 {
     return this
   }
 
-  public withRequestBinaryFile(req: V3Request, contentType: string, file: string) {
+  public withRequestBinaryFile(
+    req: V3Request,
+    contentType: string,
+    file: string
+  ) {
     this.pact.addRequestBinaryFile(req, contentType, file)
     return this
   }
@@ -84,7 +88,11 @@ export class PactV3 {
     return this
   }
 
-  public withResponseBinaryFile(res: V3Response, contentType: string, file: string) {
+  public withResponseBinaryFile(
+    res: V3Response,
+    contentType: string,
+    file: string
+  ) {
     this.pact.addResponseBinaryFile(res, contentType, file)
     return this
   }
@@ -99,7 +107,9 @@ export class PactV3 {
     return this
   }
 
-  public executeTest<T>(testFn: (mockServer: V3MockServer) => Promise<T>): Promise<T> {
+  public executeTest<T>(
+    testFn: (mockServer: V3MockServer) => Promise<T>
+  ): Promise<T> {
     const result = this.pact.executeTest(testFn)
     if (result.testResult) {
       return result.testResult
@@ -142,10 +152,10 @@ export class PactV3 {
           return Promise.reject(new Error(error))
         })
         .finally(() => {
-          this.pact.shutdownMockServer(result)
+          this.pact.shutdownMockServer(result.mockServer)
         })
     } else {
-      this.pact.shutdownMockServer(result)
+      this.pact.shutdownMockServer(result.mockServer)
       return Promise.reject(result.testError)
     }
   }
@@ -157,75 +167,77 @@ interface RunningServer {
 }
 
 interface TestResult {
-  mockServerError: string | null;
-  mockServerMismatches: string[] | null;
+  mockServerError: string | null
+  mockServerMismatches: string[] | null
 }
 
 export async function withMockServer<T>(
   testFn: (...mockServers: V3MockServer[]) => Promise<T>,
   ...pacts: PactV3[]
 ): Promise<T> {
-  const runningServers: RunningServer[] = [];
+  const runningServers: RunningServer[] = []
 
   try {
     pacts.forEach(pact => {
       runningServers.push({
         pact,
-        mockServer: (pact as any).pact.startMockServer() as V3MockServer
-      });
-    });
+        mockServer: (pact as any).pact.startMockServer() as V3MockServer,
+      })
+    })
 
-    const value = await testFn(...runningServers.map(({ mockServer }) => mockServer));
+    const value = await testFn(
+      ...runningServers.map(({ mockServer }) => mockServer)
+    )
 
-    const pactErrors = getTestResults(runningServers).filter(isError);
+    const pactErrors = getTestResults(runningServers).filter(isError)
 
     if (pactErrors.length) {
-      let message = 'Mock server failed with the following mismatches: ';
+      let message = "Mock server failed with the following mismatches: "
       for (const pactError of pactErrors) {
-        message += formatPactErrorMessage(pactError);
+        message += formatPactErrorMessage(pactError)
       }
-      throw new Error(message);
+      throw new Error(message)
     }
 
-    runningServers.forEach(({ pact, mockServer}) => {
-      const nativePact = (pact as any).pact;
-      nativePact.writePactFile(mockServer.id, (pact as any).opts.dir);
-    });
+    runningServers.forEach(({ pact, mockServer }) => {
+      const nativePact = (pact as any).pact
+      nativePact.writePactFile(mockServer.id, (pact as any).opts.dir)
+    })
 
-    return value;
+    return value
   } catch (err) {
-    const pactErrors = getTestResults(runningServers).filter(isError);
+    const pactErrors = getTestResults(runningServers).filter(isError)
 
     if (pactErrors.length) {
-      let message = "Test failed for the following reasons:";
-      message += "\n\n\tTest code failed with an error: " + err.message;
+      let message = "Test failed for the following reasons:"
+      message += "\n\n\tTest code failed with an error: " + err.message
 
       for (const pactError of pactErrors) {
-        message += formatPactErrorMessage(pactError);
+        message += formatPactErrorMessage(pactError)
       }
 
-      const newError = new Error(message);
+      const newError = new Error(message)
       // 'Forward' original stack trace:
-      newError.stack = err.stack;
-      throw newError;
+      newError.stack = err.stack
+      throw newError
     }
 
-    throw err;
+    throw err
   } finally {
     runningServers.forEach(({ pact, mockServer }) => {
-      (pact as any).pact.shutdownMockServer(mockServer);
-    });
+      ;(pact as any).pact.shutdownMockServer(mockServer)
+    })
   }
 }
 
 function formatPactErrorMessage(testResult: TestResult): string {
-  let message = '';
+  let message = ""
   if (testResult.mockServerError) {
-    message += '\n\n\t' + testResult.mockServerError;
+    message += "\n\n\t" + testResult.mockServerError
   }
   if (testResult.mockServerMismatches) {
-    message += '\n\n\tMock server failed with the following mismatches: ';
-    let i = 1;
+    message += "\n\n\tMock server failed with the following mismatches: "
+    let i = 1
     for (const mismatchJson of testResult.mockServerMismatches) {
       let mismatches = JSON.parse(mismatchJson)
       if (mismatches.mismatches) {
@@ -238,13 +250,15 @@ function formatPactErrorMessage(testResult: TestResult): string {
     }
   }
 
-  return message;
+  return message
 }
 
 function isError(testResult: TestResult): boolean {
-  return !!testResult.mockServerError || !!testResult.mockServerMismatches;
+  return !!testResult.mockServerError || !!testResult.mockServerMismatches
 }
 
 function getTestResults(runningServers: RunningServer[]): TestResult[] {
-  return runningServers.map(({ pact, mockServer }) => (pact as any).pact.getTestResult(mockServer.id));
+  return runningServers.map(({ pact, mockServer }) =>
+    (pact as any).pact.getTestResult(mockServer.id)
+  )
 }

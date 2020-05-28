@@ -2,7 +2,11 @@ const path = require("path")
 const chai = require("chai")
 const chaiAsPromised = require("chai-as-promised")
 const expect = chai.expect
-const { PactV3, MatchersV3 } = require("@pact-foundation/pact/v3")
+const {
+  PactV3,
+  MatchersV3,
+  withMockServer,
+} = require("@pact-foundation/pact/v3")
 const LOG_LEVEL = process.env.LOG_LEVEL || "WARN"
 
 chai.use(chaiAsPromised)
@@ -106,11 +110,11 @@ describe("Pact V3", () => {
       )
 
       it("returns a 401 unauthorized", () => {
-        return provider.executeTest(mockserver => {
+        return withMockServer(mockserver => {
           return expect(
             suggestion(suitor, () => mockserver.url)
           ).to.eventually.be.rejectedWith("Unauthorized")
-        })
+        }, provider)
       })
     })
     describe("and the user is authenticated", () => {
@@ -140,7 +144,7 @@ describe("Pact V3", () => {
         })
 
         it("returns a list of animals", () => {
-          return provider.executeTest(mockserver => {
+          return withMockServer(mockserver => {
             const suggestedMates = suggestion(suitor, () => mockserver.url)
             return Promise.all([
               expect(suggestedMates).to.eventually.have.deep.property(
@@ -151,7 +155,7 @@ describe("Pact V3", () => {
                 .to.eventually.have.property("suggestions")
                 .with.lengthOf(MIN_ANIMALS),
             ])
-          })
+          }, provider)
         })
       })
     })
