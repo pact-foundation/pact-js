@@ -666,9 +666,34 @@ declare_types! {
       Ok(js_result.upcast())
     }
 
-    method shutdownTest(mut cx) {
-      let test_result = cx.argument::<JsObject>(0)?;
-      let mock_server = test_result.get(&mut cx, "mockServer")?.downcast::<JsObject>().unwrap();
+    method startMockServer(mut cx) {
+      let this = cx.this();
+
+      let mock_server_id = Uuid::new_v4().simple().to_string();
+      let port = {
+        let guard = cx.lock();
+        let pact = this.borrow(&guard);
+        match MANAGER.lock().unwrap()
+          .start_mock_server(mock_server_id.clone(), pact.clone(), 0)
+          .map(|port| port as i32) {
+            Ok(port) => port,
+            Err(err) => panic!(err)
+          }
+      };
+
+      let js_port = cx.number(port);
+      let js_url = cx.string(format!("http://127.0.0.1:{}", port));
+      let js_id = cx.string(mock_server_id);
+      let js_mock_server = JsObject::new(&mut cx);
+      js_mock_server.set(&mut cx, "port", js_port)?;
+      js_mock_server.set(&mut cx, "url", js_url)?;
+      js_mock_server.set(&mut cx, "id", js_id)?;
+
+      Ok(js_mock_server.upcast())
+    }
+
+    method shutdownMockServer(mut cx) {
+      let mock_server = cx.argument::<JsObject>(0)?;
       let mock_server_id = mock_server.get(&mut cx, "id")?.downcast::<JsString>().unwrap().value();
       MANAGER.lock().unwrap().shutdown_mock_server_by_id(mock_server_id);
       Ok(cx.undefined().upcast())
