@@ -63,7 +63,11 @@ export class PactV3 {
     return this
   }
 
-  public withRequestBinaryFile(req: V3Request, contentType: string, file: string) {
+  public withRequestBinaryFile(
+    req: V3Request,
+    contentType: string,
+    file: string
+  ) {
     this.pact.addRequestBinaryFile(req, contentType, file)
     return this
   }
@@ -84,7 +88,11 @@ export class PactV3 {
     return this
   }
 
-  public withResponseBinaryFile(res: V3Response, contentType: string, file: string) {
+  public withResponseBinaryFile(
+    res: V3Response,
+    contentType: string,
+    file: string
+  ) {
     this.pact.addResponseBinaryFile(res, contentType, file)
     return this
   }
@@ -99,7 +107,9 @@ export class PactV3 {
     return this
   }
 
-  public executeTest<T>(testFn: (mockServer: V3MockServer) => Promise<T>): Promise<T> {
+  public executeTest<T>(
+    testFn: (mockServer: V3MockServer) => Promise<T>
+  ): Promise<T> {
     const result = this.pact.executeTest(testFn)
     if (result.testResult) {
       return result.testResult

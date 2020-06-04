@@ -299,9 +299,6 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
   // consumerVersionTag?: string | string[]
   // providerVersionTag?: string | string[]
   // customProviderHeaders?: string[]
-  // publishVerificationResult?: boolean
-  // providerVersion?: string
-  // tags?: string[]
 
   let mut provider_info = ProviderInfo {
     name: provider.clone(),
@@ -358,14 +355,71 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
     _ => ()
   };
 
+  let publish = match config.get(&mut cx, "publishVerificationResult") {
+    Ok(publish) => match publish.downcast::<JsBoolean>() {
+      Ok(publish) => publish.value(),
+      Err(_) => {
+        warn!("publishVerificationResult must be a boolean value. Ignoring it");
+        false
+      }
+    },
+    _ => false
+  };
+
+  let provider_version = match config.get(&mut cx, "providerVersion") {
+    Ok(provider_version) => match provider_version.downcast::<JsString>() {
+      Ok(provider_version) => Some(provider_version.value().to_string()),
+      Err(_) => if !provider_version.is_a::<JsUndefined>() {
+        println!("    {}", Red.paint("ERROR: providerVersion must be a string value"));
+        return cx.throw_error("providerVersion must be a string value")
+      } else {
+        None
+      }
+    },
+    _ => None
+  };
+
+  if publish && provider_version.is_none() {
+    println!("    {}", Red.paint("ERROR: providerVersion must be provided if publishing verification results in enabled (publishVerificationResult == true)"));
+    return cx.throw_error("providerVersion must be provided if publishing verification results in enabled (publishVerificationResult == true)")?
+  }
+
+  let provider_tags = match config.get(&mut cx, "providerVersionTag") {
+    Ok(provider_tags) => match provider_tags.downcast::<JsString>() {
+      Ok(provider_tag) => vec![ provider_tag.value().to_string() ],
+      Err(_) => match provider_tags.downcast::<JsArray>() {
+        Ok(provider_tags) => {
+          let mut tags = vec![];
+          for tag in provider_tags.to_vec(&mut cx)? {
+            match tag.downcast::<JsString>() {
+              Ok(val) => tags.push(val.value().to_string()),
+              Err(_) => {
+                println!("    {}", Red.paint("ERROR: providerVersionTag must be a string or array of strings"));
+                return cx.throw_error("providerVersionTag must be a string or array of strings")
+              }
+            }
+          };
+          tags
+        },
+        Err(_) => if !provider_tags.is_a::<JsUndefined>() {
+          println!("    {}", Red.paint("ERROR: providerVersionTag must be a string or array of strings"));
+          return cx.throw_error("providerVersionTag must be a string or array of strings")
+        } else {
+          vec![]
+        }
+      }
+    },
+    _ => vec![]
+  };
+
   let filter_info = FilterInfo::None;
   let consumers_filter: Vec<String> = vec![];
   let options = VerificationOptions {
-    publish: false,
-    provider_version: None,
+    publish,
+    provider_version,
     build_url: None,
     request_filter,
-    provider_tags: vec![]
+    provider_tags
   };
 
   debug!("Starting background task");
