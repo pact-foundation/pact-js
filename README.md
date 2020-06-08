@@ -579,7 +579,7 @@ const {
 } = require("@pact-foundation/pact")
 
 // 1 Dog API Handler
-const dogApiHandler = function (dog) {
+const dogApiHandler = function(dog) {
   if (!dog.id && !dog.name && !dog.type) {
     throw new Error("missing fields")
   }
@@ -1049,7 +1049,7 @@ There is an `XmlBuilder` class that provides a DSL to help construct XML bodies 
 for example:
 
 ```javascript
-body: new XmlBuilder("1.0", "UTF-8", "ns1:projects").build((el) => {
+body: new XmlBuilder("1.0", "UTF-8", "ns1:projects").build(el => {
   el.setAttributes({
     id: "1234",
     "xmlns:ns1": "http://some.namespace/and/more/stuff",
@@ -1062,8 +1062,8 @@ body: new XmlBuilder("1.0", "UTF-8", "ns1:projects").build((el) => {
       name: string("Project 1"),
       due: timestamp("yyyy-MM-dd'T'HH:mm:ss.SZ", "2016-02-11T09:46:56.023Z"),
     },
-    (project) => {
-      project.appendElement("ns1:tasks", {}, (task) => {
+    project => {
+      project.appendElement("ns1:tasks", {}, task => {
         task.eachLike(
           "ns1:task",
           {
@@ -1139,8 +1139,7 @@ stateHandlers: {
 
 ## Troubleshooting / FAQs
 
-If you are having issues, a good place to start is setting `logLevel: 'DEBUG'`
-when configuring the `new Pact({...})` object.
+If you are having issues, a good place to start is setting `logLevel: 'debug'` when configuring the `new Pact({...})` object. Setting it to `trace` will give you detailed in/out requests as far as Pact sees it.
 
 ### Alpine + Docker
 
@@ -1218,11 +1217,11 @@ The correct code for the above is:
 
 ```
 it("returns a successful thing", () => {
-  return executeApiCallThatIsAPromise()
+  return executeApiCallThatIsAPromise() // <- explicit return here, you could also use the "async/await" syntax here
     .then((response) => {
       expect(response.data).to.eq({...})
     })
-    .then(() => provider.verify())
+    .then(() => provider.verify()) // provider.verify() also returned
   })
 ```
 
@@ -1310,7 +1309,7 @@ See [this issue](https://github.com/angular/angular/issues/13554) for background
 
 ### Debugging
 
-If your standard tricks don't get you anywhere, setting the logLevel to `DEBUG` and increasing the timeout doesn't help and you don't know where else to look, it could be that the binaries we use to do much of the Pact magic aren't starting as expected.
+If your standard tricks don't get you anywhere, setting the logLevel to `trace` and increasing the timeout doesn't help and you don't know where else to look, it could be that the binaries we use to do much of the Pact magic aren't starting as expected.
 
 Try starting the mock service manually and seeing if it comes up. When submitting a bug report, it would be worth running these commands before hand as it will greatly help us:
 
