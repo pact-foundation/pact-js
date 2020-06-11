@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.6](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.5...v10.0.0-beta.6) (2020-06-11)
+
+
+### Features
+
+* enable publishing of verification results ([fcbdb3e](https://github.com/pact-foundation/pact-js/commit/fcbdb3e9729365039c30267996a7364e23ccdef1))
+* release node 14 native binaries ([9ee832c](https://github.com/pact-foundation/pact-js/commit/9ee832c8dcfd896432ef34fb57595496bcac0077))
+
 ## [10.0.0-beta.5](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.4...v10.0.0-beta.5) (2020-05-27)
 
 

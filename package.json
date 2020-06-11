@@ -1,6 +1,6 @@
 {
   "name": "@pact-foundation/pact",
-  "version": "10.0.0-beta.5",
+  "version": "10.0.0-beta.6",
   "description": "Pact for all things Javascript",
   "main": "./pact.js",
   "types": "./pact.d.ts",
@@ -22,7 +22,7 @@
     "lint:prettier:js": "prettier --check \"{src,test,examples}/**/*.js\"",
     "postdist": "npm t",
     "predist": "npm run clean && npm run lint && npm run jscpd",
-    "release": "standard-version",
+    "release": "standard-version -p beta",
     "test": "nyc --check-coverage --reporter=html --reporter=text-summary mocha",
     "test:examples": "npm run test:e2e-examples && npm run test:jest-examples && npm run test:mocha-examples && npm run test:ava-examples && npm run test:ts-examples && npm run test:message-examples && npm run test:serverless-examples && npm run test:graphql-examples",
     "test:e2e-examples": "cd examples/e2e && npm it",
