@@ -976,7 +976,7 @@ sponsoring this work.
 To install it:
 
 ```console
-npm i @pact-foundation/pact@10.0.0-beta.3
+npm i @pact-foundation/pact@beta
 ```
 
 For examples on how to use it, see [examples/v3/e2e](examples/v3/e2e) and [examples/v3/todo-consumer](examples/v3/todo-consumer).
