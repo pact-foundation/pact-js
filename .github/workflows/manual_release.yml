@@ -1,0 +1,37 @@
+name: Manual release workflow
+
+on: ["deployment"]
+
+jobs:
+  deployment:
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        operating-system: [ubuntu-latest, windows-latest, macos-latest]
+        node-version: [10.x, 12.x, 13.x, 14.x]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: feat/v3.0.0
+      - name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install stable Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - name: Install LLVM
+        run: choco install -y llvm
+        if: runner.os == 'Windows'
+      - run: npm install node-pre-gyp node-pre-gyp-github
+      - run: npm run build:v3
+      - if: runner.os != 'windows'
+        run: rm -rf native/target
+      - if: runner.os == 'windows'
+        run: Remove-Item 'native\target' -Recurse -Force
+      - run: npm run upload-binary
+        env:
+          NODE_PRE_GYP_GITHUB_TOKEN: ${{ secrets.ReleaseDeployKey }}
