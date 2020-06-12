@@ -9,8 +9,22 @@ addons:
     packages:
       - g++-5
 cache:
-  - npm
-  - cargo
+  npm: true
+  cargo: true
+  bundler: true
+  directories:
+    - native/target
+    - examples/ava/node_modules
+    - examples/e2e/node_modules
+    - examples/graphql/node_modules
+    - examples/jest/node_modules
+    - examples/karma/node_modules
+    - examples/messages/node_modules
+    - examples/mocha/node_modules
+    - examples/serverless/node_modules
+    - examples/typescript/node_modules
+    - examples/v3/e2e/node_modules
+    - examples/v3/todo-consumer/node_modules
 env:
   global:
     # travis encrypt NPM_KEY=<key>
