@@ -10,10 +10,10 @@ npm run dist
 
 git checkout native
 npm run build:v3
-rm -rf native/target
 # Copy Rust native lib
 echo "    Copying ./native => dist/native"
 mkdir -p dist/native && cp -r native dist/
+rm -rf dist/native/target
 
 # Link the build so that the examples are always testing the
 # current build, in it's properly exported format
