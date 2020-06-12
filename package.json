@@ -39,7 +39,7 @@
     "travis": "./scripts/build.sh",
     "appveyor": "./scripts/build.ps1",
     "webpack": "webpack --config ./config/webpack.web.config.js",
-    "install": "node-pre-gyp install --fallback-to-build=false || neon build --release",
+    "postinstall": "node-pre-gyp install --fallback-to-build=false || neon build --release",
     "package": "node-pre-gyp package",
     "upload-binary": "npm run package && node-pre-gyp-github publish"
   },
