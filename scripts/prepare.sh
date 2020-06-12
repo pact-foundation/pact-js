@@ -14,6 +14,9 @@ for artifact in "${artifacts[@]}"; do
   cp "${artifact}" "./dist-web/${artifact}"
 done
 
+echo "    Copying ./native => dist/native"
+mkdir -p dist/native && cp -r native dist/
+
 echo "--> Creating pact-web package"
 sed "s/VERSION/${VERSION}/g" < package.json.web > dist-web/package.json
 
