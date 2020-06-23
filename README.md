@@ -969,7 +969,7 @@ this [gist](https://gist.github.com/mefellows/15c9fcb052c2aa9d8951f91d48d6da54) 
 
 ## Pact JS V3
 
-An initial beta version of Pact-JS with support for V3 specification features and XML matching has
+An initial alpha version of Pact-JS with support for V3 specification features and XML matching has
 been released. Current support is for Node 10, 12 and 13. Thanks to the folks at [Align Tech](https://www.aligntech.com/) for
 sponsoring this work.
 
@@ -981,7 +981,7 @@ npm i @pact-foundation/pact@beta
 
 For examples on how to use it, see [examples/v3/e2e](examples/v3/e2e) and [examples/v3/todo-consumer](examples/v3/todo-consumer).
 
-**NOTE: This implementation DOES NOT yet support the following features:**
+**NOTE: This implementation is not ready for production use yet, as it DOES NOT yet support the following features:**
 
 * Verifying a pact by direct URL
 * `consumerVersionTags` to specify which pacts to verify - only the latest pact will be verified.
