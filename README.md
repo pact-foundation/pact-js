@@ -981,6 +981,14 @@ npm i @pact-foundation/pact@beta
 
 For examples on how to use it, see [examples/v3/e2e](examples/v3/e2e) and [examples/v3/todo-consumer](examples/v3/todo-consumer).
 
+**NOTE: This implementation DOES NOT yet support the following features:**
+
+* `consumerVersionTags` to specify which pacts to verify - only the latest pact will be verified.
+* Any features that make use of the "Pacts for Verification" API which include:
+    * Support for `consumerVersionSelectors`
+    * Pending pacts
+    * WIP pacts
+
 ### Using the V3 matching rules
 
 There are a number of new matchers that can be used, like `integer` and `timestamp`. There are defined in the `MatchersV3` class that needs to be used with `PactV3` DSL.
