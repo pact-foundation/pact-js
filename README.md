@@ -983,6 +983,7 @@ For examples on how to use it, see [examples/v3/e2e](examples/v3/e2e) and [examp
 
 **NOTE: This implementation DOES NOT yet support the following features:**
 
+* Verifying a pact by direct URL
 * `consumerVersionTags` to specify which pacts to verify - only the latest pact will be verified.
 * Any features that make use of the "Pacts for Verification" API which include:
     * Support for `consumerVersionSelectors`
