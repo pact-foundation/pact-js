@@ -4,6 +4,7 @@
 [![Appveyor Build status](https://ci.appveyor.com/api/projects/status/58ww3fref30d5nx8?svg=true)](https://ci.appveyor.com/project/pact-foundation/pact-js)
 ![Native release](https://github.com/pact-foundation/pact-js/workflows/Release%20workflow/badge.svg?branch=feat%2Fv3.0.0)
 [![npm](https://img.shields.io/npm/v/@pact-foundation/pact.svg)](https://www.npmjs.com/package/@pact-foundation/pact)
+![Release workflow](https://github.com/pact-foundation/pact-js/workflows/Release%20workflow/badge.svg?branch=feat%2Fv3.0.0)
 [![Coverage Status](https://coveralls.io/repos/github/pact-foundation/pact-js/badge.svg?branch=master)](https://coveralls.io/github/pact-foundation/pact-js?branch=master)
 [![Code Climate](https://codeclimate.com/github/pact-foundation/pact-js/badges/gpa.svg)](https://codeclimate.com/github/pact-foundation/pact-js)
 [![Issue Count](https://codeclimate.com/github/pact-foundation/pact-js/badges/issue_count.svg)](https://codeclimate.com/github/pact-foundation/pact-js)
@@ -970,17 +971,26 @@ this [gist](https://gist.github.com/mefellows/15c9fcb052c2aa9d8951f91d48d6da54) 
 
 ## Pact JS V3
 
-An initial beta version of Pact-JS with support for V3 specification features and XML matching has
+An initial alpha version of Pact-JS with support for V3 specification features and XML matching has
 been released. Current support is for Node 10, 12 and 13. Thanks to the folks at [Align Tech](https://www.aligntech.com/) for
 sponsoring this work.
 
 To install it:
 
 ```console
-npm i @pact-foundation/pact@10.0.0-beta.3
+npm i @pact-foundation/pact@beta
 ```
 
 For examples on how to use it, see [examples/v3/e2e](examples/v3/e2e) and [examples/v3/todo-consumer](examples/v3/todo-consumer).
+
+**NOTE: This implementation is not ready for production use yet, as it DOES NOT yet support the following features:**
+
+* Verifying a pact by direct URL
+* `consumerVersionTags` to specify which pacts to verify - only the latest pact will be verified.
+* Any features that make use of the "Pacts for Verification" API which include:
+    * Support for `consumerVersionSelectors`
+    * Pending pacts
+    * WIP pacts
 
 ### Using the V3 matching rules
 
