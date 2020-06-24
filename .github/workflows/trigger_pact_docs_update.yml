@@ -26,6 +26,6 @@ jobs:
           curl -X POST https://api.github.com/repos/pact-foundation/docs.pact.io/dispatches \
                 -H 'Accept: application/vnd.github.everest-preview+json' \
                 -H "Authorization: Bearer $GITHUB_TOKEN" \
-                -d '{"event_type": "pact-js-updated"}'
+                -d '{"event_type": "pact-js-docs-updated"}'
         env:
           GITHUB_TOKEN: ${{ secrets.GHTOKENFORTRIGGERINGPACTDOCSUPDATE }}
