@@ -8,7 +8,7 @@
 [![Issue Count](https://codeclimate.com/github/pact-foundation/pact-js/badges/issue_count.svg)](https://codeclimate.com/github/pact-foundation/pact-js)
 [![Known Vulnerabilities](https://snyk.io/test/github/pact-foundation/pact-js/badge.svg?targetFile=package.json)](https://snyk.io/test/github/pact-foundation/pact-js?targetFile=package.json)
 [![license](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/pact-foundation/pact-js/blob/master/LICENSE)
-[![slack](http://slack.pact.io/badge.svg)](http://slack.pact.io)
+[![slack](https://slack.pact.io/badge.svg)](https://slack.pact.io)
 
 Implementation of the consumer driven contract library [Pact](https://docs.pact.io) for Javascript.
 
@@ -1350,13 +1350,12 @@ The vision is to have a compatible `Pact` implementation in all the commonly use
 
 Join us in [Slack](slack.pact.io)
 
-<a href="http://slack.pact.io"><img src="http://slack.pact.io/badge.svg"></a>
+<a href="https://slack.pact.io"><img src="https://slack.pact.io/badge.svg"></a>
 
 or chat to us at
 
 - Twitter: [@pact_up](https://twitter.com/pact_up)
 - Stack Overflow: https://stackoverflow.com/questions/tagged/pact
-- Google users group: https://groups.google.com/forum/#!forum/pact-support
 
 [getting started with pact]: https://docs.pact.io/getting_started
 [spec]: https://github.com/pact-foundation/pact-specification
