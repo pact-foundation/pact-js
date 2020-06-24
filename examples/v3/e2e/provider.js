@@ -59,11 +59,13 @@ server.get("/animals/available", (req, res) => {
 // Get all available animals as XML
 server.get("/animals/available/xml", (req, res) => {
   res.header("Content-Type", "application/xml; charset=utf-8")
-  let xml_body = xml({animals: animalRepository.fetchAll().map(animal => {
-    let result = {}
-    result[animal.animal] = { _attr: animal }
-    return result
-  })})
+  let xml_body = xml({
+    animals: animalRepository.fetchAll().map(animal => {
+      let result = {}
+      result[animal.animal] = { _attr: animal }
+      return result
+    }),
+  })
   res.end(xml_body)
 })
 

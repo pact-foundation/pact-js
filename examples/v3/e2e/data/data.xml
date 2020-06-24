@@ -1,0 +1,8 @@
+<animals>
+	<goat first_name="Billy" last_name="Goat" animal="goat" age="21" available_from="2017-12-04T14:47:18.582Z" gender="M" location="[object Object]" eligibility="[object Object]" interests="walks in the garden/meadow,munching on a paddock bomb,parkour" id="1" />
+	<goat first_name="Nanny" animal="goat" last_name="Doe" age="27" available_from="2017-12-04T14:47:18.582Z" gender="F" location="[object Object]" eligibility="[object Object]" interests="walks in the garden/meadow,parkour" id="2" />
+	<lion first_name="Simba" last_name="Cantwaittobeking" animal="lion" age="4" available_from="2017-12-04T14:47:18.582Z" gender="M" location="[object Object]" eligibility="[object Object]" interests="walks in the garden/meadow,parkour" id="3" />
+	<goat first_name="Billy" last_name="Goat" animal="goat" age="21" available_from="2017-12-04T14:47:18.582Z" gender="M" location="[object Object]" eligibility="[object Object]" interests="walks in the garden/meadow,munching on a paddock bomb,parkour" id="1" />
+	<goat first_name="Nanny" animal="goat" last_name="Doe" age="27" available_from="2017-12-04T14:47:18.582Z" gender="F" location="[object Object]" eligibility="[object Object]" interests="walks in the garden/meadow,parkour" id="2" />
+	<lion first_name="Simba" last_name="Cantwaittobeking" animal="lion" age="4" available_from="2017-12-04T14:47:18.582Z" gender="M" location="[object Object]" eligibility="[object Object]" interests="walks in the garden/meadow,parkour" id="3" />
+</animals>
