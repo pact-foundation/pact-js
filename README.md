@@ -1345,10 +1345,6 @@ Try starting the mock service manually and seeing if it comes up. When submittin
 4.  Push to the branch (`git push origin my-new-feature`)
 5.  Create new Pull Request
 
-If you would like to implement `Pact` in another language, please check out the Pact [Spec] and have a chat to one of us on the [pact-dev Google group](https://groups.google.com/forum/#!forum/pact-support).
-
-The vision is to have a compatible `Pact` implementation in all the commonly used languages, your help would be greatly appreciated!
-
 ## Contact
 
 Join us in [Slack](slack.pact.io)
