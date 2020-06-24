@@ -373,6 +373,9 @@ If you have defined any `state`s in your consumer tests, the `Verifier` can put 
 let opts = {
   ...
   stateHandlers: {
+    [null]: () => {
+      // This is the "default" state handler, when no state is given
+    }
     "Has no animals": () => {
       animalRepository.clear()
       return Promise.resolve(`Animals removed from the db`)
