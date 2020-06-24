@@ -1208,7 +1208,7 @@ TL;DR - you almost certainly have not properly handled (returned) a Promise.
 
 We see this sort of thing all of the time:
 
-```
+```js
 it("returns a successful thing", () => {
   executeApiCallThatIsAPromise()
     .then((response) => {
@@ -1229,7 +1229,7 @@ _Side note_: Jasmine and other test frameworks may detect an unhandled promise r
 
 The correct code for the above is:
 
-```
+```js
 it("returns a successful thing", () => {
   return executeApiCallThatIsAPromise()
     .then((response) => {
