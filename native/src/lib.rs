@@ -49,11 +49,16 @@ fn process_xml(body: String, matching_rules: &mut Category, generators: &mut Gen
   }
 }
 
-fn process_body(body: String, content_type: DetectedContentType, matching_rules: &mut MatchingRules, generators: &mut Generators) -> Result<OptionalBody, String> {
+fn process_body(
+  body: String, 
+  content_type: DetectedContentType, 
+  matching_rules: &mut MatchingRules, 
+  generators: &mut Generators
+) -> Result<OptionalBody, String> {
   let category = matching_rules.add_category("body");
   match content_type {
-    DetectedContentType::Json => Ok(OptionalBody::from(process_json(body, category, generators))),
-    DetectedContentType::Xml => Ok(OptionalBody::Present(process_xml(body, category, generators)?)),
+    DetectedContentType::Json => Ok(OptionalBody::Present(process_json(body, category, generators).as_bytes().to_vec(), Some("application/json".into()))),
+    DetectedContentType::Xml => Ok(OptionalBody::Present(process_xml(body, category, generators)?, Some("application/xml".into()))),
     _ => Ok(OptionalBody::from(body))
   }
 }
@@ -177,7 +182,7 @@ fn get_headers(cx: &mut CallContext<JsPact>, obj: Handle<JsObject>) -> NeonResul
 }
 
 fn load_file(file_path: &String) -> Result<OptionalBody, std::io::Error> {
-  fs::read(file_path).map(|data| OptionalBody::Present(data))
+  fs::read(file_path).map(|data| OptionalBody::Present(data, None))
 }
 
 declare_types! {
