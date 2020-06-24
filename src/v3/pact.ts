@@ -1,5 +1,5 @@
 import logger from "../common/logger"
-const pkg = require("../metadata")
+const pkg = require("../common/metadata")
 const PactNative = require("../native")
 
 export interface PactV3Options {
