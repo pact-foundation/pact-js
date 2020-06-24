@@ -17,4 +17,4 @@ Other tools such as ...
 
 Karma can be used right now with both Mocha and Jasmine - check the `examples` folder.
 
-If you have any requests for functionality, feel free to drop us a line on this repo or have a chat to one of us on the [pact-dev Google group](https://groups.google.com/forum/#!forum/pact-support).
+If you have any requests for functionality, feel free to drop us a line on this repo or have a chat to one of us on the [Pact Slack workspace](https://slack.pact.io).
