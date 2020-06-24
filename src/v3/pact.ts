@@ -1,4 +1,5 @@
 import logger from "../common/logger"
+const pkg = require("../metadata")
 const PactNative = require("../native")
 
 export interface PactV3Options {
@@ -45,7 +46,7 @@ export class PactV3 {
 
   constructor(opts: PactV3Options & {}) {
     this.opts = opts
-    this.pact = new PactNative.Pact(opts.consumer, opts.provider)
+    this.pact = new PactNative.Pact(opts.consumer, opts.provider, pkg.version)
   }
 
   public given(providerState: string, parameters?: any) {

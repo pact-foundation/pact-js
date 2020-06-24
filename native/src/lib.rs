@@ -185,10 +185,14 @@ declare_types! {
     init(mut cx) {
       let consumer: String = cx.argument::<JsString>(0)?.value();
       let provider: String = cx.argument::<JsString>(1)?.value();
+      let version: String = cx.argument::<JsString>(2)?.value();
 
+      let mut metadata = Pact::default_metadata();
+      metadata.insert("pactJs".to_string(), btreemap!{ "version".to_string() => version.to_string() });
       let pact = Pact {
         consumer: Consumer { name: consumer },
         provider: Provider { name: provider },
+        metadata,
         .. Pact::default()
       };
 
