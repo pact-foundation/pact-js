@@ -2,6 +2,7 @@ const express = require("express")
 const cors = require("cors")
 const bodyParser = require("body-parser")
 const Repository = require("./repository")
+const xml = require("xml")
 
 const server = express()
 server.use(cors())
@@ -53,6 +54,17 @@ server.get("/animals", (req, res) => {
 // Get all available animals
 server.get("/animals/available", (req, res) => {
   res.json(availableAnimals())
+})
+
+// Get all available animals as XML
+server.get("/animals/available/xml", (req, res) => {
+  res.header("Content-Type", "application/xml; charset=utf-8")
+  let xml_body = xml({animals: animalRepository.fetchAll().map(animal => {
+    let result = {}
+    result[animal.animal] = { _attr: animal }
+    return result
+  })})
+  res.end(xml_body)
 })
 
 // Find an animal by ID

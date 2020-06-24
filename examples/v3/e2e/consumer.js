@@ -89,10 +89,21 @@ server.get("/suggestions/:animalId", (req, res) => {
   })
 })
 
+const getAnimalsAsXML = (api = getApiEndpoint) => {
+  return request
+    .get(`${api()}/animals/available/xml`)
+    .set(authHeader)
+    .then(
+      res => res.body,
+      () => null
+    )
+}
+
 module.exports = {
   server,
   availableAnimals,
   createMateForDates,
   suggestion,
   getAnimalById,
+  getAnimalsAsXML,
 }

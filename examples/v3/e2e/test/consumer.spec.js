@@ -2,7 +2,7 @@ const path = require("path")
 const chai = require("chai")
 const chaiAsPromised = require("chai-as-promised")
 const expect = chai.expect
-const { PactV3, MatchersV3 } = require("@pact-foundation/pact/v3")
+const { PactV3, MatchersV3, XmlBuilder } = require("@pact-foundation/pact/v3")
 const LOG_LEVEL = process.env.LOG_LEVEL || "WARN"
 
 chai.use(chaiAsPromised)
@@ -78,6 +78,7 @@ describe("Pact V3", () => {
     createMateForDates,
     suggestion,
     getAnimalById,
+    getAnimalsAsXML,
   } = require("../consumer")
 
   // Verify service client works as expected.
@@ -258,6 +259,56 @@ describe("Pact V3", () => {
       return provider.executeTest(mockserver => {
         return expect(createMateForDates(suitor, () => mockserver.url)).to
           .eventually.be.fulfilled
+      })
+    })
+  })
+
+  describe("when a call to the Animal Service is made to get animals in XML format", () => {
+    const provider = new PactV3({
+      consumer: "Matching Service V3",
+      provider: "Animal Profile Service V3",
+      dir: path.resolve(process.cwd(), "pacts"),
+    })
+
+    before(() =>
+      provider
+        .given("is authenticated")
+        .given("Has some animals")
+        .uponReceiving("a request to get animals as XML")
+        .withRequest({
+          path: "/animals/available/xml",
+          headers: { Authorization: "Bearer token" },
+        })
+        .willRespondWith({
+          status: 200,
+          headers: {
+            "Content-Type": "application/xml; charset=utf-8",
+          },
+          body: new XmlBuilder("1.0", "UTF-8", "animals").build(el => {
+            el.eachLike("lion", {
+              id: integer(1),
+              available_from: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
+              first_name: string("Slinky"),
+              last_name: string("Malinky"),
+              age: integer(27),
+              gender: regex("M|F", "F"),
+            })
+            el.eachLike("goat", {
+              id: integer(3),
+              available_from: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
+              first_name: string("Head"),
+              last_name: string("Butts"),
+              age: integer(27),
+              gender: regex("M|F", "F"),
+            })
+          }),
+        })
+    )
+
+    it("creates a new mate", () => {
+      return provider.executeTest(mockserver => {
+        return expect(getAnimalsAsXML(() => mockserver.url)).to.eventually.be
+          .fulfilled
       })
     })
   })

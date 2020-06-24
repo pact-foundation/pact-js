@@ -56,21 +56,21 @@ fn create_element_from_json<'a>(
   let mut element = None;
   let mut text = None;
   if object.contains_key("pact:matcher:type") {
-    if let Some(rule) = MatchingRule::from_integration_json(object) {
-      matching_rules.add_rule(path.join("."), rule, &RuleLogic::And);
-    }
-    if let Some(gen) = object.get("pact:generator:type") {
-      match Generator::from_map(&json_to_string(gen), object) {
-        Some(generator) => generators.add_generator_with_subcategory(&GeneratorCategory::BODY, path.join("."), generator),
-        _ => ()
-      };
-    }
-
     let mut updated_path = path.clone();
-    updated_path.push(".*");
     if let Some(val) = object.get("value") {
       if let Value::Object(attr) = val {
         let name = json_to_string(attr.get("name").unwrap());
+        updated_path.push(&name);
+        if let Some(rule) = MatchingRule::from_integration_json(object) {
+          matching_rules.add_rule(updated_path.join("."), rule, &RuleLogic::And);
+        }
+        if let Some(gen) = object.get("pact:generator:type") {
+          match Generator::from_map(&json_to_string(gen), object) {
+            Some(generator) => generators.add_generator_with_subcategory(&GeneratorCategory::BODY, updated_path.join("."), generator),
+            _ => ()
+          };
+        }
+
         let new_element = doc.create_element(name.as_str());
         if let Some(attributes) = val.get("attributes") {
           match attributes {
@@ -85,13 +85,11 @@ fn create_element_from_json<'a>(
 
         if let Some(children) = val.get("children") {
           match children {
-            Value::Array(children) => for (index, child) in children.iter().enumerate() {
+            Value::Array(children) => for child in children {
               match child {
                 Value::Object(attributes) => {
                   let mut updated_path = path.clone();
-                  let index = index.to_string();
                   updated_path.push(new_element.name().local_part());
-                  updated_path.push(&index);
                   create_element_from_json(doc, Some(new_element), attributes, matching_rules, generators, &updated_path, true, namespaces);
                 },
                 _ => panic!("Intermediate JSON format is invalid, child is not an object: {:?}", child)
@@ -144,13 +142,11 @@ fn create_element_from_json<'a>(
 
     if let Some(children) = object.get("children") {
       match children {
-        Value::Array(children) => for (index, child) in children.iter().enumerate() {
+        Value::Array(children) => for child in children {
           match child {
             Value::Object(attributes) => {
               let mut updated_path = path.clone();
-              let index = index.to_string();
               updated_path.push(&name);
-              updated_path.push(&index);
               create_element_from_json(doc, Some(new_element), attributes, matching_rules, generators, &updated_path, false, namespaces);
             },
             _ => panic!("Intermediate JSON format is invalid, child is not an object: {:?}", child)

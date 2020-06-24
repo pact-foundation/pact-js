@@ -34,7 +34,9 @@
     "ts-node": "^8.8.2",
     "typescript": "^3.8.3"
   },
-  "dependencies": {},
+  "dependencies": {
+    "xml": "^1.0.1"
+  },
   "config": {
     "pact_do_not_track": true
   }
