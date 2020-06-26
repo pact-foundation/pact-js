@@ -1,5 +1,7 @@
 # Pact JS
 
+<!-- Please use absolute URLs for all links as the content of this page is synced to docs.pact.io -->
+
 [![Build Status](https://travis-ci.org/pact-foundation/pact-js.svg?branch=master)](https://travis-ci.org/pact-foundation/pact-js)
 [![npm](https://img.shields.io/npm/v/@pact-foundation/pact.svg)](https://www.npmjs.com/package/@pact-foundation/pact)
 ![Release workflow](https://github.com/pact-foundation/pact-js/workflows/Release%20workflow/badge.svg?branch=feat%2Fv3.0.0)
