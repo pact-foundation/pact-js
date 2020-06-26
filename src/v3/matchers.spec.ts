@@ -1,6 +1,7 @@
 import * as mockery from "mockery"
-const MockNative = {
-  
+let MockNative = {
+  generate_datetime_string: () => "",
+  generate_regex_string: () => ""
 }
 mockery.registerMock("../native", MockNative)
 
@@ -239,6 +240,176 @@ describe("V3 Matchers", () => {
       expect(result).to.deep.equal({
         "pact:matcher:type": "type",
         value: true
+      })
+    })
+  })
+
+  describe("#string", () => {
+    it("returns a JSON representation of a like matcher", () => {
+      let result = matchers.string("true")
+      expect(result).to.deep.equal({
+        "pact:matcher:type": "type",
+        value: "true"
+      })
+    })
+  })
+
+  describe("#regex", () => {
+    it("returns a JSON representation of a regex matcher", () => {
+      let result = matchers.regex("\\d+", "1234")
+      expect(result).to.deep.equal({
+        "pact:matcher:type": "regex",
+        "regex": "\\d+",
+        value: "1234"
+      })
+    })
+
+    describe("when given a regular expression", () => {
+      it("returns a JSON representation of a regex matcher", () => {
+        let result = matchers.regex(/\d+/, "1234")
+        expect(result).to.deep.equal({
+          "pact:matcher:type": "regex",
+          "regex": "\\d+",
+          value: "1234"
+        })
+      })
+    })
+  })
+
+  describe("#equal", () => {
+    it("returns a JSON representation of an equality matcher", () => {
+      let result = matchers.equal("true")
+      expect(result).to.deep.equal({
+        "pact:matcher:type": "equality",
+        value: "true"
+      })
+    })
+  })
+
+  describe("#datetime", () => {
+    it("returns a JSON representation of a datetime matcher", () => {
+      let result = matchers.datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX", "2016-02-11T09:46:56.023Z")
+      expect(result).to.deep.equal({
+        "pact:generator:type": "DateTime",
+        "pact:matcher:type": "timestamp",
+        "format": "yyyy-MM-dd'T'HH:mm:ss.SSSX",
+        value: "2016-02-11T09:46:56.023Z"
+      })
+    })
+
+    describe("when no example is given", () => {
+      it("generates a datetime from the current system time", () => {
+        MockNative.generate_datetime_string = () => "2016-02-11T09:46:56.023Z"
+        let result = matchers.datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX")
+        expect(result).to.deep.equal({
+          "pact:generator:type": "DateTime",
+          "pact:matcher:type": "timestamp",
+          "format": "yyyy-MM-dd'T'HH:mm:ss.SSSX",
+          value: "2016-02-11T09:46:56.023Z"
+        })
+      })
+    })
+  })
+
+  describe("#time", () => {
+    it("returns a JSON representation of a time matcher", () => {
+      let result = matchers.time("HH:mm:ss", "09:46:56")
+      expect(result).to.deep.equal({
+        "pact:generator:type": "Time",
+        "pact:matcher:type": "time",
+        "format": "HH:mm:ss",
+        value: "09:46:56"
+      })
+    })
+
+    describe("when no example is given", () => {
+      it("generates a time from the current system time", () => {
+        MockNative.generate_datetime_string = () => "10:46:56.023"
+        let result = matchers.time("HH:mm:ss.SSS")
+        expect(result).to.deep.equal({
+          "pact:generator:type": "Time",
+          "pact:matcher:type": "time",
+          "format": "HH:mm:ss.SSS",
+          value: "10:46:56.023"
+        })
+      })
+    })
+  })
+
+  describe("#date", () => {
+    it("returns a JSON representation of a date matcher", () => {
+      let result = matchers.date("yyyy-MM-dd", "2016-02-11")
+      expect(result).to.deep.equal({
+        "pact:generator:type": "Date",
+        "pact:matcher:type": "date",
+        "format": "yyyy-MM-dd",
+        value: "2016-02-11"
+      })
+    })
+
+    describe("when no example is given", () => {
+      it("generates a date from the current system time", () => {
+        MockNative.generate_datetime_string = () => "2020-02-11"
+        let result = matchers.date("yyyy-MM-dd")
+        expect(result).to.deep.equal({
+          "pact:generator:type": "Date",
+          "pact:matcher:type": "date",
+          "format": "yyyy-MM-dd",
+          value: "2020-02-11"
+        })
+      })
+    })
+  })
+
+  describe("#includes", () => {
+    it("returns a JSON representation of an include matcher", () => {
+      let result = matchers.includes("true")
+      expect(result).to.deep.equal({
+        "pact:matcher:type": "include",
+        value: "true"
+      })
+    })
+  })
+
+  describe("#nullValue", () => {
+    it("returns a JSON representation of an null matcher", () => {
+      let result = matchers.nullValue()
+      expect(result).to.deep.equal({
+        "pact:matcher:type": "null"
+      })
+    })
+  })
+
+  describe("#url", () => {
+    it("returns a JSON representation of a regex matcher for the URL", () => {
+      let result = matchers.url('http://localhost:8080', ['users', '1234', 'posts', 'latest'])
+      expect(result).to.deep.equal({
+        "pact:matcher:type": "regex",
+        "regex": ".*\\/users\\/1234\\/posts\\/latest$",
+        "value": "http://localhost:8080/users/1234/posts/latest"
+      })
+    })
+
+    describe("when provided with a regex matcher", () => {
+      it("returns a JSON representation of a regex matcher for the URL", () => {
+        let result = matchers.url('http://localhost:8080', ['users', matchers.regex("\\d+", "1234"), 'posts', 'latest'])
+        expect(result).to.deep.equal({
+          "pact:matcher:type": "regex",
+          "regex": ".*\\/users\\/\\d+\\/posts\\/latest$",
+          "value": "http://localhost:8080/users/1234/posts/latest"
+        })
+      })
+    })
+
+    describe("when provided with a regular expression", () => {
+      it("returns a JSON representation of a regex matcher for the URL", () => {
+        MockNative.generate_regex_string = () => "12345678"
+        let result = matchers.url('http://localhost:8080', ['users', /\d+/, 'posts', 'latest'])
+        expect(result).to.deep.equal({
+          "pact:matcher:type": "regex",
+          "regex": ".*\\/users\\/\\d+\\/posts\\/latest$",
+          "value": "http://localhost:8080/users/12345678/posts/latest"
+        })
       })
     })
   })

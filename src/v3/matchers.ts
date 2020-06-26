@@ -268,7 +268,6 @@ export function datetime(format: string, example?: string) {
     "pact:generator:type": "DateTime",
     "pact:matcher:type": "timestamp",
     format,
-    timestamp: format, // This is needed due to a defect in upstream matching lib. Should be fixed in 0.6.2
     value: example || PactNative.generate_datetime_string(format),
   }
 }
@@ -283,7 +282,6 @@ export function time(format: string, example?: string) {
     "pact:generator:type": "Time",
     "pact:matcher:type": "time",
     format,
-    time: format, // This is needed due to a defect in upstream matching lib. Should be fixed in 0.6.2
     value: example || PactNative.generate_datetime_string(format),
   }
 }
@@ -298,7 +296,6 @@ export function date(format: any, example?: string) {
     format,
     "pact:generator:type": "Date",
     "pact:matcher:type": "date",
-    date: format, // This is needed due to a defect in upstream matching lib. Should be fixed in 0.6.2
     value: example || PactNative.generate_datetime_string(format),
   }
 }
@@ -330,8 +327,8 @@ export function nullValue() {
  * @param pathFragments list of path fragments, can be regular expressions
  */
 export function url(basePath: string, pathFragments: Array<any>) {
-  let regex = ""
-  let example = ""
+  let regex = ".*"
+  let example = basePath
   for (let p of pathFragments) {
     if (p instanceof Object && p["pact:matcher:type"] == "regex") {
       regex += "\\/" + p["regex"]
@@ -339,16 +336,14 @@ export function url(basePath: string, pathFragments: Array<any>) {
     } else if (p instanceof RegExp) {
       regex += "\\/" + p.source
       example += "/" + PactNative.generate_regex_string(p.source)
-    } else if (p instanceof string) {
-      regex += "\\/" + p
-      example += "/" + p
     } else {
-      throw new Error("Only regex matchers, regular expressions or strings can be use a path fragments")
+      regex += "\\/" + p.toString()
+      example += "/" + p.toString()
     }
   }
   return {
     "pact:matcher:type": "regex",
-    regex,
+    regex: regex + '$',
     value: example
   }
 }
