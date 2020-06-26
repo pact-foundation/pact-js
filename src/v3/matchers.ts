@@ -323,3 +323,32 @@ export function nullValue() {
     "pact:matcher:type": "null",
   }
 }
+
+/**
+ * Matches a URL composed of a base path and a list of path fragments
+ * @param basePath Base path of the URL
+ * @param pathFragments list of path fragments, can be regular expressions
+ */
+export function url(basePath: string, pathFragments: Array<any>) {
+  let regex = ""
+  let example = ""
+  for (let p of pathFragments) {
+    if (p instanceof Object && p["pact:matcher:type"] == "regex") {
+      regex += "\\/" + p["regex"]
+      example += "/" + p["value"]
+    } else if (p instanceof RegExp) {
+      regex += "\\/" + p.source
+      example += "/" + PactNative.generate_regex_string(p.source)
+    } else if (p instanceof string) {
+      regex += "\\/" + p
+      example += "/" + p
+    } else {
+      throw new Error("Only regex matchers, regular expressions or strings can be use a path fragments")
+    }
+  }
+  return {
+    "pact:matcher:type": "regex",
+    regex,
+    value: example
+  }
+}

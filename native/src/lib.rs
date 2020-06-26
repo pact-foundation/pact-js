@@ -13,6 +13,7 @@ use pact_matching::models::generators::{Generators, GeneratorCategory, Generator
 use pact_matching::time_utils::generate_string;
 use pact_mock_server::server_manager::ServerManager;
 use pact_mock_server_ffi::bodies::{process_json, request_multipart, response_multipart, file_as_multipart_body};
+use pact_mock_server_ffi::{generate_regex_value, StringResult};
 use env_logger::{Builder, Target};
 use uuid::Uuid;
 use std::sync::Mutex;
@@ -20,6 +21,8 @@ use serde_json::Value;
 use log::*;
 use std::collections::HashMap;
 use std::fs;
+use std::ffi::CStr;
+use std::ffi::CString;
 
 mod verify;
 mod xml;
@@ -107,6 +110,28 @@ fn generate_datetime_string(mut cx: FunctionContext) -> JsResult<JsString> {
   match result {
     Ok(value) => Ok(cx.string(value)),
     Err(err) => cx.throw_error(err)
+  }
+}
+
+fn generate_regex_string(mut cx: FunctionContext) -> JsResult<JsString> {
+  let pattern = cx.argument::<JsString>(0)?;
+  let c_str = CString::new(pattern.value()).unwrap();
+  let result = unsafe { generate_regex_value(c_str.into_raw()) };
+  match result {
+    StringResult::Ok(value) => {
+      let c_str = unsafe { CStr::from_ptr(value) };
+      match c_str.to_str() {
+        Ok(value) => Ok(cx.string(value)),
+        Err(err) => cx.throw_error(err.to_string())
+      }
+    },
+    StringResult::Failed(err) => {
+      let c_str = unsafe { CStr::from_ptr(err) };
+      match c_str.to_str() {
+        Ok(value) => cx.throw_error(value),
+        Err(err) => cx.throw_error(err.to_string())
+      }
+    }
   }
 }
 
@@ -739,5 +764,6 @@ register_module!(mut m, {
     m.export_class::<JsPact>("Pact")?;
     m.export_function("verify_provider", verify::verify_provider)?;
     m.export_function("generate_datetime_string", generate_datetime_string)?;
+    m.export_function("generate_regex_string", generate_regex_string)?;
     Ok(())
 });
