@@ -1,7 +1,7 @@
 import * as mockery from "mockery"
 let MockNative = {
   generate_datetime_string: () => "",
-  generate_regex_string: () => ""
+  generate_regex_string: () => "",
 }
 mockery.registerMock("../native", MockNative)
 
@@ -14,13 +14,13 @@ describe("V3 Matchers", () => {
   describe("#like", () => {
     it("returns a JSON representation of a like matcher", () => {
       let result = matchers.like({
-        a: 'b'
+        a: "b",
       })
       expect(result).to.deep.equal({
         "pact:matcher:type": "type",
         value: {
-          a: "b"
-        }
+          a: "b",
+        },
       })
     })
   })
@@ -28,13 +28,15 @@ describe("V3 Matchers", () => {
   describe("#eachLike", () => {
     it("returns a JSON representation of an eachLike matcher", () => {
       let result = matchers.eachLike({
-        a: 'b'
+        a: "b",
       })
       expect(result).to.deep.equal({
         "pact:matcher:type": "type",
-        value: [{
-          a: "b"
-        }]
+        value: [
+          {
+            a: "b",
+          },
+        ],
       })
     })
   })
@@ -43,27 +45,32 @@ describe("V3 Matchers", () => {
     describe("with no examples", () => {
       it("returns a JSON representation of an atLeastOneLike matcher", () => {
         let result = matchers.atLeastOneLike({
-          a: 'b'
+          a: "b",
         })
         expect(result).to.deep.equal({
           "pact:matcher:type": "type",
           min: 1,
-          value: [{
-            a: "b"
-          }]
+          value: [
+            {
+              a: "b",
+            },
+          ],
         })
       })
     })
 
     describe("when provided examples", () => {
       it("returns a JSON representation of an atLeastOneLike matcher with the correct number of examples", () => {
-        let result = matchers.atLeastOneLike({
-          a: 'b'
-        }, 4)
+        let result = matchers.atLeastOneLike(
+          {
+            a: "b",
+          },
+          4
+        )
         expect(result).to.deep.equal({
           "pact:matcher:type": "type",
           min: 1,
-          "value": [{"a": "b"}, {"a": "b"}, {"a": "b"}, {"a": "b"}]
+          value: [{ a: "b" }, { a: "b" }, { a: "b" }, { a: "b" }],
         })
       })
     })
@@ -72,102 +79,133 @@ describe("V3 Matchers", () => {
   describe("#atLeastLike", () => {
     describe("with no examples", () => {
       it("returns a JSON representation of an atLeastLike matcher", () => {
-        let result = matchers.atLeastLike({
-          a: 'b'
-        }, 2)
+        let result = matchers.atLeastLike(
+          {
+            a: "b",
+          },
+          2
+        )
         expect(result).to.deep.equal({
           "pact:matcher:type": "type",
           min: 2,
-          value: [{a: "b"}, {a: "b"}]
+          value: [{ a: "b" }, { a: "b" }],
         })
       })
     })
 
     describe("when provided examples", () => {
       it("returns a JSON representation of an atLeastLike matcher with the correct number of examples", () => {
-        let result = matchers.atLeastLike({
-          a: 'b'
-        }, 2, 4)
+        let result = matchers.atLeastLike(
+          {
+            a: "b",
+          },
+          2,
+          4
+        )
         expect(result).to.deep.equal({
           "pact:matcher:type": "type",
           min: 2,
-          "value": [{"a": "b"}, {"a": "b"}, {"a": "b"}, {"a": "b"}]
+          value: [{ a: "b" }, { a: "b" }, { a: "b" }, { a: "b" }],
         })
       })
     })
 
     it("throws an error if the number of examples is less than the minimum", () => {
-      expect(() => matchers.atLeastLike({a: 'b'}, 4, 2)).to.throw("atLeastLike has a minimum of 4 but 2 elements where requested. Make sure the count is greater than or equal to the min.")
+      expect(() => matchers.atLeastLike({ a: "b" }, 4, 2)).to.throw(
+        "atLeastLike has a minimum of 4 but 2 elements where requested. Make sure the count is greater than or equal to the min."
+      )
     })
   })
 
   describe("#atMostLike", () => {
     describe("with no examples", () => {
       it("returns a JSON representation of an atMostLike matcher", () => {
-        let result = matchers.atMostLike({
-          a: 'b'
-        }, 2)
+        let result = matchers.atMostLike(
+          {
+            a: "b",
+          },
+          2
+        )
         expect(result).to.deep.equal({
           "pact:matcher:type": "type",
           max: 2,
-          value: [{a: "b"}]
+          value: [{ a: "b" }],
         })
       })
     })
 
     describe("when provided examples", () => {
       it("returns a JSON representation of an atMostLike matcher with the correct number of examples", () => {
-        let result = matchers.atMostLike({
-          a: 'b'
-        }, 4, 4)
+        let result = matchers.atMostLike(
+          {
+            a: "b",
+          },
+          4,
+          4
+        )
         expect(result).to.deep.equal({
           "pact:matcher:type": "type",
           max: 4,
-          "value": [{"a": "b"}, {"a": "b"}, {"a": "b"}, {"a": "b"}]
+          value: [{ a: "b" }, { a: "b" }, { a: "b" }, { a: "b" }],
         })
       })
     })
 
     it("throws an error if the number of examples is more than the maximum", () => {
-      expect(() => matchers.atMostLike({a: 'b'}, 2, 4)).to.throw("atMostLike has a maximum of 2 but 4 elements where requested. Make sure the count is less than or equal to the max.")
+      expect(() => matchers.atMostLike({ a: "b" }, 2, 4)).to.throw(
+        "atMostLike has a maximum of 2 but 4 elements where requested. Make sure the count is less than or equal to the max."
+      )
     })
   })
 
   describe("#constrainedArrayLike", () => {
     describe("with no examples", () => {
       it("returns a JSON representation of an constrainedArrayLike matcher", () => {
-        let result = matchers.constrainedArrayLike({
-          a: 'b'
-        }, 2, 4)
+        let result = matchers.constrainedArrayLike(
+          {
+            a: "b",
+          },
+          2,
+          4
+        )
         expect(result).to.deep.equal({
           "pact:matcher:type": "type",
           min: 2,
           max: 4,
-          value: [{a: "b"}, {a: "b"}]
+          value: [{ a: "b" }, { a: "b" }],
         })
       })
     })
 
     describe("when provided examples", () => {
       it("returns a JSON representation of an constrainedArrayLike matcher with the correct number of examples", () => {
-        let result = matchers.constrainedArrayLike({
-          a: 'b'
-        }, 2, 4, 3)
+        let result = matchers.constrainedArrayLike(
+          {
+            a: "b",
+          },
+          2,
+          4,
+          3
+        )
         expect(result).to.deep.equal({
           "pact:matcher:type": "type",
           min: 2,
           max: 4,
-          "value": [{"a": "b"}, {"a": "b"}, {"a": "b"}]
+          value: [{ a: "b" }, { a: "b" }, { a: "b" }],
         })
       })
     })
 
     it("throws an error if the number of examples is less than the minimum", () => {
-      expect(() => matchers.constrainedArrayLike({a: 'b'}, 4, 6, 2)).to.throw("constrainedArrayLike has a minimum of 4 but 2 elements where requested. Make sure the count is greater than or equal to the min.")
+      expect(() => matchers.constrainedArrayLike({ a: "b" }, 4, 6, 2)).to.throw(
+        "constrainedArrayLike has a minimum of 4 but 2 elements where requested. Make sure the count is greater than or equal to the min."
+      )
     })
 
     it("throws an error if the number of examples is more than the maximum", () => {
-      expect(() => matchers.constrainedArrayLike({a: 'b'}, 4, 6, 8)).to.throw("constrainedArrayLike has a maximum of 6 but 8 elements where requested. Make sure the count is less than or equal to the max.")
+      expect(() => matchers.constrainedArrayLike({ a: "b" }, 4, 6, 8)).to.throw(
+        "constrainedArrayLike has a maximum of 6 but 8 elements where requested. Make sure the count is less than or equal to the max."
+      )
     })
   })
 
@@ -176,7 +214,7 @@ describe("V3 Matchers", () => {
       let result = matchers.integer(100)
       expect(result).to.deep.equal({
         "pact:matcher:type": "integer",
-        value: 100
+        value: 100,
       })
     })
 
@@ -186,7 +224,7 @@ describe("V3 Matchers", () => {
         expect(result).to.deep.equal({
           "pact:matcher:type": "integer",
           "pact:generator:type": "RandomInt",
-          value: 101
+          value: 101,
         })
       })
     })
@@ -197,7 +235,7 @@ describe("V3 Matchers", () => {
       let result = matchers.decimal(100.3)
       expect(result).to.deep.equal({
         "pact:matcher:type": "decimal",
-        value: 100.3
+        value: 100.3,
       })
     })
 
@@ -207,7 +245,7 @@ describe("V3 Matchers", () => {
         expect(result).to.deep.equal({
           "pact:matcher:type": "decimal",
           "pact:generator:type": "RandomDecimal",
-          value: 12.34
+          value: 12.34,
         })
       })
     })
@@ -218,7 +256,7 @@ describe("V3 Matchers", () => {
       let result = matchers.number(100.3)
       expect(result).to.deep.equal({
         "pact:matcher:type": "number",
-        value: 100.3
+        value: 100.3,
       })
     })
 
@@ -228,7 +266,7 @@ describe("V3 Matchers", () => {
         expect(result).to.deep.equal({
           "pact:matcher:type": "number",
           "pact:generator:type": "RandomInt",
-          value: 1234
+          value: 1234,
         })
       })
     })
@@ -239,7 +277,7 @@ describe("V3 Matchers", () => {
       let result = matchers.boolean(true)
       expect(result).to.deep.equal({
         "pact:matcher:type": "type",
-        value: true
+        value: true,
       })
     })
   })
@@ -249,7 +287,7 @@ describe("V3 Matchers", () => {
       let result = matchers.string("true")
       expect(result).to.deep.equal({
         "pact:matcher:type": "type",
-        value: "true"
+        value: "true",
       })
     })
   })
@@ -259,8 +297,8 @@ describe("V3 Matchers", () => {
       let result = matchers.regex("\\d+", "1234")
       expect(result).to.deep.equal({
         "pact:matcher:type": "regex",
-        "regex": "\\d+",
-        value: "1234"
+        regex: "\\d+",
+        value: "1234",
       })
     })
 
@@ -269,8 +307,8 @@ describe("V3 Matchers", () => {
         let result = matchers.regex(/\d+/, "1234")
         expect(result).to.deep.equal({
           "pact:matcher:type": "regex",
-          "regex": "\\d+",
-          value: "1234"
+          regex: "\\d+",
+          value: "1234",
         })
       })
     })
@@ -281,19 +319,22 @@ describe("V3 Matchers", () => {
       let result = matchers.equal("true")
       expect(result).to.deep.equal({
         "pact:matcher:type": "equality",
-        value: "true"
+        value: "true",
       })
     })
   })
 
   describe("#datetime", () => {
     it("returns a JSON representation of a datetime matcher", () => {
-      let result = matchers.datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX", "2016-02-11T09:46:56.023Z")
+      let result = matchers.datetime(
+        "yyyy-MM-dd'T'HH:mm:ss.SSSX",
+        "2016-02-11T09:46:56.023Z"
+      )
       expect(result).to.deep.equal({
         "pact:generator:type": "DateTime",
         "pact:matcher:type": "timestamp",
-        "format": "yyyy-MM-dd'T'HH:mm:ss.SSSX",
-        value: "2016-02-11T09:46:56.023Z"
+        format: "yyyy-MM-dd'T'HH:mm:ss.SSSX",
+        value: "2016-02-11T09:46:56.023Z",
       })
     })
 
@@ -304,8 +345,8 @@ describe("V3 Matchers", () => {
         expect(result).to.deep.equal({
           "pact:generator:type": "DateTime",
           "pact:matcher:type": "timestamp",
-          "format": "yyyy-MM-dd'T'HH:mm:ss.SSSX",
-          value: "2016-02-11T09:46:56.023Z"
+          format: "yyyy-MM-dd'T'HH:mm:ss.SSSX",
+          value: "2016-02-11T09:46:56.023Z",
         })
       })
     })
@@ -317,8 +358,8 @@ describe("V3 Matchers", () => {
       expect(result).to.deep.equal({
         "pact:generator:type": "Time",
         "pact:matcher:type": "time",
-        "format": "HH:mm:ss",
-        value: "09:46:56"
+        format: "HH:mm:ss",
+        value: "09:46:56",
       })
     })
 
@@ -329,8 +370,8 @@ describe("V3 Matchers", () => {
         expect(result).to.deep.equal({
           "pact:generator:type": "Time",
           "pact:matcher:type": "time",
-          "format": "HH:mm:ss.SSS",
-          value: "10:46:56.023"
+          format: "HH:mm:ss.SSS",
+          value: "10:46:56.023",
         })
       })
     })
@@ -342,8 +383,8 @@ describe("V3 Matchers", () => {
       expect(result).to.deep.equal({
         "pact:generator:type": "Date",
         "pact:matcher:type": "date",
-        "format": "yyyy-MM-dd",
-        value: "2016-02-11"
+        format: "yyyy-MM-dd",
+        value: "2016-02-11",
       })
     })
 
@@ -354,8 +395,8 @@ describe("V3 Matchers", () => {
         expect(result).to.deep.equal({
           "pact:generator:type": "Date",
           "pact:matcher:type": "date",
-          "format": "yyyy-MM-dd",
-          value: "2020-02-11"
+          format: "yyyy-MM-dd",
+          value: "2020-02-11",
         })
       })
     })
@@ -366,7 +407,7 @@ describe("V3 Matchers", () => {
       let result = matchers.includes("true")
       expect(result).to.deep.equal({
         "pact:matcher:type": "include",
-        value: "true"
+        value: "true",
       })
     })
   })
@@ -375,28 +416,38 @@ describe("V3 Matchers", () => {
     it("returns a JSON representation of an null matcher", () => {
       let result = matchers.nullValue()
       expect(result).to.deep.equal({
-        "pact:matcher:type": "null"
+        "pact:matcher:type": "null",
       })
     })
   })
 
   describe("#url", () => {
     it("returns a JSON representation of a regex matcher for the URL", () => {
-      let result = matchers.url('http://localhost:8080', ['users', '1234', 'posts', 'latest'])
+      let result = matchers.url("http://localhost:8080", [
+        "users",
+        "1234",
+        "posts",
+        "latest",
+      ])
       expect(result).to.deep.equal({
         "pact:matcher:type": "regex",
-        "regex": ".*\\/users\\/1234\\/posts\\/latest$",
-        "value": "http://localhost:8080/users/1234/posts/latest"
+        regex: ".*\\/users\\/1234\\/posts\\/latest$",
+        value: "http://localhost:8080/users/1234/posts/latest",
       })
     })
 
     describe("when provided with a regex matcher", () => {
       it("returns a JSON representation of a regex matcher for the URL", () => {
-        let result = matchers.url('http://localhost:8080', ['users', matchers.regex("\\d+", "1234"), 'posts', 'latest'])
+        let result = matchers.url("http://localhost:8080", [
+          "users",
+          matchers.regex("\\d+", "1234"),
+          "posts",
+          "latest",
+        ])
         expect(result).to.deep.equal({
           "pact:matcher:type": "regex",
-          "regex": ".*\\/users\\/\\d+\\/posts\\/latest$",
-          "value": "http://localhost:8080/users/1234/posts/latest"
+          regex: ".*\\/users\\/\\d+\\/posts\\/latest$",
+          value: "http://localhost:8080/users/1234/posts/latest",
         })
       })
     })
@@ -404,11 +455,16 @@ describe("V3 Matchers", () => {
     describe("when provided with a regular expression", () => {
       it("returns a JSON representation of a regex matcher for the URL", () => {
         MockNative.generate_regex_string = () => "12345678"
-        let result = matchers.url('http://localhost:8080', ['users', /\d+/, 'posts', 'latest'])
+        let result = matchers.url("http://localhost:8080", [
+          "users",
+          /\d+/,
+          "posts",
+          "latest",
+        ])
         expect(result).to.deep.equal({
           "pact:matcher:type": "regex",
-          "regex": ".*\\/users\\/\\d+\\/posts\\/latest$",
-          "value": "http://localhost:8080/users/12345678/posts/latest"
+          regex: ".*\\/users\\/\\d+\\/posts\\/latest$",
+          value: "http://localhost:8080/users/12345678/posts/latest",
         })
       })
     })

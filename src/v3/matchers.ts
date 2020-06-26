@@ -343,7 +343,7 @@ export function url(basePath: string, pathFragments: Array<any>) {
   }
   return {
     "pact:matcher:type": "regex",
-    regex: regex + '$',
-    value: example
+    regex: regex + "$",
+    value: example,
   }
 }
