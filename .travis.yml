@@ -46,6 +46,7 @@ before_install:
 before_deploy:
   - npm run dist
   - npm run deploy:prepare
+  - export RELEASE_NOTES=$(cat CHANGELOG.md | awk 'BEGIN { flag=0 } /^## / { if (flag == 0) { flag=1 } else { flag=2 }; next } flag == 1')
 
 # these are executed in order.  each must pass for the next to be run
 stages:
@@ -75,9 +76,11 @@ jobs:
           on:
             tags: true
         - provider: releases
+          edge: true
           api_key:
             secure: FmoLJnO8GNxyztR2P433ZCumYPrxiZdBCfVhmhTGYlXhOfVaAECm0gUVPLZuBQRUaqsef5ekg+OSIA5xbrnNoOQ9qlmnF2n+5yiwqG6o35XLA4L6lB5pL+x8xoAAgpaj9dTD184HKGdub3heQStTPRd2ll3nNRwxhfyIyBaMX3elDTH3mkV2QxNhG1RTgJe322PQrwoU2sWkghTWNr4t+h/G+oYu364xwZuxFX1hrFpAW+IEmbDSuhmCe24lMU96ntIiciRU3eBYR7s3KlktOFgMORXMRw3H/qaGmx7rKtpJ892XGRuVbw+tPB3A1jbFvOwJwzpnsWG5REu3PkZ6oiWpnX+5riN3jPyvFpWd+LLfH1KdZeBnF/anEfl+mSPdrDROOWotV3Xt5zOiEwx2j4BRbDNfa6wXzX0zK31AMf0IFmw7KZJkzcyWjNRluxTn3r2bbjNoi+gBojQuX27R3AQz5G0E0yZUk5ujmcd+85WOgNh/zVwsZLHYVQxDyULkbDTCDAulBsJLyxUFRs0JixyHCvA6srrUdpcO0NdyDfvULk9e/g/c9aD56Rk4xT4/Xa7K1fAHLjLkV6CA4H9Of96Zl2BK8r6LAlw382hO7FaZH+A3YShObEeTiZsDbfSQrFl5x8aimvc9oeYopvvQ+EdZxHvvwxHQIp/MWOybdJ4=
           file: pactjs.tar.gz
+          release_notes: ${RELEASE_NOTES}
           skip_cleanup: true
           on:
             tags: true
