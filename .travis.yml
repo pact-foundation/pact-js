@@ -8,6 +8,8 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - g++-5
+services:
+  - docker
 cache:
   npm: true
   cargo: true
