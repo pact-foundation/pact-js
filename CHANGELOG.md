@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.13](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.12...v10.0.0-beta.13) (2020-06-27)
+
+
+### Features
+
+* add some tests around the conusmer DSL matchers ([e6a153f](https://github.com/pact-foundation/pact-js/commit/e6a153fd62d48644b97018d69e5f23d1710e510f))
+* handle XML matching with different types of child elements ([2143ca4](https://github.com/pact-foundation/pact-js/commit/2143ca4c968969e1c6218dd8e538097733ccfa56))
+* implemented consumer DSL URL matcher ([f27a444](https://github.com/pact-foundation/pact-js/commit/f27a44409aed3ece1adbab6af9e853b7684c101c))
+
+
+### Bug Fixes
+
+* after upgrading crates ([9a5a36d](https://github.com/pact-foundation/pact-js/commit/9a5a36db9d733bd13a1d68bb5b8d893720a915cb))
+* import for metadata was wrong ([ba2a975](https://github.com/pact-foundation/pact-js/commit/ba2a9755aee672cbed73b236c44f68aab14939f0))
+* lint ([78b4692](https://github.com/pact-foundation/pact-js/commit/78b46927bbeb96a4da6a924b7d8e86084ff6c355))
+* **deps:** Update vulnerable dependencies ([2b2ce6e](https://github.com/pact-foundation/pact-js/commit/2b2ce6e30c161c967331c8c0f00b7319d3158489))
+
+## [9.11.0](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.4...v9.11.0) (2020-05-20)
+
+
+### Bug Fixes
+
+* **dsl:** Fix extractPayload so that it passes through object properties that are not matchers (fixes [#454](https://github.com/pact-foundation/pact-js/issues/454)) ([c0f3d37](https://github.com/pact-foundation/pact-js/commit/c0f3d37b3a1f1843d4e92182b388bfe23d95e5c8))
+
 ## [10.0.0-beta.12](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.11...v10.0.0-beta.12) (2020-06-12)
 
 ## [10.0.0-beta.11](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.10...v10.0.0-beta.11) (2020-06-12)
