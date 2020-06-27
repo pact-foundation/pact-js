@@ -14,7 +14,7 @@ cache:
   bundler: true
   directories:
     - native/target
-    - examples/ava/node_modules
+    # - examples/ava/node_modules
     - examples/e2e/node_modules
     - examples/graphql/node_modules
     - examples/jest/node_modules
