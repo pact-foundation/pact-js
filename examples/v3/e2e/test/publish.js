@@ -7,7 +7,9 @@ const opts = {
       "../pacts/Matching Service V3-Animal Profile Service V3.json"
     ),
   ],
-  pactBroker: process.env.CI ? "http://localhost:9292" : "https://test.pact.dius.com.au",
+  pactBroker: process.env.CI
+    ? "http://localhost:9292"
+    : "https://test.pact.dius.com.au",
   pactBrokerUsername: "dXfltyFMgNOFZAxr8io9wJ37iUpY42M",
   pactBrokerPassword: "O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
   tags: ["prod", "test"],

@@ -70,7 +70,9 @@ describe("Pact Verification", () => {
       },
 
       // Fetch pacts from broker
-      pactBrokerUrl: process.env.CI ? "http://localhost:9292" : "https://test.pact.dius.com.au",
+      pactBrokerUrl: process.env.CI
+        ? "http://localhost:9292"
+        : "https://test.pact.dius.com.au",
 
       // Fetch from broker with given tags
       tags: ["prod"],
