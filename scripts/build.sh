@@ -31,8 +31,8 @@ for i in examples/*; do
   fi
 done
 
-echo "--> Running coverage checks"
-npm run coverage
+# echo "--> Running coverage checks"
+# npm run coverage
 
 echo "Running V3 e2e examples build for node version ${TRAVIS_NODE_VERSION}"
 for i in examples/v3/*; do
