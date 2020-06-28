@@ -35,9 +35,10 @@ lazy_static! {
 fn init(mut cx: FunctionContext) -> JsResult<JsString> {
     let mut builder = Builder::from_env("LOG_LEVEL");
     builder.target(Target::Stdout);
-    builder.init();
-
-    debug!("Initialising Pact native library version {}", env!("CARGO_PKG_VERSION"));
+    
+    if let Ok(_) = builder.try_init() {
+      debug!("Initialising Pact native library version {}", env!("CARGO_PKG_VERSION"));
+    }
 
     Ok(cx.string(env!("CARGO_PKG_VERSION")))
 }
