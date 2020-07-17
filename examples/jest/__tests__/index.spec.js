@@ -42,7 +42,7 @@ pactWith({ consumer: "MyConsumer", provider: "MyProvider" }, provider => {
     })
 
     // add expectations
-    it("returns a sucessful body", () => {
+    it("returns a successful body", () => {
       return getMeDogs({
         url: provider.mockService.baseUrl,
       }).then(dogs => {
@@ -84,7 +84,7 @@ pactWith({ consumer: "MyConsumer", provider: "MyProvider" }, provider => {
       })
     })
 
-    it("returns a sucessful body", () => {
+    it("returns a successful body", () => {
       return getMeCats({
         url: provider.mockService.baseUrl,
       }).then(cats => {
