@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [9.11.1](https://github.com/pact-foundation/pact-js/compare/v9.11.0...v9.11.1) (2020-07-18)
+
+
+### Bug Fixes
+
+* **deps:** Bump lodash dependency version to obtain security fix ([c035482](https://github.com/pact-foundation/pact-js/commit/c035482524f1b27f7de0b2fe60d104e1cf25a601))
+* package.json & package-lock.json to reduce vulnerabilities ([f147ad2](https://github.com/pact-foundation/pact-js/commit/f147ad2b97bc384b8ccdf965bf4d47b65901cdf0))
+* package.json & package-lock.json to reduce vulnerabilities ([c620dc1](https://github.com/pact-foundation/pact-js/commit/c620dc1965ff2b73c5d649dd2192e206e9a24e0e))
+* **deps:** Update vulnerable dependencies ([2b2ce6e](https://github.com/pact-foundation/pact-js/commit/2b2ce6e30c161c967331c8c0f00b7319d3158489))
+
 ## [9.11.0](https://github.com/pact-foundation/pact-js/compare/v9.10.0...v9.11.0) (2020-05-20)
 
 
