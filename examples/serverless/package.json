@@ -21,7 +21,7 @@
     "@pact-foundation/pact": "^9.2.2",
     "aws-sdk": "^2.218.1",
     "chai": "^3.5.0",
-    "lodash": "^4.17.13",
+    "lodash": "^4.17.19",
     "mocha": "^5.1.1",
     "rimraf": "^2.6.2",
     "serverless": "^1.26.1"

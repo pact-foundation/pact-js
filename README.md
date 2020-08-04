@@ -1,5 +1,7 @@
 # Pact JS
 
+<!-- Please use absolute URLs for all links as the content of this page is synced to docs.pact.io -->
+
 [![Build Status](https://travis-ci.org/pact-foundation/pact-js.svg?branch=master)](https://travis-ci.org/pact-foundation/pact-js)
 [![Appveyor Build status](https://ci.appveyor.com/api/projects/status/58ww3fref30d5nx8?svg=true)](https://ci.appveyor.com/project/pact-foundation/pact-js)
 ![Native release](https://github.com/pact-foundation/pact-js/workflows/Release%20workflow/badge.svg?branch=feat%2Fv3.0.0)
@@ -10,7 +12,7 @@
 [![Issue Count](https://codeclimate.com/github/pact-foundation/pact-js/badges/issue_count.svg)](https://codeclimate.com/github/pact-foundation/pact-js)
 [![Known Vulnerabilities](https://snyk.io/test/github/pact-foundation/pact-js/badge.svg?targetFile=package.json)](https://snyk.io/test/github/pact-foundation/pact-js?targetFile=package.json)
 [![license](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/pact-foundation/pact-js/blob/master/LICENSE)
-[![slack](http://slack.pact.io/badge.svg)](http://slack.pact.io)
+[![slack](https://slack.pact.io/badge.svg)](https://slack.pact.io)
 
 Implementation of the consumer driven contract library [Pact](https://docs.pact.io) for Javascript.
 
@@ -375,6 +377,9 @@ If you have defined any `state`s in your consumer tests, the `Verifier` can put 
 let opts = {
   ...
   stateHandlers: {
+    [null]: () => {
+      // This is the "default" state handler, when no state is given
+    }
     "Has no animals": () => {
       animalRepository.clear()
       return Promise.resolve(`Animals removed from the db`)
@@ -399,7 +404,7 @@ Read more about [Provider States](https://docs.pact.io/getting_started/provider_
 
 #### Pending Pacts
 
-_NOTE_: This feature is currently only available on [Pactflow]
+_NOTE_: This feature is available on [Pactflow] by default, and requires [configuration](https://docs.pact.io/pact_broker/advanced_topics/wip_pacts) if using a self-hosted broker.
 
 Pending pacts is a feature that allows consumers to publish new contracts or changes to existing contracts without breaking Provider's builds. It does so by flagging the contract as "unverified" in the Pact Broker the first time a contract is published. A Provider can then enable a behaviour (via `enablePending: true`) that will still perform a verification (and thus share the results back to the broker) but _not_ fail the verification step itself.
 
@@ -409,7 +414,7 @@ See the [docs](https://docs.pact.io/pending) and this [article](http://blog.pact
 
 #### WIP Pacts
 
-_NOTE_: This feature is currently only available on [Pactflow]
+_NOTE_: This feature is available on [Pactflow] by default, and requires [configuration](https://docs.pact.io/pact_broker/advanced_topics/wip_pacts) if using a self-hosted broker.
 
 WIP Pacts builds upon pending pacts, enabling provider tests to pull in _any_ contracts applicable to the provider regardless of the `tag` it was given. This is useful, because often times consumers won't follow the exact same tagging convention and so their workflow would be interrupted. This feature enables any pacts determined to be "work in progress" to be verified by the Provider, without causing a build failure. You can enable this behaviour by specifying a valid timestamp for `includeWipPactsSince`. This sets the start window for which new WIP pacts will be pulled down for verification, regardless of the tag.
 
@@ -1207,7 +1212,7 @@ TL;DR - you almost certainly have not properly handled (returned) a Promise.
 
 We see this sort of thing all of the time:
 
-```
+```js
 it("returns a successful thing", () => {
   executeApiCallThatIsAPromise()
     .then((response) => {
@@ -1228,7 +1233,7 @@ _Side note_: Jasmine and other test frameworks may detect an unhandled promise r
 
 The correct code for the above is:
 
-```
+```js
 it("returns a successful thing", () => {
   return executeApiCallThatIsAPromise()
     .then((response) => {
@@ -1344,21 +1349,16 @@ Try starting the mock service manually and seeing if it comes up. When submittin
 4.  Push to the branch (`git push origin my-new-feature`)
 5.  Create new Pull Request
 
-If you would like to implement `Pact` in another language, please check out the Pact [Spec] and have a chat to one of us on the [pact-dev Google group](https://groups.google.com/forum/#!forum/pact-support).
-
-The vision is to have a compatible `Pact` implementation in all the commonly used languages, your help would be greatly appreciated!
-
 ## Contact
 
 Join us in [Slack](slack.pact.io)
 
-<a href="http://slack.pact.io"><img src="http://slack.pact.io/badge.svg"></a>
+<a href="https://slack.pact.io"><img src="https://slack.pact.io/badge.svg"></a>
 
 or chat to us at
 
 - Twitter: [@pact_up](https://twitter.com/pact_up)
 - Stack Overflow: https://stackoverflow.com/questions/tagged/pact
-- Google users group: https://groups.google.com/forum/#!forum/pact-support
 
 [getting started with pact]: https://docs.pact.io/getting_started
 [spec]: https://github.com/pact-foundation/pact-specification

@@ -11,6 +11,8 @@ All notable changes to this project will be documented in this file. See [standa
 * handle XML matching with different types of child elements ([2143ca4](https://github.com/pact-foundation/pact-js/commit/2143ca4c968969e1c6218dd8e538097733ccfa56))
 * implemented consumer DSL URL matcher ([f27a444](https://github.com/pact-foundation/pact-js/commit/f27a44409aed3ece1adbab6af9e853b7684c101c))
 
+### [9.11.1](https://github.com/pact-foundation/pact-js/compare/v9.11.0...v9.11.1) (2020-07-18)
+
 
 ### Bug Fixes
 
@@ -47,6 +49,11 @@ All notable changes to this project will be documented in this file. See [standa
 * release node 14 native binaries ([9ee832c](https://github.com/pact-foundation/pact-js/commit/9ee832c8dcfd896432ef34fb57595496bcac0077))
 
 ## [10.0.0-beta.5](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.4...v10.0.0-beta.5) (2020-05-27)
+* **deps:** Bump lodash dependency version to obtain security fix ([c035482](https://github.com/pact-foundation/pact-js/commit/c035482524f1b27f7de0b2fe60d104e1cf25a601))
+* package.json & package-lock.json to reduce vulnerabilities ([f147ad2](https://github.com/pact-foundation/pact-js/commit/f147ad2b97bc384b8ccdf965bf4d47b65901cdf0))
+* package.json & package-lock.json to reduce vulnerabilities ([c620dc1](https://github.com/pact-foundation/pact-js/commit/c620dc1965ff2b73c5d649dd2192e206e9a24e0e))
+* **deps:** Update vulnerable dependencies ([2b2ce6e](https://github.com/pact-foundation/pact-js/commit/2b2ce6e30c161c967331c8c0f00b7319d3158489))
+
 ## [9.11.0](https://github.com/pact-foundation/pact-js/compare/v9.10.0...v9.11.0) (2020-05-20)
 
 
