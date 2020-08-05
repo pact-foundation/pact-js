@@ -115,6 +115,7 @@
     "@babel/cli": "~7.6.0",
     "@babel/core": "^7.6.4",
     "@babel/preset-env": "^7.6.3",
+    "@octokit/rest": "^18.0.3",
     "@types/chai": "^4.0.3",
     "@types/chai-as-promised": "0.0.31",
     "@types/cli-color": "^0.3.29",
