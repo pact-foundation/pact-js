@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.15](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.14...v10.0.0-beta.15) (2020-08-05)
+
+
+### Bug Fixes
+
+* correct matcher paths for text nodes in XML ([a217793](https://github.com/pact-foundation/pact-js/commit/a217793a5e538d9e9616ae1bab8cbd561fdd5377))
+
 ## [10.0.0-beta.14](https://github.com/pact-foundation/pact-js/compare/v9.11.1...v10.0.0-beta.14) (2020-08-04)
 
 
