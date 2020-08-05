@@ -110,7 +110,6 @@ fn create_element_from_json<'a>(
     text = Some(doc.create_text(json_to_string(content).as_str()));
     if let Some(matcher) = object.get("matcher") {
       let mut text_path = path.clone();
-      text_path.pop();
       text_path.push("#text");
       if let Value::Object(matcher) = matcher {
         if let Some(rule) = MatchingRule::from_integration_json(matcher) {
