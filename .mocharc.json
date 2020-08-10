@@ -1,0 +1,18 @@
+{
+    "bail": true,
+    "require": [
+        "ts-node/register",
+        "./test/helper.ts",
+        "source-map-support/register"
+    ],
+    "fullTrace": true,
+    "reporter": "spec",
+    "colors": true,
+    "recursive": true,
+    "timeout": 30000,
+    "spec": [
+        "src/*.spec.ts",
+        "src/**/*.spec.ts"
+    ],
+    "exit": true
+}
