@@ -28,7 +28,7 @@ Read [Getting started with Pact] for more information for beginners.
 
 <p align="center">
   <a href="https://asciinema.org/a/105793">
-    <img width="880" src="https://raw.githubusercontent.com/pact-foundation/pact-js/master/.github/pact.svg?sanitize=true&t=1">
+    <img width="880" src="https://raw.githubusercontent.com/pact-foundation/pact-js/master/.github/pact.svg?sanitize=true&t=1"></img>
   </a>
 </p>
 
@@ -1351,7 +1351,7 @@ Try starting the mock service manually and seeing if it comes up. When submittin
 
 Join us in [Slack](slack.pact.io)
 
-<a href="https://slack.pact.io"><img src="https://slack.pact.io/badge.svg"></a>
+<a href="https://slack.pact.io"><img src="https://slack.pact.io/badge.svg"></img></a>
 
 or chat to us at
 
