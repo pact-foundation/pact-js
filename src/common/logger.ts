@@ -1,35 +1,37 @@
-import * as bunyan from "bunyan"
-const PrettyStream = require("bunyan-prettystream")
+const pino = require("pino")
 const pkg = require("./metadata")
 
-const prettyStdOut = new PrettyStream()
-prettyStdOut.pipe(process.stdout)
+const DEFAULT_LOG_LEVEL = "info"
+const logLevel = process.env.LOGLEVEL || DEFAULT_LOG_LEVEL
+const pactLogFile = process.env.PACT_LOG_PATH
 
-export class Logger extends bunyan {
-  public time(action: string, startTime: number) {
-    const time = Date.now() - startTime
-    this.info(
-      {
-        action,
-        duration: time,
-        type: "TIMER",
-      },
-      `TIMER: ${action} completed in ${time} milliseconds`
-    )
-  }
+const destination = pactLogFile
+  ? pino.destination(pactLogFile)
+  : pino.destination(1)
 
-  public get logLevelName(): string {
-    return bunyan.nameFromLevel[this.level()]
-  }
+const logOpts = {
+  level: logLevel,
+  prettyPrint: {
+    messageFormat: `pact@${pkg.version}: {msg}`,
+    translateTime: true,
+  },
 }
 
-export default new Logger({
-  name: `pact@${pkg.version}`,
-  streams: [
-    {
-      level: (process.env.LOGLEVEL || "info") as bunyan.LogLevel,
-      stream: prettyStdOut,
-      type: "raw",
+let logger = pino(logOpts, destination)
+
+Object.defineProperties(logger, {
+  level: {
+    enumerable: true,
+    value: (newLevel: string): void => {
+      logger = pino(
+        {
+          ...logOpts,
+          level: newLevel || DEFAULT_LOG_LEVEL,
+        },
+        destination
+      )
     },
-  ],
+  },
 })
+
+export default logger
