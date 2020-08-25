@@ -2,7 +2,7 @@ const pino = require("pino")
 const pkg = require("./metadata")
 
 const DEFAULT_LOG_LEVEL = "info"
-const logLevel = process.env.LOGLEVEL || DEFAULT_LOG_LEVEL
+const logLevel = (process.env.LOGLEVEL || DEFAULT_LOG_LEVEL).toLowerCase()
 const pactLogFile = process.env.PACT_LOG_PATH
 
 const destination = pactLogFile
@@ -26,7 +26,7 @@ Object.defineProperties(logger, {
       logger = pino(
         {
           ...logOpts,
-          level: newLevel || DEFAULT_LOG_LEVEL,
+          level: (newLevel || DEFAULT_LOG_LEVEL).toLowerCase(),
         },
         destination
       )
