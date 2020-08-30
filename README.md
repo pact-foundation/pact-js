@@ -1349,7 +1349,7 @@ Try starting the mock service manually and seeing if it comes up. When submittin
 
 ## Contact
 
-Join us in [Slack](slack.pact.io)
+Join us on [Slack](https://slack.pact.io)
 
 <a href="https://slack.pact.io"><img src="https://slack.pact.io/badge.svg"></img></a>
 
