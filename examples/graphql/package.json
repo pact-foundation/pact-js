@@ -39,7 +39,7 @@
     "graphql-tools": "^4.0.5",
     "lodash": "^4.17.19",
     "mocha": "^5.1.1",
-    "node-fetch": "^2.2.0",
+    "node-fetch": "^2.6.1",
     "nyc": "^15.0.0-beta.0",
     "rimraf": "^2.6.2",
     "ts-node": "^3.3.0",
