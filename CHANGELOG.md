@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [9.12.0](https://github.com/pact-foundation/pact-js/compare/v9.11.1...v9.12.0) (2020-09-21)
+
+
+### Features
+
+* allow also WebDAV HTTP Requests ([2ac811d](https://github.com/pact-foundation/pact-js/commit/2ac811d514a6a419a0e2d1abec1ac46e854d4770))
+
+
+### Bug Fixes
+
+* package.json & package-lock.json to reduce vulnerabilities ([0bb8512](https://github.com/pact-foundation/pact-js/commit/0bb851255c0f08d25fd935e5bd164ce99063a9ae))
+* **pact-node:** Bump version of pact-node to pick up improved logging options ([1e09e1e](https://github.com/pact-foundation/pact-js/commit/1e09e1e44017811966defd9ba87c24066385d059))
+
 ### [9.11.1](https://github.com/pact-foundation/pact-js/compare/v9.11.0...v9.11.1) (2020-07-18)
 
 
