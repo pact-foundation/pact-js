@@ -54,6 +54,7 @@ All notable changes to this project will be documented in this file. See [standa
 * release node 14 native binaries ([9ee832c](https://github.com/pact-foundation/pact-js/commit/9ee832c8dcfd896432ef34fb57595496bcac0077))
 
 ## [10.0.0-beta.5](https://github.com/pact-foundation/pact-js/compare/v9.11.0...v10.0.0-beta.5) (2020-05-27)
+## [9.12.0](https://github.com/pact-foundation/pact-js/compare/v9.11.1...v9.12.0) (2020-09-21)
 
 
 ### Features
@@ -62,6 +63,7 @@ All notable changes to this project will be documented in this file. See [standa
 * support regex matcher with a regexp object ([d92f6f5](https://github.com/pact-foundation/pact-js/commit/d92f6f5eee92667e5a3ce0ecdd44177d18a6b7ff))
 * support text nodes configured from XML builder ([a2a7f55](https://github.com/pact-foundation/pact-js/commit/a2a7f55eff4a187cbe30a3e56917745ebc40e33d))
 * support using matchers on XML text nodes ([b3b5e62](https://github.com/pact-foundation/pact-js/commit/b3b5e6231e9f0ade7be045ff117b441d0169114a))
+* allow also WebDAV HTTP Requests ([2ac811d](https://github.com/pact-foundation/pact-js/commit/2ac811d514a6a419a0e2d1abec1ac46e854d4770))
 
 
 ### Bug Fixes
@@ -150,6 +152,8 @@ All notable changes to this project will be documented in this file. See [standa
 * add some tests around the conusmer DSL matchers ([e6a153f](https://github.com/pact-foundation/pact-js/commit/e6a153fd62d48644b97018d69e5f23d1710e510f))
 * handle XML matching with different types of child elements ([2143ca4](https://github.com/pact-foundation/pact-js/commit/2143ca4c968969e1c6218dd8e538097733ccfa56))
 * implemented consumer DSL URL matcher ([f27a444](https://github.com/pact-foundation/pact-js/commit/f27a44409aed3ece1adbab6af9e853b7684c101c))
+* package.json & package-lock.json to reduce vulnerabilities ([0bb8512](https://github.com/pact-foundation/pact-js/commit/0bb851255c0f08d25fd935e5bd164ce99063a9ae))
+* **pact-node:** Bump version of pact-node to pick up improved logging options ([1e09e1e](https://github.com/pact-foundation/pact-js/commit/1e09e1e44017811966defd9ba87c24066385d059))
 
 ### [9.11.1](https://github.com/pact-foundation/pact-js/compare/v9.11.0...v9.11.1) (2020-07-18)
 

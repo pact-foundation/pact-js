@@ -12,6 +12,13 @@ export enum HTTPMethod {
   DELETE = "DELETE",
   HEAD = "HEAD",
   OPTIONS = "OPTIONS",
+  COPY = "COPY",
+  LOCK = "LOCK",
+  MKCOL = "MKCOL",
+  MOVE = "MOVE",
+  PROPFIND = "PROPFIND",
+  PROPPATCH = "PROPPATCH",
+  UNLOCK = "UNLOCK",
 }
 
 export type methods =
@@ -22,6 +29,13 @@ export type methods =
   | "DELETE"
   | "HEAD"
   | "OPTIONS"
+  | "COPY"
+  | "LOCK"
+  | "MKCOL"
+  | "MOVE"
+  | "PROPFIND"
+  | "PROPPATCH"
+  | "UNLOCK"
 
 export class Request {
   private readonly transport = Popsicle.createTransport({

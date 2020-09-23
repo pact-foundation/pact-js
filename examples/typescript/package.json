@@ -29,7 +29,7 @@
     "statements": 80
   },
   "devDependencies": {
-    "@pact-foundation/pact": "^9.0.1",
+    "@pact-foundation/pact": "^9.11.1",
     "@types/chai": "^4.1.7",
     "@types/chai-as-promised": "7.1.0",
     "@types/mocha": "^5.2.7",
@@ -44,8 +44,8 @@
     "nyc": "^14.1.1",
     "sinon": "^7.3.2",
     "sinon-chai": "^3.3.0",
-    "typescript": "^3.5.3",
     "ts-mock-imports": "^1.2.6",
-    "ts-node": "^8.3.0"
+    "ts-node": "^8.3.0",
+    "typescript": "^3.5.3"
   }
 }
