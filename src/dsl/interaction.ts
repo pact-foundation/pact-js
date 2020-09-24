@@ -151,6 +151,10 @@ export class Interaction {
    * @param query
    */
   private queryObjectIsValid(query: QueryObject) {
+    if (isMatcher(query)) {
+      return
+    }
+
     Object.values(query).every(value => {
       if (
         isMatcher(value) ||
