@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [9.12.1](https://github.com/pact-foundation/pact-js/compare/v9.12.0...v9.12.1) (2020-09-24)
+
+
+### Bug Fixes
+
+* allow matcher as the top-level value of a query string ([2922f8f](https://github.com/pact-foundation/pact-js/commit/2922f8fee871bfb1f220df37cfa76745e57f4e5e)), closes [#510](https://github.com/pact-foundation/pact-js/issues/510)
+
 ## [9.12.0](https://github.com/pact-foundation/pact-js/compare/v9.11.1...v9.12.0) (2020-09-21)
 
 
