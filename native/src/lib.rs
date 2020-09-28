@@ -226,9 +226,27 @@ declare_types! {
       let consumer: String = cx.argument::<JsString>(0)?.value();
       let provider: String = cx.argument::<JsString>(1)?.value();
       let version: String = cx.argument::<JsString>(2)?.value();
+      let options: Handle<JsObject> = cx.argument::<JsObject>(3)?;
 
       let mut metadata = RequestResponsePact::default_metadata();
-      metadata.insert("pactJs".to_string(), btreemap!{ "version".to_string() => version.to_string() });
+      let mut pact_js_metadata = btreemap!{ "version".to_string() => version.to_string() };
+      let options = options.downcast::<JsObject>().unwrap();
+      let js_props = options.get_own_property_names(&mut cx).unwrap();
+      for prop in js_props.to_vec(&mut cx).unwrap() {
+        let prop_name = prop.downcast::<JsString>().unwrap().value();
+        let prop_val = options.get(&mut cx, prop_name.as_str()).unwrap();
+        if let Ok(val) = prop_val.downcast::<JsString>() {
+          pact_js_metadata.insert(format!("opts:{}", prop_name), val.value());
+        } else if let Ok(val) = prop_val.downcast::<JsNumber>() {
+          pact_js_metadata.insert(format!("opts:{}", prop_name), val.value().to_string());
+        } else if let Ok(val) = prop_val.downcast::<JsBoolean>() {
+          pact_js_metadata.insert(format!("opts:{}", prop_name), val.value().to_string());
+        } else {
+          error!("Ignoring value for from mock server options '{}'", prop_name);
+        }
+      }
+      metadata.insert("pactJs".to_string(), pact_js_metadata);
+      
       let pact = RequestResponsePact {
         consumer: Consumer { name: consumer },
         provider: Provider { name: provider },
@@ -669,14 +687,27 @@ declare_types! {
 
     method executeTest(mut cx) {
       let test_fn = cx.argument::<JsFunction>(0)?;
+      let options: Handle<JsObject> = cx.argument::<JsObject>(1)?;
       let this = cx.this();
 
+      let mock_server_config = match options.get(&mut cx, "cors") {
+        Ok(cors_prop) => match cors_prop.downcast::<JsBoolean>() {
+          Ok(cors) => {
+            debug!("Enabling handling of CORS pre-flight requests in the mock server");
+            MockServerConfig {
+              cors_preflight: cors.value()
+            }
+          },
+          _ => MockServerConfig::default()
+        },
+        _ => MockServerConfig::default()
+      };
       let mock_server_id = Uuid::new_v4().simple().to_string();
       let port = {
         let guard = cx.lock();
         let pact = this.borrow(&guard);
         match MANAGER.lock().unwrap()
-          .start_mock_server(mock_server_id.clone(), pact.clone(), 0, MockServerConfig::default())
+          .start_mock_server(mock_server_id.clone(), pact.clone(), 0, mock_server_config)
           .map(|port| port as i32) {
             Ok(port) => port,
             Err(err) => panic!(err)

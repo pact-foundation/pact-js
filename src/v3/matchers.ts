@@ -2,10 +2,19 @@ import * as R from "ramda"
 const PactNative = require("../native")
 
 /**
+ * Pact Matcher
+ */
+interface Matcher {
+  "pact:matcher:type": string
+  "pact:generator:type"?: string
+  value?: any
+}
+
+/**
  * Value must match the given template
  * @param template Template to base the comparison on
  */
-export function like(template: any) {
+export function like(template: any): Matcher {
   return {
     "pact:matcher:type": "type",
     value: template,
@@ -16,7 +25,7 @@ export function like(template: any) {
  * Array where each element must match the given template
  * @param template Template to base the comparison on
  */
-export function eachLike(template: any) {
+export function eachLike(template: any): Matcher {
   return {
     "pact:matcher:type": "type",
     value: [template],
@@ -24,11 +33,18 @@ export function eachLike(template: any) {
 }
 
 /**
+ * Like Matcher with a minimum number of required values
+ */
+interface MinLikeMatcher extends Matcher {
+  min: number
+}
+
+/**
  * An array that has to have at least one element and each element must match the given template
  * @param template Template to base the comparison on
  * @param count Number of examples to generate, defaults to one
  */
-export function atLeastOneLike(template: any, count: number = 1) {
+export function atLeastOneLike(template: any, count: number = 1): MinLikeMatcher {
   return {
     min: 1,
     "pact:matcher:type": "type",
@@ -42,7 +58,7 @@ export function atLeastOneLike(template: any, count: number = 1) {
  * @param min Minimum number of elements required in the array
  * @param count Number of examples to generate, defaults to one
  */
-export function atLeastLike(template: any, min: number, count?: number) {
+export function atLeastLike(template: any, min: number, count?: number): MinLikeMatcher {
   const elements = count || min
   if (count && count < min) {
     throw new Error(
@@ -63,12 +79,19 @@ export function atLeastLike(template: any, min: number, count?: number) {
 }
 
 /**
+ * Like Matcher with a maximum number of required values
+ */
+interface MaxLikeMatcher extends Matcher {
+  max: number
+}
+
+/**
  * An array that has to have at most the required number of elements and each element must match the given template
  * @param template Template to base the comparison on
  * @param max Maximum number of elements required in the array
  * @param count Number of examples to generate, defaults to one
  */
-export function atMostLike(template: any, max: number, count?: number) {
+export function atMostLike(template: any, max: number, count?: number): MaxLikeMatcher {
   const elements = count || 1
   if (count && count > max) {
     throw new Error(
@@ -100,7 +123,7 @@ export function constrainedArrayLike(
   min: number,
   max: number,
   count?: number
-) {
+): MinLikeMatcher & MaxLikeMatcher {
   const elements = count || min
   if (count) {
     if (count < min) {
@@ -136,7 +159,7 @@ export function constrainedArrayLike(
  * Value must be a boolean
  * @param b Boolean example value
  */
-export function boolean(b: boolean) {
+export function boolean(b: boolean): Matcher {
   return {
     "pact:matcher:type": "type",
     value: b,
@@ -147,7 +170,7 @@ export function boolean(b: boolean) {
  * Value must be an integer (must be a number and have no decimal places)
  * @param int Example value. If omitted a random value will be generated.
  */
-export function integer(int?: number) {
+export function integer(int?: number): Matcher {
   if (int) {
     return {
       "pact:matcher:type": "integer",
@@ -166,7 +189,7 @@ export function integer(int?: number) {
  * Value must be a decimal number (must be a number and have decimal places)
  * @param num Example value. If omitted a random value will be generated.
  */
-export function decimal(num?: number) {
+export function decimal(num?: number): Matcher {
   if (num) {
     return {
       "pact:matcher:type": "decimal",
@@ -185,7 +208,7 @@ export function decimal(num?: number) {
  * Value must be a number
  * @param num Example value. If omitted a random integer value will be generated.
  */
-export function number(num?: number) {
+export function number(num?: number): Matcher {
   if (num) {
     return {
       "pact:matcher:type": "number",
@@ -204,11 +227,15 @@ export function number(num?: number) {
  * Value must be a string
  * @param str Example value
  */
-export function string(str: string) {
+export function string(str: string): Matcher {
   return {
     "pact:matcher:type": "type",
     value: str,
   }
+}
+
+interface RegexMatcher extends Matcher {
+  regex: string
 }
 
 /**
@@ -216,14 +243,14 @@ export function string(str: string) {
  * @param pattern Regular Expression to match
  * @param str Example value
  */
-export function regex(pattern: string, str: string): any
+export function regex(pattern: string, str: string): RegexMatcher
 /**
  * Value that must match the given regular expression
  * @param pattern Regular Expression to match
  * @param str Example value
  */
-export function regex(pattern: RegExp, str: string): any
-export function regex(pattern: any, str: string): any {
+export function regex(pattern: RegExp, str: string): RegexMatcher
+export function regex(pattern: any, str: string): RegexMatcher {
   if (pattern instanceof RegExp) {
     return {
       "pact:matcher:type": "regex",
@@ -242,11 +269,15 @@ export function regex(pattern: any, str: string): any {
  * Value that must be equal to the example. This is mainly used to reset the matching rules which cascade.
  * @param value Example value
  */
-export function equal(value: any) {
+export function equal(value: any): Matcher {
   return {
     "pact:matcher:type": "equality",
     value,
   }
+}
+
+interface DateTimeMatcher extends Matcher {
+  format: string
 }
 
 /**
@@ -254,7 +285,7 @@ export function equal(value: any) {
  * @param format Datetime format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html)
  * @param example Example value to use. If omitted a value using the current system date and time will be generated.
  */
-export function timestamp(format: string, example?: string) {
+export function timestamp(format: string, example?: string): DateTimeMatcher {
   return datetime(format, example)
 }
 
@@ -263,7 +294,7 @@ export function timestamp(format: string, example?: string) {
  * @param format Datetime format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html)
  * @param example Example value to use. If omitted a value using the current system date and time will be generated.
  */
-export function datetime(format: string, example?: string) {
+export function datetime(format: string, example?: string): DateTimeMatcher {
   return {
     "pact:generator:type": "DateTime",
     "pact:matcher:type": "timestamp",
@@ -277,7 +308,7 @@ export function datetime(format: string, example?: string) {
  * @param format Time format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html)
  * @param example Example value to use. If omitted a value using the current system time will be generated.
  */
-export function time(format: string, example?: string) {
+export function time(format: string, example?: string): DateTimeMatcher {
   return {
     "pact:generator:type": "Time",
     "pact:matcher:type": "time",
@@ -291,7 +322,7 @@ export function time(format: string, example?: string) {
  * @param format Date format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html)
  * @param example Example value to use. If omitted a value using the current system date will be generated.
  */
-export function date(format: any, example?: string) {
+export function date(format: any, example?: string): DateTimeMatcher {
   return {
     format,
     "pact:generator:type": "Date",
@@ -304,7 +335,7 @@ export function date(format: any, example?: string) {
  * Value that must include the example value as a substring.
  * @param value String value to include
  */
-export function includes(value: string) {
+export function includes(value: string): Matcher {
   return {
     "pact:matcher:type": "include",
     value,
@@ -315,7 +346,7 @@ export function includes(value: string) {
  * Value that must be null. This will only match the JSON Null value. For other content types, it will
  * match if the attribute is missing.
  */
-export function nullValue() {
+export function nullValue(): Matcher {
   return {
     "pact:matcher:type": "null",
   }
@@ -326,7 +357,7 @@ export function nullValue() {
  * @param basePath Base path of the URL
  * @param pathFragments list of path fragments, can be regular expressions
  */
-export function url(basePath: string, pathFragments: Array<any>) {
+export function url(basePath: string, pathFragments: Array<any>): RegexMatcher {
   let regex = ".*"
   let example = basePath
   for (let p of pathFragments) {

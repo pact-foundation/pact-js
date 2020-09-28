@@ -92,6 +92,7 @@ describe("Pact V3", () => {
         consumer: "Matching Service V3",
         provider: "Animal Profile Service V3",
         dir: path.resolve(process.cwd(), "pacts"),
+        cors: true
       })
 
       before(() =>

@@ -1,11 +1,28 @@
 import logger from "../common/logger"
+import { omit } from "ramda"
 const pkg = require("../common/metadata")
 const PactNative = require("../native")
 
+/**
+ * Options for the mock server
+ */
 export interface PactV3Options {
+  /**
+   * Directory to write the pact file to
+   */
   dir: string
+  /**
+   * Consumer name
+   */
   consumer: string
-  provider: string
+  /**
+   * Provider name
+   */
+  provider: string,
+  /**
+   * If the mock server should have CORS pre-flight requests
+   */
+  cors?: boolean
 }
 
 export interface V3ProviderState {
@@ -40,26 +57,26 @@ export interface V3MockServer {
 }
 
 export class PactV3 {
-  private opts: any
+  private opts: PactV3Options & {}
   private states: V3ProviderState[] = []
   private pact: any
 
   constructor(opts: PactV3Options & {}) {
     this.opts = opts
-    this.pact = new PactNative.Pact(opts.consumer, opts.provider, pkg.version)
+    this.pact = new PactNative.Pact(opts.consumer, opts.provider, pkg.version, omit(['consumer', 'provider'], opts))
   }
 
-  public given(providerState: string, parameters?: any) {
+  public given(providerState: string, parameters?: any): PactV3 {
     this.states.push({ description: providerState, parameters })
     return this
   }
 
-  public uponReceiving(desc: string) {
+  public uponReceiving(desc: string): PactV3 {
     this.pact.addInteraction(desc, this.states)
     return this
   }
 
-  public withRequest(req: V3Request) {
+  public withRequest(req: V3Request): PactV3 {
     this.pact.addRequest(req, req.body && JSON.stringify(req.body))
     return this
   }
@@ -68,7 +85,7 @@ export class PactV3 {
     req: V3Request,
     contentType: string,
     file: string
-  ) {
+  ): PactV3 {
     this.pact.addRequestBinaryFile(req, contentType, file)
     return this
   }
@@ -78,12 +95,12 @@ export class PactV3 {
     contentType: string,
     file: string,
     part: string
-  ) {
+  ): PactV3 {
     this.pact.addRequestMultipartFileUpload(req, contentType, file, part)
     return this
   }
 
-  public willRespondWith(res: V3Response) {
+  public willRespondWith(res: V3Response): PactV3 {
     this.pact.addResponse(res, res.body && JSON.stringify(res.body))
     this.states = []
     return this
@@ -93,7 +110,7 @@ export class PactV3 {
     res: V3Response,
     contentType: string,
     file: string
-  ) {
+  ): PactV3 {
     this.pact.addResponseBinaryFile(res, contentType, file)
     return this
   }
@@ -103,7 +120,7 @@ export class PactV3 {
     contentType: string,
     file: string,
     part: string
-  ) {
+  ): PactV3 {
     this.pact.addResponseMultipartFileUpload(req, contentType, file, part)
     return this
   }
@@ -111,7 +128,7 @@ export class PactV3 {
   public executeTest<T>(
     testFn: (mockServer: V3MockServer) => Promise<T>
   ): Promise<T> {
-    const result = this.pact.executeTest(testFn)
+    const result = this.pact.executeTest(testFn, this.opts)
     if (result.testResult) {
       return result.testResult
         .then((val: T) => {

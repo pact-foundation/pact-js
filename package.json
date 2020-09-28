@@ -21,7 +21,7 @@
     "lint:prettier:ts": "prettier --parser typescript --check \"{src,test,examples}/**/*.ts\"",
     "lint:prettier:js": "prettier --check \"{src,test,examples}/**/*.js\"",
     "postdist": "npm t",
-    "predist": "npm run clean && npm run lint && npm run jscpd",
+    "predist": "npm run clean",
     "release": "standard-version -p beta",
     "test": "nyc --check-coverage --reporter=html --reporter=text-summary mocha",
     "test:examples": "npm run test:e2e-examples && npm run test:jest-examples && npm run test:mocha-examples && npm run test:ava-examples && npm run test:ts-examples && npm run test:message-examples && npm run test:serverless-examples && npm run test:graphql-examples",
