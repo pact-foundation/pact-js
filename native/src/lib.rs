@@ -5,6 +5,8 @@
 #[macro_use] extern crate serde_json;
 #[macro_use] extern crate maplit;
 
+use pact_mock_server::mock_server::MockServerConfig;
+use pact_matching::models::content_types::ContentType;
 use neon::prelude::*;
 use pact_matching::models::*;
 use pact_matching::models::provider_states::ProviderState;
@@ -55,15 +57,22 @@ fn process_xml(body: String, matching_rules: &mut Category, generators: &mut Gen
 
 fn process_body(
   body: String, 
-  content_type: DetectedContentType, 
+  content_type: Option<ContentType>, 
   matching_rules: &mut MatchingRules, 
   generators: &mut Generators
 ) -> Result<OptionalBody, String> {
   let category = matching_rules.add_category("body");
   match content_type {
-    DetectedContentType::Json => Ok(OptionalBody::Present(process_json(body, category, generators).as_bytes().to_vec(), Some("application/json".into()))),
-    DetectedContentType::Xml => Ok(OptionalBody::Present(process_xml(body, category, generators)?, Some("application/xml".into()))),
-    _ => Ok(OptionalBody::from(body))
+    Some(ref content_type) => {
+      if content_type.is_json() {
+        Ok(OptionalBody::Present(process_json(body, category, generators).as_bytes().to_vec(), Some("application/json".into())))
+      } else if content_type.is_xml() {
+        Ok(OptionalBody::Present(process_xml(body, category, generators)?, Some("application/xml".into())))
+      } else {
+        Ok(OptionalBody::from(body))
+      }
+    },
+    None => Ok(OptionalBody::from(body))
   }
 }
 
@@ -212,19 +221,19 @@ fn load_file(file_path: &String) -> Result<OptionalBody, std::io::Error> {
 }
 
 declare_types! {
-  pub class JsPact for Pact {
+  pub class JsPact for RequestResponsePact {
     init(mut cx) {
       let consumer: String = cx.argument::<JsString>(0)?.value();
       let provider: String = cx.argument::<JsString>(1)?.value();
       let version: String = cx.argument::<JsString>(2)?.value();
 
-      let mut metadata = Pact::default_metadata();
+      let mut metadata = RequestResponsePact::default_metadata();
       metadata.insert("pactJs".to_string(), btreemap!{ "version".to_string() => version.to_string() });
-      let pact = Pact {
+      let pact = RequestResponsePact {
         consumer: Consumer { name: consumer },
         provider: Provider { name: provider },
         metadata,
-        .. Pact::default()
+        .. RequestResponsePact::default()
       };
 
       Ok(pact)
@@ -273,10 +282,10 @@ declare_types! {
       {
         let guard = cx.lock();
         let mut pact = this.borrow_mut(&guard);
-        pact.interactions.push(Interaction {
+        pact.interactions.push(RequestResponseInteraction {
             description,
             provider_states,
-            .. Interaction::default()
+            .. RequestResponseInteraction::default()
         });
       }
 
@@ -327,7 +336,7 @@ declare_types! {
             last.request.headers = Some(header_props)
           }
           if let Some(body) = js_body {
-            match process_body(body, last.request.content_type_enum(), &mut last.request.matching_rules,
+            match process_body(body, last.request.content_type(), &mut last.request.matching_rules,
               &mut last.request.generators) {
               Ok(body) => {
                 debug!("Request body = {}", body.str_value());
@@ -526,7 +535,7 @@ declare_types! {
           }
 
           if let Some(body) = js_body {
-            match process_body(body, last.response.content_type_enum(), &mut last.response.matching_rules,
+            match process_body(body, last.response.content_type(), &mut last.response.matching_rules,
               &mut last.response.generators) {
               Ok(body) => last.response.body = body,
               Err(err) => panic!(err)
@@ -667,7 +676,7 @@ declare_types! {
         let guard = cx.lock();
         let pact = this.borrow(&guard);
         match MANAGER.lock().unwrap()
-          .start_mock_server(mock_server_id.clone(), pact.clone(), 0)
+          .start_mock_server(mock_server_id.clone(), pact.clone(), 0, MockServerConfig::default())
           .map(|port| port as i32) {
             Ok(port) => port,
             Err(err) => panic!(err)
