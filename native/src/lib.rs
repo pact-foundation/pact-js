@@ -702,12 +702,19 @@ declare_types! {
         },
         _ => MockServerConfig::default()
       };
+      let mock_server_port = match options.get(&mut cx, "port") {
+        Ok(prop) => match prop.downcast::<JsNumber>() {
+          Ok(port) => port.value() as u16,
+          _ => 0
+        },
+        _ => 0
+      };
       let mock_server_id = Uuid::new_v4().simple().to_string();
       let port = {
         let guard = cx.lock();
         let pact = this.borrow(&guard);
         match MANAGER.lock().unwrap()
-          .start_mock_server(mock_server_id.clone(), pact.clone(), 0, mock_server_config)
+          .start_mock_server(mock_server_id.clone(), pact.clone(), mock_server_port, mock_server_config)
           .map(|port| port as i32) {
             Ok(port) => port,
             Err(err) => panic!(err)

@@ -1,4 +1,3 @@
-import logger from "../common/logger"
 import { omit } from "ramda"
 const pkg = require("../common/metadata")
 const PactNative = require("../native")
@@ -20,9 +19,13 @@ export interface PactV3Options {
    */
   provider: string,
   /**
-   * If the mock server should have CORS pre-flight requests
+   * If the mock server should have CORS pre-flight requests. Defaults to false
    */
-  cors?: boolean
+  cors?: boolean,
+  /**
+   * Port to run the mock server on. Defaults to a random port
+   */
+  port?: number
 }
 
 export interface V3ProviderState {
@@ -63,7 +66,7 @@ export class PactV3 {
 
   constructor(opts: PactV3Options & {}) {
     this.opts = opts
-    this.pact = new PactNative.Pact(opts.consumer, opts.provider, pkg.version, omit(['consumer', 'provider'], opts))
+    this.pact = new PactNative.Pact(opts.consumer, opts.provider, pkg.version, omit(['consumer', 'provider', 'dir'], opts))
   }
 
   public given(providerState: string, parameters?: any): PactV3 {
