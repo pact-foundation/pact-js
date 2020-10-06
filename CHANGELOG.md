@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [9.12.2](https://github.com/pact-foundation/pact-js/compare/v9.12.1...v9.12.2) (2020-10-06)
+
+
+### Bug Fixes
+
+* **types:** Export LogLevel, PactOptions and MessageProviderOptions at the root of @pact-foundation/pact ([a6b50d3](https://github.com/pact-foundation/pact-js/commit/a6b50d387dcfb34b46a0602462104fa0a4f67db4))
+
 ### [9.12.1](https://github.com/pact-foundation/pact-js/compare/v9.12.0...v9.12.1) (2020-09-24)
 
 
