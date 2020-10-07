@@ -986,7 +986,7 @@ To install it:
 npm i @pact-foundation/pact@beta
 ```
 
-For examples on how to use it, see [examples/v3/e2e](examples/v3/e2e) and [examples/v3/todo-consumer](examples/v3/todo-consumer).
+For examples on how to use it, see [examples/v3/e2e](https://github.com/pact-foundation/pact-js/tree/feat/v3.0.0/examples/v3/e2e) and [examples/v3/todo-consumer](https://github.com/pact-foundation/pact-js/tree/feat/v3.0.0/examples/v3/todo-consumer) in the `v3.0.0` branch.
 
 **NOTE: This implementation is not ready for production use yet, as it DOES NOT yet support the following features:**
 

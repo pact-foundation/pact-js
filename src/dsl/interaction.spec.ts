@@ -145,6 +145,19 @@ describe("Interaction", () => {
       }
 
       it("is passed with matcher", () => {
+        request.query = term({
+          generate: "limit=50&status=finished&order=desc",
+          matcher: "^limit=[0-9]+&status=(finished)&order=(desc|asc)$",
+        })
+        expect(
+          new Interaction()
+            .uponReceiving("request")
+            .withRequest(request)
+            .json().request
+        ).to.have.any.keys("query")
+      })
+
+      it("is passed with matcher as the value", () => {
         request.query = {
           "id[]": eachLike("1"),
         }

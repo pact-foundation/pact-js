@@ -83,3 +83,10 @@ export * from "./v3"
  * @static
  */
 export * from "./dsl/publisher"
+
+/**
+ * Exposes {@link PactOptions}
+ * @memberof Pact
+ * @static
+ */
+export * from "./dsl/options"
