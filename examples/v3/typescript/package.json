@@ -1,0 +1,51 @@
+{
+  "name": "typescript-pact-v3",
+  "version": "1.0.0",
+  "description": "TypeScript Pact Example (Using V3 version)",
+  "main": "index.js",
+  "scripts": {
+    "test": "nyc --check-coverage --reporter=html --reporter=text-summary mocha",
+    "mocha:direct": "mocha"
+  },
+  "author": "",
+  "license": "MIT",
+  "nyc": {
+    "extension": [
+      ".ts"
+    ],
+    "include": [
+      "**/*.ts"
+    ],
+    "exclude": [
+      "**/*.d.ts"
+    ],
+    "reporter": [
+      "html"
+    ],
+    "all": true,
+    "branches": 80,
+    "lines": 80,
+    "functions": 80,
+    "statements": 80
+  },
+  "devDependencies": {
+    "@pact-foundation/pact": "^10.0.0-beta",
+    "@types/chai": "^4.1.7",
+    "@types/chai-as-promised": "7.1.0",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^12.6.8",
+    "@types/sinon": "^7.0.13",
+    "@types/sinon-chai": "^3.2.2",
+    "axios": "^0.19.0",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "lodash": "^4.17.19",
+    "mocha": "^6.2.0",
+    "nyc": "^14.1.1",
+    "sinon": "^7.3.2",
+    "sinon-chai": "^3.3.0",
+    "ts-mock-imports": "^1.2.6",
+    "ts-node": "^8.3.0",
+    "typescript": "^3.5.3"
+  }
+}
