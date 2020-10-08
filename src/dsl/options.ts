@@ -3,7 +3,7 @@
  * @module PactOptions
  */
 import { PactfileWriteMode } from "./mockService"
-import { MessageProviders, StateHandlers } from "../pact"
+import { MessageProviders, StateHandlers } from "./message"
 import { VerifierOptions as PactNodeVerifierOptions } from "@pact-foundation/pact-node"
 
 export type LogLevel = "trace" | "debug" | "info" | "warn" | "error" | "fatal"
