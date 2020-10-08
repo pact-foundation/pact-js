@@ -34,8 +34,8 @@ export interface V3ProviderState {
 }
 
 export interface V3Request {
-  method: string
-  path: string
+  method?: string
+  path?: string
   query?: {
     [param: string]: string
   }
@@ -57,6 +57,60 @@ export interface V3MockServer {
   port: number
   url: string
   id: string
+}
+
+function displayQuery(query: { [k: string]: string[] }) {
+  let pairs = toPairs(query)
+  let mapped = flatten(map(([key, values]) => map((val) => `${key}=${val}`, values), pairs))
+  return join('&', mapped)
+}
+
+function displayHeaders(headers: any, indent: string) {
+  return join('\n' + indent, map(([k, v]) => `${k}: ${v}`, toPairs(headers)))
+}
+
+function displayRequest(request: any, indent: string) {
+  let output = `\n${indent}Method: ${request.method}\n${indent}Path: ${request.path}`
+
+  if (request.query) {
+    output += `\n${indent}Query String: ${displayQuery(request.query)}`
+  }
+
+  if (request.headers) {
+    output += `\n${indent}Headers:\n${indent}  ${displayHeaders(request.headers, indent + '  ')}`
+  }
+
+  if (request.body) {
+    output += `\n${indent}Body: ${request.body.substr(0, 20)}... (${request.body.length} length)`
+  }
+
+  return output
+}
+
+function generateMockServerError(testResult: any, indent: string) {
+  let error = "Mock server failed with the following mismatches: "
+
+  let i = 1
+  for (const mismatchJson of testResult.mockServerMismatches) {
+    let mismatches = JSON.parse(mismatchJson)
+    if (mismatches.mismatches) {
+      for (const mismatch of mismatches.mismatches) {
+        error += `\n${indent}${i++}) ${mismatch.type} ${
+          mismatch.path ? `(at ${mismatch.path}) ` : ""
+        }${mismatch.mismatch}`
+      }
+    }
+
+    if (mismatches.type == "request-not-found") {
+      error += `\n\n${indent}${i++}) The following request was not expected: ${displayRequest(mismatches.request, indent + "    ")}`
+    }
+
+    if (mismatches.type == "missing-request") {
+      error += `\n\n${indent}${i++}) The following request was expected but not received: ${displayRequest(mismatches.request, indent + "    ")}`
+    }
+  }
+
+  return error
 }
 
 export class PactV3 {
@@ -139,11 +193,7 @@ export class PactV3 {
           if (testResult.mockServerError) {
             return Promise.reject(new Error(testResult.mockServerError))
           } else if (testResult.mockServerMismatches) {
-            let error = "Mock server failed with the following mismatches: "
-            for (const mismatch of testResult.mockServerMismatches) {
-              error += "\n\t" + mismatch
-            }
-            return Promise.reject(new Error(error))
+            return Promise.reject(new Error(generateMockServerError(testResult, "  ")))
           } else {
             this.pact.writePactFile(result.mockServer.id, this.opts.dir)
             return val
@@ -152,23 +202,12 @@ export class PactV3 {
         .catch((err: any) => {
           const testResult = this.pact.getTestResult(result.mockServer.id)
           let error = "Test failed for the following reasons:"
-          error += "\n\n\tTest code failed with an error: " + err.message
+          error += "\n\n  Test code failed with an error: " + err.message
           if (testResult.mockServerError) {
-            error += "\n\n\t" + testResult.mockServerError
+            error += "\n\n  " + testResult.mockServerError
           }
           if (testResult.mockServerMismatches) {
-            error += "\n\n\tMock server failed with the following mismatches: "
-            let i = 1
-            for (const mismatchJson of testResult.mockServerMismatches) {
-              let mismatches = JSON.parse(mismatchJson)
-              if (mismatches.mismatches) {
-                for (const mismatch of mismatches.mismatches) {
-                  error += `\n\t\t${i++}) ${mismatch.type} ${
-                    mismatch.path ? `(at ${mismatch.path}) ` : ""
-                  }${mismatch.mismatch}`
-                }
-              }
-            }
+            error += "\n\n  " + generateMockServerError(testResult, "    ")
           }
           return Promise.reject(new Error(error))
         })
