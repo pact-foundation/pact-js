@@ -1,4 +1,4 @@
-const PactNative = require("../native")
+const PactNative = require("../native/index.node")
 import logger from "../common/logger"
 
 const version = PactNative.init()
@@ -8,13 +8,10 @@ export * from "./pact"
 
 /**
  * Exposes {@link MatchersV3}
- * To avoid polluting the root module's namespace, re-export
- * Matchers as its owns module
  * @memberof Pact
  * @static
  */
-import * as MatchersV3 from "./matchers"
-export import MatchersV3 = MatchersV3
+export * from "./matchers"
 
 /**
  * Exposes {@link VerifierV3}

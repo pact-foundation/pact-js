@@ -1,6 +1,6 @@
-import { omit } from "ramda"
+import { omit, join, chain, toPairs, map, flatten } from "ramda"
 const pkg = require("../common/metadata")
-const PactNative = require("../native")
+const PactNative = require("../native/index.node")
 
 /**
  * Options for the mock server
