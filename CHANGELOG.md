@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.18](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.17...v10.0.0-beta.18) (2020-10-16)
+
+
+### Features
+
+* add support for array contains matcher ([57bcc79](https://github.com/pact-foundation/pact-js/commit/57bcc792037eb05d17a6e6268d14dcabe0262712))
+
+
+### Bug Fixes
+
+* typo in comment ([7491383](https://github.com/pact-foundation/pact-js/commit/7491383ded889a4b25f3480c2601f715b4f49c69))
+* update to latest matching lib ([23e1f39](https://github.com/pact-foundation/pact-js/commit/23e1f39bd690f2bbf80cf78cb2922939484c6838))
+
 ## [10.0.0-beta.17](https://github.com/pact-foundation/pact-js/compare/v9.12.2...v10.0.0-beta.17) (2020-10-12)
 
 
