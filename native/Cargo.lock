@@ -1236,9 +1236,9 @@ dependencies = [
 
 [[package]]
 name = "pact_matching"
-version = "0.8.0"
+version = "0.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a04e878914cb714cdc285b12b70da01108e8a464ad6de348badc4955c7221423"
+checksum = "4523680447e68292e4e1832e93fee5b79f4e0eb9dbbb297ddd4d54dac4d721bb"
 dependencies = [
  "ansi_term 0.9.0",
  "base64 0.12.3",
