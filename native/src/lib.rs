@@ -5,16 +5,17 @@
 #[macro_use] extern crate serde_json;
 #[macro_use] extern crate maplit;
 
+use pact_matching::models::matchingrules::MatchingRuleCategory;
 use pact_mock_server::mock_server::MockServerConfig;
 use pact_matching::models::content_types::ContentType;
 use neon::prelude::*;
 use pact_matching::models::*;
 use pact_matching::models::provider_states::ProviderState;
-use pact_matching::models::matchingrules::{MatchingRules, MatchingRule, Category, RuleLogic};
+use pact_matching::models::matchingrules::{MatchingRules, MatchingRule, RuleLogic};
 use pact_matching::models::generators::{Generators, GeneratorCategory, Generator};
 use pact_matching::time_utils::generate_string;
 use pact_mock_server::server_manager::ServerManager;
-use pact_mock_server_ffi::bodies::{process_json, request_multipart, response_multipart, file_as_multipart_body};
+use pact_mock_server_ffi::bodies::{process_json, request_multipart, response_multipart, file_as_multipart_body, from_integration_json};
 use pact_mock_server_ffi::{generate_regex_value, StringResult};
 use env_logger::{Builder, Target};
 use uuid::Uuid;
@@ -45,7 +46,7 @@ fn init(mut cx: FunctionContext) -> JsResult<JsString> {
     Ok(cx.string(env!("CARGO_PKG_VERSION")))
 }
 
-fn process_xml(body: String, matching_rules: &mut Category, generators: &mut Generators) -> Result<Vec<u8>, String> {
+fn process_xml(body: String, matching_rules: &mut MatchingRuleCategory, generators: &mut Generators) -> Result<Vec<u8>, String> {
   match serde_json::from_str(&body) {
     Ok(json) => match json {
       Value::Object(ref map) => xml::generate_xml_body(map, matching_rules, generators),
@@ -88,7 +89,7 @@ fn matching_rule_from_js_object<'a>(obj: Handle<JsObject>, ctx: &mut CallContext
       matcher_vals.insert(prop_name, json!(val.value()));
     }
   }
-  MatchingRule::from_integration_json(&matcher_vals)
+  from_integration_json(&matcher_vals)
 }
 
 fn generator_from_js_object<'a>(obj: Handle<JsObject>, ctx: &mut CallContext<JsPact>) -> Option<Generator> {

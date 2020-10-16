@@ -379,4 +379,19 @@ export namespace MatchersV3 {
       value: example,
     }
   }
+
+  interface ArrayContainsMatcher extends Matcher {
+    variants: any[]
+  }
+
+  /**
+   * Matches the items in an array against a number of variants. Matching is successful if each variant 
+   * occurs once in the array. Variants may be objects containing matching rules.
+   */
+  export function arrayContaining(...variants: any[]): ArrayContainsMatcher {
+    return {
+      "pact:matcher:type": "arrayContains",
+      variants
+    }
+  }
 }

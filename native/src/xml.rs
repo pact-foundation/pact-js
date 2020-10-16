@@ -1,18 +1,20 @@
 //! XML handling
+use pact_matching::models::matchingrules::MatchingRuleCategory;
 use serde_json::Value::Number;
 use sxd_document::dom::{Document, Element, ChildOfElement, Text};
 use serde_json::Value;
 use serde_json::map::Map;
 use sxd_document::Package;
 use sxd_document::writer::format_document;
-use pact_matching::models::matchingrules::{MatchingRule, Category, RuleLogic};
+use pact_matching::models::matchingrules::RuleLogic;
 use pact_matching::models::generators::{Generators, GeneratorCategory, Generator};
 use pact_matching::models::json_utils::json_to_string;
+use pact_mock_server_ffi::bodies::from_integration_json;
 use log::*;
 use std::collections::HashMap;
 use either::Either;
 
-pub fn generate_xml_body(attributes: &Map<String, Value>, matching_rules: &mut Category, generators: &mut Generators) -> Result<Vec<u8>, String> {
+pub fn generate_xml_body(attributes: &Map<String, Value>, matching_rules: &mut MatchingRuleCategory, generators: &mut Generators) -> Result<Vec<u8>, String> {
   let package = Package::new();
   let doc = package.as_document();
 
@@ -46,7 +48,7 @@ fn create_element_from_json<'a>(
   doc: Document<'a>, 
   parent: Option<Element<'a>>, 
   object: &Map<String, Value>, 
-  matching_rules: &mut Category, 
+  matching_rules: &mut MatchingRuleCategory, 
   generators: &mut Generators, 
   path: &Vec<&str>, 
   type_matcher: bool,
@@ -61,7 +63,7 @@ fn create_element_from_json<'a>(
       if let Value::Object(attr) = val {
         let name = json_to_string(attr.get("name").unwrap());
         updated_path.push(&name);
-        if let Some(rule) = MatchingRule::from_integration_json(object) {
+        if let Some(rule) = from_integration_json(object) {
           matching_rules.add_rule(updated_path.join("."), rule, &RuleLogic::And);
         }
         if let Some(gen) = object.get("pact:generator:type") {
@@ -112,7 +114,7 @@ fn create_element_from_json<'a>(
       let mut text_path = path.clone();
       text_path.push("#text");
       if let Value::Object(matcher) = matcher {
-        if let Some(rule) = MatchingRule::from_integration_json(matcher) {
+        if let Some(rule) = from_integration_json(matcher) {
           matching_rules.add_rule(&text_path.join("."), rule, &RuleLogic::And);
         }
       }
@@ -189,7 +191,7 @@ fn create_element_from_json<'a>(
 fn add_attributes(
   element: &Element, 
   attributes: &Map<String, Value>, 
-  matching_rules: &mut Category, 
+  matching_rules: &mut MatchingRuleCategory, 
   generators: &mut Generators, 
   path: &Vec<&str>
 ) {
@@ -199,7 +201,7 @@ fn add_attributes(
 
     let value = match v {
       Value::Object(matcher_definition) => if matcher_definition.contains_key("pact:matcher:type") {
-        if let Some(rule) = MatchingRule::from_integration_json(matcher_definition) {
+        if let Some(rule) = from_integration_json(matcher_definition) {
           matching_rules.add_rule(&path, rule, &RuleLogic::And);
         }
         if let Some(gen) = matcher_definition.get("pact:generator:type") {
