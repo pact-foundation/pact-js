@@ -41,7 +41,7 @@
     "webpack": "webpack --config ./config/webpack.web.config.js",
     "postinstall": "node-pre-gyp install --fallback-to-build=false || neon build --release",
     "package": "node-pre-gyp package",
-    "upload-binary": "npm run package && node-pre-gyp-github publish"
+    "calc-sha256": "node ./scripts/calc-sha256.js"
   },
   "repository": {
     "type": "git",
@@ -157,6 +157,7 @@
     "prettier": "^1.18.2",
     "proxyquire": "^2.0.1",
     "rimraf": "^2.7.1",
+    "sha256-file": "^1.0.0",
     "sinon": "^7.2.4",
     "sinon-chai": "^3.3.0",
     "source-map-loader": "^0.2.1",
