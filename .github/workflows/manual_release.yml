@@ -26,12 +26,22 @@ jobs:
       - name: Install LLVM
         run: choco install -y llvm
         if: runner.os == 'Windows'
-      - run: npm install node-pre-gyp node-pre-gyp-github
+      - run: npm install
       - run: npm run build:v3
       - if: runner.os != 'windows'
         run: rm -rf native/target
       - if: runner.os == 'windows'
         run: Remove-Item 'native\target' -Recurse -Force
-      - run: npm run upload-binary
+      - run: npm package
+      - id: set_package_info
+        run: echo "::set-output name=packageJson::$(npx node-pre-gyp reveal)"
+      - name: Upload Release Assets
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
         env:
-          NODE_PRE_GYP_GITHUB_TOKEN: ${{ secrets.ReleaseDeployKey }}
+          GITHUB_TOKEN: ${{ secrets.ReleaseDeployKey }}
+        with:
+          upload_url: ${{ fromJson(steps.set_package_info.outputs.packageJson).hosted_path }}
+          asset_path: ${{ fromJson(steps.set_package_info.outputs.packageJson).staged_tarball }}
+          asset_name: ${{ fromJson(steps.set_package_info.outputs.packageJson).package_name }}
+          asset_content_type: application/gzip

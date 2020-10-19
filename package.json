@@ -40,8 +40,8 @@
     "appveyor": "./scripts/build.ps1",
     "webpack": "webpack --config ./config/webpack.web.config.js",
     "postinstall": "node-pre-gyp install --fallback-to-build=false || neon build --release",
-    "package": "node-pre-gyp package",
-    "calc-sha256": "node ./scripts/calc-sha256.js"
+    "package": "npm run native:sha256 && node-pre-gyp package && node-pre-gyp testpackage",
+    "native:sha256": "node ./scripts/calc-sha256.js"
   },
   "repository": {
     "type": "git",
@@ -175,7 +175,7 @@
     "module_name": "index",
     "host": "https://github.com/pact-foundation/pact-js/releases/download/",
     "remote_path": "v{version}",
-    "package_name": "{node_abi}-{platform}-{arch}.tar.gz",
+    "package_name": "{node_abi}-{platform}-{arch}-{libc}.tar.gz",
     "module_path": "./native",
     "pkg_path": "."
   }

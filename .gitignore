@@ -54,7 +54,7 @@ pacts/
 # Rust/neon output
 pact-foundation-pact-*.tgz
 /native/index.node
+/native/index.node.sha256
 /native/target/
 build/
 native/artifacts.json
-
