@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.19](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.18...v10.0.0-beta.19) (2020-10-19)
+
 ## [10.0.0-beta.18](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.17...v10.0.0-beta.18) (2020-10-16)
 
 
