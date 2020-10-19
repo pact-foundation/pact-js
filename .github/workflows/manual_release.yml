@@ -32,7 +32,7 @@ jobs:
         run: rm -rf native/target
       - if: runner.os == 'windows'
         run: Remove-Item 'native\target' -Recurse -Force
-      - run: npm package
+      - run: npm run package
       - id: set_package_info
         run: echo "::set-output name=packageJson::$(npx node-pre-gyp reveal)"
       - name: Upload Release Assets
