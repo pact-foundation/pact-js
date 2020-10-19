@@ -106,7 +106,6 @@
     "lodash.omit": "^4.5.0",
     "lodash.omitby": "4.6.0",
     "node-pre-gyp": "^0.13.0",
-    "node-pre-gyp-github": "^1.4.3",
     "pkginfo": "^0.4.1",
     "popsicle": "^9.2.0",
     "ramda": "^0.26.1"
