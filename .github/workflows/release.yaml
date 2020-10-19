@@ -2,7 +2,7 @@ name: Release workflow
 
 on:
   release:
-    types: [created, published, edited]
+    types: [created, published]
 
 jobs:
   build-release:
@@ -34,7 +34,7 @@ jobs:
         run: Remove-Item 'native\target' -Recurse -Force
       - run: npm run package
       - id: set_package_info
-        run: echo "::set-output name=packageJson::$(npx node-pre-gyp reveal)"
+        run: echo "::set-output name=packageJson::$(node ./scripts/native-lib-details.js)"
       - name: Upload Release Assets
         id: upload-release-asset 
         uses: actions/upload-release-asset@v1
