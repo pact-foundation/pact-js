@@ -39,7 +39,7 @@ jobs:
         id: upload-release-asset 
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.ReleaseDeployKey }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ fromJson(steps.set_package_info.outputs.packageJson).hosted_path }}
           asset_path: ${{ fromJson(steps.set_package_info.outputs.packageJson).staged_tarball }}
