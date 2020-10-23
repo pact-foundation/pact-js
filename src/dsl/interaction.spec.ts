@@ -68,7 +68,7 @@ describe("Interaction", () => {
         interaction.withRequest.bind(interaction, { method: "FOO" })
       ).to.throw(
         Error,
-        "You must provide a valid HTTP method: GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS, COPY, LOCK, MKCOL, MOVE, PROPFIND, PROPPATCH, UNLOCK."
+        "You must provide a valid HTTP method: GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS, COPY, LOCK, MKCOL, MOVE, PROPFIND, PROPPATCH, UNLOCK, REPORT."
       )
     })
 
