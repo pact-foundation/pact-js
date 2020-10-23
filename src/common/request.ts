@@ -19,7 +19,7 @@ export enum HTTPMethod {
   PROPFIND = "PROPFIND",
   PROPPATCH = "PROPPATCH",
   UNLOCK = "UNLOCK",
-  REPORT = "REPORT"
+  REPORT = "REPORT",
 }
 
 export type methods =
