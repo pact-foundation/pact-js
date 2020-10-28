@@ -31,6 +31,7 @@ All notable changes to this project will be documented in this file. See [standa
 * correct the imports [#514](https://github.com/pact-foundation/pact-js/issues/514) ([6764a84](https://github.com/pact-foundation/pact-js/commit/6764a84e5b3004cd7f0f814a9ef694e606481ebe))
 
 ## [10.0.0-beta.16](https://github.com/pact-foundation/pact-js/compare/v9.12.1...v10.0.0-beta.16) (2020-09-28)
+## [9.13.0](https://github.com/pact-foundation/pact-js/compare/v9.12.2...v9.13.0) (2020-10-23)
 
 
 ### Features
@@ -253,6 +254,7 @@ All notable changes to this project will be documented in this file. See [standa
 * support text nodes configured from XML builder ([a2a7f55](https://github.com/pact-foundation/pact-js/commit/a2a7f55eff4a187cbe30a3e56917745ebc40e33d))
 * support using matchers on XML text nodes ([b3b5e62](https://github.com/pact-foundation/pact-js/commit/b3b5e6231e9f0ade7be045ff117b441d0169114a))
 
+* allow WebDav REPORT request ([2928613](https://github.com/pact-foundation/pact-js/commit/2928613e35a52d76dff90981a8319df20ea1fccc))
 
 ### [9.12.2](https://github.com/pact-foundation/pact-js/compare/v9.12.1...v9.12.2) (2020-10-06)
 

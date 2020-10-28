@@ -19,6 +19,7 @@ export enum HTTPMethod {
   PROPFIND = "PROPFIND",
   PROPPATCH = "PROPPATCH",
   UNLOCK = "UNLOCK",
+  REPORT = "REPORT",
 }
 
 export type methods =
@@ -36,6 +37,7 @@ export type methods =
   | "PROPFIND"
   | "PROPPATCH"
   | "UNLOCK"
+  | "REPORT"
 
 export class Request {
   private readonly transport = Popsicle.createTransport({
