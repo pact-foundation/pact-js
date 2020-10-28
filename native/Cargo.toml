@@ -37,3 +37,4 @@ async-trait = "0.1.24"
 reqwest = "0.10"
 native-tls = { version = "0.2.4" }
 either = "1.5.3"
+openssl = { version = "0.10", features = ["vendored"] }
