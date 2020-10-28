@@ -273,16 +273,7 @@ declare_types! {
                   let props = js_props.to_vec(&mut cx).unwrap().iter().map(|prop| {
                     let prop_name = prop.downcast::<JsString>().unwrap().value();
                     let prop_val = parameters.get(&mut cx, prop_name.as_str()).unwrap();
-                    if let Ok(val) = prop_val.downcast::<JsString>() {
-                      (prop_name, json!(val.value()))
-                    } else if let Ok(val) = prop_val.downcast::<JsNumber>() {
-                      (prop_name, json!(val.value()))
-                    } else if let Ok(val) = prop_val.downcast::<JsBoolean>() {
-                      (prop_name, json!(val.value()))
-                    } else {
-                      error!("Ignoring value for provider state parameter '{}'", prop_name);
-                      (prop_name, Value::Null)
-                    }
+                    (prop_name, utils::js_value_to_serde_value(&prop_val, &mut cx))
                   }).collect();
                   ProviderState { name: description.clone(), params: props }
                 },

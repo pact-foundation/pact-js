@@ -1,5 +1,7 @@
 use serde_json::Value;
+use serde_json::map::Map;
 use neon::prelude::*;
+use log::*;
 
 pub fn serde_value_to_js_object_attr<'a>(cx: &mut TaskContext, obj: &Handle<'a, JsObject>, key: &String, value: &Value) -> Result<bool, neon::result::Throw> {
   match value {
@@ -76,5 +78,32 @@ fn serde_value_to_js_array_value<'a>(cx: &mut TaskContext, array: &Handle<'a, Js
 
       array.set(cx, i, obj)
     }
+  }
+}
+
+pub(crate) fn js_value_to_serde_value<'a, C: Context<'a>>(value: &Handle<'a, JsValue>, cx: &mut C) -> Value {
+  if let Ok(val) = value.downcast::<JsString>() {
+    Value::String(val.value())
+  } else if let Ok(val) = value.downcast::<JsNumber>() {
+    json!(val.value())
+  } else if let Ok(val) = value.downcast::<JsBoolean>() {
+    Value::Bool(val.value())
+  } else if let Ok(val) = value.downcast::<JsArray>() {
+    Value::Array(val.to_vec(cx).unwrap().iter().map(|v| js_value_to_serde_value(v, cx)).collect())
+  } else if let Ok(_) = value.downcast::<JsNull>() {
+    Value::Null
+  } else if let Ok(_) = value.downcast::<JsUndefined>() {
+    Value::Null
+  } else if let Ok(val) = value.downcast::<JsObject>() {
+    let js_props = val.get_own_property_names(cx).unwrap();
+    let props: Map<String, Value> = js_props.to_vec(cx).unwrap().iter().map(|prop| {
+      let prop_name = prop.downcast::<JsString>().unwrap().value();
+      let prop_val = val.get(cx, prop_name.as_str()).unwrap();
+      (prop_name, js_value_to_serde_value(&prop_val, cx))
+    }).collect();
+    Value::Object(props)
+  } else {
+    error!("Ignoring a value for provider state parameter as it can not be converted to a JSON type");
+    Value::Null
   }
 }
