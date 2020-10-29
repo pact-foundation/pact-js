@@ -4,8 +4,11 @@ ARG NODE_VERSION=14
 RUN addgroup -S -g 1000 rust && adduser -S -u 1000 rust -G rust
 RUN apk add --no-cache curl bash python3 gcc musl-dev libstdc++ ca-certificates openssl ncurses coreutils python2 make g++ libgcc linux-headers grep util-linux binutils findutils perl
 
+RUN mkdir -p /github/workspace
+RUN chmod -R 777 /github
+
 USER rust
-RUN mkdir -p /home/rust/bin /home/rust/src
+RUN mkdir -p /home/rust/bin /github/workspace
 RUN touch /home/rust/.bashrc && touch /home/rust/.profile
 
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --default-host x86_64-unknown-linux-musl
@@ -27,5 +30,5 @@ ENV RUSTONIG_SYSTEM_LIBONIG=0
 ENV OPENSSL_STATIC=1
 
 COPY build-native.sh /home/rust/bin/
-WORKDIR /home/rust/src
+WORKDIR /github/workspace
 ENTRYPOINT [ "/home/rust/bin/build-native.sh" ]
