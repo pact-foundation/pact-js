@@ -44,44 +44,15 @@ jobs:
           asset_name: ${{ fromJson(steps.set_package_info.outputs.packageJson).package_name }}
           tag: ${{ github.ref }}
 
-  build-musl-release-node10:
+  build-musl-release:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10, 12, 14]
     steps:
       - uses: actions/checkout@v2      
       - id: set_package_info
-        uses: docker://pactfoundation/pact-js-musl:10
-      - name: Upload Release Assets
-        id: upload-release-asset 
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ${{ fromJson(steps.set_package_info.outputs.packageJson).staged_tarball }}
-          asset_name: ${{ fromJson(steps.set_package_info.outputs.packageJson).package_name }}
-          tag: ${{ github.ref }}
-
-  build-musl-release-node12:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2      
-      - run: echo ${{ matrix.node }}
-      - id: set_package_info
-        uses: docker://pactfoundation/pact-js-musl:12
-      - name: Upload Release Assets
-        id: upload-release-asset 
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ${{ fromJson(steps.set_package_info.outputs.packageJson).staged_tarball }}
-          asset_name: ${{ fromJson(steps.set_package_info.outputs.packageJson).package_name }}
-          tag: ${{ github.ref }}
-  
-  build-musl-release-node14:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2      
-      - run: echo ${{ matrix.node }}
-      - id: set_package_info
-        uses: docker://pactfoundation/pact-js-musl:14
+        run: docker run --rm -v $(pwd):/home/rust/src -t pactfoundation/pact-js-musl:${{ matrix.node-version }}
       - name: Upload Release Assets
         id: upload-release-asset 
         uses: svenstaro/upload-release-action@v2

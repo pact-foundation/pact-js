@@ -7,6 +7,7 @@ RUN apk add --no-cache curl bash python3 gcc musl-dev libstdc++ ca-certificates 
 USER rust
 RUN mkdir -p /home/rust/bin /home/rust/src
 RUN touch /home/rust/.bashrc && touch /home/rust/.profile
+ENV HOME /home/rust
 
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --default-host x86_64-unknown-linux-musl
 ENV PATH=/home/rust/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
