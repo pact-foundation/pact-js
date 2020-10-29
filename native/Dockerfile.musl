@@ -3,7 +3,7 @@ ARG NODE_VERSION=14
 
 RUN apk add --no-cache curl bash python3 gcc musl-dev libstdc++ ca-certificates openssl ncurses coreutils python2 make g++ libgcc linux-headers grep util-linux binutils findutils perl
 
-RUN mkdir -p /github/workspace /github/home/bin
+RUN mkdir -p /github/workspace /github/home/bin /entrypoint
 RUN chmod -R 777 /github
 RUN touch /github/home/.bashrc && touch /github/home/.profile
 ENV HOME /github/home
@@ -28,6 +28,6 @@ ENV RUSTONIG_STATIC_LIBONIG=1
 ENV RUSTONIG_SYSTEM_LIBONIG=0
 ENV OPENSSL_STATIC=1
 
-COPY build-native.sh /github/home/bin/
+COPY build-native.sh /entrypoint/
 WORKDIR /github/workspace
-ENTRYPOINT [ "/github/home/bin/build-native.sh" ]
+ENTRYPOINT [ "/entrypoint/build-native.sh" ]
