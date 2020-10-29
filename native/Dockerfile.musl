@@ -3,21 +3,20 @@ ARG NODE_VERSION=14
 
 RUN apk add --no-cache curl bash python3 gcc musl-dev libstdc++ ca-certificates openssl ncurses coreutils python2 make g++ libgcc linux-headers grep util-linux binutils findutils perl
 
-RUN mkdir -p /github/workspace
+RUN mkdir -p /github/workspace /github/home/bin
 RUN chmod -R 777 /github
-
-RUN mkdir -p /root/bin
-RUN touch /root/.bashrc && touch /root/.profile
+RUN touch /github/home/.bashrc && touch /github/home/.profile
+ENV HOME /github/home
 
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --default-host x86_64-unknown-linux-musl
-ENV PATH=/root/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV PATH=/github/home/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 RUN rustup install stable
 RUN rustup default stable
 
-ENV NVM_DIR /root/.nvm
+ENV NVM_DIR /github/home/.nvm
 ENV NVM_NODEJS_ORG_MIRROR=https://unofficial-builds.nodejs.org/download/release
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
-COPY nvm-musl.sh /root/.nvm/nvm.sh
+COPY nvm-musl.sh /github/home/.nvm/nvm.sh
 SHELL ["bash", "-l", "-c"]
 RUN source $NVM_DIR/nvm.sh && nvm install $NODE_VERSION && nvm alias default $NODE_VERSION && nvm use default
 ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
@@ -29,6 +28,6 @@ ENV RUSTONIG_STATIC_LIBONIG=1
 ENV RUSTONIG_SYSTEM_LIBONIG=0
 ENV OPENSSL_STATIC=1
 
-COPY build-native.sh /root/bin/
+COPY build-native.sh /github/home/bin/
 WORKDIR /github/workspace
-ENTRYPOINT [ "/root/bin/build-native.sh" ]
+ENTRYPOINT [ "/github/home/build-native.sh" ]
