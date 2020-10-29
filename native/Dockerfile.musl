@@ -1,23 +1,21 @@
 FROM alpine:latest
 ARG NODE_VERSION=14
 
-RUN addgroup -S -g 1000 rust && adduser -S -u 1000 rust -G rust
 RUN apk add --no-cache curl bash python3 gcc musl-dev libstdc++ ca-certificates openssl ncurses coreutils python2 make g++ libgcc linux-headers grep util-linux binutils findutils perl
 
 RUN mkdir -p /github/workspace
 RUN chmod -R 777 /github
 
-USER rust
-RUN mkdir -p /home/rust/bin /github/workspace
-RUN touch /home/rust/.bashrc && touch /home/rust/.profile
+RUN mkdir -p /root/bin
+RUN touch /root/.bashrc && touch /root/.profile
 
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --default-host x86_64-unknown-linux-musl
-ENV PATH=/home/rust/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV PATH=/root/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-ENV NVM_DIR /home/rust/.nvm
+ENV NVM_DIR /root/.nvm
 ENV NVM_NODEJS_ORG_MIRROR=https://unofficial-builds.nodejs.org/download/release
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
-COPY nvm-musl.sh /home/rust/.nvm/nvm.sh
+COPY nvm-musl.sh /root/.nvm/nvm.sh
 SHELL ["bash", "-l", "-c"]
 RUN source $NVM_DIR/nvm.sh && nvm install $NODE_VERSION && nvm alias default $NODE_VERSION && nvm use default
 ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
@@ -29,6 +27,6 @@ ENV RUSTONIG_STATIC_LIBONIG=1
 ENV RUSTONIG_SYSTEM_LIBONIG=0
 ENV OPENSSL_STATIC=1
 
-COPY build-native.sh /home/rust/bin/
+COPY build-native.sh /root/bin/
 WORKDIR /github/workspace
-ENTRYPOINT [ "/home/rust/bin/build-native.sh" ]
+ENTRYPOINT [ "/root/bin/build-native.sh" ]
