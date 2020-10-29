@@ -40,7 +40,6 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          upload_url: ${{ fromJson(steps.set_package_info.outputs.packageJson).hosted_path }}
           file: ${{ fromJson(steps.set_package_info.outputs.packageJson).staged_tarball }}
           asset_name: ${{ fromJson(steps.set_package_info.outputs.packageJson).package_name }}
           tag: ${{ github.ref }}
@@ -59,7 +58,6 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          upload_url: ${{ fromJson(steps.set_package_info.outputs.packageJson).hosted_path }}
           file: ${{ fromJson(steps.set_package_info.outputs.packageJson).staged_tarball }}
           asset_name: ${{ fromJson(steps.set_package_info.outputs.packageJson).package_name }}
           tag: ${{ github.ref }}
