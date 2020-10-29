@@ -2,10 +2,13 @@ FROM alpine:latest
 ARG NODE_VERSION=14
 
 RUN addgroup -S -g 1000 rust && adduser -S -u 1000 rust -G rust
-RUN apk add --no-cache curl bash python3 gcc musl-dev libstdc++ ca-certificates openssl ncurses coreutils python2 make g++ libgcc linux-headers grep util-linux binutils findutils perl
+RUN apk add --no-cache curl bash python3 gcc musl-dev libstdc++ ca-certificates openssl ncurses coreutils python2 make \
+  g++ libgcc linux-headers grep util-linux binutils findutils perl gnupg
 
-USER rust
-RUN mkdir -p /home/rust/bin /home/rust/src
+RUN mkdir -p /workspace
+RUN chmod 777 /workspace
+# USER rust
+RUN mkdir -p /home/rust/bin
 RUN touch /home/rust/.bashrc && touch /home/rust/.profile
 ENV HOME /home/rust
 
@@ -27,6 +30,6 @@ ENV RUSTONIG_STATIC_LIBONIG=1
 ENV RUSTONIG_SYSTEM_LIBONIG=0
 ENV OPENSSL_STATIC=1
 
-COPY build-native.sh /home/rust/bin/
-WORKDIR /home/rust/src
-ENTRYPOINT [ "/home/rust/bin/build-native.sh" ]
+COPY build-native.sh entrypoint.sh /home/rust/bin/
+WORKDIR /workspace
+ENTRYPOINT [ "/home/rust/bin/entrypoint.sh" ]

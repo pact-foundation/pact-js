@@ -52,7 +52,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2      
       - id: set_package_info
-        run: docker run --rm -v $(pwd):/home/rust/src -t pactfoundation/pact-js-musl:${{ matrix.node-version }}
+        run: docker run --rm -e LOCAL_USER_ID=`id -u $USER` -v $(pwd):/home/rust/src -t pactfoundation/pact-js-musl:${{ matrix.node-version }}
       - name: Upload Release Assets
         id: upload-release-asset 
         uses: svenstaro/upload-release-action@v2
