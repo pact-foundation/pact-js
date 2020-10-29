@@ -11,6 +11,8 @@ RUN touch /root/.bashrc && touch /root/.profile
 
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --default-host x86_64-unknown-linux-musl
 ENV PATH=/root/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+RUN rustup install stable
+RUN rustup default stable
 
 ENV NVM_DIR /root/.nvm
 ENV NVM_NODEJS_ORG_MIRROR=https://unofficial-builds.nodejs.org/download/release
