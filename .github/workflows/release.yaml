@@ -48,11 +48,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [10, 12, 14]
+        node: [10, 12, 14]
     steps:
       - uses: actions/checkout@v2      
+      - run: echo ${{ matrix.node }}
       - id: set_package_info
-        uses: docker://pactfoundation/pact-js-musl:${{ matrix.node-version }}
+        uses: docker://pactfoundation/pact-js-musl:10
       - name: Upload Release Assets
         id: upload-release-asset 
         uses: svenstaro/upload-release-action@v2
