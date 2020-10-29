@@ -30,4 +30,4 @@ ENV OPENSSL_STATIC=1
 
 COPY build-native.sh /github/home/bin/
 WORKDIR /github/workspace
-ENTRYPOINT [ "/github/home/build-native.sh" ]
+ENTRYPOINT [ "/github/home/bin/build-native.sh" ]
