@@ -975,8 +975,7 @@ this [gist](https://gist.github.com/mefellows/15c9fcb052c2aa9d8951f91d48d6da54) 
 ## Pact JS V3
 
 An initial alpha version of Pact-JS with support for V3 specification features and XML matching has
-been released. Current support is for Node 10, 12 and 13. Thanks to the folks at [Align Tech](https://www.aligntech.com/) for
-sponsoring this work.
+been released. Current support is for Node 10, 12 and 14. Thanks to the folks at [Align Tech](https://www.aligntech.com/) for sponsoring this work.
 
 To install it:
 
@@ -1151,6 +1150,10 @@ stateHandlers: {
     }
   },
 ```
+
+### Debugging issues with Pact-JS V3
+
+You can change the log levels using the `LOG_LEVEL` environment variable. 
 
 ## Troubleshooting / FAQs
 
