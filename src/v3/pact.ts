@@ -199,17 +199,25 @@ export class PactV3 {
             return val
           }
         })
-        .catch((err: any) => {
+        .catch((err: Error) => {
           const testResult = this.pact.getTestResult(result.mockServer.id)
-          let error = "Test failed for the following reasons:"
-          error += "\n\n  Test code failed with an error: " + err.message
-          if (testResult.mockServerError) {
-            error += "\n\n  " + testResult.mockServerError
+          if (testResult.mockServerError || testResult.mockServerMismatches) {
+            let error = "Test failed for the following reasons:"
+            error += "\n\n  Test code failed with an error: " + err.message
+            if (err.stack) {
+              error += "\n" + err.stack + "\n"
+            }
+
+            if (testResult.mockServerError) {
+              error += "\n\n  " + testResult.mockServerError
+            }
+            if (testResult.mockServerMismatches) {
+              error += "\n\n  " + generateMockServerError(testResult, "    ")
+            }
+            return Promise.reject(new Error(error))
+          } else {
+            return Promise.reject(err)
           }
-          if (testResult.mockServerMismatches) {
-            error += "\n\n  " + generateMockServerError(testResult, "    ")
-          }
-          return Promise.reject(new Error(error))
         })
         .finally(() => {
           this.pact.shutdownTest(result)
