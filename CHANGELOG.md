@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.21](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.20...v10.0.0-beta.21) (2020-10-30)
+
+
+### Bug Fixes
+
+* improve the test error to include the original stack trace ([c14cb97](https://github.com/pact-foundation/pact-js/commit/c14cb97492ad38f16d442bef5a6411999149501d))
+* update to latest mock server crate, fixes [#520](https://github.com/pact-foundation/pact-js/issues/520) ([21774de](https://github.com/pact-foundation/pact-js/commit/21774de2cc83b62224cb5315e888fb9ccd09c20b))
+
 ## [10.0.0-beta.20](https://github.com/pact-foundation/pact-js/compare/v9.13.0...v10.0.0-beta.20) (2020-10-28)
 
 
