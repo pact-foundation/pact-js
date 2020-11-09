@@ -1057,6 +1057,37 @@ const animalBodyExpectation = {
 | `date`                 | format: string, example?: string                   | String value that must match the provided date format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) for details on the format string. If the example value is o mitted, a value will be generated using a Date generator and the current system date.                  |
 | `includes`             | value: string                                      | Value that must include the example value as a substring.                                                                                                                                                                                                                                                                               |
 | `nullValue`            |                                                    | Value that must be null. This will only match the JSON Null value. For other content types, it will match if the attribute is missing.                                                                                                                                                                                                  |
+|`arrayContaining`| variants... | Matches the items in an array against a number of variants. Matching is successful if each variant occurs once in the array. Variants may be objects containing matching rules. |
+
+#### Array contains matcher
+
+The array contains matcher function allows you to match the actual list against a list of required variants. These work
+by matching each item against each of the variants, and the matching succeeds if each variant matches at least one item. Order of
+items in the list is not important.
+
+The variants can have a totally different structure, and can have their own matching rules to apply. For an example of how
+these can be used to match a hypermedia format like Siren, see [Example Pact + Siren project](https://github.com/pactflow/example-siren).
+
+| function | description |
+|----------|-------------|
+| `arrayContaining` | Matches the items in an array against a number of variants. Matching is successful if each variant occurs once in the array. Variants may be objects containing matching rules. |
+
+```js
+{
+  "actions": arrayContaining(
+    {
+      "name": "update",
+      "method": "PUT",
+      "href": url("http://localhost:9000", ["orders", regex("\\d+", "1234")])
+    },
+    {
+      "name": "delete",
+      "method": "DELETE",
+      "href": url("http://localhost:9000", ["orders", regex("\\d+", "1234")])
+    }
+  )
+}
+```
 
 ### Using Pact with XML
 
