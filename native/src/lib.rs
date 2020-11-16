@@ -209,10 +209,10 @@ fn get_parameter(cx: &mut CallContext<JsPact>, param: &Handle<JsValue>) -> NeonR
 }
 
 fn process_query(cx: &mut CallContext<JsPact>, js_query: Handle<JsValue>, request: Handle<JsObject>) -> NeonResult<(HashMap<String, Vec<String>>, MatchingRuleCategory, HashMap<String, Generator>)> {
+  let mut map = hashmap!{};
+  let mut rules = MatchingRuleCategory::empty("query");
+  let mut generators = hashmap!{};
   if let Ok(query_map) = js_query.downcast::<JsObject>() {
-    let mut map = hashmap!{};
-    let mut rules = MatchingRuleCategory::empty("query");
-    let mut generators = hashmap!{};
     let props = query_map.get_own_property_names(cx)?;
     for prop in props.to_vec(cx).unwrap() {
       let prop_name = prop.downcast::<JsString>().unwrap().value();
@@ -242,6 +242,8 @@ fn process_query(cx: &mut CallContext<JsPact>, js_query: Handle<JsValue>, reques
         map.insert(prop_name, vec![value]);
       }
     }
+    Ok((map, rules, generators))
+  } else if js_query.is_a::<JsUndefined>() || js_query.is_a::<JsNull>() {
     Ok((map, rules, generators))
   } else {
     cx.throw_type_error(format!("Query parameters must be a map of key/values"))
