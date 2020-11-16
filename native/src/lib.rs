@@ -5,7 +5,7 @@
 #[macro_use] extern crate serde_json;
 #[macro_use] extern crate maplit;
 
-use pact_matching::models::matchingrules::MatchingRuleCategory;
+use pact_matching::models::matchingrules::{MatchingRuleCategory, RuleList};
 use pact_mock_server::mock_server::MockServerConfig;
 use pact_matching::models::content_types::ContentType;
 use neon::prelude::*;
@@ -178,27 +178,74 @@ fn get_request_path(cx: &mut CallContext<JsPact>, request: Handle<JsObject>) -> 
   }
 }
 
-fn get_query(cx: &mut CallContext<JsPact>, request: Handle<JsObject>) -> NeonResult<HashMap<String, Vec<String>>> {
-  let js_query = request.get(cx, "query");
-  js_query.map(|val| {
-    let mut map = hashmap!{};
-    if let Ok(query_map) = val.downcast::<JsObject>() {
-      let props = query_map.get_own_property_names(cx).unwrap();
-      for prop in props.to_vec(cx).unwrap() {
-        let prop_name = prop.downcast::<JsString>().unwrap().value();
-        let prop_val = query_map.get(cx, prop_name.as_str()).unwrap();
-        if let Ok(array) = prop_val.downcast::<JsArray>() {
-          let vec = array.to_vec(cx).unwrap();
-          map.insert(prop_name, vec.iter().map(|item| {
-            item.downcast::<JsString>().unwrap().value()
-          }).collect());
-        } else {
-          map.insert(prop_name, vec![prop_val.downcast::<JsString>().unwrap().value()]);
+fn get_parameter(cx: &mut CallContext<JsPact>, param: &Handle<JsValue>) -> NeonResult<(String, Option<MatchingRule>, Option<Generator>)> {
+  match param.downcast::<JsString>() {
+    Ok(param) => Ok((param.value().to_string(), None, None)),
+    Err(err) => {
+      match param.downcast::<JsObject>() {
+        Ok(param) => {
+          let prop_val = param.get(cx, "value")?;
+          match prop_val.downcast::<JsString>() {
+            Ok(val) => {
+              let rule = matching_rule_from_js_object(param, cx);
+              let gen = generator_from_js_object(param, cx);
+              Ok((val.value(), rule, gen))
+            },
+            Err(err2) => {
+              let message = format!("Query parameters and headers must be string values or matchers - {}, {}", err, err2);
+              error!("{}", message.as_str());
+              cx.throw_error(message)
+            }
+          }
+        },
+        Err(err2) => {
+          let message = format!("Query parameters and headers must be string values or matchers - {}, {}", err, err2);
+          error!("{}", message.as_str());
+          cx.throw_error(message)
         }
       }
     }
-    map
-  })
+  }
+}
+
+fn process_query(cx: &mut CallContext<JsPact>, js_query: Handle<JsValue>, request: Handle<JsObject>) -> NeonResult<(HashMap<String, Vec<String>>, MatchingRuleCategory, HashMap<String, Generator>)> {
+  if let Ok(query_map) = js_query.downcast::<JsObject>() {
+    let mut map = hashmap!{};
+    let mut rules = MatchingRuleCategory::empty("query");
+    let mut generators = hashmap!{};
+    let props = query_map.get_own_property_names(cx)?;
+    for prop in props.to_vec(cx).unwrap() {
+      let prop_name = prop.downcast::<JsString>().unwrap().value();
+      let prop_val = query_map.get(cx, prop_name.as_str())?;
+      if let Ok(array) = prop_val.downcast::<JsArray>() {
+        let vec = array.to_vec(cx)?;
+        let mut params = vec![];
+        for (index, item) in vec.iter().enumerate() {
+          let (value, matcher, generator) = get_parameter(cx, &item)?;
+          if let Some(rule) = matcher {
+            rules.add_rule(prop_name.clone(), rule, &RuleLogic::And);
+          }
+          if let Some(generator) = generator {
+            generators.insert(format!("{}[{}]", prop_name.clone(), index), generator);
+          }
+          params.push(value);
+        }
+        map.insert(prop_name, params);
+      } else {
+        let (value, matcher, generator) = get_parameter(cx, &prop_val)?;
+        if let Some(rule) = matcher {
+          rules.add_rule(prop_name.clone(), rule, &RuleLogic::And);
+        }
+        if let Some(generator) = generator {
+          generators.insert(prop_name.clone(), generator);
+        };
+        map.insert(prop_name, vec![value]);
+      }
+    }
+    Ok((map, rules, generators))
+  } else {
+    cx.throw_type_error(format!("Query parameters must be a map of key/values"))
+  }
 }
 
 fn get_headers(cx: &mut CallContext<JsPact>, obj: Handle<JsObject>) -> NeonResult<HashMap<String, Vec<String>>> {
@@ -307,7 +354,8 @@ declare_types! {
 
       let js_method = request.get(&mut cx, "method");
       let path = get_request_path(&mut cx, request);
-      let js_query_props = get_query(&mut cx, request);
+      let js_query = request.get(&mut cx, "query")?;
+      let (query_vals, query_rules, query_gens) = process_query(&mut cx, js_query, request)?;
       let js_header_props = get_headers(&mut cx, request);
       let js_body = match cx.argument::<JsValue>(1) {
         Ok(body) => body.downcast::<JsString>().map(|val| val.value()).ok(),
@@ -339,9 +387,17 @@ declare_types! {
               last.request.generators.add_generator(&GeneratorCategory::PATH, gen)
             }
           }
-          if let Ok(query_props) = js_query_props {
-            last.request.query = Some(query_props)
+
+          if !query_vals.is_empty() {
+            last.request.query = Some(query_vals);
+            if query_rules.is_not_empty() {
+              last.request.matching_rules.rules.insert("query".into(), query_rules);
+            }
+            if !query_gens.is_empty() {
+              last.request.generators.categories.insert(GeneratorCategory::QUERY, query_gens);
+            }
           }
+
           if let Ok(header_props) = js_header_props {
             last.request.headers = Some(header_props)
           }
@@ -379,7 +435,8 @@ declare_types! {
 
       let js_method = request.get(&mut cx, "method");
       let path = get_request_path(&mut cx, request);
-      let js_query_props = get_query(&mut cx, request);
+      let js_query = request.get(&mut cx, "query")?;
+      let (query_vals, query_rules, query_gens) = process_query(&mut cx, js_query, request)?;
       let js_header_props = get_headers(&mut cx, request);
 
       let mut this = cx.this();
@@ -408,8 +465,14 @@ declare_types! {
             }
           }
 
-          if let Ok(query_props) = js_query_props {
-            last.request.query = Some(query_props)
+          if !query_vals.is_empty() {
+            last.request.query = Some(query_vals);
+            if query_rules.is_not_empty() {
+              last.request.matching_rules.rules.insert("query".into(), query_rules);
+            }
+            if !query_gens.is_empty() {
+              last.request.generators.categories.insert(GeneratorCategory::QUERY, query_gens);
+            }
           }
 
           if let Ok(header_props) = js_header_props {
@@ -458,7 +521,8 @@ declare_types! {
 
       let js_method = request.get(&mut cx, "method");
       let path = get_request_path(&mut cx, request);
-      let js_query_props = get_query(&mut cx, request);
+      let js_query = request.get(&mut cx, "query")?;
+      let (query_vals, query_rules, query_gens) = process_query(&mut cx, js_query, request)?;
       let js_header_props = get_headers(&mut cx, request);
 
       let mut this = cx.this();
@@ -487,8 +551,14 @@ declare_types! {
             }
           }
 
-          if let Ok(query_props) = js_query_props {
-            last.request.query = Some(query_props)
+          if !query_vals.is_empty() {
+            last.request.query = Some(query_vals);
+            if query_rules.is_not_empty() {
+              last.request.matching_rules.rules.insert("query".into(), query_rules);
+            }
+            if !&query_gens.is_empty() {
+              last.request.generators.categories.insert(GeneratorCategory::QUERY, query_gens);
+            }
           }
 
           if let Ok(header_props) = js_header_props {

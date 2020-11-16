@@ -394,4 +394,22 @@ export namespace MatchersV3 {
       variants
     }
   }
+
+  interface ProviderStateInjectedValue extends Matcher {
+    expression: string
+  }
+
+  /**
+   * Marks a item as to be injected from the provider state
+   * @param expression Expression to lookup in the provider state context
+   * @param exampleValue Example value to use in the consumer test
+   */
+  export function fromProviderState(expression: string, exampleValue: string): ProviderStateInjectedValue {
+    return {
+      "pact:matcher:type": "ProviderState",
+      "pact:generator:type": "ProviderState",
+      expression,
+      value: exampleValue
+    }
+  }
 }
