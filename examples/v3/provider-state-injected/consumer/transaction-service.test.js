@@ -7,7 +7,8 @@ const {
   integer,
   url,
   regex,
-  datetime
+  datetime,
+  fromProviderState
 } = MatchersV3
 
 describe("Transaction service - create a new transaction for an account", () => {
@@ -29,7 +30,7 @@ describe("Transaction service - create a new transaction for an account", () => 
       .withRequest({
         method: "GET",
         path: "/accounts/search/findOneByAccountNumberId",
-        query: { accountNumber: "100" },
+        query: { accountNumber: fromProviderState("\${accountNumber}", "100") },
         headers: { Accept: "application/json" },
       })
       .willRespondWith({
@@ -43,7 +44,7 @@ describe("Transaction service - create a new transaction for an account", () => 
           createdDate: datetime("yyyy-MM-dd HH:mm:ss"),
           lastModifiedDate: datetime("yyyy-MM-dd HH:mm:ss"),
           accountNumber: {
-            id: integer(100)
+            id: fromProviderState("\${accountNumber}", 100)
           },
           _links: {
             self: {
