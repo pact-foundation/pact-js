@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.22](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.21...v10.0.0-beta.22) (2020-11-17)
+
+
+### Features
+
+* add example consumer test with provider state injected values [#516](https://github.com/pact-foundation/pact-js/issues/516) ([190f332](https://github.com/pact-foundation/pact-js/commit/190f332559fe0b1717054796614aa2624e81818c))
+* added consumer for provider state injected example ([bdc333c](https://github.com/pact-foundation/pact-js/commit/bdc333c57107ac62f44abfac83ec62645470cc71))
+* got provider state injected values working with provider test [#516](https://github.com/pact-foundation/pact-js/issues/516) ([5fdf7eb](https://github.com/pact-foundation/pact-js/commit/5fdf7eb8284d73030049e1abf19c34445981510b))
+* implemented matching query parameters and provider state injected values (in consumer DSL) [#516](https://github.com/pact-foundation/pact-js/issues/516) ([f798c13](https://github.com/pact-foundation/pact-js/commit/f798c13494b690d9f5348c61d143855e7117de33))
+
+
+### Bug Fixes
+
+* if query parameters are not supplied they will be null or undefined [#516](https://github.com/pact-foundation/pact-js/issues/516) ([17397be](https://github.com/pact-foundation/pact-js/commit/17397bea50f25d3ded1dc71739a935e39b1f9a52))
+
 ## [10.0.0-beta.21](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.20...v10.0.0-beta.21) (2020-10-30)
 
 
