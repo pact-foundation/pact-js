@@ -28,12 +28,10 @@ const accountRepository = {
     account.version = version
     account.accountNumber.id = accountNumber
     accounts.push(account)
-    console.log("save", accounts)
     return account
   },
 
   findByAccountNumber: async (accountNumber) => {
-    console.log("find", accountNumber, accounts)
     return accounts.find(account => account.accountNumber.id == accountNumber)
   }
 }
