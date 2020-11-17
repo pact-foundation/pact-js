@@ -1,3 +1,4 @@
+use serde_json::Value;
 use neon::prelude::*;
 use pact_verifier::{ProviderInfo, VerificationOptions, FilterInfo, PactSource};
 use pact_verifier::callback_executors::{RequestFilterExecutor, ProviderStateExecutor, ProviderStateError};
@@ -11,7 +12,7 @@ use async_trait::async_trait;
 use pact_matching::models::provider_states::ProviderState;
 use maplit::*;
 use std::collections::HashMap;
-use crate::utils::serde_value_to_js_object_attr;
+use crate::utils::{serde_value_to_js_object_attr, js_value_to_serde_value};
 use log::*;
 use std::panic;
 
@@ -163,7 +164,19 @@ impl ProviderStateExecutor for ProviderStateCallback<'_> {
           let callback_result = callback.call(cx, this, args);
           match callback_result {
             Ok(val) => {
-              sender.send(Ok(hashmap!{})).unwrap();
+              if let Ok(vals) = val.downcast::<JsObject>() {
+                let js_props = vals.get_own_property_names(cx).unwrap();
+                let props: HashMap<String, Value> = js_props.to_vec(cx).unwrap().iter().map(|prop| {
+                  let prop_name = prop.downcast::<JsString>().unwrap().value();
+                  let prop_val = vals.get(cx, prop_name.as_str()).unwrap();
+                  (prop_name, js_value_to_serde_value(&prop_val, cx))
+                }).collect();
+                debug!("Provider state callback result = {:?}", props);
+                sender.send(Ok(props)).unwrap();
+              } else {
+                debug!("Provider state callback did not return a map of values. Ignoring.");
+                sender.send(Ok(hashmap!{})).unwrap();
+              }
             },
             Err(err) => {
               error!("Provider state callback for '{}' failed: {}", state.name, err);
@@ -175,10 +188,7 @@ impl ProviderStateExecutor for ProviderStateCallback<'_> {
         match receiver.recv_timeout(Duration::from_millis(1000)) {
           Ok(result) => {
             debug!("Received {:?} from callback", result);
-            match result {
-              Ok(result) => Ok(hashmap!{}),
-              Err(err) => Err(err)
-            }
+            result
           },
           Err(_) => Err(ProviderStateError { description: format!("Provider state callback for '{}' timed out after 1000 ms", provider_state.name), interaction_id })
         }

@@ -406,7 +406,7 @@ export namespace MatchersV3 {
    */
   export function fromProviderState(expression: string, exampleValue: string): ProviderStateInjectedValue {
     return {
-      "pact:matcher:type": "ProviderState",
+      "pact:matcher:type": "type",
       "pact:generator:type": "ProviderState",
       expression,
       value: exampleValue

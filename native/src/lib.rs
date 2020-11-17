@@ -116,11 +116,17 @@ fn generator_from_js_object<'a>(obj: Handle<JsObject>, ctx: &mut CallContext<JsP
 }
 
 fn generate_datetime_string(mut cx: FunctionContext) -> JsResult<JsString> {
-  let format = cx.argument::<JsString>(0)?;
-  let result = generate_string(&format.value());
+  let format = cx.argument::<JsString>(0)?.value();
+  let result = generate_string(&format);
   match result {
-    Ok(value) => Ok(cx.string(value)),
-    Err(err) => cx.throw_error(err)
+    Ok(value) => {
+      debug!("Generated datetime value from '{}' -> '{}'", format, value);
+      Ok(cx.string(value))
+    },
+    Err(err) => {
+      error!("Failed to generate datetime value for '{}': {}", format, err);
+      cx.throw_error(err)
+    }
   }
 }
 

@@ -31,7 +31,7 @@ describe("Transaction service - create a new transaction for an account", () => 
         method: "GET",
         path: "/accounts/search/findOneByAccountNumberId",
         query: { accountNumber: fromProviderState("\${accountNumber}", "100") },
-        headers: { Accept: "application/json" },
+        headers: { Accept: "application/hal+json" },
       })
       .willRespondWith({
         status: 200,
@@ -41,8 +41,8 @@ describe("Transaction service - create a new transaction for an account", () => 
           version: integer(0),
           name: string("Test"),
           accountRef: string("Test001"),
-          createdDate: datetime("yyyy-MM-dd HH:mm:ss"),
-          lastModifiedDate: datetime("yyyy-MM-dd HH:mm:ss"),
+          createdDate: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
+          lastModifiedDate: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
           accountNumber: {
             id: fromProviderState("\${accountNumber}", 100)
           },

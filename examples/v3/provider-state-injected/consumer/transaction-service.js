@@ -11,6 +11,9 @@ module.exports = {
     return axios.get(accountServiceUrl + "/accounts/search/findOneByAccountNumberId", {
       params: {
         accountNumber: accountId
+      },
+      headers: {
+        Accept: 'application/hal+json'
       }
     }).then(({ data }) => {
       // This is the point where a real transaction service would create the transaction, but for the purpose

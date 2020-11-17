@@ -85,7 +85,13 @@ pub(crate) fn js_value_to_serde_value<'a, C: Context<'a>>(value: &Handle<'a, JsV
   if let Ok(val) = value.downcast::<JsString>() {
     Value::String(val.value())
   } else if let Ok(val) = value.downcast::<JsNumber>() {
-    json!(val.value())
+    let num = val.value();
+    let s_num = num.to_string();
+    if s_num.contains('.') {
+      json!(num)
+    } else {
+      json!(num as i64)
+    }
   } else if let Ok(val) = value.downcast::<JsBoolean>() {
     Value::Bool(val.value())
   } else if let Ok(val) = value.downcast::<JsArray>() {
