@@ -976,9 +976,8 @@ this [gist](https://gist.github.com/mefellows/15c9fcb052c2aa9d8951f91d48d6da54) 
 
 ## Pact JS V3
 
-An initial alpha version of Pact-JS with support for V3 specification features and XML matching has
-been released. Current support is for Node 10, 12 and 13. Thanks to the folks at [Align Tech](https://www.aligntech.com/) for
-sponsoring this work.
+An initial beta version of Pact-JS with support for V3 specification features and XML matching has
+been released. Current support is for Node 10, 12 and 14. Thanks to the folks at [Align Tech](https://www.aligntech.com/) for sponsoring this work.
 
 To install it:
 
@@ -987,15 +986,6 @@ npm i @pact-foundation/pact@beta
 ```
 
 For examples on how to use it, see [examples/v3/e2e](https://github.com/pact-foundation/pact-js/tree/feat/v3.0.0/examples/v3/e2e) and [examples/v3/todo-consumer](https://github.com/pact-foundation/pact-js/tree/feat/v3.0.0/examples/v3/todo-consumer) in the `v3.0.0` branch.
-
-**NOTE: This implementation is not ready for production use yet, as it DOES NOT yet support the following features:**
-
-* Verifying a pact by direct URL
-* `consumerVersionTags` to specify which pacts to verify - only the latest pact will be verified.
-* Any features that make use of the "Pacts for Verification" API which include:
-    * Support for `consumerVersionSelectors`
-    * Pending pacts
-    * WIP pacts
 
 ### Using the V3 matching rules
 
@@ -1058,6 +1048,7 @@ const animalBodyExpectation = {
 | `includes`             | value: string                                      | Value that must include the example value as a substring.                                                                                                                                                                                                                                                                               |
 | `nullValue`            |                                                    | Value that must be null. This will only match the JSON Null value. For other content types, it will match if the attribute is missing.                                                                                                                                                                                                  |
 |`arrayContaining`| variants... | Matches the items in an array against a number of variants. Matching is successful if each variant occurs once in the array. Variants may be objects containing matching rules. |
+|`fromProviderState`| expression: string, exampleValue: string | Sets a type matcher and a provider state generator. See the section below. |
 
 #### Array contains matcher
 
@@ -1087,6 +1078,38 @@ these can be used to match a hypermedia format like Siren, see [Example Pact + S
     }
   )
 }
+```
+
+#### Provider State Injected Values
+
+The `fromProviderState` matching function allows values to be generated based on values returned from the provider state callbacks. This should be used for the cases were database entries have auto-generated values and these values need to be used in the URLs or query parameters.
+
+For an example, see [examples/v3/provider-state-injected](https://github.com/pact-foundation/pact-js/tree/feat/v3.0.0/examples/v3/provider-state-injected).
+
+For this to work, in the consumer test we use the `fromProviderState` matching function which takes an expression and an example value. The example value will be used in the consumer test. 
+
+For example:
+
+```js
+  query: { accountNumber: fromProviderState("\${accountNumber}", "100") },
+```
+
+Then when the provider is verified, the provider state callback can return a map of values. These values will be used to generate the value using the expression supplied from the consumer test.
+
+For example:
+
+```js
+      stateHandlers: {
+        "Account Test001 exists": (setup, params) => {
+          if (setup) {
+            let account = new Account(0, 0, "Test001", params.accountRef, new AccountNumber(0), Date.now(), Date.now())
+            let persistedAccount = accountRepository.save(account)
+            return { accountNumber: persistedAccount.accountNumber.id }
+          } else {
+            return null
+          }
+        }
+      },
 ```
 
 ### Using Pact with XML
