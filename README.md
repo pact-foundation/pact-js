@@ -1112,6 +1112,8 @@ For example:
       },
 ```
 
+**NOTE:** Async callbacks and returning promises from the provider state callbacks is not currently supported.
+
 ### Using Pact with XML
 
 You can write both consumer and provider verification tests with XML requests or responses. For an example, see [examples/v3/todo-consumer/test/consumer.spec.js](examples/v3/todo-consumer/test/consumer.spec.js).
@@ -1176,37 +1178,38 @@ requestFilter: req => {
 
 Provider state callbacks have been updated to support parameters and return values. The first parameter is a boolean indicating whether it is a setup call
 (run before the verification) or a tear down call (run afterwards). The second optional parameter is a key-value map of any parameters defined in the
-pact file. Provider state callbacks can also return a map of key-value values. These are used with provider-state injected values, but support for that
-will be added in a later release.
+pact file. Provider state callbacks can also return a map of key-value values. These are used with provider-state injected values (see the section on that above).
 
 ```javascript
 stateHandlers: {
   "Has no animals": setup => {
     if (setup) {
       animalRepository.clear()
-      return Promise.resolve({ description: `Animals removed to the db` })
+      return { description: `Animals removed to the db` }
     }
   },
   "Has some animals": setup => {
     if (setup) {
       importData()
-      return Promise.resolve({
+      return {
         description: `Animals added to the db`,
         count: animalRepository.count(),
-      })
+      }
     }
   },
   "Has an animal with ID": (setup, parameters) => {
     if (setup) {
       importData()
       animalRepository.first().id = parameters.id
-      return Promise.resolve({
+      return {
         description: `Animal with ID ${parameters.id} added to the db`,
         id: parameters.id,
-      })
+      }
     }
   },
 ```
+
+**NOTE:** Async callbacks and returning promises from the provider state callbacks is not currently supported.
 
 ## Troubleshooting / FAQs
 
