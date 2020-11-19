@@ -8,7 +8,6 @@ use ansi_term::Colour::*;
 use url::Url;
 use std::sync::mpsc;
 use std::time::Duration;
-use std::ops::Deref;
 use async_trait::async_trait;
 use pact_matching::models::provider_states::ProviderState;
 use maplit::*;

@@ -214,7 +214,7 @@ fn get_parameter(cx: &mut CallContext<JsPact>, param: &Handle<JsValue>) -> NeonR
   }
 }
 
-fn process_query(cx: &mut CallContext<JsPact>, js_query: Handle<JsValue>, request: Handle<JsObject>) -> NeonResult<(HashMap<String, Vec<String>>, MatchingRuleCategory, HashMap<String, Generator>)> {
+fn process_query(cx: &mut CallContext<JsPact>, js_query: Handle<JsValue>) -> NeonResult<(HashMap<String, Vec<String>>, MatchingRuleCategory, HashMap<String, Generator>)> {
   let mut map = hashmap!{};
   let mut rules = MatchingRuleCategory::empty("query");
   let mut generators = hashmap!{};
@@ -256,20 +256,47 @@ fn process_query(cx: &mut CallContext<JsPact>, js_query: Handle<JsValue>, reques
   }
 }
 
-fn get_headers(cx: &mut CallContext<JsPact>, obj: Handle<JsObject>) -> NeonResult<HashMap<String, Vec<String>>> {
-  let js_headers = obj.get(cx, "headers");
-  js_headers.map(|val| {
-    let mut map = hashmap!{};
-    if let Ok(header_map) = val.downcast::<JsObject>() {
-      let props = header_map.get_own_property_names(cx).unwrap();
-      for prop in props.to_vec(cx).unwrap() {
-        let prop_name = prop.downcast::<JsString>().unwrap().value();
-        let prop_val = header_map.get(cx, prop_name.as_str()).unwrap();
-        map.insert(prop_name, vec![prop_val.downcast::<JsString>().unwrap().value()]);
+fn process_headers(cx: &mut CallContext<JsPact>, obj: Handle<JsObject>) -> NeonResult<(HashMap<String, Vec<String>>, MatchingRuleCategory, HashMap<String, Generator>)> {
+  let mut map = hashmap!{};
+  let mut rules = MatchingRuleCategory::empty("header");
+  let mut generators = hashmap!{};
+  let js_headers = obj.get(cx, "headers")?;
+  if let Ok(header_map) = js_headers.downcast::<JsObject>() {
+    let props = header_map.get_own_property_names(cx)?;
+    for prop in props.to_vec(cx).unwrap() {
+      let prop_name = prop.downcast::<JsString>().unwrap().value();
+      let prop_val = header_map.get(cx, prop_name.as_str())?;
+      if let Ok(array) = prop_val.downcast::<JsArray>() {
+        let vec = array.to_vec(cx)?;
+        let mut params = vec![];
+        for (index, item) in vec.iter().enumerate() {
+          let (value, matcher, generator) = get_parameter(cx, &item)?;
+          if let Some(rule) = matcher {
+            rules.add_rule(prop_name.clone(), rule, &RuleLogic::And);
+          }
+          if let Some(generator) = generator {
+            generators.insert(format!("{}[{}]", prop_name.clone(), index), generator);
+          }
+          params.push(value);
+        }
+        map.insert(prop_name, params);
+      } else {
+        let (value, matcher, generator) = get_parameter(cx, &prop_val)?;
+        if let Some(rule) = matcher {
+          rules.add_rule(prop_name.clone(), rule, &RuleLogic::And);
+        }
+        if let Some(generator) = generator {
+          generators.insert(prop_name.clone(), generator);
+        };
+        map.insert(prop_name, vec![value]);
       }
     }
-    map
-  })
+    Ok((map, rules, generators))
+  } else if js_headers.is_a::<JsUndefined>() || js_headers.is_a::<JsNull>() {
+    Ok((map, rules, generators))
+  } else {
+    cx.throw_type_error(format!("Headers must be a map of key/values"))
+  }
 }
 
 fn load_file(file_path: &String) -> Result<OptionalBody, std::io::Error> {
@@ -363,8 +390,8 @@ declare_types! {
       let js_method = request.get(&mut cx, "method");
       let path = get_request_path(&mut cx, request);
       let js_query = request.get(&mut cx, "query")?;
-      let (query_vals, query_rules, query_gens) = process_query(&mut cx, js_query, request)?;
-      let js_header_props = get_headers(&mut cx, request);
+      let (query_vals, query_rules, query_gens) = process_query(&mut cx, js_query)?;
+      let (headers, header_rules, header_gens) = process_headers(&mut cx, request)?;
       let js_body = match cx.argument::<JsValue>(1) {
         Ok(body) => body.downcast::<JsString>().map(|val| val.value()).ok(),
         Err(_) => None
@@ -406,9 +433,16 @@ declare_types! {
             }
           }
 
-          if let Ok(header_props) = js_header_props {
-            last.request.headers = Some(header_props)
+          if !headers.is_empty() {
+            last.request.headers = Some(headers);
+            if header_rules.is_not_empty() {
+              last.request.matching_rules.rules.insert("header".into(), header_rules);
+            }
+            if !header_gens.is_empty() {
+              last.request.generators.categories.insert(GeneratorCategory::HEADER, header_gens);
+            }
           }
+
           if let Some(body) = js_body {
             match process_body(body, last.request.content_type(), &mut last.request.matching_rules,
               &mut last.request.generators) {
@@ -444,8 +478,8 @@ declare_types! {
       let js_method = request.get(&mut cx, "method");
       let path = get_request_path(&mut cx, request);
       let js_query = request.get(&mut cx, "query")?;
-      let (query_vals, query_rules, query_gens) = process_query(&mut cx, js_query, request)?;
-      let js_header_props = get_headers(&mut cx, request);
+      let (query_vals, query_rules, query_gens) = process_query(&mut cx, js_query)?;
+      let (headers, header_rules, header_gens) = process_headers(&mut cx, request)?;
 
       let mut this = cx.this();
 
@@ -483,8 +517,14 @@ declare_types! {
             }
           }
 
-          if let Ok(header_props) = js_header_props {
-            last.request.headers = Some(header_props)
+          if !headers.is_empty() {
+            last.request.headers = Some(headers);
+            if header_rules.is_not_empty() {
+              last.request.matching_rules.rules.insert("header".into(), header_rules);
+            }
+            if !header_gens.is_empty() {
+              last.request.generators.categories.insert(GeneratorCategory::HEADER, header_gens);
+            }
           }
 
           match load_file(&file_path.value()) {
@@ -530,8 +570,8 @@ declare_types! {
       let js_method = request.get(&mut cx, "method");
       let path = get_request_path(&mut cx, request);
       let js_query = request.get(&mut cx, "query")?;
-      let (query_vals, query_rules, query_gens) = process_query(&mut cx, js_query, request)?;
-      let js_header_props = get_headers(&mut cx, request);
+      let (query_vals, query_rules, query_gens) = process_query(&mut cx, js_query)?;
+      let (headers, header_rules, header_gens) = process_headers(&mut cx, request)?;
 
       let mut this = cx.this();
 
@@ -569,8 +609,14 @@ declare_types! {
             }
           }
 
-          if let Ok(header_props) = js_header_props {
-            last.request.headers = Some(header_props)
+          if !headers.is_empty() {
+            last.request.headers = Some(headers);
+            if header_rules.is_not_empty() {
+              last.request.matching_rules.rules.insert("header".into(), header_rules);
+            }
+            if !header_gens.is_empty() {
+              last.request.generators.categories.insert(GeneratorCategory::HEADER, header_gens);
+            }
           }
 
           let boundary = last.description.replace(" ", "_");
@@ -600,7 +646,7 @@ declare_types! {
     method addResponse(mut cx) {
       let response = cx.argument::<JsObject>(0)?;
       let js_status = response.get(&mut cx, "status");
-      let js_header_props = get_headers(&mut cx, response);
+      let (headers, header_rules, header_gens) = process_headers(&mut cx, response)?;
       let js_body = match cx.argument::<JsValue>(1) {
         Ok(body) => body.downcast::<JsString>().map(|val| val.value()).ok(),
         Err(_) => None
@@ -618,8 +664,15 @@ declare_types! {
               Err(err) => warn!("Response status is not a number - {}", err)
             }
           }
-          if let Ok(header_props) = js_header_props {
-            last.response.headers = Some(header_props)
+
+          if !headers.is_empty() {
+            last.response.headers = Some(headers);
+            if header_rules.is_not_empty() {
+              last.response.matching_rules.rules.insert("header".into(), header_rules);
+            }
+            if !header_gens.is_empty() {
+              last.response.generators.categories.insert(GeneratorCategory::HEADER, header_gens);
+            }
           }
 
           if let Some(body) = js_body {
@@ -652,7 +705,7 @@ declare_types! {
       let file_path = cx.argument::<JsString>(2)?;
 
       let js_status = response.get(&mut cx, "status");
-      let js_header_props = get_headers(&mut cx, response);
+      let (headers, header_rules, header_gens) = process_headers(&mut cx, response)?;
 
       let mut this = cx.this();
 
@@ -667,8 +720,15 @@ declare_types! {
               Err(err) => warn!("Response status is not a number - {}", err)
             }
           }
-          if let Ok(header_props) = js_header_props {
-            last.response.headers = Some(header_props)
+
+          if !headers.is_empty() {
+            last.response.headers = Some(headers);
+            if header_rules.is_not_empty() {
+              last.response.matching_rules.rules.insert("header".into(), header_rules);
+            }
+            if !header_gens.is_empty() {
+              last.response.generators.categories.insert(GeneratorCategory::HEADER, header_gens);
+            }
           }
 
           match load_file(&file_path.value()) {
@@ -712,7 +772,7 @@ declare_types! {
       let part_name = cx.argument::<JsString>(3)?;
 
       let js_status = response.get(&mut cx, "status");
-      let js_header_props = get_headers(&mut cx, response);
+      let (headers, header_rules, header_gens) = process_headers(&mut cx, response)?;
 
       let mut this = cx.this();
 
@@ -727,8 +787,15 @@ declare_types! {
               Err(err) => warn!("Response status is not a number - {}", err)
             }
           }
-          if let Ok(header_props) = js_header_props {
-            last.response.headers = Some(header_props)
+
+          if !headers.is_empty() {
+            last.response.headers = Some(headers);
+            if header_rules.is_not_empty() {
+              last.response.matching_rules.rules.insert("header".into(), header_rules);
+            }
+            if !header_gens.is_empty() {
+              last.response.generators.categories.insert(GeneratorCategory::HEADER, header_gens);
+            }
           }
 
           let boundary = last.description.replace(" ", "_");

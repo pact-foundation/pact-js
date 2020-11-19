@@ -17,7 +17,7 @@ module.exports = {
       .then(response => {
         console.log("todo response:")
         eyes.inspect(response.data)
-        if (format === "xml") {
+        if (format.endsWith("xml")) {
           const result = JSON.parse(parser.toJson(response.data))
           console.dir(result, { depth: 10 })
           return R.path(["ns1:projects"], result)

@@ -20,14 +20,9 @@ describe("Pact XML Verification", () => {
       provider: "XML Service",
       providerBaseUrl: "http://localhost:8081",
       pactUrls: ["./pacts/TodoApp-TodoServiceV3.json"],
-      // pactUrls: [
-      //   path.resolve(
-      //     process.cwd(),
-      //     "./pacts/matching_service-animal_profile_service.json"
-      //   ),
-      // ],
       stateHandlers: {
         "i have a list of projects": setup => {},
+        "i have a project": setup => {},
       },
     }
 

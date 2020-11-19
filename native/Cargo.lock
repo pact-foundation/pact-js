@@ -1284,7 +1284,7 @@ dependencies = [
 
 [[package]]
 name = "pact-js-v3"
-version = "0.0.5"
+version = "0.0.6"
 dependencies = [
  "ansi_term 0.12.1",
  "async-trait",
@@ -1314,9 +1314,7 @@ dependencies = [
 
 [[package]]
 name = "pact_matching"
-version = "0.8.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "769dc68f69aa27d8f4272691f460547c7c23741b7ce78d033e3e0245ca515d98"
+version = "0.8.5"
 dependencies = [
  "ansi_term 0.9.0",
  "base64 0.12.3",
@@ -1351,9 +1349,7 @@ dependencies = [
 
 [[package]]
 name = "pact_mock_server"
-version = "0.7.11"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "541668137a9948a6b1de529417e6b377b686d1be3b481dd373e0de8cb631e6b0"
+version = "0.7.12"
 dependencies = [
  "bytes 0.5.6",
  "futures 0.3.8",
@@ -1372,9 +1368,7 @@ dependencies = [
 
 [[package]]
 name = "pact_mock_server_ffi"
-version = "0.0.11"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6f13fafe2792299db2787519532230534814eaff33a4b0e43b607f2fcb51bb5e"
+version = "0.0.12"
 dependencies = [
  "cbindgen",
  "chrono",
@@ -1400,9 +1394,7 @@ dependencies = [
 
 [[package]]
 name = "pact_verifier"
-version = "0.9.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b1701e5e2225f7b0bc4645f03472d594f56f11f375aa2d2c0e2b08aa8b25009d"
+version = "0.9.4"
 dependencies = [
  "ansi_term 0.12.1",
  "async-trait",
