@@ -38,7 +38,7 @@ lazy_static! {
 fn init(mut cx: FunctionContext) -> JsResult<JsString> {
     let mut builder = Builder::from_env("LOG_LEVEL");
     builder.target(Target::Stdout);
-    
+
     if let Ok(_) = builder.try_init() {
       debug!("Initialising Pact native library version {}", env!("CARGO_PKG_VERSION"));
     }
@@ -57,9 +57,9 @@ fn process_xml(body: String, matching_rules: &mut MatchingRuleCategory, generato
 }
 
 fn process_body(
-  body: String, 
-  content_type: Option<ContentType>, 
-  matching_rules: &mut MatchingRules, 
+  body: String,
+  content_type: Option<ContentType>,
+  matching_rules: &mut MatchingRules,
   generators: &mut Generators
 ) -> Result<OptionalBody, String> {
   let category = matching_rules.add_category("body");

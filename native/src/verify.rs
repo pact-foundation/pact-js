@@ -26,6 +26,49 @@ fn get_string_value(cx: &mut FunctionContext, obj: &JsObject, name: &str) -> Opt
   }
 }
 
+fn get_bool_value(cx: &mut FunctionContext, obj: &JsObject, name: &str) -> bool {
+  match obj.get(cx, name) {
+    Ok(val) => match val.downcast::<JsBoolean>() {
+      Ok(val) => val.value(),
+      Err(_) => false
+    },
+    _ => false
+  }
+}
+
+fn get_string_array(cx: &mut FunctionContext, obj: &JsObject, name: &str) -> Result<Vec<String>, String> {
+  match obj.get(cx, name) {
+    Ok(items) => match items.downcast::<JsString>() {
+      Ok(item) => Ok(vec![ item.value().to_string() ]),
+      Err(_) => match items.downcast::<JsArray>() {
+        Ok(items) => {
+          let mut tags = vec![];
+          if let Ok(items) = items.to_vec(cx) {
+            for tag in items {
+              match tag.downcast::<JsString>() {
+                Ok(val) => tags.push(val.value().to_string()),
+                Err(_) => {
+                  println!("    {}", Red.paint(format!("ERROR: {} must be a string or array of strings", name)));
+                }
+              }
+            }
+          };
+          Ok(tags)
+        },
+        Err(_) => if !items.is_a::<JsUndefined>() {
+          println!("    {}", Red.paint("ERROR: providerVersionTag must be a string or array of strings"));
+          Err(format!("{} must be a string or array of strings", name))
+        } else {
+          Ok(vec![])
+        }
+      }
+    },
+    _ => Ok(vec![])
+  }
+}
+
+
+
 #[derive(Clone)]
 struct RequestFilterCallback {
   callback_handler: EventHandler
@@ -251,6 +294,43 @@ impl Task for BackgroundTask {
   }
 }
 
+// if let Some(values) = matches.values_of("broker-url") {
+//   sources.extend(values.map(|v| {
+//     if matches.is_present("user") || matches.is_present("token") {
+//       let name = matches.value_of("provider-name").unwrap().to_string();
+//       let pending = matches.is_present("enable-pending");
+//       let wip = matches.value_of("include-wip-pacts-since").map(|wip| wip.to_string());
+//       let consumer_version_tags = matches.values_of("consumer-version-tags")
+//         .map_or_else(|| vec![], |tags| consumer_tags_to_selectors(tags.collect::<Vec<_>>()));
+//       let provider_tags = matches.values_of("provider-tags")
+//         .map_or_else(|| vec![], |tags| tags.map(|tag| tag.to_string()).collect());
+
+//       if matches.is_present("token") {
+//         PactSource::BrokerWithDynamicConfiguration { provider_name: name, broker_url: s!(v), enable_pending: pending, include_wip_pacts_since: wip, provider_tags: provider_tags, selectors: consumer_version_tags,
+//           auth: matches.value_of("token").map(|token| HttpAuth::Token(token.to_string())), links: vec![] }
+//       } else {
+//       let auth = matches.value_of("user").map(|user| {
+//         HttpAuth::User(user.to_string(), matches.value_of("password").map(|p| p.to_string()))
+//       });
+//         PactSource::BrokerWithDynamicConfiguration { provider_name: name, broker_url: s!(v), enable_pending: pending, include_wip_pacts_since: wip, provider_tags: provider_tags, selectors: consumer_version_tags, auth: auth, links: vec![] }
+//       }
+//     } else {
+//       PactSource::BrokerUrl(s!(matches.value_of("provider-name").unwrap()), s!(v), None, vec![])
+//     }
+//   }).collect::<Vec<PactSource>>());
+// };
+
+fn consumer_tags_to_selectors(tags: Vec<String>) -> Vec<pact_verifier::ConsumerVersionSelector> {
+  tags.iter().map(|t| {
+    pact_verifier::ConsumerVersionSelector {
+      consumer: None,
+      fallback_tag: None,
+      tag: t.to_string(),
+      latest: Some(true),
+    }
+  }).collect()
+}
+
 pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
   let config = cx.argument::<JsObject>(0)?;
   let callback = cx.argument::<JsFunction>(1)?;
@@ -277,16 +357,30 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
     _ => ()
   };
 
+  let provider_tags = match get_string_array(&mut cx, &config, "providerVersionTags") {
+    Ok(tags) => tags,
+    Err(e) => return cx.throw_error(e)
+  };
+
+
   match config.get(&mut cx, "pactBrokerUrl") {
     Ok(url) => match url.downcast::<JsString>() {
       Ok(url) => {
+        let pending = get_bool_value(&mut cx, &config, "enablePending");
+        let wip = get_string_value(&mut cx, &config, "includeWipPactsSince");
+        let consumer_version_tags = match get_string_array(&mut cx, &config, "consumerVersionTags") {
+          Ok(tags) => tags,
+          Err(e) => return cx.throw_error(e)
+        };
+        let selectors = consumer_tags_to_selectors(consumer_version_tags);
+
         if let Some(username) = get_string_value(&mut cx, &config, "pactBrokerUsername") {
           let password = get_string_value(&mut cx, &config, "pactBrokerPassword");
-          pacts.push(PactSource::BrokerUrl(provider.clone(), url.value(), Some(HttpAuth::User(username, password)), vec![]));
+          pacts.push(PactSource::BrokerWithDynamicConfiguration { provider_name: provider.clone(), broker_url: url.value(), enable_pending: pending, include_wip_pacts_since: wip, provider_tags: provider_tags.clone(), selectors: selectors, auth: Some(HttpAuth::User(username, password)), links: vec![] })
         } else if let Some(token) = get_string_value(&mut cx, &config, "pactBrokerToken") {
-          pacts.push(PactSource::BrokerUrl(provider.clone(), url.value(), Some(HttpAuth::Token(token)), vec![]));
+          pacts.push(PactSource::BrokerWithDynamicConfiguration { provider_name: provider.clone(), broker_url: url.value(), enable_pending: pending, include_wip_pacts_since: wip, provider_tags: provider_tags.clone(), selectors: selectors, auth: Some(HttpAuth::Token(token)), links: vec![] })
         } else {
-          pacts.push(PactSource::BrokerUrl(provider.clone(), url.value(), None, vec![]));
+          pacts.push(PactSource::BrokerWithDynamicConfiguration { provider_name: provider.clone(), broker_url: url.value(), enable_pending: pending, include_wip_pacts_since: wip, provider_tags: provider_tags.clone(), selectors: selectors, auth: None, links: vec![] })
         }
       },
       Err(_) => {
@@ -304,11 +398,6 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
     println!("    {}", Red.paint("ERROR: No pacts were found to verify!"));
     cx.throw_error("No pacts were found to verify!")?;
   }
-
-  // providerStatesSetupUrl?: string
-  // consumerVersionTag?: string | string[]
-  // providerVersionTag?: string | string[]
-  // customProviderHeaders?: string[]
 
   let mut provider_info = ProviderInfo {
     name: provider.clone(),
@@ -394,33 +483,8 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
     return cx.throw_error("providerVersion must be provided if publishing verification results in enabled (publishVerificationResult == true)")?
   }
 
-  let provider_tags = match config.get(&mut cx, "providerVersionTag") {
-    Ok(provider_tags) => match provider_tags.downcast::<JsString>() {
-      Ok(provider_tag) => vec![ provider_tag.value().to_string() ],
-      Err(_) => match provider_tags.downcast::<JsArray>() {
-        Ok(provider_tags) => {
-          let mut tags = vec![];
-          for tag in provider_tags.to_vec(&mut cx)? {
-            match tag.downcast::<JsString>() {
-              Ok(val) => tags.push(val.value().to_string()),
-              Err(_) => {
-                println!("    {}", Red.paint("ERROR: providerVersionTag must be a string or array of strings"));
-                return cx.throw_error("providerVersionTag must be a string or array of strings")
-              }
-            }
-          };
-          tags
-        },
-        Err(_) => if !provider_tags.is_a::<JsUndefined>() {
-          println!("    {}", Red.paint("ERROR: providerVersionTag must be a string or array of strings"));
-          return cx.throw_error("providerVersionTag must be a string or array of strings")
-        } else {
-          vec![]
-        }
-      }
-    },
-    _ => vec![]
-  };
+
+
 
   let filter_info = FilterInfo::None;
   let consumers_filter: Vec<String> = vec![];
