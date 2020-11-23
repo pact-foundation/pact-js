@@ -56,7 +56,7 @@ fn get_string_array(cx: &mut FunctionContext, obj: &JsObject, name: &str) -> Res
           Ok(tags)
         },
         Err(_) => if !items.is_a::<JsUndefined>() {
-          println!("    {}", Red.paint("ERROR: providerVersionTag must be a string or array of strings"));
+          println!("    {}", Red.paint(format!("ERROR: {} must be a string or array of strings", name)));
           Err(format!("{} must be a string or array of strings", name))
         } else {
           Ok(vec![])
@@ -293,32 +293,6 @@ impl Task for BackgroundTask {
     }
   }
 }
-
-// if let Some(values) = matches.values_of("broker-url") {
-//   sources.extend(values.map(|v| {
-//     if matches.is_present("user") || matches.is_present("token") {
-//       let name = matches.value_of("provider-name").unwrap().to_string();
-//       let pending = matches.is_present("enable-pending");
-//       let wip = matches.value_of("include-wip-pacts-since").map(|wip| wip.to_string());
-//       let consumer_version_tags = matches.values_of("consumer-version-tags")
-//         .map_or_else(|| vec![], |tags| consumer_tags_to_selectors(tags.collect::<Vec<_>>()));
-//       let provider_tags = matches.values_of("provider-tags")
-//         .map_or_else(|| vec![], |tags| tags.map(|tag| tag.to_string()).collect());
-
-//       if matches.is_present("token") {
-//         PactSource::BrokerWithDynamicConfiguration { provider_name: name, broker_url: s!(v), enable_pending: pending, include_wip_pacts_since: wip, provider_tags: provider_tags, selectors: consumer_version_tags,
-//           auth: matches.value_of("token").map(|token| HttpAuth::Token(token.to_string())), links: vec![] }
-//       } else {
-//       let auth = matches.value_of("user").map(|user| {
-//         HttpAuth::User(user.to_string(), matches.value_of("password").map(|p| p.to_string()))
-//       });
-//         PactSource::BrokerWithDynamicConfiguration { provider_name: name, broker_url: s!(v), enable_pending: pending, include_wip_pacts_since: wip, provider_tags: provider_tags, selectors: consumer_version_tags, auth: auth, links: vec![] }
-//       }
-//     } else {
-//       PactSource::BrokerUrl(s!(matches.value_of("provider-name").unwrap()), s!(v), None, vec![])
-//     }
-//   }).collect::<Vec<PactSource>>());
-// };
 
 fn consumer_tags_to_selectors(tags: Vec<String>) -> Vec<pact_verifier::ConsumerVersionSelector> {
   tags.iter().map(|t| {
