@@ -4,6 +4,8 @@ import logger from "../common/logger"
 
 const PactNative = require("../native/index.node")
 
+// Commented out fields highlight areas we need to look at for compatibility
+// with existing API, as a sort of "TODO" list.
 export interface VerifierV3Options {
   provider: string
   logLevel: string
