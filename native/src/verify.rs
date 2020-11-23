@@ -26,6 +26,49 @@ fn get_string_value(cx: &mut FunctionContext, obj: &JsObject, name: &str) -> Opt
   }
 }
 
+fn get_bool_value(cx: &mut FunctionContext, obj: &JsObject, name: &str) -> bool {
+  match obj.get(cx, name) {
+    Ok(val) => match val.downcast::<JsBoolean>() {
+      Ok(val) => val.value(),
+      Err(_) => false
+    },
+    _ => false
+  }
+}
+
+fn get_string_array(cx: &mut FunctionContext, obj: &JsObject, name: &str) -> Result<Vec<String>, String> {
+  match obj.get(cx, name) {
+    Ok(items) => match items.downcast::<JsString>() {
+      Ok(item) => Ok(vec![ item.value().to_string() ]),
+      Err(_) => match items.downcast::<JsArray>() {
+        Ok(items) => {
+          let mut tags = vec![];
+          if let Ok(items) = items.to_vec(cx) {
+            for tag in items {
+              match tag.downcast::<JsString>() {
+                Ok(val) => tags.push(val.value().to_string()),
+                Err(_) => {
+                  println!("    {}", Red.paint(format!("ERROR: {} must be a string or array of strings", name)));
+                }
+              }
+            }
+          };
+          Ok(tags)
+        },
+        Err(_) => if !items.is_a::<JsUndefined>() {
+          println!("    {}", Red.paint(format!("ERROR: {} must be a string or array of strings", name)));
+          Err(format!("{} must be a string or array of strings", name))
+        } else {
+          Ok(vec![])
+        }
+      }
+    },
+    _ => Ok(vec![])
+  }
+}
+
+
+
 #[derive(Clone)]
 struct RequestFilterCallback {
   callback_handler: EventHandler
@@ -251,6 +294,17 @@ impl Task for BackgroundTask {
   }
 }
 
+fn consumer_tags_to_selectors(tags: Vec<String>) -> Vec<pact_verifier::ConsumerVersionSelector> {
+  tags.iter().map(|t| {
+    pact_verifier::ConsumerVersionSelector {
+      consumer: None,
+      fallback_tag: None,
+      tag: t.to_string(),
+      latest: Some(true),
+    }
+  }).collect()
+}
+
 pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
   let config = cx.argument::<JsObject>(0)?;
   let callback = cx.argument::<JsFunction>(1)?;
@@ -277,16 +331,30 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
     _ => ()
   };
 
+  let provider_tags = match get_string_array(&mut cx, &config, "providerVersionTags") {
+    Ok(tags) => tags,
+    Err(e) => return cx.throw_error(e)
+  };
+
+
   match config.get(&mut cx, "pactBrokerUrl") {
     Ok(url) => match url.downcast::<JsString>() {
       Ok(url) => {
+        let pending = get_bool_value(&mut cx, &config, "enablePending");
+        let wip = get_string_value(&mut cx, &config, "includeWipPactsSince");
+        let consumer_version_tags = match get_string_array(&mut cx, &config, "consumerVersionTags") {
+          Ok(tags) => tags,
+          Err(e) => return cx.throw_error(e)
+        };
+        let selectors = consumer_tags_to_selectors(consumer_version_tags);
+
         if let Some(username) = get_string_value(&mut cx, &config, "pactBrokerUsername") {
           let password = get_string_value(&mut cx, &config, "pactBrokerPassword");
-          pacts.push(PactSource::BrokerUrl(provider.clone(), url.value(), Some(HttpAuth::User(username, password)), vec![]));
+          pacts.push(PactSource::BrokerWithDynamicConfiguration { provider_name: provider.clone(), broker_url: url.value(), enable_pending: pending, include_wip_pacts_since: wip, provider_tags: provider_tags.clone(), selectors: selectors, auth: Some(HttpAuth::User(username, password)), links: vec![] })
         } else if let Some(token) = get_string_value(&mut cx, &config, "pactBrokerToken") {
-          pacts.push(PactSource::BrokerUrl(provider.clone(), url.value(), Some(HttpAuth::Token(token)), vec![]));
+          pacts.push(PactSource::BrokerWithDynamicConfiguration { provider_name: provider.clone(), broker_url: url.value(), enable_pending: pending, include_wip_pacts_since: wip, provider_tags: provider_tags.clone(), selectors: selectors, auth: Some(HttpAuth::Token(token)), links: vec![] })
         } else {
-          pacts.push(PactSource::BrokerUrl(provider.clone(), url.value(), None, vec![]));
+          pacts.push(PactSource::BrokerWithDynamicConfiguration { provider_name: provider.clone(), broker_url: url.value(), enable_pending: pending, include_wip_pacts_since: wip, provider_tags: provider_tags.clone(), selectors: selectors, auth: None, links: vec![] })
         }
       },
       Err(_) => {
@@ -304,11 +372,6 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
     println!("    {}", Red.paint("ERROR: No pacts were found to verify!"));
     cx.throw_error("No pacts were found to verify!")?;
   }
-
-  // providerStatesSetupUrl?: string
-  // consumerVersionTag?: string | string[]
-  // providerVersionTag?: string | string[]
-  // customProviderHeaders?: string[]
 
   let mut provider_info = ProviderInfo {
     name: provider.clone(),
@@ -394,33 +457,8 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
     return cx.throw_error("providerVersion must be provided if publishing verification results in enabled (publishVerificationResult == true)")?
   }
 
-  let provider_tags = match config.get(&mut cx, "providerVersionTag") {
-    Ok(provider_tags) => match provider_tags.downcast::<JsString>() {
-      Ok(provider_tag) => vec![ provider_tag.value().to_string() ],
-      Err(_) => match provider_tags.downcast::<JsArray>() {
-        Ok(provider_tags) => {
-          let mut tags = vec![];
-          for tag in provider_tags.to_vec(&mut cx)? {
-            match tag.downcast::<JsString>() {
-              Ok(val) => tags.push(val.value().to_string()),
-              Err(_) => {
-                println!("    {}", Red.paint("ERROR: providerVersionTag must be a string or array of strings"));
-                return cx.throw_error("providerVersionTag must be a string or array of strings")
-              }
-            }
-          };
-          tags
-        },
-        Err(_) => if !provider_tags.is_a::<JsUndefined>() {
-          println!("    {}", Red.paint("ERROR: providerVersionTag must be a string or array of strings"));
-          return cx.throw_error("providerVersionTag must be a string or array of strings")
-        } else {
-          vec![]
-        }
-      }
-    },
-    _ => vec![]
-  };
+
+
 
   let filter_info = FilterInfo::None;
   let consumers_filter: Vec<String> = vec![];

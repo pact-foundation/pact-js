@@ -4,6 +4,8 @@ import logger from "../common/logger"
 
 const PactNative = require("../native/index.node")
 
+// Commented out fields highlight areas we need to look at for compatibility
+// with existing API, as a sort of "TODO" list.
 export interface VerifierV3Options {
   provider: string
   logLevel: string
@@ -14,14 +16,30 @@ export interface VerifierV3Options {
   pactBrokerUsername?: string
   pactBrokerPassword?: string
   pactBrokerToken?: string
-  consumerVersionTag?: string | string[]
-  providerVersionTag?: string | string[]
-  customProviderHeaders?: string[]
+  // customProviderHeaders?: string[]
   publishVerificationResult?: boolean
   providerVersion?: string
-  tags?: string[]
   requestFilter?: (req: any) => any
   stateHandlers?: any
+
+  consumerVersionTags?: string | string[]
+  providerVersionTags?: string | string[]
+  // consumerVersionSelectors?: ConsumerVersionSelector[];
+  enablePending?: boolean
+  // timeout?: number;
+  // verbose?: boolean;
+  includeWipPactsSince?: string
+  // out?: string;
+  // logDir?: string;
+  // logLevel?: LogLevel;
+}
+
+export interface ConsumerVersionSelector {
+  pacticipant?: string
+  tag?: string
+  version?: string
+  latest?: boolean
+  all?: boolean
 }
 
 export class VerifierV3 {

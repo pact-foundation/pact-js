@@ -14,7 +14,7 @@ describe("Pact Verification", () => {
   it("validates the expectations of Matching Service", () => {
     let token = "INVALID TOKEN"
 
-    let opts = {
+    return new VerifierV3({
       provider: "Animal Profile Service V3",
       providerBaseUrl: "http://localhost:8081",
 
@@ -75,7 +75,9 @@ describe("Pact Verification", () => {
         : "https://test.pact.dius.com.au",
 
       // Fetch from broker with given tags
-      tags: ["prod"],
+      consumerVersionTags: ["prod"],
+      providerVersionTags: ["master"],
+      enablePending: true,
 
       // Specific Remote pacts (doesn't need to be a broker)
       // pactUrls: ['https://test.pact.dius.com.au/pacts/provider/Animal%20Profile%20Service/consumer/Matching%20Service/latest'],
@@ -91,9 +93,7 @@ describe("Pact Verification", () => {
       pactBrokerPassword: "O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
       publishVerificationResult: true,
       providerVersion: "1.0.0",
-    }
-
-    return new VerifierV3(opts).verifyProvider().then(output => {
+    }).verifyProvider().then(output => {
       console.log("Pact Verification Complete!")
       console.log("Result:", output)
     })
