@@ -8,12 +8,12 @@ import logger from "./common/logger"
 import { VerifierOptions } from "@pact-foundation/pact-node"
 import { PactMessageProviderOptions } from "./dsl/options"
 import serviceFactory from "@pact-foundation/pact-node"
-import * as express from "express"
+import express from "express"
 import * as http from "http"
 import { MessageProvider } from "./pact"
 import { qToPromise } from "./common/utils"
 
-const bodyParser = require("body-parser")
+import bodyParser from "body-parser"
 
 /**
  * A Message Provider is analagous to Consumer in the HTTP Interaction model.
@@ -34,7 +34,7 @@ export class MessageProviderPact {
   /**
    * Verify a Message Provider.
    */
-  public verify(): Promise<any> {
+  public verify(): Promise<unknown> {
     logger.info("Verifying message")
 
     // Start the verification CLI proxy server
@@ -73,7 +73,7 @@ export class MessageProviderPact {
         ...{ providerBaseUrl: "http://localhost:" + server.address().port },
       } as VerifierOptions
 
-      return qToPromise<any>(serviceFactory.verifyPacts(opts))
+      return qToPromise<string>(serviceFactory.verifyPacts(opts))
     }
   }
 
@@ -120,8 +120,8 @@ export class MessageProviderPact {
   }
 
   // Lookup the handler based on the description, or get the default handler
-  private setupStates(message: MessageDescriptor): Promise<any> {
-    const promises: Array<Promise<any>> = new Array()
+  private setupStates(message: MessageDescriptor): Promise<unknown> {
+    const promises: Array<Promise<unknown>> = []
 
     if (message.providerStates) {
       message.providerStates.forEach(state => {

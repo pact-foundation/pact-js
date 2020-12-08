@@ -1,5 +1,5 @@
-/* tslint:disable:no-unused-expression no-empty object-literal-sort-keys */
-const expect = require("chai").expect
+/* eslint-disable @typescript-eslint/no-empty-function */
+import { expect } from "chai"
 import {
   boolean,
   decimal,
@@ -608,7 +608,7 @@ describe("Matcher", () => {
         }
 
         it("returns just that object", () => {
-          expect(extractPayload(object)).to.deep.eql(object)
+          expect(extractPayload(object)).to.deep.equal(object)
         })
       })
 
@@ -640,7 +640,7 @@ describe("Matcher", () => {
         }
 
         it("returns without matching guff", () => {
-          expect(extractPayload(someMatchers)).to.deep.eql(expected)
+          expect(extractPayload(someMatchers)).to.deep.equal(expected)
         })
       })
 
@@ -714,7 +714,7 @@ describe("Matcher", () => {
             },
           }
 
-          expect(extractPayload(o)).to.deep.eql(expected)
+          expect(extractPayload(o)).to.deep.equal(expected)
         })
       })
     })

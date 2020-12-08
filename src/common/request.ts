@@ -1,4 +1,5 @@
 // Polyfill Object.assign since it's missing in Popsicle
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 require("es6-object-assign").polyfill()
 
 import * as Popsicle from "popsicle/dist/common"

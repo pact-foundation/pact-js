@@ -1,8 +1,8 @@
 /* tslint:disable:no-unused-expression object-literal-sort-keys */
-import * as chai from "chai"
-import * as chaiAsPromised from "chai-as-promised"
-import * as sinon from "sinon"
-import * as sinonChai from "sinon-chai"
+import chai from "chai"
+import chaiAsPromised from "chai-as-promised"
+import sinon from "sinon"
+import sinonChai from "sinon-chai"
 import { HTTPMethod } from "./common/request"
 import { Interaction, InteractionObject } from "./dsl/interaction"
 import { MockService } from "./dsl/mockService"
@@ -141,7 +141,7 @@ describe("PactWeb", () => {
 
         return Promise.all([
           expect(verifyPromise).to.eventually.be.rejectedWith(Error),
-          verifyPromise.catch(e => {
+          verifyPromise.catch(() => {
             expect(removeInteractionsStub).to.callCount(0)
           }),
         ])

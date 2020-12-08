@@ -6,11 +6,7 @@ if (process.env.CI !== "true") {
 const { Publisher } = require("@pact-foundation/pact")
 const path = require("path")
 
-const exec = command =>
-  childProcess
-    .execSync(command)
-    .toString()
-    .trim()
+const exec = command => childProcess.execSync(command).toString().trim()
 
 //Usually, you would just use the CI env vars, but to allow these examples to run from
 //local development machines, we'll fall back to the git command when the env vars aren't set.

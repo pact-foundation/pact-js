@@ -1,12 +1,12 @@
-import * as bunyan from "bunyan"
-const PrettyStream = require("bunyan-prettystream")
-const pkg = require("./metadata")
+import bunyan from "bunyan"
+import PrettyStream from "bunyan-prettystream"
+import pkg from "pjson"
 
 const prettyStdOut = new PrettyStream()
 prettyStdOut.pipe(process.stdout)
 
 export class Logger extends bunyan {
-  public time(action: string, startTime: number) {
+  public time(action: string, startTime: number): void {
     const time = Date.now() - startTime
     this.info(
       {

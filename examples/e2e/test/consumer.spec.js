@@ -220,9 +220,7 @@ describe("Pact", () => {
         // const suggestedMates = getAnimalById(123)
         const suggestedMates = getAnimalById(100)
 
-        expect(suggestedMates)
-          .to.eventually.be.a("null")
-          .notify(done)
+        expect(suggestedMates).to.eventually.be.a("null").notify(done)
       })
     })
   })

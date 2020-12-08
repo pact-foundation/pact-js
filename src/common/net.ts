@@ -36,10 +36,10 @@ const isPortAvailable = (port: number, host: string): Promise<void> => {
 
 const portCheck = (port: number, host: string): Promise<void> => {
   return new Promise((resolve, reject) => {
-    const server: any = net
+    const server = net
       .createServer()
       .listen({ port, host, exclusive: true })
-      .on("error", (e: any) => {
+      .on("error", (e: NodeJS.ErrnoException) => {
         if (e.code === "EADDRINUSE") {
           reject(new Error(`Port ${port} is unavailable on address ${host}`))
         } else {

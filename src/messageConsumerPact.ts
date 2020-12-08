@@ -3,22 +3,19 @@
  */
 
 import { isEmpty, cloneDeep } from "lodash"
-import { extractPayload } from "./dsl/matchers"
+import { ConcreteFixture, extractPayload, PactFixture } from "./dsl/matchers"
 import { qToPromise } from "./common/utils"
 import {
   Metadata,
   Message,
-  MessageProvider,
   MessageConsumer,
+  ConcreteMessage,
 } from "./dsl/message"
 import logger from "./common/logger"
 import serviceFactory from "@pact-foundation/pact-node"
 import { MessageConsumerOptions } from "./dsl/options"
 import ConfigurationError from "./errors/configurationError"
 
-interface PactNodeFactory {
-  createMessage(opts: any): any
-}
 /**
  * A Message Consumer is analagous to a Provider in the HTTP Interaction model.
  * It is the receiver of an interaction, and needs to be able to handle whatever
@@ -26,7 +23,7 @@ interface PactNodeFactory {
  */
 export class MessageConsumerPact {
   // Build up a valid Message object
-  private state: any = {}
+  private state: Partial<Message> = {}
 
   constructor(private config: MessageConsumerOptions) {
     if (!isEmpty(config.logLevel)) {
@@ -40,7 +37,7 @@ export class MessageConsumerPact {
    * @param {string} providerState - The state of the provider.
    * @returns {Message} MessageConsumer
    */
-  public given(providerState: string) {
+  public given(providerState: string): MessageConsumerPact {
     if (providerState) {
       // Currently only supports a single state
       // but the format needs to be v3 compatible for
@@ -61,7 +58,7 @@ export class MessageConsumerPact {
    * @param {string} description - A description of the Message to be received
    * @returns {Message} MessageConsumer
    */
-  public expectsToReceive(description: string) {
+  public expectsToReceive(description: string): MessageConsumerPact {
     if (isEmpty(description)) {
       throw new ConfigurationError(
         "You must provide a description for the Message."
@@ -80,7 +77,7 @@ export class MessageConsumerPact {
    * @param {string} content - A description of the Message to be received
    * @returns {Message} MessageConsumer
    */
-  public withContent(content: any) {
+  public withContent(content: PactFixture): MessageConsumerPact {
     if (isEmpty(content)) {
       throw new ConfigurationError(
         "You must provide a valid JSON document or primitive for the Message."
@@ -97,7 +94,7 @@ export class MessageConsumerPact {
    * @param {string} metadata -
    * @returns {Message} MessageConsumer
    */
-  public withMetadata(metadata: Metadata) {
+  public withMetadata(metadata: Metadata): MessageConsumerPact {
     if (isEmpty(metadata)) {
       throw new ConfigurationError(
         "You must provide valid metadata for the Message, or none at all"
@@ -123,13 +120,16 @@ export class MessageConsumerPact {
    * @param handler A message handler, that must be able to consume the given Message
    * @returns {Promise}
    */
-  public verify(handler: MessageConsumer): Promise<any> {
+  public verify(handler: MessageConsumer): Promise<unknown> {
     logger.info("Verifying message")
 
     return this.validate()
-      .then(() => handler(extractPayload(cloneDeep(this.state))))
+      .then(() => cloneDeep(this.state))
+      .then((clone: Message) =>
+        handler({ ...clone, contents: extractPayload(clone.contents) })
+      )
       .then(() =>
-        qToPromise<string>(
+        qToPromise<unknown>(
           this.getServiceFactory().createMessage({
             consumer: this.config.consumer,
             content: JSON.stringify(this.state),
@@ -147,19 +147,19 @@ export class MessageConsumerPact {
    *
    * @returns {Promise}
    */
-  public validate(): Promise<any> {
+  public validate(): Promise<unknown> {
     if (isMessage(this.state)) {
       return Promise.resolve()
     }
     return Promise.reject("message has not yet been properly constructed")
   }
 
-  private getServiceFactory(): PactNodeFactory {
+  private getServiceFactory() {
     return serviceFactory
   }
 }
 
-const isMessage = (x: Message | any): x is Message => {
+const isMessage = (x: Message | unknown): x is Message => {
   return (x as Message).contents !== undefined
 }
 
@@ -167,10 +167,10 @@ const isMessage = (x: Message | any): x is Message => {
 
 // bodyHandler takes a synchronous function and returns
 // a wrapped function that accepts a Message and returns a Promise
-export function synchronousBodyHandler(
-  handler: (body: any) => any
+export function synchronousBodyHandler<R>(
+  handler: (body: ConcreteFixture) => R
 ): MessageConsumer {
-  return (m: Message): Promise<any> => {
+  return (m: ConcreteMessage): Promise<R> => {
     const body = m.contents
 
     return new Promise((resolve, reject) => {
@@ -187,8 +187,8 @@ export function synchronousBodyHandler(
 // bodyHandler takes an asynchronous (promisified) function and returns
 // a wrapped function that accepts a Message and returns a Promise
 // TODO: move this into its own package and re-export?
-export function asynchronousBodyHandler(
-  handler: (body: any) => Promise<any>
+export function asynchronousBodyHandler<R>(
+  handler: (body: ConcreteFixture) => Promise<R>
 ): MessageConsumer {
-  return (m: Message) => handler(m.contents)
+  return (m: ConcreteMessage) => handler(m.contents)
 }

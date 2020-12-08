@@ -1,7 +1,7 @@
 import serviceFactory from "@pact-foundation/pact-node"
-import * as path from "path"
-import * as clc from "cli-color"
-import * as process from "process"
+import path from "path"
+import clc from "cli-color"
+import process from "process"
 import { Interaction, InteractionObject } from "./dsl/interaction"
 import { isEmpty } from "lodash"
 import { isPortAvailable } from "./common/net"
@@ -112,7 +112,7 @@ export class Pact {
     return this.mockService
       .verify()
       .then(() => this.mockService.removeInteractions())
-      .catch((e: any) => {
+      .catch(e => {
         // Properly format the error
         /* tslint:disable: no-console */
         console.error("")
@@ -155,7 +155,10 @@ export class Pact {
       .then(
         () =>
           new Promise<void>((resolve, reject) =>
-            this.server.delete().then(() => resolve(), e => reject(e))
+            this.server.delete().then(
+              () => resolve(),
+              e => reject(e)
+            )
           )
       )
       .catch(
@@ -196,9 +199,7 @@ export class Pact {
   }
 
   private setupMockService(): void {
-    logger.info(`Setting up Pact with Consumer "${
-      this.opts.consumer
-    }" and Provider "${this.opts.provider}"
+    logger.info(`Setting up Pact with Consumer "${this.opts.consumer}" and Provider "${this.opts.provider}"
     using mock service on Port: "${this.opts.port}"`)
 
     this.mockService = new MockService(
@@ -218,7 +219,7 @@ export class Pact {
           this.opts.port = this.server.options.port || this.opts.port
           resolve(this.opts)
         },
-        (e: any) => reject(e)
+        e => reject(e)
       )
     )
   }

@@ -1,8 +1,9 @@
-/* tslint:disable:no-unused-expression */
 import logger from "./logger"
 import { isPortAvailable } from "./net"
-const chai = require("chai")
-const chaiAsPromised = require("chai-as-promised")
+import chai from "chai"
+import chaiAsPromised from "chai-as-promised"
+import nodeNet from "net"
+
 const expect = chai.expect
 
 chai.use(chaiAsPromised)
@@ -60,7 +61,6 @@ describe("Net", () => {
   // Utility function to create a server on a given port and return a Promise
   const createServer = (p: number, host = defaultHost) =>
     new Promise((resolve, reject) => {
-      const nodeNet = require("net")
       const server = nodeNet.createServer()
 
       server.on("error", (err: any) => reject(err))

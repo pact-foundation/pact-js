@@ -4,7 +4,6 @@
  * @module Pact Web
  */
 import { polyfill } from "es6-promise"
-import { isEmpty } from "lodash"
 import { Interaction, InteractionObject } from "./dsl/interaction"
 import { MockService, PactfileWriteMode } from "./dsl/mockService"
 import { PactOptions, LogLevel, MandatoryPactOptions } from "./dsl/options"
@@ -59,7 +58,7 @@ export type PactWebOptionsComplete = PactOptions & MandatoryPactOptions
  */
 export class PactWeb {
   public mockService: MockService
-  public server: any
+  public server: unknown
   public opts: PactWebOptionsComplete
 
   constructor(config?: PactWebOptions) {
@@ -124,7 +123,7 @@ export class PactWeb {
     return this.mockService
       .verify()
       .then(() => this.mockService.removeInteractions())
-      .catch((e: any) => {
+      .catch(e => {
         throw new VerificationError(e)
       })
   }

@@ -7,22 +7,22 @@ import { qToPromise } from "../common/utils"
 import { VerifierOptions as PactNodeVerifierOptions } from "@pact-foundation/pact-node"
 import serviceFactory from "@pact-foundation/pact-node"
 import { omit, isEmpty } from "lodash"
-import * as express from "express"
+import express from "express"
 import * as http from "http"
 import logger from "../common/logger"
 import { LogLevel } from "./options"
 import ConfigurationError from "../errors/configurationError"
 import { localAddresses } from "../common/net"
 import * as url from "url"
-const HttpProxy = require("http-proxy")
-const bodyParser = require("body-parser")
+import HttpProxy from "http-proxy"
+import bodyParser from "body-parser"
 
 export interface ProviderState {
   states?: [string]
 }
 
 export interface StateHandler {
-  [name: string]: () => Promise<any>
+  [name: string]: () => Promise<unknown>
 }
 
 interface ProxyOptions {
@@ -36,8 +36,8 @@ interface ProxyOptions {
 export type VerifierOptions = ProxyOptions & PactNodeVerifierOptions
 
 export class Verifier {
-  private address: string = "http://localhost"
-  private stateSetupPath: string = "/_pactSetup"
+  private address = "http://localhost"
+  private stateSetupPath = "/_pactSetup"
   private config: VerifierOptions
   private deprecatedFields: string[] = ["providerStatesSetupUrl"]
 
@@ -52,7 +52,7 @@ export class Verifier {
    *
    * @param config
    */
-  public verifyProvider(config?: VerifierOptions): Promise<any> {
+  public verifyProvider(config?: VerifierOptions): Promise<string> {
     logger.info("Verifying provider")
 
     // Backwards compatibility
@@ -97,7 +97,7 @@ export class Verifier {
         providerBaseUrl: `${this.address}:${server.address().port}`,
       }
 
-      return qToPromise<any>(pact.verifyPacts(opts))
+      return qToPromise<string>(pact.verifyPacts(opts))
     }
   }
 
@@ -149,7 +149,7 @@ export class Verifier {
   }
 
   private createProxyStateHandler() {
-    return (req: any, res: any) => {
+    return (req: express.Request, res: express.Response) => {
       const message: ProviderState = req.body
 
       return this.setupStates(message)
@@ -159,8 +159,8 @@ export class Verifier {
   }
 
   // Lookup the handler based on the description, or get the default handler
-  private setupStates(descriptor: ProviderState): Promise<any> {
-    const promises: Array<Promise<any>> = new Array()
+  private setupStates(descriptor: ProviderState): Promise<unknown> {
+    const promises: Array<Promise<unknown>> = []
 
     if (descriptor.states) {
       descriptor.states.forEach(state => {
@@ -187,8 +187,8 @@ export class Verifier {
       logger.level(this.config.logLevel)
     }
 
-    this.deprecatedFields.forEach(f => {
-      if ((this.config as any)[f]) {
+    this.deprecatedFields.forEach((f: keyof VerifierOptions) => {
+      if (this.config[f]) {
         logger.warn(
           `${f} is deprecated, and will be removed in future versions`
         )
@@ -205,9 +205,7 @@ export class Verifier {
       if (!this.isLocalVerification()) {
         this.config.changeOrigin = true
         logger.debug(
-          `non-local provider address ${
-            this.config.providerBaseUrl
-          } detected, setting 'changeOrigin' to 'true'. This property can be overridden.`
+          `non-local provider address ${this.config.providerBaseUrl} detected, setting 'changeOrigin' to 'true'. This property can be overridden.`
         )
       }
     }

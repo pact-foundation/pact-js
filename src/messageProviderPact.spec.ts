@@ -1,10 +1,10 @@
 /* tslint:disable:no-unused-expression no-empty */
 import * as chai from "chai"
-import * as chaiAsPromised from "chai-as-promised"
+import chaiAsPromised from "chai-as-promised"
 import { MessageProviderPact } from "./messageProviderPact"
 import { Message } from "./dsl/message"
-import * as sinonChai from "sinon-chai"
-import * as express from "express"
+import sinonChai from "sinon-chai"
+import express from "express"
 import * as http from "http"
 
 chai.use(sinonChai)
@@ -142,6 +142,7 @@ describe("MesageProvider", () => {
     describe("when the http server starts up", () => {
       it("returns a resolved promise", () => {
         const waitForServerReady = (provider as any).waitForServerReady
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         const server = http.createServer(() => {}).listen()
 
         return expect(waitForServerReady(server)).to.eventually.be.fulfilled
