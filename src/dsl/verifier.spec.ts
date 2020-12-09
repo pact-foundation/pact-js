@@ -245,11 +245,11 @@ describe("Verifier", () => {
         sinon.stub(v, "setupStates" as any).returns(Promise.resolve())
         const h = v["createProxyStateHandler"]()
 
-        return expect(h({}, mockResponse)).to.eventually.be.fulfilled.then(
-          () => {
-            expect(res).to.eql(200)
-          }
-        )
+        return expect(
+          h({} as express.Request, mockResponse as express.Response)
+        ).to.eventually.be.fulfilled.then(() => {
+          expect(res).to.eql(200)
+        })
       })
     })
 
@@ -261,11 +261,11 @@ describe("Verifier", () => {
 
         const h = v["createProxyStateHandler"]()
 
-        return expect(h({}, mockResponse)).to.eventually.be.fulfilled.then(
-          () => {
-            expect(res).to.eql(500)
-          }
-        )
+        return expect(
+          h({} as express.Request, mockResponse as express.Response)
+        ).to.eventually.be.fulfilled.then(() => {
+          expect(res).to.eql(500)
+        })
       })
     })
   })

@@ -25,10 +25,14 @@ export interface StateHandler {
   [name: string]: () => Promise<any>
 }
 
+export type Hook = () => Promise<any>
+
 interface ProxyOptions {
   logLevel?: LogLevel
   requestFilter?: express.RequestHandler
   stateHandlers?: StateHandler
+  before?: Hook
+  after?: Hook
   validateSSL?: boolean
   changeOrigin?: boolean
 }
@@ -126,6 +130,8 @@ export class Verifier {
 
     app.use(this.stateSetupPath, bodyParser.json())
     app.use(this.stateSetupPath, bodyParser.urlencoded({ extended: true }))
+    this.registerBeforeHook(app)
+    this.registerAfterHook(app)
 
     // Allow for request filtering
     if (this.config.requestFilter !== undefined) {
@@ -149,13 +155,49 @@ export class Verifier {
   }
 
   private createProxyStateHandler() {
-    return (req: any, res: any) => {
+    return (req: express.Request, res: express.Response) => {
       const message: ProviderState = req.body
 
       return this.setupStates(message)
         .then(() => res.sendStatus(200))
         .catch(e => res.status(500).send(e))
     }
+  }
+
+  private registerBeforeHook(app: express.Express) {
+    app.use(async (req, res, next) => {
+      if (this.config.before !== undefined) {
+        logger.trace("registered 'before' hook")
+        if (req.path === this.stateSetupPath) {
+          logger.debug("executing 'before' hook")
+          try {
+            await this.config.before()
+          } catch (e) {
+            logger.error("error executing 'before' hook: ", e)
+            next(new Error(`error executing 'before' hook: ${e}`))
+          }
+        }
+        next()
+      }
+    })
+  }
+
+  private registerAfterHook(app: express.Express) {
+    app.use(async (req, res, next) => {
+      if (this.config.after !== undefined) {
+        logger.trace("registered 'after' hook")
+        next()
+        if (req.path !== this.stateSetupPath) {
+          logger.debug("executing 'after' hook")
+          try {
+            await this.config.after()
+          } catch (e) {
+            logger.error("error executing 'after' hook: ", e)
+            next(new Error(`error executing 'after' hook: ${e}`))
+          }
+        }
+      }
+    })
   }
 
   // Lookup the handler based on the description, or get the default handler
