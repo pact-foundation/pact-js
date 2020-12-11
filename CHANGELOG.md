@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [9.13.1](https://github.com/pact-foundation/pact-js/compare/v9.13.0...v9.13.1) (2020-12-11)
+
+
+### Bug Fixes
+
+* Expect at least one millisecond digit in iso8601DateTimeWithMillis ([4f48823](https://github.com/pact-foundation/pact-js/commit/4f48823586467fcdf3932b391cb961cfccb8d4eb))
+
 ## [9.13.0](https://github.com/pact-foundation/pact-js/compare/v9.12.2...v9.13.0) (2020-10-23)
 
 
