@@ -1057,7 +1057,7 @@ const animalBodyExpectation = {
 
 ### Using Pact with XML
 
-You can write both consumer and provider verification tests with XML requests or responses. For an example, see [examples/v3/todo-consumer/test/consumer.spec.js](examples/v3/todo-consumer/test/consumer.spec.js).
+You can write both consumer and provider verification tests with XML requests or responses. For an example, see [examples/v3/todo-consumer/test/consumer.spec.js](https://github.com/pact-foundation/pact-js/blob/feat/v3.0.0/examples/v3/todo-consumer/test/consumer.spec.js).
 There is an `XmlBuilder` class that provides a DSL to help construct XML bodies with matching rules and generators (NOTE that generators are not supported for XML at this time).
 
 for example:
