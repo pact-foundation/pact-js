@@ -8,7 +8,6 @@ init:
 # Test against these versions of Node
 environment:
   matrix:
-    - nodejs_version: "8"
     - nodejs_version: "10"
     - nodejs_version: "12"
     - nodejs_version: "13"
