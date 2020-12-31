@@ -314,7 +314,7 @@ new Verifier(opts).verifyProvider().then(function () {
 | `providerBaseUrl`           | true      | string                         | Running API provider host endpoint.                                                                                                                   |
 | `pactBrokerUrl`             | false     | string                         | Base URL of the Pact Broker from which to retrieve the pacts. Required if `pactUrls` not given.                                                       |
 | `provider`                  | false     | string                         | Name of the provider if fetching from a Broker                                                                                                        |
-| `consumerVersionSelectors`  | false     | ConsumerVersionSelector\|array | Use [Selectors](https://docs.pact.io/selectors) to is a way we specify which pacticipants and versions we want to use when configuring verifications. |
+| `consumerVersion,`  | false     | ConsumerVersionSelector\|array | Using [Selectors](https://docs.pact.io/pact_broker/advanced_topics/consumer_version_selectors/) is a way we specify which pacticipants and versions we want to use when configuring verifications. |
 | `consumerVersionTag`        | false     | string\|array                  | Retrieve the latest pacts with given tag(s)                                                                                                           |
 | `providerVersionTag`        | false     | string\|array                  | Tag(s) to apply to the provider application                                                                                                           |
 | `includeWipPactsSince`      | false     | string                         | Includes pact marked as WIP since this date. String in the format %Y-%m-%d or %Y-%m-%dT%H:%M:%S.000%:z                                                |
@@ -422,7 +422,7 @@ See the [docs](https://docs.pact.io/wip) and this [article](http://blog.pact.io/
 
 Tags may be used to indicate a particular version of an application has been deployed to an environment - e.g. `prod`, and are critical in configuring can-i-deploy checks for CI/CD pipelines. In the majority of cases, only one version of an application is deployed to an environment at a time. For example, an API and a Website are usually deployed in replacement of an existing system, and any transition period is quite short lived.
 
-Mobile is an exception to this rule - it is common to have multiple versions of an application that are in "production" simultaneously. To support this workflow, we have a feature known as [consumer version selectors](https://docs.pact.io/selectors). Using selectors, we can verify that _all_ pacts with a given tag should be verified. The following selectors ask the broker to "find all pacts with tag 'prod' and the latest pact for 'master'":
+Mobile is an exception to this rule - it is common to have multiple versions of an application that are in "production" simultaneously. To support this workflow, we have a feature known as [consumer version selectors](https://docs.pact.io/pact_broker/advanced_topics/consumer_version_selectors/). Using selectors, we can verify that _all_ pacts with a given tag should be verified. The following selectors ask the broker to "find all pacts with tag 'prod' and the latest pact for 'master'":
 
 ```js
 consumerVersionSelectors: [
