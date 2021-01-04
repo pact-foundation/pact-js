@@ -4,7 +4,6 @@ import {
   PactConsumerOptionsFactory,
   PactConsumerOverallOptions,
 } from 'nestjs-pact';
-import { exec } from 'child_process';
 
 @Injectable()
 export class PactConsumerConfigOptionsService
@@ -12,9 +11,8 @@ export class PactConsumerConfigOptionsService
   createPactConsumerOptions(): PactConsumerOverallOptions {
     // Usually, you would just use the CI env vars, but to allow these examples to run from
     // local development machines, we'll fall back to the git command when the env vars aren't set.
-    const gitSha = process.env.TRAVIS_COMMIT || exec('git rev-parse HEAD');
-    const branch =
-      process.env.TRAVIS_BRANCH || exec('git rev-parse --abbrev-ref HEAD');
+    const gitSha = process.env.TRAVIS_COMMIT; // || exec('git rev-parse HEAD');
+    const branch = process.env.TRAVIS_BRANCH; // || exec('git rev-parse --abbrev-ref HEAD');
 
     return {
       consumer: {
