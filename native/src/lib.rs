@@ -846,7 +846,7 @@ declare_types! {
         },
         _ => 0
       };
-      let mock_server_id = Uuid::new_v4().simple().to_string();
+      let mock_server_id = Uuid::new_v4().to_simple().to_string();
       let port = {
         let guard = cx.lock();
         let pact = this.borrow(&guard);

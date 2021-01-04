@@ -12,29 +12,29 @@ name = "pact_js_v3"
 crate-type = ["cdylib"]
 
 [build-dependencies]
-neon-build = "0.5.1"
+neon-build = "0.6.0"
 
 [dependencies]
-neon = { version = "0.5.1", features = ["event-handler-api"] }
-pact_mock_server = "0.7.11"
-pact_mock_server_ffi = "0.0.11"
-pact_matching = "0.8.5"
-pact_verifier = "0.9.4"
-env_logger = "0.7"
+neon = { version = "0.6.0", features = ["event-handler-api"] }
+pact_mock_server = "=0.7.11"
+pact_mock_server_ffi = "=0.0.11"
+pact_matching = "=0.8.5"
+pact_verifier = "=0.9.4"
+env_logger = "0.8"
 log = "0.4.6"
-uuid = { version = "0.6", features = ["v4"] }
+uuid = { version = "0.8.1", features = ["v4"] }
 serde_derive = "1.0.80"
 serde = "1.0.80"
 serde_json = "1.0"
 lazy_static = "1.4.0"
-maplit = "0.1.3"
-tokio = { version = "0.2.11", features = ["full"] }
+maplit = "1.0.2"
+tokio = { version = "0.2.24", features = ["full"] }
 ansi_term = "0.12.1"
-url = "2.1.0"
+url = "2.2.0"
 futures = "0.3"
 sxd-document = "0.3.2"
 async-trait = "0.1.24"
-reqwest = "0.10"
+reqwest = "0.10.10"
 native-tls = { version = "0.2.4" }
-either = "1.5.3"
+either = "1.6.1"
 openssl = { version = "0.10", features = ["vendored"] }
