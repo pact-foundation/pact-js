@@ -3,18 +3,19 @@ import { Animal } from './animal.interface';
 
 @Injectable()
 export class AppService {
-  private static readonly API_ENDPOINT =
-    process.env.API_HOST || 'http://localhost:3000';
-
   private static readonly AUTH_HEADER = {
     Authorization: 'Bearer token',
   };
 
   public constructor(private readonly http: HttpService) {}
 
+  private static getApiEndpoint() {
+    return process.env.API_HOST || 'http://localhost:8081';
+  }
+
   public async availableAnimals(): Promise<Animal[]> {
     const { data } = await this.http
-      .get(`${AppService.API_ENDPOINT}/animals/available`, {
+      .get(`${AppService.getApiEndpoint()}/animals/available`, {
         headers: { ...AppService.AUTH_HEADER },
       })
       .toPromise();
@@ -24,7 +25,7 @@ export class AppService {
 
   public async getAnimalById(id: string | number): Promise<Animal> {
     const { data } = await this.http
-      .get(`${AppService.API_ENDPOINT}/animals/${id}`, {
+      .get(`${AppService.getApiEndpoint()}/animals/${id}`, {
         headers: { ...AppService.AUTH_HEADER },
       })
       .toPromise();
@@ -45,11 +46,11 @@ export class AppService {
 
     return this.availableAnimals().then((availableAnimals: Animal[]) => {
       const eligible = availableAnimals.filter(
-        a => !predicates.map(p => p(a, mate)).includes(false),
+        (a) => !predicates.map((p) => p(a, mate)).includes(false),
       );
 
       return {
-        suggestions: eligible.map(candidateAnimal => {
+        suggestions: eligible.map((candidateAnimal) => {
           const score = weights.reduce((acc, weight) => {
             return acc - weight(candidateAnimal, mate);
           }, 100);
@@ -65,7 +66,7 @@ export class AppService {
 
   public async createMateForDates(mate: Animal): Promise<Animal> {
     const { data } = await this.http
-      .post(`${AppService.API_ENDPOINT}/animals`, mate, {
+      .post(`${AppService.getApiEndpoint()}/animals`, mate, {
         headers: { 'Content-Type': 'application/json; charset=utf-8' },
       })
       .toPromise();

@@ -248,13 +248,18 @@ describe('Pact', () => {
     );
 
     it('creates a new mate', async () => {
-      const result = animalsService.createMateForDates(suitor);
-
-      await expect(result).resolves.toBe(Object);
+      return expect(
+        animalsService.createMateForDates(suitor),
+      ).resolves.not.toThrow();
     });
   });
 
+  // After each individual test (one or more interactions)
+  // we validate that the correct request came through.
+  // This ensures what we _expect_ from the provider, is actually
+  // what we've asked for (and is what gets captured in the contract)
   afterEach(() => provider.verify());
 
+  // Write pact files
   afterAll(() => provider.finalize());
 });
