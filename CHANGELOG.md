@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [9.13.2](https://github.com/pact-foundation/pact-js/compare/v9.13.1...v9.13.2) (2021-01-04)
+
+
+### Bug Fixes
+
+* **popsicle:** Increase maxBufferSize of requests to infinity ([8fd751a](https://github.com/pact-foundation/pact-js/commit/8fd751a9e73b7f9150eb938f4d083d2ab235d747))
+* **web:** Use latest can-i-use database when producing distribution ([cae3ea2](https://github.com/pact-foundation/pact-js/commit/cae3ea28199e55397b74c56d5e99e2f0430a6c5d))
+* small errors ([076549e](https://github.com/pact-foundation/pact-js/commit/076549e9cf5c9cb5798104bcda7d1cb97c1daf83))
+
 ### [9.13.1](https://github.com/pact-foundation/pact-js/compare/v9.13.0...v9.13.1) (2020-12-11)
 
 
