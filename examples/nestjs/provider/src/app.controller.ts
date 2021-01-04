@@ -7,12 +7,15 @@ import {
   NotFoundException,
   Param,
   Post,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { Animal } from './animal.interface';
 import { AppRepository } from './app.repository';
+import { AppInterceptor } from './app.guard';
 
 @Controller('/animals')
+@UseInterceptors(new AppInterceptor())
 export class AppController {
   public constructor(
     private readonly appService: AppService,
@@ -30,7 +33,6 @@ export class AppController {
   }
 
   @Get('/:id')
-  @HttpCode(HttpStatus.NOT_FOUND)
   public getAnimalById(@Param('id') id: number): Animal {
     const result = this.repository.getById(id);
 

@@ -3,9 +3,7 @@ import { Animal } from './animal.interface';
 
 @Injectable()
 export class AppService {
-  private static readonly AUTH_HEADER = {
-    Authorization: 'Bearer token',
-  };
+  private static readonly AUTH_HEADER = { authorization: 'Bearer token' };
 
   public constructor(private readonly http: HttpService) {}
 

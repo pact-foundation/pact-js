@@ -5,10 +5,10 @@ import { AppModule } from '../src/app.module';
 import { AppRepository } from '../src/app.repository';
 import { PactModule } from './pact/pact.module';
 
-jest.setTimeout(99999);
+jest.setTimeout(30000);
 
 describe('Pact Verification', () => {
-  let verifierService: PactVerifierService;
+  let verifier: PactVerifierService;
   let logger: LoggerService;
   let app: INestApplication;
 
@@ -18,7 +18,7 @@ describe('Pact Verification', () => {
       providers: [AppRepository, Logger],
     }).compile();
 
-    verifierService = moduleRef.get(PactVerifierService);
+    verifier = moduleRef.get(PactVerifierService);
     logger = moduleRef.get(Logger);
 
     app = moduleRef.createNestApplication();
@@ -26,11 +26,16 @@ describe('Pact Verification', () => {
     await app.init();
   });
 
-  it('validates the expectations of Matching Service', async () => {
-    const output = await verifierService.verify(app);
+  it("Validates the expectations of 'Matching Service'", async () => {
+    try {
+      const output = await verifier.verify(app);
 
-    logger.log('Pact Verification Complete!');
-    logger.log(output);
+      logger.log('Pact Verification Complete!');
+      logger.log(output);
+    } catch (e) {
+      logger.error('Pact verification has failed');
+      fail('Pact verification has failed');
+    }
   });
 
   afterAll(async () => {

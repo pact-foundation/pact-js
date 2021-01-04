@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PactProducerOptionsFactory, PactProducerOptions } from 'nestjs-pact';
 import { AppRepository } from '../../src/app.repository';
 
@@ -29,11 +29,13 @@ export class PactProducerConfigOptionsService
         'Has no animals': async () => {
           this.animalRepository.clear();
           token = '1234';
+
           return 'Animals removed to the db';
         },
         'Has some animals': async () => {
           token = '1234';
           this.animalRepository.importData();
+
           return 'Animals added to the db';
         },
         'Has an animal with ID 1': async () => {
@@ -44,6 +46,7 @@ export class PactProducerConfigOptionsService
         },
         'is not authenticated': async () => {
           token = '';
+
           return 'Invalid bearer token generated';
         },
       },

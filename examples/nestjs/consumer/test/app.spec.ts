@@ -1,12 +1,14 @@
-import { Test } from '@nestjs/testing';
-import { PactFactory } from 'nestjs-pact';
-import { AppModule } from '../src/app.module';
-import { PactModule } from './pact/pact.module';
-import { Matchers, Pact } from '@pact-foundation/pact';
-import { AppService } from '../src/app.service';
-import { Animal } from '../src/animal.interface';
+import { PactFactory } from "nestjs-pact"
+import { Test } from "@nestjs/testing"
+import { HttpStatus } from "@nestjs/common"
+import { AppModule } from "../src/app.module"
+import { PactModule } from "./pact/pact.module"
+import { Matchers, Pact } from "@pact-foundation/pact"
+import { AppService } from "../src/app.service"
+import { Animal } from "../src/animal.interface"
+import { HTTPMethod } from "@pact-foundation/pact/common/request"
 
-jest.setTimeout(99999);
+jest.setTimeout(30000);
 
 describe('Pact', () => {
   let pactFactory: PactFactory;
@@ -125,7 +127,7 @@ describe('Pact', () => {
             path: '/animals/available',
           },
           willRespondWith: {
-            status: 401,
+            status: HttpStatus.UNAUTHORIZED,
           },
         }),
       );
@@ -142,12 +144,12 @@ describe('Pact', () => {
             state: 'Has some animals',
             uponReceiving: 'a request for all animals',
             withRequest: {
-              method: 'GET',
+              method: HTTPMethod.GET,
               path: '/animals/available',
               headers: { Authorization: 'Bearer token' },
             },
             willRespondWith: {
-              status: 200,
+              status: HttpStatus.OK,
               headers: {
                 'Content-Type': 'application/json; charset=utf-8',
               },
@@ -177,12 +179,12 @@ describe('Pact', () => {
           state: 'Has an animal with ID 1',
           uponReceiving: 'a request for an animal with ID 1',
           withRequest: {
-            method: 'GET',
+            method: HTTPMethod.GET,
             path: term({ generate: '/animals/1', matcher: '/animals/[0-9]+' }),
             headers: { Authorization: 'Bearer token' },
           },
           willRespondWith: {
-            status: 200,
+            status: HttpStatus.OK,
             headers: {
               'Content-Type': 'application/json; charset=utf-8',
             },
@@ -204,12 +206,12 @@ describe('Pact', () => {
           state: 'Has no animals',
           uponReceiving: 'a request for an animal with ID 100',
           withRequest: {
-            method: 'GET',
+            method: HTTPMethod.GET,
             path: '/animals/100',
             headers: { Authorization: 'Bearer token' },
           },
           willRespondWith: {
-            status: 404,
+            status: HttpStatus.NOT_FOUND,
           },
         }),
       );
@@ -230,7 +232,7 @@ describe('Pact', () => {
         state: undefined,
         uponReceiving: 'a request to create a new mate',
         withRequest: {
-          method: 'POST',
+          method: HTTPMethod.POST,
           path: '/animals',
           body: like(suitor),
           headers: {
@@ -238,7 +240,7 @@ describe('Pact', () => {
           },
         },
         willRespondWith: {
-          status: 200,
+          status: HttpStatus.OK,
           headers: {
             'Content-Type': 'application/json; charset=utf-8',
           },
