@@ -264,7 +264,7 @@ impl Task for BackgroundTask {
       match tokio::runtime::Builder::new().threaded_scheduler().enable_all().build() {
         Ok(mut runtime) => runtime.block_on(async {
           let provider_state_executor = ProviderStateCallback { callback_handlers: &self.state_handlers };
-          pact_verifier::verify_provider(self.provider_info.clone(), self.pacts.clone(), self.filter_info.clone(), self.consumers_filter.clone(), self.options.clone(), &provider_state_executor).await
+          pact_verifier::verify_provider_async(self.provider_info.clone(), self.pacts.clone(), self.filter_info.clone(), self.consumers_filter.clone(), self.options.clone(), &provider_state_executor).await
         }),
         Err(err) => {
           error!("Verify process failed to start the tokio runtime: {}", err);
@@ -457,8 +457,18 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
     return cx.throw_error("providerVersion must be provided if publishing verification results in enabled (publishVerificationResult == true)")?
   }
 
-
-
+  let disable_ssl_verification = match config.get(&mut cx, "disableSSLVerification") {
+    Ok(disable) => match disable.downcast::<JsBoolean>() {
+      Ok(disable) => disable.value(),
+      Err(_) => {
+        if !disable.is_a::<JsUndefined>() {
+          warn!("disableSSLVerification must be a boolean value. Ignoring it");
+        }
+        false
+      }
+    },
+    _ => false
+  };
 
   let filter_info = FilterInfo::None;
   let consumers_filter: Vec<String> = vec![];
@@ -467,7 +477,8 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
     provider_version,
     build_url: None,
     request_filter,
-    provider_tags
+    provider_tags,
+    disable_ssl_verification
   };
 
   debug!("Starting background task");

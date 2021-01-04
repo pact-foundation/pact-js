@@ -32,6 +32,7 @@ export interface VerifierV3Options {
   // out?: string;
   // logDir?: string;
   // logLevel?: LogLevel;
+  disableSSLVerification?: boolean
 }
 
 export interface ConsumerVersionSelector {

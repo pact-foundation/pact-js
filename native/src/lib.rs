@@ -619,10 +619,9 @@ declare_types! {
             }
           }
 
-          let boundary = last.description.replace(" ", "_");
-          match file_as_multipart_body(&file_path.value(), &part_name.value(), &boundary) {
+          match file_as_multipart_body(&file_path.value(), &part_name.value()) {
             Ok(body) => {
-              request_multipart(&mut last.request, &boundary, body, &content_type.value(), &part_name.value());
+              request_multipart(&mut last.request, &body.boundary, body.body, &content_type.value(), &part_name.value());
               Ok(())
             },
             Err(err) => {
@@ -798,10 +797,9 @@ declare_types! {
             }
           }
 
-          let boundary = last.description.replace(" ", "_");
-          match file_as_multipart_body(&file_path.value(), &part_name.value(), &boundary) {
+          match file_as_multipart_body(&file_path.value(), &part_name.value()) {
             Ok(body) => {
-              response_multipart(&mut last.response, &boundary, body, &content_type.value(), &part_name.value());
+              response_multipart(&mut last.response, &body.boundary, body.body, &content_type.value(), &part_name.value());
               Ok(())
             },
             Err(err) => {
