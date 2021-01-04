@@ -235,14 +235,20 @@ All notable changes to this project will be documented in this file. See [standa
 ### Features
 
 * improve the error messages for a failed test ([f01b57e](https://github.com/pact-foundation/pact-js/commit/f01b57e9b0606735669bc684517ceaac19269be1))
+### [9.13.1](https://github.com/pact-foundation/pact-js/compare/v9.13.0...v9.13.1) (2020-12-11)
 
 
 ### Bug Fixes
 
+<<<<<<< HEAD
 * allow the mock server port to be configured ([9c63d28](https://github.com/pact-foundation/pact-js/commit/9c63d28eb6d0c3d361b07b2053dcd3853649b160))
 * correct the imports [#514](https://github.com/pact-foundation/pact-js/issues/514) ([6764a84](https://github.com/pact-foundation/pact-js/commit/6764a84e5b3004cd7f0f814a9ef694e606481ebe))
 
 ## [10.0.0-beta.16](https://github.com/pact-foundation/pact-js/compare/v9.12.1...v10.0.0-beta.16) (2020-09-28)
+=======
+* Expect at least one millisecond digit in iso8601DateTimeWithMillis ([4f48823](https://github.com/pact-foundation/pact-js/commit/4f48823586467fcdf3932b391cb961cfccb8d4eb))
+
+>>>>>>> master
 ## [9.13.0](https://github.com/pact-foundation/pact-js/compare/v9.12.2...v9.13.0) (2020-10-23)
 
 

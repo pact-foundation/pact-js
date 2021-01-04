@@ -205,7 +205,9 @@ export class Verifier {
       if (!this.isLocalVerification()) {
         this.config.changeOrigin = true
         logger.debug(
-          `non-local provider address ${this.config.providerBaseUrl} detected, setting 'changeOrigin' to 'true'. This property can be overridden.`
+          `non-local provider address ${
+            this.config.providerBaseUrl
+          } detected, setting 'changeOrigin' to 'true'. This property can be overridden.`
         )
       }
     }

@@ -2,9 +2,13 @@
 
 <!-- Please use absolute URLs for all links as the content of this page is synced to docs.pact.io -->
 
+<<<<<<< HEAD
 [![Build Status](https://travis-ci.org/pact-foundation/pact-js.svg?branch=master)](https://travis-ci.org/pact-foundation/pact-js)
 [![Appveyor Build status](https://ci.appveyor.com/api/projects/status/58ww3fref30d5nx8?svg=true)](https://ci.appveyor.com/project/pact-foundation/pact-js)
 ![Native release](https://github.com/pact-foundation/pact-js/workflows/Release%20workflow/badge.svg?branch=feat%2Fv3.0.0)
+=======
+[![Build Status](https://travis-ci.com/pact-foundation/pact-js.svg?branch=master)](https://travis-ci.com/pact-foundation/pact-js)
+>>>>>>> master
 [![npm](https://img.shields.io/npm/v/@pact-foundation/pact.svg)](https://www.npmjs.com/package/@pact-foundation/pact)
 ![Release workflow](https://github.com/pact-foundation/pact-js/workflows/Release%20workflow/badge.svg?branch=feat%2Fv3.0.0)
 [![Coverage Status](https://coveralls.io/repos/github/pact-foundation/pact-js/badge.svg?branch=master)](https://coveralls.io/github/pact-foundation/pact-js?branch=master)
@@ -316,7 +320,7 @@ new Verifier(opts).verifyProvider().then(function () {
 | `providerBaseUrl`           | true      | string                         | Running API provider host endpoint.                                                                                                                   |
 | `pactBrokerUrl`             | false     | string                         | Base URL of the Pact Broker from which to retrieve the pacts. Required if `pactUrls` not given.                                                       |
 | `provider`                  | false     | string                         | Name of the provider if fetching from a Broker                                                                                                        |
-| `consumerVersionSelectors`  | false     | ConsumerVersionSelector\|array | Use [Selectors](https://docs.pact.io/selectors) to is a way we specify which pacticipants and versions we want to use when configuring verifications. |
+| `consumerVersion,`  | false     | ConsumerVersionSelector\|array | Using [Selectors](https://docs.pact.io/pact_broker/advanced_topics/consumer_version_selectors/) is a way we specify which pacticipants and versions we want to use when configuring verifications. |
 | `consumerVersionTag`        | false     | string\|array                  | Retrieve the latest pacts with given tag(s)                                                                                                           |
 | `providerVersionTag`        | false     | string\|array                  | Tag(s) to apply to the provider application                                                                                                           |
 | `includeWipPactsSince`      | false     | string                         | Includes pact marked as WIP since this date. String in the format %Y-%m-%d or %Y-%m-%dT%H:%M:%S.000%:z                                                |
@@ -424,7 +428,7 @@ See the [docs](https://docs.pact.io/wip) and this [article](http://blog.pact.io/
 
 Tags may be used to indicate a particular version of an application has been deployed to an environment - e.g. `prod`, and are critical in configuring can-i-deploy checks for CI/CD pipelines. In the majority of cases, only one version of an application is deployed to an environment at a time. For example, an API and a Website are usually deployed in replacement of an existing system, and any transition period is quite short lived.
 
-Mobile is an exception to this rule - it is common to have multiple versions of an application that are in "production" simultaneously. To support this workflow, we have a feature known as [consumer version selectors](https://docs.pact.io/selectors). Using selectors, we can verify that _all_ pacts with a given tag should be verified. The following selectors ask the broker to "find all pacts with tag 'prod' and the latest pact for 'master'":
+Mobile is an exception to this rule - it is common to have multiple versions of an application that are in "production" simultaneously. To support this workflow, we have a feature known as [consumer version selectors](https://docs.pact.io/pact_broker/advanced_topics/consumer_version_selectors/). Using selectors, we can verify that _all_ pacts with a given tag should be verified. The following selectors ask the broker to "find all pacts with tag 'prod' and the latest pact for 'master'":
 
 ```js
 consumerVersionSelectors: [
@@ -885,8 +889,8 @@ The workshop takes you through all of the key concepts using a React consumer an
 - [Pact with TypeScript + Mocha](https://github.com/pact-foundation/pact-js/tree/master/examples/typescript)
 - [Pact with Mocha](https://github.com/pact-foundation/pact-js/tree/master/examples/mocha)
 - [Pact with GraphQL](https://github.com/pact-foundation/pact-js/tree/master/examples/graphql)
-- [Pact with Karma + Jasmine](https://github.com/pact-foundation/pact-js/tree/master/karma/jasmine)
-- [Pact with Karma + Mocha](https://github.com/pact-foundation/pact-js/tree/master/karma/mocha)
+- [Pact with Karma + Jasmine](https://github.com/pact-foundation/pact-js/tree/master/examples/karma/jasmine)
+- [Pact with Karma + Mocha](https://github.com/pact-foundation/pact-js/tree/master/examples/karma/mocha)
 - [Pact with React + Jest](https://github.com/pact-foundation/pact-workshop-js)
 
 ### Asynchronous APIs
@@ -976,7 +980,11 @@ this [gist](https://gist.github.com/mefellows/15c9fcb052c2aa9d8951f91d48d6da54) 
 
 ## Pact JS V3
 
+<<<<<<< HEAD
 An initial beta version of Pact-JS with support for V3 specification features and XML matching has
+=======
+An initial alpha version of Pact-JS with support for V3 specification features and XML matching has
+>>>>>>> master
 been released. Current support is for Node 10, 12 and 14. Thanks to the folks at [Align Tech](https://www.aligntech.com/) for sponsoring this work.
 
 To install it:
@@ -1043,8 +1051,8 @@ const animalBodyExpectation = {
 | `regex`                | pattern, example: string                           | Value that must match the given regular expression.                                                                                                                                                                                                                                                                                     |
 | `equal`                | example                                            | Value that must be equal to the example. This is mainly used to reset the matching rules which cascade.                                                                                                                                                                                                                                 |
 | `timestamp`            | format: string, example?: string                   | String value that must match the provided datetime format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) for details on the format string. If the example value is omitted, a value will be generated using a Timestamp generator and the current system date and time. |
-| `time`                 | format: string, example?: string                   | String value that must match the provided time format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) for details on the format string. If the example value is o mitted, a value will be generated using a Time generator and the current system time.                  |
-| `date`                 | format: string, example?: string                   | String value that must match the provided date format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) for details on the format string. If the example value is o mitted, a value will be generated using a Date generator and the current system date.                  |
+| `time`                 | format: string, example?: string                   | String value that must match the provided time format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) for details on the format string. If the example value is omitted, a value will be generated using a Time generator and the current system time.                  |
+| `date`                 | format: string, example?: string                   | String value that must match the provided date format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) for details on the format string. If the example value is omitted, a value will be generated using a Date generator and the current system date.                  |
 | `includes`             | value: string                                      | Value that must include the example value as a substring.                                                                                                                                                                                                                                                                               |
 | `nullValue`            |                                                    | Value that must be null. This will only match the JSON Null value. For other content types, it will match if the attribute is missing.                                                                                                                                                                                                  |
 |`arrayContaining`| variants... | Matches the items in an array against a number of variants. Matching is successful if each variant occurs once in the array. Variants may be objects containing matching rules. |
@@ -1116,7 +1124,7 @@ For example:
 
 ### Using Pact with XML
 
-You can write both consumer and provider verification tests with XML requests or responses. For an example, see [examples/v3/todo-consumer/test/consumer.spec.js](examples/v3/todo-consumer/test/consumer.spec.js).
+You can write both consumer and provider verification tests with XML requests or responses. For an example, see [examples/v3/todo-consumer/test/consumer.spec.js](https://github.com/pact-foundation/pact-js/blob/feat/v3.0.0/examples/v3/todo-consumer/test/consumer.spec.js).
 There is an `XmlBuilder` class that provides a DSL to help construct XML bodies with matching rules and generators (NOTE that generators are not supported for XML at this time).
 
 for example:
@@ -1210,6 +1218,10 @@ stateHandlers: {
 ```
 
 **NOTE:** Async callbacks and returning promises from the provider state callbacks is not currently supported.
+
+### Debugging issues with Pact-JS V3
+
+You can change the log levels using the `LOG_LEVEL` environment variable. 
 
 ## Troubleshooting / FAQs
 
