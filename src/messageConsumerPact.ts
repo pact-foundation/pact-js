@@ -15,6 +15,7 @@ import logger from "./common/logger"
 import serviceFactory from "@pact-foundation/pact-node"
 import { MessageConsumerOptions } from "./dsl/options"
 import ConfigurationError from "./errors/configurationError"
+import { LogLevels } from "@pact-foundation/pact-node/src/logger"
 
 interface PactNodeFactory {
   createMessage(opts: any): any
@@ -30,6 +31,7 @@ export class MessageConsumerPact {
 
   constructor(private config: MessageConsumerOptions) {
     if (!isEmpty(config.logLevel)) {
+      logger.level(config.logLevel as LogLevels)
       serviceFactory.logLevel(config.logLevel)
     }
   }
