@@ -431,7 +431,7 @@ describe("V3 Matchers", () => {
       ])
       expect(result).to.deep.equal({
         "pact:matcher:type": "regex",
-        regex: ".*\\/users\\/1234\\/posts\\/latest$",
+        regex: ".*(\\/users\\/1234\\/posts\\/latest)$",
         value: "http://localhost:8080/users/1234/posts/latest",
       })
     })
@@ -446,7 +446,7 @@ describe("V3 Matchers", () => {
         ])
         expect(result).to.deep.equal({
           "pact:matcher:type": "regex",
-          regex: ".*\\/users\\/\\d+\\/posts\\/latest$",
+          regex: ".*(\\/users\\/\\d+\\/posts\\/latest)$",
           value: "http://localhost:8080/users/1234/posts/latest",
         })
       })
@@ -463,7 +463,7 @@ describe("V3 Matchers", () => {
         ])
         expect(result).to.deep.equal({
           "pact:matcher:type": "regex",
-          regex: ".*\\/users\\/\\d+\\/posts\\/latest$",
+          regex: ".*(\\/users\\/\\d+\\/posts\\/latest)$",
           value: "http://localhost:8080/users/12345678/posts/latest",
         })
       })
