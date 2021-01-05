@@ -41,8 +41,8 @@ export type methods =
 
 export class Request {
   private readonly transport = Popsicle.createTransport({
-    rejectUnauthorized: false, // Need to tell node to ignore bad ssl cert
     maxBufferSize: Infinity, // Allow data of any size
+    rejectUnauthorized: false, // Need to tell node to ignore bad ssl cert
     type: "text",
   })
   public send(

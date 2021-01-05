@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file. See [standa
 * initial pacts for verification integration ([6428bbe](https://github.com/pact-foundation/pact-js/commit/6428bbef3c056b884c4225a1d05f9f3b7b2d1691))
 * support for matchers on headers ([aa3d55e](https://github.com/pact-foundation/pact-js/commit/aa3d55e4bbc60a210cc4be568d1c9dab9b0998b7))
 * Update URL matching functions to support mock server URL generation ([2733af9](https://github.com/pact-foundation/pact-js/commit/2733af9aa0f936928358ad6e40e2c17d3aeb48b5))
+### [9.13.2](https://github.com/pact-foundation/pact-js/compare/v9.13.1...v9.13.2) (2021-01-04)
 
 
 ### Bug Fixes
@@ -464,20 +465,20 @@ All notable changes to this project will be documented in this file. See [standa
 ### Features
 
 * improve the error messages for a failed test ([f01b57e](https://github.com/pact-foundation/pact-js/commit/f01b57e9b0606735669bc684517ceaac19269be1))
+* **web:** Use latest can-i-use database when producing distribution ([cae3ea2](https://github.com/pact-foundation/pact-js/commit/cae3ea28199e55397b74c56d5e99e2f0430a6c5d))
+* small errors ([076549e](https://github.com/pact-foundation/pact-js/commit/076549e9cf5c9cb5798104bcda7d1cb97c1daf83))
+
 ### [9.13.1](https://github.com/pact-foundation/pact-js/compare/v9.13.0...v9.13.1) (2020-12-11)
 
 
 ### Bug Fixes
 
-<<<<<<< HEAD
 * allow the mock server port to be configured ([9c63d28](https://github.com/pact-foundation/pact-js/commit/9c63d28eb6d0c3d361b07b2053dcd3853649b160))
 * correct the imports [#514](https://github.com/pact-foundation/pact-js/issues/514) ([6764a84](https://github.com/pact-foundation/pact-js/commit/6764a84e5b3004cd7f0f814a9ef694e606481ebe))
 
 ## [10.0.0-beta.16](https://github.com/pact-foundation/pact-js/compare/v9.12.1...v10.0.0-beta.16) (2020-09-28)
-=======
 * Expect at least one millisecond digit in iso8601DateTimeWithMillis ([4f48823](https://github.com/pact-foundation/pact-js/commit/4f48823586467fcdf3932b391cb961cfccb8d4eb))
 
->>>>>>> master
 ## [9.13.0](https://github.com/pact-foundation/pact-js/compare/v9.12.2...v9.13.0) (2020-10-23)
 
 
