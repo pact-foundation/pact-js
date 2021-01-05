@@ -8,7 +8,7 @@
     "build": "npm run lint && npm run compile",
     "compile": "rimraf dist && tsc",
     "clean": "rimraf docs dist dist-web coverage .nyc_output logs pacts jscpd.json",
-    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "coverage": "nyc report --reporter=lcov",
     "deploy:package": "tar -czf pactjs.tar.gz config dist src package.json README.md LICENSE",
     "deploy:prepare": "npm i --production && npm run deploy:package && ./scripts/create_npmrc_file.sh",
     "dist": "npm run compile && webpack --config ./config/webpack.web.config.js && cp package.json ./dist",

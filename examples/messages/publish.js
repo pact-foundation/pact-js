@@ -5,6 +5,7 @@ if (process.env.CI !== "true") {
 
 const { Publisher } = require("@pact-foundation/pact")
 const path = require("path")
+const childProcess = require("child_process")
 
 const exec = command =>
   childProcess
