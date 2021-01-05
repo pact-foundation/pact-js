@@ -423,7 +423,7 @@ describe("V3 Matchers", () => {
 
   describe("#url", () => {
     it("returns a JSON representation of a regex matcher for the URL", () => {
-      let result = MatchersV3.url("http://localhost:8080", [
+      let result = MatchersV3.url2("http://localhost:8080", [
         "users",
         "1234",
         "posts",
@@ -438,7 +438,7 @@ describe("V3 Matchers", () => {
 
     describe("when provided with a regex matcher", () => {
       it("returns a JSON representation of a regex matcher for the URL", () => {
-        let result = MatchersV3.url("http://localhost:8080", [
+        let result = MatchersV3.url2("http://localhost:8080", [
           "users",
           MatchersV3.regex("\\d+", "1234"),
           "posts",
@@ -455,7 +455,7 @@ describe("V3 Matchers", () => {
     describe("when provided with a regular expression", () => {
       it("returns a JSON representation of a regex matcher for the URL", () => {
         MockNative.generate_regex_string = () => "12345678"
-        let result = MatchersV3.url("http://localhost:8080", [
+        let result = MatchersV3.url2("http://localhost:8080", [
           "users",
           /\d+/,
           "posts",

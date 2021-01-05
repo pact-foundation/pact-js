@@ -58,27 +58,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "23b62fc65de8e4e7f52534fb52b0f3ed04746ae267519eef2a83941e8085068b"
 
 [[package]]
-name = "async-stream"
-version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3670df70cbc01729f901f94c887814b3c68db038aad1329a418bae178bc5295c"
-dependencies = [
- "async-stream-impl",
- "futures-core",
-]
-
-[[package]]
-name = "async-stream-impl"
-version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a3548b8efc9f8e8a5a0a2808c5bd8451a9031b9e5b879a79590304ae928b0a70"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
-]
-
-[[package]]
 name = "async-trait"
 version = "0.1.42"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1359,6 +1338,8 @@ dependencies = [
 [[package]]
 name = "pact_matching"
 version = "0.8.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "62d771e8672d23ab2078fa936d9f36551384fc9efafea49a5c4dd8aa9ef303f4"
 dependencies = [
  "ansi_term 0.12.1",
  "base64 0.13.0",
@@ -1393,6 +1374,8 @@ dependencies = [
 [[package]]
 name = "pact_mock_server"
 version = "0.7.13"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7bee82720b4a64e6d2c892f378b0674360b0e6201fd42bbeb7fe51e0affc65fe"
 dependencies = [
  "bytes 1.0.0",
  "futures",
@@ -1413,6 +1396,8 @@ dependencies = [
 [[package]]
 name = "pact_mock_server_ffi"
 version = "0.0.13"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b1519bb915b3dccd89fc7fbbcfa7d54715384195fe60b8d34a67a8ad88619230"
 dependencies = [
  "cbindgen",
  "chrono",
@@ -1438,6 +1423,8 @@ dependencies = [
 [[package]]
 name = "pact_verifier"
 version = "0.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1c07633ed5a0861701b61ccba364a8d633a6a4251f8366ac8e9d30ad110392e8"
 dependencies = [
  "ansi_term 0.12.1",
  "async-trait",
@@ -2423,11 +2410,10 @@ dependencies = [
 
 [[package]]
 name = "tokio-stream"
-version = "0.1.0"
+version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3f3be913b74b13210c8fe04b17ab833f5a124f45b93d0f99f59fff621f64392a"
+checksum = "e4cdeb73537e63f98adcd73138af75e3f368ccaecffaa29d7eb61b9f5a440457"
 dependencies = [
- "async-stream",
  "futures-core",
  "pin-project-lite 0.2.0",
  "tokio 1.0.1",

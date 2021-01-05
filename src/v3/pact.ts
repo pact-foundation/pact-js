@@ -1,4 +1,6 @@
-import { omit, join, chain, toPairs, map, flatten } from "ramda"
+import { omit, join, toPairs, map, flatten } from "ramda"
+import { MatchersV3 } from "./matchers"
+
 const pkg = require("../common/metadata")
 const PactNative = require("../native/index.node")
 
@@ -35,12 +37,12 @@ export interface V3ProviderState {
 
 export interface V3Request {
   method?: string
-  path?: string
+  path?: string | MatchersV3.Matcher
   query?: {
-    [param: string]: string
+    [param: string]: string | MatchersV3.Matcher
   }
   headers?: {
-    [header: string]: string
+    [header: string]: string | MatchersV3.Matcher
   }
   body?: any
 }
@@ -48,7 +50,7 @@ export interface V3Request {
 export interface V3Response {
   status: number
   headers?: {
-    [header: string]: string
+    [header: string]: string | MatchersV3.Matcher
   }
   body?: any
 }
@@ -59,17 +61,17 @@ export interface V3MockServer {
   id: string
 }
 
-function displayQuery(query: { [k: string]: string[] }) {
+function displayQuery(query: { [k: string]: string[] }): string {
   let pairs = toPairs(query)
   let mapped = flatten(map(([key, values]) => map((val) => `${key}=${val}`, values), pairs))
   return join('&', mapped)
 }
 
-function displayHeaders(headers: any, indent: string) {
+function displayHeaders(headers: any, indent: string): string {
   return join('\n' + indent, map(([k, v]) => `${k}: ${v}`, toPairs(headers)))
 }
 
-function displayRequest(request: any, indent: string) {
+function displayRequest(request: any, indent: string): string {
   let output = `\n${indent}Method: ${request.method}\n${indent}Path: ${request.path}`
 
   if (request.query) {

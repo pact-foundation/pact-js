@@ -5,7 +5,7 @@ export namespace MatchersV3 {
   /**
    * Pact Matcher
    */
-  interface Matcher {
+  export interface Matcher {
     "pact:matcher:type": string
     "pact:generator:type"?: string
     value?: any
@@ -354,29 +354,47 @@ export namespace MatchersV3 {
   }
 
   /**
-   * Matches a URL composed of a base path and a list of path fragments
-   * @param basePath Base path of the URL
+   * Matches a URL composed of a list of path fragments. The base URL from the mock server will be used.
    * @param pathFragments list of path fragments, can be regular expressions
    */
-  export function url(basePath: string, pathFragments: Array<any>): RegexMatcher {
-    let regex = ".*"
-    let example = basePath
+  export function url(pathFragments: Array<string | RegexMatcher| RegExp>): RegexMatcher {
+    return url2(null, pathFragments)
+  }
+
+  /**
+   * Matches a URL composed of a base path and a list of path fragments
+   * @param basePath Base path of the URL. If null, will use the base URL from the mock server.
+   * @param pathFragments list of path fragments, can be regular expressions
+   */
+  export function url2(basePath: string | null, pathFragments: Array<string | RegexMatcher | RegExp>): RegexMatcher {
+    let regex = ".*("
+    let example = basePath || "http://localhost:8080"
     for (let p of pathFragments) {
-      if (p instanceof Object && p["pact:matcher:type"] == "regex") {
-        regex += "\\/" + p["regex"]
-        example += "/" + p["value"]
-      } else if (p instanceof RegExp) {
+      if (p instanceof RegExp) {
         regex += "\\/" + p.source
         example += "/" + PactNative.generate_regex_string(p.source)
+      } else if (p instanceof Object && p["pact:matcher:type"] == "regex") {
+        regex += "\\/" + p["regex"]
+        example += "/" + p["value"]
       } else {
         regex += "\\/" + p.toString()
         example += "/" + p.toString()
       }
     }
-    return {
-      "pact:matcher:type": "regex",
-      regex: regex + "$",
-      value: example,
+
+    if (basePath == null) {
+      return {
+        "pact:matcher:type": "regex",
+        "pact:generator:type": "MockServerURL",
+        regex: regex + ")$",
+        value: example,
+      }
+    } else {
+      return {
+        "pact:matcher:type": "regex",
+        regex: regex + ")$",
+        value: example,
+      }
     }
   }
 
