@@ -33,7 +33,7 @@ interface ProxyOptions {
   changeOrigin?: boolean
 }
 
-export type VerifierOptions = ProxyOptions & PactNodeVerifierOptions
+export type VerifierOptions = PactNodeVerifierOptions & ProxyOptions
 
 export class Verifier {
   private address: string = "http://localhost"
@@ -128,8 +128,8 @@ export class Verifier {
     app.use(this.stateSetupPath, bodyParser.urlencoded({ extended: true }))
 
     // Trace req/res logging
-    if (this.config.logLevel === "trace") {
-      logger.info("trace logging enabled")
+    if (this.config.logLevel === "debug") {
+      logger.info("debug request/response logging enabled")
       app.use(this.createRequestTracer())
       app.use(this.createResponseTracer())
     }
