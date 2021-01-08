@@ -12,7 +12,7 @@ npm run dist
 (cd dist && npm link)
 (cd dist-web && npm link)
 
-echo "Running e2e examples build for node version ${NODE_VERSION}"
+echo "Running e2e examples build for node version $(node --version)"
 for i in examples/*; do
   [ -e "$i" ] || continue # prevent failure if there are no examples
   echo "--> running tests for: $i"
