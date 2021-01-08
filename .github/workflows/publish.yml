@@ -34,11 +34,11 @@ jobs:
           MATRIX_CONTEXT: ${{ toJson(matrix) }}
         run: echo "$MATRIX_CONTEXT"
       - uses: actions/checkout@v2
-      - id: publish
-        uses: actions/setup-node@v1
+      - uses: actions/setup-node@v1
         with:
           node-version: 12
           registry-url: $registry-url(npm)
+      - id: publish
         run: scripts/ci/release.sh
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
