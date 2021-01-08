@@ -5,7 +5,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 npm ci
 npm run dist
 
-${DIR}/prepare.sh
+${DIR}/prepare-release.sh
 
 # Link the build so that the examples are always testing the
 # current build, in it's properly exported format
