@@ -2,7 +2,7 @@
 
 <!-- Please use absolute URLs for all links as the content of this page is synced to docs.pact.io -->
 
-[![Build Status](https://travis-ci.com/pact-foundation/pact-js.svg?branch=master)](https://travis-ci.com/pact-foundation/pact-js)
+[![Build Status](https://github.com/pact-foundation/pact-js/workflows/Build,%20test,%20test%20all%20examples/badge.svg)](https://github.com/pact-foundation/pact-js/actions?query=workflow%3A%22Build%2C+test%2C+test+all+examples%22)
 [![npm](https://img.shields.io/npm/v/@pact-foundation/pact.svg)](https://www.npmjs.com/package/@pact-foundation/pact)
 ![Release workflow](https://github.com/pact-foundation/pact-js/workflows/Release%20workflow/badge.svg?branch=feat%2Fv3.0.0)
 [![Coverage Status](https://coveralls.io/repos/github/pact-foundation/pact-js/badge.svg?branch=master)](https://coveralls.io/github/pact-foundation/pact-js?branch=master)
