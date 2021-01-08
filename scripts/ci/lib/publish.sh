@@ -1,10 +1,12 @@
-#!/bin/bash -e
+#!/bin/bash -eu
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)" # Figure out where the script is running
+. "$SCRIPT_DIR"/robust-bash.sh
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+require_binary npm
 
-"${DIR}"/prepare.sh
+"${SCRIPT_DIR}"/prepare-release.sh
+VERSION="$("$SCRIPT_DIR/get-version.sh")"
 
-VERSION=$(grep '\"version\"' package.json | grep -E -o "([0-9\.]+(-[a-z\.0-9]+)?)")
 echo "--> Releasing version ${VERSION}"
 
 echo "--> Releasing artifacts"

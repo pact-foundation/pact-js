@@ -1,3 +1,4 @@
+npm ci
 npm run dist
 
 Get-ChildItem ".\examples" -Directory | ForEach-Object {

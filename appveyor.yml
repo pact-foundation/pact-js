@@ -31,4 +31,4 @@ install:
 
 # Run custom build script instead of MSBuild
 build_script:
-  - powershell .\scripts\build.ps1
+  - powershell .\scripts\ci\build-and-test.ps1

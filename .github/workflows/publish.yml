@@ -1,27 +1,54 @@
-name: Npm Publish
+name: Publish and release
 
 on:
-  release:
-    types: [created]
+  repository_dispatch:
+    types:
+      - release-triggered
 
-jobs:
-  publish:
+  release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12
-      - run: npm ci --ignore-scripts
-      - run: scripts/build.sh
-      - run: npm run deploy:prepare
-      - run: scripts/publish.sh
+      - name: Dump GitHub context
         env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-      - uses: actions/setup-node@v1
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: Dump job context
+        env:
+          JOB_CONTEXT: ${{ toJson(job) }}
+        run: echo "$JOB_CONTEXT"
+      - name: Dump steps context
+        env:
+          STEPS_CONTEXT: ${{ toJson(steps) }}
+        run: echo "$STEPS_CONTEXT"
+      - name: Dump runner context
+        env:
+          RUNNER_CONTEXT: ${{ toJson(runner) }}
+        run: echo "$RUNNER_CONTEXT"
+      - name: Dump strategy context
+        env:
+          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
+        run: echo "$STRATEGY_CONTEXT"
+      - name: Dump matrix context
+        env:
+          MATRIX_CONTEXT: ${{ toJson(matrix) }}
+        run: echo "$MATRIX_CONTEXT"
+      - uses: actions/checkout@v2
+      - id: publish
+        uses: actions/setup-node@v1
         with:
           node-version: 12
           registry-url: $registry-url(npm)
-      - run: npm publish
+        run: scripts/ci/release.sh
         env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ steps.publish.outputs.version }}
+          release_name: Release ${{ steps.publish.outputs.version }}
+          body: ${{steps.publish.outputs.notes}}
+          draft: false
+          prerelease: false

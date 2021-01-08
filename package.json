@@ -17,7 +17,7 @@
     "lint:fix": "prettier --parser typescript --write \"{src,test,examples}/**/*.ts\" && prettier --write \"{src,test,examples}/**/*.js\"",
     "lint:prettier:ts": "prettier --parser typescript --check \"{src,test,examples}/**/*.ts\"",
     "lint:prettier:js": "prettier --check \"{src,test,examples}/**/*.js\"",
-    "postdist": "npm t",
+    "postdist": "npm test",
     "predist": "npm run clean && npm run lint && npm run jscpd",
     "release": "standard-version",
     "test": "nyc --check-coverage --reporter=html --reporter=text-summary mocha",
@@ -33,8 +33,6 @@
     "test:karma": "npm run test:karma:jasmine && npm run test:karma:mocha",
     "test:karma:jasmine": "cd examples/karma && npm i && npm run test:jasmine",
     "test:karma:mocha": "cd examples/karma && npm i && npm run test:mocha",
-    "travis": "./scripts/build.sh",
-    "appveyor": "./scripts/build.ps1",
     "webpack": "webpack --config ./config/webpack.web.config.js"
   },
   "repository": {
