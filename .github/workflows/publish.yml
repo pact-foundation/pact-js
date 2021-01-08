@@ -5,6 +5,7 @@ on:
     types:
       - release-triggered
 
+jobs:
   release:
     runs-on: ubuntu-latest
     steps:
