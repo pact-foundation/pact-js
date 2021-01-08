@@ -14,7 +14,7 @@
   "devDependencies": {
     "@pact-foundation/pact": "^9.11.1",
     "axios": "^0.21.1",
-    "jest": "^24.9.0",
+    "jest": "^26.6.3",
     "jest-pact": "^0.5.2"
   }
 }

@@ -28,7 +28,7 @@
     "eslint-config-google": "^0.7.1",
     "express": "^4.16.3",
     "express-http-proxy": "^1.4.0",
-    "mocha": "^5.2.0",
+    "mocha": "^8.2.1",
     "superagent": "^3.8.3"
   }
 }
