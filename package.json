@@ -73,6 +73,42 @@
     "url": "https://github.com/pact-foundation/pact-js/issues"
   },
   "homepage": "http://docs.pact.io/documentation/javascript.html",
+  "standard-version": {
+    "types": [
+      {
+        "type": "feat",
+        "section": "Features"
+      },
+      {
+        "type": "fix",
+        "section": "Fixes and Improvements"
+      },
+      {
+        "type": "chore",
+        "hidden": true
+      },
+      {
+        "type": "docs",
+        "hidden": true
+      },
+      {
+        "type": "style",
+        "hidden": true
+      },
+      {
+        "type": "refactor",
+        "hidden": true
+      },
+      {
+        "type": "perf",
+        "hidden": true
+      },
+      {
+        "type": "test",
+        "hidden": true
+      }
+    ]
+  },
   "dependencies": {
     "@pact-foundation/pact-node": "^10.10.1",
     "@types/bluebird": "^3.5.20",
