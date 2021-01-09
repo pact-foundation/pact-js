@@ -24,8 +24,6 @@
     "cli-color": "^1.1.0",
     "concurrently": "^3.1.0",
     "cors": "^2.8.1",
-    "eslint": "^3.13.1",
-    "eslint-config-google": "^0.7.1",
     "express": "^4.16.3",
     "express-http-proxy": "^1.4.0",
     "mocha": "^8.2.1",
