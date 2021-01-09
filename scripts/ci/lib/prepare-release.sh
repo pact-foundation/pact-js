@@ -32,6 +32,3 @@ for type in "${types[@]}"; do
   mkdir -p "$(dirname "./dist-web/${type}")"
   cp -r "dist/${type}" "./dist-web/${type}"
 done
-
-echo "--> Preparing npmrc file"
-"$SCRIPT_DIR"/create_npmrc_file.sh

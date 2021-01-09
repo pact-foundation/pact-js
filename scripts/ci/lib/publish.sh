@@ -7,6 +7,9 @@ require_binary npm
 "${SCRIPT_DIR}"/prepare-release.sh
 VERSION="$("$SCRIPT_DIR/get-version.sh")"
 
+echo "--> Preparing npmrc file"
+"$SCRIPT_DIR"/create_npmrc_file.sh
+
 echo "--> Releasing version ${VERSION}"
 
 echo "--> Releasing artifacts"
