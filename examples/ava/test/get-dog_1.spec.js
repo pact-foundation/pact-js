@@ -24,7 +24,7 @@ test.before("setting up Dog API expectations", async () => {
 })
 
 test("Dog API GET /dogs/1", async t => {
-  t.plan(1)
+  t.plan(2)
 
   // BEGIN -
   // Setup interactions for expected API response from provider
@@ -71,9 +71,7 @@ test("Dog API GET /dogs/1", async t => {
       name: "rocky",
     },
   ])
-})
 
-test.afterEach(async t => {
   // verify with Pact, and reset expectations
   await t.notThrows(() => provider.verify())
 })
