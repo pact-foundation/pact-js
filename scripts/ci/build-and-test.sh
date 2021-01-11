@@ -21,10 +21,14 @@ echo "Running e2e examples build for node version $(node --version)"
 for i in examples/*; do
   [ -e "$i" ] || continue # prevent failure if there are no examples
   echo "--> running tests for: $i"
-  if [[ "$i" =~ "karma" ]]; then
-    (cd "$i" && npm i && npm link @pact-foundation/pact-web && npm t)
+  if [[ "$i" =~ "ava" ]]; then
+    continue
   else
-    (cd "$i" && npm i && npm link @pact-foundation/pact && npm t)
+    if [[ "$i" =~ "karma" ]]; then
+      (cd "$i" && npm i && npm link @pact-foundation/pact-web && npm t)
+    else
+      (cd "$i" && npm i && npm link @pact-foundation/pact && npm t)
+    fi
   fi
 done
 
