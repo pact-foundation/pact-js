@@ -44,7 +44,7 @@ trap "docker kill $BROKER_ID" EXIT
 
 export LOG_LEVEL=debug
 for i in examples/v3/*; do
-  [ -e "$i" ] || continue # prevent failure if there are no examples
+  [ ! -d "$i" ] || [ -e "$i" ] || continue # prevent failure if not a directory or there are no examples
   echo "------------------------------------------------"
   echo "------------> continuing to test V3 example project: $i"
   node --version
