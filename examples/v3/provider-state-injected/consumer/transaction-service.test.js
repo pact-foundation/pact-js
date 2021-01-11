@@ -5,7 +5,7 @@ const { expect } = require("chai")
 const {
   string,
   integer,
-  url,
+  url2,
   regex,
   datetime,
   fromProviderState
@@ -48,10 +48,10 @@ describe("Transaction service - create a new transaction for an account", () => 
           },
           _links: {
             self: {
-              href: url("http://localhost:8080", [ "accounts", regex("\\d+", "100") ])
+              href: url2("http://localhost:8080", [ "accounts", regex("\\d+", "100") ])
             },
             account: {
-              href: url("http://localhost:8080", [ "accounts", regex("\\d+", "100") ])
+              href: url2("http://localhost:8080", [ "accounts", regex("\\d+", "100") ])
             }
           }
         }
