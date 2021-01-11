@@ -5,7 +5,7 @@
 #[macro_use] extern crate serde_json;
 #[macro_use] extern crate maplit;
 
-use pact_matching::models::matchingrules::{MatchingRuleCategory, RuleList};
+use pact_matching::models::matchingrules::MatchingRuleCategory;
 use pact_mock_server::mock_server::MockServerConfig;
 use pact_matching::models::content_types::ContentType;
 use neon::prelude::*;

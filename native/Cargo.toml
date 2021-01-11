@@ -34,5 +34,9 @@ url = "2.2.0"
 futures = "0.3"
 sxd-document = "0.3.2"
 async-trait = "0.1.24"
-reqwest = "0.11.0"
 either = "1.6.1"
+
+[dependencies.reqwest]
+version = "0.11.0"
+default-features = false
+features = ["rustls-tls"]
