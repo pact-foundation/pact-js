@@ -261,8 +261,8 @@ impl Task for BackgroundTask {
   fn perform(&self) -> Result<Self::Output, Self::Error> {
     debug!("Background verification task started");
     panic::catch_unwind(|| {
-      match tokio::runtime::Builder::new().threaded_scheduler().enable_all().build() {
-        Ok(mut runtime) => runtime.block_on(async {
+      match tokio::runtime::Builder::new_current_thread().enable_all().build() {
+        Ok(runtime) => runtime.block_on(async {
           let provider_state_executor = ProviderStateCallback { callback_handlers: &self.state_handlers };
           pact_verifier::verify_provider_async(self.provider_info.clone(), self.pacts.clone(), self.filter_info.clone(), self.consumers_filter.clone(), self.options.clone(), &provider_state_executor).await
         }),
