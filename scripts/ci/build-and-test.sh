@@ -42,6 +42,7 @@ BROKER_ID=$(docker run -e PACT_BROKER_DATABASE_ADAPTER=sqlite -d -p 9292:9292 pa
 
 trap "docker kill $BROKER_ID" EXIT
 
+export LOG_LEVEL=debug
 for i in examples/v3/*; do
   [ -e "$i" ] || continue # prevent failure if there are no examples
   echo "------------------------------------------------"
