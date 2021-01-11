@@ -4,7 +4,7 @@
   "description": "Example project showing provider state injected values",
   "main": "index.js",
   "scripts": {
-    "test": "npm run test:consumer && cat pacts/*.json && npm run test:provider",
+    "test": "npm run test:consumer && npm run test:provider",
     "test:consumer": "jest consumer/*.test.js",
     "test:provider": "jest -i --detectOpenHandles --forceExit provider/*.test.js"
   },
