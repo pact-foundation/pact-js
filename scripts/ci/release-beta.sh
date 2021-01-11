@@ -12,7 +12,7 @@ git config user.name "${GITHUB_ACTOR}"
 
 # It's easier to read the release notes 
 # from the standard version tool before it runs
-RELEASE_NOTES="$(npx standard-version --dry-run | awk 'BEGIN { flag=0 } /^---$/ { if (flag == 0) { flag=1 } else { flag=2 }; next } flag == 1')"
+RELEASE_NOTES="$(npx standard-version --dry-run -p beta | awk 'BEGIN { flag=0 } /^---$/ { if (flag == 0) { flag=1 } else { flag=2 }; next } flag == 1')"
 # Don't release if there are no changes
 if [ "$(echo "$RELEASE_NOTES" | wc -l)" -eq 1 ] ; then
     echo "ERROR: This release would have no release notes. Does it include changes?"

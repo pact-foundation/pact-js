@@ -1,4 +1,4 @@
-name: Release workflow
+name: Release Native Libs workflow
 
 on:
   release:
