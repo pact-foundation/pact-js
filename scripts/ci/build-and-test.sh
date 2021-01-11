@@ -22,7 +22,7 @@ for i in examples/*; do
   [ -e "$i" ] || continue # prevent failure if there are no examples
   echo "--> running tests for: $i"
   if [[ "$i" =~ "ava" ]]; then
-    continue
+    (cd "$i" && npm i && npm link @pact-foundation/pact && npm t || cat logs/*.log)
   else
     if [[ "$i" =~ "karma" ]]; then
       (cd "$i" && npm i && npm link @pact-foundation/pact-web && npm t)
