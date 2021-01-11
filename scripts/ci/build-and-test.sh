@@ -21,14 +21,10 @@ echo "Running e2e examples build for node version $(node --version)"
 for i in examples/*; do
   [ -e "$i" ] || continue # prevent failure if there are no examples
   echo "--> running tests for: $i"
-  if [[ "$i" =~ "ava" ]]; then
-    (cd "$i" && npm i && npm link @pact-foundation/pact && npm t || cat logs/*.log)
+  if [[ "$i" =~ "karma" ]]; then
+    (cd "$i" && npm i && npm link @pact-foundation/pact-web && npm t)
   else
-    if [[ "$i" =~ "karma" ]]; then
-      (cd "$i" && npm i && npm link @pact-foundation/pact-web && npm t)
-    else
-      (cd "$i" && npm i && npm link @pact-foundation/pact && npm t)
-    fi
+    (cd "$i" && npm i && npm link @pact-foundation/pact && npm t)
   fi
 done
 
@@ -44,7 +40,8 @@ trap "docker kill $BROKER_ID" EXIT
 
 export LOG_LEVEL=debug
 for i in examples/v3/*; do
-  [ ! -d "$i" ] || [ -e "$i" ] || continue # prevent failure if not a directory or there are no examples
+  [ -d "$i" ] || continue # prevent failure if not a directory
+  [ -e "$i" ] || continue # prevent failure if there are no examples
   echo "------------------------------------------------"
   echo "------------> continuing to test V3 example project: $i"
   node --version
