@@ -1,7 +1,14 @@
-#!/bin/bash -e
+#!/bin/bash -eu
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)" # Figure out where the script is running
+. "$SCRIPT_DIR"/robust-bash.sh
+
+require_binary grep
+require_binary sed
+require_binary find
 
 mkdir -p dist-web
-VERSION=$(grep '\"version\"' package.json | grep -E -o "([0-9\.]+(-[a-z\.0-9]+)?)")
+VERSION="$("$SCRIPT_DIR/get-version.sh")"
+
 echo "--> Preparing release version ${VERSION}"
 
 echo "--> Copy key artifacts into pact and pact-web distributions"
@@ -14,8 +21,10 @@ for artifact in "${artifacts[@]}"; do
   cp "${artifact}" "./dist-web/${artifact}"
 done
 
+# Copy Rust native lib
 echo "    Copying ./native => dist/native"
 mkdir -p dist/native && cp -r native dist/
+rm -rf dist/native/target
 
 echo "--> Creating pact-web package"
 sed "s/VERSION/${VERSION}/g" < package.json.web > dist-web/package.json

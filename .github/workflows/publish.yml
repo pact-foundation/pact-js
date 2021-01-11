@@ -1,27 +1,33 @@
-name: Npm Publish
+name: Publish and release
 
 on:
-  release:
-    types: [created]
+  repository_dispatch:
+    types:
+      - release-triggered
 
 jobs:
-  publish:
+  release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v1
         with:
           node-version: 12
-      - run: npm ci --ignore-scripts
-      - run: scripts/build.sh
-      - run: npm run deploy:prepare
-      - run: scripts/publish.sh
+          registry-url: "https://registry.npmjs.org"
+      - id: publish
+        run: scripts/ci/release.sh
         env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-      - uses: actions/setup-node@v1
+          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTOMATION_TOKEN}}
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          node-version: 12
-          registry-url: $registry-url(npm)
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          tag_name: v${{ steps.publish.outputs.version }}
+          release_name: Release v${{ steps.publish.outputs.version }}
+          body: ${{steps.publish.outputs.notes}}
+          draft: false
+          prerelease: false

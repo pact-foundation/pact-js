@@ -2,13 +2,7 @@
 
 <!-- Please use absolute URLs for all links as the content of this page is synced to docs.pact.io -->
 
-<<<<<<< HEAD
-[![Build Status](https://travis-ci.org/pact-foundation/pact-js.svg?branch=master)](https://travis-ci.org/pact-foundation/pact-js)
-[![Appveyor Build status](https://ci.appveyor.com/api/projects/status/58ww3fref30d5nx8?svg=true)](https://ci.appveyor.com/project/pact-foundation/pact-js)
-![Native release](https://github.com/pact-foundation/pact-js/workflows/Release%20workflow/badge.svg?branch=feat%2Fv3.0.0)
-=======
-[![Build Status](https://travis-ci.com/pact-foundation/pact-js.svg?branch=master)](https://travis-ci.com/pact-foundation/pact-js)
->>>>>>> master
+[![Build Status](https://github.com/pact-foundation/pact-js/workflows/Build,%20test,%20test%20all%20examples/badge.svg)](https://github.com/pact-foundation/pact-js/actions?query=workflow%3A%22Build%2C+test%2C+test+all+examples%22)
 [![npm](https://img.shields.io/npm/v/@pact-foundation/pact.svg)](https://www.npmjs.com/package/@pact-foundation/pact)
 ![Release workflow](https://github.com/pact-foundation/pact-js/workflows/Release%20workflow/badge.svg?branch=feat%2Fv3.0.0)
 [![Coverage Status](https://coveralls.io/repos/github/pact-foundation/pact-js/badge.svg?branch=master)](https://coveralls.io/github/pact-foundation/pact-js?branch=master)
@@ -591,7 +585,7 @@ const {
 } = require("@pact-foundation/pact")
 
 // 1 Dog API Handler
-const dogApiHandler = function (dog) {
+const dogApiHandler = function(dog) {
   if (!dog.id && !dog.name && !dog.type) {
     throw new Error("missing fields")
   }
@@ -980,11 +974,7 @@ this [gist](https://gist.github.com/mefellows/15c9fcb052c2aa9d8951f91d48d6da54) 
 
 ## Pact JS V3
 
-<<<<<<< HEAD
 An initial beta version of Pact-JS with support for V3 specification features and XML matching has
-=======
-An initial alpha version of Pact-JS with support for V3 specification features and XML matching has
->>>>>>> master
 been released. Current support is for Node 10, 12 and 14. Thanks to the folks at [Align Tech](https://www.aligntech.com/) for sponsoring this work.
 
 To install it:
@@ -1130,7 +1120,7 @@ There is an `XmlBuilder` class that provides a DSL to help construct XML bodies 
 for example:
 
 ```javascript
-body: new XmlBuilder("1.0", "UTF-8", "ns1:projects").build((el) => {
+body: new XmlBuilder("1.0", "UTF-8", "ns1:projects").build(el => {
   el.setAttributes({
     id: "1234",
     "xmlns:ns1": "http://some.namespace/and/more/stuff",
@@ -1143,8 +1133,8 @@ body: new XmlBuilder("1.0", "UTF-8", "ns1:projects").build((el) => {
       name: string("Project 1"),
       due: timestamp("yyyy-MM-dd'T'HH:mm:ss.SZ", "2016-02-11T09:46:56.023Z"),
     },
-    (project) => {
-      project.appendElement("ns1:tasks", {}, (task) => {
+    project => {
+      project.appendElement("ns1:tasks", {}, task => {
         task.eachLike(
           "ns1:task",
           {
@@ -1225,8 +1215,7 @@ You can change the log levels using the `LOG_LEVEL` environment variable.
 
 ## Troubleshooting / FAQs
 
-If you are having issues, a good place to start is setting `logLevel: 'DEBUG'`
-when configuring the `new Pact({...})` object.
+If you are having issues, a good place to start is setting `logLevel: 'debug'` when configuring the `new Pact({...})` object. Setting it to `trace` will give you detailed in/out requests as far as Pact sees it.
 
 ### Alpine + Docker
 
@@ -1304,11 +1293,11 @@ The correct code for the above is:
 
 ```js
 it("returns a successful thing", () => {
-  return executeApiCallThatIsAPromise()
+  return executeApiCallThatIsAPromise() // <- explicit return here, you could also use the "async/await" syntax here
     .then((response) => {
       expect(response.data).to.eq({...})
     })
-    .then(() => provider.verify())
+    .then(() => provider.verify()) // provider.verify() also returned
   })
 ```
 
@@ -1396,7 +1385,7 @@ See [this issue](https://github.com/angular/angular/issues/13554) for background
 
 ### Debugging
 
-If your standard tricks don't get you anywhere, setting the logLevel to `DEBUG` and increasing the timeout doesn't help and you don't know where else to look, it could be that the binaries we use to do much of the Pact magic aren't starting as expected.
+If your standard tricks don't get you anywhere, setting the logLevel to `trace` and increasing the timeout doesn't help and you don't know where else to look, it could be that the binaries we use to do much of the Pact magic aren't starting as expected.
 
 Try starting the mock service manually and seeing if it comes up. When submitting a bug report, it would be worth running these commands before hand as it will greatly help us:
 

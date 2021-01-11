@@ -10,6 +10,20 @@ All notable changes to this project will be documented in this file. See [standa
 * initial pacts for verification integration ([6428bbe](https://github.com/pact-foundation/pact-js/commit/6428bbef3c056b884c4225a1d05f9f3b7b2d1691))
 * support for matchers on headers ([aa3d55e](https://github.com/pact-foundation/pact-js/commit/aa3d55e4bbc60a210cc4be568d1c9dab9b0998b7))
 * Update URL matching functions to support mock server URL generation ([2733af9](https://github.com/pact-foundation/pact-js/commit/2733af9aa0f936928358ad6e40e2c17d3aeb48b5))
+
+## [9.14.0](https://github.com/pact-foundation/pact-js/compare/v9.13.2...v9.14.0) (2021-01-09)
+
+
+### Features
+
+* add request/response tracing ([37c3dc3](https://github.com/pact-foundation/pact-js/commit/37c3dc356c819d08bca114d7d76983ea606368fd))
+
+
+### Fixes and Improvements
+
+* **logger:** Message consumers now respect the specified log level ([98e601c](https://github.com/pact-foundation/pact-js/commit/98e601c7b5ee97b5f9d620abc1542f702cfe84b7))
+* **pact-web:** Pact-web is now built using webpack 4. Please let us know if there are any issues ([27fd1b5](https://github.com/pact-foundation/pact-js/commit/27fd1b5fb737f29a1c0b326ddd89ab9b2a21aaa6))
+
 ### [9.13.2](https://github.com/pact-foundation/pact-js/compare/v9.13.1...v9.13.2) (2021-01-04)
 
 

@@ -1,5 +1,4 @@
-Set-PSDebug -Trace 1
-
+npm ci
 npm run dist
 npm run build:v3
 Copy-Item "package.json" -Destination "dist"

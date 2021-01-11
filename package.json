@@ -13,7 +13,7 @@
     "clean:native": "rm -rf native/target",
     "coverage": "nyc report --reporter=lcov",
     "deploy:package": "tar -czf pactjs.tar.gz config dist src package.json README.md LICENSE",
-    "deploy:prepare": "npm i --production && npm run deploy:package && ./scripts/create_npmrc_file.sh",
+    "deploy:prepare": "npm i --production && npm run deploy:package",
     "dist": "npm run compile && webpack --config ./config/webpack.web.config.js && cp package.json ./dist",
     "jscpd": "jscpd -p src -r json -o jscpd.json",
     "lint": "npm run lint:prettier:ts && npm run lint:prettier:js",
@@ -36,8 +36,6 @@
     "test:karma": "npm run test:karma:jasmine && npm run test:karma:mocha",
     "test:karma:jasmine": "cd examples/karma && npm i && npm run test:jasmine",
     "test:karma:mocha": "cd examples/karma && npm i && npm run test:mocha",
-    "travis": "./scripts/build.sh",
-    "appveyor": "./scripts/build.ps1",
     "webpack": "webpack --config ./config/webpack.web.config.js",
     "postinstall": "node-pre-gyp install --fallback-to-build=false || neon build --release",
     "package": "npm run native:sha256 && node-pre-gyp package && node-pre-gyp testpackage",
@@ -81,6 +79,42 @@
     "url": "https://github.com/pact-foundation/pact-js/issues"
   },
   "homepage": "http://docs.pact.io/documentation/javascript.html",
+  "standard-version": {
+    "types": [
+      {
+        "type": "feat",
+        "section": "Features"
+      },
+      {
+        "type": "fix",
+        "section": "Fixes and Improvements"
+      },
+      {
+        "type": "chore",
+        "hidden": true
+      },
+      {
+        "type": "docs",
+        "hidden": true
+      },
+      {
+        "type": "style",
+        "hidden": true
+      },
+      {
+        "type": "refactor",
+        "hidden": true
+      },
+      {
+        "type": "perf",
+        "hidden": true
+      },
+      {
+        "type": "test",
+        "hidden": true
+      }
+    ]
+  },
   "dependencies": {
     "@pact-foundation/pact-node": "^10.10.1",
     "@types/bluebird": "^3.5.20",
@@ -162,14 +196,15 @@
     "sinon-chai": "^3.3.0",
     "source-map-loader": "^0.2.1",
     "source-map-support": "^0.4.18",
-    "standard-version": "^8.0.1",
+    "standard-version": "^9.1.0",
     "superagent": "^3.8.2",
     "ts-mock-imports": "^1.2.6",
     "ts-node": "^3.3.0",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
     "typescript": "^3.8.3",
-    "webpack": "^3.5.5"
+    "webpack": "^4.45.0",
+    "webpack-cli": "^4.3.1"
   },
   "binary": {
     "module_name": "index",

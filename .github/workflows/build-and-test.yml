@@ -1,13 +1,13 @@
-name: end to end tests
+name: Build, test, test all examples
 
 on:
   push:
-    branches: [ master ]
+    branches: [master, feat/v3.0.0]
   pull_request:
-    branches: [ master ]
+    branches: [master, feat/v3.0.0]
 
 jobs:
-  test:
+  build-and-test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -19,5 +19,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci --ignore-scripts
-      - run: scripts/build.sh
+      - run: scripts/ci/build-and-test.sh
+        env:
+          NODE_VERSION: ${{ matrix.node-version }}

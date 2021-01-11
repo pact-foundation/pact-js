@@ -22,6 +22,7 @@ Confirm the following:
 - [ ] I have created a reproducable git repository (see below) to illuminate the problem
 - [ ] I have the read the FAQs in the Readme
 - [ ] I have triple checked, that there are **no unhandled promises** in my code
+- [ ] I have set my log level to debug and attached a log file showing the complete request/response cycle
 
 ### Expected behaviour
 
