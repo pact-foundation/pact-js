@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.24](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.23...v10.0.0-beta.24) (2021-01-12)
+
+
+### Fixes and Improvements
+
+* exclude openssl from native build for musl versions ([3db75af](https://github.com/pact-foundation/pact-js/commit/3db75afe2e42da0747deabff946ade6afca30ba4))
+* exclude the native lib from the NPM package ([208e750](https://github.com/pact-foundation/pact-js/commit/208e750c5d51968f7e643ed835a299c4bb48f00a))
+* exclude the native lib from the NPM package ([69a6e5b](https://github.com/pact-foundation/pact-js/commit/69a6e5b5263750bbef84ae7cadbc20d95294ee1c))
+
 ## [10.0.0-beta.23](https://github.com/pact-foundation/pact-js/compare/v9.14.0...v10.0.0-beta.23) (2021-01-11)
 
 
