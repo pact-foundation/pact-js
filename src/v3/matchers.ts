@@ -237,6 +237,7 @@ export namespace MatchersV3 {
 
   interface RegexMatcher extends Matcher {
     regex: string
+    example?: string
   }
 
   /**
@@ -382,12 +383,15 @@ export namespace MatchersV3 {
       }
     }
 
+    // Temporary fix for inconsistancies between matchers and generators. Matchers use "value" attribute for
+    // example values, while generators use "example"
     if (basePath == null) {
       return {
         "pact:matcher:type": "regex",
         "pact:generator:type": "MockServerURL",
         regex: regex + ")$",
         value: example,
+        example
       }
     } else {
       return {

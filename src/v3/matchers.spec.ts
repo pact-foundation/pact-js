@@ -468,5 +468,23 @@ describe("V3 Matchers", () => {
         })
       })
     })
+
+    describe("when no base URL is provided", () => {
+      it("returns regex matcher and a MockServerURL generator", () => {
+        let result = MatchersV3.url([
+          "users",
+          MatchersV3.regex("\\d+", "1234"),
+          "posts",
+          "latest",
+        ])
+        expect(result).to.deep.equal({
+          "pact:matcher:type": "regex",
+          "pact:generator:type": "MockServerURL",
+          regex: ".*(\\/users\\/\\d+\\/posts\\/latest)$",
+          value: "http://localhost:8080/users/1234/posts/latest",
+          example: "http://localhost:8080/users/1234/posts/latest"
+        })
+      })
+    })
   })
 })
