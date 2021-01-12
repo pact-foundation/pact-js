@@ -28,6 +28,8 @@ echo "::set-output name=notes::$RELEASE_NOTES"
 
 npm ci
 "$SCRIPT_DIR"/build-and-test.sh
+
+rm -rf dist/native
 npm run release
 npm run deploy:prepare
 
