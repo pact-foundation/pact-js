@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.25](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.24...v10.0.0-beta.25) (2021-01-12)
+
+
+### Fixes and Improvements
+
+* change the release trigger for native libs ([3f1bbfa](https://github.com/pact-foundation/pact-js/commit/3f1bbfa79a4eb11593bc26ad96d34cc852b82c9e))
+* URLs were not being generated correctly when used with an array contains matcher ([4fccb8d](https://github.com/pact-foundation/pact-js/commit/4fccb8df1ac19fa858cd7c4f1ca2da68c068bd04))
+
 ## [10.0.0-beta.24](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.23...v10.0.0-beta.24) (2021-01-12)
 
 
