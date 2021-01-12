@@ -2,7 +2,7 @@ name: Release Native Libs workflow
 
 on:
   release:
-    types: [created]
+    types: [created, updated]
 
 jobs:
   build-release:
