@@ -487,4 +487,31 @@ describe("V3 Matchers", () => {
       })
     })
   })
+
+  describe("#uuid", () => {
+    it("returns a JSON representation of an regex matcher for UUIDs", () => {
+      let result = MatchersV3.uuid('ba4bd1bc-5556-11eb-9286-d71bc5b507be')
+      expect(result).to.deep.equal({
+        "pact:matcher:type": "regex",
+        "regex": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+        "value": "ba4bd1bc-5556-11eb-9286-d71bc5b507be"
+      })
+    })
+
+    it("throws an exception if the example value does not match the UUID regex", () => {
+      expect(() => MatchersV3.uuid('not a uuid')).to.throw()
+      expect(() => MatchersV3.uuid('ba4bd1bc-5556-11eb-9286')).to.throw()
+      expect(() => MatchersV3.uuid('ba4bd1bc-5556-11eb-9286-d71bc5b507be-1234')).to.throw()
+    })
+
+    it("if no example is provided, it sets up a generator", () => {
+      let result = MatchersV3.uuid()
+      expect(result).to.deep.equal({
+        "pact:matcher:type": "regex",
+        "pact:generator:type": "Uuid",
+        "regex": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+        "value": "e2490de5-5bd3-43d5-b7c4-526e33f71304"
+      })
+    })
+  })
 })

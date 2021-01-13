@@ -434,4 +434,29 @@ export namespace MatchersV3 {
       value: exampleValue
     }
   }
+
+  /**
+   * Match a universally unique identifier (UUID). Random values will be used for examples if no example is given.
+   */
+  export function uuid(example?: string): RegexMatcher {
+    const regexStr = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+    if (example) {
+      const regex = new RegExp("^" + regexStr + "$")
+      if (!example.match(regex)) {
+        throw new Error(`regex: Example value '${example}' does not match the UUID regular expression '${regexStr}'`)
+      }
+      return {
+        "pact:matcher:type": "regex",
+        regex: regexStr,
+        value: example
+      }
+    } else {
+      return {
+        "pact:matcher:type": "regex",
+        regex: regexStr,
+        "pact:generator:type": "Uuid",
+        "value": "e2490de5-5bd3-43d5-b7c4-526e33f71304"
+      }
+    }
+  }
 }
