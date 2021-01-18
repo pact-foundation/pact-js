@@ -8,7 +8,7 @@
     "clean": "rimraf pacts",
     "test": "npm run test:consumer && npm run test:publish && npm run test:provider",
     "test:consumer": "nyc --check-coverage --reporter=html --reporter=text-summary mocha consumer/*.spec.ts",
-    "test:provider": "nyc --check-coverage --reporter=html --reporter=text-summary mocha -t 10000 provider/*.spec.ts",
+    "test:provider": "nyc --check-coverage --reporter=html --reporter=text-summary mocha -t 20000 provider/*.spec.ts",
     "test:publish": "node publish.js"
   },
   "author": "",
