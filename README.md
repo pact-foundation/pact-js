@@ -1,3 +1,4 @@
+trigger CI
 # Pact JS
 
 <!-- Please use absolute URLs for all links as the content of this page is synced to docs.pact.io -->
