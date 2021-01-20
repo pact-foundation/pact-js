@@ -136,7 +136,11 @@ export class PactV3 {
   }
 
   public withRequest(req: V3Request): PactV3 {
-    this.pact.addRequest(req, req.body && JSON.stringify(req.body))
+    let body = req.body
+    if (typeof body !== 'string') {
+      body = body && JSON.stringify(body)
+    }
+    this.pact.addRequest(req, body)
     return this
   }
 

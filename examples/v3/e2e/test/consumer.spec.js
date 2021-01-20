@@ -264,6 +264,45 @@ describe("Pact V3", () => {
     })
   })
 
+  describe("when a call to the Animal Service is made to create a new mate using form-data body", () => {
+    const provider = new PactV3({
+      consumer: "Matching Service V3",
+      provider: "Animal Profile Service V3",
+      dir: path.resolve(process.cwd(), "pacts"),
+    })
+
+    before(() =>
+      provider
+        .given("is authenticated")
+        .uponReceiving("a request to create a new mate")
+        .withRequest({
+          method: "POST",
+          path: "/animals",
+          body: "first_name=Nanny&last_name=Doe",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        })
+        .willRespondWith({
+          status: 200,
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+          },
+          body: like(suitor),
+        })
+    )
+
+    it("creates a new mate with application/x-www-form-urlencoded", () => {
+      return provider.executeTest(mockserver => {
+        return expect(createMateForDates(
+          "first_name=Nanny&last_name=Doe",
+          () => mockserver.url,
+          "application/x-www-form-urlencoded")).to
+          .eventually.be.fulfilled
+      })
+    })
+  })
+
   describe("when a call to the Animal Service is made to get animals in XML format", () => {
     const provider = new PactV3({
       consumer: "Matching Service V3",
