@@ -19,6 +19,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm run lint
       - run: scripts/ci/build-and-test.sh
         env:
           NODE_VERSION: ${{ matrix.node-version }}
