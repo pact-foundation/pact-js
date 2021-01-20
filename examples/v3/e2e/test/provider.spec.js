@@ -85,7 +85,7 @@ describe("Pact Verification", () => {
       // pactUrls: [
       //   path.resolve(
       //     process.cwd(),
-      //     "./pacts/matching_service-animal_profile_service.json"
+      //     "./pacts/Matching Service V3-Animal Profile Service V3.json"
       //   ),
       // ],
 

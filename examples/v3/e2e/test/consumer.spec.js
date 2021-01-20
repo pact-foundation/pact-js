@@ -160,7 +160,9 @@ describe("Pact V3", () => {
   })
 
   describe("when a call to the Animal Service is made to retrieve a single animal by ID", () => {
-    describe("and there is an animal in the DB with ID 1", () => {
+    describe("and there is an animal in the DB with ID 100", () => {
+      let responseBody = animalBodyExpectation
+      responseBody.id = 100
       const provider = new PactV3({
         consumer: "Matching Service V3",
         provider: "Animal Profile Service V3",
@@ -175,7 +177,7 @@ describe("Pact V3", () => {
           })
           .uponReceiving("a request for an animal with an ID")
           .withRequest({
-            path: regex("/animals/[0-9]+", "/animals/1"),
+            path: regex("/animals/[0-9]+", "/animals/100"),
             headers: { Authorization: "Bearer token" },
           })
           .willRespondWith({
@@ -183,15 +185,15 @@ describe("Pact V3", () => {
             headers: {
               "Content-Type": "application/json; charset=utf-8",
             },
-            body: animalBodyExpectation,
+            body: responseBody,
           })
       )
 
       it("returns the animal", () => {
         return provider.executeTest(mockserver => {
-          const animal = getAnimalById(1, () => mockserver.url)
+          const animal = getAnimalById(100, () => mockserver.url)
 
-          return expect(animal).to.eventually.have.deep.property("id", 1)
+          return expect(animal).to.eventually.have.deep.property("id", 100)
         })
       })
     })
