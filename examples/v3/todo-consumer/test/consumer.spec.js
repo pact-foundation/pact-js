@@ -9,7 +9,7 @@ const {
   boolean,
   atLeastOneLike,
   timestamp,
-  regex
+  regex,
 } = MatchersV3
 
 const TodoApp = require("../src/todo")
@@ -99,7 +99,12 @@ describe("Pact V3", () => {
           })
           .willRespondWith({
             status: 200,
-            headers: { "Content-Type": regex("application/.*xml(;.*)?", "application/xml") },
+            headers: {
+              "Content-Type": regex(
+                "application/.*xml(;.*)?",
+                "application/xml"
+              ),
+            },
             body: new XmlBuilder("1.0", "UTF-8", "ns1:projects").build(el => {
               el.setAttributes({
                 id: "1234",
@@ -133,7 +138,7 @@ describe("Pact V3", () => {
                 },
                 { examples: 2 }
               )
-            })
+            }),
           })
       })
 

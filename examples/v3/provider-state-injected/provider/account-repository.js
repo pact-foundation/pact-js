@@ -19,7 +19,7 @@ class Account {
 const accounts = []
 
 const accountRepository = {
-  save: (account) => {
+  save: account => {
     // This similates a save to the DB where the IDs get allocated
     let id = Math.floor(Math.random() * Math.floor(100000))
     let accountNumber = Math.floor(Math.random() * Math.floor(100000))
@@ -31,11 +31,13 @@ const accountRepository = {
     return account
   },
 
-  findByAccountNumber: async (accountNumber) => {
+  findByAccountNumber: async accountNumber => {
     return accounts.find(account => account.accountNumber.id == accountNumber)
-  }
+  },
 }
 
 module.exports = {
-  Account, AccountNumber, accountRepository
+  Account,
+  AccountNumber,
+  accountRepository,
 }

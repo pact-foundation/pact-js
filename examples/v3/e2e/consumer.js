@@ -60,7 +60,11 @@ const suggestion = (mate, api) => {
 }
 
 // Creates a mate for suggestions
-const createMateForDates = (mate, api = getApiEndpoint, contentType = 'application/json' ) => {
+const createMateForDates = (
+  mate,
+  api = getApiEndpoint,
+  contentType = "application/json"
+) => {
   return request
     .post(`${api()}/animals`)
     .send(mate)

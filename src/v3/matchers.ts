@@ -45,7 +45,10 @@ export namespace MatchersV3 {
    * @param template Template to base the comparison on
    * @param count Number of examples to generate, defaults to one
    */
-  export function atLeastOneLike(template: any, count: number = 1): MinLikeMatcher {
+  export function atLeastOneLike(
+    template: any,
+    count: number = 1
+  ): MinLikeMatcher {
     return {
       min: 1,
       "pact:matcher:type": "type",
@@ -59,7 +62,11 @@ export namespace MatchersV3 {
    * @param min Minimum number of elements required in the array
    * @param count Number of examples to generate, defaults to one
    */
-  export function atLeastLike(template: any, min: number, count?: number): MinLikeMatcher {
+  export function atLeastLike(
+    template: any,
+    min: number,
+    count?: number
+  ): MinLikeMatcher {
     const elements = count || min
     if (count && count < min) {
       throw new Error(
@@ -92,7 +99,11 @@ export namespace MatchersV3 {
    * @param max Maximum number of elements required in the array
    * @param count Number of examples to generate, defaults to one
    */
-  export function atMostLike(template: any, max: number, count?: number): MaxLikeMatcher {
+  export function atMostLike(
+    template: any,
+    max: number,
+    count?: number
+  ): MaxLikeMatcher {
     const elements = count || 1
     if (count && count > max) {
       throw new Error(
@@ -358,7 +369,9 @@ export namespace MatchersV3 {
    * Matches a URL composed of a list of path fragments. The base URL from the mock server will be used.
    * @param pathFragments list of path fragments, can be regular expressions
    */
-  export function url(pathFragments: Array<string | RegexMatcher| RegExp>): RegexMatcher {
+  export function url(
+    pathFragments: Array<string | RegexMatcher | RegExp>
+  ): RegexMatcher {
     return url2(null, pathFragments)
   }
 
@@ -367,7 +380,10 @@ export namespace MatchersV3 {
    * @param basePath Base path of the URL. If null, will use the base URL from the mock server.
    * @param pathFragments list of path fragments, can be regular expressions
    */
-  export function url2(basePath: string | null, pathFragments: Array<string | RegexMatcher | RegExp>): RegexMatcher {
+  export function url2(
+    basePath: string | null,
+    pathFragments: Array<string | RegexMatcher | RegExp>
+  ): RegexMatcher {
     let regex = ".*("
     let example = basePath || "http://localhost:8080"
     for (let p of pathFragments) {
@@ -391,7 +407,7 @@ export namespace MatchersV3 {
         "pact:generator:type": "MockServerURL",
         regex: regex + ")$",
         value: example,
-        example
+        example,
       }
     } else {
       return {
@@ -407,13 +423,13 @@ export namespace MatchersV3 {
   }
 
   /**
-   * Matches the items in an array against a number of variants. Matching is successful if each variant 
+   * Matches the items in an array against a number of variants. Matching is successful if each variant
    * occurs once in the array. Variants may be objects containing matching rules.
    */
   export function arrayContaining(...variants: any[]): ArrayContainsMatcher {
     return {
       "pact:matcher:type": "arrayContains",
-      variants
+      variants,
     }
   }
 
@@ -426,12 +442,15 @@ export namespace MatchersV3 {
    * @param expression Expression to lookup in the provider state context
    * @param exampleValue Example value to use in the consumer test
    */
-  export function fromProviderState(expression: string, exampleValue: string): ProviderStateInjectedValue {
+  export function fromProviderState(
+    expression: string,
+    exampleValue: string
+  ): ProviderStateInjectedValue {
     return {
       "pact:matcher:type": "type",
       "pact:generator:type": "ProviderState",
       expression,
-      value: exampleValue
+      value: exampleValue,
     }
   }
 
@@ -439,23 +458,26 @@ export namespace MatchersV3 {
    * Match a universally unique identifier (UUID). Random values will be used for examples if no example is given.
    */
   export function uuid(example?: string): RegexMatcher {
-    const regexStr = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+    const regexStr =
+      "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
     if (example) {
       const regex = new RegExp("^" + regexStr + "$")
       if (!example.match(regex)) {
-        throw new Error(`regex: Example value '${example}' does not match the UUID regular expression '${regexStr}'`)
+        throw new Error(
+          `regex: Example value '${example}' does not match the UUID regular expression '${regexStr}'`
+        )
       }
       return {
         "pact:matcher:type": "regex",
         regex: regexStr,
-        value: example
+        value: example,
       }
     } else {
       return {
         "pact:matcher:type": "regex",
         regex: regexStr,
         "pact:generator:type": "Uuid",
-        "value": "e2490de5-5bd3-43d5-b7c4-526e33f71304"
+        value: "e2490de5-5bd3-43d5-b7c4-526e33f71304",
       }
     }
   }

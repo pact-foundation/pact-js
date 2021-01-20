@@ -19,11 +19,11 @@ export interface PactV3Options {
   /**
    * Provider name
    */
-  provider: string,
+  provider: string
   /**
    * If the mock server should handle CORS pre-flight requests. Defaults to false
    */
-  cors?: boolean,
+  cors?: boolean
   /**
    * Port to run the mock server on. Defaults to a random port
    */
@@ -63,12 +63,17 @@ export interface V3MockServer {
 
 function displayQuery(query: { [k: string]: string[] }): string {
   let pairs = toPairs(query)
-  let mapped = flatten(map(([key, values]) => map((val) => `${key}=${val}`, values), pairs))
-  return join('&', mapped)
+  let mapped = flatten(
+    map(([key, values]) => map(val => `${key}=${val}`, values), pairs)
+  )
+  return join("&", mapped)
 }
 
 function displayHeaders(headers: any, indent: string): string {
-  return join('\n' + indent, map(([k, v]) => `${k}: ${v}`, toPairs(headers)))
+  return join(
+    "\n" + indent,
+    map(([k, v]) => `${k}: ${v}`, toPairs(headers))
+  )
 }
 
 function displayRequest(request: any, indent: string): string {
@@ -79,11 +84,16 @@ function displayRequest(request: any, indent: string): string {
   }
 
   if (request.headers) {
-    output += `\n${indent}Headers:\n${indent}  ${displayHeaders(request.headers, indent + '  ')}`
+    output += `\n${indent}Headers:\n${indent}  ${displayHeaders(
+      request.headers,
+      indent + "  "
+    )}`
   }
 
   if (request.body) {
-    output += `\n${indent}Body: ${request.body.substr(0, 20)}... (${request.body.length} length)`
+    output += `\n${indent}Body: ${request.body.substr(0, 20)}... (${
+      request.body.length
+    } length)`
   }
 
   return output
@@ -104,11 +114,17 @@ function generateMockServerError(testResult: any, indent: string) {
     }
 
     if (mismatches.type == "request-not-found") {
-      error += `\n\n${indent}${i++}) The following request was not expected: ${displayRequest(mismatches.request, indent + "    ")}`
+      error += `\n\n${indent}${i++}) The following request was not expected: ${displayRequest(
+        mismatches.request,
+        indent + "    "
+      )}`
     }
 
     if (mismatches.type == "missing-request") {
-      error += `\n\n${indent}${i++}) The following request was expected but not received: ${displayRequest(mismatches.request, indent + "    ")}`
+      error += `\n\n${indent}${i++}) The following request was expected but not received: ${displayRequest(
+        mismatches.request,
+        indent + "    "
+      )}`
     }
   }
 
@@ -122,7 +138,12 @@ export class PactV3 {
 
   constructor(opts: PactV3Options & {}) {
     this.opts = opts
-    this.pact = new PactNative.Pact(opts.consumer, opts.provider, pkg.version, omit(['consumer', 'provider', 'dir'], opts))
+    this.pact = new PactNative.Pact(
+      opts.consumer,
+      opts.provider,
+      pkg.version,
+      omit(["consumer", "provider", "dir"], opts)
+    )
   }
 
   public given(providerState: string, parameters?: any): PactV3 {
@@ -137,7 +158,7 @@ export class PactV3 {
 
   public withRequest(req: V3Request): PactV3 {
     let body = req.body
-    if (typeof body !== 'string') {
+    if (typeof body !== "string") {
       body = body && JSON.stringify(body)
     }
     this.pact.addRequest(req, body)
@@ -199,7 +220,9 @@ export class PactV3 {
           if (testResult.mockServerError) {
             return Promise.reject(new Error(testResult.mockServerError))
           } else if (testResult.mockServerMismatches) {
-            return Promise.reject(new Error(generateMockServerError(testResult, "  ")))
+            return Promise.reject(
+              new Error(generateMockServerError(testResult, "  "))
+            )
           } else {
             this.pact.writePactFile(result.mockServer.id, this.opts.dir)
             return val

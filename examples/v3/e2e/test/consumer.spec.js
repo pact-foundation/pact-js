@@ -92,7 +92,7 @@ describe("Pact V3", () => {
         consumer: "Matching Service V3",
         provider: "Animal Profile Service V3",
         dir: path.resolve(process.cwd(), "pacts"),
-        cors: true
+        cors: true,
       })
 
       before(() =>
@@ -296,11 +296,13 @@ describe("Pact V3", () => {
 
     it("creates a new mate with application/x-www-form-urlencoded", () => {
       return provider.executeTest(mockserver => {
-        return expect(createMateForDates(
-          "first_name=Nanny&last_name=Doe",
-          () => mockserver.url,
-          "application/x-www-form-urlencoded")).to
-          .eventually.be.fulfilled
+        return expect(
+          createMateForDates(
+            "first_name=Nanny&last_name=Doe",
+            () => mockserver.url,
+            "application/x-www-form-urlencoded"
+          )
+        ).to.eventually.be.fulfilled
       })
     })
   })

@@ -37,15 +37,15 @@ describe("The Dog API", () => {
         .willRespondWith({
           status: 200,
           headers: { "Content-Type": "application/json" },
-          body: EXPECTED_BODY
+          body: EXPECTED_BODY,
         })
 
-        return provider.executeTest(mockserver => {
-          dogService = new DogService(mockserver.url)
-          return dogService.getMeDogs("today").then(response => {
-            return expect(response.data[0]).to.deep.eq(dogExample)
-          })
+      return provider.executeTest(mockserver => {
+        dogService = new DogService(mockserver.url)
+        return dogService.getMeDogs("today").then(response => {
+          return expect(response.data[0]).to.deep.eq(dogExample)
         })
+      })
     })
   })
 })

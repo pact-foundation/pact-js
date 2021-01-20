@@ -9,7 +9,7 @@ export class DogService {
       params: { from: from },
       headers: { Accept: "application/json" },
       method: "GET",
-      url: "/dogs"
+      url: "/dogs",
     })
   }
 }

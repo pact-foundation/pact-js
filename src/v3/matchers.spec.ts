@@ -197,13 +197,17 @@ describe("V3 Matchers", () => {
     })
 
     it("throws an error if the number of examples is less than the minimum", () => {
-      expect(() => MatchersV3.constrainedArrayLike({ a: "b" }, 4, 6, 2)).to.throw(
+      expect(() =>
+        MatchersV3.constrainedArrayLike({ a: "b" }, 4, 6, 2)
+      ).to.throw(
         "constrainedArrayLike has a minimum of 4 but 2 elements where requested. Make sure the count is greater than or equal to the min."
       )
     })
 
     it("throws an error if the number of examples is more than the maximum", () => {
-      expect(() => MatchersV3.constrainedArrayLike({ a: "b" }, 4, 6, 8)).to.throw(
+      expect(() =>
+        MatchersV3.constrainedArrayLike({ a: "b" }, 4, 6, 8)
+      ).to.throw(
         "constrainedArrayLike has a maximum of 6 but 8 elements where requested. Make sure the count is less than or equal to the max."
       )
     })
@@ -482,7 +486,7 @@ describe("V3 Matchers", () => {
           "pact:generator:type": "MockServerURL",
           regex: ".*(\\/users\\/\\d+\\/posts\\/latest)$",
           value: "http://localhost:8080/users/1234/posts/latest",
-          example: "http://localhost:8080/users/1234/posts/latest"
+          example: "http://localhost:8080/users/1234/posts/latest",
         })
       })
     })
@@ -490,18 +494,20 @@ describe("V3 Matchers", () => {
 
   describe("#uuid", () => {
     it("returns a JSON representation of an regex matcher for UUIDs", () => {
-      let result = MatchersV3.uuid('ba4bd1bc-5556-11eb-9286-d71bc5b507be')
+      let result = MatchersV3.uuid("ba4bd1bc-5556-11eb-9286-d71bc5b507be")
       expect(result).to.deep.equal({
         "pact:matcher:type": "regex",
-        "regex": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
-        "value": "ba4bd1bc-5556-11eb-9286-d71bc5b507be"
+        regex: "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+        value: "ba4bd1bc-5556-11eb-9286-d71bc5b507be",
       })
     })
 
     it("throws an exception if the example value does not match the UUID regex", () => {
-      expect(() => MatchersV3.uuid('not a uuid')).to.throw()
-      expect(() => MatchersV3.uuid('ba4bd1bc-5556-11eb-9286')).to.throw()
-      expect(() => MatchersV3.uuid('ba4bd1bc-5556-11eb-9286-d71bc5b507be-1234')).to.throw()
+      expect(() => MatchersV3.uuid("not a uuid")).to.throw()
+      expect(() => MatchersV3.uuid("ba4bd1bc-5556-11eb-9286")).to.throw()
+      expect(() =>
+        MatchersV3.uuid("ba4bd1bc-5556-11eb-9286-d71bc5b507be-1234")
+      ).to.throw()
     })
 
     it("if no example is provided, it sets up a generator", () => {
@@ -509,8 +515,8 @@ describe("V3 Matchers", () => {
       expect(result).to.deep.equal({
         "pact:matcher:type": "regex",
         "pact:generator:type": "Uuid",
-        "regex": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
-        "value": "e2490de5-5bd3-43d5-b7c4-526e33f71304"
+        regex: "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+        value: "e2490de5-5bd3-43d5-b7c4-526e33f71304",
       })
     })
   })

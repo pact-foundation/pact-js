@@ -93,9 +93,11 @@ describe("Pact Verification", () => {
       pactBrokerPassword: "O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
       publishVerificationResult: true,
       providerVersion: "1.0.0",
-    }).verifyProvider().then(output => {
-      console.log("Pact Verification Complete!")
-      console.log("Result:", output)
     })
+      .verifyProvider()
+      .then(output => {
+        console.log("Pact Verification Complete!")
+        console.log("Result:", output)
+      })
   })
 })
