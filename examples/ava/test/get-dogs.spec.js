@@ -24,7 +24,7 @@ test.before("setting up Dog API expectations", async () => {
 })
 
 test("Dog API GET /dogs", async t => {
-  t.plan(2)
+  t.plan(1)
 
   // BEGIN -
   // Setup interactions for expected API response from provider
@@ -73,7 +73,7 @@ test("Dog API GET /dogs", async t => {
   ])
 
   // verify with Pact, and reset expectations
-  await t.notThrows(() => provider.verify())
+  await provider.verify()
 })
 
 test.after.always("pact.js mock server graceful shutdown", async () => {
