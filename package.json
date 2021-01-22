@@ -7,7 +7,7 @@
   "scripts": {
     "clean": "rimraf docs dist dist-web coverage .nyc_output logs pacts jscpd.json",
     "coverage": "nyc report --reporter=lcov",
-    "dist": "tsc && webpack --config ./config/webpack.web.config.js && cp package.json ./dist",
+    "dist": "tsc && webpack --config ./config/webpack.web.config.js && copyfiles package.json ./dist",
     "jscpd": "jscpd -p src -r json -o jscpd.json",
     "lint": "tslint -c tslint.json '{src,test,examples}/**/*.ts' -e '**/node_modules/**/*.ts'",
     "lint:fix": "npm run lint -- --fix",
@@ -156,6 +156,7 @@
     "babel-loader": "^8.0.6",
     "chai": "~4.1.2",
     "chai-as-promised": "^7.1.1",
+    "copyfiles": "^2.4.1",
     "coveralls": "^3.0.2",
     "enhanced-resolve": "^3.4.1",
     "eslint": "^5.6.1",
