@@ -7,8 +7,6 @@
   "scripts": {
     "clean": "rimraf docs dist dist-web coverage .nyc_output logs pacts jscpd.json",
     "coverage": "nyc report --reporter=lcov",
-    "deploy:package": "tar -czf pactjs.tar.gz config dist src package.json README.md LICENSE",
-    "deploy:prepare": "npm i --production && npm run deploy:package",
     "dist": "tsc && webpack --config ./config/webpack.web.config.js && cp package.json ./dist",
     "jscpd": "jscpd -p src -r json -o jscpd.json",
     "lint": "npm run format:check && tslint -c tslint.json '{src,test,examples}/**/*.ts' -e '**/node_modules/**/*.ts'",
