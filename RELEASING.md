@@ -1,84 +1,68 @@
 # Releasing
 
-## Publishing via Travis (recommended)
+We've moved to GitHub Actions for releases.
 
-- Update the version number in each `package.json` file to latest version
-- Commit
+## How a release works
 
-        $ npm run release
-        $ # review workspace and commits - if all looks good...
-        $ git push --follow-tags
+Releases trigger when the repository recieves the custom repository_dispatch event
+`release-triggered`.
 
-Travis CI will do the rest.
+This triggers the `publish.yml` workflow, which in turn
+triggers the `release.sh` script in `scripts/ci`.
+The workflow will also create a github release with an appropriate changelog.
 
-## How to re-tag if a publish fails
+Having the release triggered by a custom event is useful for automating
+releases in the future (eg for version bumps in pact dependencies).
 
-Delete broken tag:
+### Release.sh
 
-    $ git tag -d "X.Y.Z" && git push origin :refs/tags/X.Y.Z
+This script is not intended to be run locally. Note that it modifies your git
+settings.
 
-Now you can re-tag and push as above.
+The script will:
 
-## Publishing manually
+- Modify git authorship settings
+- Confirm that there would be changes in the changelog after release
+- Run Lint
+- Run Build
+- Run Test
+- Commit an appropriate version bump, changelog and tag
+- Package and publish to npm
+- Push the new commit and tag back to the main branch.
 
-Log in to npm as pact-foundation.
+Should you need to modify the script locally, you will find it uses some
+dependencies in `scripts/ci/lib`.
 
-Run the following commands:
+## Kicking off a release
 
-    $ npm run dist
-    $ npm run coverage
-    $ npm prune --production
-    $ tar -czvf pactjs.tar.gz config dist src package.json README.md LICENSE
-    $ npm run deploy:prepare
-    $ script: npm publish dist --access public
+You must be able to create a github access token with `repo` scope to the
+pact-js repository.
 
-This should have published the latest version, check to see that at npmjs.com/package/pact.
-We now need to create a GitHub release, upload zipped distribution (pactjs.tar.gz) to [GitHub Releases](https://github.com/pact-foundation/pact-js/releases).
+- Set an environment variable `GITHUB_ACCESS_TOKEN_FOR_PF_RELEASES` to this token.
+- Make sure master contains the code you want to release
+- Run `scripts/trigger-release.sh`
 
-## Updating NPM key
+Then wait for github to do its magic. It will release the current head of master.
 
-Log in to pact-foundation npm account in a browser and revoke the old key in the Tokens section.
-Delete the env.global.secure key from travis.yml
-Log in to npm via command line using the pact-foundation account.
-Echo the ~/.npmrc file and grab the token out of it.
+Note that the release script refuses to publish anything that wouldn't
+produce a changelog. Please make sure your commits follow the guidelines in
+`CONTRIBUTING.md`
 
-    $ gem install travis
-    $ travis encrypt NPM_KEY=${NPM_KEY} --add env.global
+## If the release fails
 
-## v3.0.0
+The publish is the second to last step, so if the release fails, you don't
+need to do any rollbacks.
 
-The native binaries required for post-install are trigerred [Github Actions](https://github.com/pact-foundation/pact-js/actions) on successful travis builds.
+However, there is a potential for the push to fail _after_ a publish if there
+are new commits to master since the release started. This is unlikely with
+the current commit frequency, but could still happen. Check the logs to
+determine if npm has a version that doesn't exist in the master branch.
 
-Occasionally, you may need to generate these binaries manually. You can do so by running the command as follows (be careful to substitute branches/tagse etc.):
-
-To produce a darwin build, run from a Mac:
-
-```
-export NODE_PRE_GYP_GITHUB_TOKEN=<your github access token>
-npm install node-pre-gyp node-pre-gyp-github
-npm run build:v3
-rm -rf native/target
-npm run upload-binary
-```
-
-For linux64 (update version of node you need to release from in the docker image name). Please run the steps by hand:
+If this has happened, you will need to manually put the release commit in.
 
 ```
-docker run --rm -it -v $(pwd):/app node:latest bash
-apt-get update -y
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | \
-    sh -s -- -y
-#
-# choose 1 to progress
-#
-source $HOME/.cargo/env
-export NODE_PRE_GYP_GITHUB_TOKEN=<your github access token>
-cd /app
-rm -rf node_modules build
-npm ci
-npm install node-pre-gyp node-pre-gyp-github
-npm run build:v3
-rm -rf native/target
-npm run upload-binary
+npm run release # This tags, commits and updates the changelog only
 ```
+
+Depending on the nature of the new commits to master after the release, you
+may need to rebase them on top of the tagged release commit and force push.
