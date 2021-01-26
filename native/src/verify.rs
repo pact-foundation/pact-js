@@ -1,25 +1,27 @@
-use serde_json::Value;
-use neon::prelude::*;
-use pact_verifier::{ProviderInfo, VerificationOptions, FilterInfo, PactSource};
-use pact_verifier::callback_executors::{RequestFilterExecutor, ProviderStateExecutor, ProviderStateError};
-use pact_matching::models::http_utils::HttpAuth;
-use pact_matching::models::Request;
-use ansi_term::Colour::*;
-use url::Url;
-use std::sync::mpsc;
-use std::time::Duration;
-use async_trait::async_trait;
-use pact_matching::models::provider_states::ProviderState;
-use maplit::*;
 use std::collections::HashMap;
-use crate::utils::{serde_value_to_js_object_attr, js_value_to_serde_value};
-use log::*;
 use std::panic;
+use std::sync::{Arc, mpsc};
+use std::time::Duration;
+
+use ansi_term::Colour::*;
+use async_trait::async_trait;
+use log::*;
+use maplit::*;
+use neon::prelude::*;
+use pact_matching::models::http_utils::HttpAuth;
+use pact_matching::models::provider_states::ProviderState;
+use pact_matching::models::Request;
+use pact_verifier::{FilterInfo, PactSource, ProviderInfo, VerificationOptions};
+use pact_verifier::callback_executors::{ProviderStateError, ProviderStateExecutor, RequestFilterExecutor};
+use serde_json::Value;
+use url::Url;
+
+use crate::utils::{js_value_to_serde_value, serde_value_to_js_object_attr};
 
 fn get_string_value(cx: &mut FunctionContext, obj: &JsObject, name: &str) -> Option<String> {
   match obj.get(cx, name) {
-    Ok(val) => match val.downcast::<JsString>() {
-      Ok(val) => Some(val.value()),
+    Ok(val) => match val.downcast::<JsString, FunctionContext>(cx) {
+      Ok(val) => Some(val.value(cx)),
       Err(_) => None
     },
     _ => None
@@ -28,8 +30,8 @@ fn get_string_value(cx: &mut FunctionContext, obj: &JsObject, name: &str) -> Opt
 
 fn get_bool_value(cx: &mut FunctionContext, obj: &JsObject, name: &str) -> bool {
   match obj.get(cx, name) {
-    Ok(val) => match val.downcast::<JsBoolean>() {
-      Ok(val) => val.value(),
+    Ok(val) => match val.downcast::<JsBoolean, FunctionContext>(cx) {
+      Ok(val) => val.value(cx),
       Err(_) => false
     },
     _ => false
@@ -38,15 +40,15 @@ fn get_bool_value(cx: &mut FunctionContext, obj: &JsObject, name: &str) -> bool 
 
 fn get_string_array(cx: &mut FunctionContext, obj: &JsObject, name: &str) -> Result<Vec<String>, String> {
   match obj.get(cx, name) {
-    Ok(items) => match items.downcast::<JsString>() {
-      Ok(item) => Ok(vec![ item.value().to_string() ]),
-      Err(_) => match items.downcast::<JsArray>() {
+    Ok(items) => match items.downcast::<JsString, FunctionContext>(cx) {
+      Ok(item) => Ok(vec![ item.value(cx).to_string() ]),
+      Err(_) => match items.downcast::<JsArray, FunctionContext>(cx) {
         Ok(items) => {
           let mut tags = vec![];
           if let Ok(items) = items.to_vec(cx) {
             for tag in items {
-              match tag.downcast::<JsString>() {
-                Ok(val) => tags.push(val.value().to_string()),
+              match tag.downcast::<JsString, FunctionContext>(cx) {
+                Ok(val) => tags.push(val.value(cx).to_string()),
                 Err(_) => {
                   println!("    {}", Red.paint(format!("ERROR: {} must be a string or array of strings", name)));
                 }
@@ -55,7 +57,7 @@ fn get_string_array(cx: &mut FunctionContext, obj: &JsObject, name: &str) -> Res
           };
           Ok(tags)
         },
-        Err(_) => if !items.is_a::<JsUndefined>() {
+        Err(_) => if !items.is_a::<JsUndefined, FunctionContext>(cx) {
           println!("    {}", Red.paint(format!("ERROR: {} must be a string or array of strings", name)));
           Err(format!("{} must be a string or array of strings", name))
         } else {
@@ -67,100 +69,103 @@ fn get_string_array(cx: &mut FunctionContext, obj: &JsObject, name: &str) -> Res
   }
 }
 
-
-
 #[derive(Clone)]
 struct RequestFilterCallback {
-  callback_handler: EventHandler
+  callback_handler: Arc<Root<JsFunction>>,
+  queue: Arc<EventQueue>
 }
 
 impl RequestFilterExecutor for RequestFilterCallback {
-  fn call(&self, request: &Request) -> Request {
+  fn call(self: Arc<Self>, request: &Request) -> Request {
+    let (sender_in, receiver_in) = mpsc::channel();
     let (sender, receiver) = mpsc::channel();
-    let request_copy = request.clone();
-    self.callback_handler.schedule_with(move |cx, this, callback| {
+    sender_in.send((request.clone(), self.callback_handler.clone())).unwrap();
+    self.queue.send(move |mut cx| {
+      let (request_copy, callback) = receiver_in.recv().unwrap();
       let js_method = cx.string(request_copy.method);
       let js_path = cx.string(request_copy.path);
-      let js_query = JsObject::new(cx);
-      let js_headers = JsObject::new(cx);
-      let js_request = JsObject::new(cx);
+      let js_query = JsObject::new(&mut cx);
+      let js_headers = JsObject::new(&mut cx);
+      let js_request = JsObject::new(&mut cx);
       let js_body = cx.string(request_copy.body.str_value());
 
       if let Some(query) = request_copy.query {
         query.iter().for_each(|(k, v)| {
-          let vars = JsArray::new(cx, v.len() as u32);
+          let vars = JsArray::new(&mut cx, v.len() as u32);
           v.iter().enumerate().for_each(|(i, val)| {
             let qval = cx.string(val);
-            vars.set(cx, i as u32, qval).unwrap();
+            vars.set(&mut cx, i as u32, qval).unwrap();
           });
-          js_query.set(cx, k.as_str(), vars).unwrap();
+          js_query.set(&mut cx, k.as_str(), vars).unwrap();
         });
       };
 
       if let Some(headers) = request_copy.headers {
         headers.iter().for_each(|(k, v)| {
-          let vars = JsArray::new(cx, v.len() as u32);
+          let vars = JsArray::new(&mut cx, v.len() as u32);
           v.iter().enumerate().for_each(|(i, val)| {
             let hval = cx.string(val);
-            vars.set(cx, i as u32, hval).unwrap();
+            vars.set(&mut cx, i as u32, hval).unwrap();
           });
-          js_headers.set(cx, k.to_lowercase().as_str(), vars).unwrap();
+          js_headers.set(&mut cx, k.to_lowercase().as_str(), vars).unwrap();
         });
       };
 
-      js_request.set(cx, "method", js_method).unwrap();
-      js_request.set(cx, "path", js_path).unwrap();
-      js_request.set(cx, "headers", js_headers).unwrap();
-      js_request.set(cx, "query", js_query).unwrap();
-      js_request.set(cx, "body", js_body).unwrap();
+      js_request.set(&mut cx, "method", js_method).unwrap();
+      js_request.set(&mut cx, "path", js_path).unwrap();
+      js_request.set(&mut cx, "headers", js_headers).unwrap();
+      js_request.set(&mut cx, "query", js_query).unwrap();
+      js_request.set(&mut cx, "body", js_body).unwrap();
       let args = vec![js_request];
-      let result = callback.call(cx, this, args);
+      let inner = callback.to_inner(&mut cx);
+      let this = cx.undefined();
+      let result = inner.call(&mut cx, this, args);
 
       match result {
         Ok(val) => {
-          if let Ok(js_obj) = val.downcast::<JsObject>() {
+          if let Ok(js_obj) = val.downcast::<JsObject, TaskContext>(&mut cx) {
             let mut request = Request::default();
-            if let Ok(val) = js_obj.get(cx, "method").unwrap().downcast::<JsString>() {
-              request.method = val.value();
+            if let Ok(val) = js_obj.get(&mut cx, "method").unwrap().downcast::<JsString, TaskContext>(&mut cx) {
+              request.method = val.value(&mut cx);
             }
-            if let Ok(val) = js_obj.get(cx, "path").unwrap().downcast::<JsString>() {
-              request.path = val.value();
+            if let Ok(val) = js_obj.get(&mut cx, "path").unwrap().downcast::<JsString, TaskContext>(&mut cx) {
+              request.path = val.value(&mut cx);
             }
-            if let Ok(val) = js_obj.get(cx, "body").unwrap().downcast::<JsString>() {
-              request.body = val.value().into();
+            if let Ok(val) = js_obj.get(&mut cx, "body").unwrap().downcast::<JsString, TaskContext>(&mut cx) {
+              request.body = val.value(&mut cx).into();
             }
 
-            if let Ok(query_map) = js_obj.get(cx, "query").unwrap().downcast::<JsObject>() {
+            if let Ok(query_map) = js_obj.get(&mut cx, "query").unwrap().downcast::<JsObject, TaskContext>(&mut cx) {
               let mut map = hashmap!{};
-              let props = query_map.get_own_property_names(cx).unwrap();
-              for prop in props.to_vec(cx).unwrap() {
-                let prop_name = prop.downcast::<JsString>().unwrap().value();
-                let prop_val = query_map.get(cx, prop_name.as_str()).unwrap();
-                if let Ok(array) = prop_val.downcast::<JsArray>() {
-                  let vec = array.to_vec(cx).unwrap();
+              let props = query_map.get_own_property_names(&mut cx).unwrap();
+              for prop in props.to_vec(&mut cx).unwrap() {
+                let prop_name = prop.downcast::<JsString, TaskContext>(&mut cx).unwrap().value(&mut cx);
+                let prop_val = query_map.get(&mut cx, prop_name.as_str()).unwrap();
+                if let Ok(array) = prop_val.downcast::<JsArray, TaskContext>(&mut cx) {
+                  let vec = array.to_vec(&mut cx).unwrap();
                   map.insert(prop_name, vec.iter().map(|item| {
-                    item.downcast::<JsString>().unwrap().value()
+                    item.downcast::<JsString, TaskContext>(&mut cx).unwrap().value(&mut cx)
                   }).collect());
                 } else {
-                  map.insert(prop_name, vec![prop_val.downcast::<JsString>().unwrap().value()]);
+                  map.insert(prop_name, vec![prop_val.downcast::<JsString, TaskContext>(&mut cx).unwrap().value(&mut cx)]);
                 }
               }
               request.query = Some(map)
             }
 
-            if let Ok(header_map) = js_obj.get(cx, "headers").unwrap().downcast::<JsObject>() {
+            if let Ok(header_map) = js_obj.get(&mut cx, "headers").unwrap().downcast::<JsObject, TaskContext>(&mut cx) {
               let mut map = hashmap!{};
-              let props = header_map.get_own_property_names(cx).unwrap();
-              for prop in props.to_vec(cx).unwrap() {
-                let prop_name = prop.downcast::<JsString>().unwrap().value();
-                let prop_val = header_map.get(cx, prop_name.as_str()).unwrap();
-                if let Ok(array) = prop_val.downcast::<JsArray>() {
-                  let vec = array.to_vec(cx).unwrap();
+              let props = header_map.get_own_property_names(&mut cx).unwrap();
+              for prop in props.to_vec(&mut cx).unwrap() {
+                let prop_name = prop.downcast::<JsString, TaskContext>(&mut cx).unwrap().value(&mut cx);
+                let prop_val = header_map.get(&mut cx, prop_name.as_str()).unwrap();
+                if let Ok(array) = prop_val.downcast::<JsArray, TaskContext>(&mut cx) {
+                  let vec = array.to_vec(&mut cx).unwrap();
                   map.insert(prop_name, vec.iter().map(|item| {
-                    item.downcast::<JsString>().unwrap().value()
+                    item.downcast::<JsString, TaskContext>(&mut cx).unwrap().value(&mut cx)
                   }).collect());
                 } else {
-                  map.insert(prop_name, vec![prop_val.downcast::<JsString>().unwrap().value()]);
+                  map.insert(prop_name, vec![prop_val.downcast::<JsString, TaskContext>(&mut cx).unwrap().value(&mut cx)]);
                 }
               }
               request.headers = Some(map)
@@ -174,45 +179,54 @@ impl RequestFilterExecutor for RequestFilterCallback {
         Err(err) => {
           error!("Request filter threw an exception: {}", err);
         }
-      }
+      };
+
+      Ok(())
     });
 
     receiver.recv_timeout(Duration::from_millis(1000)).unwrap_or(request.clone())
   }
 }
 
-#[derive(Clone)]
-struct ProviderStateCallback<'a> {
-  callback_handlers: &'a HashMap<String, EventHandler>
+struct ProviderStateCallback {
+  callback_handlers: HashMap<String, Arc<Root<JsFunction>>>,
+  queue: Arc<EventQueue>
 }
 
 #[async_trait]
-impl ProviderStateExecutor for ProviderStateCallback<'_> {
-  async fn call(&self, interaction_id: Option<String>, provider_state: &ProviderState, setup: bool, _client: Option<&reqwest::Client>) -> Result<HashMap<String, serde_json::Value>, ProviderStateError> {
-    match self.callback_handlers.get(&provider_state.name) {
+impl ProviderStateExecutor for ProviderStateCallback {
+  async fn call(self: Arc<Self>, interaction_id: Option<String>, provider_state: &ProviderState, setup: bool, _client: Option<&reqwest::Client>) -> Result<HashMap<String, serde_json::Value>, ProviderStateError> {
+    let inner = self.clone();
+    match inner.callback_handlers.get(provider_state.name.as_str()) {
       Some(callback) => {
+        let (sender_in, receiver_in) = mpsc::channel();
         let (sender, receiver) = mpsc::channel();
         let state = provider_state.clone();
         let iid = interaction_id.clone();
-        callback.schedule_with(move |cx, this, callback| {
+        let queue = self.queue.clone();
+        sender_in.send(callback.clone()).unwrap();
+        queue.send(move |mut cx| {
+          let callback = receiver_in.recv().unwrap();
           let args = if !state.params.is_empty() {
-            let js_parameter = JsObject::new(cx);
+            let js_parameter = JsObject::new(&mut cx);
             for (ref parameter, ref value) in state.params {
-              serde_value_to_js_object_attr(cx, &js_parameter, parameter, value).unwrap();
+              serde_value_to_js_object_attr(&mut cx, &js_parameter, parameter, value).unwrap();
             };
             vec![cx.boolean(setup).upcast::<JsValue>(), js_parameter.upcast::<JsValue>()]
           } else {
             vec![cx.boolean(setup).upcast::<JsValue>()]
           };
-          let callback_result = callback.call(cx, this, args);
+          let callback = callback.as_ref().clone(&mut cx).into_inner(&mut cx);
+          let this = cx.undefined();
+          let callback_result = callback.call(&mut cx, this, args);
           match callback_result {
             Ok(val) => {
-              if let Ok(vals) = val.downcast::<JsObject>() {
-                let js_props = vals.get_own_property_names(cx).unwrap();
-                let props: HashMap<String, Value> = js_props.to_vec(cx).unwrap().iter().map(|prop| {
-                  let prop_name = prop.downcast::<JsString>().unwrap().value();
-                  let prop_val = vals.get(cx, prop_name.as_str()).unwrap();
-                  (prop_name, js_value_to_serde_value(&prop_val, cx))
+              if let Ok(vals) = val.downcast::<JsObject, TaskContext>(&mut cx) {
+                let js_props = vals.get_own_property_names(&mut cx).unwrap();
+                let props: HashMap<String, Value> = js_props.to_vec(&mut cx).unwrap().iter().map(|prop| {
+                  let prop_name = prop.downcast::<JsString, TaskContext>(&mut cx).unwrap().value(&mut cx);
+                  let prop_val = vals.get(&mut cx, prop_name.as_str()).unwrap();
+                  (prop_name, js_value_to_serde_value(&prop_val, &mut cx))
                 }).collect();
                 debug!("Provider state callback result = {:?}", props);
                 sender.send(Ok(props)).unwrap();
@@ -227,6 +241,8 @@ impl ProviderStateExecutor for ProviderStateCallback<'_> {
               sender.send(Result::<HashMap<String, serde_json::Value>, ProviderStateError>::Err(error)).unwrap();
             }
           };
+
+          Ok(())
         });
         match receiver.recv_timeout(Duration::from_millis(1000)) {
           Ok(result) => {
@@ -250,7 +266,8 @@ struct BackgroundTask {
   pub filter_info: FilterInfo,
   pub consumers_filter: Vec<String>,
   pub options: VerificationOptions<RequestFilterCallback>,
-  pub state_handlers: HashMap<String, EventHandler>
+  pub state_handlers: HashMap<String, Arc<Root<JsFunction>>>,
+  queue: Arc<EventQueue>
 }
 
 impl Task for BackgroundTask {
@@ -263,8 +280,18 @@ impl Task for BackgroundTask {
     panic::catch_unwind(|| {
       match tokio::runtime::Builder::new_current_thread().enable_all().build() {
         Ok(runtime) => runtime.block_on(async {
-          let provider_state_executor = ProviderStateCallback { callback_handlers: &self.state_handlers };
-          pact_verifier::verify_provider_async(self.provider_info.clone(), self.pacts.clone(), self.filter_info.clone(), self.consumers_filter.clone(), self.options.clone(), &provider_state_executor).await
+          let provider_state_executor = &Arc::new(ProviderStateCallback {
+            callback_handlers: self.state_handlers.clone(),
+            queue: self.queue.clone()
+          });
+          pact_verifier::verify_provider_async(
+            self.provider_info.clone(),
+            self.pacts.clone(),
+            self.filter_info.clone(),
+            self.consumers_filter.clone(),
+            self.options.clone(),
+            provider_state_executor
+          ).await
         }),
         Err(err) => {
           error!("Verify process failed to start the tokio runtime: {}", err);
@@ -309,22 +336,22 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
   let config = cx.argument::<JsObject>(0)?;
   let callback = cx.argument::<JsFunction>(1)?;
 
-  let provider = config.get(&mut cx, "provider").unwrap().downcast::<JsString>().unwrap().value();
+  let provider = config.get(&mut cx, "provider").unwrap().downcast::<JsString, FunctionContext>(&mut cx).unwrap().value(&mut cx);
 
   let mut pacts: Vec<PactSource> = vec![];
   match config.get(&mut cx, "pactUrls") {
-    Ok(urls) => match urls.downcast::<JsArray>() {
+    Ok(urls) => match urls.downcast::<JsArray, FunctionContext>(&mut cx) {
       Ok(urls) => {
         if let Ok(urls) = urls.to_vec(&mut cx) {
           for url in urls {
-            match url.downcast::<JsString>() {
-              Ok(url) => pacts.push(PactSource::File(url.value())),
+            match url.downcast::<JsString, FunctionContext>(&mut cx) {
+              Ok(url) => pacts.push(PactSource::File(url.value(&mut cx))),
               _ => println!("    {}", Yellow.paint ("WARN: pactUrls does not contain a valid list of URL strings"))
             }
           }
         }
       },
-      _ => if !urls.is_a::<JsUndefined>() && !urls.is_a::<JsNull>() {
+      _ => if !urls.is_a::<JsUndefined, FunctionContext>(&mut cx) && !urls.is_a::<JsNull, FunctionContext>(&mut cx) {
         println!("    {}", Yellow.paint ("WARN: pactUrls is not a list of URLs, ignoring"));
       }
     },
@@ -338,7 +365,7 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
 
 
   match config.get(&mut cx, "pactBrokerUrl") {
-    Ok(url) => match url.downcast::<JsString>() {
+    Ok(url) => match url.downcast::<JsString, FunctionContext>(&mut cx) {
       Ok(url) => {
         let pending = get_bool_value(&mut cx, &config, "enablePending");
         let wip = get_string_value(&mut cx, &config, "includeWipPactsSince");
@@ -350,15 +377,41 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
 
         if let Some(username) = get_string_value(&mut cx, &config, "pactBrokerUsername") {
           let password = get_string_value(&mut cx, &config, "pactBrokerPassword");
-          pacts.push(PactSource::BrokerWithDynamicConfiguration { provider_name: provider.clone(), broker_url: url.value(), enable_pending: pending, include_wip_pacts_since: wip, provider_tags: provider_tags.clone(), selectors: selectors, auth: Some(HttpAuth::User(username, password)), links: vec![] })
+          pacts.push(PactSource::BrokerWithDynamicConfiguration {
+            provider_name: provider.clone(),
+            broker_url: url.value(&mut cx),
+            enable_pending: pending,
+            include_wip_pacts_since: wip,
+            provider_tags: provider_tags.clone(),
+            selectors,
+            auth: Some(HttpAuth::User(username, password)), links: vec![]
+          })
         } else if let Some(token) = get_string_value(&mut cx, &config, "pactBrokerToken") {
-          pacts.push(PactSource::BrokerWithDynamicConfiguration { provider_name: provider.clone(), broker_url: url.value(), enable_pending: pending, include_wip_pacts_since: wip, provider_tags: provider_tags.clone(), selectors: selectors, auth: Some(HttpAuth::Token(token)), links: vec![] })
+          pacts.push(PactSource::BrokerWithDynamicConfiguration {
+            provider_name: provider.clone(),
+            broker_url: url.value(&mut cx),
+            enable_pending: pending,
+            include_wip_pacts_since: wip,
+            provider_tags: provider_tags.clone(),
+            selectors,
+            auth: Some(HttpAuth::Token(token)),
+            links: vec![]
+          })
         } else {
-          pacts.push(PactSource::BrokerWithDynamicConfiguration { provider_name: provider.clone(), broker_url: url.value(), enable_pending: pending, include_wip_pacts_since: wip, provider_tags: provider_tags.clone(), selectors: selectors, auth: None, links: vec![] })
+          pacts.push(PactSource::BrokerWithDynamicConfiguration {
+            provider_name: provider.clone(),
+            broker_url: url.value(&mut cx),
+            enable_pending: pending,
+            include_wip_pacts_since: wip,
+            provider_tags: provider_tags.clone(),
+            selectors,
+            auth: None,
+            links: vec![]
+          })
         }
       },
       Err(_) => {
-        if !url.is_a::<JsUndefined>() {
+        if !url.is_a::<JsUndefined, FunctionContext>(&mut cx) {
           println!("    {}", Red.paint("ERROR: pactBrokerUrl must be a string value"));
           cx.throw_error("pactBrokerUrl must be a string value")?;
         }
@@ -397,10 +450,12 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
   debug!("provider_info = {:?}", provider_info);
 
   let request_filter = match config.get(&mut cx, "requestFilter") {
-    Ok(request_filter) => match request_filter.downcast::<JsFunction>() {
+    Ok(request_filter) => match request_filter.downcast::<JsFunction, FunctionContext>(&mut cx) {
       Ok(val) => {
-        let this = cx.this();
-        Some(Box::new(RequestFilterCallback { callback_handler: EventHandler::new(&cx, this, val) }))
+        Some(Arc::new(RequestFilterCallback {
+          callback_handler: Arc::new(val.root(&mut cx)),
+          queue: Arc::new(cx.queue())
+        }))
       },
       Err(_) => None
     },
@@ -411,15 +466,14 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
 
   let mut callbacks = hashmap![];
   match config.get(&mut cx, "stateHandlers") {
-    Ok(state_handlers) => match state_handlers.downcast::<JsObject>() {
+    Ok(state_handlers) => match state_handlers.downcast::<JsObject, FunctionContext>(&mut cx) {
       Ok(state_handlers) => {
-        let this = cx.this();
         let props = state_handlers.get_own_property_names(&mut cx).unwrap();
         for prop in props.to_vec(&mut cx).unwrap() {
-          let prop_name = prop.downcast::<JsString>().unwrap().value();
+          let prop_name = prop.downcast::<JsString, FunctionContext>(&mut cx).unwrap().value(&mut cx);
           let prop_val = state_handlers.get(&mut cx, prop_name.as_str()).unwrap();
-          if let Ok(callback) = prop_val.downcast::<JsFunction>() {
-            callbacks.insert(prop_name, EventHandler::new(&cx, this, callback));
+          if let Ok(callback) = prop_val.downcast::<JsFunction, FunctionContext>(&mut cx) {
+            callbacks.insert(prop_name, Arc::new(callback.root(&mut cx)));
           }
         };
       },
@@ -429,8 +483,8 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
   };
 
   let publish = match config.get(&mut cx, "publishVerificationResult") {
-    Ok(publish) => match publish.downcast::<JsBoolean>() {
-      Ok(publish) => publish.value(),
+    Ok(publish) => match publish.downcast::<JsBoolean, FunctionContext>(&mut cx) {
+      Ok(publish) => publish.value(&mut cx),
       Err(_) => {
         warn!("publishVerificationResult must be a boolean value. Ignoring it");
         false
@@ -440,9 +494,9 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
   };
 
   let provider_version = match config.get(&mut cx, "providerVersion") {
-    Ok(provider_version) => match provider_version.downcast::<JsString>() {
-      Ok(provider_version) => Some(provider_version.value().to_string()),
-      Err(_) => if !provider_version.is_a::<JsUndefined>() {
+    Ok(provider_version) => match provider_version.downcast::<JsString, FunctionContext>(&mut cx) {
+      Ok(provider_version) => Some(provider_version.value(&mut cx).to_string()),
+      Err(_) => if !provider_version.is_a::<JsUndefined, FunctionContext>(&mut cx) {
         println!("    {}", Red.paint("ERROR: providerVersion must be a string value"));
         return cx.throw_error("providerVersion must be a string value")
       } else {
@@ -458,10 +512,10 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
   }
 
   let disable_ssl_verification = match config.get(&mut cx, "disableSSLVerification") {
-    Ok(disable) => match disable.downcast::<JsBoolean>() {
-      Ok(disable) => disable.value(),
+    Ok(disable) => match disable.downcast::<JsBoolean, FunctionContext>(&mut cx) {
+      Ok(disable) => disable.value(&mut cx),
       Err(_) => {
-        if !disable.is_a::<JsUndefined>() {
+        if !disable.is_a::<JsUndefined, FunctionContext>(&mut cx) {
           warn!("disableSSLVerification must be a boolean value. Ignoring it");
         }
         false
@@ -482,7 +536,15 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
   };
 
   debug!("Starting background task");
-  BackgroundTask { provider_info, pacts, filter_info, consumers_filter, options, state_handlers: callbacks }.schedule(callback);
+  BackgroundTask {
+    provider_info,
+    pacts,
+    filter_info,
+    consumers_filter,
+    options,
+    state_handlers: callbacks,
+    queue: Arc::new(cx.queue())
+  }.schedule(callback);
 
   debug!("Done");
   Ok(cx.undefined())
