@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.26](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.25...v10.0.0-beta.26) (2021-01-27)
+
+
+### Features
+
+* add uuid matcher function ([49c3da8](https://github.com/pact-foundation/pact-js/commit/49c3da8183ae729fe6063bd27e3eeba57750d853))
+
+
+### Fixes and Improvements
+
+* don't JSON.stringify body if its already a string ([6d44059](https://github.com/pact-foundation/pact-js/commit/6d44059db1917c17e40f128a4b3eedfda16fd2c1))
+* increase provider test timeout ([f850859](https://github.com/pact-foundation/pact-js/commit/f850859f2cf47b741e070fd52665befc7f5e9b90))
+* local pact URL ([1fd5fe4](https://github.com/pact-foundation/pact-js/commit/1fd5fe4806c62581be7c80504c806257a7b9020a))
+* publish V3 was not kicking off the native libs release process ([23bd533](https://github.com/pact-foundation/pact-js/commit/23bd533c9f3e5e98c0326c3764d8113d63ddc5a4))
+* use correct id in consumer test ([3d7e9c0](https://github.com/pact-foundation/pact-js/commit/3d7e9c0fa1ccc36734d864bfa02eab220b054af1))
+
 ## [10.0.0-beta.25](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.24...v10.0.0-beta.25) (2021-01-12)
 
 
