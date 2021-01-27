@@ -2,8 +2,7 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-"$SCRIPT_DIR"/lib/modify-permissions-github-actions.sh
-
+"$DIR"/lib/modify-permissions-github-actions.sh
 npm ci
 npm run dist
 
