@@ -230,6 +230,47 @@ describe("Pact V3", () => {
     })
   })
 
+  describe("when a call to the Animal Service is made to retrieve a single animal in text by ID", () => {
+    describe("and there is an animal in the DB with ID 100", () => {
+
+      const provider = new PactV3({
+        consumer: "Matching Service V3",
+        provider: "Animal Profile Service V3",
+        dir: path.resolve(process.cwd(), "pacts")
+      })
+
+      before(() =>
+        provider
+          .given("is authenticated")
+          .given("Has an animal with ID", {
+            id: 100,
+          })
+          .uponReceiving("a request for an animal as text with an ID")
+          .withRequest({
+            path: regex("/animals/[0-9]+", "/animals/100"),
+            headers: {
+              Authorization: "Bearer token",
+              Accept: "text/plain"
+            },
+          })
+          .willRespondWith({
+            status: 200,
+            headers: {
+              "Content-Type": "text/plain; charset=utf-8",
+            },
+            body: 'id=100;first_name=Nanny;last_name=Doe;animal=goat',
+          })
+      )
+
+      it("returns the animal", async () => {
+        return provider.executeTest(async mockserver =>  {
+          const animal = await getAnimalById(100, () => mockserver.url, 'text/plain')
+          return expect(animal).to.equal('id=100;first_name=Nanny;last_name=Doe;animal=goat')
+        })
+      })
+    })
+  })
+
   describe("when a call to the Animal Service is made to create a new mate", () => {
     const provider = new PactV3({
       consumer: "Matching Service V3",

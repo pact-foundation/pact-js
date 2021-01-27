@@ -17,14 +17,20 @@ const availableAnimals = (api = getApiEndpoint) => {
 }
 
 // Find animals by their ID from the Animal Service
-const getAnimalById = (id, api = getApiEndpoint) => {
-  return request
+const getAnimalById = (id, api = getApiEndpoint, format = 'application/json') => {
+  let r = request
     .get(`${api()}/animals/${id}`)
     .set(authHeader)
-    .then(
-      res => res.body,
-      () => null
-    )
+    .set({Accept: format})
+
+  if (format === 'text/plain') {
+    return r.then(res => res.text)
+  }
+
+  return r.then(
+    res => res.body,
+    () => null
+  )
 }
 
 // Suggestions function:
