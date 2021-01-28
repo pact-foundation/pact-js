@@ -36,7 +36,7 @@ export namespace MatchersV3 {
   /**
    * Like Matcher with a minimum number of required values
    */
-  interface MinLikeMatcher extends Matcher {
+  export interface MinLikeMatcher extends Matcher {
     min: number
   }
 
@@ -82,7 +82,7 @@ export namespace MatchersV3 {
   /**
    * Like Matcher with a maximum number of required values
    */
-  interface MaxLikeMatcher extends Matcher {
+  export interface MaxLikeMatcher extends Matcher {
     max: number
   }
 
@@ -235,7 +235,7 @@ export namespace MatchersV3 {
     }
   }
 
-  interface RegexMatcher extends Matcher {
+  export interface RegexMatcher extends Matcher {
     regex: string
     example?: string
   }
@@ -278,7 +278,7 @@ export namespace MatchersV3 {
     }
   }
 
-  interface DateTimeMatcher extends Matcher {
+  export interface DateTimeMatcher extends Matcher {
     format: string
   }
 
@@ -402,7 +402,7 @@ export namespace MatchersV3 {
     }
   }
 
-  interface ArrayContainsMatcher extends Matcher {
+  export interface ArrayContainsMatcher extends Matcher {
     variants: any[]
   }
 
@@ -417,7 +417,7 @@ export namespace MatchersV3 {
     }
   }
 
-  interface ProviderStateInjectedValue extends Matcher {
+  export interface ProviderStateInjectedValue extends Matcher {
     expression: string
   }
 
