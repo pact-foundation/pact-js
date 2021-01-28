@@ -17,18 +17,6 @@
     "predist": "npm run clean && npm run format:check && npm run lint",
     "release": "standard-version",
     "test": "nyc --check-coverage --reporter=html --reporter=text-summary mocha",
-    "test:examples": "npm run test:e2e-examples && npm run test:jest-examples && npm run test:mocha-examples && npm run test:ava-examples && npm run test:ts-examples && npm run test:message-examples && npm run test:serverless-examples && npm run test:graphql-examples",
-    "test:e2e-examples": "cd examples/e2e && npm it",
-    "test:ava-examples": "cd examples/ava && npm it",
-    "test:jest-examples": "cd examples/jest && npm it",
-    "test:mocha-examples": "cd examples/mocha && npm it",
-    "test:ts-examples": "cd examples/typescript && npm it",
-    "test:message-examples": "cd examples/messages && npm it",
-    "test:serverless-examples": "cd examples/serverless && npm it",
-    "test:graphql-examples": "cd examples/graphql && npm it",
-    "test:karma": "npm run test:karma:jasmine && npm run test:karma:mocha",
-    "test:karma:jasmine": "cd examples/karma && npm i && npm run test:jasmine",
-    "test:karma:mocha": "cd examples/karma && npm i && npm run test:mocha",
     "webpack": "webpack --config ./config/webpack.web.config.js"
   },
   "repository": {
