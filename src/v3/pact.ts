@@ -164,7 +164,11 @@ export class PactV3 {
   }
 
   public willRespondWith(res: V3Response): PactV3 {
-    this.pact.addResponse(res, res.body && JSON.stringify(res.body))
+    let body = res.body
+    if (typeof body !== 'string') {
+      body = body && JSON.stringify(body)
+    }
+    this.pact.addResponse(res, body)
     this.states = []
     return this
   }
