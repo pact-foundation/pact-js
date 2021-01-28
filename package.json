@@ -5,7 +5,7 @@
   "main": "./pact.js",
   "types": "./pact.d.ts",
   "scripts": {
-    "clean": "rimraf docs dist dist-web coverage .nyc_output logs pacts jscpd.json",
+    "clean": "rimraf docs dist dist-web coverage .nyc_output logs pacts",
     "coverage": "nyc report --reporter=lcov",
     "dist": "tsc && webpack --config ./config/webpack.web.config.js && copyfiles package.json ./dist",
     "lint": "tslint -c tslint.json '{src,test,examples}/**/*.ts' -e '**/node_modules/**/*.ts'",
