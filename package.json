@@ -12,7 +12,7 @@
     "lint": "tslint -c tslint.json '{src,test,examples}/**/*.ts' -e '**/node_modules/**/*.ts'",
     "lint:fix": "npm run lint -- --fix",
     "format:base": "prettier \"{src,test,examples}/**/*.{ts,js}\"",
-    "format:fix": "npm run format:base -- --fix",
+    "format:fix": "npm run format:base -- --write",
     "format:check": "npm run format:base -- --check",
     "postdist": "npm test",
     "predist": "npm run clean && npm run format:check && npm run lint && npm run jscpd",
