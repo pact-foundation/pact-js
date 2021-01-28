@@ -7,7 +7,7 @@ Pop-Location
 
 Get-ChildItem ".\examples" -Directory | ForEach-Object {
   Write-Output "Running examples in $($_.FullName)"
-  cd $_.FullName
+  Set-Location $_.FullName
   npm i
   npm link @pact-foundation/pact
   npm t
