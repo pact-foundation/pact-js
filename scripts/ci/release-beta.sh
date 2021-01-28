@@ -29,7 +29,6 @@ echo "::set-output name=notes::$RELEASE_NOTES"
 npm ci
 "$SCRIPT_DIR"/build-and-test.sh
 npm run release
-npm run deploy:prepare
 
 # Emit version to next step
 VERSION="$("$SCRIPT_DIR/lib/get-version.sh")"
