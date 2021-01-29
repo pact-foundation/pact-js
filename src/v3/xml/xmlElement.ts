@@ -1,9 +1,8 @@
 import { XmlNode } from "./xmlNode"
 import { XmlText } from "./xmlText"
 
-type XmlAttributes = Map<string, string>
-
-type Callback = (n: XmlElement) => void
+export type XmlAttributes = Map<string, string>
+export type XmlCallback = (n: XmlElement) => void
 
 export class XmlElement extends XmlNode {
   private attributes: XmlAttributes
@@ -34,7 +33,7 @@ export class XmlElement extends XmlNode {
   public appendElement(
     name: string,
     attributes: XmlAttributes,
-    arg?: Callback
+    arg?: XmlCallback
   ): XmlElement
   /**
    * Creates a new element with the given name and attributes and then sets it's text content (can be a matcher)
@@ -80,7 +79,7 @@ export class XmlElement extends XmlNode {
   public eachLike(
     name: string,
     attributes: XmlAttributes,
-    cb?: Callback,
+    cb?: XmlCallback,
     options: EachLikeOptions = { examples: 1 }
   ): XmlElement {
     const el = new XmlElement(name).setAttributes(attributes)
@@ -94,7 +93,7 @@ export class XmlElement extends XmlNode {
     return this
   }
 
-  private executeCallback(el: XmlElement, cb?: Callback) {
+  private executeCallback(el: XmlElement, cb?: XmlCallback) {
     if (cb) {
       cb(el)
     }

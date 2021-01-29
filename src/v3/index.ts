@@ -27,3 +27,5 @@ export * from "./verifier"
  */
 export * from "./xml/xmlBuilder"
 export * from "./xml/xmlElement"
+export * from "./xml/xmlNode"
+export * from "./xml/xmlText"
