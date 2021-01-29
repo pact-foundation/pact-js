@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.27](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.26...v10.0.0-beta.27) (2021-01-29)
+
+
+### Fixes and Improvements
+
+* added export to V3 matcher interfaces ([8d11c1a](https://github.com/pact-foundation/pact-js/commit/8d11c1a6d6d8033ae96f471665245baec750ca51))
+* don't strigify response that is already a string ([a867147](https://github.com/pact-foundation/pact-js/commit/a867147566b182e1f9244d72d96c29db59a51007))
+
 ## [10.0.0-beta.26](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.25...v10.0.0-beta.26) (2021-01-27)
 
 
