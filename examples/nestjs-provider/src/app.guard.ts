@@ -11,7 +11,10 @@ import { Request } from "express"
 
 @Injectable()
 export class AppInterceptor implements NestInterceptor {
-  public intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+  public intercept(
+    context: ExecutionContext,
+    next: CallHandler
+  ): Observable<any> {
     const request = context.switchToHttp().getRequest<Request>()
 
     const { headers } = request

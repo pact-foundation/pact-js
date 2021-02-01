@@ -22,7 +22,13 @@ pactWith(
     })
 
     // Alias flexible matchers for simplicity
-    const { eachLike, like, term, iso8601DateTimeWithMillis } = Matchers
+    const {
+      eachLike,
+      like,
+      term,
+      iso8601DateTimeWithMillis,
+      extractPayload,
+    } = Matchers
 
     // Animal we want to match :)
     const suitor: Animal = {
@@ -175,7 +181,7 @@ pactWith(
         it("returns the animal", async () => {
           const suggestedMates = await animalsService.getAnimalById(11)
 
-          expect(suggestedMates).toHaveProperty("id", 1)
+          expect(suggestedMates).toEqual(extractPayload(animalBodyExpectation))
         })
       })
 
@@ -228,7 +234,7 @@ pactWith(
         })
       )
 
-      it("creates a new mate", async () => {
+      it("creates a new mate", () => {
         return expect(
           animalsService.createMateForDates(suitor)
         ).resolves.not.toThrow()
