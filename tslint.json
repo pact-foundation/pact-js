@@ -6,6 +6,7 @@
     "interface-name": [true, "never-prefix"],
     "no-var-requires": false,
     "ordered-imports": false,
+    "object-literal-sort-keys": false,
     "semicolon": [true, "never"],
     "whitespace": [
       true,

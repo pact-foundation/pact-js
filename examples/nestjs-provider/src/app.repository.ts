@@ -30,7 +30,7 @@ export class AppRepository {
   }
 
   public getById(id: number): Animal {
-    return this.entities.find(entity => id == entity.id)
+    return this.entities.find(entity => id === entity.id)
   }
 
   public insert(entity: Animal): Animal {

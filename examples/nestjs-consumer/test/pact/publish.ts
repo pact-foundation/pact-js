@@ -1,3 +1,5 @@
+/* tslint:disable no-console */
+
 import { Publisher } from "@pact-foundation/pact"
 import { resolve } from "path"
 import { execSync } from "child_process"

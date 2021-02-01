@@ -15,9 +15,6 @@ export class PactProducerConfigOptionsService
       logLevel: "debug",
 
       requestFilter: (req, res, next) => {
-        console.log(
-          "Middleware invoked before provider API - injecting Authorization token"
-        )
         req.headers.MY_SPECIAL_HEADER = "my special value"
 
         // e.g. ADD Bearer token
