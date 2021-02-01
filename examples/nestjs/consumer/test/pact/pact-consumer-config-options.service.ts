@@ -23,7 +23,7 @@ export class PactConsumerConfigOptionsService
         spec: 2,
       },
       publication: {
-        pactFilesOrDirs: [path.resolve(process.cwd(), 'pacts')],
+        pactFilesOrDirs: [path.resolve(process.cwd(), 'pact/pacts')],
         pactBroker: 'https://test.pact.dius.com.au',
         pactBrokerUsername: 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
         pactBrokerPassword: 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
