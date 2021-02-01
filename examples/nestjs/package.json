@@ -1,0 +1,9 @@
+{
+  "name": "pact-nestjs-full-example",
+  "version": "1.0.0",
+  "scripts": {
+    "test:consumer": "cd ./consumer && npm run test",
+    "test:provider": "cd ./provider && npm run test",
+    "test": "npm run test:consumer && npm run test:provider"
+  }
+}
