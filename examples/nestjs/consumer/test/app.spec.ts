@@ -82,12 +82,6 @@ pactWith(
       min: MIN_ANIMALS,
     })
 
-    // After each individual test (one or more interactions)
-    // we validate that the correct request came through.
-    // This ensures what we _expect_ from the provider, is actually
-    // what we've asked for (and is what gets captured in the contract)
-    afterEach(() => provider.verify())
-
     // Configure and import consumer API
     // Note that we update the API endpoint to point at the Mock Service
 
