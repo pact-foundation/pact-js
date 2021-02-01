@@ -1,44 +1,44 @@
-import { Test } from '@nestjs/testing';
-import { PactVerifierService } from 'nestjs-pact';
-import { INestApplication, Logger, LoggerService } from '@nestjs/common';
-import { AppModule } from '../src/app.module';
-import { AppRepository } from '../src/app.repository';
-import { PactModule } from './pact/pact.module';
+import { Test } from "@nestjs/testing"
+import { PactVerifierService } from "nestjs-pact"
+import { INestApplication, Logger, LoggerService } from "@nestjs/common"
+import { AppModule } from "../src/app.module"
+import { AppRepository } from "../src/app.repository"
+import { PactModule } from "./pact/pact.module"
 
-jest.setTimeout(30000);
+jest.setTimeout(30000)
 
-describe('Pact Verification', () => {
-  let verifier: PactVerifierService;
-  let logger: LoggerService;
-  let app: INestApplication;
+describe("Pact Verification", () => {
+  let verifier: PactVerifierService
+  let logger: LoggerService
+  let app: INestApplication
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, PactModule],
       providers: [AppRepository, Logger],
-    }).compile();
+    }).compile()
 
-    verifier = moduleRef.get(PactVerifierService);
-    logger = moduleRef.get(Logger);
+    verifier = moduleRef.get(PactVerifierService)
+    logger = moduleRef.get(Logger)
 
-    app = moduleRef.createNestApplication();
+    app = moduleRef.createNestApplication()
 
-    await app.init();
-  });
+    await app.init()
+  })
 
   it("Validates the expectations of 'Matching Service'", async () => {
     try {
-      const output = await verifier.verify(app);
+      const output = await verifier.verify(app)
 
-      logger.log('Pact Verification Complete!');
-      logger.log(output);
+      logger.log("Pact Verification Complete!")
+      logger.log(output)
     } catch (e) {
-      logger.error('Pact verification has failed');
-      fail('Pact verification has failed');
+      logger.error("Pact verification has failed")
+      fail("Pact verification has failed")
     }
-  });
+  })
 
   afterAll(async () => {
-    await app.close();
-  });
-});
+    await app.close()
+  })
+})
