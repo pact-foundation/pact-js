@@ -33,8 +33,8 @@ export class AppController {
   }
 
   @Get("/:id")
-  public getAnimalById(@Param("id") id: number): Animal {
-    const result = this.repository.getById(id)
+  public getAnimalById(@Param("id") id: string): Animal {
+    const result = this.repository.getById(parseInt(id, 10))
 
     if (!result) {
       throw new NotFoundException("Animal not found")
