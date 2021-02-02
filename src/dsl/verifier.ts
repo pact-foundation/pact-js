@@ -184,8 +184,8 @@ export class Verifier {
             next(new Error(`error executing 'beforeEach' hook: ${e}`))
           }
         }
-        next()
       }
+      next()
     })
   }
 
@@ -203,6 +203,8 @@ export class Verifier {
             next(new Error(`error executing 'afterEach' hook: ${e}`))
           }
         }
+      } else {
+        next()
       }
     })
   }
