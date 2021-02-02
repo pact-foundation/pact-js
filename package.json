@@ -2,8 +2,8 @@
   "name": "@pact-foundation/pact",
   "version": "9.14.2",
   "description": "Pact for all things Javascript",
-  "main": "./pact.js",
-  "types": "./pact.d.ts",
+  "main": "./src/pact.js",
+  "types": "./src/pact.d.ts",
   "scripts": {
     "clean": "rimraf docs dist dist-web coverage .nyc_output logs pacts",
     "coverage": "nyc report --reporter=lcov",

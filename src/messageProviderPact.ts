@@ -4,7 +4,7 @@
 
 import { omit, isEmpty } from "lodash"
 import { MessageDescriptor } from "./dsl/message"
-import logger from "./common/logger"
+import logger, { setLogLevel } from "./common/logger"
 import { VerifierOptions } from "@pact-foundation/pact-node"
 import { PactMessageProviderOptions } from "./dsl/options"
 import serviceFactory from "@pact-foundation/pact-node"
@@ -25,9 +25,9 @@ export class MessageProviderPact {
   constructor(private config: PactMessageProviderOptions) {
     if (config.logLevel && !isEmpty(config.logLevel)) {
       serviceFactory.logLevel(config.logLevel)
-      logger.level(config.logLevel)
+      setLogLevel(config.logLevel)
     } else {
-      logger.level()
+      setLogLevel()
     }
   }
 

@@ -1,40 +1,37 @@
 import pino = require("pino")
-import pkg from "./metadata"
+import { version } from "../../package.json"
 import { RequestOptions, ClientRequest, IncomingMessage } from "http"
 const http = require("http")
 
-const DEFAULT_LOG_LEVEL = "info"
-const logLevel = (process.env.LOGLEVEL || DEFAULT_LOG_LEVEL).toLowerCase()
-const pactLogFile = process.env.PACT_LOG_PATH
+const DEFAULT_LEVEL: LogLevel = (
+  process.env.LOGLEVEL || "info"
+).toLowerCase() as LogLevel
 
-const destination = pactLogFile
-  ? pino.destination(pactLogFile)
-  : pino.destination(1)
+type Logger = pino.Logger
+type LogLevel = pino.Level
 
-const logOpts = {
-  level: logLevel,
-  prettyPrint: {
-    messageFormat: `pact@${pkg.version}: {msg}`,
-    translateTime: true,
-  },
-}
-
-let logger = pino(logOpts, destination)
-
-Object.defineProperties(logger, {
-  level: {
-    enumerable: true,
-    value: (newLevel: string): void => {
-      logger = pino(
-        {
-          ...logOpts,
-          level: (newLevel || DEFAULT_LOG_LEVEL).toLowerCase(),
-        },
-        destination
-      )
+const createLogger = (level: LogLevel = DEFAULT_LEVEL): Logger =>
+  pino({
+    level: level.toLowerCase(),
+    prettyPrint: {
+      messageFormat: `pact@${version}: {msg}`,
+      translateTime: true,
     },
-  },
-})
+  })
+
+const logger: pino.Logger = createLogger()
+
+export const setLogLevel = (
+  wantedLevel?: pino.Level | number
+): number | void => {
+  if (wantedLevel) {
+    logger.level =
+      typeof wantedLevel === "string"
+        ? wantedLevel.toLowerCase()
+        : logger.levels.labels[wantedLevel]
+  }
+  return logger.levels.values[logger.level]
+}
 
 export const traceHttpInteractions = () => {
   const originalRequest = http.request
