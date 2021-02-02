@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [9.15.0](https://github.com/pact-foundation/pact-js/compare/v9.14.2...v9.15.0) (2021-02-02)
+
+
+### Features
+
+* **provider-states:** Add beforeEach and afterEach hooks to provider verification ([#529](https://github.com/pact-foundation/pact-js/issues/529)) - Fixes [#526](https://github.com/pact-foundation/pact-js/issues/526) ([8147042](https://github.com/pact-foundation/pact-js/commit/8147042f8dcbc396e991331afaf6c23d6c362b10))
+
+
+### Fixes and Improvements
+
+* **logger:** lowercase log level ([8388776](https://github.com/pact-foundation/pact-js/commit/8388776df0f576d3860cf11280cebb96e9cd5aab))
+* **logger:** replace bunyan with pino ([fe6dd30](https://github.com/pact-foundation/pact-js/commit/fe6dd302cc2de389d009eaf0136776d8366d0394))
+
 ### [9.14.2](https://github.com/pact-foundation/pact-js/compare/v9.14.1...v9.14.2) (2021-01-28)
 
 
