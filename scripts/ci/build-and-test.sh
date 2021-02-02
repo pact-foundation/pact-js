@@ -2,7 +2,9 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-"$DIR"/lib/modify-permissions-github-actions.sh
+if [[ ! -z "${CI:-}" ]]; then
+  "$DIR"/lib/modify-permissions-github-actions.sh
+fi
 npm ci
 npm run dist
 
