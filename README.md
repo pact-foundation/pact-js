@@ -324,8 +324,8 @@ new Verifier(opts).verifyProvider().then(function () {
 | `providerStatesSetupUrl`    | false     | string                         | Deprecated (use URL to send PUT requests to setup a given provider state                                                                              |
 | `stateHandlers`             | false     | object                         | Map of "state" to a function that sets up a given provider state. See docs below for more information                                                 |
 | `requestFilter`             | false     | function                       | Function that may be used to alter the incoming request or outgoing response from the verification process. See below for use.                        |
-| `before`                    | false     | function                       | Function to execute prior to any interaction being validated                                                                                          |
-| `after`                     | false     | function                       | Function to execute after each interaction has been validated                                                                                         |
+| `beforeEach`                    | false     | function                       | Function to execute prior to each interaction being validated                                                                                          |
+| `afterEach`                     | false     | function                       | Function to execute after each interaction has been validated                                                                                         |
 | `pactBrokerUsername`        | false     | string                         | Username for Pact Broker basic authentication                                                                                                         |
 | `pactBrokerPassword`        | false     | string                         | Password for Pact Broker basic authentication                                                                                                         |
 | `pactBrokerToken`           | false     | string                         | Bearer token for Pact Broker authentication                                                                                                           |
@@ -406,18 +406,18 @@ Read more about [Provider States](https://docs.pact.io/getting_started/provider_
 
 #### Before and After Hooks
 
-Sometimes, it's useful to be able to do things before or after a test has run, such as reset a database, log a metric etc. A `before` hook runs before any other part of the Pact test lifecycle, and a `after` hook runs as the last step before returning the verification result back to the test.
+Sometimes, it's useful to be able to do things before or after a test has run, such as reset a database, log a metric etc. A `beforeEach` hook runs on each verification before any other part of the Pact test lifecycle, and a `afterEach` hook runs as the last step before returning the verification result back to the test.
 
 You can add them to your verification options as follows:
 
 ```js
 const opts = {
   ...
-  before: () => {
+  beforeEach: () => {
     console.log('I run before everything else')
   },
 
-  after: () => {
+  afterEach: () => {
     console.log('I run after everything else has finished')
   }
 }
@@ -517,7 +517,7 @@ _Important Note_: You should only use this feature for things that can not be pe
 
 For each _interaction_ in a pact file, the order of execution is as follows:
 
-`Before` -> `State Handler` -> `Request Filter (request phase)` -> `Execute Provider Test` -> `Request Filter (response phase)` -> `After`
+`BeforeEach` -> `State Handler` -> `Request Filter (request phase)` -> `Execute Provider Test` -> `Request Filter (response phase)` -> `AfterEach`
 
 If any of the middleware or hooks fail, the tests will also fail.
 

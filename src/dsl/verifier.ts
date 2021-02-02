@@ -31,8 +31,8 @@ interface ProxyOptions {
   logLevel?: LogLevel
   requestFilter?: express.RequestHandler
   stateHandlers?: StateHandler
-  before?: Hook
-  after?: Hook
+  beforeEach?: Hook
+  afterEach?: Hook
   validateSSL?: boolean
   changeOrigin?: boolean
 }
@@ -166,15 +166,15 @@ export class Verifier {
 
   private registerBeforeHook(app: express.Express) {
     app.use(async (req, res, next) => {
-      if (this.config.before !== undefined) {
-        logger.trace("registered 'before' hook")
+      if (this.config.beforeEach !== undefined) {
+        logger.trace("registered 'beforeEach' hook")
         if (req.path === this.stateSetupPath) {
-          logger.debug("executing 'before' hook")
+          logger.debug("executing 'beforeEach' hook")
           try {
-            await this.config.before()
+            await this.config.beforeEach()
           } catch (e) {
-            logger.error("error executing 'before' hook: ", e)
-            next(new Error(`error executing 'before' hook: ${e}`))
+            logger.error("error executing 'beforeEach' hook: ", e)
+            next(new Error(`error executing 'beforeEach' hook: ${e}`))
           }
         }
         next()
@@ -184,16 +184,16 @@ export class Verifier {
 
   private registerAfterHook(app: express.Express) {
     app.use(async (req, res, next) => {
-      if (this.config.after !== undefined) {
-        logger.trace("registered 'after' hook")
+      if (this.config.afterEach !== undefined) {
+        logger.trace("registered 'afterEach' hook")
         next()
         if (req.path !== this.stateSetupPath) {
-          logger.debug("executing 'after' hook")
+          logger.debug("executing 'afterEach' hook")
           try {
-            await this.config.after()
+            await this.config.afterEach()
           } catch (e) {
-            logger.error("error executing 'after' hook: ", e)
-            next(new Error(`error executing 'after' hook: ${e}`))
+            logger.error("error executing 'afterEach' hook: ", e)
+            next(new Error(`error executing 'afterEach' hook: ${e}`))
           }
         }
       }
@@ -247,9 +247,7 @@ export class Verifier {
       if (!this.isLocalVerification()) {
         this.config.changeOrigin = true
         logger.debug(
-          `non-local provider address ${
-            this.config.providerBaseUrl
-          } detected, setting 'changeOrigin' to 'true'. This property can be overridden.`
+          `non-local provider address ${this.config.providerBaseUrl} detected, setting 'changeOrigin' to 'true'. This property can be overridden.`
         )
       }
     }
