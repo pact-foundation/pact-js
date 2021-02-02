@@ -5,10 +5,9 @@ import * as process from "process"
 import { Interaction, InteractionObject } from "./dsl/interaction"
 import { isEmpty } from "lodash"
 import { isPortAvailable } from "./common/net"
-import logger, { traceHttpInteractions } from "./common/logger"
-import { LogLevels } from "@pact-foundation/pact-node/src/logger"
+import logger, { traceHttpInteractions, setLogLevel } from "./common/logger"
 import { MockService } from "./dsl/mockService"
-import { PactOptions, PactOptionsComplete } from "./dsl/options"
+import { LogLevel, PactOptions, PactOptionsComplete } from "./dsl/options"
 import { Server } from "@pact-foundation/pact-node/src/server"
 import VerificationError from "./errors/verificationError"
 import ConfigurationError from "./errors/configurationError"
@@ -56,7 +55,7 @@ export class Pact {
       throw new ConfigurationError("You must specify a Provider for this pact.")
     }
 
-    logger.level(this.opts.logLevel as LogLevels)
+    setLogLevel(this.opts.logLevel as LogLevel)
     serviceFactory.logLevel(this.opts.logLevel)
 
     if (this.opts.logLevel === "trace") {

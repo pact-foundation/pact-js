@@ -9,7 +9,7 @@ import serviceFactory from "@pact-foundation/pact-node"
 import { omit, isEmpty, pickBy, identity, reduce } from "lodash"
 import * as express from "express"
 import * as http from "http"
-import logger from "../common/logger"
+import logger, { setLogLevel } from "../common/logger"
 import { LogLevel } from "./options"
 import ConfigurationError from "../errors/configurationError"
 import { localAddresses } from "../common/net"
@@ -269,7 +269,7 @@ export class Verifier {
 
     if (this.config.logLevel && !isEmpty(this.config.logLevel)) {
       serviceFactory.logLevel(this.config.logLevel)
-      logger.level(this.config.logLevel)
+      setLogLevel(this.config.logLevel)
     }
 
     this.deprecatedFields.forEach(f => {
