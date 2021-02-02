@@ -5,7 +5,6 @@ import { AppModule } from "../src/app.module"
 import { Matchers, Pact } from "@pact-foundation/pact"
 import { AppService } from "../src/app.service"
 import { Animal } from "../src/animal.interface"
-import { HTTPMethod } from "@pact-foundation/pact/common/request"
 
 pactWith(
   { consumer: "Matching Service", provider: "Animal Profile Service" },
@@ -126,7 +125,7 @@ pactWith(
               state: "Has some animals",
               uponReceiving: "a request for all animals",
               withRequest: {
-                method: HTTPMethod.GET,
+                method: "GET",
                 path: "/animals/available",
                 headers: { Authorization: "Bearer token" },
               },
@@ -161,7 +160,7 @@ pactWith(
             state: "Has an animal with ID 1",
             uponReceiving: "a request for an animal with ID 1",
             withRequest: {
-              method: HTTPMethod.GET,
+              method: "GET",
               path: term({
                 generate: "/animals/1",
                 matcher: "/animals/[0-9]+",
@@ -191,7 +190,7 @@ pactWith(
             state: "Has no animals",
             uponReceiving: "a request for an animal with ID 100",
             withRequest: {
-              method: HTTPMethod.GET,
+              method: "GET",
               path: "/animals/100",
               headers: { Authorization: "Bearer token" },
             },
@@ -217,7 +216,7 @@ pactWith(
           state: undefined,
           uponReceiving: "a request to create a new mate",
           withRequest: {
-            method: HTTPMethod.POST,
+            method: "POST",
             path: "/animals",
             body: like(suitor),
             headers: {
