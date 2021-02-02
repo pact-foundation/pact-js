@@ -22,10 +22,10 @@ export interface ProviderState {
 }
 
 export interface StateHandler {
-  [name: string]: () => Promise<any>
+  [name: string]: () => Promise<unknown>
 }
 
-export type Hook = () => Promise<any>
+export type Hook = () => Promise<unknown>
 
 interface ProxyOptions {
   logLevel?: LogLevel
