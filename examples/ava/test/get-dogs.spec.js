@@ -71,13 +71,11 @@ test("Dog API GET /dogs", async t => {
       name: "rocky",
     },
   ])
-})
 
-test.afterEach(async t => {
   // verify with Pact, and reset expectations
-  await t.notThrows(provider.verify())
+  await provider.verify()
 })
 
-test.always.after("pact.js mock server graceful shutdown", async () => {
+test.after.always("pact.js mock server graceful shutdown", async () => {
   await provider.finalize()
 })

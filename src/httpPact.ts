@@ -5,7 +5,7 @@ import * as process from "process"
 import { Interaction, InteractionObject } from "./dsl/interaction"
 import { isEmpty } from "lodash"
 import { isPortAvailable } from "./common/net"
-import logger from "./common/logger"
+import logger, { traceHttpInteractions } from "./common/logger"
 import { LogLevels } from "@pact-foundation/pact-node/src/logger"
 import { MockService } from "./dsl/mockService"
 import { PactOptions, PactOptionsComplete } from "./dsl/options"
@@ -58,6 +58,10 @@ export class Pact {
 
     logger.level(this.opts.logLevel as LogLevels)
     serviceFactory.logLevel(this.opts.logLevel)
+
+    if (this.opts.logLevel === "trace") {
+      traceHttpInteractions()
+    }
 
     this.createServer(config)
   }
@@ -155,7 +159,10 @@ export class Pact {
       .then(
         () =>
           new Promise<void>((resolve, reject) =>
-            this.server.delete().then(() => resolve(), e => reject(e))
+            this.server.delete().then(
+              () => resolve(),
+              e => reject(e)
+            )
           )
       )
       .catch(
@@ -196,9 +203,7 @@ export class Pact {
   }
 
   private setupMockService(): void {
-    logger.info(`Setting up Pact with Consumer "${
-      this.opts.consumer
-    }" and Provider "${this.opts.provider}"
+    logger.info(`Setting up Pact with Consumer "${this.opts.consumer}" and Provider "${this.opts.provider}"
     using mock service on Port: "${this.opts.port}"`)
 
     this.mockService = new MockService(

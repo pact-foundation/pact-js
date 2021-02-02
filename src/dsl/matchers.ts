@@ -16,7 +16,7 @@ export const ISO8601_DATE_FORMAT =
 export const ISO8601_DATETIME_FORMAT =
   "^\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d([+-][0-2]\\d:[0-5]\\d|Z)$"
 export const ISO8601_DATETIME_WITH_MILLIS_FORMAT =
-  "^\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d\\.\\d{3,}([+-][0-2]\\d(:?[0-5]\\d)?|Z)$"
+  "^\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d\\.\\d+([+-][0-2]\\d(:?[0-5]\\d)?|Z)$"
 export const ISO8601_TIME_FORMAT =
   "^(T\\d\\d:\\d\\d(:\\d\\d)?(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?)?$"
 export const RFC3339_TIMESTAMP_FORMAT =

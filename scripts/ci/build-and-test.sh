@@ -1,17 +1,19 @@
-#!/bin/bash -e
+#!/bin/bash -eu
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+"$DIR"/lib/modify-permissions-github-actions.sh
+npm ci
 npm run dist
 
-${DIR}/prepare.sh
+"${DIR}"/lib/prepare-release.sh
 
 # Link the build so that the examples are always testing the
 # current build, in it's properly exported format
 (cd dist && npm link)
 (cd dist-web && npm link)
 
-echo "Running e2e examples build for node version ${TRAVIS_NODE_VERSION}"
+echo "Running e2e examples build for node version $(node --version)"
 for i in examples/*; do
   [ -e "$i" ] || continue # prevent failure if there are no examples
   echo "--> running tests for: $i"

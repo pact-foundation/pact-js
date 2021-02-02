@@ -6,7 +6,7 @@ import pact from "@pact-foundation/pact-node"
 import { qToPromise } from "../common/utils"
 import { VerifierOptions as PactNodeVerifierOptions } from "@pact-foundation/pact-node"
 import serviceFactory from "@pact-foundation/pact-node"
-import { omit, isEmpty } from "lodash"
+import { omit, isEmpty, pickBy, identity, reduce } from "lodash"
 import * as express from "express"
 import * as http from "http"
 import logger from "../common/logger"
@@ -37,7 +37,7 @@ interface ProxyOptions {
   changeOrigin?: boolean
 }
 
-export type VerifierOptions = ProxyOptions & PactNodeVerifierOptions
+export type VerifierOptions = PactNodeVerifierOptions & ProxyOptions
 
 export class Verifier {
   private address: string = "http://localhost"
@@ -133,6 +133,13 @@ export class Verifier {
     this.registerBeforeHook(app)
     this.registerAfterHook(app)
 
+    // Trace req/res logging
+    if (this.config.logLevel === "debug") {
+      logger.info("debug request/response logging enabled")
+      app.use(this.createRequestTracer())
+      app.use(this.createResponseTracer())
+    }
+
     // Allow for request filtering
     if (this.config.requestFilter !== undefined) {
       app.use(this.config.requestFilter)
@@ -200,6 +207,40 @@ export class Verifier {
     })
   }
 
+  private createRequestTracer(): express.RequestHandler {
+    return (req, _, next) => {
+      logger.trace("incoming request", removeEmptyRequestProperties(req))
+      next()
+    }
+  }
+
+  private createResponseTracer(): express.RequestHandler {
+    return (_, res, next) => {
+      const [oldWrite, oldEnd] = [res.write, res.end]
+      const chunks: Buffer[] = []
+
+      res.write = (chunk: any) => {
+        chunks.push(Buffer.from(chunk))
+        return oldWrite.apply(res, [chunk])
+      }
+
+      res.end = (chunk: any) => {
+        if (chunk) {
+          chunks.push(Buffer.from(chunk))
+        }
+        const body = Buffer.concat(chunks).toString("utf8")
+        logger.trace(
+          "outgoing response",
+          removeEmptyResponseProperties(body, res)
+        )
+        oldEnd.apply(res, [chunk])
+      }
+      if (typeof next === "function") {
+        next()
+      }
+    }
+  }
+
   // Lookup the handler based on the description, or get the default handler
   private setupStates(descriptor: ProviderState): Promise<any> {
     const promises: Array<Promise<any>> = new Array()
@@ -260,3 +301,31 @@ export class Verifier {
     )
   }
 }
+
+const removeEmptyRequestProperties = (req: express.Request) =>
+  pickBy(
+    {
+      body: req.body,
+      headers: req.headers,
+      method: req.method,
+      path: req.path,
+    },
+    identity
+  )
+
+const removeEmptyResponseProperties = (body: any, res: express.Response) =>
+  pickBy(
+    {
+      body,
+      headers: reduce(
+        res.getHeaders(),
+        (acc: any, val, index) => {
+          acc[index] = val
+          return acc
+        },
+        {}
+      ),
+      status: res.statusCode,
+    },
+    identity
+  )

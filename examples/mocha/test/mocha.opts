@@ -1,5 +1,0 @@
---bail
---reporter spec
---colors
---timeout 10000
---exit

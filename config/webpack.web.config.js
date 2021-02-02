@@ -1,46 +1,55 @@
 /* eslint-disable */
-const path = require('path');
-const webpack = require('webpack');
-const DIST = path.resolve(__dirname, '../dist-web');
-const APP = path.resolve(__dirname, '../dist');
+const path = require("path")
+const webpack = require("webpack")
+const DIST = path.resolve(__dirname, "../dist-web")
+const APP = path.resolve(__dirname, "../dist")
 
 module.exports = {
-  entry: path.resolve(APP, 'pact-web.js'),
+  entry: path.resolve(APP, "pact-web.js"),
+  mode: "production",
   output: {
     path: DIST,
-    library: 'Pact',
-    libraryTarget: 'umd',
+    library: "Pact",
+    libraryTarget: "umd",
     umdNamedDefine: false,
-    filename: 'pact-web.js'
+    filename: "pact-web.js",
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js']
+    extensions: [".ts", ".tsx", ".js"],
   },
-  target: 'web',
+  target: "web",
   node: {
-    net: 'empty'
+    net: "empty",
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.tsx?$/,
-        loader: 'awesome-typescript-loader'
+        use: [
+          {
+            loader: "awesome-typescript-loader",
+          },
+        ],
       },
       {
-        loader: 'babel-loader',
         test: APP,
         exclude: /node_modules/,
-        query: {
-          presets: ['@babel/preset-env']
-        }
-      }
+        use: [
+          {
+            loader: "babel-loader",
+            query: {
+              presets: ["@babel/preset-env"],
+            },
+          },
+        ],
+      },
     ],
   },
+
   plugins: [
-    new webpack.ProvidePlugin({ Promise: ['es6-promise', 'Promise'] }),
-    new webpack.DefinePlugin({ 'global.GENTLY': false }),
+    new webpack.ProvidePlugin({ Promise: ["es6-promise", "Promise"] }),
+    new webpack.DefinePlugin({ "global.GENTLY": false }),
     new webpack.IgnorePlugin(/vertx/),
-    new webpack.NoEmitOnErrorsPlugin()
   ],
-  devtool: 'source-map'
-};
+  devtool: "source-map",
+}

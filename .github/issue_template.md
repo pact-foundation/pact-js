@@ -1,46 +1,11 @@
-## Issue Classification
+_Thank you for reporting an issue! We appreciate it very much. Issues are a big input into the priorities for Pact-JS development_
 
-- [ ] Feature request
-- [ ] Bug report
+_NOTE: If your issue is a how-to question, it is probably better asked in the pact-foundation slack channel, https://slack.pact.io/ _
 
-## Bug Report
+_This is the template for issues that aren't feature requests or bug reports. If your issue is a feature request or bug report, please use the relevant template from https://github.com/pact-foundation/pact-js/issues/new/choose - these will cover off the most common questions we ask and speed up a fix_
 
-### Software versions
+_If you're reading this thinking "Hmmm, it is bug report/feature request, but neither of those templates work for what I want to report", then please feel free to ignore the template in whatever way you think best suits your issue. We trust you, you're awesome_
 
-_NOTE: only applicable for bug reports_
+_All italic text in this template is safe to remove before submitting_
 
-- **OS**: e.g. Mac OSX 10.11.5
-- **Consumer Pact library**: e.g. Pact JS v2.6.0
-- **Provider Pact library**: e.g. pact-jvm-provider-maven_2.11 v 3.3.8
-- **Node Version**: `node --version`
-
-### Issue Checklist
-
-Confirm the following:
-
-- [ ] I have upgraded to the latest
-- [ ] I have created a reproducable git repository (see below) to illuminate the problem
-- [ ] I have the read the FAQs in the Readme
-- [ ] I have triple checked, that there are **no unhandled promises** in my code
-
-### Expected behaviour
-
-TBC
-
-### Actual behaviour
-
-TBC
-
-### Steps to reproduce
-
-Provide a repository, gist or reproducible code snippet so that we can test the problem.
-
-Forking the project and modifying the [E2E test](https://github.com/pact-foundation/pact-js/blob/master/examples/e2e/README.md) may be the fastest path to demonstrating any problem.
-
-### Relevant log files
-
-Please ensure you set logging to `DEBUG` and attach any relevant log files here (or link from a gist).
-
-## Feature Request
-
-TBC
+_Thanks again!_

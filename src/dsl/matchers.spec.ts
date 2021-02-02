@@ -583,6 +583,12 @@ describe("Matcher", () => {
           expect(
             iso8601DateTimeWithMillis("2015-08-06T16:53:10.537357Z")
           ).to.be.an("object")
+          expect(iso8601DateTimeWithMillis("2020-12-10T09:01:29.06Z")).to.be.an(
+            "object"
+          )
+          expect(iso8601DateTimeWithMillis("2020-12-10T09:01:29.1Z")).to.be.an(
+            "object"
+          )
           expect(iso8601DateTimeWithMillis()).to.be.an("object")
         })
       })

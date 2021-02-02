@@ -8,10 +8,8 @@ init:
 # Test against these versions of Node
 environment:
   matrix:
-    - nodejs_version: "8"
     - nodejs_version: "10"
     - nodejs_version: "12"
-    - nodejs_version: "13"
     - nodejs_version: "14"
 
 platform:
@@ -31,4 +29,4 @@ install:
 
 # Run custom build script instead of MSBuild
 build_script:
-  - powershell .\scripts\build.ps1
+  - powershell .\scripts\ci\build-and-test.ps1
