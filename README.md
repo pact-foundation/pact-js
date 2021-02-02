@@ -46,10 +46,12 @@ Read [Getting started with Pact] for more information for beginners.
     - [Provider API Testing](#provider-api-testing)
       - [Verification Options](#verification-options)
       - [API with Provider States](#api-with-provider-states)
+      - [Before and After Hooks](#before-and-after-hooks)
       - [Pending Pacts](#pending-pacts)
       - [WIP Pacts](#wip-pacts)
       - [Verifying multiple contracts with the same tag (e.g. for Mobile use cases)](#verifying-multiple-contracts-with-the-same-tag-eg-for-mobile-use-cases)
       - [Modify Requests Prior to Verification (Request Filters)](#modify-requests-prior-to-verification-request-filters)
+      - [Lifecycle of a provider verification](#lifecycle-of-a-provider-verification)
     - [Publishing Pacts to a Broker](#publishing-pacts-to-a-broker)
       - [Pact publishing options](#pact-publishing-options)
       - [Publishing Verification Results to a Pact Broker](#publishing-verification-results-to-a-pact-broker)
@@ -321,7 +323,9 @@ new Verifier(opts).verifyProvider().then(function () {
 | `pactUrls`                  | false     | array                          | Array of local pact file paths or HTTP-based URLs. Required if _not_ using a Pact Broker.                                                             |
 | `providerStatesSetupUrl`    | false     | string                         | Deprecated (use URL to send PUT requests to setup a given provider state                                                                              |
 | `stateHandlers`             | false     | object                         | Map of "state" to a function that sets up a given provider state. See docs below for more information                                                 |
-| `requestFilter`             | false     | function                       | Function that may be used to alter the incoming request or outgoing response from the verification process. See belot for use.                        |
+| `requestFilter`             | false     | function                       | Function that may be used to alter the incoming request or outgoing response from the verification process. See below for use.                        |
+| `beforeEach`                    | false     | function                       | Function to execute prior to each interaction being validated                                                                                          |
+| `afterEach`                     | false     | function                       | Function to execute after each interaction has been validated                                                                                         |
 | `pactBrokerUsername`        | false     | string                         | Username for Pact Broker basic authentication                                                                                                         |
 | `pactBrokerPassword`        | false     | string                         | Password for Pact Broker basic authentication                                                                                                         |
 | `pactBrokerToken`           | false     | string                         | Bearer token for Pact Broker authentication                                                                                                           |
@@ -372,7 +376,7 @@ Read more about [Verifying Pacts](https://docs.pact.io/getting_started/verifying
 If you have defined any `state`s in your consumer tests, the `Verifier` can put the provider into the right state prior to sending the request. For example, the provider can use the state to mock away certain database queries. To support this, set up a handler for each `state` using hooks on the `stateHandlers` property. Here is an example from our [e2e suite](https://github.com/pact-foundation/pact-js/blob/master/examples/e2e/test/provider.spec.js):
 
 ```js
-let opts = {
+const opts = {
   ...
   stateHandlers: {
     [null]: () => {
@@ -399,6 +403,27 @@ return new Verifier(opts).verifyProvider().then(...)
 As you can see, for each state ("Has no animals", ...), we configure the local datastore differently. If this option is not configured, the `Verifier` will ignore the provider states defined in the pact and log a warning.
 
 Read more about [Provider States](https://docs.pact.io/getting_started/provider_states).
+
+#### Before and After Hooks
+
+Sometimes, it's useful to be able to do things before or after a test has run, such as reset a database, log a metric etc. A `beforeEach` hook runs on each verification before any other part of the Pact test lifecycle, and a `afterEach` hook runs as the last step before returning the verification result back to the test.
+
+You can add them to your verification options as follows:
+
+```js
+const opts = {
+  ...
+  beforeEach: () => {
+    console.log('I run before everything else')
+  },
+
+  afterEach: () => {
+    console.log('I run after everything else has finished')
+  }
+}
+```
+
+If the hook errors, the test will fail. See the lifecycle of an interaction below.
 
 #### Pending Pacts
 
@@ -487,6 +512,14 @@ return new Verifier(opts).verifyProvider().then(...)
 As you can see, this is your opportunity to modify\add to headers being sent to the Provider API, for example to create a valid time-bound token.
 
 _Important Note_: You should only use this feature for things that can not be persisted in the pact file. By modifying the request, you are potentially modifying the contract from the consumer tests!
+
+#### Lifecycle of a provider verification
+
+For each _interaction_ in a pact file, the order of execution is as follows:
+
+`BeforeEach` -> `State Handler` -> `Request Filter (request phase)` -> `Execute Provider Test` -> `Request Filter (response phase)` -> `AfterEach`
+
+If any of the middleware or hooks fail, the tests will also fail.
 
 ### Publishing Pacts to a Broker
 

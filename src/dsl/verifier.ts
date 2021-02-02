@@ -22,13 +22,17 @@ export interface ProviderState {
 }
 
 export interface StateHandler {
-  [name: string]: () => Promise<any>
+  [name: string]: () => Promise<unknown>
 }
+
+export type Hook = () => Promise<unknown>
 
 interface ProxyOptions {
   logLevel?: LogLevel
   requestFilter?: express.RequestHandler
   stateHandlers?: StateHandler
+  beforeEach?: Hook
+  afterEach?: Hook
   validateSSL?: boolean
   changeOrigin?: boolean
 }
@@ -126,6 +130,8 @@ export class Verifier {
 
     app.use(this.stateSetupPath, bodyParser.json())
     app.use(this.stateSetupPath, bodyParser.urlencoded({ extended: true }))
+    this.registerBeforeHook(app)
+    this.registerAfterHook(app)
 
     // Trace req/res logging
     if (this.config.logLevel === "debug") {
@@ -156,13 +162,51 @@ export class Verifier {
   }
 
   private createProxyStateHandler() {
-    return (req: any, res: any) => {
+    return (req: express.Request, res: express.Response) => {
       const message: ProviderState = req.body
 
       return this.setupStates(message)
         .then(() => res.sendStatus(200))
         .catch(e => res.status(500).send(e))
     }
+  }
+
+  private registerBeforeHook(app: express.Express) {
+    app.use(async (req, res, next) => {
+      if (this.config.beforeEach !== undefined) {
+        logger.trace("registered 'beforeEach' hook")
+        if (req.path === this.stateSetupPath) {
+          logger.debug("executing 'beforeEach' hook")
+          try {
+            await this.config.beforeEach()
+          } catch (e) {
+            logger.error("error executing 'beforeEach' hook: ", e)
+            next(new Error(`error executing 'beforeEach' hook: ${e}`))
+          }
+        }
+      }
+      next()
+    })
+  }
+
+  private registerAfterHook(app: express.Express) {
+    app.use(async (req, res, next) => {
+      if (this.config.afterEach !== undefined) {
+        logger.trace("registered 'afterEach' hook")
+        next()
+        if (req.path !== this.stateSetupPath) {
+          logger.debug("executing 'afterEach' hook")
+          try {
+            await this.config.afterEach()
+          } catch (e) {
+            logger.error("error executing 'afterEach' hook: ", e)
+            next(new Error(`error executing 'afterEach' hook: ${e}`))
+          }
+        }
+      } else {
+        next()
+      }
+    })
   }
 
   private createRequestTracer(): express.RequestHandler {
