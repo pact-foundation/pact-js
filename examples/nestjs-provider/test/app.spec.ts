@@ -27,15 +27,10 @@ describe("Pact Verification", () => {
   })
 
   it("Validates the expectations of 'Matching Service'", async () => {
-    try {
-      const output = await verifier.verify(app)
+    const output = await verifier.verify(app)
 
-      logger.log("Pact Verification Complete!")
-      logger.log(output)
-    } catch (e) {
-      logger.error("Pact verification has failed")
-      fail("Pact verification has failed")
-    }
+    logger.log("Pact Verification Complete!")
+    logger.log(output)
   })
 
   afterAll(async () => {
