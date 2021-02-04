@@ -1,13 +1,13 @@
 import { Injectable } from "@nestjs/common"
-import { PactProducerOptionsFactory, PactProducerOptions } from "nestjs-pact"
+import { PactProviderOptionsFactory, PactProviderOptions } from "nestjs-pact"
 import { AppRepository } from "../../src/app.repository"
 
 @Injectable()
-export class PactProducerConfigOptionsService
-  implements PactProducerOptionsFactory {
+export class PactProviderConfigOptionsService
+  implements PactProviderOptionsFactory {
   public constructor(private readonly animalRepository: AppRepository) {}
 
-  public createPactProducerOptions(): PactProducerOptions {
+  public createPactProviderOptions(): PactProviderOptions {
     let token
 
     return {
