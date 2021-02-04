@@ -1,14 +1,14 @@
 import { Module } from "@nestjs/common"
-import { PactProviderModule } from "nestjs-pact"
-import { PactProviderConfigOptionsService } from "./pact-provider-config-options.service"
+import { PactProducerModule } from "nestjs-pact"
+import { PactProducerConfigOptionsService } from "./pact-producer-config-options.service"
 import { AppRepository } from "../../src/app.repository"
 import { AppModule } from "../../src/app.module"
 
 @Module({
   imports: [
-    PactProviderModule.registerAsync({
+    PactProducerModule.registerAsync({
       imports: [AppModule],
-      useClass: PactProviderConfigOptionsService,
+      useClass: PactProducerConfigOptionsService,
       inject: [AppRepository],
     }),
   ],
