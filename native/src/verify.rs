@@ -275,7 +275,9 @@ impl Task for BackgroundTask {
         Ok(runtime) => runtime.block_on(async {
           let provider_state_executor = ProviderStateCallback { 
             callback_handlers: &self.state_handlers,
-            timeout: self.options.callback_timeout
+            // TODO: add this in once the downstream lib has been released
+            // timeout: self.options.callback_timeout
+            timeout: 10000
           };
           pact_verifier::verify_provider_async(self.provider_info.clone(), self.pacts.clone(), self.filter_info.clone(), self.consumers_filter.clone(), self.options.clone(), &provider_state_executor).await
         }),
