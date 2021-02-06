@@ -496,7 +496,9 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
     request_filter,
     provider_tags,
     disable_ssl_verification,
-    callback_timeout
+    // TODO: add this in once the downstream lib has been released
+    // callback_timeout,
+    .. VerificationOptions::default()
   };
 
   debug!("Starting background task");
