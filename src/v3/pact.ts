@@ -205,7 +205,7 @@ export class PactV3 {
           } else if (testResult.mockServerMismatches) {
             return Promise.reject(new Error(generateMockServerError(testResult, "  ")))
           } else {
-            this.pact.writePactFile(result.mockServer.id, this.opts.dir)
+            this.pact.writePactFile(result.mockServer.id, this.opts)
             return val
           }
         })

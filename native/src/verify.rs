@@ -1,3 +1,4 @@
+use std::sync::Arc;
 use serde_json::Value;
 use neon::prelude::*;
 use pact_verifier::{ProviderInfo, VerificationOptions, FilterInfo, PactSource};
@@ -84,7 +85,7 @@ struct RequestFilterCallback {
 }
 
 impl RequestFilterExecutor for RequestFilterCallback {
-  fn call(&self, request: &Request) -> Request {
+  fn call(self: Arc<Self>, request: &Request) -> Request {
     let (sender, receiver) = mpsc::channel();
     let request_copy = request.clone();
     self.callback_handler.schedule_with(move |cx, this, callback| {
@@ -198,7 +199,7 @@ struct ProviderStateCallback<'a> {
 
 #[async_trait]
 impl ProviderStateExecutor for ProviderStateCallback<'_> {
-  async fn call(&self, interaction_id: Option<String>, provider_state: &ProviderState, setup: bool, _client: Option<&reqwest::Client>) -> Result<HashMap<String, serde_json::Value>, ProviderStateError> {
+  async fn call(self: Arc<Self>, interaction_id: Option<String>, provider_state: &ProviderState, setup: bool, _client: Option<&reqwest::Client>) -> Result<HashMap<String, serde_json::Value>, ProviderStateError> {
     match self.callback_handlers.get(&provider_state.name) {
       Some(callback) => {
         let (sender, receiver) = mpsc::channel();
@@ -273,13 +274,11 @@ impl Task for BackgroundTask {
     panic::catch_unwind(|| {
       match tokio::runtime::Builder::new_current_thread().enable_all().build() {
         Ok(runtime) => runtime.block_on(async {
-          let provider_state_executor = ProviderStateCallback { 
+          let provider_state_executor = ProviderStateCallback {
             callback_handlers: &self.state_handlers,
-            // TODO: add this in once the downstream lib has been released
-            // timeout: self.options.callback_timeout
-            timeout: 10000
+            timeout: self.options.callback_timeout
           };
-          pact_verifier::verify_provider_async(self.provider_info.clone(), self.pacts.clone(), self.filter_info.clone(), self.consumers_filter.clone(), self.options.clone(), &provider_state_executor).await
+          pact_verifier::verify_provider_async(self.provider_info.clone(), self.pacts.clone(), self.filter_info.clone(), self.consumers_filter.clone(), self.options.clone(), &Arc::new(provider_state_executor)).await
         }),
         Err(err) => {
           error!("Verify process failed to start the tokio runtime: {}", err);
@@ -410,13 +409,13 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
 
   debug!("provider_info = {:?}", provider_info);
 
-  let callback_timeout = get_integer_value(&mut cx, &config, "callbackTimeoutMs").unwrap_or(5000);
+  let callback_timeout = get_integer_value(&mut cx, &config, "callbackTimeout").unwrap_or(5000);
 
   let request_filter = match config.get(&mut cx, "requestFilter") {
     Ok(request_filter) => match request_filter.downcast::<JsFunction>() {
       Ok(val) => {
         let this = cx.this();
-        Some(Box::new(RequestFilterCallback { 
+        Some(Arc::new(RequestFilterCallback {
           callback_handler: EventHandler::new(&cx, this, val),
           timeout: callback_timeout
         }))
@@ -498,8 +497,7 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
     request_filter,
     provider_tags,
     disable_ssl_verification,
-    // TODO: add this in once the downstream lib has been released
-    // callback_timeout,
+    callback_timeout,
     .. VerificationOptions::default()
   };
 

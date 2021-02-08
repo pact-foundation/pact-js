@@ -16,6 +16,10 @@ export interface VerifierV3Options {
   pactBrokerUsername?: string
   pactBrokerPassword?: string
   pactBrokerToken?: string
+
+  // The timeout in milliseconds for request filters and provider state handlers
+  // to execute within
+  callbackTimeout?: number
   // customProviderHeaders?: string[]
   publishVerificationResult?: boolean
   providerVersion?: string

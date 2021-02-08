@@ -26,6 +26,7 @@ use std::collections::HashMap;
 use std::fs;
 use std::ffi::CStr;
 use std::ffi::CString;
+use bytes::{Bytes};
 
 mod verify;
 mod xml;
@@ -66,9 +67,9 @@ fn process_body(
   match content_type {
     Some(ref content_type) => {
       if content_type.is_json() {
-        Ok(OptionalBody::Present(process_json(body, category, generators).as_bytes().to_vec(), Some("application/json".into())))
+        Ok(OptionalBody::Present(Bytes::from(process_json(body, category, generators)), Some("application/json".into())))
       } else if content_type.is_xml() {
-        Ok(OptionalBody::Present(process_xml(body, category, generators)?, Some("application/xml".into())))
+        Ok(OptionalBody::Present(Bytes::from(process_xml(body, category, generators)?), Some("application/xml".into())))
       } else {
         Ok(OptionalBody::from(body))
       }
@@ -300,7 +301,7 @@ fn process_headers(cx: &mut CallContext<JsPact>, obj: Handle<JsObject>) -> NeonR
 }
 
 fn load_file(file_path: &String) -> Result<OptionalBody, std::io::Error> {
-  fs::read(file_path).map(|data| OptionalBody::Present(data, None))
+  fs::read(file_path).map(|data| OptionalBody::Present(Bytes::from(data), None))
 }
 
 declare_types! {
@@ -329,7 +330,7 @@ declare_types! {
         }
       }
       metadata.insert("pactJs".to_string(), pact_js_metadata);
-      
+
       let pact = RequestResponsePact {
         consumer: Consumer { name: consumer },
         provider: Provider { name: provider },
@@ -919,11 +920,17 @@ declare_types! {
 
     method writePactFile(mut cx) {
       let mock_server_id = cx.argument::<JsString>(0)?.value();
-      let dir = cx.argument::<JsValue>(1)?.downcast::<JsString>().map(|val| val.value()).ok();
+      let options: Handle<JsObject> = cx.argument::<JsObject>(1)?;
       let undefined = cx.undefined().upcast();
+      let dir = options.get(&mut cx, "dir")?.downcast::<JsString>().map(|val| val.value()).ok();
+      let overwrite = match options.get(&mut cx, "overwrite")?.downcast::<JsBoolean>() {
+        Ok(val) => val.value(),
+        Err(_) => false
+      };
+
       let result = MANAGER.lock().unwrap()
         .find_mock_server_by_id(&mock_server_id, &|mock_server| {
-            mock_server.write_pact(&dir)
+            mock_server.write_pact(&dir, overwrite)
                 .map(|_| undefined)
                 .map_err(|err| {
                     error!("Failed to write pact to file - {}", err);

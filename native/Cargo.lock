@@ -106,6 +106,9 @@ name = "bytes"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ad1f8e949d755f9d79112b5bb46938e0ef9d3804a0b16dfab13aafcaa5f0fa72"
+dependencies = [
+ "serde",
+]
 
 [[package]]
 name = "cbindgen"
@@ -301,6 +304,16 @@ checksum = "ece68d15c92e84fa4f19d3780f1294e5ca82a78a6d515f1efaabcc144688be00"
 dependencies = [
  "matches",
  "percent-encoding",
+]
+
+[[package]]
+name = "fs2"
+version = "0.4.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9564fc758e15025b46aa6643b1b77d047d1a56a1aea6e01002ac0c7026876213"
+dependencies = [
+ "libc",
+ "winapi",
 ]
 
 [[package]]
@@ -606,15 +619,6 @@ checksum = "47be2f14c678be2fdcab04ab1171db51b2762ce6f0a8ee87c8dd4a04ed216135"
 
 [[package]]
 name = "itertools"
-version = "0.9.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "284f18f85651fe11e8a991b2adb42cb078325c996ed026d994719efcfca1d54b"
-dependencies = [
- "either",
-]
-
-[[package]]
-name = "itertools"
 version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "37d572918e350e82412fe766d24b15e6682fb2ed2bbe018280caa810397cb319"
@@ -698,12 +702,6 @@ checksum = "4fabed175da42fed1fa0746b0ea71f412aa9d35e76e95e59b192c64b9dc2bf8b"
 dependencies = [
  "cfg-if 0.1.10",
 ]
-
-[[package]]
-name = "maplit"
-version = "0.1.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "22593015b8df7747861c69c28acd32589fb96c1686369f3b661d12e409d4cf65"
 
 [[package]]
 name = "maplit"
@@ -924,12 +922,13 @@ version = "0.0.6"
 dependencies = [
  "ansi_term 0.12.1",
  "async-trait",
+ "bytes",
  "either",
  "env_logger",
  "futures",
  "lazy_static",
  "log",
- "maplit 1.0.2",
+ "maplit",
  "neon",
  "neon-build",
  "pact_matching",
@@ -948,23 +947,25 @@ dependencies = [
 
 [[package]]
 name = "pact_matching"
-version = "0.8.8"
+version = "0.8.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0fb828a97f69d594a4838c78b0760aab14d079fc26f7ddfc8b8b09e743cc961a"
+checksum = "4795f8809e6dce72f2da00d58407ade6271e360337825bfa3659134aa7202e23"
 dependencies = [
  "ansi_term 0.12.1",
  "base64",
+ "bytes",
  "chrono",
  "chrono-tz",
  "difference",
+ "fs2",
  "hex",
  "http",
  "indextree",
- "itertools 0.10.0",
+ "itertools",
  "lazy_static",
  "lenient_semver",
  "log",
- "maplit 1.0.2",
+ "maplit",
  "mime",
  "multipart",
  "nom 5.1.2",
@@ -984,18 +985,18 @@ dependencies = [
 
 [[package]]
 name = "pact_mock_server"
-version = "0.7.14"
+version = "0.7.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dc43ab2627cd64f7dd496f17b193a2e04c2cf2d211c895a2a6c3c32716b9974d"
+checksum = "e836267a44ac8ca068405848954f2616ddf27f31a7543a5b1b6700d015018cb5"
 dependencies = [
  "bytes",
  "futures",
  "hyper",
  "hyper-rustls",
- "itertools 0.9.0",
+ "itertools",
  "lazy_static",
  "log",
- "maplit 0.1.6",
+ "maplit",
  "pact_matching",
  "rustls",
  "serde_json",
@@ -1006,19 +1007,20 @@ dependencies = [
 
 [[package]]
 name = "pact_mock_server_ffi"
-version = "0.0.14"
+version = "0.0.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "81441a9229fa79c900fa284639ae038926697aea4ed9d52bcfaf5a12e9a7739f"
+checksum = "d786fe9d741cc87af5389e47c88eb90123958f41d29a5ac0dacdbe4f7fd816f1"
 dependencies = [
+ "bytes",
  "cbindgen",
  "chrono",
  "chrono-tz",
  "env_logger",
- "itertools 0.9.0",
+ "itertools",
  "lazy_static",
  "libc",
  "log",
- "maplit 1.0.2",
+ "maplit",
  "multipart",
  "onig",
  "pact_matching",
@@ -1032,9 +1034,9 @@ dependencies = [
 
 [[package]]
 name = "pact_verifier"
-version = "0.10.1"
+version = "0.10.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "62f0fd50b1e10b82888a9e88566f5381c35450660e92cdd9fa2f72309ad5dd3d"
+checksum = "8594f881fb4a446c997515bc73f206944d38bc3bd19d23f6bb1770a192a364c9"
 dependencies = [
  "ansi_term 0.12.1",
  "async-trait",
@@ -1042,11 +1044,11 @@ dependencies = [
  "difference",
  "futures",
  "http",
- "itertools 0.10.0",
+ "itertools",
  "lazy_static",
  "libc",
  "log",
- "maplit 1.0.2",
+ "maplit",
  "mime",
  "pact_matching",
  "regex",
