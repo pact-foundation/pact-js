@@ -32,3 +32,8 @@ jobs:
           body: ${{steps.publish.outputs.notes}}
           draft: false
           prerelease: false
+      - name: Trigger release
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.GITHUBRELEASETOKEN }}
+          event-type: native-release-triggered

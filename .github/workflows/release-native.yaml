@@ -1,8 +1,9 @@
 name: Release Native Libs workflow
 
 on:
-  release:
-    types: [created, edited]
+  repository_dispatch:
+    types:
+      - native-release-triggered
 
 jobs:
   build-release:
