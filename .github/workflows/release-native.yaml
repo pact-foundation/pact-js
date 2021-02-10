@@ -14,6 +14,9 @@ jobs:
         node-version: [10.x, 12.x, 13.x, 14.x]
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: feat/v3.0.0
+          fetch-depth: 0
       - name: Setup node
         uses: actions/setup-node@v1
         with:
@@ -37,7 +40,7 @@ jobs:
       - id: set_package_info
         run: echo "::set-output name=packageJson::$(node ./scripts/native-lib-details.js)"
       - name: Upload Release Assets
-        id: upload-release-asset 
+        id: upload-release-asset
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
@@ -51,11 +54,14 @@ jobs:
       matrix:
         node-version: [10, 12, 14]
     steps:
-      - uses: actions/checkout@v2      
+      - uses: actions/checkout@v2
+        with:
+          ref: feat/v3.0.0
+          fetch-depth: 0
       - id: set_package_info
         run: docker run --rm -e LOCAL_USER_ID=`id -u $USER` -v $(pwd):/workspace -t pactfoundation/pact-js-musl:${{ matrix.node-version }}
       - name: Upload Release Assets
-        id: upload-release-asset 
+        id: upload-release-asset
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
