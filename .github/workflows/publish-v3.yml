@@ -8,6 +8,8 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    outputs:
+      version: v${{ steps.publish.outputs.version }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -34,6 +36,7 @@ jobs:
           prerelease: true
 
   build-release:
+    needs: release
     runs-on: ${{ matrix.operating-system }}
     strategy:
       matrix:
@@ -73,9 +76,10 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{ fromJson(steps.set_package_info.outputs.packageJson).staged_tarball }}
           asset_name: ${{ fromJson(steps.set_package_info.outputs.packageJson).package_name }}
-          tag: ${{ github.ref }}
+          tag: v${{ needs.release.outputs.version }}
 
   build-musl-release:
+    needs: release
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -94,4 +98,4 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{ fromJson(steps.set_package_info.outputs.packageJson).staged_tarball }}
           asset_name: ${{ fromJson(steps.set_package_info.outputs.packageJson).package_name }}
-          tag: ${{ github.ref }}
+          tag: v${{ needs.release.outputs.version }}
