@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.31](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.29...v10.0.0-beta.31) (2021-02-10)
+
+
+### Features
+
+* fix file locking, add 'overwrite' and 'callbackTimeout' flags ([e891fcc](https://github.com/pact-foundation/pact-js/commit/e891fccb5802491cf148f398c81406bf06ae43c8)), closes [#599](https://github.com/pact-foundation/pact-js/issues/599) [#600](https://github.com/pact-foundation/pact-js/issues/600)
+
+
+### Fixes and Improvements
+
+* improve file locking behaviour ([0f73466](https://github.com/pact-foundation/pact-js/commit/0f7346663d3edd9ef36cdfa7f08adfbe8f4ab4d8))
+* make the callback timeout configurable with a 5 sec default ([a0f0876](https://github.com/pact-foundation/pact-js/commit/a0f0876b93e728379a289a5bfa6e2e8613ec1768))
+
 ## [10.0.0-beta.30](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.29...v10.0.0-beta.30) (2021-02-08)
 
 
