@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.31](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.30...v10.0.0-beta.31) (2021-02-10)
+
+
+### Fixes and Improvements
+
+* improve file locking behaviour ([0f73466](https://github.com/pact-foundation/pact-js/commit/0f7346663d3edd9ef36cdfa7f08adfbe8f4ab4d8))
+
 ## [10.0.0-beta.30](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.29...v10.0.0-beta.30) (2021-02-08)
 
 
