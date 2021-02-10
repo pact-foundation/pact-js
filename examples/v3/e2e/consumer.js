@@ -9,9 +9,14 @@ const authHeader = {
 
 // Fetch animals who are currently 'available' from the
 // Animal Service
-const availableAnimals = (api = getApiEndpoint) => {
+const availableAnimals = (api = getApiEndpoint, filter = {}) => {
+  let query = {}
+  for (const key in filter) {
+   query[key] = filter[key]
+  }
   return request
     .get(`${api()}/animals/available`)
+    .query(query)
     .set(authHeader)
     .then(res => res.body)
 }
@@ -36,7 +41,7 @@ const getAnimalById = (id, api = getApiEndpoint, format = 'application/json') =>
 // Suggestions function:
 // Given availability and sex etc. find available suitors,
 // and give them a 'score'
-const suggestion = (mate, api) => {
+const suggestion = (mate, api, filter = {}) => {
   const predicates = [
     (candidate, animal) => candidate.id !== animal.id,
     (candidate, animal) => candidate.gender !== animal.gender,
@@ -45,7 +50,7 @@ const suggestion = (mate, api) => {
 
   const weights = [(candidate, animal) => Math.abs(candidate.age - animal.age)]
 
-  return availableAnimals(api).then(available => {
+  return availableAnimals(api, filter).then(available => {
     const eligible = available.filter(
       a => !predicates.map(p => p(a, mate)).includes(false)
     )
