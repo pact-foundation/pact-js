@@ -224,7 +224,7 @@ pactWith(
             },
           },
           willRespondWith: {
-            status: HttpStatus.OK,
+            status: HttpStatus.CREATED,
             headers: {
               "Content-Type": "application/json; charset=utf-8",
             },
