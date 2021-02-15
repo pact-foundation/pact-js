@@ -6,7 +6,7 @@ import * as sinonChai from "sinon-chai"
 import { Pact, Interaction, Matchers } from "@pact-foundation/pact"
 
 const expect = chai.expect
-import { DogService } from "../index"
+import { DogService } from "../src/index"
 const { eachLike } = Matchers
 
 chai.use(sinonChai)
