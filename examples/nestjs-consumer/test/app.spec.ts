@@ -7,7 +7,7 @@ import { AppService } from "../src/app.service"
 import { Animal } from "../src/animal.interface"
 
 pactWith(
-  { consumer: "Matching Service", provider: "Animal Profile Service" },
+  { consumer: "NestJS Consumer Example", provider: "NestJS Provider Example" },
   (provider: Pact) => {
     let animalsService: AppService
 
