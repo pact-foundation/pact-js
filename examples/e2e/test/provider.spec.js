@@ -16,7 +16,7 @@ describe("Pact Verification", () => {
     let token = "INVALID TOKEN"
 
     let opts = {
-      provider: "Animal Profile Service",
+      provider: "e2e Provider Example",
       logLevel: "DEBUG",
       providerBaseUrl: "http://localhost:8081",
 

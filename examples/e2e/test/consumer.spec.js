@@ -9,8 +9,8 @@ chai.use(chaiAsPromised)
 
 describe("Pact", () => {
   const provider = new Pact({
-    consumer: "Matching Service",
-    provider: "Animal Profile Service",
+    consumer: "e2e Consumer Example",
+    provider: "e2e Provider Example",
     // port: 1234, // You can set the port explicitly here or dynamically (see setup() below)
     log: path.resolve(process.cwd(), "logs", "mockserver-integration.log"),
     dir: path.resolve(process.cwd(), "pacts"),

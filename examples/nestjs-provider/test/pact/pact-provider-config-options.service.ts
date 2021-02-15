@@ -11,7 +11,7 @@ export class PactProviderConfigOptionsService
     let token
 
     return {
-      provider: "Animal Profile Service",
+      provider: "NestJS Provider Example",
       logLevel: "debug",
 
       requestFilter: (req, res, next) => {

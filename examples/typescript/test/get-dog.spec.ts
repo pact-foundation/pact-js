@@ -21,8 +21,8 @@ describe("The Dog API", () => {
     log: path.resolve(process.cwd(), "logs", "mockserver-integration.log"),
     dir: path.resolve(process.cwd(), "pacts"),
     spec: 2,
-    consumer: "MyConsumer",
-    provider: "MyProvider",
+    consumer: "Typescript Consumer Example",
+    provider: "Typescript Provider Example",
   })
 
   const dogExample = { dog: 1 }

@@ -14,8 +14,8 @@ const provider = new Pact({
   log: path.resolve(process.cwd(), "logs", "mockserver-integration.log"),
   dir: path.resolve(process.cwd(), "pacts"),
   spec: 2,
-  consumer: "MyConsumer",
-  provider: "MyProvider",
+  consumer: "Ava Consumer Example",
+  provider: "Ava Provider Example",
   pactfileWriteMode: "merge",
 })
 
