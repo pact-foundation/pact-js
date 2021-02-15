@@ -2,7 +2,6 @@ name: Build, test, test all examples
 
 on:
   push:
-    branches: *
   pull_request:
     branches: [master]
 
