@@ -14,6 +14,7 @@ import { LogLevel } from "./options"
 import ConfigurationError from "../errors/configurationError"
 import { localAddresses } from "../common/net"
 import * as url from "url"
+import { AddressInfo } from "dgram"
 const HttpProxy = require("http-proxy")
 const bodyParser = require("body-parser")
 
@@ -93,12 +94,11 @@ export class Verifier {
   // Run the Verification CLI process
   private runProviderVerification() {
     return (server: http.Server) => {
+      const { port } = server.address() as AddressInfo
       const opts = {
-        providerStatesSetupUrl: `${this.address}:${server.address().port}${
-          this.stateSetupPath
-        }`,
+        providerStatesSetupUrl: `${this.address}:${port}${this.stateSetupPath}`,
         ...omit(this.config, "handlers"),
-        providerBaseUrl: `${this.address}:${server.address().port}`,
+        providerBaseUrl: `${this.address}:${port}`,
       }
 
       return qToPromise<any>(pact.verifyPacts(opts))

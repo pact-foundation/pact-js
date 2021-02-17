@@ -63,7 +63,7 @@ export function eachLike<T>(content: T, opts?: { min: number }) {
   return {
     contents: content,
     getValue: () => {
-      const data = []
+      const data: T[] = []
       for (let i = 0; i < min; i++) {
         data[i] = content
       }

@@ -15,12 +15,29 @@ module.exports = {
     filename: "pact-web.js",
   },
   resolve: {
-    extensions: [".ts", ".tsx", ".js"],
+    extensions: [".ts", ".tsx", ".js"], 
+    modules: [
+      path.resolve('./node_modules/popsicle/node_modules'),
+      'node_modules',
+    ],
+    alias: {
+      "form-data": path.resolve('./node_modules/popsicle/node_modules/form-data/'),
+      "tough-cookie": path.resolve('./node_modules/popsicle/node_modules/tough-cookie/'),
+    },
+    fallback: {
+      "util": false,
+      "url": false,
+      "querystring": false,
+      "http": false,
+      "https": false,
+      "stream": false,
+      "url": false,
+      "zlib": false,
+      "net": false,
+      "buffer": false,
+    }
   },
   target: "web",
-  node: {
-    net: "empty",
-  },
   module: {
     rules: [
       {
@@ -37,9 +54,6 @@ module.exports = {
         use: [
           {
             loader: "babel-loader",
-            query: {
-              presets: ["@babel/preset-env"],
-            },
           },
         ],
       },

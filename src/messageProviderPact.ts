@@ -12,6 +12,7 @@ import * as express from "express"
 import * as http from "http"
 import { MessageProvider } from "./pact"
 import { qToPromise } from "./common/utils"
+import { AddressInfo } from "dgram"
 
 const bodyParser = require("body-parser")
 
@@ -68,9 +69,10 @@ export class MessageProviderPact {
   // Run the Verification CLI process
   private runProviderVerification() {
     return (server: http.Server) => {
+      const { port } = server.address() as AddressInfo
       const opts = {
         ...omit(this.config, "handlers"),
-        ...{ providerBaseUrl: "http://localhost:" + server.address().port },
+        ...{ providerBaseUrl: "http://localhost:" + port },
       } as VerifierOptions
 
       return qToPromise<any>(serviceFactory.verifyPacts(opts))
