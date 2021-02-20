@@ -25,8 +25,7 @@ describe("Message provider tests", () => {
     pactBrokerPassword: "O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
     publishVerificationResult: true,
 
-    // Tag the contract
-    tags: ["latest"],
+    consumerVersionTags: ["latest"],
   })
 
   describe("send an event", () => {
