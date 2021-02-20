@@ -1,6 +1,7 @@
 /* tslint:disable no-console */
 
 import { Publisher } from "@pact-foundation/pact"
+import { versionFromGitTag } from "@pact-foundation/absolute-version"
 import { resolve } from "path"
 import { execSync } from "child_process"
 
@@ -14,9 +15,12 @@ if (process.env.CI !== "true") {
   process.exit(0)
 }
 
+// Your version numbers need to be unique for every different version of your consumer
+// see https://docs.pact.io/getting_started/versioning_in_the_pact_broker/ for details.
+// If you use git tags, then you can use @pact-foundation/absolute-version as we do here.
+const consumerVersion = versionFromGitTag()
 // Usually, you would just use the CI env vars, but to allow these examples to run from
 // local development machines, we'll fall back to the git command when the env vars aren't set.
-const gitSha = process.env.TRAVIS_COMMIT || exec("git rev-parse HEAD")
 const branch =
   process.env.TRAVIS_BRANCH || exec("git rev-parse --abbrev-ref HEAD")
 
@@ -25,13 +29,15 @@ new Publisher({
   pactBroker: "https://test.pact.dius.com.au",
   pactBrokerUsername: "dXfltyFMgNOFZAxr8io9wJ37iUpY42M",
   pactBrokerPassword: "O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
-  consumerVersion: gitSha as string,
   tags: [(branch as string) || "master"],
+  consumerVersion,
 })
   .publishPacts()
   .then(
     () => {
-      console.log("Pact contract publishing complete!")
+      console.log(
+        `Pact contract for consumer version ${consumerVersion} published!`
+      )
       console.log("")
       console.log("Head over to https://test.pact.dius.com.au/ and login with")
       console.log("=> Username: dXfltyFMgNOFZAxr8io9wJ37iUpY42M")
