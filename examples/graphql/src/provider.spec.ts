@@ -1,4 +1,5 @@
 import { Verifier } from "@pact-foundation/pact"
+import { versionFromGitTag } from "@pact-foundation/absolute-version"
 import app from "./provider"
 
 let server: any
@@ -21,7 +22,10 @@ describe("Pact Verification", () => {
       pactBrokerUsername: "dXfltyFMgNOFZAxr8io9wJ37iUpY42M",
       provider: "GraphQLProvider",
       providerBaseUrl: "http://localhost:4000/graphql",
-      providerVersion: "1.0.0",
+      // Your version numbers need to be unique for every different version of your provider
+      // see https://docs.pact.io/getting_started/versioning_in_the_pact_broker/ for details.
+      // If you use git tags, then you can use @pact-foundation/absolute-version as we do here.
+      providerVersion: versionFromGitTag(),
       publishVerificationResult: true,
       tags: ["prod"],
     }
