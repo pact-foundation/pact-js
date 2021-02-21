@@ -18,6 +18,7 @@
     "deploy:provider": "npm run can-i-deploy && serverless deploy -f provider"
   },
   "devDependencies": {
+    "@pact-foundation/absolute-version": "0.0.1",
     "@pact-foundation/pact": "^9.11.1",
     "aws-sdk": "^2.218.1",
     "chai": "^3.5.0",

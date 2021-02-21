@@ -1,11 +1,6 @@
-/* tslint:disable:no-unused-expression object-literal-sort-keys max-classes-per-file no-empty */
-const {
-  MessageProviderPact,
-  Message,
-  Matchers,
-} = require("@pact-foundation/pact")
+const { MessageProviderPact } = require("@pact-foundation/pact")
+const { versionFromGitTag } = require("@pact-foundation/absolute-version")
 const path = require("path")
-const { like, term } = Matchers
 const { createEvent } = require("./index")
 
 describe("Message provider tests", () => {
@@ -15,7 +10,11 @@ describe("Message provider tests", () => {
     },
     logLevel: "WARN",
     provider: "SNSPactEventProvider",
-    providerVersion: "1.0.0",
+
+    // Your version numbers need to be unique for every different version of your provider
+    // see https://docs.pact.io/getting_started/versioning_in_the_pact_broker/ for details.
+    // If you use git tags, then you can use @pact-foundation/absolute-version as we do here.
+    providerVersion: versionFromGitTag(),
 
     // For local validation
     // pactUrls: [path.resolve(process.cwd(), "pacts", "snspacteventconsumer-snspacteventprovider.json")],
@@ -26,8 +25,7 @@ describe("Message provider tests", () => {
     pactBrokerPassword: "O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
     publishVerificationResult: true,
 
-    // Tag the contract
-    tags: ["latest"],
+    consumerVersionTags: ["latest"],
   })
 
   describe("send an event", () => {

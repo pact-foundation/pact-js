@@ -19,6 +19,7 @@
   "author": "Matt Fellows <matt.fellows@onegeek.com.au>",
   "license": "MIT",
   "devDependencies": {
+    "@pact-foundation/absolute-version": "0.0.1",
     "@pact-foundation/pact": "^9.11.1",
     "@types/chai": "^4.2.0",
     "@types/chai-as-promised": "0.0.31",
