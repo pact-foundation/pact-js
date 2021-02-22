@@ -6,9 +6,9 @@ Here is a short checklist to give your PR the best start:
 
 _Everything above can be removed once checked_
 
-[] `npm run dist` works locally (this will run tests, lint and build)
-[] Commit messages are ready to go in the changelog (see below for details)
-[] PR template filled in (see below for details)
+- [ ] `npm run dist` works locally (this will run tests, lint and build)
+- [ ] Commit messages are ready to go in the changelog (see below for details)
+- [ ] PR template filled in (see below for details)
 
 # Commit messages
 
