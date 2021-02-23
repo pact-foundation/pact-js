@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.32](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.31...v10.0.0-beta.32) (2021-02-23)
+
+
+### Features
+
+* add experimental 'allow missing' behind env var PACT_EXPERIMENTAL_FEATURE_ALLOW_MISSING_REQUESTS ([2d3a1fe](https://github.com/pact-foundation/pact-js/commit/2d3a1fec0c8989d58d0384bd39888cd8eb76d0a7))
+
 ## [10.0.0-beta.31](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.30...v10.0.0-beta.31) (2021-02-10)
 
 
