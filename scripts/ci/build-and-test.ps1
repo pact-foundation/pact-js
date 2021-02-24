@@ -12,8 +12,8 @@ Get-ChildItem ".\examples" -Directory | ForEach-Object {
   if ($_.Name -ne "v3") {
     Write-Output "Running examples in $($_.Name)"
     pushd $_.FullName
-    npm link @pact-foundation/pact
     npm i
+    npm link @pact-foundation/pact
     npm t
     if ($LastExitCode -ne 0) {
       Write-Output "Non-zero exit code!"
