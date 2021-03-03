@@ -325,16 +325,17 @@ describe("V3 Matchers", () => {
   })
 
   describe("#datetime", () => {
-    it("returns a JSON representation of a datetime matcher", () => {
-      let result = MatchersV3.datetime(
-        "yyyy-MM-dd'T'HH:mm:ss.SSSX",
-        "2016-02-11T09:46:56.023Z"
-      )
-      expect(result).to.deep.equal({
-        "pact:generator:type": "DateTime",
-        "pact:matcher:type": "timestamp",
-        format: "yyyy-MM-dd'T'HH:mm:ss.SSSX",
-        value: "2016-02-11T09:46:56.023Z",
+    describe("when an example is given", () => {
+      it("returns a JSON representation of a datetime matcher", () => {
+        let result = MatchersV3.datetime(
+          "yyyy-MM-dd'T'HH:mm:ss.SSSX",
+          "2016-02-11T09:46:56.023Z"
+        )
+        expect(result).to.deep.equal({
+          "pact:matcher:type": "timestamp",
+          format: "yyyy-MM-dd'T'HH:mm:ss.SSSX",
+          value: "2016-02-11T09:46:56.023Z",
+        })
       })
     })
 

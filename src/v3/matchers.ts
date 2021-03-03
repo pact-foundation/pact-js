@@ -1,4 +1,5 @@
-import * as R from "ramda"
+import { isNil, pickBy, times } from "ramda"
+
 const PactNative = require("../native/index.node")
 
 export namespace MatchersV3 {
@@ -49,7 +50,7 @@ export namespace MatchersV3 {
     return {
       min: 1,
       "pact:matcher:type": "type",
-      value: R.times(() => template, count),
+      value: times(() => template, count),
     }
   }
 
@@ -75,7 +76,7 @@ export namespace MatchersV3 {
     return {
       min,
       "pact:matcher:type": "type",
-      value: R.times(() => template, elements),
+      value: times(() => template, elements),
     }
   }
 
@@ -108,7 +109,7 @@ export namespace MatchersV3 {
     return {
       max,
       "pact:matcher:type": "type",
-      value: R.times(() => template, elements),
+      value: times(() => template, elements),
     }
   }
 
@@ -152,7 +153,7 @@ export namespace MatchersV3 {
       min,
       max,
       "pact:matcher:type": "type",
-      value: R.times(() => template, elements),
+      value: times(() => template, elements),
     }
   }
 
@@ -297,12 +298,12 @@ export namespace MatchersV3 {
    * @param example Example value to use. If omitted a value using the current system date and time will be generated.
    */
   export function datetime(format: string, example?: string): DateTimeMatcher {
-    return {
-      "pact:generator:type": "DateTime",
+    return pickBy((v) => !isNil(v), {
+      "pact:generator:type": example ? undefined : "DateTime",
       "pact:matcher:type": "timestamp",
       format,
       value: example || PactNative.generate_datetime_string(format),
-    }
+    })
   }
 
   /**
