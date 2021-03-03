@@ -39,7 +39,7 @@ export interface V3Request {
   method?: string
   path?: string | MatchersV3.Matcher
   query?: {
-    [param: string]: string | MatchersV3.Matcher
+    [param: string]: string | string[] | MatchersV3.Matcher
   }
   headers?: {
     [header: string]: string | MatchersV3.Matcher
