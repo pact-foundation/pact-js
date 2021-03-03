@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.33](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.32...v10.0.0-beta.33) (2021-03-03)
+
+
+### Fixes and Improvements
+
+* use example in datetime matcher instead of generator if provided. Fixes [#620](https://github.com/pact-foundation/pact-js/issues/620) ([c0ca78b](https://github.com/pact-foundation/pact-js/commit/c0ca78b6995354154ed387f18c1d896789acf778))
+* **pact-node:** Bump dependency on pact-node ([812e09e](https://github.com/pact-foundation/pact-js/commit/812e09e67a9789b8ab02c852fe689a7b39d092c0))
+
 ## [10.0.0-beta.32](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.31...v10.0.0-beta.32) (2021-02-23)
 
 
