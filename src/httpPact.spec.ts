@@ -7,7 +7,7 @@ import { HTTPMethod } from "./common/request"
 import { Interaction, InteractionObject } from "./dsl/interaction"
 import { MockService } from "./dsl/mockService"
 import { PactOptions, PactOptionsComplete } from "./dsl/options"
-import serviceFactory from "@pact-foundation/pact-node"
+import serviceFactory from "@pact-foundation/pact-core"
 import { Pact } from "./httpPact"
 import { ImportMock } from "ts-mock-imports"
 
@@ -38,7 +38,7 @@ describe("Pact", () => {
   } as PactOptionsComplete
 
   before(() => {
-    // Stub out pact-node
+    // Stub out pact-core
     const manager = ImportMock.mockClass(serviceFactory, "createServer") as any
     manager.mock("createServer", () => {})
   })
@@ -98,17 +98,17 @@ describe("Pact", () => {
     }
 
     describe("when server is not properly configured", () => {
-      describe("and pact-node is unable to start the server", () => {
+      describe("and pact-core is unable to start the server", () => {
         it("returns a rejected promise", async () => {
           const p: any = new Pact(fullOpts)
 
           p.server = {
-            start: () => Promise.reject("pact-node error"),
+            start: () => Promise.reject("pact-core error"),
             options: { port: 1234 },
           }
 
           return expect(p.setup()).to.eventually.be.rejectedWith(
-            "pact-node error"
+            "pact-core error"
           )
         })
       })
