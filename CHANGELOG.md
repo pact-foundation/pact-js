@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [9.15.3](https://github.com/pact-foundation/pact-js/compare/v9.15.2...v9.15.3) (2021-03-10)
+
+
+### Fixes and Improvements
+
+* **pact-web-types:** Fix issue where typescript types were not exposed in pact-web ([d529082](https://github.com/pact-foundation/pact-js/commit/d529082f0b1e7d969ebdedae091adc54ad4be464))
+
 ### [9.15.2](https://github.com/pact-foundation/pact-js/compare/v9.15.1...v9.15.2) (2021-02-28)
 
 
