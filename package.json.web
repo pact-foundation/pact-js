@@ -4,7 +4,7 @@
   "description": "Pact for the browser",
   "main": "pact-web.js",
   "scripts": {},
-  "types": "./pact-web.d.ts",
+  "types": "./src/pact-web.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pact-foundation/pact-js.git"
