@@ -73,9 +73,11 @@ server.get("/animals/available/xml", (req, res) => {
 server.get("/animals/:id", (req, res) => {
   const response = animalRepository.getById(req.params.id)
   if (response) {
-    if (req.header('accept') === 'text/plain') {
-      res.contentType('text/plain; charset=utf-8')
-      res.end(`id=${response.id};first_name=${response.first_name};last_name=${response.last_name};animal=${response.animal}`)
+    if (req.header("accept") === "text/plain") {
+      res.contentType("text/plain; charset=utf-8")
+      res.end(
+        `id=${response.id};first_name=${response.first_name};last_name=${response.last_name};animal=${response.animal}`
+      )
     } else {
       res.end(JSON.stringify(response))
     }

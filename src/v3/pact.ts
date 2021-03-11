@@ -108,7 +108,7 @@ function displayRequest(request: any, indent: string): string {
 
 function filterMissingFeatureFlag(mismatches: Mismatch[]) {
   if (process.env.PACT_EXPERIMENTAL_FEATURE_ALLOW_MISSING_REQUESTS) {
-    return mismatches.filter((m) => m.type !== "missing-request")
+    return mismatches.filter(m => m.type !== "missing-request")
   } else {
     return mismatches
   }
@@ -236,7 +236,9 @@ export class PactV3 {
           if (testResult.mockServerError) {
             return Promise.reject(new Error(testResult.mockServerError))
           } else if (testResult.mockServerMismatches) {
-            const mismatches = extractMismatches(testResult.mockServerMismatches)
+            const mismatches = extractMismatches(
+              testResult.mockServerMismatches
+            )
             if (filterMissingFeatureFlag(mismatches).length > 0) {
               // Feature flag: allow missing requests on the mock service
               return Promise.reject(

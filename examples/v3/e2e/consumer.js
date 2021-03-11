@@ -12,7 +12,7 @@ const authHeader = {
 const availableAnimals = (api = getApiEndpoint, filter = {}) => {
   let query = {}
   for (const key in filter) {
-   query[key] = filter[key]
+    query[key] = filter[key]
   }
   return request
     .get(`${api()}/animals/available`)
@@ -22,13 +22,17 @@ const availableAnimals = (api = getApiEndpoint, filter = {}) => {
 }
 
 // Find animals by their ID from the Animal Service
-const getAnimalById = (id, api = getApiEndpoint, format = 'application/json') => {
+const getAnimalById = (
+  id,
+  api = getApiEndpoint,
+  format = "application/json"
+) => {
   let r = request
     .get(`${api()}/animals/${id}`)
     .set(authHeader)
-    .set({Accept: format})
+    .set({ Accept: format })
 
-  if (format === 'text/plain') {
+  if (format === "text/plain") {
     return r.then(res => res.text)
   }
 
@@ -71,7 +75,11 @@ const suggestion = (mate, api, filter = {}) => {
 }
 
 // Creates a mate for suggestions
-const createMateForDates = (mate, api = getApiEndpoint, contentType = 'application/json' ) => {
+const createMateForDates = (
+  mate,
+  api = getApiEndpoint,
+  contentType = "application/json"
+) => {
   return request
     .post(`${api()}/animals`)
     .send(mate)

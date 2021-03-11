@@ -33,7 +33,6 @@ export const setLogLevel = (
   return logger.levels.values[logger.level]
 }
 
-
 export const traceHttpInteractions = () => {
   const originalRequest = http.request
 
