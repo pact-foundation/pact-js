@@ -2,7 +2,8 @@ import { isEmpty } from "ramda"
 import ConfigurationError from "../errors/configurationError"
 import logger from "../common/logger"
 
-const PactNative = require("../../native/index.node")
+import PactNative from "../../native/index.node"
+import express from "express"
 
 // Commented out fields highlight areas we need to look at for compatibility
 // with existing API, as a sort of "TODO" list.
@@ -23,8 +24,8 @@ export interface VerifierV3Options {
   // customProviderHeaders?: string[]
   publishVerificationResult?: boolean
   providerVersion?: string
-  requestFilter?: (req: any) => any
-  stateHandlers?: any
+  requestFilter?: express.RequestHandler
+  stateHandlers?: Record<string, () => void>
 
   consumerVersionTags?: string | string[]
   providerVersionTags?: string | string[]
@@ -57,7 +58,7 @@ export class VerifierV3 {
   /**
    * Verify a HTTP Provider
    */
-  public verifyProvider(): Promise<any> {
+  public verifyProvider(): Promise<unknown> {
     return new Promise((resolve, reject) => {
       if (isEmpty(this.config)) {
         reject(new ConfigurationError("No configuration provided to verifier"))
@@ -74,7 +75,7 @@ export class VerifierV3 {
       }
 
       try {
-        PactNative.verify_provider(this.config, (err: any, val: any) => {
+        PactNative.verify_provider(this.config, (err, val) => {
           if (err || !val) {
             logger.debug("In verify_provider callback: FAILED with", err, val)
             reject(err)

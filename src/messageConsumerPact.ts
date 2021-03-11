@@ -3,7 +3,7 @@
  */
 
 import { isEmpty, cloneDeep } from "lodash"
-import { ConcreteFixture, extractPayload, PactFixture } from "./dsl/matchers"
+import { AnyJson, extractPayload, PactFixture } from "./dsl/matchers"
 import { qToPromise } from "./common/utils"
 import {
   Metadata,
@@ -169,7 +169,7 @@ const isMessage = (x: Message | unknown): x is Message => {
 // bodyHandler takes a synchronous function and returns
 // a wrapped function that accepts a Message and returns a Promise
 export function synchronousBodyHandler<R>(
-  handler: (body: ConcreteFixture) => R
+  handler: (body: AnyJson) => R
 ): MessageConsumer {
   return (m: ConcreteMessage): Promise<R> => {
     const body = m.contents
@@ -189,7 +189,7 @@ export function synchronousBodyHandler<R>(
 // a wrapped function that accepts a Message and returns a Promise
 // TODO: move this into its own package and re-export?
 export function asynchronousBodyHandler<R>(
-  handler: (body: ConcreteFixture) => Promise<R>
+  handler: (body: AnyJson) => Promise<R>
 ): MessageConsumer {
   return (m: ConcreteMessage) => handler(m.contents)
 }

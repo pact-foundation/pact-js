@@ -1,21 +1,28 @@
 import { isNil, pickBy, times } from "ramda"
+import { AnyJson } from "./jsonTypes"
 
-const PactNative = require("../../native/index.node")
+import PactNative from "../../native/index.node"
 
 /**
  * Pact Matcher
  */
-export interface Matcher {
+export interface Matcher<T> {
   "pact:matcher:type": string
   "pact:generator:type"?: string
-  value?: any
+  value?: T
 }
+
+export type AnyTemplate = AnyJson | TemplateMap | TemplateArray
+interface TemplateMap {
+  [key: string]: AnyJson | AnyTemplate
+}
+type TemplateArray = Array<AnyTemplate>
 
 /**
  * Value must match the given template
  * @param template Template to base the comparison on
  */
-export function like(template: any): Matcher {
+export const like = <T extends AnyTemplate>(template: T): Matcher<T> => {
   return {
     "pact:matcher:type": "type",
     value: template,
@@ -26,7 +33,7 @@ export function like(template: any): Matcher {
  * Array where each element must match the given template
  * @param template Template to base the comparison on
  */
-export function eachLike(template: any): Matcher {
+export const eachLike = <T extends AnyTemplate>(template: T): Matcher<T[]> => {
   return {
     "pact:matcher:type": "type",
     value: [template],
@@ -36,7 +43,7 @@ export function eachLike(template: any): Matcher {
 /**
  * Like Matcher with a minimum number of required values
  */
-export interface MinLikeMatcher extends Matcher {
+export interface MinLikeMatcher<T> extends Matcher<T> {
   min: number
 }
 
@@ -45,10 +52,10 @@ export interface MinLikeMatcher extends Matcher {
  * @param template Template to base the comparison on
  * @param count Number of examples to generate, defaults to one
  */
-export function atLeastOneLike(
-  template: any,
-  count: number = 1
-): MinLikeMatcher {
+export const atLeastOneLike = <T extends AnyTemplate>(
+  template: T,
+  count = 1
+): MinLikeMatcher<T[]> => {
   return {
     min: 1,
     "pact:matcher:type": "type",
@@ -60,13 +67,13 @@ export function atLeastOneLike(
  * An array that has to have at least the required number of elements and each element must match the given template
  * @param template Template to base the comparison on
  * @param min Minimum number of elements required in the array
- * @param count Number of examples to generate, defaults to one
+ * @param count Number of examples to generate, defaults to min
  */
-export function atLeastLike(
-  template: any,
+export const atLeastLike = <T extends AnyTemplate>(
+  template: T,
   min: number,
   count?: number
-): MinLikeMatcher {
+): MinLikeMatcher<T[]> => {
   const elements = count || min
   if (count && count < min) {
     throw new Error(
@@ -74,7 +81,7 @@ export function atLeastLike(
         min +
         " but " +
         count +
-        " elements where requested." +
+        " elements were requested." +
         " Make sure the count is greater than or equal to the min."
     )
   }
@@ -89,7 +96,7 @@ export function atLeastLike(
 /**
  * Like Matcher with a maximum number of required values
  */
-export interface MaxLikeMatcher extends Matcher {
+export interface MaxLikeMatcher<T> extends Matcher<T> {
   max: number
 }
 
@@ -99,11 +106,11 @@ export interface MaxLikeMatcher extends Matcher {
  * @param max Maximum number of elements required in the array
  * @param count Number of examples to generate, defaults to one
  */
-export function atMostLike(
-  template: any,
+export const atMostLike = <T extends AnyTemplate>(
+  template: T,
   max: number,
   count?: number
-): MaxLikeMatcher {
+): MaxLikeMatcher<T[]> => {
   const elements = count || 1
   if (count && count > max) {
     throw new Error(
@@ -130,12 +137,12 @@ export function atMostLike(
  * @param max Maximum number of elements required in the array
  * @param count Number of examples to generate, defaults to one
  */
-export function constrainedArrayLike(
-  template: any,
+export const constrainedArrayLike = <T extends AnyTemplate>(
+  template: T,
   min: number,
   max: number,
   count?: number
-): MinLikeMatcher & MaxLikeMatcher {
+): MinLikeMatcher<T[]> & MaxLikeMatcher<T[]> => {
   const elements = count || min
   if (count) {
     if (count < min) {
@@ -169,20 +176,18 @@ export function constrainedArrayLike(
 
 /**
  * Value must be a boolean
- * @param b Boolean example value
+ * @param b Boolean example value. Defaults to true if unsupplied
  */
-export function boolean(b: boolean): Matcher {
-  return {
-    "pact:matcher:type": "type",
-    value: b,
-  }
-}
+export const boolean = (b = true): Matcher<boolean> => ({
+  "pact:matcher:type": "type",
+  value: b,
+})
 
 /**
  * Value must be an integer (must be a number and have no decimal places)
  * @param int Example value. If omitted a random value will be generated.
  */
-export function integer(int?: number): Matcher {
+export const integer = (int?: number): Matcher<number> => {
   if (int) {
     return {
       "pact:matcher:type": "integer",
@@ -201,7 +206,7 @@ export function integer(int?: number): Matcher {
  * Value must be a decimal number (must be a number and have decimal places)
  * @param num Example value. If omitted a random value will be generated.
  */
-export function decimal(num?: number): Matcher {
+export const decimal = (num?: number): Matcher<number> => {
   if (num) {
     return {
       "pact:matcher:type": "decimal",
@@ -220,7 +225,7 @@ export function decimal(num?: number): Matcher {
  * Value must be a number
  * @param num Example value. If omitted a random integer value will be generated.
  */
-export function number(num?: number): Matcher {
+export function number(num?: number): Matcher<number> {
   if (num) {
     return {
       "pact:matcher:type": "number",
@@ -239,14 +244,14 @@ export function number(num?: number): Matcher {
  * Value must be a string
  * @param str Example value
  */
-export function string(str: string): Matcher {
+export function string(str: string): Matcher<string> {
   return {
     "pact:matcher:type": "type",
     value: str,
   }
 }
 
-export interface RegexMatcher extends Matcher {
+export interface RegexMatcher extends Matcher<string> {
   regex: string
   example?: string
 }
@@ -275,14 +280,12 @@ export function regex(pattern: RegExp | string, str: string): RegexMatcher {
  * Value that must be equal to the example. This is mainly used to reset the matching rules which cascade.
  * @param value Example value
  */
-export function equal(value: any): Matcher {
-  return {
-    "pact:matcher:type": "equality",
-    value,
-  }
-}
+export const equal = <T extends AnyTemplate>(value: T): Matcher<T> => ({
+  "pact:matcher:type": "equality",
+  value,
+})
 
-export interface DateTimeMatcher extends Matcher {
+export interface DateTimeMatcher extends Matcher<string> {
   format: string
 }
 
@@ -328,7 +331,7 @@ export function time(format: string, example?: string): DateTimeMatcher {
  * @param format Date format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html)
  * @param example Example value to use. If omitted a value using the current system date will be generated.
  */
-export function date(format: any, example?: string): DateTimeMatcher {
+export function date(format: string, example?: string): DateTimeMatcher {
   return {
     format,
     "pact:generator:type": "Date",
@@ -341,7 +344,7 @@ export function date(format: any, example?: string): DateTimeMatcher {
  * Value that must include the example value as a substring.
  * @param value String value to include
  */
-export function includes(value: string): Matcher {
+export function includes(value: string): Matcher<string> {
   return {
     "pact:matcher:type": "include",
     value,
@@ -352,7 +355,7 @@ export function includes(value: string): Matcher {
  * Value that must be null. This will only match the JSON Null value. For other content types, it will
  * match if the attribute is missing.
  */
-export function nullValue(): Matcher {
+export function nullValue(): Matcher<null> {
   return {
     "pact:matcher:type": "null",
   }
@@ -411,22 +414,24 @@ export function url2(
   }
 }
 
-export interface ArrayContainsMatcher extends Matcher {
-  variants: any[]
+export interface ArrayContainsMatcher extends Matcher<AnyTemplate[]> {
+  variants: Array<AnyTemplate>
 }
 
 /**
  * Matches the items in an array against a number of variants. Matching is successful if each variant
  * occurs once in the array. Variants may be objects containing matching rules.
  */
-export function arrayContaining(...variants: any[]): ArrayContainsMatcher {
+export function arrayContaining(
+  ...variants: AnyTemplate[]
+): ArrayContainsMatcher {
   return {
     "pact:matcher:type": "arrayContains",
     variants,
   }
 }
 
-export interface ProviderStateInjectedValue extends Matcher {
+export interface ProviderStateInjectedValue extends Matcher<string> {
   expression: string
 }
 

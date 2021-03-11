@@ -1,4 +1,4 @@
-import { ConcreteFixture, MatcherResult, PactFixture } from "./matchers"
+import { AnyJson, MatcherResult, PactFixture } from "./matchers"
 
 /**
  * Metadata is a map containing message context,
@@ -26,7 +26,7 @@ export interface ConcreteMessage {
   providerStates?: [{ name: string }]
   description?: string
   metadata?: Metadata
-  contents: ConcreteFixture
+  contents: AnyJson
 }
 
 /**

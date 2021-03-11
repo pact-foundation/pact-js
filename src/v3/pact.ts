@@ -2,7 +2,7 @@ import { omit, join, toPairs, map, flatten } from "ramda"
 import * as MatchersV3 from "./matchers"
 import { version as pactPackageVersion } from "../../package.json"
 
-const PactNative = require("../../native/index.node")
+import PactNative, { Mismatch, MismatchRequest } from "../../native/index.node"
 
 /**
  * Options for the mock server
@@ -32,27 +32,32 @@ export interface PactV3Options {
 
 export interface V3ProviderState {
   description: string
-  parameters?: any
+  parameters?: unknown
 }
+
+type TemplateHeaders = {
+  [header: string]: string | MatchersV3.Matcher<string>
+}
+
+type TemplateQuery = Record<
+  string,
+  | string
+  | MatchersV3.Matcher<string>
+  | Array<string | MatchersV3.Matcher<string>>
+>
 
 export interface V3Request {
   method?: string
-  path?: string | MatchersV3.Matcher
-  query?: {
-    [param: string]: string | MatchersV3.Matcher
-  }
-  headers?: {
-    [header: string]: string | MatchersV3.Matcher
-  }
-  body?: any
+  path?: string | MatchersV3.Matcher<string>
+  query?: TemplateQuery
+  headers?: TemplateHeaders
+  body?: MatchersV3.AnyTemplate
 }
 
 export interface V3Response {
   status: number
-  headers?: {
-    [header: string]: string | MatchersV3.Matcher
-  }
-  body?: any
+  headers?: TemplateHeaders
+  body?: MatchersV3.AnyTemplate
 }
 
 export interface V3MockServer {
@@ -61,14 +66,7 @@ export interface V3MockServer {
   id: string
 }
 
-export interface Mismatch {
-  path?: string
-  method?: string
-  type: string
-  request?: V3Request
-}
-
-function displayQuery(query: { [k: string]: string[] }): string {
+function displayQuery(query: Record<string, string[]>): string {
   const pairs = toPairs(query)
   const mapped = flatten(
     map(([key, values]) => map((val) => `${key}=${val}`, values), pairs)
@@ -76,14 +74,14 @@ function displayQuery(query: { [k: string]: string[] }): string {
   return join("&", mapped)
 }
 
-function displayHeaders(headers: any, indent: string): string {
+function displayHeaders(headers: TemplateHeaders, indent: string): string {
   return join(
     "\n" + indent,
     map(([k, v]) => `${k}: ${v}`, toPairs(headers))
   )
 }
 
-function displayRequest(request: any, indent: string): string {
+function displayRequest(request: MismatchRequest, indent: string): string {
   let output = `\n${indent}Method: ${request.method}\n${indent}Path: ${request.path}`
 
   if (request.query) {
@@ -114,7 +112,7 @@ function filterMissingFeatureFlag(mismatches: Mismatch[]) {
   }
 }
 
-function extractMismatches(mockServerMismatches: any[]): Mismatch[] {
+function extractMismatches(mockServerMismatches: string[]): Mismatch[] {
   return mockServerMismatches.map((mismatchJson) => JSON.parse(mismatchJson))
 }
 
@@ -144,11 +142,11 @@ function generateMockServerError(mismatches: Mismatch[], indent: string) {
 }
 
 export class PactV3 {
-  private opts: PactV3Options & {}
+  private opts: PactV3Options
   private states: V3ProviderState[] = []
-  private pact: any
+  private pact: PactNative.Pact
 
-  constructor(opts: PactV3Options & {}) {
+  constructor(opts: PactV3Options) {
     this.opts = opts
     this.pact = new PactNative.Pact(
       opts.consumer,
@@ -158,7 +156,7 @@ export class PactV3 {
     )
   }
 
-  public given(providerState: string, parameters?: any): PactV3 {
+  public given(providerState: string, parameters?: unknown): PactV3 {
     this.states.push({ description: providerState, parameters })
     return this
   }
@@ -263,7 +261,12 @@ export class PactV3 {
               error += "\n\n  " + testResult.mockServerError
             }
             if (testResult.mockServerMismatches) {
-              error += "\n\n  " + generateMockServerError(testResult, "    ")
+              error +=
+                "\n\n  " +
+                generateMockServerError(
+                  extractMismatches(testResult.mockServerMismatches),
+                  "    "
+                )
             }
             return Promise.reject(new Error(error))
           } else {

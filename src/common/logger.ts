@@ -1,7 +1,6 @@
 import pino = require("pino")
 import { version } from "../../package.json"
-import { RequestOptions, ClientRequest, IncomingMessage } from "http"
-import http = require("http")
+import http, { RequestOptions, ClientRequest, IncomingMessage } from "http"
 
 const DEFAULT_LEVEL: LogLevel = (
   process.env.LOGLEVEL || "info"
@@ -33,14 +32,17 @@ export const setLogLevel = (
   return logger.levels.values[logger.level]
 }
 
-export const traceHttpInteractions = () => {
+export const traceHttpInteractions = (): void => {
   const originalRequest = http.request
 
-  http.request = (options: RequestOptions, cb: any): ClientRequest => {
+  http.request = (
+    options: RequestOptions,
+    cb: (res: IncomingMessage) => void
+  ): ClientRequest => {
     const requestBodyChunks: Buffer[] = []
     const responseBodyChunks: Buffer[] = []
 
-    const hijackedCalback = (res: any) => {
+    const hijackedCalback = (res: IncomingMessage) => {
       logger.trace("outgoing request", {
         ...options,
         body: Buffer.concat(requestBodyChunks).toString("utf8"),
@@ -57,7 +59,9 @@ export const traceHttpInteractions = () => {
     )
     const oldWrite = clientRequest.write.bind(clientRequest)
 
-    clientRequest.write = (chunk: any) => {
+    clientRequest.write = (
+      chunk: Parameters<typeof clientRequest.write>[0]
+    ) => {
       requestBodyChunks.push(Buffer.from(chunk))
       return oldWrite(chunk)
     }

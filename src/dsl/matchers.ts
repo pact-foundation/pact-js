@@ -306,22 +306,26 @@ export function isMatcher(x: PactFixture): x is MatcherResult<PactFixture> {
 }
 
 export type PactFixture =
-  | Record<string, unknown>
-  | string
-  | number
-  | Array<PactFixture>
+  | AnyJson
   | MatcherResult<PactFixture>
   | MatcherArrayResult<PactFixture>
+  | PactFixtureMap
+  | PactFixtureArray
 
-export type ConcreteFixture =
-  | Record<string, unknown>
-  | string
-  | number
-  | Array<ConcreteFixture>
+interface PactFixtureMap {
+  [key: string]: PactFixture
+}
+type PactFixtureArray = Array<PactFixture>
+
+export type AnyJson = boolean | number | string | null | JsonArray | JsonMap
+interface JsonMap {
+  [key: string]: AnyJson
+}
+type JsonArray = Array<AnyJson>
 
 // Recurse the object removing any underlying matching guff, returning
 // the raw example content
-export function extractPayload(value: PactFixture): ConcreteFixture {
+export function extractPayload(value: PactFixture): AnyJson {
   if (isMatcher(value)) {
     return extractPayload(value.getValue())
   }
@@ -330,9 +334,9 @@ export function extractPayload(value: PactFixture): ConcreteFixture {
     return (value as Array<PactFixture>).map(extractPayload)
   }
 
-  if (typeof value === "object") {
+  if (value !== null && typeof value === "object") {
     return Object.keys(value).reduce(
-      (acc: Record<string, ConcreteFixture>, propName: string) => ({
+      (acc: JsonMap, propName: string) => ({
         ...acc,
         [propName]: extractPayload(
           (value as Record<string, PactFixture>)[propName]

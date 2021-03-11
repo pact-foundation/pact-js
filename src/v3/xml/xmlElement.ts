@@ -1,3 +1,4 @@
+import { Matcher } from "v3/matchers"
 import { XmlNode } from "./xmlNode"
 import { XmlText } from "./xmlText"
 
@@ -33,12 +34,7 @@ export class XmlElement extends XmlNode {
   public appendElement(
     name: string,
     attributes: XmlAttributes,
-    arg?: string | XmlCallback
-  ): XmlElement
-  public appendElement(
-    name: string,
-    attributes: XmlAttributes,
-    arg?: any
+    arg?: string | XmlCallback | Matcher<string>
   ): XmlElement {
     const el = new XmlElement(name).setAttributes(attributes)
     if (arg) {
@@ -53,12 +49,16 @@ export class XmlElement extends XmlNode {
     return this
   }
 
-  public appendText(content: string): XmlElement
-  public appendText(content: any): XmlElement {
+  public appendText(content: string | Matcher<string>): XmlElement {
     if (typeof context === "string") {
-      this.children.push(new XmlText(content))
-    } else if (content["pact:matcher:type"]) {
-      this.children.push(new XmlText(content.value, content))
+      this.children.push(new XmlText(content as string))
+    } else if (content as Matcher<string>["pact:matcher:type"]) {
+      this.children.push(
+        new XmlText(
+          (content as Matcher<string>).value || "",
+          content as Matcher<string>
+        )
+      )
     } else {
       this.children.push(new XmlText(content.toString()))
     }

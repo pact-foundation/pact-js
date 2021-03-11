@@ -112,7 +112,7 @@ describe("V3 Matchers", () => {
 
     it("throws an error if the number of examples is less than the minimum", () => {
       expect(() => MatchersV3.atLeastLike({ a: "b" }, 4, 2)).to.throw(
-        "atLeastLike has a minimum of 4 but 2 elements where requested. Make sure the count is greater than or equal to the min."
+        "atLeastLike has a minimum of 4 but 2 elements were requested. Make sure the count is greater than or equal to the min."
       )
     })
   })

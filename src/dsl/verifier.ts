@@ -6,7 +6,7 @@ import pact from "@pact-foundation/pact-node"
 import { qToPromise } from "../common/utils"
 import { VerifierOptions as PactNodeVerifierOptions } from "@pact-foundation/pact-node"
 import serviceFactory from "@pact-foundation/pact-node"
-import { omit, isEmpty, pickBy, identity, reduce } from "lodash"
+import { omit, isEmpty, pickBy, identity, reduce, Dictionary } from "lodash"
 import express from "express"
 import * as http from "http"
 import logger, { setLogLevel } from "../common/logger"
@@ -221,12 +221,12 @@ export class Verifier {
       const [oldWrite, oldEnd] = [res.write, res.end]
       const chunks: Buffer[] = []
 
-      res.write = (chunk: any) => {
+      res.write = (chunk: Parameters<typeof res.write>[0]) => {
         chunks.push(Buffer.from(chunk))
         return oldWrite.apply(res, [chunk])
       }
 
-      res.end = (chunk: any) => {
+      res.end = (chunk: Parameters<typeof res.write>[0]) => {
         if (chunk) {
           chunks.push(Buffer.from(chunk))
         }
@@ -315,13 +315,17 @@ const removeEmptyRequestProperties = (req: express.Request) =>
     identity
   )
 
-const removeEmptyResponseProperties = (body: any, res: express.Response) =>
+const removeEmptyResponseProperties = (body: string, res: express.Response) =>
   pickBy(
     {
       body,
       headers: reduce(
         res.getHeaders(),
-        (acc: any, val, index) => {
+        (
+          acc: Dictionary<string | number | string[] | undefined>,
+          val,
+          index
+        ) => {
           acc[index] = val
           return acc
         },
