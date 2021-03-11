@@ -12,7 +12,11 @@ export interface Matcher<T> {
   value?: T
 }
 
-export type AnyTemplate = AnyJson | TemplateMap | TemplateArray
+export type AnyTemplate =
+  | AnyJson
+  | TemplateMap
+  | TemplateArray
+  | Matcher<unknown>
 interface TemplateMap {
   [key: string]: AnyJson | AnyTemplate
 }
