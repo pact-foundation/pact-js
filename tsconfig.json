@@ -8,6 +8,7 @@
     "noImplicitReturns": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
+    "resolveJsonModule": true,
     "strictNullChecks": true,
     "moduleResolution": "node",
     "noEmitOnError": true,

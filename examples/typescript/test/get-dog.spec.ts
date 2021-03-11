@@ -6,7 +6,7 @@ import * as sinonChai from "sinon-chai"
 import { Pact, Interaction, Matchers } from "@pact-foundation/pact"
 
 const expect = chai.expect
-import { DogService } from "../index"
+import { DogService } from "../src/index"
 const { eachLike } = Matchers
 
 chai.use(sinonChai)
@@ -21,8 +21,8 @@ describe("The Dog API", () => {
     log: path.resolve(process.cwd(), "logs", "mockserver-integration.log"),
     dir: path.resolve(process.cwd(), "pacts"),
     spec: 2,
-    consumer: "MyConsumer",
-    provider: "MyProvider",
+    consumer: "Typescript Consumer Example",
+    provider: "Typescript Provider Example",
   })
 
   const dogExample = { dog: 1 }

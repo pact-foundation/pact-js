@@ -61,8 +61,28 @@ determine if npm has a version that doesn't exist in the master branch.
 If this has happened, you will need to manually put the release commit in.
 
 ```
-npm run release # This tags, commits and updates the changelog only
+# First delete the new tag
+#   somehow this ends up in the repository
+#   even though the push fails.
+
+git checkout master
+git pull --tags
+git tag -d <broken-version>
+git push -delete origin <broken-version>
+
+
+# If there are changes that introduce features, then you'll have to branch and probably rebase
+
+# Now create a new commit + tag for the version:
+npm run release
+
+# Push that tag + commit
+git push origin master --follow-tags
+
 ```
 
+- Don't forget to create a new release in github.
+
 Depending on the nature of the new commits to master after the release, you
-may need to rebase them on top of the tagged release commit and force push.
+may need to rebase them on top of the tagged release commit and force push (only do this
+if the released version would be different to the version tagged by `npm run release`)

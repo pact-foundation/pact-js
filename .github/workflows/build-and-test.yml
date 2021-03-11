@@ -2,7 +2,6 @@ name: Build, test, test all examples
 
 on:
   push:
-    branches: [master, feat/v3.0.0]
   pull_request:
     branches: [master, feat/v3.0.0]
 
@@ -15,6 +14,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:

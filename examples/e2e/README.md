@@ -34,7 +34,7 @@ Given an animal profile, recommends a suitable partner based on similar interest
 ## Running the tests
 
 1. `npm install` (on the root project directory)
-1. `npm run compile` (on the root project directory)
+1. `npm run dist` (on the root project directory)
 1. `npm run test:consumer` (from e2e directory) - Run consumer tests
 1. `npm run test:publish` (from e2e directory) - Publish contracts to the broker
 1. `npm run test:provider` (from e2e directory) - Run provider tests
