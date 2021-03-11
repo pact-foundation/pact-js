@@ -65,7 +65,7 @@ describe("MesageProvider", () => {
 
   describe("#setupVerificationHandler", () => {
     describe("when their is a valid setup", () => {
-      it("creates a valid express handler", done => {
+      it("creates a valid express handler", (done) => {
         const setupVerificationHandler = (provider as any).setupVerificationHandler.bind(
           provider
         )()
@@ -78,7 +78,7 @@ describe("MesageProvider", () => {
       })
     })
     describe("when their is an invalid setup", () => {
-      it("creates a valid express handler that rejects the message", done => {
+      it("creates a valid express handler that rejects the message", (done) => {
         const setupVerificationHandler = (provider as any).setupVerificationHandler.bind(
           provider
         )()

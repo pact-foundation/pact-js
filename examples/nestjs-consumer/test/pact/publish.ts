@@ -5,10 +5,7 @@ import { versionFromGitTag } from "@pact-foundation/absolute-version"
 import { resolve } from "path"
 import { execSync } from "child_process"
 
-const exec = command =>
-  execSync(command)
-    .toString()
-    .trim()
+const exec = (command) => execSync(command).toString().trim()
 
 if (process.env.CI !== "true") {
   console.log("Skipping Pact publish as not on CI")
@@ -44,7 +41,7 @@ new Publisher({
       console.log("=> Password: O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1")
       console.log("to see your published contracts.")
     },
-    e => {
+    (e) => {
       console.error("Pact contract publishing failed: ", e)
     }
   )

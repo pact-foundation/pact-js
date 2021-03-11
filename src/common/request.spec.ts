@@ -21,9 +21,7 @@ describe("Request", () => {
 
     describe("Promise", () => {
       it("returns a promise", () => {
-        nock(url)
-          .get("/")
-          .reply(200)
+        nock(url).get("/").reply(200)
         const r = request.send(HTTPMethod.GET, url)
         return Promise.all([
           expect(r).is.ok,
@@ -34,9 +32,7 @@ describe("Request", () => {
       })
       it("resolves when request succeeds with response body", () => {
         const body = "body"
-        nock(url)
-          .get("/")
-          .reply(200, body)
+        nock(url).get("/").reply(200, body)
         const p = request.send(HTTPMethod.GET, url)
         return Promise.all([
           expect(p).to.be.fulfilled,
@@ -45,19 +41,14 @@ describe("Request", () => {
       })
       it("rejects when request fails with error message", () => {
         const error = "error"
-        nock(url)
-          .get("/")
-          .reply(400, error)
+        nock(url).get("/").reply(400, error)
         const p = request.send(HTTPMethod.GET, url)
         return expect(p).to.be.rejectedWith(error)
       })
     })
     describe("Headers", () => {
       it("sends Pact headers are sent with every request", () => {
-        nock(url)
-          .matchHeader("X-Pact-Mock-Service", "true")
-          .get("/")
-          .reply(200)
+        nock(url).matchHeader("X-Pact-Mock-Service", "true").get("/").reply(200)
         return expect(request.send(HTTPMethod.GET, url)).to.be.fulfilled
       })
     })

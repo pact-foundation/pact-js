@@ -13,16 +13,16 @@ const availableAnimals = () => {
   return request
     .get(`${getApiEndpoint()}/animals/available`)
     .set(authHeader)
-    .then(res => res.body)
+    .then((res) => res.body)
 }
 
 // Find animals by their ID from the Animal Service
-const getAnimalById = id => {
+const getAnimalById = (id) => {
   return request
     .get(`${getApiEndpoint()}/animals/${id}`)
     .set(authHeader)
     .then(
-      res => res.body,
+      (res) => res.body,
       () => null
     )
 }
@@ -30,7 +30,7 @@ const getAnimalById = id => {
 // Suggestions function:
 // Given availability and sex etc. find available suitors,
 // and give them a 'score'
-const suggestion = mate => {
+const suggestion = (mate) => {
   const predicates = [
     (candidate, animal) => candidate.id !== animal.id,
     (candidate, animal) => candidate.gender !== animal.gender,
@@ -39,13 +39,13 @@ const suggestion = mate => {
 
   const weights = [(candidate, animal) => Math.abs(candidate.age - animal.age)]
 
-  return availableAnimals().then(available => {
+  return availableAnimals().then((available) => {
     const eligible = available.filter(
-      a => !predicates.map(p => p(a, mate)).includes(false)
+      (a) => !predicates.map((p) => p(a, mate)).includes(false)
     )
 
     return {
-      suggestions: eligible.map(candidate => {
+      suggestions: eligible.map((candidate) => {
         const score = weights.reduce((acc, weight) => {
           return acc - weight(candidate, mate)
         }, 100)
@@ -60,7 +60,7 @@ const suggestion = mate => {
 }
 
 // Creates a mate for suggestions
-const createMateForDates = mate => {
+const createMateForDates = (mate) => {
   return request
     .post(`${getApiEndpoint()}/animals`)
     .send(mate)
@@ -76,7 +76,7 @@ server.get("/suggestions/:animalId", (req, res) => {
 
   request(`${getApiEndpoint()}/animals/${req.params.animalId}`, (err, r) => {
     if (!err && r.statusCode === 200) {
-      suggestion(r.body).then(suggestions => {
+      suggestion(r.body).then((suggestions) => {
         res.json(suggestions)
       })
     } else if (r && r.statusCode === 404) {

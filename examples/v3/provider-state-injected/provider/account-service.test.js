@@ -8,8 +8,8 @@ const {
 } = require("./account-repository")
 
 describe("Account Service", () => {
-  beforeAll(done => accountService.listen(8081, done))
-  afterAll(done => accountService.close(done))
+  beforeAll((done) => accountService.listen(8081, done))
+  afterAll((done) => accountService.close(done))
 
   it("validates the expectations of Transaction Service", () => {
     let opts = {
@@ -44,6 +44,6 @@ describe("Account Service", () => {
       ],
     }
 
-    return new VerifierV3(opts).verifyProvider().then(output => true)
+    return new VerifierV3(opts).verifyProvider().then((output) => true)
   })
 })

@@ -1,15 +1,15 @@
 /*eslint-disable*/
 var example = example || {}
 
-;(function() {
+;(function () {
   var localBaseUrl
 
-  this.createClient = function(baseUrl) {
+  this.createClient = function (baseUrl) {
     localBaseUrl = baseUrl
     return this
   }
 
-  this.sayHello = function() {
+  this.sayHello = function () {
     //Makes a synchronous request
     var xhr = new XMLHttpRequest()
     xhr.open("GET", localBaseUrl + "/sayHello", false)
@@ -18,12 +18,12 @@ var example = example || {}
     return Promise.resolve(xhr)
   }
 
-  this.findFriendsByAgeAndChildren = function(age, children) {
+  this.findFriendsByAgeAndChildren = function (age, children) {
     var url =
       localBaseUrl +
       "/friends?age=" +
       age +
-      children.reduce(function(acc, item) {
+      children.reduce(function (acc, item) {
         return acc.concat("&children=" + item)
       }, "")
     var xhr = new XMLHttpRequest()
@@ -34,12 +34,12 @@ var example = example || {}
     return Promise.resolve(xhr)
   }
 
-  this.unfriendMe = function() {
+  this.unfriendMe = function () {
     //Makes an asynchronous request
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
       var xmlhttp = new XMLHttpRequest()
 
-      xmlhttp.onreadystatechange = function() {
+      xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState === 4) {
           if (xmlhttp.status === 200) {
             resolve(xmlhttp)

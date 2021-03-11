@@ -5,7 +5,7 @@
 const handler = (event, context, callback) => {
   console.log("Received event from SNS")
 
-  event.Records.forEach(e => {
+  event.Records.forEach((e) => {
     console.log("Event:", JSON.parse(e.Sns.Message))
     consumeEvent(JSON.parse(e.Sns.Message))
   })
@@ -19,7 +19,7 @@ let eventCount = 0
 
 // Actual consumer code, has no Lambda/AWS/Protocol specific stuff
 // This is the thing we test in the Consumer Pact tests
-const consumeEvent = event => {
+const consumeEvent = (event) => {
   console.log("consuming event", event)
 
   if (!event || !event.id) {

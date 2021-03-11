@@ -54,12 +54,14 @@ describe("Transaction service - create a new transaction for an account", () => 
         },
       })
 
-    return provider.executeTest(async mockserver => {
+    return provider.executeTest(async (mockserver) => {
       transactionService.setAccountServiceUrl(mockserver.url)
-      return transactionService.createTransaction(100, 100000).then(result => {
-        expect(result.account.accountNumber).to.equal(100)
-        expect(result.transaction.amount).to.equal(100000)
-      })
+      return transactionService
+        .createTransaction(100, 100000)
+        .then((result) => {
+          expect(result.account.accountNumber).to.equal(100)
+          expect(result.transaction.amount).to.equal(100000)
+        })
     })
   })
 })

@@ -71,7 +71,7 @@ export interface Mismatch {
 function displayQuery(query: { [k: string]: string[] }): string {
   const pairs = toPairs(query)
   const mapped = flatten(
-    map(([key, values]) => map(val => `${key}=${val}`, values), pairs)
+    map(([key, values]) => map((val) => `${key}=${val}`, values), pairs)
   )
   return join("&", mapped)
 }
@@ -108,14 +108,14 @@ function displayRequest(request: any, indent: string): string {
 
 function filterMissingFeatureFlag(mismatches: Mismatch[]) {
   if (process.env.PACT_EXPERIMENTAL_FEATURE_ALLOW_MISSING_REQUESTS) {
-    return mismatches.filter(m => m.type !== "missing-request")
+    return mismatches.filter((m) => m.type !== "missing-request")
   } else {
     return mismatches
   }
 }
 
 function extractMismatches(mockServerMismatches: any[]): Mismatch[] {
-  return mockServerMismatches.map(mismatchJson => JSON.parse(mismatchJson))
+  return mockServerMismatches.map((mismatchJson) => JSON.parse(mismatchJson))
 }
 
 function generateMockServerError(mismatches: Mismatch[], indent: string) {

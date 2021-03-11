@@ -6,7 +6,7 @@ let server: any
 
 // Verify that the provider meets all consumer expectations
 describe("Pact Verification", () => {
-  before(done => {
+  before((done) => {
     server = app.listen(4000, () => {
       done()
     })
@@ -30,7 +30,7 @@ describe("Pact Verification", () => {
       consumerVersionTags: ["prod"],
     }
 
-    return new Verifier(opts).verifyProvider().then(output => {
+    return new Verifier(opts).verifyProvider().then((output) => {
       server.close()
     })
   })

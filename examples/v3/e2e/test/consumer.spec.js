@@ -109,7 +109,7 @@ describe("Pact V3", () => {
       )
 
       it("returns a 401 unauthorized", () => {
-        return provider.executeTest(mockserver => {
+        return provider.executeTest((mockserver) => {
           return expect(
             suggestion(suitor, () => mockserver.url)
           ).to.eventually.be.rejectedWith("Unauthorized")
@@ -140,7 +140,7 @@ describe("Pact V3", () => {
               body: animalListExpectation,
             })
 
-          return provider.executeTest(mockserver => {
+          return provider.executeTest((mockserver) => {
             const suggestedMates = suggestion(suitor, () => mockserver.url)
             return Promise.all([
               expect(suggestedMates).to.eventually.have.deep.property(
@@ -199,10 +199,10 @@ describe("Pact V3", () => {
                 },
               ],
             })
-          return provider.executeTest(mockserver => {
+          return provider.executeTest((mockserver) => {
             return availableAnimals(() => mockserver.url, {
               first_name: "Billy",
-            }).then(available => {
+            }).then((available) => {
               expect(available[0]).to.contain({ first_name: "Billy" })
               expect(available).to.have.lengthOf(1)
             })
@@ -254,10 +254,10 @@ describe("Pact V3", () => {
                 },
               ],
             })
-          return provider.executeTest(mockserver => {
+          return provider.executeTest((mockserver) => {
             return availableAnimals(() => mockserver.url, {
               first_name: "比利",
-            }).then(available => {
+            }).then((available) => {
               expect(available[0]).to.contain({ first_name: "比利" })
               expect(available).to.have.lengthOf(1)
             })
@@ -309,10 +309,10 @@ describe("Pact V3", () => {
                 },
               ],
             })
-          return provider.executeTest(mockserver => {
+          return provider.executeTest((mockserver) => {
             return availableAnimals(() => mockserver.url, {
               first_name: "बिल्ली",
-            }).then(available => {
+            }).then((available) => {
               expect(available[0]).to.contain({ first_name: "बिल्ली" })
               expect(available).to.have.lengthOf(1)
             })
@@ -353,7 +353,7 @@ describe("Pact V3", () => {
       )
 
       it("returns the animal", () => {
-        return provider.executeTest(mockserver => {
+        return provider.executeTest((mockserver) => {
           const animal = getAnimalById(100, () => mockserver.url)
 
           return expect(animal).to.eventually.have.deep.property("id", 100)
@@ -384,7 +384,7 @@ describe("Pact V3", () => {
       )
 
       it("returns a 404", () => {
-        return provider.executeTest(mockserver => {
+        return provider.executeTest((mockserver) => {
           const animal = getAnimalById(123, () => mockserver.url)
 
           return expect(animal).to.eventually.be.a("null")
@@ -425,7 +425,7 @@ describe("Pact V3", () => {
       )
 
       it("returns the animal", async () => {
-        return provider.executeTest(async mockserver => {
+        return provider.executeTest(async (mockserver) => {
           const animal = await getAnimalById(
             100,
             () => mockserver.url,
@@ -468,7 +468,7 @@ describe("Pact V3", () => {
     )
 
     it("creates a new mate", () => {
-      return provider.executeTest(mockserver => {
+      return provider.executeTest((mockserver) => {
         return expect(createMateForDates(suitor, () => mockserver.url)).to
           .eventually.be.fulfilled
       })
@@ -504,7 +504,7 @@ describe("Pact V3", () => {
     )
 
     it("creates a new mate with application/x-www-form-urlencoded", () => {
-      return provider.executeTest(mockserver => {
+      return provider.executeTest((mockserver) => {
         return expect(
           createMateForDates(
             "first_name=Nanny&last_name=Doe",
@@ -537,7 +537,7 @@ describe("Pact V3", () => {
           headers: {
             "Content-Type": "application/xml; charset=utf-8",
           },
-          body: new XmlBuilder("1.0", "UTF-8", "animals").build(el => {
+          body: new XmlBuilder("1.0", "UTF-8", "animals").build((el) => {
             el.eachLike("lion", {
               id: integer(1),
               available_from: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
@@ -559,7 +559,7 @@ describe("Pact V3", () => {
     )
 
     it("creates a new mate", () => {
-      return provider.executeTest(mockserver => {
+      return provider.executeTest((mockserver) => {
         return expect(getAnimalsAsXML(() => mockserver.url)).to.eventually.be
           .fulfilled
       })

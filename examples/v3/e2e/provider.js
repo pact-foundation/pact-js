@@ -41,7 +41,7 @@ const importData = () => {
 
 // List all animals with 'available' eligibility
 const availableAnimals = () => {
-  return animalRepository.fetchAll().filter(a => {
+  return animalRepository.fetchAll().filter((a) => {
     return a.eligibility.available
   })
 }
@@ -60,7 +60,7 @@ server.get("/animals/available", (req, res) => {
 server.get("/animals/available/xml", (req, res) => {
   res.header("Content-Type", "application/xml; charset=utf-8")
   let xml_body = xml({
-    animals: animalRepository.fetchAll().map(animal => {
+    animals: animalRepository.fetchAll().map((animal) => {
       let result = {}
       result[animal.animal] = { _attr: animal }
       return result

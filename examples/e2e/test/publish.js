@@ -8,11 +8,7 @@ const { versionFromGitTag } = require("@pact-foundation/absolute-version")
 const path = require("path")
 const childProcess = require("child_process")
 
-const exec = command =>
-  childProcess
-    .execSync(command)
-    .toString()
-    .trim()
+const exec = (command) => childProcess.execSync(command).toString().trim()
 
 const branch =
   process.env.TRAVIS_BRANCH || exec("git rev-parse --abbrev-ref HEAD")
@@ -42,6 +38,6 @@ new Publisher(opts)
     console.log("=> Password: O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1")
     console.log("to see your published contracts.")
   })
-  .catch(e => {
+  .catch((e) => {
     console.log("Pact contract publishing failed: ", e)
   })

@@ -7,7 +7,7 @@ export class AppService {
   public constructor(private readonly repository: AppRepository) {}
 
   public availableAnimals(): Animal[] {
-    return this.repository.fetchAll().filter(animal => {
+    return this.repository.fetchAll().filter((animal) => {
       return animal.eligibility.available
     })
   }

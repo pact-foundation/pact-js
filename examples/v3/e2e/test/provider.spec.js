@@ -23,7 +23,7 @@ describe("Pact Verification", () => {
       provider: "Animal Profile Service V3",
       providerBaseUrl: "http://localhost:8081",
 
-      requestFilter: req => {
+      requestFilter: (req) => {
         console.log(
           "Middleware invoked before provider API - injecting Authorization token"
         )
@@ -37,13 +37,13 @@ describe("Pact Verification", () => {
       },
 
       stateHandlers: {
-        "Has no animals": setup => {
+        "Has no animals": (setup) => {
           if (setup) {
             animalRepository.clear()
             return Promise.resolve({ description: `Animals removed to the db` })
           }
         },
-        "Has some animals": setup => {
+        "Has some animals": (setup) => {
           if (setup) {
             importData()
             return Promise.resolve({
@@ -98,7 +98,7 @@ describe("Pact Verification", () => {
       providerVersion: "1.0.0",
     })
       .verifyProvider()
-      .then(output => {
+      .then((output) => {
         console.log("Pact Verification Complete!")
         console.log("Result:", output)
       })

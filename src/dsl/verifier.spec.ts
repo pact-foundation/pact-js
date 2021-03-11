@@ -53,11 +53,9 @@ describe("Verifier", () => {
       it("sets the configuration on the object", () => {
         v = new Verifier(opts)
 
-        expect(v)
-          .to.have.deep.property("config")
-          .includes({
-            providerBaseUrl,
-          })
+        expect(v).to.have.deep.property("config").includes({
+          providerBaseUrl,
+        })
         expect(v).to.have.nested.property("config.stateHandlers")
         expect(v).to.have.nested.property("config.requestFilter")
       })

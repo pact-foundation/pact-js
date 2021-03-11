@@ -45,11 +45,11 @@ export class MessageProviderPact {
     return this.waitForServerReady(server)
       .then(this.runProviderVerification())
       .then(
-        result => {
+        (result) => {
           server.close()
           return result
         },
-        err => {
+        (err) => {
           server.close()
           throw err
         }
@@ -89,9 +89,9 @@ export class MessageProviderPact {
       // wrapped in a Message
       this.setupStates(message)
         .then(() => this.findHandler(message))
-        .then(handler => handler(message))
-        .then(o => res.json({ contents: o }))
-        .catch(e => res.status(500).send(e))
+        .then((handler) => handler(message))
+        .then((o) => res.json({ contents: o }))
+        .catch((e) => res.status(500).send(e))
     }
   }
 
@@ -124,7 +124,7 @@ export class MessageProviderPact {
     const promises: Array<Promise<any>> = new Array()
 
     if (message.providerStates) {
-      message.providerStates.forEach(state => {
+      message.providerStates.forEach((state) => {
         const handler = this.config.stateHandlers
           ? this.config.stateHandlers[state.name]
           : null

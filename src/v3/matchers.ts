@@ -301,7 +301,7 @@ export function timestamp(format: string, example?: string): DateTimeMatcher {
  * @param example Example value to use. If omitted a value using the current system date and time will be generated.
  */
 export function datetime(format: string, example?: string): DateTimeMatcher {
-  return pickBy(v => !isNil(v), {
+  return pickBy((v) => !isNil(v), {
     "pact:generator:type": example ? undefined : "DateTime",
     "pact:matcher:type": "timestamp",
     format,

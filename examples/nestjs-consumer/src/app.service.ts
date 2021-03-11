@@ -44,11 +44,11 @@ export class AppService {
 
     return this.availableAnimals().then((availableAnimals: Animal[]) => {
       const eligible = availableAnimals.filter(
-        a => !predicates.map(p => p(a, mate)).includes(false)
+        (a) => !predicates.map((p) => p(a, mate)).includes(false)
       )
 
       return {
-        suggestions: eligible.map(candidateAnimal => {
+        suggestions: eligible.map((candidateAnimal) => {
           const score = weights.reduce((acc, weight) => {
             return acc - weight(candidateAnimal, mate)
           }, 100)

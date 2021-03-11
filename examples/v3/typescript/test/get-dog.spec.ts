@@ -40,9 +40,9 @@ describe("The Dog API", () => {
           body: EXPECTED_BODY,
         })
 
-      return provider.executeTest(mockserver => {
+      return provider.executeTest((mockserver) => {
         dogService = new DogService(mockserver.url)
-        return dogService.getMeDogs("today").then(response => {
+        return dogService.getMeDogs("today").then((response) => {
           return expect(response.data[0]).to.deep.eq(dogExample)
         })
       })

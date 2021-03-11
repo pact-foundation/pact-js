@@ -18,7 +18,7 @@ const availableAnimals = (api = getApiEndpoint, filter = {}) => {
     .get(`${api()}/animals/available`)
     .query(query)
     .set(authHeader)
-    .then(res => res.body)
+    .then((res) => res.body)
 }
 
 // Find animals by their ID from the Animal Service
@@ -33,11 +33,11 @@ const getAnimalById = (
     .set({ Accept: format })
 
   if (format === "text/plain") {
-    return r.then(res => res.text)
+    return r.then((res) => res.text)
   }
 
   return r.then(
-    res => res.body,
+    (res) => res.body,
     () => null
   )
 }
@@ -54,13 +54,13 @@ const suggestion = (mate, api, filter = {}) => {
 
   const weights = [(candidate, animal) => Math.abs(candidate.age - animal.age)]
 
-  return availableAnimals(api, filter).then(available => {
+  return availableAnimals(api, filter).then((available) => {
     const eligible = available.filter(
-      a => !predicates.map(p => p(a, mate)).includes(false)
+      (a) => !predicates.map((p) => p(a, mate)).includes(false)
     )
 
     return {
-      suggestions: eligible.map(candidate => {
+      suggestions: eligible.map((candidate) => {
         const score = weights.reduce((acc, weight) => {
           return acc - weight(candidate, mate)
         }, 100)
@@ -95,7 +95,7 @@ server.get("/suggestions/:animalId", (req, res) => {
 
   request(`${getApiEndpoint()}/animals/${req.params.animalId}`, (err, r) => {
     if (!err && r.statusCode === 200) {
-      suggestion(r.body).then(suggestions => {
+      suggestion(r.body).then((suggestions) => {
         res.json(suggestions)
       })
     } else if (r && r.statusCode === 404) {
@@ -113,7 +113,7 @@ const getAnimalsAsXML = (api = getApiEndpoint) => {
     .get(`${api()}/animals/available/xml`)
     .set(authHeader)
     .then(
-      res => res.body,
+      (res) => res.body,
       () => null
     )
 }

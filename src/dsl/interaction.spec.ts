@@ -22,10 +22,7 @@ describe("Interaction", () => {
 
     describe("without provider state", () => {
       it("creates Interaction when blank", () => {
-        const actual = new Interaction()
-          .uponReceiving("r")
-          .given("")
-          .json()
+        const actual = new Interaction().uponReceiving("r").given("").json()
         expect(actual).to.eql({ description: "r" })
       })
       it("creates Interaction when nothing is passed", () => {
@@ -150,10 +147,8 @@ describe("Interaction", () => {
           matcher: "^limit=[0-9]+&status=(finished)&order=(desc|asc)$",
         })
         expect(
-          new Interaction()
-            .uponReceiving("request")
-            .withRequest(request)
-            .json().request
+          new Interaction().uponReceiving("request").withRequest(request).json()
+            .request
         ).to.have.any.keys("query")
       })
 
@@ -162,10 +157,8 @@ describe("Interaction", () => {
           "id[]": eachLike("1"),
         }
         expect(
-          new Interaction()
-            .uponReceiving("request")
-            .withRequest(request)
-            .json().request
+          new Interaction().uponReceiving("request").withRequest(request).json()
+            .request
         ).to.have.any.keys("query")
       })
 
@@ -174,10 +167,8 @@ describe("Interaction", () => {
           id: "1",
         }
         expect(
-          new Interaction()
-            .uponReceiving("request")
-            .withRequest(request)
-            .json().request
+          new Interaction().uponReceiving("request").withRequest(request).json()
+            .request
         ).to.have.any.keys("query")
       })
 
@@ -186,10 +177,8 @@ describe("Interaction", () => {
           id: ["1", "2"],
         }
         expect(
-          new Interaction()
-            .uponReceiving("request")
-            .withRequest(request)
-            .json().request?.query
+          new Interaction().uponReceiving("request").withRequest(request).json()
+            .request?.query
         ).to.deep.eq({ id: ["1", "2"] })
       })
     })

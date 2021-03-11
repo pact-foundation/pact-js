@@ -23,7 +23,7 @@ test.before("setting up Dog API expectations", async () => {
   await provider.setup()
 })
 
-test("Dog API GET /dogs", async t => {
+test("Dog API GET /dogs", async (t) => {
   t.plan(1)
 
   // BEGIN -

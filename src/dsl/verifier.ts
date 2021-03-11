@@ -80,11 +80,11 @@ export class Verifier {
     // Run the verification once the proxy server is available
     return this.waitForServerReady(server)
       .then(this.runProviderVerification())
-      .then(result => {
+      .then((result) => {
         server.close()
         return result
       })
-      .catch(e => {
+      .catch((e) => {
         server.close()
         throw e
       })
@@ -167,7 +167,7 @@ export class Verifier {
 
       return this.setupStates(message)
         .then(() => res.sendStatus(200))
-        .catch(e => res.status(500).send(e))
+        .catch((e) => res.status(500).send(e))
     }
   }
 
@@ -248,7 +248,7 @@ export class Verifier {
     const promises: Array<Promise<any>> = new Array()
 
     if (descriptor.states) {
-      descriptor.states.forEach(state => {
+      descriptor.states.forEach((state) => {
         const handler = this.config.stateHandlers
           ? this.config.stateHandlers[state]
           : null
@@ -272,7 +272,7 @@ export class Verifier {
       setLogLevel(this.config.logLevel)
     }
 
-    this.deprecatedFields.forEach(f => {
+    this.deprecatedFields.forEach((f) => {
       if ((this.config as any)[f]) {
         logger.warn(
           `${f} is deprecated, and will be removed in future versions`

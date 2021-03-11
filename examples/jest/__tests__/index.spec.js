@@ -7,7 +7,7 @@ const { getMeDogs, getMeCats } = require("../index")
 
 pactWith(
   { consumer: "Jest Consumer Example", provider: "Jest Provider Example" },
-  provider => {
+  (provider) => {
     describe("Dogs API", () => {
       const DOGS_DATA = [
         {
@@ -47,7 +47,7 @@ pactWith(
       it("returns a successful body", () => {
         return getMeDogs({
           url: provider.mockService.baseUrl,
-        }).then(dogs => {
+        }).then((dogs) => {
           expect(dogs).toEqual(DOGS_DATA)
         })
       })
@@ -89,7 +89,7 @@ pactWith(
       it("returns a successful body", () => {
         return getMeCats({
           url: provider.mockService.baseUrl,
-        }).then(cats => {
+        }).then((cats) => {
           expect(cats).toEqual(CATS_DATA)
         })
       })

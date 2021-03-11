@@ -155,7 +155,7 @@ export class Interaction {
       return
     }
 
-    Object.values(query).every(value => {
+    Object.values(query).every((value) => {
       if (
         isMatcher(value) ||
         Array.isArray(value) ||

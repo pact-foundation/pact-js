@@ -29,7 +29,7 @@ describe("The Dog API", () => {
   const EXPECTED_BODY = eachLike(dogExample)
 
   before(() =>
-    provider.setup().then(opts => {
+    provider.setup().then((opts) => {
       dogService = new DogService({ url, port: opts.port })
     })
   )
@@ -61,7 +61,7 @@ describe("The Dog API", () => {
       return provider.addInteraction(interaction)
     })
 
-    it("returns the correct response", done => {
+    it("returns the correct response", (done) => {
       dogService.getMeDogs().then((response: any) => {
         expect(response.data[0]).to.deep.eq(dogExample)
         done()
@@ -91,7 +91,7 @@ describe("The Dog API", () => {
       })
     })
 
-    it("returns the correct response", done => {
+    it("returns the correct response", (done) => {
       dogService.getMeDogs().then((response: any) => {
         expect(response.data[0]).to.deep.eq(dogExample)
         done()

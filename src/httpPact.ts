@@ -73,7 +73,7 @@ export class Pact {
   public setup(): Promise<PactOptionsComplete> {
     return this.checkPort()
       .then(() => this.startServer())
-      .then(opts => {
+      .then((opts) => {
         this.setupMockService()
         return Promise.resolve(opts)
       })
@@ -151,7 +151,7 @@ export class Pact {
       .writePact()
       .then(
         () => logger.info("Pact File Written"),
-        e => {
+        (e) => {
           return Promise.reject(e)
         }
       )
@@ -160,7 +160,7 @@ export class Pact {
           new Promise<void>((resolve, reject) =>
             this.server.delete().then(
               () => resolve(),
-              e => reject(e)
+              (e) => reject(e)
             )
           )
       )

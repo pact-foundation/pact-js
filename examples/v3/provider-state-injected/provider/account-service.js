@@ -14,7 +14,7 @@ server.use(bodyParser.json())
 server.get("/accounts/search/findOneByAccountNumberId", (req, res) => {
   return accountRepository
     .findByAccountNumber(req.query.accountNumber)
-    .then(account => {
+    .then((account) => {
       if (account) {
         res.header("Content-Type", "application/hal+json; charset=utf-8")
         let baseUrl =

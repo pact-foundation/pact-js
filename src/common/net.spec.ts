@@ -38,7 +38,7 @@ describe("Net", () => {
         }))
 
       // close the servers used in this test as to not conflict with other tests
-      afterEach(done => closeFn(done))
+      afterEach((done) => closeFn(done))
     })
 
     context("when a single host is unavailable", () => {
@@ -53,7 +53,7 @@ describe("Net", () => {
         }))
 
       // close the servers used in this test as to not conflict with other tests
-      afterEach(done => closeFn(done))
+      afterEach((done) => closeFn(done))
     })
   })
 

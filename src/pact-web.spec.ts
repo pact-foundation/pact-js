@@ -51,7 +51,7 @@ describe("PactWeb", () => {
     }
 
     describe("when given a provider state", () => {
-      it("creates interaction with state", done => {
+      it("creates interaction with state", (done) => {
         pact.mockService = {
           addInteraction: (
             int: InteractionObject
@@ -65,7 +65,7 @@ describe("PactWeb", () => {
     })
 
     describe("when not given a provider state", () => {
-      it("creates interaction with state", done => {
+      it("creates interaction with state", (done) => {
         pact.mockService = {
           addInteraction: (
             int: InteractionObject
@@ -141,7 +141,7 @@ describe("PactWeb", () => {
 
         return Promise.all([
           expect(verifyPromise).to.eventually.be.rejectedWith(Error),
-          verifyPromise.catch(e => {
+          verifyPromise.catch((e) => {
             expect(removeInteractionsStub).to.callCount(0)
           }),
         ])

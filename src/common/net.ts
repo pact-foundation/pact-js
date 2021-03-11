@@ -16,13 +16,13 @@ const isPortAvailable = (port: number, host: string): Promise<void> => {
         localAddresses,
         // we meed to wrap the built-in Promise with bluebird.reflect() so we can
         // test the result of the promise without failing bluebird.map()
-        h => bluebird.resolve(portCheck(port, h)).reflect(),
+        (h) => bluebird.resolve(portCheck(port, h)).reflect(),
         // do each port check sequentially (as localhost & 127.0.0.1 will conflict on most default environments)
         { concurrency: 1 }
       )
-      .then(inspections => {
+      .then((inspections) => {
         // if every port check failed, then fail the `isPortAvailable` check
-        if (inspections.every(inspection => !inspection.isFulfilled())) {
+        if (inspections.every((inspection) => !inspection.isFulfilled())) {
           return Promise.reject(
             new Error(`Cannot open port ${port} on ipv4 or ipv6 interfaces`)
           )

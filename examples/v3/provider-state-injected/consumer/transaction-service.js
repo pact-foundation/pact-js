@@ -3,7 +3,7 @@ const axios = require("axios")
 let accountServiceUrl = ""
 
 module.exports = {
-  setAccountServiceUrl: url => {
+  setAccountServiceUrl: (url) => {
     accountServiceUrl = url
   },
 

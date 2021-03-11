@@ -14,7 +14,7 @@ module.exports = {
           Accept: "application/" + format,
         },
       })
-      .then(response => {
+      .then((response) => {
         console.log("todo response:")
         eyes.inspect(response.data)
         if (format.endsWith("xml")) {
@@ -24,12 +24,12 @@ module.exports = {
         }
         return response.data
       })
-      .catch(error => {
+      .catch((error) => {
         console.log("todo error", error.message)
         return Promise.reject(error)
       })
   },
-  setUrl: function(url) {
+  setUrl: function (url) {
     serverUrl = url
     return this
   },

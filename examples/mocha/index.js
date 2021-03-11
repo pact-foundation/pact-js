@@ -2,7 +2,7 @@
 
 const axios = require("axios")
 
-exports.getMeDogs = endpoint => {
+exports.getMeDogs = (endpoint) => {
   const url = endpoint.url
   const port = endpoint.port
 
@@ -14,7 +14,7 @@ exports.getMeDogs = endpoint => {
   })
 }
 
-exports.getMeDog = endpoint => {
+exports.getMeDog = (endpoint) => {
   const url = endpoint.url
   const port = endpoint.port
 

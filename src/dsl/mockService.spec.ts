@@ -135,9 +135,7 @@ describe("MockService", () => {
 
       describe("and writing fails", () => {
         it("returns a rejected promise", () => {
-          nock(mock.baseUrl)
-            .post(/pact$/, {})
-            .reply(500)
+          nock(mock.baseUrl).post(/pact$/, {}).reply(500)
 
           return expect(mock.writePact()).to.eventually.be.rejected
         })
@@ -147,9 +145,7 @@ describe("MockService", () => {
     describe("when consumer and provider details are not provided", () => {
       const mock = new MockService(undefined, undefined, 1234)
       it("does not write the consumer and provider details into the pact", () => {
-        nock(mock.baseUrl)
-          .post(/pact$/)
-          .reply(200)
+        nock(mock.baseUrl).post(/pact$/).reply(200)
 
         return expect(mock.writePact()).to.eventually.be.fulfilled
       })

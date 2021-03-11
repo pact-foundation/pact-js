@@ -97,7 +97,7 @@ describe("Pact Verification", () => {
       providerVersion: versionFromGitTag(),
     }
 
-    return new Verifier(opts).verifyProvider().then(output => {
+    return new Verifier(opts).verifyProvider().then((output) => {
       console.log("Pact Verification Complete!")
       console.log(output)
     })
