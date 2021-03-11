@@ -1,4 +1,4 @@
-const PactNative = require("../native/index.node")
+const PactNative = require("../../native/index.node")
 import logger from "../common/logger"
 
 const version = PactNative.init()

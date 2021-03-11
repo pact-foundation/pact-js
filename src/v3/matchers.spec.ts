@@ -3,7 +3,7 @@ const MockNative = {
   generate_datetime_string: () => "",
   generate_regex_string: () => "",
 }
-mockery.registerMock("../native/index.node", MockNative)
+mockery.registerMock("../../native/index.node", MockNative)
 
 import * as chai from "chai"
 import * as MatchersV3 from "./matchers"

@@ -1,8 +1,8 @@
 import { omit, join, toPairs, map, flatten } from "ramda"
-import { MatchersV3 } from "./matchers"
+import * as MatchersV3 from "./matchers"
+import { version as pactPackageVersion } from "../../package.json"
 
-const pkg = require("../common/metadata")
-const PactNative = require("../native/index.node")
+const PactNative = require("../../native/index.node")
 
 /**
  * Options for the mock server
@@ -153,7 +153,7 @@ export class PactV3 {
     this.pact = new PactNative.Pact(
       opts.consumer,
       opts.provider,
-      pkg.version,
+      pactPackageVersion,
       omit(["consumer", "provider", "dir"], opts)
     )
   }

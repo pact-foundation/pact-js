@@ -2,8 +2,8 @@
   "name": "@pact-foundation/pact",
   "version": "10.0.0-beta.33",
   "description": "Pact for all things Javascript",
-  "main": "./src/pact.js",
-  "types": "./src/pact.d.ts",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
   "scripts": {
     "build": "npm run build:v2 && npm run build:v3",
     "build:v2": "npm run dist",

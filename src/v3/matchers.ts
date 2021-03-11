@@ -1,6 +1,6 @@
 import { isNil, pickBy, times } from "ramda"
 
-const PactNative = require("../native/index.node")
+const PactNative = require("../../native/index.node")
 
 /**
  * Pact Matcher
