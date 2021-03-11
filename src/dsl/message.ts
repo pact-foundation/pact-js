@@ -1,4 +1,5 @@
-import { AnyJson, MatcherResult, PactFixture } from "./matchers"
+import { AnyJson } from "common/jsonTypes"
+import { Matcher, AnyTemplate } from "./matchers"
 
 /**
  * Metadata is a map containing message context,
@@ -7,7 +8,7 @@ import { AnyJson, MatcherResult, PactFixture } from "./matchers"
  * @module Message
  */
 export interface Metadata {
-  [name: string]: string | MatcherResult<string>
+  [name: string]: string | Matcher<string>
 }
 
 /**
@@ -19,7 +20,7 @@ export interface Message {
   providerStates?: [{ name: string }]
   description?: string
   metadata?: Metadata
-  contents: PactFixture
+  contents: AnyTemplate
 }
 
 export interface ConcreteMessage {

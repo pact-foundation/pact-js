@@ -5,26 +5,26 @@
 
 import { isNil, keys, omitBy } from "lodash"
 import { HTTPMethod, methods } from "../common/request"
-import { MatcherResult, isMatcher, PactFixture } from "./matchers"
+import { Matcher, isMatcher, AnyTemplate } from "./matchers"
 import ConfigurationError from "../errors/configurationError"
 
 interface QueryObject {
-  [name: string]: string | MatcherResult<string> | string[]
+  [name: string]: string | Matcher<string> | string[]
 }
 export type Query = string | QueryObject
 
 export interface RequestOptions {
   method: HTTPMethod | methods
-  path: string | MatcherResult<string>
+  path: string | Matcher<string>
   query?: Query
-  headers?: { [name: string]: string | MatcherResult<string> }
-  body?: PactFixture
+  headers?: { [name: string]: string | Matcher<string> }
+  body?: AnyTemplate
 }
 
 export interface ResponseOptions {
-  status: number | MatcherResult<number>
-  headers?: { [name: string]: string | MatcherResult<string> }
-  body?: PactFixture
+  status: number | Matcher<number>
+  headers?: { [name: string]: string | Matcher<string> }
+  body?: AnyTemplate
 }
 
 export interface InteractionObject {

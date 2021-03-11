@@ -1,5 +1,5 @@
 import { isNil, pickBy, times } from "ramda"
-import { AnyJson } from "./jsonTypes"
+import { AnyJson } from "../common/jsonTypes"
 
 import PactNative from "../../native/index.node"
 

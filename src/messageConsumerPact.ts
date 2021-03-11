@@ -3,7 +3,7 @@
  */
 
 import { isEmpty, cloneDeep } from "lodash"
-import { AnyJson, extractPayload, PactFixture } from "./dsl/matchers"
+import { extractPayload, AnyTemplate } from "./dsl/matchers"
 import { qToPromise } from "./common/utils"
 import {
   Metadata,
@@ -15,6 +15,7 @@ import logger, { setLogLevel } from "./common/logger"
 import serviceFactory from "@pact-foundation/pact-node"
 import { MessageConsumerOptions } from "./dsl/options"
 import ConfigurationError from "./errors/configurationError"
+import { AnyJson } from "common/jsonTypes"
 
 /**
  * A Message Consumer is analagous to a Provider in the HTTP Interaction model.
@@ -78,7 +79,7 @@ export class MessageConsumerPact {
    * @param {string} content - A description of the Message to be received
    * @returns {Message} MessageConsumer
    */
-  public withContent(content: PactFixture): MessageConsumerPact {
+  public withContent(content: AnyTemplate): MessageConsumerPact {
     if (isEmpty(content)) {
       throw new ConfigurationError(
         "You must provide a valid JSON document or primitive for the Message."
