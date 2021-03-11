@@ -1,12 +1,12 @@
 /* tslint:disable:no-unused-expression no-empty no-string-literal*/
-import * as chai from "chai"
-import * as chaiAsPromised from "chai-as-promised"
+import chai from "chai"
+import chaiAsPromised from "chai-as-promised"
 import * as sinon from "sinon"
 import { Verifier, VerifierOptions } from "./verifier"
 import serviceFactory from "@pact-foundation/pact-node"
 import logger from "../common/logger"
 import * as http from "http"
-import * as express from "express"
+import express from "express"
 
 chai.use(chaiAsPromised)
 

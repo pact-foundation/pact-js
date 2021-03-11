@@ -1,7 +1,7 @@
 import pino = require("pino")
 import { version } from "../../package.json"
 import { RequestOptions, ClientRequest, IncomingMessage } from "http"
-const http = require("http")
+import http = require("http")
 
 const DEFAULT_LEVEL: LogLevel = (
   process.env.LOGLEVEL || "info"

@@ -1,7 +1,7 @@
 import serviceFactory from "@pact-foundation/pact-node"
 import * as path from "path"
-import * as clc from "cli-color"
-import * as process from "process"
+import clc from "cli-color"
+import process from "process"
 import { Interaction, InteractionObject } from "./dsl/interaction"
 import { isEmpty } from "lodash"
 import { isPortAvailable } from "./common/net"
@@ -115,7 +115,7 @@ export class Pact {
     return this.mockService
       .verify()
       .then(() => this.mockService.removeInteractions())
-      .catch((e: any) => {
+      .catch((e) => {
         // Properly format the error
         /* tslint:disable: no-console */
         console.error("")
@@ -222,7 +222,7 @@ export class Pact {
           this.opts.port = this.server.options.port || this.opts.port
           resolve(this.opts)
         },
-        (e: any) => reject(e)
+        (e) => reject(e)
       )
     )
   }

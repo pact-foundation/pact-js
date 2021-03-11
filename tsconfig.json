@@ -11,13 +11,14 @@
     "resolveJsonModule": true,
     "strictNullChecks": true,
     "moduleResolution": "node",
+    "esModuleInterop": true,
     "noEmitOnError": true,
     "emitDecoratorMetadata": true,
     "declaration": true,
     "experimentalDecorators": true,
     "target": "es5",
-    "lib": ["es2016", "dom", "esnext.asynciterable"]
+    "lib": ["es2016", "dom", "esnext.asynciterable", "esnext"]
   },
-  "include": ["src"],
+  "include": ["src", "test"],
   "exclude": ["./node_modules/**", "dist", "examples"]
 }

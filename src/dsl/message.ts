@@ -1,4 +1,4 @@
-import { MatcherResult } from "./matchers"
+import { ConcreteFixture, MatcherResult, PactFixture } from "./matchers"
 
 /**
  * Metadata is a map containing message context,
@@ -7,7 +7,7 @@ import { MatcherResult } from "./matchers"
  * @module Message
  */
 export interface Metadata {
-  [name: string]: string | MatcherResult
+  [name: string]: string | MatcherResult<string>
 }
 
 /**
@@ -19,7 +19,14 @@ export interface Message {
   providerStates?: [{ name: string }]
   description?: string
   metadata?: Metadata
-  contents: any
+  contents: PactFixture
+}
+
+export interface ConcreteMessage {
+  providerStates?: [{ name: string }]
+  description?: string
+  metadata?: Metadata
+  contents: ConcreteFixture
 }
 
 /**
@@ -40,7 +47,7 @@ export interface MessageDescriptor {
  *
  * @module Message
  */
-export type MessageConsumer = (m: Message) => Promise<any>
+export type MessageConsumer = (m: Message) => Promise<unknown>
 
 /**
  * A Message Provider is a function that will be invoked by the framework
@@ -50,12 +57,12 @@ export type MessageConsumer = (m: Message) => Promise<any>
  *
  * @module Message
  */
-export type MessageProvider = (m: MessageDescriptor) => Promise<any>
+export type MessageProvider = (m: MessageDescriptor) => Promise<unknown>
 
 export interface MessageProviders {
   [name: string]: MessageProvider
 }
 
 export interface StateHandlers {
-  [name: string]: (state: string) => Promise<any>
+  [name: string]: (state: string) => Promise<unknown>
 }
