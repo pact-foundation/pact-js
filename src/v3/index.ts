@@ -11,7 +11,7 @@ export * from "./pact"
  * @memberof Pact
  * @static
  */
-export * from "./matchers"
+export * as MatchersV3 from "./matchers"
 
 /**
  * Exposes {@link VerifierV3}

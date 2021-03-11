@@ -25,26 +25,15 @@ export class XmlElement extends XmlNode {
   }
 
   /**
-   * Creates a new element with the given name and attributes and then invokes the callback to configure it.
-   * @param name Element name
-   * @param attributes Map of element attributes
-   * @param arg Callback to configure the new element
-   */
-  public appendElement(
-    name: string,
-    attributes: XmlAttributes,
-    arg?: XmlCallback
-  ): XmlElement
-  /**
    * Creates a new element with the given name and attributes and then sets it's text content (can be a matcher)
    * @param name Element name
    * @param attributes Map of element attributes
-   * @param arg Text content to create the new element with (can be a matcher)
+   * @param arg Callback to configure the new element, or text content to create the new element with (can be a matcher)
    */
   public appendElement(
     name: string,
     attributes: XmlAttributes,
-    arg?: string
+    arg?: string | XmlCallback
   ): XmlElement
   public appendElement(
     name: string,
@@ -53,7 +42,7 @@ export class XmlElement extends XmlNode {
   ): XmlElement {
     const el = new XmlElement(name).setAttributes(attributes)
     if (arg) {
-      if (typeof arg != "function") {
+      if (typeof arg !== "function") {
         el.appendText(arg)
       } else {
         this.executeCallback(el, arg)
@@ -66,10 +55,10 @@ export class XmlElement extends XmlNode {
 
   public appendText(content: string): XmlElement
   public appendText(content: any): XmlElement {
-    if (typeof context == "string") {
+    if (typeof context === "string") {
       this.children.push(new XmlText(content))
     } else if (content["pact:matcher:type"]) {
-      this.children.push(new XmlText(content["value"], content))
+      this.children.push(new XmlText(content.value, content))
     } else {
       this.children.push(new XmlText(content.toString()))
     }
