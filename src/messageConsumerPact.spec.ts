@@ -134,7 +134,7 @@ describe("MessageConsumer", () => {
   })
 
   describe("#getServiceFactory", () => {
-    it("returns a valid pact-node object", () => {
+    it("returns a valid pact-core object", () => {
       const serviceFactory = (consumer as any).getServiceFactory()
       expect(serviceFactory).to.be.a("object")
       expect(serviceFactory).to.respondTo("createMessage")

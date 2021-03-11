@@ -12,7 +12,7 @@
   "license": "MIT",
   "devDependencies": {
     "@pact-foundation/karma-pact": "^2.3.1",
-    "@pact-foundation/pact-node": "^10.11.1",
+    "@pact-foundation/pact-core": "^10.12.0",
     "@pact-foundation/pact-web": "^8.2.6",
     "chai": "^4.2.0",
     "karma": "5.2.3",

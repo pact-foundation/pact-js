@@ -2,10 +2,10 @@
  * Provider Verifier service
  * @module ProviderVerifier
  */
-import pact from "@pact-foundation/pact-node"
 import { qToPromise } from "../common/utils"
-import { VerifierOptions as PactNodeVerifierOptions } from "@pact-foundation/pact-node"
-import serviceFactory from "@pact-foundation/pact-node"
+import serviceFactory, {
+  VerifierOptions as PactCoreVerifierOptions,
+} from "@pact-foundation/pact-core"
 import { omit, isEmpty, pickBy, identity, reduce, Dictionary } from "lodash"
 import express from "express"
 import * as http from "http"
@@ -37,7 +37,7 @@ interface ProxyOptions {
   changeOrigin?: boolean
 }
 
-export type VerifierOptions = PactNodeVerifierOptions & ProxyOptions
+export type VerifierOptions = PactCoreVerifierOptions & ProxyOptions
 
 export class Verifier {
   private address = "http://localhost"
@@ -101,7 +101,7 @@ export class Verifier {
         providerBaseUrl: `${this.address}:${server.address().port}`,
       }
 
-      return qToPromise<string>(pact.verifyPacts(opts))
+      return qToPromise<string>(serviceFactory.verifyPacts(opts))
     }
   }
 

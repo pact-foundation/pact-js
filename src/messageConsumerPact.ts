@@ -12,7 +12,7 @@ import {
   ConcreteMessage,
 } from "./dsl/message"
 import logger, { setLogLevel } from "./common/logger"
-import serviceFactory from "@pact-foundation/pact-node"
+import serviceFactory from "@pact-foundation/pact-core"
 import { MessageConsumerOptions } from "./dsl/options"
 import ConfigurationError from "./errors/configurationError"
 import { AnyJson } from "common/jsonTypes"
