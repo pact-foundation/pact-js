@@ -1,5 +1,3 @@
-// Disable module boundary types so that we get the correct inferred type in the graphql interactions
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /**
  * An Interaction is where you define the state of your interaction with a Provider.
  * @module Interaction
@@ -51,7 +49,7 @@ export class Interaction {
    * @param {string} providerState - The state of the provider.
    * @returns {Interaction} interaction
    */
-  public given(providerState: string) {
+  public given(providerState: string): this {
     if (providerState) {
       this.state.providerState = providerState
     }
@@ -64,7 +62,7 @@ export class Interaction {
    * @param {string} description - A description of the interaction.
    * @returns {Interaction} interaction
    */
-  public uponReceiving(description: string) {
+  public uponReceiving(description: string): this {
     if (isNil(description)) {
       throw new ConfigurationError(
         "You must provide a description for the interaction."
@@ -85,7 +83,7 @@ export class Interaction {
    * @param {Object} requestOpts.body - The body, in {@link String} format or {@link Object} format
    * @returns {Interaction} interaction
    */
-  public withRequest(requestOpts: RequestOptions) {
+  public withRequest(requestOpts: RequestOptions): this {
     if (isNil(requestOpts.method)) {
       throw new ConfigurationError("You must provide an HTTP method.")
     }
@@ -115,8 +113,9 @@ export class Interaction {
    * @param {string} responseOpts.status - The HTTP status
    * @param {string} responseOpts.headers
    * @param {Object} responseOpts.body
+   * @returns {Interaction} interaction
    */
-  public willRespondWith(responseOpts: ResponseOptions) {
+  public willRespondWith(responseOpts: ResponseOptions): this {
     if (
       isNil(responseOpts.status) ||
       responseOpts.status.toString().trim().length === 0

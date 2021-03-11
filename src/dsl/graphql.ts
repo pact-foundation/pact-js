@@ -25,7 +25,7 @@ export class GraphQLInteraction extends Interaction {
   /**
    * The type of GraphQL operation. Generally not required.
    */
-  public withOperation(operation: string | null): GraphQLInteraction {
+  public withOperation(operation: string | null): this {
     this.operation = operation
 
     return this
@@ -34,7 +34,7 @@ export class GraphQLInteraction extends Interaction {
   /**
    * Any variables used in the Query
    */
-  public withVariables(variables: GraphQLVariables): GraphQLInteraction {
+  public withVariables(variables: GraphQLVariables): this {
     this.variables = variables
 
     return this
@@ -58,7 +58,7 @@ export class GraphQLInteraction extends Interaction {
    *     }"
    *  }'
    */
-  public withQuery(query: string): GraphQLInteraction {
+  public withQuery(query: string): this {
     if (isNil(query)) {
       throw new ConfigurationError("You must provide a GraphQL query.")
     }
