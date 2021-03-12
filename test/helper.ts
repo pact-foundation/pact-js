@@ -1,6 +1,6 @@
 "use strict"
 
-import pact from "@pact-foundation/pact-node"
+import pact from "@pact-foundation/pact-core"
 import * as mockery from "mockery"
 
 // used to kill any left over mock server instances

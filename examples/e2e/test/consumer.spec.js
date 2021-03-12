@@ -9,8 +9,8 @@ chai.use(chaiAsPromised)
 
 describe("Pact", () => {
   const provider = new Pact({
-    consumer: "Matching Service",
-    provider: "Animal Profile Service",
+    consumer: "e2e Consumer Example",
+    provider: "e2e Provider Example",
     // port: 1234, // You can set the port explicitly here or dynamically (see setup() below)
     log: path.resolve(process.cwd(), "logs", "mockserver-integration.log"),
     dir: path.resolve(process.cwd(), "pacts"),
@@ -85,7 +85,7 @@ describe("Pact", () => {
   // It also sets up expectations for what requests are to come, and will fail
   // if the calls are not seen.
   before(() =>
-    provider.setup().then(opts => {
+    provider.setup().then((opts) => {
       // Get a dynamic port from the runtime
       process.env.API_HOST = `http://localhost:${opts.port}`
     })
@@ -153,7 +153,7 @@ describe("Pact", () => {
           })
         )
 
-        it("returns a list of animals", done => {
+        it("returns a list of animals", (done) => {
           const suggestedMates = suggestion(suitor)
 
           expect(suggestedMates).to.eventually.have.deep.property(
@@ -190,7 +190,7 @@ describe("Pact", () => {
         })
       )
 
-      it("returns the animal", done => {
+      it("returns the animal", (done) => {
         const suggestedMates = getAnimalById(11)
 
         expect(suggestedMates)
@@ -215,14 +215,12 @@ describe("Pact", () => {
         })
       )
 
-      it("returns a 404", done => {
+      it("returns a 404", (done) => {
         // uncomment below to test a failed verify
         // const suggestedMates = getAnimalById(123)
         const suggestedMates = getAnimalById(100)
 
-        expect(suggestedMates)
-          .to.eventually.be.a("null")
-          .notify(done)
+        expect(suggestedMates).to.eventually.be.a("null").notify(done)
       })
     })
   })
@@ -249,7 +247,7 @@ describe("Pact", () => {
       })
     )
 
-    it("creates a new mate", done => {
+    it("creates a new mate", (done) => {
       expect(createMateForDates(suitor)).to.eventually.be.fulfilled.notify(done)
     })
   })

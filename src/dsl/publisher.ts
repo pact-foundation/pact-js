@@ -3,7 +3,7 @@
  * @module Publisher
  */
 import { qToPromise } from "../common/utils"
-import publisher, { PublisherOptions } from "@pact-foundation/pact-node"
+import publisher, { PublisherOptions } from "@pact-foundation/pact-core"
 
 export class Publisher {
   constructor(private opts: PublisherOptions) {}

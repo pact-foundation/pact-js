@@ -1,51 +1,48 @@
-import * as bunyan from "bunyan"
-import { RequestOptions, ClientRequest, IncomingMessage } from "http"
-const PrettyStream = require("bunyan-prettystream")
-const pkg = require("./metadata")
-const http = require("http")
+import pino = require("pino")
+import { version } from "../../package.json"
+import http, { RequestOptions, ClientRequest, IncomingMessage } from "http"
 
-const prettyStdOut = new PrettyStream()
-prettyStdOut.pipe(process.stdout)
+const DEFAULT_LEVEL: LogLevel = (
+  process.env.LOGLEVEL || "info"
+).toLowerCase() as LogLevel
 
-export class Logger extends bunyan {
-  public time(action: string, startTime: number) {
-    const time = Date.now() - startTime
-    this.info(
-      {
-        action,
-        duration: time,
-        type: "TIMER",
-      },
-      `TIMER: ${action} completed in ${time} milliseconds`
-    )
+type Logger = pino.Logger
+type LogLevel = pino.Level
+
+const createLogger = (level: LogLevel = DEFAULT_LEVEL): Logger =>
+  pino({
+    level: level.toLowerCase(),
+    prettyPrint: {
+      messageFormat: `pact@${version}: {msg}`,
+      translateTime: true,
+    },
+  })
+
+const logger: pino.Logger = createLogger()
+
+export const setLogLevel = (
+  wantedLevel?: pino.Level | number
+): number | void => {
+  if (wantedLevel) {
+    logger.level =
+      typeof wantedLevel === "string"
+        ? wantedLevel.toLowerCase()
+        : logger.levels.labels[wantedLevel]
   }
-
-  public get logLevelName(): string {
-    return bunyan.nameFromLevel[this.level()]
-  }
+  return logger.levels.values[logger.level]
 }
 
-const logger = new Logger({
-  name: `pact@${pkg.version}`,
-  streams: [
-    {
-      level: (process.env.LOG_LEVEL ||
-        process.env.LOGLEVEL ||
-        "info") as bunyan.LogLevel,
-      stream: prettyStdOut,
-      type: "raw",
-    },
-  ],
-})
-
-export const traceHttpInteractions = () => {
+export const traceHttpInteractions = (): void => {
   const originalRequest = http.request
 
-  http.request = (options: RequestOptions, cb: any): ClientRequest => {
+  http.request = (
+    options: RequestOptions,
+    cb: (res: IncomingMessage) => void
+  ): ClientRequest => {
     const requestBodyChunks: Buffer[] = []
     const responseBodyChunks: Buffer[] = []
 
-    const hijackedCalback = (res: any) => {
+    const hijackedCalback = (res: IncomingMessage) => {
       logger.trace("outgoing request", {
         ...options,
         body: Buffer.concat(requestBodyChunks).toString("utf8"),
@@ -62,7 +59,9 @@ export const traceHttpInteractions = () => {
     )
     const oldWrite = clientRequest.write.bind(clientRequest)
 
-    clientRequest.write = (chunk: any) => {
+    clientRequest.write = (
+      chunk: Parameters<typeof clientRequest.write>[0]
+    ) => {
       requestBodyChunks.push(Buffer.from(chunk))
       return oldWrite(chunk)
     }

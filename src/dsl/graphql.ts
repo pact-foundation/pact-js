@@ -11,7 +11,7 @@ import GraphQLQueryError from "../errors/graphQLQueryError"
 import ConfigurationError from "../errors/configurationError"
 
 export interface GraphQLVariables {
-  [name: string]: any
+  [name: string]: unknown
 }
 
 /**
@@ -25,7 +25,7 @@ export class GraphQLInteraction extends Interaction {
   /**
    * The type of GraphQL operation. Generally not required.
    */
-  public withOperation(operation: string | null) {
+  public withOperation(operation: string | null): this {
     this.operation = operation
 
     return this
@@ -34,7 +34,7 @@ export class GraphQLInteraction extends Interaction {
   /**
    * Any variables used in the Query
    */
-  public withVariables(variables: GraphQLVariables) {
+  public withVariables(variables: GraphQLVariables): this {
     this.variables = variables
 
     return this
@@ -58,7 +58,7 @@ export class GraphQLInteraction extends Interaction {
    *     }"
    *  }'
    */
-  public withQuery(query: string) {
+  public withQuery(query: string): this {
     if (isNil(query)) {
       throw new ConfigurationError("You must provide a GraphQL query.")
     }

@@ -4,7 +4,7 @@
  */
 import { PactfileWriteMode } from "./mockService"
 import { MessageProviders, StateHandlers } from "./message"
-import { VerifierOptions as PactNodeVerifierOptions } from "@pact-foundation/pact-node"
+import { VerifierOptions as PactCoreVerifierOptions } from "@pact-foundation/pact-core"
 
 export type LogLevel = "trace" | "debug" | "info" | "warn" | "error" | "fatal"
 
@@ -70,11 +70,11 @@ export interface MessageProviderOptions {
 }
 
 type ExcludedPactNodeVerifierKeys = Exclude<
-  keyof PactNodeVerifierOptions,
+  keyof PactCoreVerifierOptions,
   "providerBaseUrl"
 >
 export type PactNodeVerificationExcludedOptions = Pick<
-  PactNodeVerifierOptions,
+  PactCoreVerifierOptions,
   ExcludedPactNodeVerifierKeys
 >
 

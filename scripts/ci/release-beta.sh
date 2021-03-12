@@ -31,7 +31,6 @@ npm ci
 
 rm -rf dist/native
 npm run release
-npm run deploy:prepare
 
 # Emit version to next step
 VERSION="$("$SCRIPT_DIR/lib/get-version.sh")"

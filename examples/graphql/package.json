@@ -7,9 +7,9 @@
     "build": "tsc",
     "clean": "rimraf pacts",
     "test": "npm run clean && npm run test:consumer && npm run test:publish && npm run test:provider",
-    "test:consumer": "nyc --reporter=text-summary mocha consumer.spec.ts",
+    "test:consumer": "nyc --reporter=text-summary mocha src/consumer.spec.ts",
     "test:publish": "node publish.js",
-    "test:provider": "nyc --reporter=text-summary mocha -t 30000 provider.spec.ts"
+    "test:provider": "nyc --reporter=text-summary mocha -t 30000 src/provider.spec.ts"
   },
   "keywords": [
     "graphql",
@@ -19,15 +19,15 @@
   "author": "Matt Fellows <matt.fellows@onegeek.com.au>",
   "license": "MIT",
   "devDependencies": {
+    "@pact-foundation/absolute-version": "0.0.1",
     "@pact-foundation/pact": "^9.11.1",
-    "@types/chai": "^4.0.3",
+    "@types/chai": "^4.2.0",
     "@types/chai-as-promised": "0.0.31",
     "@types/express-graphql": "0.8.0",
     "@types/mocha": "^2.2.48",
     "@types/node": "^8.0.24",
-    "apollo-boost": "^0.4.9",
+    "apollo-boost": "0.4.8",
     "apollo-cache-inmemory": "^1.6.6",
-    "apollo-client": "^2.6.10",
     "apollo-server-express": "^2.14.2",
     "body-parser": "^1.18.2",
     "chai": "^4.2.0",

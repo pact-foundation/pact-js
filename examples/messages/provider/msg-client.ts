@@ -1,5 +1,5 @@
 export const getMsg = () => {
-  return new Promise(resolve =>
+  return new Promise((resolve) =>
     resolve({
       body: {
         movPath: "C:/xampp/htdocs/render-service/538481.mov",

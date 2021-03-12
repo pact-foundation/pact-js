@@ -1,19 +1,19 @@
 import * as mockery from "mockery"
-let MockNative = {
+const MockNative = {
   generate_datetime_string: () => "",
   generate_regex_string: () => "",
 }
-mockery.registerMock("../native/index.node", MockNative)
+mockery.registerMock("../../native/index.node", MockNative)
 
 import * as chai from "chai"
-import { MatchersV3 } from "./matchers"
+import * as MatchersV3 from "./matchers"
 
 const expect = chai.expect
 
 describe("V3 Matchers", () => {
   describe("#like", () => {
     it("returns a JSON representation of a like matcher", () => {
-      let result = MatchersV3.like({
+      const result = MatchersV3.like({
         a: "b",
       })
       expect(result).to.deep.equal({
@@ -27,7 +27,7 @@ describe("V3 Matchers", () => {
 
   describe("#eachLike", () => {
     it("returns a JSON representation of an eachLike matcher", () => {
-      let result = MatchersV3.eachLike({
+      const result = MatchersV3.eachLike({
         a: "b",
       })
       expect(result).to.deep.equal({
@@ -44,7 +44,7 @@ describe("V3 Matchers", () => {
   describe("#atLeastOneLike", () => {
     describe("with no examples", () => {
       it("returns a JSON representation of an atLeastOneLike matcher", () => {
-        let result = MatchersV3.atLeastOneLike({
+        const result = MatchersV3.atLeastOneLike({
           a: "b",
         })
         expect(result).to.deep.equal({
@@ -61,7 +61,7 @@ describe("V3 Matchers", () => {
 
     describe("when provided examples", () => {
       it("returns a JSON representation of an atLeastOneLike matcher with the correct number of examples", () => {
-        let result = MatchersV3.atLeastOneLike(
+        const result = MatchersV3.atLeastOneLike(
           {
             a: "b",
           },
@@ -79,7 +79,7 @@ describe("V3 Matchers", () => {
   describe("#atLeastLike", () => {
     describe("with no examples", () => {
       it("returns a JSON representation of an atLeastLike matcher", () => {
-        let result = MatchersV3.atLeastLike(
+        const result = MatchersV3.atLeastLike(
           {
             a: "b",
           },
@@ -95,7 +95,7 @@ describe("V3 Matchers", () => {
 
     describe("when provided examples", () => {
       it("returns a JSON representation of an atLeastLike matcher with the correct number of examples", () => {
-        let result = MatchersV3.atLeastLike(
+        const result = MatchersV3.atLeastLike(
           {
             a: "b",
           },
@@ -112,7 +112,7 @@ describe("V3 Matchers", () => {
 
     it("throws an error if the number of examples is less than the minimum", () => {
       expect(() => MatchersV3.atLeastLike({ a: "b" }, 4, 2)).to.throw(
-        "atLeastLike has a minimum of 4 but 2 elements where requested. Make sure the count is greater than or equal to the min."
+        "atLeastLike has a minimum of 4 but 2 elements were requested. Make sure the count is greater than or equal to the min."
       )
     })
   })
@@ -120,7 +120,7 @@ describe("V3 Matchers", () => {
   describe("#atMostLike", () => {
     describe("with no examples", () => {
       it("returns a JSON representation of an atMostLike matcher", () => {
-        let result = MatchersV3.atMostLike(
+        const result = MatchersV3.atMostLike(
           {
             a: "b",
           },
@@ -136,7 +136,7 @@ describe("V3 Matchers", () => {
 
     describe("when provided examples", () => {
       it("returns a JSON representation of an atMostLike matcher with the correct number of examples", () => {
-        let result = MatchersV3.atMostLike(
+        const result = MatchersV3.atMostLike(
           {
             a: "b",
           },
@@ -161,7 +161,7 @@ describe("V3 Matchers", () => {
   describe("#constrainedArrayLike", () => {
     describe("with no examples", () => {
       it("returns a JSON representation of an constrainedArrayLike matcher", () => {
-        let result = MatchersV3.constrainedArrayLike(
+        const result = MatchersV3.constrainedArrayLike(
           {
             a: "b",
           },
@@ -179,7 +179,7 @@ describe("V3 Matchers", () => {
 
     describe("when provided examples", () => {
       it("returns a JSON representation of an constrainedArrayLike matcher with the correct number of examples", () => {
-        let result = MatchersV3.constrainedArrayLike(
+        const result = MatchersV3.constrainedArrayLike(
           {
             a: "b",
           },
@@ -197,13 +197,17 @@ describe("V3 Matchers", () => {
     })
 
     it("throws an error if the number of examples is less than the minimum", () => {
-      expect(() => MatchersV3.constrainedArrayLike({ a: "b" }, 4, 6, 2)).to.throw(
+      expect(() =>
+        MatchersV3.constrainedArrayLike({ a: "b" }, 4, 6, 2)
+      ).to.throw(
         "constrainedArrayLike has a minimum of 4 but 2 elements where requested. Make sure the count is greater than or equal to the min."
       )
     })
 
     it("throws an error if the number of examples is more than the maximum", () => {
-      expect(() => MatchersV3.constrainedArrayLike({ a: "b" }, 4, 6, 8)).to.throw(
+      expect(() =>
+        MatchersV3.constrainedArrayLike({ a: "b" }, 4, 6, 8)
+      ).to.throw(
         "constrainedArrayLike has a maximum of 6 but 8 elements where requested. Make sure the count is less than or equal to the max."
       )
     })
@@ -211,7 +215,7 @@ describe("V3 Matchers", () => {
 
   describe("#integer", () => {
     it("returns a JSON representation of an integer matcher", () => {
-      let result = MatchersV3.integer(100)
+      const result = MatchersV3.integer(100)
       expect(result).to.deep.equal({
         "pact:matcher:type": "integer",
         value: 100,
@@ -220,7 +224,7 @@ describe("V3 Matchers", () => {
 
     describe("when no example is given", () => {
       it("also includes a random integer generator", () => {
-        let result = MatchersV3.integer()
+        const result = MatchersV3.integer()
         expect(result).to.deep.equal({
           "pact:matcher:type": "integer",
           "pact:generator:type": "RandomInt",
@@ -232,7 +236,7 @@ describe("V3 Matchers", () => {
 
   describe("#decimal", () => {
     it("returns a JSON representation of an decimal matcher", () => {
-      let result = MatchersV3.decimal(100.3)
+      const result = MatchersV3.decimal(100.3)
       expect(result).to.deep.equal({
         "pact:matcher:type": "decimal",
         value: 100.3,
@@ -241,7 +245,7 @@ describe("V3 Matchers", () => {
 
     describe("when no example is given", () => {
       it("also includes a random decimal generator", () => {
-        let result = MatchersV3.decimal()
+        const result = MatchersV3.decimal()
         expect(result).to.deep.equal({
           "pact:matcher:type": "decimal",
           "pact:generator:type": "RandomDecimal",
@@ -253,7 +257,7 @@ describe("V3 Matchers", () => {
 
   describe("#number", () => {
     it("returns a JSON representation of an number matcher", () => {
-      let result = MatchersV3.number(100.3)
+      const result = MatchersV3.number(100.3)
       expect(result).to.deep.equal({
         "pact:matcher:type": "number",
         value: 100.3,
@@ -262,7 +266,7 @@ describe("V3 Matchers", () => {
 
     describe("when no example is given", () => {
       it("also includes a random integer generator", () => {
-        let result = MatchersV3.number()
+        const result = MatchersV3.number()
         expect(result).to.deep.equal({
           "pact:matcher:type": "number",
           "pact:generator:type": "RandomInt",
@@ -274,7 +278,7 @@ describe("V3 Matchers", () => {
 
   describe("#boolean", () => {
     it("returns a JSON representation of a like matcher", () => {
-      let result = MatchersV3.boolean(true)
+      const result = MatchersV3.boolean(true)
       expect(result).to.deep.equal({
         "pact:matcher:type": "type",
         value: true,
@@ -284,7 +288,7 @@ describe("V3 Matchers", () => {
 
   describe("#string", () => {
     it("returns a JSON representation of a like matcher", () => {
-      let result = MatchersV3.string("true")
+      const result = MatchersV3.string("true")
       expect(result).to.deep.equal({
         "pact:matcher:type": "type",
         value: "true",
@@ -294,7 +298,7 @@ describe("V3 Matchers", () => {
 
   describe("#regex", () => {
     it("returns a JSON representation of a regex matcher", () => {
-      let result = MatchersV3.regex("\\d+", "1234")
+      const result = MatchersV3.regex("\\d+", "1234")
       expect(result).to.deep.equal({
         "pact:matcher:type": "regex",
         regex: "\\d+",
@@ -304,7 +308,7 @@ describe("V3 Matchers", () => {
 
     describe("when given a regular expression", () => {
       it("returns a JSON representation of a regex matcher", () => {
-        let result = MatchersV3.regex(/\d+/, "1234")
+        const result = MatchersV3.regex(/\d+/, "1234")
         expect(result).to.deep.equal({
           "pact:matcher:type": "regex",
           regex: "\\d+",
@@ -316,7 +320,7 @@ describe("V3 Matchers", () => {
 
   describe("#equal", () => {
     it("returns a JSON representation of an equality matcher", () => {
-      let result = MatchersV3.equal("true")
+      const result = MatchersV3.equal("true")
       expect(result).to.deep.equal({
         "pact:matcher:type": "equality",
         value: "true",
@@ -327,7 +331,7 @@ describe("V3 Matchers", () => {
   describe("#datetime", () => {
     describe("when an example is given", () => {
       it("returns a JSON representation of a datetime matcher", () => {
-        let result = MatchersV3.datetime(
+        const result = MatchersV3.datetime(
           "yyyy-MM-dd'T'HH:mm:ss.SSSX",
           "2016-02-11T09:46:56.023Z"
         )
@@ -342,7 +346,7 @@ describe("V3 Matchers", () => {
     describe("when no example is given", () => {
       it("generates a datetime from the current system time", () => {
         MockNative.generate_datetime_string = () => "2016-02-11T09:46:56.023Z"
-        let result = MatchersV3.datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX")
+        const result = MatchersV3.datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX")
         expect(result).to.deep.equal({
           "pact:generator:type": "DateTime",
           "pact:matcher:type": "timestamp",
@@ -355,7 +359,7 @@ describe("V3 Matchers", () => {
 
   describe("#time", () => {
     it("returns a JSON representation of a time matcher", () => {
-      let result = MatchersV3.time("HH:mm:ss", "09:46:56")
+      const result = MatchersV3.time("HH:mm:ss", "09:46:56")
       expect(result).to.deep.equal({
         "pact:generator:type": "Time",
         "pact:matcher:type": "time",
@@ -367,7 +371,7 @@ describe("V3 Matchers", () => {
     describe("when no example is given", () => {
       it("generates a time from the current system time", () => {
         MockNative.generate_datetime_string = () => "10:46:56.023"
-        let result = MatchersV3.time("HH:mm:ss.SSS")
+        const result = MatchersV3.time("HH:mm:ss.SSS")
         expect(result).to.deep.equal({
           "pact:generator:type": "Time",
           "pact:matcher:type": "time",
@@ -380,7 +384,7 @@ describe("V3 Matchers", () => {
 
   describe("#date", () => {
     it("returns a JSON representation of a date matcher", () => {
-      let result = MatchersV3.date("yyyy-MM-dd", "2016-02-11")
+      const result = MatchersV3.date("yyyy-MM-dd", "2016-02-11")
       expect(result).to.deep.equal({
         "pact:generator:type": "Date",
         "pact:matcher:type": "date",
@@ -392,7 +396,7 @@ describe("V3 Matchers", () => {
     describe("when no example is given", () => {
       it("generates a date from the current system time", () => {
         MockNative.generate_datetime_string = () => "2020-02-11"
-        let result = MatchersV3.date("yyyy-MM-dd")
+        const result = MatchersV3.date("yyyy-MM-dd")
         expect(result).to.deep.equal({
           "pact:generator:type": "Date",
           "pact:matcher:type": "date",
@@ -405,7 +409,7 @@ describe("V3 Matchers", () => {
 
   describe("#includes", () => {
     it("returns a JSON representation of an include matcher", () => {
-      let result = MatchersV3.includes("true")
+      const result = MatchersV3.includes("true")
       expect(result).to.deep.equal({
         "pact:matcher:type": "include",
         value: "true",
@@ -415,7 +419,7 @@ describe("V3 Matchers", () => {
 
   describe("#nullValue", () => {
     it("returns a JSON representation of an null matcher", () => {
-      let result = MatchersV3.nullValue()
+      const result = MatchersV3.nullValue()
       expect(result).to.deep.equal({
         "pact:matcher:type": "null",
       })
@@ -424,7 +428,7 @@ describe("V3 Matchers", () => {
 
   describe("#url", () => {
     it("returns a JSON representation of a regex matcher for the URL", () => {
-      let result = MatchersV3.url2("http://localhost:8080", [
+      const result = MatchersV3.url2("http://localhost:8080", [
         "users",
         "1234",
         "posts",
@@ -439,7 +443,7 @@ describe("V3 Matchers", () => {
 
     describe("when provided with a regex matcher", () => {
       it("returns a JSON representation of a regex matcher for the URL", () => {
-        let result = MatchersV3.url2("http://localhost:8080", [
+        const result = MatchersV3.url2("http://localhost:8080", [
           "users",
           MatchersV3.regex("\\d+", "1234"),
           "posts",
@@ -456,7 +460,7 @@ describe("V3 Matchers", () => {
     describe("when provided with a regular expression", () => {
       it("returns a JSON representation of a regex matcher for the URL", () => {
         MockNative.generate_regex_string = () => "12345678"
-        let result = MatchersV3.url2("http://localhost:8080", [
+        const result = MatchersV3.url2("http://localhost:8080", [
           "users",
           /\d+/,
           "posts",
@@ -472,7 +476,7 @@ describe("V3 Matchers", () => {
 
     describe("when no base URL is provided", () => {
       it("returns regex matcher and a MockServerURL generator", () => {
-        let result = MatchersV3.url([
+        const result = MatchersV3.url([
           "users",
           MatchersV3.regex("\\d+", "1234"),
           "posts",
@@ -483,7 +487,7 @@ describe("V3 Matchers", () => {
           "pact:generator:type": "MockServerURL",
           regex: ".*(\\/users\\/\\d+\\/posts\\/latest)$",
           value: "http://localhost:8080/users/1234/posts/latest",
-          example: "http://localhost:8080/users/1234/posts/latest"
+          example: "http://localhost:8080/users/1234/posts/latest",
         })
       })
     })
@@ -491,27 +495,29 @@ describe("V3 Matchers", () => {
 
   describe("#uuid", () => {
     it("returns a JSON representation of an regex matcher for UUIDs", () => {
-      let result = MatchersV3.uuid('ba4bd1bc-5556-11eb-9286-d71bc5b507be')
+      const result = MatchersV3.uuid("ba4bd1bc-5556-11eb-9286-d71bc5b507be")
       expect(result).to.deep.equal({
         "pact:matcher:type": "regex",
-        "regex": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
-        "value": "ba4bd1bc-5556-11eb-9286-d71bc5b507be"
+        regex: "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+        value: "ba4bd1bc-5556-11eb-9286-d71bc5b507be",
       })
     })
 
     it("throws an exception if the example value does not match the UUID regex", () => {
-      expect(() => MatchersV3.uuid('not a uuid')).to.throw()
-      expect(() => MatchersV3.uuid('ba4bd1bc-5556-11eb-9286')).to.throw()
-      expect(() => MatchersV3.uuid('ba4bd1bc-5556-11eb-9286-d71bc5b507be-1234')).to.throw()
+      expect(() => MatchersV3.uuid("not a uuid")).to.throw()
+      expect(() => MatchersV3.uuid("ba4bd1bc-5556-11eb-9286")).to.throw()
+      expect(() =>
+        MatchersV3.uuid("ba4bd1bc-5556-11eb-9286-d71bc5b507be-1234")
+      ).to.throw()
     })
 
     it("if no example is provided, it sets up a generator", () => {
-      let result = MatchersV3.uuid()
+      const result = MatchersV3.uuid()
       expect(result).to.deep.equal({
         "pact:matcher:type": "regex",
         "pact:generator:type": "Uuid",
-        "regex": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
-        "value": "e2490de5-5bd3-43d5-b7c4-526e33f71304"
+        regex: "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+        value: "e2490de5-5bd3-43d5-b7c4-526e33f71304",
       })
     })
   })

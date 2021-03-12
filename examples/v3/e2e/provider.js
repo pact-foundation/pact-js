@@ -41,7 +41,7 @@ const importData = () => {
 
 // List all animals with 'available' eligibility
 const availableAnimals = () => {
-  return animalRepository.fetchAll().filter(a => {
+  return animalRepository.fetchAll().filter((a) => {
     return a.eligibility.available
   })
 }
@@ -60,7 +60,7 @@ server.get("/animals/available", (req, res) => {
 server.get("/animals/available/xml", (req, res) => {
   res.header("Content-Type", "application/xml; charset=utf-8")
   let xml_body = xml({
-    animals: animalRepository.fetchAll().map(animal => {
+    animals: animalRepository.fetchAll().map((animal) => {
       let result = {}
       result[animal.animal] = { _attr: animal }
       return result
@@ -73,9 +73,11 @@ server.get("/animals/available/xml", (req, res) => {
 server.get("/animals/:id", (req, res) => {
   const response = animalRepository.getById(req.params.id)
   if (response) {
-    if (req.header('accept') === 'text/plain') {
-      res.contentType('text/plain; charset=utf-8')
-      res.end(`id=${response.id};first_name=${response.first_name};last_name=${response.last_name};animal=${response.animal}`)
+    if (req.header("accept") === "text/plain") {
+      res.contentType("text/plain; charset=utf-8")
+      res.end(
+        `id=${response.id};first_name=${response.first_name};last_name=${response.last_name};animal=${response.animal}`
+      )
     } else {
       res.end(JSON.stringify(response))
     }

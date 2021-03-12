@@ -33,7 +33,7 @@ const handler = (event, context, callback) => {
 
 // Separate your producer code, from the lambda handler.
 // No Lambda/AWS/Protocol specific stuff in here..
-const createEvent = obj => {
+const createEvent = (obj) => {
   // Change 'type' to something else to test a pact failure
   return {
     id: parseInt(Math.random() * 100),

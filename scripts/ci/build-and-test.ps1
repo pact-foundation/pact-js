@@ -8,6 +8,10 @@ pushd dist
 npm link
 popd
 
+Push-Location dist
+npm link
+Pop-Location
+
 Get-ChildItem ".\examples" -Directory | ForEach-Object {
   if ($_.Name -ne "v3") {
     Write-Output "Running examples in $($_.Name)"
@@ -30,6 +34,7 @@ Get-ChildItem ".\examples\v3" -Directory | ForEach-Object {
   pushd $_.FullName
   npm i
   Remove-Item -LiteralPath "node_modules\@pact-foundation\pact" -Force -Recurse
+
   npm link @pact-foundation/pact
   npm t
   if ($LastExitCode -ne 0) {

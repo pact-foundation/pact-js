@@ -38,7 +38,7 @@ describe("The Dog API", () => {
   afterEach(() => provider.verify())
 
   describe("get /dogs", () => {
-    before(done => {
+    before((done) => {
       const interaction = {
         state: "i have a list of dogs",
         uponReceiving: "a request for all dogs",
@@ -62,12 +62,12 @@ describe("The Dog API", () => {
       })
     })
 
-    it("returns the correct response", done => {
+    it("returns the correct response", (done) => {
       const urlAndPort = {
         url: url,
         port: port,
       }
-      getMeDogs(urlAndPort).then(response => {
+      getMeDogs(urlAndPort).then((response) => {
         expect(response.data).to.eql(EXPECTED_BODY)
         done()
       }, done)
@@ -75,7 +75,7 @@ describe("The Dog API", () => {
   })
 
   describe("get /dog/1", () => {
-    before(done => {
+    before((done) => {
       const interaction = {
         state: "i have a list of dogs",
         uponReceiving: "a request for a single dog",
@@ -99,12 +99,12 @@ describe("The Dog API", () => {
       })
     })
 
-    it("returns the correct response", done => {
+    it("returns the correct response", (done) => {
       const urlAndPort = {
         url: url,
         port: port,
       }
-      getMeDog(urlAndPort).then(response => {
+      getMeDog(urlAndPort).then((response) => {
         expect(response.data).to.eql(EXPECTED_BODY)
         done()
       }, done)

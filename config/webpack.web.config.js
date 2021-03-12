@@ -5,7 +5,7 @@ const DIST = path.resolve(__dirname, "../dist-web")
 const APP = path.resolve(__dirname, "../dist")
 
 module.exports = {
-  entry: path.resolve(APP, "pact-web.js"),
+  entry: path.resolve(APP, "src/pact-web.js"),
   mode: "production",
   output: {
     path: DIST,

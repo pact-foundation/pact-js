@@ -1,12 +1,12 @@
 /* tslint:disable:no-unused-expression no-empty no-string-literal*/
-import * as chai from "chai"
-import * as chaiAsPromised from "chai-as-promised"
+import chai from "chai"
+import chaiAsPromised from "chai-as-promised"
 import * as sinon from "sinon"
 import { Verifier, VerifierOptions } from "./verifier"
-import serviceFactory from "@pact-foundation/pact-node"
+import serviceFactory from "@pact-foundation/pact-core"
 import logger from "../common/logger"
 import * as http from "http"
-import * as express from "express"
+import express from "express"
 
 chai.use(chaiAsPromised)
 
@@ -53,11 +53,9 @@ describe("Verifier", () => {
       it("sets the configuration on the object", () => {
         v = new Verifier(opts)
 
-        expect(v)
-          .to.have.deep.property("config")
-          .includes({
-            providerBaseUrl,
-          })
+        expect(v).to.have.deep.property("config").includes({
+          providerBaseUrl,
+        })
         expect(v).to.have.nested.property("config.stateHandlers")
         expect(v).to.have.nested.property("config.requestFilter")
       })
@@ -245,11 +243,11 @@ describe("Verifier", () => {
         sinon.stub(v, "setupStates" as any).returns(Promise.resolve())
         const h = v["createProxyStateHandler"]()
 
-        return expect(h({}, mockResponse)).to.eventually.be.fulfilled.then(
-          () => {
-            expect(res).to.eql(200)
-          }
-        )
+        return expect(
+          h({} as express.Request, mockResponse as express.Response)
+        ).to.eventually.be.fulfilled.then(() => {
+          expect(res).to.eql(200)
+        })
       })
     })
 
@@ -261,11 +259,11 @@ describe("Verifier", () => {
 
         const h = v["createProxyStateHandler"]()
 
-        return expect(h({}, mockResponse)).to.eventually.be.fulfilled.then(
-          () => {
-            expect(res).to.eql(500)
-          }
-        )
+        return expect(
+          h({} as express.Request, mockResponse as express.Response)
+        ).to.eventually.be.fulfilled.then(() => {
+          expect(res).to.eql(500)
+        })
       })
     })
   })

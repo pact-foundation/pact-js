@@ -1,14 +1,14 @@
 /*eslint-disable*/
-;(function() {
-  describe("Client", function() {
+;(function () {
+  describe("Client", function () {
     var client, provider
 
-    beforeAll(function(done) {
+    beforeAll(function (done) {
       client = example.createClient("http://localhost:1234")
       provider = new Pact.PactWeb()
 
       // required for slower Travis CI environment
-      setTimeout(function() {
+      setTimeout(function () {
         done()
       }, 2000)
 
@@ -16,12 +16,12 @@
       provider.removeInteractions()
     })
 
-    afterAll(function(done) {
+    afterAll(function (done) {
       provider.finalize().then(done, done.fail)
     })
 
-    describe("sayHello", function() {
-      beforeAll(function(done) {
+    describe("sayHello", function () {
+      beforeAll(function (done) {
         provider
           .addInteraction({
             uponReceiving: "a request for hello",
@@ -42,9 +42,9 @@
           .then(done, done.fail)
       })
 
-      it("says hello", function(done) {
+      it("says hello", function (done) {
         //Run the tests
-        client.sayHello().then(function(data) {
+        client.sayHello().then(function (data) {
           expect(JSON.parse(data.responseText)).toEqual({
             reply: "Hello",
           })
@@ -53,8 +53,8 @@
       })
     })
 
-    describe("findFriendsByAgeAndChildren", function() {
-      beforeAll(function(done) {
+    describe("findFriendsByAgeAndChildren", function () {
+      beforeAll(function (done) {
         provider
           .addInteraction({
             uponReceiving: "a request friends",
@@ -92,11 +92,11 @@
           .then(done, done.fail)
       })
 
-      it("returns some friends", function(done) {
+      it("returns some friends", function (done) {
         //Run the tests
         client
           .findFriendsByAgeAndChildren("33", ["Mary Jane", "James"])
-          .then(function(res) {
+          .then(function (res) {
             expect(JSON.parse(res.responseText)).toEqual({
               friends: [
                 {
@@ -109,13 +109,13 @@
       })
     })
 
-    describe("unfriendMe", function() {
-      afterEach(function() {
+    describe("unfriendMe", function () {
+      afterEach(function () {
         return provider.removeInteractions()
       })
 
-      describe("when I have some friends", function() {
-        beforeAll(function(done) {
+      describe("when I have some friends", function () {
+        beforeAll(function (done) {
           //Add interaction
           provider
             .addInteraction({
@@ -138,9 +138,9 @@
             .then(done, done.fail)
         })
 
-        it("unfriends me", function(done) {
+        it("unfriends me", function (done) {
           //Run the tests
-          client.unfriendMe().then(function(res) {
+          client.unfriendMe().then(function (res) {
             expect(JSON.parse(res.responseText)).toEqual({
               reply: "Bye",
             })
@@ -150,8 +150,8 @@
       })
 
       // verify with Pact, and reset expectations
-      describe("when there are no friends", function() {
-        beforeAll(function(done) {
+      describe("when there are no friends", function () {
+        beforeAll(function (done) {
           //Add interaction
           provider
             .addInteraction({
@@ -171,13 +171,13 @@
             .then(done, done.fail)
         })
 
-        it("returns an error message", function(done) {
+        it("returns an error message", function (done) {
           //Run the tests
           client.unfriendMe().then(
-            function() {
+            function () {
               done(new Error("expected request to /unfriend me to fail"))
             },
-            function(e) {
+            function (e) {
               expect(e.status).toEqual(404)
               expect(JSON.parse(e.responseText).error).toEqual("No friends :(")
               provider.verify().then(done, done.fail)

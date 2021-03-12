@@ -2,42 +2,46 @@
  * Provider Verifier service
  * @module ProviderVerifier
  */
-import pact from "@pact-foundation/pact-node"
 import { qToPromise } from "../common/utils"
-import { VerifierOptions as PactNodeVerifierOptions } from "@pact-foundation/pact-node"
-import serviceFactory from "@pact-foundation/pact-node"
-import { omit, isEmpty, pickBy, identity, reduce } from "lodash"
-import * as express from "express"
+import serviceFactory, {
+  VerifierOptions as PactCoreVerifierOptions,
+} from "@pact-foundation/pact-core"
+import { omit, isEmpty, pickBy, identity, reduce, Dictionary } from "lodash"
+import express from "express"
 import * as http from "http"
-import logger from "../common/logger"
+import logger, { setLogLevel } from "../common/logger"
 import { LogLevel } from "./options"
 import ConfigurationError from "../errors/configurationError"
 import { localAddresses } from "../common/net"
 import * as url from "url"
-const HttpProxy = require("http-proxy")
-const bodyParser = require("body-parser")
+import HttpProxy from "http-proxy"
+import bodyParser from "body-parser"
 
 export interface ProviderState {
   states?: [string]
 }
 
 export interface StateHandler {
-  [name: string]: () => Promise<any>
+  [name: string]: () => Promise<unknown>
 }
+
+export type Hook = () => Promise<unknown>
 
 interface ProxyOptions {
   logLevel?: LogLevel
   requestFilter?: express.RequestHandler
   stateHandlers?: StateHandler
+  beforeEach?: Hook
+  afterEach?: Hook
   validateSSL?: boolean
   changeOrigin?: boolean
 }
 
-export type VerifierOptions = PactNodeVerifierOptions & ProxyOptions
+export type VerifierOptions = PactCoreVerifierOptions & ProxyOptions
 
 export class Verifier {
-  private address: string = "http://localhost"
-  private stateSetupPath: string = "/_pactSetup"
+  private address = "http://localhost"
+  private stateSetupPath = "/_pactSetup"
   private config: VerifierOptions
   private deprecatedFields: string[] = ["providerStatesSetupUrl"]
 
@@ -52,7 +56,7 @@ export class Verifier {
    *
    * @param config
    */
-  public verifyProvider(config?: VerifierOptions): Promise<any> {
+  public verifyProvider(config?: VerifierOptions): Promise<string> {
     logger.info("Verifying provider")
 
     // Backwards compatibility
@@ -76,11 +80,11 @@ export class Verifier {
     // Run the verification once the proxy server is available
     return this.waitForServerReady(server)
       .then(this.runProviderVerification())
-      .then(result => {
+      .then((result) => {
         server.close()
         return result
       })
-      .catch(e => {
+      .catch((e) => {
         server.close()
         throw e
       })
@@ -97,7 +101,7 @@ export class Verifier {
         providerBaseUrl: `${this.address}:${server.address().port}`,
       }
 
-      return qToPromise<any>(pact.verifyPacts(opts))
+      return qToPromise<string>(serviceFactory.verifyPacts(opts))
     }
   }
 
@@ -126,6 +130,8 @@ export class Verifier {
 
     app.use(this.stateSetupPath, bodyParser.json())
     app.use(this.stateSetupPath, bodyParser.urlencoded({ extended: true }))
+    this.registerBeforeHook(app)
+    this.registerAfterHook(app)
 
     // Trace req/res logging
     if (this.config.logLevel === "debug") {
@@ -156,13 +162,51 @@ export class Verifier {
   }
 
   private createProxyStateHandler() {
-    return (req: any, res: any) => {
+    return (req: express.Request, res: express.Response) => {
       const message: ProviderState = req.body
 
       return this.setupStates(message)
         .then(() => res.sendStatus(200))
-        .catch(e => res.status(500).send(e))
+        .catch((e) => res.status(500).send(e))
     }
+  }
+
+  private registerBeforeHook(app: express.Express) {
+    app.use(async (req, res, next) => {
+      if (this.config.beforeEach !== undefined) {
+        logger.trace("registered 'beforeEach' hook")
+        if (req.path === this.stateSetupPath) {
+          logger.debug("executing 'beforeEach' hook")
+          try {
+            await this.config.beforeEach()
+          } catch (e) {
+            logger.error("error executing 'beforeEach' hook: ", e)
+            next(new Error(`error executing 'beforeEach' hook: ${e}`))
+          }
+        }
+      }
+      next()
+    })
+  }
+
+  private registerAfterHook(app: express.Express) {
+    app.use(async (req, res, next) => {
+      if (this.config.afterEach !== undefined) {
+        logger.trace("registered 'afterEach' hook")
+        next()
+        if (req.path !== this.stateSetupPath) {
+          logger.debug("executing 'afterEach' hook")
+          try {
+            await this.config.afterEach()
+          } catch (e) {
+            logger.error("error executing 'afterEach' hook: ", e)
+            next(new Error(`error executing 'afterEach' hook: ${e}`))
+          }
+        }
+      } else {
+        next()
+      }
+    })
   }
 
   private createRequestTracer(): express.RequestHandler {
@@ -177,12 +221,12 @@ export class Verifier {
       const [oldWrite, oldEnd] = [res.write, res.end]
       const chunks: Buffer[] = []
 
-      res.write = (chunk: any) => {
+      res.write = (chunk: Parameters<typeof res.write>[0]) => {
         chunks.push(Buffer.from(chunk))
         return oldWrite.apply(res, [chunk])
       }
 
-      res.end = (chunk: any) => {
+      res.end = (chunk: Parameters<typeof res.write>[0]) => {
         if (chunk) {
           chunks.push(Buffer.from(chunk))
         }
@@ -200,11 +244,11 @@ export class Verifier {
   }
 
   // Lookup the handler based on the description, or get the default handler
-  private setupStates(descriptor: ProviderState): Promise<any> {
-    const promises: Array<Promise<any>> = new Array()
+  private setupStates(descriptor: ProviderState): Promise<unknown> {
+    const promises: Array<Promise<unknown>> = []
 
     if (descriptor.states) {
-      descriptor.states.forEach(state => {
+      descriptor.states.forEach((state) => {
         const handler = this.config.stateHandlers
           ? this.config.stateHandlers[state]
           : null
@@ -225,11 +269,11 @@ export class Verifier {
 
     if (this.config.logLevel && !isEmpty(this.config.logLevel)) {
       serviceFactory.logLevel(this.config.logLevel)
-      logger.level(this.config.logLevel)
+      setLogLevel(this.config.logLevel)
     }
 
-    this.deprecatedFields.forEach(f => {
-      if ((this.config as any)[f]) {
+    this.deprecatedFields.forEach((f: keyof VerifierOptions) => {
+      if (this.config[f]) {
         logger.warn(
           `${f} is deprecated, and will be removed in future versions`
         )
@@ -271,13 +315,17 @@ const removeEmptyRequestProperties = (req: express.Request) =>
     identity
   )
 
-const removeEmptyResponseProperties = (body: any, res: express.Response) =>
+const removeEmptyResponseProperties = (body: string, res: express.Response) =>
   pickBy(
     {
       body,
       headers: reduce(
         res.getHeaders(),
-        (acc: any, val, index) => {
+        (
+          acc: Dictionary<string | number | string[] | undefined>,
+          val,
+          index
+        ) => {
           acc[index] = val
           return acc
         },

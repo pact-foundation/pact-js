@@ -40,7 +40,7 @@ const importData = () => {
 
 // List all animals with 'available' eligibility
 const availableAnimals = () => {
-  return animalRepository.fetchAll().filter(a => {
+  return animalRepository.fetchAll().filter((a) => {
     return a.eligibility.available
   })
 }

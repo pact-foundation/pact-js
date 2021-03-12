@@ -1,3 +1,4 @@
+import { Matcher } from "v3/matchers"
 import { XmlNode } from "./xmlNode"
 import { XmlText } from "./xmlText"
 
@@ -25,35 +26,19 @@ export class XmlElement extends XmlNode {
   }
 
   /**
-   * Creates a new element with the given name and attributes and then invokes the callback to configure it.
-   * @param name Element name
-   * @param attributes Map of element attributes
-   * @param arg Callback to configure the new element
-   */
-  public appendElement(
-    name: string,
-    attributes: XmlAttributes,
-    arg?: XmlCallback
-  ): XmlElement
-  /**
    * Creates a new element with the given name and attributes and then sets it's text content (can be a matcher)
    * @param name Element name
    * @param attributes Map of element attributes
-   * @param arg Text content to create the new element with (can be a matcher)
+   * @param arg Callback to configure the new element, or text content to create the new element with (can be a matcher)
    */
   public appendElement(
     name: string,
     attributes: XmlAttributes,
-    arg?: string
-  ): XmlElement
-  public appendElement(
-    name: string,
-    attributes: XmlAttributes,
-    arg?: any
+    arg?: string | XmlCallback | Matcher<string>
   ): XmlElement {
     const el = new XmlElement(name).setAttributes(attributes)
     if (arg) {
-      if (typeof arg != "function") {
+      if (typeof arg !== "function") {
         el.appendText(arg)
       } else {
         this.executeCallback(el, arg)
@@ -64,12 +49,16 @@ export class XmlElement extends XmlNode {
     return this
   }
 
-  public appendText(content: string): XmlElement
-  public appendText(content: any): XmlElement {
-    if (typeof context == "string") {
-      this.children.push(new XmlText(content))
-    } else if (content["pact:matcher:type"]) {
-      this.children.push(new XmlText(content["value"], content))
+  public appendText(content: string | Matcher<string>): XmlElement {
+    if (typeof context === "string") {
+      this.children.push(new XmlText(content as string))
+    } else if (content as Matcher<string>["pact:matcher:type"]) {
+      this.children.push(
+        new XmlText(
+          (content as Matcher<string>).value || "",
+          content as Matcher<string>
+        )
+      )
     } else {
       this.children.push(new XmlText(content.toString()))
     }

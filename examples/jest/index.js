@@ -2,7 +2,7 @@
 
 const axios = require("axios")
 
-exports.getMeDogs = endpoint => {
+exports.getMeDogs = (endpoint) => {
   const url = endpoint.url
 
   return axios
@@ -12,10 +12,10 @@ exports.getMeDogs = endpoint => {
       url: "/dogs",
       headers: { Accept: "application/json" },
     })
-    .then(response => response.data)
+    .then((response) => response.data)
 }
 
-exports.getMeCats = endpoint => {
+exports.getMeCats = (endpoint) => {
   const url = endpoint.url
 
   return axios
@@ -25,5 +25,5 @@ exports.getMeCats = endpoint => {
       url: "/cats?catId[]=2&catId[]=3",
       headers: { Accept: "application/json" },
     })
-    .then(response => response.data)
+    .then((response) => response.data)
 }

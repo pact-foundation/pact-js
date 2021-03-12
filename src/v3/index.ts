@@ -1,5 +1,6 @@
-const PactNative = require("../native/index.node")
 import logger from "../common/logger"
+
+import PactNative from "../../native/index.node"
 
 const version = PactNative.init()
 logger.debug("Initialised native library " + version)
@@ -11,7 +12,7 @@ export * from "./pact"
  * @memberof Pact
  * @static
  */
-export * from "./matchers"
+export * as MatchersV3 from "./matchers"
 
 /**
  * Exposes {@link VerifierV3}

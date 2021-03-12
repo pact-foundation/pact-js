@@ -41,6 +41,6 @@ pact
       console.log("to see your published contracts.")
     }
   })
-  .catch(e => {
+  .catch((e) => {
     console.log("Pact contract publishing failed: ", e)
   })

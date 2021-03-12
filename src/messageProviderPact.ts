@@ -3,16 +3,16 @@
  */
 
 import { omit, isEmpty } from "lodash"
+
 import { MessageDescriptor, MessageProvider } from "./dsl/message"
-import logger from "./common/logger"
-import { VerifierOptions } from "@pact-foundation/pact-node"
+import logger, { setLogLevel } from "./common/logger"
 import { PactMessageProviderOptions } from "./dsl/options"
-import serviceFactory from "@pact-foundation/pact-node"
-import * as express from "express"
+import serviceFactory, { VerifierOptions } from "@pact-foundation/pact-core"
+import express from "express"
 import * as http from "http"
 import { qToPromise } from "./common/utils"
 
-const bodyParser = require("body-parser")
+import bodyParser from "body-parser"
 
 /**
  * A Message Provider is analagous to Consumer in the HTTP Interaction model.
@@ -24,16 +24,16 @@ export class MessageProviderPact {
   constructor(private config: PactMessageProviderOptions) {
     if (config.logLevel && !isEmpty(config.logLevel)) {
       serviceFactory.logLevel(config.logLevel)
-      logger.level(config.logLevel)
+      setLogLevel(config.logLevel)
     } else {
-      logger.level()
+      setLogLevel()
     }
   }
 
   /**
    * Verify a Message Provider.
    */
-  public verify(): Promise<any> {
+  public verify(): Promise<unknown> {
     logger.info("Verifying message")
 
     // Start the verification CLI proxy server
@@ -44,11 +44,11 @@ export class MessageProviderPact {
     return this.waitForServerReady(server)
       .then(this.runProviderVerification())
       .then(
-        result => {
+        (result) => {
           server.close()
           return result
         },
-        err => {
+        (err) => {
           server.close()
           throw err
         }
@@ -72,7 +72,7 @@ export class MessageProviderPact {
         ...{ providerBaseUrl: "http://localhost:" + server.address().port },
       } as VerifierOptions
 
-      return qToPromise<any>(serviceFactory.verifyPacts(opts))
+      return qToPromise<string>(serviceFactory.verifyPacts(opts))
     }
   }
 
@@ -88,9 +88,9 @@ export class MessageProviderPact {
       // wrapped in a Message
       this.setupStates(message)
         .then(() => this.findHandler(message))
-        .then(handler => handler(message))
-        .then(o => res.json({ contents: o }))
-        .catch(e => res.status(500).send(e))
+        .then((handler) => handler(message))
+        .then((o) => res.json({ contents: o }))
+        .catch((e) => res.status(500).send(e))
     }
   }
 
@@ -119,11 +119,11 @@ export class MessageProviderPact {
   }
 
   // Lookup the handler based on the description, or get the default handler
-  private setupStates(message: MessageDescriptor): Promise<any> {
-    const promises: Array<Promise<any>> = new Array()
+  private setupStates(message: MessageDescriptor): Promise<unknown> {
+    const promises: Array<Promise<unknown>> = []
 
     if (message.providerStates) {
-      message.providerStates.forEach(state => {
+      message.providerStates.forEach((state) => {
         const handler = this.config.stateHandlers
           ? this.config.stateHandlers[state.name]
           : null

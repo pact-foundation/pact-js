@@ -1,13 +1,13 @@
 /* tslint:disable:no-unused-expression no-empty */
-import * as chai from "chai"
-import * as chaiAsPromised from "chai-as-promised"
+import chai from "chai"
+import chaiAsPromised from "chai-as-promised"
 import {
   MessageConsumerPact,
   synchronousBodyHandler,
   asynchronousBodyHandler,
 } from "./messageConsumerPact"
-import { Message, MessageDescriptor } from "./dsl/message"
-import * as sinonChai from "sinon-chai"
+import { Message } from "./dsl/message"
+import sinonChai from "sinon-chai"
 
 chai.use(sinonChai)
 chai.use(chaiAsPromised)
@@ -108,7 +108,7 @@ describe("MessageConsumer", () => {
         // Stub out service factory
         stub.getServiceFactory = () => {
           return {
-            createMessage: (opts: any) => Promise.resolve("message created"),
+            createMessage: () => Promise.resolve("message created"),
           }
         }
 
@@ -118,9 +118,8 @@ describe("MessageConsumer", () => {
           .withContent({ foo: "bar" })
           .withMetadata({ baz: "bat" })
 
-        return expect(
-          stubbedConsumer.verify((m: Message) => Promise.resolve("yay!"))
-        ).to.eventually.be.fulfilled
+        return expect(stubbedConsumer.verify(() => Promise.resolve("yay!"))).to
+          .eventually.be.fulfilled
       })
     })
   })
@@ -135,7 +134,7 @@ describe("MessageConsumer", () => {
   })
 
   describe("#getServiceFactory", () => {
-    it("returns a valid pact-node object", () => {
+    it("returns a valid pact-core object", () => {
       const serviceFactory = (consumer as any).getServiceFactory()
       expect(serviceFactory).to.be.a("object")
       expect(serviceFactory).to.respondTo("createMessage")
@@ -146,7 +145,7 @@ describe("MessageConsumer", () => {
     describe("#asynchronousbodyHandler", () => {
       describe("when given a function that succeeds", () => {
         it("returns a Handler object that returns a completed promise", () => {
-          const failFn = (obj: any) => Promise.resolve("yay!")
+          const failFn = () => Promise.resolve("yay!")
           const hFn = asynchronousBodyHandler(failFn)
 
           return expect(hFn(testMessage)).to.eventually.be.fulfilled
@@ -154,7 +153,7 @@ describe("MessageConsumer", () => {
       })
       describe("when given a function that throws an Exception", () => {
         it("returns a Handler object that returns a rejected promise", () => {
-          const failFn = (obj: any) => Promise.reject("fail")
+          const failFn = () => Promise.reject("fail")
           const hFn = asynchronousBodyHandler(failFn)
 
           return expect(hFn(testMessage)).to.eventually.be.rejected
@@ -165,7 +164,7 @@ describe("MessageConsumer", () => {
     describe("#synchronousbodyHandler", () => {
       describe("when given a function that succeeds", () => {
         it("returns a Handler object that returns a completed promise", () => {
-          const failFn = (obj: any) => {
+          const failFn = () => {
             /* do nothing! */
           }
           const hFn = synchronousBodyHandler(failFn)
@@ -176,7 +175,7 @@ describe("MessageConsumer", () => {
 
       describe("when given a function that throws an Exception", () => {
         it("returns a Handler object that returns a rejected promise", () => {
-          const failFn = (obj: any) => {
+          const failFn = () => {
             throw new Error("fail")
           }
           const hFn = synchronousBodyHandler(failFn)

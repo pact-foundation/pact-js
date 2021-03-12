@@ -32,10 +32,12 @@ const accountRepository = {
   },
 
   findByAccountNumber: async (accountNumber) => {
-    return accounts.find(account => account.accountNumber.id == accountNumber)
-  }
+    return accounts.find((account) => account.accountNumber.id == accountNumber)
+  },
 }
 
 module.exports = {
-  Account, AccountNumber, accountRepository
+  Account,
+  AccountNumber,
+  accountRepository,
 }

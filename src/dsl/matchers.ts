@@ -4,6 +4,7 @@
  * but are fixed, to prevent contract invalidation after each run of the consumer test.
  */
 
+import { AnyJson, JsonMap } from "common/jsonTypes"
 import { isFunction, isNil, isEmpty, isUndefined } from "lodash"
 import MatcherError from "../errors/matcherError"
 
@@ -45,7 +46,10 @@ export function validateExample(example: string, matcher: string): boolean {
  * @param {Object} opts
  * @param {Number} opts.min
  */
-export function eachLike<T>(content: T, opts?: { min: number }) {
+export function eachLike<T>(
+  content: T,
+  opts?: { min: number }
+): ArrayMatcher<T> {
   if (isUndefined(content)) {
     throw new MatcherError(
       "Error creating a Pact eachLike. Please provide a content argument"
@@ -78,7 +82,7 @@ export function eachLike<T>(content: T, opts?: { min: number }) {
  * The somethingLike matcher
  * @param {any} value - the value to be somethingLike
  */
-export function somethingLike<T>(value: T) {
+export function somethingLike<T>(value: T): Matcher<T> {
   if (isNil(value) || isFunction(value)) {
     throw new MatcherError(
       "Error creating a Pact somethingLike Match. Value cannot be a function or undefined"
@@ -100,7 +104,10 @@ export function somethingLike<T>(value: T) {
  * @param {string} opts.generate - a value to represent the matched String
  * @param {string} opts.matcher - a Regex representing the value
  */
-export function term(opts: { generate: string; matcher: string }) {
+export function term(opts: {
+  generate: string
+  matcher: string
+}): Matcher<string> {
   const generate = opts.generate
   const matcher = opts.matcher
 
@@ -135,7 +142,7 @@ export function term(opts: { generate: string; matcher: string }) {
  * Email address matcher.
  * @param {string} address - a email address to use as an example
  */
-export function email(address?: string) {
+export function email(address?: string): Matcher<string> {
   return term({
     generate: address || "hello@pact.io",
     matcher: EMAIL_FORMAT,
@@ -146,7 +153,7 @@ export function email(address?: string) {
  * UUID v4 matcher.
  * @param {string} uuuid - a UUID to use as an example.
  */
-export function uuid(id?: string) {
+export function uuid(id?: string): Matcher<string> {
   return term({
     generate: id || "ce118b6e-d8e1-11e7-9296-cec278b6b50a",
     matcher: UUID_V4_FORMAT,
@@ -157,7 +164,7 @@ export function uuid(id?: string) {
  * IPv4 matcher.
  * @param {string} ip - an IPv4 address to use as an example. Defaults to `127.0.0.13`
  */
-export function ipv4Address(ip?: string) {
+export function ipv4Address(ip?: string): Matcher<string> {
   return term({
     generate: ip || "127.0.0.13",
     matcher: IPV4_FORMAT,
@@ -168,7 +175,7 @@ export function ipv4Address(ip?: string) {
  * IPv6 matcher.
  * @param {string} ip - an IPv6 address to use as an example. Defaults to '::ffff:192.0.2.128'
  */
-export function ipv6Address(ip?: string) {
+export function ipv6Address(ip?: string): Matcher<string> {
   return term({
     generate: ip || "::ffff:192.0.2.128",
     matcher: IPV6_FORMAT,
@@ -180,7 +187,7 @@ export function ipv6Address(ip?: string) {
  * @param {string} date - an ISO8601 Date and Time string
  *                        e.g. 2015-08-06T16:53:10+01:00 are valid
  */
-export function iso8601DateTime(date?: string) {
+export function iso8601DateTime(date?: string): Matcher<string> {
   return term({
     generate: date || "2015-08-06T16:53:10+01:00",
     matcher: ISO8601_DATETIME_FORMAT,
@@ -191,7 +198,7 @@ export function iso8601DateTime(date?: string) {
  * ISO8601 DateTime matcher with required millisecond precision
  * @param {string} date - an ISO8601 Date and Time string, e.g. 2015-08-06T16:53:10.123+01:00
  */
-export function iso8601DateTimeWithMillis(date?: string) {
+export function iso8601DateTimeWithMillis(date?: string): Matcher<string> {
   return term({
     generate: date || "2015-08-06T16:53:10.123+01:00",
     matcher: ISO8601_DATETIME_WITH_MILLIS_FORMAT,
@@ -202,7 +209,7 @@ export function iso8601DateTimeWithMillis(date?: string) {
  * ISO8601 Date matcher.
  * @param {string} date - a basic yyyy-MM-dd date string e.g. 2000-09-31
  */
-export function iso8601Date(date?: string) {
+export function iso8601Date(date?: string): Matcher<string> {
   return term({
     generate: date || "2013-02-01",
     matcher: ISO8601_DATE_FORMAT,
@@ -213,7 +220,7 @@ export function iso8601Date(date?: string) {
  *  ISO8601 Time Matcher, matches a pattern of the format "'T'HH:mm:ss".
  * @param {string} date - a ISO8601 formatted time string e.g. T22:44:30.652Z
  */
-export function iso8601Time(time?: string) {
+export function iso8601Time(time?: string): Matcher<string> {
   return term({
     generate: time || "T22:44:30.652Z",
     matcher: ISO8601_TIME_FORMAT,
@@ -224,7 +231,7 @@ export function iso8601Time(time?: string) {
  * RFC3339 Timestamp matcher, a subset of ISO8609
  * @param {string} date - an RFC3339 Date and Time string, e.g. Mon, 31 Oct 2016 15:21:41 -0400
  */
-export function rfc3339Timestamp(timestamp?: string) {
+export function rfc3339Timestamp(timestamp?: string): Matcher<string> {
   return term({
     generate: timestamp || "Mon, 31 Oct 2016 15:21:41 -0400",
     matcher: RFC3339_TIMESTAMP_FORMAT,
@@ -235,7 +242,7 @@ export function rfc3339Timestamp(timestamp?: string) {
  * Hexadecimal Matcher.
  * @param {string} hex - a hex value.
  */
-export function hexadecimal(hex?: string) {
+export function hexadecimal(hex?: string): Matcher<string> {
   return term({
     generate: hex || "3F",
     matcher: HEX_FORMAT,
@@ -246,7 +253,7 @@ export function hexadecimal(hex?: string) {
  * Decimal Matcher.
  * @param {float} float - a decimal value.
  */
-export function decimal(float?: number) {
+export function decimal(float?: number): Matcher<number> {
   return somethingLike<number>(isNil(float) ? 13.01 : float)
 }
 
@@ -254,21 +261,21 @@ export function decimal(float?: number) {
  * Integer Matcher.
  * @param {integer} int - an int value.
  */
-export function integer(int?: number) {
+export function integer(int?: number): Matcher<number> {
   return somethingLike<number>(isNil(int) ? 13 : int)
 }
 
 /**
  * Boolean Matcher.
  */
-export function boolean(value: boolean = true) {
+export function boolean(value = true): Matcher<boolean> {
   return somethingLike<boolean>(value)
 }
 
 /**
  * String Matcher.
  */
-export function string(value: string = "iloveorange") {
+export function string(value = "iloveorange"): Matcher<string> {
   return somethingLike<string>(value)
 }
 
@@ -276,31 +283,57 @@ export function string(value: string = "iloveorange") {
 export { somethingLike as like }
 export { term as regex }
 
-export interface MatcherResult {
+export interface Matcher<T> {
+  data?: {
+    generate: string
+    matcher: { json_class: string; o: number; s: string }
+  }
+  contents?: T
   json_class: string
-  getValue(): any
+  getValue(): T
 }
 
-export function isMatcher(x: MatcherResult | any): x is MatcherResult {
-  return x != null && (x as MatcherResult).getValue !== undefined
+export interface ArrayMatcher<T> {
+  contents: T
+  json_class: string
+  getValue(): T[]
+  min: number
 }
+
+export function isMatcher(x: AnyTemplate): x is Matcher<AnyTemplate> {
+  return x != null && (x as Matcher<AnyTemplate>).getValue !== undefined
+}
+
+export type AnyTemplate =
+  | AnyJson
+  | Matcher<AnyTemplate>
+  | ArrayMatcher<AnyTemplate>
+  | TemplateMap
+  | ArrayTemplate
+
+interface TemplateMap {
+  [key: string]: AnyTemplate
+}
+type ArrayTemplate = Array<AnyTemplate>
 
 // Recurse the object removing any underlying matching guff, returning
 // the raw example content
-export function extractPayload(value: any): any {
+export function extractPayload(value: AnyTemplate): AnyJson {
   if (isMatcher(value)) {
     return extractPayload(value.getValue())
   }
 
   if (Object.prototype.toString.call(value) === "[object Array]") {
-    return value.map(extractPayload)
+    return (value as Array<AnyTemplate>).map(extractPayload)
   }
 
-  if (typeof value === "object") {
+  if (value !== null && typeof value === "object") {
     return Object.keys(value).reduce(
-      (acc: object, propName: string) => ({
+      (acc: JsonMap, propName: string) => ({
         ...acc,
-        [propName]: extractPayload(value[propName]),
+        [propName]: extractPayload(
+          (value as Record<string, AnyTemplate>)[propName]
+        ),
       }),
       {}
     )

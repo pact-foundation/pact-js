@@ -6,10 +6,10 @@ export class DogService {
   public getMeDogs = (from: string): AxiosPromise => {
     return axios.request({
       baseURL: this.url,
-      params: { from: from },
+      params: { from },
       headers: { Accept: "application/json" },
       method: "GET",
-      url: "/dogs"
+      url: "/dogs",
     })
   }
 }

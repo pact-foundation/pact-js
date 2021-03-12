@@ -5,26 +5,26 @@
 
 import { isNil, keys, omitBy } from "lodash"
 import { HTTPMethod, methods } from "../common/request"
-import { MatcherResult, isMatcher } from "./matchers"
+import { Matcher, isMatcher, AnyTemplate } from "./matchers"
 import ConfigurationError from "../errors/configurationError"
 
 interface QueryObject {
-  [name: string]: string | MatcherResult | string[]
+  [name: string]: string | Matcher<string> | string[]
 }
 export type Query = string | QueryObject
 
 export interface RequestOptions {
   method: HTTPMethod | methods
-  path: string | MatcherResult
+  path: string | Matcher<string>
   query?: Query
-  headers?: { [name: string]: string | MatcherResult }
-  body?: any
+  headers?: { [name: string]: string | Matcher<string> }
+  body?: AnyTemplate
 }
 
 export interface ResponseOptions {
-  status: number | MatcherResult
-  headers?: { [name: string]: string | MatcherResult }
-  body?: any
+  status: number | Matcher<number>
+  headers?: { [name: string]: string | Matcher<string> }
+  body?: AnyTemplate
 }
 
 export interface InteractionObject {
@@ -49,7 +49,7 @@ export class Interaction {
    * @param {string} providerState - The state of the provider.
    * @returns {Interaction} interaction
    */
-  public given(providerState: string) {
+  public given(providerState: string): this {
     if (providerState) {
       this.state.providerState = providerState
     }
@@ -62,7 +62,7 @@ export class Interaction {
    * @param {string} description - A description of the interaction.
    * @returns {Interaction} interaction
    */
-  public uponReceiving(description: string) {
+  public uponReceiving(description: string): this {
     if (isNil(description)) {
       throw new ConfigurationError(
         "You must provide a description for the interaction."
@@ -83,7 +83,7 @@ export class Interaction {
    * @param {Object} requestOpts.body - The body, in {@link String} format or {@link Object} format
    * @returns {Interaction} interaction
    */
-  public withRequest(requestOpts: RequestOptions) {
+  public withRequest(requestOpts: RequestOptions): this {
     if (isNil(requestOpts.method)) {
       throw new ConfigurationError("You must provide an HTTP method.")
     }
@@ -113,8 +113,9 @@ export class Interaction {
    * @param {string} responseOpts.status - The HTTP status
    * @param {string} responseOpts.headers
    * @param {Object} responseOpts.body
+   * @returns {Interaction} interaction
    */
-  public willRespondWith(responseOpts: ResponseOptions) {
+  public willRespondWith(responseOpts: ResponseOptions): this {
     if (
       isNil(responseOpts.status) ||
       responseOpts.status.toString().trim().length === 0
@@ -155,7 +156,7 @@ export class Interaction {
       return
     }
 
-    Object.values(query).every(value => {
+    Object.values(query).every((value) => {
       if (
         isMatcher(value) ||
         Array.isArray(value) ||

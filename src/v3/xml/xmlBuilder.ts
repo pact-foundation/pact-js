@@ -14,7 +14,7 @@ export class XmlBuilder {
     this.root = new XmlElement(rootElement)
   }
 
-  public build(callback: (doc: XmlElement) => void) {
+  public build(callback: (doc: XmlElement) => void): XmlBuilder {
     callback(this.root)
 
     return this

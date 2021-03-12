@@ -1,15 +1,14 @@
-import serviceFactory from "@pact-foundation/pact-node"
+import serviceFactory from "@pact-foundation/pact-core"
 import * as path from "path"
-import * as clc from "cli-color"
-import * as process from "process"
+import clc from "cli-color"
+import process from "process"
 import { Interaction, InteractionObject } from "./dsl/interaction"
 import { isEmpty } from "lodash"
 import { isPortAvailable } from "./common/net"
-import logger, { traceHttpInteractions } from "./common/logger"
-import { LogLevels } from "@pact-foundation/pact-node/src/logger"
+import logger, { traceHttpInteractions, setLogLevel } from "./common/logger"
 import { MockService } from "./dsl/mockService"
-import { PactOptions, PactOptionsComplete } from "./dsl/options"
-import { Server } from "@pact-foundation/pact-node/src/server"
+import { LogLevel, PactOptions, PactOptionsComplete } from "./dsl/options"
+import { Server } from "@pact-foundation/pact-core/src/server"
 import VerificationError from "./errors/verificationError"
 import ConfigurationError from "./errors/configurationError"
 
@@ -56,7 +55,7 @@ export class Pact {
       throw new ConfigurationError("You must specify a Provider for this pact.")
     }
 
-    logger.level(this.opts.logLevel as LogLevels)
+    setLogLevel(this.opts.logLevel as LogLevel)
     serviceFactory.logLevel(this.opts.logLevel)
 
     if (this.opts.logLevel === "trace") {
@@ -74,7 +73,7 @@ export class Pact {
   public setup(): Promise<PactOptionsComplete> {
     return this.checkPort()
       .then(() => this.startServer())
-      .then(opts => {
+      .then((opts) => {
         this.setupMockService()
         return Promise.resolve(opts)
       })
@@ -116,7 +115,7 @@ export class Pact {
     return this.mockService
       .verify()
       .then(() => this.mockService.removeInteractions())
-      .catch((e: any) => {
+      .catch((e) => {
         // Properly format the error
         /* tslint:disable: no-console */
         console.error("")
@@ -152,7 +151,7 @@ export class Pact {
       .writePact()
       .then(
         () => logger.info("Pact File Written"),
-        e => {
+        (e) => {
           return Promise.reject(e)
         }
       )
@@ -161,7 +160,7 @@ export class Pact {
           new Promise<void>((resolve, reject) =>
             this.server.delete().then(
               () => resolve(),
-              e => reject(e)
+              (e) => reject(e)
             )
           )
       )
@@ -223,7 +222,7 @@ export class Pact {
           this.opts.port = this.server.options.port || this.opts.port
           resolve(this.opts)
         },
-        (e: any) => reject(e)
+        (e) => reject(e)
       )
     )
   }

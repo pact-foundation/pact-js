@@ -6,7 +6,7 @@ import * as sinonChai from "sinon-chai"
 import { Pact, Interaction, Matchers } from "@pact-foundation/pact"
 
 const expect = chai.expect
-import { DogService } from "../index"
+import { DogService } from "../src/index"
 const { eachLike } = Matchers
 
 chai.use(sinonChai)
@@ -21,15 +21,15 @@ describe("The Dog API", () => {
     log: path.resolve(process.cwd(), "logs", "mockserver-integration.log"),
     dir: path.resolve(process.cwd(), "pacts"),
     spec: 2,
-    consumer: "MyConsumer",
-    provider: "MyProvider",
+    consumer: "Typescript Consumer Example",
+    provider: "Typescript Provider Example",
   })
 
   const dogExample = { dog: 1 }
   const EXPECTED_BODY = eachLike(dogExample)
 
   before(() =>
-    provider.setup().then(opts => {
+    provider.setup().then((opts) => {
       dogService = new DogService({ url, port: opts.port })
     })
   )
@@ -61,7 +61,7 @@ describe("The Dog API", () => {
       return provider.addInteraction(interaction)
     })
 
-    it("returns the correct response", done => {
+    it("returns the correct response", (done) => {
       dogService.getMeDogs().then((response: any) => {
         expect(response.data[0]).to.deep.eq(dogExample)
         done()
@@ -91,7 +91,7 @@ describe("The Dog API", () => {
       })
     })
 
-    it("returns the correct response", done => {
+    it("returns the correct response", (done) => {
       dogService.getMeDogs().then((response: any) => {
         expect(response.data[0]).to.deep.eq(dogExample)
         done()

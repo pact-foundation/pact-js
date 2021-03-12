@@ -9,7 +9,7 @@ const {
   boolean,
   atLeastOneLike,
   timestamp,
-  regex
+  regex,
 } = MatchersV3
 
 const TodoApp = require("../src/todo")
@@ -61,18 +61,14 @@ describe("Pact V3", () => {
         })
 
         it("generates a list of TODOs for the main screen", () => {
-          let result = provider.executeTest(mockserver => {
+          let result = provider.executeTest((mockserver) => {
             console.log("In Test Function", mockserver)
             return TodoApp.setUrl(mockserver.url)
               .getProjects()
-              .then(projects => {
-                expect(projects)
-                  .to.be.an("array")
-                  .with.length(1)
+              .then((projects) => {
+                expect(projects).to.be.an("array").with.length(1)
                 expect(projects[0].id).to.be.equal(1)
-                expect(projects[0].tasks)
-                  .to.be.an("array")
-                  .with.length(4)
+                expect(projects[0].tasks).to.be.an("array").with.length(4)
               })
           })
           console.log("result from runTest", result)
@@ -99,8 +95,13 @@ describe("Pact V3", () => {
           })
           .willRespondWith({
             status: 200,
-            headers: { "Content-Type": regex("application/.*xml(;.*)?", "application/xml") },
-            body: new XmlBuilder("1.0", "UTF-8", "ns1:projects").build(el => {
+            headers: {
+              "Content-Type": regex(
+                "application/.*xml(;.*)?",
+                "application/xml"
+              ),
+            },
+            body: new XmlBuilder("1.0", "UTF-8", "ns1:projects").build((el) => {
               el.setAttributes({
                 id: "1234",
                 "xmlns:ns1": "http://some.namespace/and/more/stuff",
@@ -117,8 +118,8 @@ describe("Pact V3", () => {
                   //   "2016-02-11T09:46:56.023Z"
                   // ),
                 },
-                project => {
-                  project.appendElement("ns1:tasks", {}, task => {
+                (project) => {
+                  project.appendElement("ns1:tasks", {}, (task) => {
                     task.eachLike(
                       "ns1:task",
                       {
@@ -133,19 +134,17 @@ describe("Pact V3", () => {
                 },
                 { examples: 2 }
               )
-            })
+            }),
           })
       })
 
       it("generates a list of TODOs for the main screen", () => {
-        let result = provider.executeTest(mockserver => {
+        let result = provider.executeTest((mockserver) => {
           console.log("In Test Function", mockserver)
           return TodoApp.setUrl(mockserver.url)
             .getProjects("xml")
-            .then(projects => {
-              expect(projects["ns1:project"])
-                .to.be.an("array")
-                .with.length(2)
+            .then((projects) => {
+              expect(projects["ns1:project"]).to.be.an("array").with.length(2)
               expect(projects["ns1:project"][0].id).to.be.equal("1")
               expect(projects["ns1:project"][0]["ns1:tasks"]["ns1:task"])
                 .to.be.an("array")
@@ -176,7 +175,7 @@ describe("Pact V3", () => {
       })
 
       it("stores the image against the project", async () => {
-        let result = await provider.executeTest(mockserver => {
+        let result = await provider.executeTest((mockserver) => {
           console.log("In Test Function", mockserver)
           return TodoApp.setUrl(mockserver.url).postImage(
             1001,
