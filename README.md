@@ -1036,7 +1036,7 @@ The `fromProviderState` matching function allows values to be generated based on
 
 For an example, see [examples/v3/provider-state-injected](https://github.com/pact-foundation/pact-js/tree/feat/v3.0.0/examples/v3/provider-state-injected).
 
-For this to work, in the consumer test we use the `fromProviderState` matching function which takes an expression and an example value. The example value will be used in the consumer test. 
+For this to work, in the consumer test we use the `fromProviderState` matching function which takes an expression and an example value. The example value will be used in the consumer test.
 
 For example:
 
@@ -1107,6 +1107,35 @@ body: new XmlBuilder("1.0", "UTF-8", "ns1:projects").build(el => {
 ### Verifying providers with VerifierV3
 
 The `VerifierV3` class can verify your provider in a similar way to the existing one.
+
+#### Verification Options with VerifierV3
+
+<details><summary>Verification Options</summary>
+
+| Parameter                   | Required? | Type                           | Description                                                                                                                                                                                        |
+| --------------------------- | --------- | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `provider`                  | false     | string                         | Name of the provider if fetching from a Broker                                                                                                                                                     |
+| `logLevel`                  | false     | string                         | not used, log level is set by [environment variable](#debugging-issues-with-pact-js-v3)                                                                                                            |
+| `providerBaseUrl`           | true      | string                         | Running API provider host endpoint.                                                                                                                                                                |
+| `pactUrls`                  | false     | array                          | Array of local pact file paths or HTTP-based URLs. Required if _not_ using a Pact Broker.                                                                                                          |
+| `pactBrokerUrl`             | false     | string                         | Base URL of the Pact Broker from which to retrieve the pacts. Required if `pactUrls` not given.                                                                                                   |
+| `providerStatesSetupUrl`    | false     | string                         | Deprecated (use URL to send PUT requests to setup a given provider state                                                                                                                           |
+| `pactBrokerUsername`        | false     | string                         | Username for Pact Broker basic authentication                                                                                                                                                      |
+| `pactBrokerPassword`        | false     | string                         | Password for Pact Broker basic authentication                                                                                                                                                      |
+| `pactBrokerToken`           | false     | string                         | Bearer token for Pact Broker authentication                                                                                                                                                        |
+| `callbackTimeout`           | false     | number                         | Timeout in milliseconds for request filters and provider state handlers to execute within                                                                                                          |
+| `publishVerificationResult` | false     | boolean                        | Publish verification result to Broker (_NOTE_: you should only enable this during CI builds)                                                                                                       |
+| `providerVersion`           | false     | string                         | Provider version, required to publish verification result to Broker. Optional otherwise.                                                                                                     |
+| `requestFilter  `           | false     | RequestHandler                 |                                                                                                                                                                                                    |
+| `stateHandlers`             | false     | object                         | Map of "state" to a function that sets up a given provider state. See docs [below](#provider-state-callbacks) for more information                                                                 |
+| `consumerVersionTags`       | false     | string\|array                  | Retrieve the latest pacts with given tag(s)                                                                                                                                                        |
+| `providerVersionTags`       | false     | string\|array                  | Tag(s) to apply to the provider application                                                                                                                                                        |
+| `enablePending`             | false     | boolean                        | Enable the [pending pacts](https://docs.pact.io/pending) feature.                                                                                                                                  |
+| `includeWipPactsSince`      | false     | string                         | Includes pact marked as WIP since this date. String in the format %Y-%m-%d or %Y-%m-%dT%H:%M:%S.000%:z                                                                                             |
+| `disableSSLVerification`    | false     | boolean                        | Ignore invalid/self-signed SSL certificates                                                                                                                                                        |
+</details>
+
+
 
 #### Request Filters
 
