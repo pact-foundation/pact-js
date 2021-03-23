@@ -196,6 +196,15 @@ export class PactV3 {
 
   public willRespondWith(res: V3Response): PactV3 {
     let body = res.body
+    if (body !== undefined && body !== null) {
+      if (
+        (body as MatchersV3.Matcher<never>)["pact:matcher:type"] !== undefined
+      ) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        body = body?.value
+      }
+    }
     if (typeof body !== "string") {
       body = body && JSON.stringify(body)
     }
