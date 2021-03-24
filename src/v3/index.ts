@@ -3,7 +3,7 @@ import logger from "../common/logger"
 import PactNative from "../../native/index.node"
 
 const version = PactNative.init()
-logger.debug("Initialised native library " + version)
+logger.debug(`Initialised native library ${version}`)
 
 export * from "./pact"
 

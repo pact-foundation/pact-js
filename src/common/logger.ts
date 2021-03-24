@@ -1,6 +1,7 @@
-import pino = require("pino")
-import { version } from "../../package.json"
 import http, { RequestOptions, ClientRequest, IncomingMessage } from "http"
+import pino from "pino"
+
+import { version } from "../../package.json"
 
 const DEFAULT_LEVEL: LogLevel = (
   process.env.LOGLEVEL || "info"
@@ -49,7 +50,7 @@ export const traceHttpInteractions = (): void => {
       })
 
       if (cb) {
-        return cb(res)
+        cb(res)
       }
     }
 

@@ -1,13 +1,12 @@
-/* tslint:disable:no-unused-expression */
 import chai from "chai"
 import chaiAsPromised from "chai-as-promised"
 import nock from "nock"
-import { HTTPMethod } from "../common/request"
+import { HTTPMethods } from "../common/request"
 import { Interaction } from "./interaction"
 import { MockService } from "./mockService"
 
 chai.use(chaiAsPromised)
-const expect = chai.expect
+const { expect } = chai
 
 describe("MockService", () => {
   after(() => {
@@ -56,7 +55,7 @@ describe("MockService", () => {
     const interaction = new Interaction()
     interaction
       .uponReceiving("duh")
-      .withRequest({ method: HTTPMethod.GET, path: "/search" })
+      .withRequest({ method: HTTPMethods.GET, path: "/search" })
       .willRespondWith({ status: 200 })
 
     it("when Interaction added successfully", () => {

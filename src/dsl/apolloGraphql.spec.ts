@@ -3,7 +3,7 @@ import chaiAsPromised from "chai-as-promised"
 import { ApolloGraphQLInteraction } from "./apolloGraphql"
 
 chai.use(chaiAsPromised)
-const expect = chai.expect
+const { expect } = chai
 
 describe("ApolloGraphQLInteraction", () => {
   let interaction: ApolloGraphQLInteraction

@@ -76,10 +76,8 @@ describe("Matcher", () => {
     })
 
     describe("when not provided with a valid expression", () => {
-      const createTheTerm = (badArg: any) => {
-        return () => {
-          term(badArg)
-        }
+      const createTheTerm = (badArg: any) => () => {
+        term(badArg)
       }
 
       describe("when no term is provided", () => {
@@ -124,10 +122,8 @@ describe("Matcher", () => {
     })
 
     describe("when not provided with a valid value", () => {
-      const createTheValue = (badArg: any) => {
-        return () => {
-          somethingLike(badArg)
-        }
+      const createTheValue = (badArg: any) => () => {
+        somethingLike(badArg)
       }
 
       describe("when no value is provided", () => {

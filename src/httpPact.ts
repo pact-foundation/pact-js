@@ -2,13 +2,13 @@ import serviceFactory from "@pact-foundation/pact-core"
 import * as path from "path"
 import clc from "cli-color"
 import process from "process"
-import { Interaction, InteractionObject } from "./dsl/interaction"
 import { isEmpty } from "lodash"
+import { Server } from "@pact-foundation/pact-core/src/server"
+import { Interaction, InteractionObject } from "./dsl/interaction"
 import { isPortAvailable } from "./common/net"
 import logger, { traceHttpInteractions, setLogLevel } from "./common/logger"
 import { MockService } from "./dsl/mockService"
 import { LogLevel, PactOptions, PactOptionsComplete } from "./dsl/options"
-import { Server } from "@pact-foundation/pact-core/src/server"
 import VerificationError from "./errors/verificationError"
 import ConfigurationError from "./errors/configurationError"
 
@@ -40,8 +40,11 @@ export class Pact {
   }
 
   public server: Server
+
   public opts: PactOptionsComplete
+
   public mockService: MockService
+
   private finalized: boolean
 
   constructor(config: PactOptions) {
@@ -117,11 +120,12 @@ export class Pact {
       .then(() => this.mockService.removeInteractions())
       .catch((e) => {
         // Properly format the error
-        /* tslint:disable: no-console */
+        // eslint-disable-next-line no-console
         console.error("")
+        // eslint-disable-next-line no-console
         console.error(clc.red("Pact verification failed!"))
+        // eslint-disable-next-line no-console
         console.error(clc.red(e))
-        /* tslint:enable: */
 
         return this.mockService.removeInteractions().then(() => {
           throw new VerificationError(
@@ -151,9 +155,7 @@ export class Pact {
       .writePact()
       .then(
         () => logger.info("Pact File Written"),
-        (e) => {
-          return Promise.reject(e)
-        }
+        (e) => Promise.reject(e)
       )
       .then(
         () =>
@@ -166,9 +168,9 @@ export class Pact {
       )
       .catch(
         (e: Error) =>
-          new Promise<void>((resolve, reject) => {
-            return this.server.delete().finally(() => reject(e))
-          })
+          new Promise<void>((resolve, reject) =>
+            this.server.delete().finally(() => reject(e))
+          )
       )
   }
 

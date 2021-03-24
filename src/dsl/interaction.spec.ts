@@ -1,11 +1,11 @@
 import chai from "chai"
 import chaiAsPromised from "chai-as-promised"
-import { HTTPMethod } from "../common/request"
+import { HTTPMethods } from "../common/request"
 import { Interaction } from "./interaction"
 import { eachLike, term } from "./matchers"
 
 chai.use(chaiAsPromised)
-const expect = chai.expect
+const { expect } = chai
 
 describe("Interaction", () => {
   describe("#given", () => {
@@ -78,14 +78,14 @@ describe("Interaction", () => {
 
     it("throws error when path is not provided", () => {
       expect(
-        interaction.withRequest.bind(interaction, { method: HTTPMethod.GET })
+        interaction.withRequest.bind(interaction, { method: HTTPMethods.GET })
       ).to.throw(Error, "You must provide a path.")
     })
 
     it("throws error when query object is not a string", () => {
       expect(
         interaction.withRequest.bind(interaction, {
-          method: HTTPMethod.GET,
+          method: HTTPMethods.GET,
           path: "/",
           query: { string: false, query: "false" },
         })
@@ -95,7 +95,7 @@ describe("Interaction", () => {
     describe("with only mandatory params", () => {
       const actual = new Interaction()
         .uponReceiving("a request")
-        .withRequest({ method: HTTPMethod.GET, path: "/search" })
+        .withRequest({ method: HTTPMethods.GET, path: "/search" })
         .json()
 
       it("has a state containing only the given keys", () => {
@@ -114,7 +114,7 @@ describe("Interaction", () => {
         .withRequest({
           body: { id: 1, name: "Test", due: "tomorrow" },
           headers: { "Content-Type": "application/json" },
-          method: HTTPMethod.GET,
+          method: HTTPMethods.GET,
           path: "/search",
           query: "q=test",
         })
@@ -136,7 +136,7 @@ describe("Interaction", () => {
       const request = {
         body: { id: 1, name: "Test", due: "tomorrow" },
         headers: { "Content-Type": "application/json" },
-        method: HTTPMethod.GET,
+        method: HTTPMethods.GET,
         path: "/search",
         query: {},
       }
@@ -189,7 +189,7 @@ describe("Interaction", () => {
           .uponReceiving("request")
           .withRequest({
             body: "",
-            method: HTTPMethod.GET,
+            method: HTTPMethods.GET,
             path: "/path",
           })
           .json()
@@ -202,7 +202,7 @@ describe("Interaction", () => {
           .uponReceiving("request")
           .withRequest({
             body: undefined,
-            method: HTTPMethod.GET,
+            method: HTTPMethods.GET,
             path: "/path",
           })
           .json()

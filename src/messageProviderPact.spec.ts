@@ -1,16 +1,20 @@
 /* tslint:disable:no-unused-expression no-empty */
 import * as chai from "chai"
 import chaiAsPromised from "chai-as-promised"
-import { MessageProviderPact } from "./messageProviderPact"
-import { Message } from "./dsl/message"
 import sinonChai from "sinon-chai"
 import express from "express"
 import * as http from "http"
+import { Message } from "./dsl/message"
+import {
+  MessageProviderPact,
+  setupProxyServer,
+  waitForServerReady,
+} from "./messageProviderPact"
 
 chai.use(sinonChai)
 chai.use(chaiAsPromised)
 
-const expect = chai.expect
+const { expect } = chai
 
 describe("MesageProvider", () => {
   let provider: MessageProviderPact
@@ -39,7 +43,7 @@ describe("MesageProvider", () => {
       logLevel: "error",
       messageProviders: {
         successfulRequest: () => Promise.resolve("yay"),
-        unsuccessfulRequest: () => Promise.reject("nay"),
+        unsuccessfulRequest: () => Promise.reject(new Error("nay")),
       },
       provider: "myprovider",
       stateHandlers: {
@@ -141,7 +145,6 @@ describe("MesageProvider", () => {
   describe("#waitForServerReady", () => {
     describe("when the http server starts up", () => {
       it("returns a resolved promise", () => {
-        const waitForServerReady = (provider as any).waitForServerReady
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         const server = http.createServer(() => {}).listen()
 
@@ -152,7 +155,6 @@ describe("MesageProvider", () => {
   describe("#setupProxyServer", () => {
     describe("when the http server starts up", () => {
       it("returns a resolved promise", () => {
-        const setupProxyServer = (provider as any).setupProxyServer
         const app = express()
 
         expect(setupProxyServer(app)).to.be.an.instanceOf(http.Server)

@@ -3,6 +3,8 @@
  */
 
 import { isEmpty, cloneDeep } from "lodash"
+import serviceFactory from "@pact-foundation/pact-core"
+import { AnyJson } from "common/jsonTypes"
 import { extractPayload, AnyTemplate } from "./dsl/matchers"
 import { qToPromise } from "./common/utils"
 import {
@@ -12,10 +14,11 @@ import {
   ConcreteMessage,
 } from "./dsl/message"
 import logger, { setLogLevel } from "./common/logger"
-import serviceFactory from "@pact-foundation/pact-core"
 import { MessageConsumerOptions } from "./dsl/options"
 import ConfigurationError from "./errors/configurationError"
-import { AnyJson } from "common/jsonTypes"
+
+const isMessage = (x: Message | unknown): x is Message =>
+  (x as Message).contents !== undefined
 
 /**
  * A Message Consumer is analagous to a Provider in the HTTP Interaction model.
@@ -25,6 +28,11 @@ import { AnyJson } from "common/jsonTypes"
 export class MessageConsumerPact {
   // Build up a valid Message object
   private state: Partial<Message> = {}
+
+  // eslint-disable-next-line class-methods-use-this
+  private getServiceFactory() {
+    return serviceFactory
+  }
 
   constructor(private config: MessageConsumerOptions) {
     if (!isEmpty(config.logLevel)) {
@@ -153,16 +161,10 @@ export class MessageConsumerPact {
     if (isMessage(this.state)) {
       return Promise.resolve()
     }
-    return Promise.reject("message has not yet been properly constructed")
+    return Promise.reject(
+      new Error("message has not yet been properly constructed")
+    )
   }
-
-  private getServiceFactory() {
-    return serviceFactory
-  }
-}
-
-const isMessage = (x: Message | unknown): x is Message => {
-  return (x as Message).contents !== undefined
 }
 
 // TODO: create more basic adapters for API handlers

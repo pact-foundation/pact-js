@@ -9,8 +9,25 @@ import { Promise as bluebird } from "bluebird"
 
 export const localAddresses = ["127.0.0.1", "localhost", "0.0.0.0", "::1"]
 
-const isPortAvailable = (port: number, host: string): Promise<void> => {
-  return Promise.resolve(
+export const portCheck = (port: number, host: string): Promise<void> =>
+  new Promise((resolve, reject) => {
+    const server = net
+      .createServer()
+      .listen({ port, host, exclusive: true })
+      .on("error", (e: NodeJS.ErrnoException) => {
+        if (e.code === "EADDRINUSE") {
+          reject(new Error(`Port ${port} is unavailable on address ${host}`))
+        } else {
+          reject(e)
+        }
+      })
+      .on("listening", () => {
+        server.once("close", () => resolve()).close()
+      })
+  })
+
+export const isPortAvailable = (port: number, host: string): Promise<void> =>
+  Promise.resolve(
     bluebird
       .map(
         localAddresses,
@@ -32,24 +49,3 @@ const isPortAvailable = (port: number, host: string): Promise<void> => {
         return portCheck(port, host)
       })
   )
-}
-
-const portCheck = (port: number, host: string): Promise<void> => {
-  return new Promise((resolve, reject) => {
-    const server = net
-      .createServer()
-      .listen({ port, host, exclusive: true })
-      .on("error", (e: NodeJS.ErrnoException) => {
-        if (e.code === "EADDRINUSE") {
-          reject(new Error(`Port ${port} is unavailable on address ${host}`))
-        } else {
-          reject(e)
-        }
-      })
-      .on("listening", () => {
-        server.once("close", () => resolve()).close()
-      })
-  })
-}
-
-export { isPortAvailable, portCheck }

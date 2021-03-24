@@ -1,11 +1,12 @@
-/* tslint:disable:no-unused-expression no-empty no-string-literal*/
+/* tslint:disable:no-unused-expression no-empty no-string-literal */
 import * as chai from "chai"
 import chaiAsPromised from "chai-as-promised"
 
 import { Publisher } from "./publisher"
+
 chai.use(chaiAsPromised)
 
-const expect = chai.expect
+const { expect } = chai
 
 describe("Publisher", () => {
   describe("#constructor", () => {

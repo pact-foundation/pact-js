@@ -76,7 +76,7 @@ function displayQuery(query: Record<string, string[]>): string {
 
 function displayHeaders(headers: TemplateHeaders, indent: string): string {
   return join(
-    "\n" + indent,
+    `\n${indent}`,
     map(([k, v]) => `${k}: ${v}`, toPairs(headers))
   )
 }
@@ -91,7 +91,7 @@ function displayRequest(request: MismatchRequest, indent: string): string {
   if (request.headers) {
     output += `\n${indent}Headers:\n${indent}  ${displayHeaders(
       request.headers,
-      indent + "  "
+      `${indent}  `
     )}`
   }
 
@@ -107,9 +107,8 @@ function displayRequest(request: MismatchRequest, indent: string): string {
 function filterMissingFeatureFlag(mismatches: Mismatch[]) {
   if (process.env.PACT_EXPERIMENTAL_FEATURE_ALLOW_MISSING_REQUESTS) {
     return mismatches.filter((m) => m.type !== "missing-request")
-  } else {
-    return mismatches
   }
+  return mismatches
 }
 
 function extractMismatches(mockServerMismatches: string[]): Mismatch[] {
@@ -117,33 +116,33 @@ function extractMismatches(mockServerMismatches: string[]): Mismatch[] {
 }
 
 function generateMockServerError(mismatches: Mismatch[], indent: string) {
-  let error = "Mock server failed with the following mismatches: "
-
-  let i = 1
-  for (const mismatch of mismatches) {
-    if (mismatch.type === "request-not-found") {
-      error += `\n\n${indent}${i++}) The following request was not expected: ${displayRequest(
-        mismatch.request,
-        indent + "    "
-      )}`
-    } else if (mismatch.type === "missing-request") {
-      error += `\n\n${indent}${i++}) The following request was expected but not received: ${displayRequest(
-        mismatch.request,
-        indent + "    "
-      )}`
-    } else {
-      error += `\n${indent}${i++}) ${mismatch.type} ${
+  return [
+    "Mock server failed with the following mismatches:",
+    ...mismatches.map((mismatch, i) => {
+      if (mismatch.type === "request-not-found") {
+        return `\n${indent}${i}) The following request was not expected: ${displayRequest(
+          mismatch.request,
+          `${indent}    `
+        )}`
+      }
+      if (mismatch.type === "missing-request") {
+        return `\n${indent}${i}) The following request was expected but not received: ${displayRequest(
+          mismatch.request,
+          `${indent}    `
+        )}`
+      }
+      return `${indent}${i}) ${mismatch.type} ${
         mismatch.path ? `(at ${mismatch.path}) ` : ""
       }${mismatch}`
-    }
-  }
-
-  return error
+    }),
+  ].join("\n")
 }
 
 export class PactV3 {
   private opts: PactV3Options
+
   private states: V3ProviderState[] = []
+
   private pact: PactNative.Pact
 
   constructor(opts: PactV3Options) {
@@ -167,7 +166,7 @@ export class PactV3 {
   }
 
   public withRequest(req: V3Request): PactV3 {
-    let body = req.body
+    let { body } = req
     if (typeof body !== "string") {
       body = body && JSON.stringify(body)
     }
@@ -195,7 +194,7 @@ export class PactV3 {
   }
 
   public willRespondWith(res: V3Response): PactV3 {
-    let body = res.body
+    let { body } = res
     if (typeof body !== "string") {
       body = body && JSON.stringify(body)
     }
@@ -233,7 +232,8 @@ export class PactV3 {
           const testResult = this.pact.getTestResult(result.mockServer.id)
           if (testResult.mockServerError) {
             return Promise.reject(new Error(testResult.mockServerError))
-          } else if (testResult.mockServerMismatches) {
+          }
+          if (testResult.mockServerMismatches) {
             const mismatches = extractMismatches(
               testResult.mockServerMismatches
             )
@@ -252,33 +252,29 @@ export class PactV3 {
           const testResult = this.pact.getTestResult(result.mockServer.id)
           if (testResult.mockServerError || testResult.mockServerMismatches) {
             let error = "Test failed for the following reasons:"
-            error += "\n\n  Test code failed with an error: " + err.message
+            error += `\n\n  Test code failed with an error: ${err.message}`
             if (err.stack) {
-              error += "\n" + err.stack + "\n"
+              error += `\n${err.stack}\n`
             }
 
             if (testResult.mockServerError) {
-              error += "\n\n  " + testResult.mockServerError
+              error += `\n\n  ${testResult.mockServerError}`
             }
             if (testResult.mockServerMismatches) {
-              error +=
-                "\n\n  " +
-                generateMockServerError(
-                  extractMismatches(testResult.mockServerMismatches),
-                  "    "
-                )
+              error += `\n\n  ${generateMockServerError(
+                extractMismatches(testResult.mockServerMismatches),
+                "    "
+              )}`
             }
             return Promise.reject(new Error(error))
-          } else {
-            return Promise.reject(err)
           }
+          return Promise.reject(err)
         })
         .finally(() => {
           this.pact.shutdownTest(result)
         })
-    } else {
-      this.pact.shutdownTest(result)
-      return Promise.reject(result.testError)
     }
+    this.pact.shutdownTest(result)
+    return Promise.reject(result.testError)
   }
 }

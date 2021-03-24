@@ -5,8 +5,14 @@ import { XmlText } from "./xmlText"
 export type XmlAttributes = Map<string, string>
 export type XmlCallback = (n: XmlElement) => void
 
+const modifyElementWithCallback = (el: XmlElement, cb?: XmlCallback) => {
+  if (cb) {
+    cb(el)
+  }
+}
 export class XmlElement extends XmlNode {
   private attributes: XmlAttributes
+
   private children: XmlNode[] = []
 
   constructor(public name: string) {
@@ -41,7 +47,7 @@ export class XmlElement extends XmlNode {
       if (typeof arg !== "function") {
         el.appendText(arg)
       } else {
-        this.executeCallback(el, arg)
+        modifyElementWithCallback(el, arg)
       }
     }
     this.children.push(el)
@@ -72,7 +78,7 @@ export class XmlElement extends XmlNode {
     options: EachLikeOptions = { examples: 1 }
   ): XmlElement {
     const el = new XmlElement(name).setAttributes(attributes)
-    this.executeCallback(el, cb)
+    modifyElementWithCallback(el, cb)
     this.children.push({
       "pact:matcher:type": "type",
       value: el,
@@ -80,12 +86,6 @@ export class XmlElement extends XmlNode {
     })
 
     return this
-  }
-
-  private executeCallback(el: XmlElement, cb?: XmlCallback) {
-    if (cb) {
-      cb(el)
-    }
   }
 }
 

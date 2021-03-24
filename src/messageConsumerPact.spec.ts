@@ -1,18 +1,18 @@
 /* tslint:disable:no-unused-expression no-empty */
 import chai from "chai"
 import chaiAsPromised from "chai-as-promised"
+import sinonChai from "sinon-chai"
 import {
   MessageConsumerPact,
   synchronousBodyHandler,
   asynchronousBodyHandler,
 } from "./messageConsumerPact"
 import { Message } from "./dsl/message"
-import sinonChai from "sinon-chai"
 
 chai.use(sinonChai)
 chai.use(chaiAsPromised)
 
-const expect = chai.expect
+const { expect } = chai
 
 describe("MessageConsumer", () => {
   let consumer: MessageConsumerPact
@@ -106,11 +106,9 @@ describe("MessageConsumer", () => {
         const stub = stubbedConsumer as any
 
         // Stub out service factory
-        stub.getServiceFactory = () => {
-          return {
-            createMessage: () => Promise.resolve("message created"),
-          }
-        }
+        stub.getServiceFactory = () => ({
+          createMessage: () => Promise.resolve("message created"),
+        })
 
         stubbedConsumer
           .given("some state")
@@ -153,7 +151,7 @@ describe("MessageConsumer", () => {
       })
       describe("when given a function that throws an Exception", () => {
         it("returns a Handler object that returns a rejected promise", () => {
-          const failFn = () => Promise.reject("fail")
+          const failFn = () => Promise.reject(new Error("fail"))
           const hFn = asynchronousBodyHandler(failFn)
 
           return expect(hFn(testMessage)).to.eventually.be.rejected

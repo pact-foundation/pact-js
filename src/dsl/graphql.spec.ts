@@ -4,7 +4,7 @@ import { GraphQLInteraction } from "./graphql"
 import { isMatcher } from "./matchers"
 
 chai.use(chaiAsPromised)
-const expect = chai.expect
+const { expect } = chai
 
 describe("GraphQLInteraction", () => {
   let interaction: GraphQLInteraction
@@ -130,6 +130,7 @@ describe("GraphQLInteraction", () => {
 
           expect(isMatcher(json.request.body.query)).to.eq(true)
           const r = new RegExp(json.request.body.query.data.matcher.s, "g")
+          // eslint-disable-next-line no-useless-escape
           const lotsOfWhitespace = `{             Hello(id: \$id) { name    } }`
           expect(r.test(lotsOfWhitespace)).to.eq(true)
         })

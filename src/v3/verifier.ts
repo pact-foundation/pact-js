@@ -1,9 +1,9 @@
 import { isEmpty } from "ramda"
+import express from "express"
 import ConfigurationError from "../errors/configurationError"
 import logger from "../common/logger"
 
 import PactNative from "../../native/index.node"
-import express from "express"
 
 // Commented out fields highlight areas we need to look at for compatibility
 // with existing API, as a sort of "TODO" list.

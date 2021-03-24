@@ -4,15 +4,27 @@
 
 import { omit, isEmpty } from "lodash"
 
-import { MessageDescriptor, MessageProvider } from "./dsl/message"
-import logger, { setLogLevel } from "./common/logger"
-import { PactMessageProviderOptions } from "./dsl/options"
 import serviceFactory, { VerifierOptions } from "@pact-foundation/pact-core"
 import express from "express"
 import * as http from "http"
+import bodyParser from "body-parser"
+import { MessageDescriptor, MessageProvider } from "./dsl/message"
+import logger, { setLogLevel } from "./common/logger"
+import { PactMessageProviderOptions } from "./dsl/options"
 import { qToPromise } from "./common/utils"
 
-import bodyParser from "body-parser"
+// Listens for the server start event
+// Converts event Emitter to a Promise
+export const waitForServerReady = (server: http.Server): Promise<http.Server> =>
+  new Promise((resolve, reject) => {
+    server.on("listening", () => resolve(server))
+    server.on("error", () => reject())
+  })
+
+// Get the Proxy we'll pass to the CLI for verification
+export const setupProxyServer = (
+  app: (request: http.IncomingMessage, response: http.ServerResponse) => void
+): http.Server => http.createServer(app).listen()
 
 /**
  * A Message Provider is analagous to Consumer in the HTTP Interaction model.
@@ -38,10 +50,10 @@ export class MessageProviderPact {
 
     // Start the verification CLI proxy server
     const app = this.setupProxyApplication()
-    const server = this.setupProxyServer(app)
+    const server = setupProxyServer(app)
 
     // Run the verification once the proxy server is available
-    return this.waitForServerReady(server)
+    return waitForServerReady(server)
       .then(this.runProviderVerification())
       .then(
         (result) => {
@@ -55,21 +67,12 @@ export class MessageProviderPact {
       )
   }
 
-  // Listens for the server start event
-  // Converts event Emitter to a Promise
-  private waitForServerReady(server: http.Server): Promise<http.Server> {
-    return new Promise((resolve, reject) => {
-      server.on("listening", () => resolve(server))
-      server.on("error", () => reject())
-    })
-  }
-
   // Run the Verification CLI process
   private runProviderVerification() {
     return (server: http.Server) => {
       const opts = {
         ...omit(this.config, "handlers"),
-        ...{ providerBaseUrl: "http://localhost:" + server.address().port },
+        ...{ providerBaseUrl: `http://localhost:${server.address().port}` },
       } as VerifierOptions
 
       return qToPromise<string>(serviceFactory.verifyPacts(opts))
@@ -92,13 +95,6 @@ export class MessageProviderPact {
         .then((o) => res.json({ contents: o }))
         .catch((e) => res.status(500).send(e))
     }
-  }
-
-  // Get the Proxy we'll pass to the CLI for verification
-  private setupProxyServer(
-    app: (request: http.IncomingMessage, response: http.ServerResponse) => void
-  ): http.Server {
-    return http.createServer(app).listen()
   }
 
   // Get the Express app that will run on the HTTP Proxy
@@ -138,6 +134,7 @@ export class MessageProviderPact {
 
     return Promise.all(promises)
   }
+
   // Lookup the handler based on the description, or get the default handler
   private findHandler(message: MessageDescriptor): Promise<MessageProvider> {
     const handler = this.config.messageProviders[message.description || ""]
@@ -146,8 +143,10 @@ export class MessageProviderPact {
       logger.warn(`no handler found for message ${message.description}`)
 
       return Promise.reject(
-        `No handler found for message "${message.description}".` +
-          ` Check your "handlers" configuration`
+        new Error(
+          `No handler found for message "${message.description}".
+             Check your "handlers" configuration`
+        )
       )
     }
 

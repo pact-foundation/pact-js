@@ -1,5 +1,3 @@
-"use strict"
-
 import pact from "@pact-foundation/pact-core"
 import * as mockery from "mockery"
 

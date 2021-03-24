@@ -2,13 +2,13 @@ import chai from "chai"
 import chaiAsPromised from "chai-as-promised"
 import sinon from "sinon"
 import sinonChai from "sinon-chai"
-import { HTTPMethod } from "./common/request"
+import serviceFactory from "@pact-foundation/pact-core"
+import { ImportMock } from "ts-mock-imports"
+import { HTTPMethods } from "./common/request"
 import { Interaction, InteractionObject } from "./dsl/interaction"
 import { MockService } from "./dsl/mockService"
 import { PactOptions, PactOptionsComplete } from "./dsl/options"
-import serviceFactory from "@pact-foundation/pact-core"
 import { Pact } from "./httpPact"
-import { ImportMock } from "ts-mock-imports"
 
 // Mock out the PactNode interfaces
 class PactServer {
@@ -20,7 +20,7 @@ class PactServer {
 chai.use(sinonChai)
 chai.use(chaiAsPromised)
 
-const expect = chai.expect
+const { expect } = chai
 
 describe("Pact", () => {
   let pact: Pact
@@ -102,7 +102,7 @@ describe("Pact", () => {
           const p: any = new Pact(fullOpts)
 
           p.server = {
-            start: () => Promise.reject("pact-core error"),
+            start: () => Promise.reject(new Error("pact-core error")),
             options: { port: 1234 },
           }
 
@@ -149,7 +149,7 @@ describe("Pact", () => {
       state: "i have a list of projects",
       uponReceiving: "a request for projects",
       withRequest: {
-        method: HTTPMethod.GET,
+        method: HTTPMethods.GET,
         path: "/projects",
         headers: { Accept: "application/json" },
       },
@@ -194,7 +194,7 @@ describe("Pact", () => {
             .given("i have a list of projects")
             .uponReceiving("a request for projects")
             .withRequest({
-              method: HTTPMethod.GET,
+              method: HTTPMethods.GET,
               path: "/projects",
               headers: { Accept: "application/json" },
             })
@@ -241,7 +241,7 @@ describe("Pact", () => {
           .resolves("removeInteractions")
 
         pact.mockService = {
-          verify: () => Promise.reject("not verified!"),
+          verify: () => Promise.reject(new Error("not verified!")),
           removeInteractions: removeInteractionsStub,
         } as any
 

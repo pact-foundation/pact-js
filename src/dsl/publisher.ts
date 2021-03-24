@@ -2,8 +2,8 @@
  * Pact Publisher service
  * @module Publisher
  */
-import { qToPromise } from "../common/utils"
 import publisher, { PublisherOptions } from "@pact-foundation/pact-core"
+import { qToPromise } from "../common/utils"
 
 export class Publisher {
   constructor(private opts: PublisherOptions) {}

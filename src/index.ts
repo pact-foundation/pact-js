@@ -8,6 +8,18 @@
  * @memberof Pact
  * @static
  */
+
+/**
+ * Exposes {@link Matchers}
+ * To avoid polluting the root module's namespace, re-export
+ * Matchers as its own module
+ * @memberof Pact
+ * @static
+ */
+import * as MatchersStar from "./dsl/matchers"
+
+export const Matchers = MatchersStar
+
 export * from "./httpPact"
 
 /**
@@ -22,7 +34,7 @@ export * from "./messageConsumerPact"
  * @memberof Pact
  * @static
  */
-export * from "./messageProviderPact"
+export { MessageProviderPact } from "./messageProviderPact"
 
 /**
  * Exposes {@link Message}
@@ -36,7 +48,7 @@ export * from "./dsl/message"
  * @memberof Pact
  * @static
  */
-export * from "./dsl/verifier"
+export * from "./dsl/verifier/verifier"
 
 /**
  * Exposes {@link GraphQL}
@@ -50,16 +62,6 @@ export * from "./dsl/graphql"
  * @static
  */
 export * from "./dsl/apolloGraphql"
-
-/**
- * Exposes {@link Matchers}
- * To avoid polluting the root module's namespace, re-export
- * Matchers as its owns module
- * @memberof Pact
- * @static
- */
-import * as Matchers from "./dsl/matchers"
-export import Matchers = Matchers
 
 /**
  * Exposes {@link Interaction}

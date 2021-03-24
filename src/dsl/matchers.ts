@@ -66,13 +66,7 @@ export function eachLike<T>(
 
   return {
     contents: content,
-    getValue: () => {
-      const data = []
-      for (let i = 0; i < min; i++) {
-        data[i] = content
-      }
-      return data
-    },
+    getValue: () => Array.from(new Array(min), () => content),
     json_class: "Pact::ArrayLike",
     min,
   }
@@ -91,9 +85,7 @@ export function somethingLike<T>(value: T): Matcher<T> {
 
   return {
     contents: value,
-    getValue: () => {
-      return value
-    },
+    getValue: () => value,
     json_class: "Pact::SomethingLike",
   }
 }
@@ -108,8 +100,7 @@ export function term(opts: {
   generate: string
   matcher: string
 }): Matcher<string> {
-  const generate = opts.generate
-  const matcher = opts.matcher
+  const { generate, matcher } = opts
 
   if (isNil(generate) || isNil(matcher)) {
     throw new MatcherError(`Error creating a Pact Term.
@@ -131,9 +122,7 @@ export function term(opts: {
         s: matcher,
       },
     },
-    getValue: () => {
-      return generate
-    },
+    getValue: () => generate,
     json_class: "Pact::Term",
   }
 }

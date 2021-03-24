@@ -26,23 +26,19 @@ type TemplateArray = Array<AnyTemplate>
  * Value must match the given template
  * @param template Template to base the comparison on
  */
-export const like = <T extends AnyTemplate>(template: T): Matcher<T> => {
-  return {
-    "pact:matcher:type": "type",
-    value: template,
-  }
-}
+export const like = <T extends AnyTemplate>(template: T): Matcher<T> => ({
+  "pact:matcher:type": "type",
+  value: template,
+})
 
 /**
  * Array where each element must match the given template
  * @param template Template to base the comparison on
  */
-export const eachLike = <T extends AnyTemplate>(template: T): Matcher<T[]> => {
-  return {
-    "pact:matcher:type": "type",
-    value: [template],
-  }
-}
+export const eachLike = <T extends AnyTemplate>(template: T): Matcher<T[]> => ({
+  "pact:matcher:type": "type",
+  value: [template],
+})
 
 /**
  * Like Matcher with a minimum number of required values
@@ -59,13 +55,11 @@ export interface MinLikeMatcher<T> extends Matcher<T> {
 export const atLeastOneLike = <T extends AnyTemplate>(
   template: T,
   count = 1
-): MinLikeMatcher<T[]> => {
-  return {
-    min: 1,
-    "pact:matcher:type": "type",
-    value: times(() => template, count),
-  }
-}
+): MinLikeMatcher<T[]> => ({
+  min: 1,
+  "pact:matcher:type": "type",
+  value: times(() => template, count),
+})
 
 /**
  * An array that has to have at least the required number of elements and each element must match the given template
@@ -81,12 +75,8 @@ export const atLeastLike = <T extends AnyTemplate>(
   const elements = count || min
   if (count && count < min) {
     throw new Error(
-      "atLeastLike has a minimum of " +
-        min +
-        " but " +
-        count +
-        " elements were requested." +
-        " Make sure the count is greater than or equal to the min."
+      `atLeastLike has a minimum of ${min} but ${count} elements were requested.` +
+        ` Make sure the count is greater than or equal to the min.`
     )
   }
 
@@ -118,12 +108,8 @@ export const atMostLike = <T extends AnyTemplate>(
   const elements = count || 1
   if (count && count > max) {
     throw new Error(
-      "atMostLike has a maximum of " +
-        max +
-        " but " +
-        count +
-        " elements where requested." +
-        " Make sure the count is less than or equal to the max."
+      `atMostLike has a maximum of ${max} but ${count} elements where requested.` +
+        ` Make sure the count is less than or equal to the max.`
     )
   }
 
@@ -151,21 +137,13 @@ export const constrainedArrayLike = <T extends AnyTemplate>(
   if (count) {
     if (count < min) {
       throw new Error(
-        "constrainedArrayLike has a minimum of " +
-          min +
-          " but " +
-          count +
-          " elements where requested." +
-          " Make sure the count is greater than or equal to the min."
+        `constrainedArrayLike has a minimum of ${min} but ${count} elements where requested.` +
+          ` Make sure the count is greater than or equal to the min.`
       )
     } else if (count > max) {
       throw new Error(
-        "constrainedArrayLike has a maximum of " +
-          max +
-          " but " +
-          count +
-          " elements where requested." +
-          " Make sure the count is less than or equal to the max."
+        `constrainedArrayLike has a maximum of ${max} but ${count} elements where requested.` +
+          ` Make sure the count is less than or equal to the max.`
       )
     }
   }
@@ -197,12 +175,11 @@ export const integer = (int?: number): Matcher<number> => {
       "pact:matcher:type": "integer",
       value: int,
     }
-  } else {
-    return {
-      "pact:generator:type": "RandomInt",
-      "pact:matcher:type": "integer",
-      value: 101,
-    }
+  }
+  return {
+    "pact:generator:type": "RandomInt",
+    "pact:matcher:type": "integer",
+    value: 101,
   }
 }
 
@@ -216,12 +193,11 @@ export const decimal = (num?: number): Matcher<number> => {
       "pact:matcher:type": "decimal",
       value: num,
     }
-  } else {
-    return {
-      "pact:generator:type": "RandomDecimal",
-      "pact:matcher:type": "decimal",
-      value: 12.34,
-    }
+  }
+  return {
+    "pact:generator:type": "RandomDecimal",
+    "pact:matcher:type": "decimal",
+    value: 12.34,
   }
 }
 
@@ -235,12 +211,11 @@ export function number(num?: number): Matcher<number> {
       "pact:matcher:type": "number",
       value: num,
     }
-  } else {
-    return {
-      "pact:generator:type": "RandomInt",
-      "pact:matcher:type": "number",
-      value: 1234,
-    }
+  }
+  return {
+    "pact:generator:type": "RandomInt",
+    "pact:matcher:type": "number",
+    value: 1234,
   }
 }
 
@@ -298,15 +273,6 @@ export interface DateTimeMatcher extends Matcher<string> {
  * @param format Datetime format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html)
  * @param example Example value to use. If omitted a value using the current system date and time will be generated.
  */
-export function timestamp(format: string, example?: string): DateTimeMatcher {
-  return datetime(format, example)
-}
-
-/**
- * String value that must match the provided datetime format string.
- * @param format Datetime format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html)
- * @param example Example value to use. If omitted a value using the current system date and time will be generated.
- */
 export function datetime(format: string, example?: string): DateTimeMatcher {
   return pickBy((v) => !isNil(v), {
     "pact:generator:type": example ? undefined : "DateTime",
@@ -314,6 +280,15 @@ export function datetime(format: string, example?: string): DateTimeMatcher {
     format,
     value: example || PactNative.generate_datetime_string(format),
   })
+}
+
+/**
+ * String value that must match the provided datetime format string.
+ * @param format Datetime format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html)
+ * @param example Example value to use. If omitted a value using the current system date and time will be generated.
+ */
+export function timestamp(format: string, example?: string): DateTimeMatcher {
+  return datetime(format, example)
 }
 
 /**
@@ -366,16 +341,6 @@ export function nullValue(): Matcher<null> {
 }
 
 /**
- * Matches a URL composed of a list of path fragments. The base URL from the mock server will be used.
- * @param pathFragments list of path fragments, can be regular expressions
- */
-export function url(
-  pathFragments: Array<string | RegexMatcher | RegExp>
-): RegexMatcher {
-  return url2(null, pathFragments)
-}
-
-/**
  * Matches a URL composed of a base path and a list of path fragments
  * @param basePath Base path of the URL. If null, will use the base URL from the mock server.
  * @param pathFragments list of path fragments, can be regular expressions
@@ -384,20 +349,31 @@ export function url2(
   basePath: string | null,
   pathFragments: Array<string | RegexMatcher | RegExp>
 ): RegexMatcher {
-  let regexpr = ".*("
-  let example = basePath || "http://localhost:8080"
-  for (const p of pathFragments) {
-    if (p instanceof RegExp) {
-      regexpr += "\\/" + p.source
-      example += "/" + PactNative.generate_regex_string(p.source)
-    } else if (p instanceof Object && p["pact:matcher:type"] === "regex") {
-      regexpr += "\\/" + p.regex
-      example += "/" + p.value
-    } else {
-      regexpr += "\\/" + p.toString()
-      example += "/" + p.toString()
-    }
-  }
+  const regexpr = [
+    ".*(",
+    ...pathFragments.map((p) => {
+      if (p instanceof RegExp) {
+        return `\\/${p.source}`
+      }
+      if (p instanceof Object && p["pact:matcher:type"] === "regex") {
+        return `\\/${p.regex}`
+      }
+      return `\\/${p.toString()}`
+    }),
+  ].join("")
+
+  const example = [
+    basePath || "http://localhost:8080",
+    ...pathFragments.map((p) => {
+      if (p instanceof RegExp) {
+        return `/${PactNative.generate_regex_string(p.source)}`
+      }
+      if (p instanceof Object && p["pact:matcher:type"] === "regex") {
+        return `/${p.value}`
+      }
+      return `/${p.toString()}`
+    }),
+  ].join("")
 
   // Temporary fix for inconsistancies between matchers and generators. Matchers use "value" attribute for
   // example values, while generators use "example"
@@ -405,17 +381,26 @@ export function url2(
     return {
       "pact:matcher:type": "regex",
       "pact:generator:type": "MockServerURL",
-      regex: regexpr + ")$",
+      regex: `${regexpr})$`,
       value: example,
       example,
     }
-  } else {
-    return {
-      "pact:matcher:type": "regex",
-      regex: regexpr + ")$",
-      value: example,
-    }
   }
+  return {
+    "pact:matcher:type": "regex",
+    regex: `${regexpr})$`,
+    value: example,
+  }
+}
+
+/**
+ * Matches a URL composed of a list of path fragments. The base URL from the mock server will be used.
+ * @param pathFragments list of path fragments, can be regular expressions
+ */
+export function url(
+  pathFragments: Array<string | RegexMatcher | RegExp>
+): RegexMatcher {
+  return url2(null, pathFragments)
 }
 
 export interface ArrayContainsMatcher extends Matcher<AnyTemplate[]> {
@@ -463,7 +448,7 @@ export function uuid(example?: string): RegexMatcher {
   const regexStr =
     "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
   if (example) {
-    const regexpr = new RegExp("^" + regexStr + "$")
+    const regexpr = new RegExp(`^${regexStr}$`)
     if (!example.match(regexpr)) {
       throw new Error(
         `regex: Example value '${example}' does not match the UUID regular expression '${regexStr}'`
@@ -474,12 +459,11 @@ export function uuid(example?: string): RegexMatcher {
       regex: regexStr,
       value: example,
     }
-  } else {
-    return {
-      "pact:matcher:type": "regex",
-      regex: regexStr,
-      "pact:generator:type": "Uuid",
-      value: "e2490de5-5bd3-43d5-b7c4-526e33f71304",
-    }
+  }
+  return {
+    "pact:matcher:type": "regex",
+    regex: regexStr,
+    "pact:generator:type": "Uuid",
+    value: "e2490de5-5bd3-43d5-b7c4-526e33f71304",
   }
 }

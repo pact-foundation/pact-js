@@ -1,11 +1,7 @@
-// Polyfill Object.assign since it's missing in Popsicle
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-require("es6-object-assign").polyfill()
-
 import * as Popsicle from "popsicle/dist/common"
 import { Response } from "popsicle/dist/response"
 
-export enum HTTPMethod {
+export enum HTTPMethods {
   GET = "GET",
   POST = "POST",
   PUT = "PUT",
@@ -23,7 +19,7 @@ export enum HTTPMethod {
   REPORT = "REPORT",
 }
 
-export type methods =
+export type HTTPMethod =
   | "GET"
   | "POST"
   | "PUT"
@@ -46,11 +42,8 @@ export class Request {
     rejectUnauthorized: false, // Need to tell node to ignore bad ssl cert
     type: "text",
   })
-  public send(
-    method: HTTPMethod | methods,
-    url: string,
-    body?: string
-  ): Promise<string> {
+
+  public send(method: HTTPMethod, url: string, body?: string): Promise<string> {
     const opts = {
       body,
       headers: {
@@ -66,9 +59,8 @@ export class Request {
     return Popsicle.request(opts).then((res: Response) => {
       if (res.status >= 200 && res.status < 400) {
         return res.body
-      } else {
-        return Promise.reject(res.body)
       }
+      return Promise.reject(res.body)
     })
   }
 }

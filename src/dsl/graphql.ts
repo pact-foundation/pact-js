@@ -3,10 +3,10 @@
  *
  * @module GraphQL
  */
-import { Interaction, InteractionState } from "../dsl/interaction"
-import { regex } from "./matchers"
 import { isNil, extend, omitBy, isUndefined } from "lodash"
 import gql from "graphql-tag"
+import { Interaction, InteractionState } from "./interaction"
+import { regex } from "./matchers"
 import GraphQLQueryError from "../errors/graphQLQueryError"
 import ConfigurationError from "../errors/configurationError"
 
@@ -14,12 +14,22 @@ export interface GraphQLVariables {
   [name: string]: unknown
 }
 
+const escapeSpace = (s: string) => s.replace(/\s+/g, "\\s*")
+
+const escapeRegexChars = (s: string) =>
+  // eslint-disable-next-line no-useless-escape
+  s.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&")
+
+const escapeGraphQlQuery = (s: string) => escapeSpace(escapeRegexChars(s))
+
 /**
  * GraphQL interface
  */
 export class GraphQLInteraction extends Interaction {
   protected operation?: string | null = undefined
+
   protected variables?: GraphQLVariables = undefined
+
   protected query: string
 
   /**
@@ -109,10 +119,3 @@ export class GraphQLInteraction extends Interaction {
     return this.state
   }
 }
-
-const escapeGraphQlQuery = (s: string) => escapeSpace(escapeRegexChars(s))
-
-const escapeRegexChars = (s: string) =>
-  s.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&")
-
-const escapeSpace = (s: string) => s.replace(/\s+/g, "\\s*")

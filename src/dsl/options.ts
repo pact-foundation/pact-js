@@ -2,9 +2,9 @@
  * Pact Options module.
  * @module PactOptions
  */
+import { VerifierOptions as PactCoreVerifierOptions } from "@pact-foundation/pact-core"
 import { PactfileWriteMode } from "./mockService"
 import { MessageProviders, StateHandlers } from "./message"
-import { VerifierOptions as PactCoreVerifierOptions } from "@pact-foundation/pact-core"
 
 export type LogLevel = "trace" | "debug" | "info" | "warn" | "error" | "fatal"
 

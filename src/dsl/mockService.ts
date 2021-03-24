@@ -4,7 +4,7 @@
  * https://gist.github.com/bethesque/9d81f21d6f77650811f4.
  * @module MockService
  */
-import { HTTPMethod, Request } from "../common/request"
+import { HTTPMethods, Request } from "../common/request"
 import { Interaction } from "./interaction"
 
 // Control how the Pact files are written
@@ -32,7 +32,9 @@ export interface PactDetails {
 
 export class MockService {
   public pactDetails: PactDetails
+
   public request: Request
+
   public baseUrl: string
 
   /**
@@ -69,7 +71,7 @@ export class MockService {
    */
   public addInteraction(interaction: Interaction): Promise<string> {
     return this.request.send(
-      HTTPMethod.POST,
+      HTTPMethods.POST,
       `${this.baseUrl}/interactions`,
       JSON.stringify(interaction.json())
     )
@@ -80,7 +82,7 @@ export class MockService {
    * @returns {Promise}
    */
   public removeInteractions(): Promise<string> {
-    return this.request.send(HTTPMethod.DELETE, `${this.baseUrl}/interactions`)
+    return this.request.send(HTTPMethods.DELETE, `${this.baseUrl}/interactions`)
   }
 
   /**
@@ -89,7 +91,7 @@ export class MockService {
    */
   public verify(): Promise<string> {
     return this.request.send(
-      HTTPMethod.GET,
+      HTTPMethods.GET,
       `${this.baseUrl}/interactions/verification`
     )
   }
@@ -100,7 +102,7 @@ export class MockService {
    */
   public writePact(): Promise<string> {
     return this.request.send(
-      HTTPMethod.POST,
+      HTTPMethods.POST,
       `${this.baseUrl}/pact`,
       JSON.stringify(this.pactDetails)
     )

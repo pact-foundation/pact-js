@@ -1,14 +1,17 @@
 import * as mockery from "mockery"
+
+import * as chai from "chai"
+
 const MockNative = {
   generate_datetime_string: () => "",
   generate_regex_string: () => "",
 }
 mockery.registerMock("../../native/index.node", MockNative)
 
-import * as chai from "chai"
+// eslint-disable-next-line import/first
 import * as MatchersV3 from "./matchers"
 
-const expect = chai.expect
+const { expect } = chai
 
 describe("V3 Matchers", () => {
   describe("#like", () => {

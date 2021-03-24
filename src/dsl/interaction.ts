@@ -4,7 +4,7 @@
  */
 
 import { isNil, keys, omitBy } from "lodash"
-import { HTTPMethod, methods } from "../common/request"
+import { HTTPMethods, HTTPMethod } from "../common/request"
 import { Matcher, isMatcher, AnyTemplate } from "./matchers"
 import ConfigurationError from "../errors/configurationError"
 
@@ -14,7 +14,7 @@ interface QueryObject {
 export type Query = string | QueryObject
 
 export interface RequestOptions {
-  method: HTTPMethod | methods
+  method: HTTPMethods | HTTPMethod
   path: string | Matcher<string>
   query?: Query
   headers?: { [name: string]: string | Matcher<string> }
@@ -39,6 +39,24 @@ export interface InteractionState {
   description?: string
   request?: RequestOptions
   response?: ResponseOptions
+}
+
+/**
+ * Returns valid if object or matcher only contains string values
+ * @param query
+ */
+const throwIfQueryObjectInvalid = (query: QueryObject) => {
+  if (isMatcher(query)) {
+    return
+  }
+
+  Object.values(query).forEach((value) => {
+    if (
+      !(isMatcher(value) || Array.isArray(value) || typeof value === "string")
+    ) {
+      throw new ConfigurationError(`Query must only contain strings.`)
+    }
+  })
 }
 
 export class Interaction {
@@ -88,9 +106,9 @@ export class Interaction {
       throw new ConfigurationError("You must provide an HTTP method.")
     }
 
-    if (keys(HTTPMethod).indexOf(requestOpts.method.toString()) < 0) {
+    if (keys(HTTPMethods).indexOf(requestOpts.method.toString()) < 0) {
       throw new ConfigurationError(
-        `You must provide a valid HTTP method: ${keys(HTTPMethod).join(", ")}.`
+        `You must provide a valid HTTP method: ${keys(HTTPMethods).join(", ")}.`
       )
     }
 
@@ -99,7 +117,7 @@ export class Interaction {
     }
 
     if (typeof requestOpts.query === "object") {
-      this.queryObjectIsValid(requestOpts.query)
+      throwIfQueryObjectInvalid(requestOpts.query)
     }
 
     this.state.request = omitBy(requestOpts, isNil) as RequestOptions
@@ -145,27 +163,5 @@ export class Interaction {
       )
     }
     return this.state
-  }
-
-  /**
-   * Returns valid if object or matcher only contains string values
-   * @param query
-   */
-  private queryObjectIsValid(query: QueryObject) {
-    if (isMatcher(query)) {
-      return
-    }
-
-    Object.values(query).every((value) => {
-      if (
-        isMatcher(value) ||
-        Array.isArray(value) ||
-        typeof value === "string"
-      ) {
-        return
-      } else {
-        throw new ConfigurationError(`Query must only contain strings.`)
-      }
-    })
   }
 }
