@@ -7,7 +7,7 @@ import { PactModule } from "./pact/pact.module"
 
 jest.setTimeout(30000)
 
-describe("Pact Verification", () => {
+xdescribe("Pact Verification", () => {
   let verifier: PactVerifierService
   let logger: LoggerService
   let app: INestApplication
