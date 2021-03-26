@@ -4,8 +4,9 @@ import {
   V3MockServer,
   V3ProviderState,
   V3Request,
-  V3Response,
+  V3Response
 } from "v3/pact"
+import { AnyTemplate } from "v3/matchers"
 
 export class Pact {
   constructor(
@@ -16,7 +17,7 @@ export class Pact {
   )
   addRequest(
     req: V3Request,
-    body: string | number | boolean | null | undefined
+    body: AnyTemplate | undefined
   ): void
   addInteraction(desc: string, states: V3ProviderState[]): void
   addRequestBinaryFile(req: V3Request, contentType: string, file: string): void
@@ -28,7 +29,7 @@ export class Pact {
   ): void
   addResponse(
     res: V3Response,
-    body: string | number | boolean | null | undefined
+    body: AnyTemplate | undefined
   ): void
 
   addResponseBinaryFile(

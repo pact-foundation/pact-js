@@ -10,12 +10,20 @@ use pact_mock_server::mock_server::MockServerConfig;
 use pact_matching::models::content_types::ContentType;
 use neon::prelude::*;
 use pact_matching::models::*;
+use pact_matching::models::json_utils::json_to_string;
 use pact_matching::models::provider_states::ProviderState;
 use pact_matching::models::matchingrules::{MatchingRules, MatchingRule, RuleLogic};
 use pact_matching::models::generators::{Generators, GeneratorCategory, Generator};
 use pact_matching::time_utils::generate_string;
 use pact_mock_server::server_manager::ServerManager;
-use pact_mock_server_ffi::bodies::{process_json, request_multipart, response_multipart, file_as_multipart_body, from_integration_json};
+use pact_mock_server_ffi::bodies::{
+  process_object,
+  process_json, 
+  request_multipart, 
+  response_multipart, 
+  file_as_multipart_body, 
+  from_integration_json
+};
 use pact_mock_server_ffi::{generate_regex_value, StringResult};
 use env_logger::{Builder, Target};
 use uuid::Uuid;
@@ -387,16 +395,14 @@ declare_types! {
 
     method addRequest(mut cx) {
       let request = cx.argument::<JsObject>(0)?;
+      let body = cx.argument::<JsValue>(1)?;
 
       let js_method = request.get(&mut cx, "method");
       let path = get_request_path(&mut cx, request);
       let js_query = request.get(&mut cx, "query")?;
       let (query_vals, query_rules, query_gens) = process_query(&mut cx, js_query)?;
       let (headers, header_rules, header_gens) = process_headers(&mut cx, request)?;
-      let js_body = match cx.argument::<JsValue>(1) {
-        Ok(body) => body.downcast::<JsString>().map(|val| val.value()).ok(),
-        Err(_) => None
-      };
+      let json_body = utils::js_value_to_serde_value(&body, &mut cx);
 
       let mut this = cx.this();
 
@@ -444,16 +450,23 @@ declare_types! {
             }
           }
 
-          if let Some(body) = js_body {
-            match process_body(body, last.request.content_type(), &mut last.request.matching_rules,
+          if let Ok(body) = body.downcast::<JsString>() {
+            match process_body(body.value().to_string(), last.request.content_type(), &mut last.request.matching_rules,
               &mut last.request.generators) {
               Ok(body) => {
                 debug!("Request body = {}", body.str_value());
-                last.request.body = body
+                last.request.body = body;
               },
               Err(err) => panic!(err)
             }
+          } else if body.is_a::<JsObject>() {
+            let category = last.request.matching_rules.add_category("body");
+            let processed = process_object(json_body.as_object().unwrap(), category, &mut last.request.generators, &"$".to_string(), false, false);
+            last.request.body = OptionalBody::Present(Bytes::from(json_to_string(&processed)), last.request.content_type());
+          } else if !body.is_a::<JsNull>() && !body.is_a::<JsUndefined>() {
+            last.request.body = OptionalBody::Present(Bytes::from(json_body.to_string()), last.request.content_type())
           }
+
           debug!("Request = {}", last.request);
           debug!("Request matching rules = {:?}", last.request.matching_rules);
           debug!("Request generators = {:?}", last.request.generators);
@@ -645,12 +658,11 @@ declare_types! {
 
     method addResponse(mut cx) {
       let response = cx.argument::<JsObject>(0)?;
+      let body = cx.argument::<JsValue>(1)?;
+
       let js_status = response.get(&mut cx, "status");
       let (headers, header_rules, header_gens) = process_headers(&mut cx, response)?;
-      let js_body = match cx.argument::<JsValue>(1) {
-        Ok(body) => body.downcast::<JsString>().map(|val| val.value()).ok(),
-        Err(_) => None
-      };
+      let json_body = utils::js_value_to_serde_value(&body, &mut cx);
 
       let mut this = cx.this();
 
@@ -675,13 +687,23 @@ declare_types! {
             }
           }
 
-          if let Some(body) = js_body {
-            match process_body(body, last.response.content_type(), &mut last.response.matching_rules,
+          if let Ok(body) = body.downcast::<JsString>() {
+            match process_body(body.value().to_string(), last.response.content_type(), &mut last.response.matching_rules,
               &mut last.response.generators) {
-              Ok(body) => last.response.body = body,
+              Ok(body) => {
+                debug!("Response body = {}", body.str_value());
+                last.response.body = body;
+              },
               Err(err) => panic!(err)
             }
+          } else if body.is_a::<JsObject>() {
+            let category = last.response.matching_rules.add_category("body");
+            let processed = process_object(json_body.as_object().unwrap(), category, &mut last.response.generators, &"$".to_string(), false, false);
+            last.response.body = OptionalBody::Present(Bytes::from(json_to_string(&processed)), last.request.content_type());
+          } else if !body.is_a::<JsNull>() && !body.is_a::<JsUndefined>() {
+            last.response.body = OptionalBody::Present(Bytes::from(json_body.to_string()), last.request.content_type())
           }
+
           debug!("Response = {}", last.response);
           debug!("Response matching rules = {:?}", last.response.matching_rules);
           debug!("Response generators = {:?}", last.response.generators);

@@ -167,9 +167,6 @@ export class PactV3 {
 
   public withRequest(req: V3Request): PactV3 {
     let { body } = req
-    if (typeof body !== "string") {
-      body = body && JSON.stringify(body)
-    }
     this.pact.addRequest(req, body)
     return this
   }
@@ -195,9 +192,6 @@ export class PactV3 {
 
   public willRespondWith(res: V3Response): PactV3 {
     let { body } = res
-    if (typeof body !== "string") {
-      body = body && JSON.stringify(body)
-    }
     this.pact.addResponse(res, body)
     this.states = []
     return this
