@@ -45,6 +45,22 @@ server.get("/accounts/search/findOneByAccountNumberId", (req, res) => {
     })
 })
 
+server.get("/data/xml/:id", (req, res) => {
+  res.header("Content-Type", "application/xml; charset=utf-8")
+  res.send(`<?xml version="1.0" encoding="UTF-8"?>
+  <root xmlns:h="http://www.w3.org/TR/html4/">
+      <data>
+          <h:data>testData</h:data>
+          <id>${req.params.id}</id>
+      </data>
+  </root>`)
+})
+
+server.get("/data/:id", (req, res) => {
+  res.header("Content-Type", "text/plain; charset=utf-8")
+  res.send("data: testData, id: " + req.params.id)
+})
+
 module.exports = {
   accountService: server,
 }

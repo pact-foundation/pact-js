@@ -6,7 +6,7 @@ const { string, integer, url2, regex, datetime, fromProviderState } = MatchersV3
 
 describe("Transaction service - create a new transaction for an account", () => {
   let provider
-  beforeAll(() => {
+  beforeEach(() => {
     provider = new PactV3({
       consumer: "TransactionService",
       provider: "AccountService",
@@ -62,6 +62,32 @@ describe("Transaction service - create a new transaction for an account", () => 
           expect(result.account.accountNumber).to.equal(100)
           expect(result.transaction.amount).to.equal(100000)
         })
+    })
+  })
+
+  // MatchersV3.fromProviderState on body
+  it("test text data", () => {
+    provider
+      .given("set id", { id: "42" })
+      .uponReceiving("a request to get the plain data")
+      .withRequest({
+        method: "GET",
+        path: MatchersV3.fromProviderState("/data/${id}", "/data/42"),
+      })
+      .willRespondWith({
+        status: 200,
+        headers: { "Content-Type": "text/plain; charset=utf-8" },
+        body: MatchersV3.fromProviderState(
+          "data: testData, id: ${id}",
+          "data: testData, id: 42"
+        ),
+      })
+
+    return provider.executeTest(async (mockserver) => {
+      transactionService.setAccountServiceUrl(mockserver.url)
+      return transactionService.getText(42).then((result) => {
+        expect(result.data).to.equal("data: testData, id: 42")
+      })
     })
   })
 })
