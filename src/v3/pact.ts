@@ -174,11 +174,8 @@ export class PactV3 {
   }
 
   public withRequest(req: V3Request): PactV3 {
-    const body =
-      typeof req.body !== 'string' && req.body
-        ? JSON.stringify(req.body)
-        : req.body;
-    this.pact.addRequest(req, body);
+    let { body } = req
+    this.pact.addRequest(req, body)
     return this;
   }
 
@@ -202,12 +199,9 @@ export class PactV3 {
   }
 
   public willRespondWith(res: V3Response): PactV3 {
-    const body =
-      typeof res.body !== 'string' && res.body
-        ? JSON.stringify(res.body)
-        : res.body;
-    this.pact.addResponse(res, body);
-    this.states = [];
+    let { body } = res
+    this.pact.addResponse(res, body)
+    this.states = []
     return this;
   }
 
