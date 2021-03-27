@@ -14,9 +14,9 @@ export class XmlBuilder {
     this.root = new XmlElement(rootElement);
   }
 
-  public build(callback: (doc: XmlElement) => void): XmlBuilder {
+  public build(callback: (doc: XmlElement) => void): string {
     callback(this.root);
 
-    return this;
+    return JSON.stringify(this);
   }
 }
