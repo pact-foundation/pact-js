@@ -18,6 +18,7 @@ use pact_matching::time_utils::generate_string;
 use pact_mock_server::server_manager::ServerManager;
 use pact_mock_server_ffi::bodies::{
   process_object,
+  process_array,
   process_json, 
   request_multipart, 
   response_multipart, 
@@ -315,6 +316,7 @@ fn load_file(file_path: &String) -> Result<OptionalBody, std::io::Error> {
 declare_types! {
   pub class JsPact for RequestResponsePact {
     init(mut cx) {
+      trace!("JsPact.init");
       let consumer: String = cx.argument::<JsString>(0)?.value();
       let provider: String = cx.argument::<JsString>(1)?.value();
       let version: String = cx.argument::<JsString>(2)?.value();
@@ -350,6 +352,7 @@ declare_types! {
     }
 
     method addInteraction(mut cx) {
+      trace!("JsPact.addInteraction");
       let description: String = cx.argument::<JsString>(0)?.value();
       let states: Handle<JsArray> = cx.argument(1)?;
       let provider_states = states.to_vec(&mut cx)?.iter()
@@ -394,6 +397,7 @@ declare_types! {
     }
 
     method addRequest(mut cx) {
+      trace!("JsPact.addRequest");
       let request = cx.argument::<JsObject>(0)?;
       let body = cx.argument::<JsValue>(1)?;
 
@@ -451,6 +455,7 @@ declare_types! {
           }
 
           if let Ok(body) = body.downcast::<JsString>() {
+            trace!("JsPact.addRequest - body is a JsString");
             match process_body(body.value().to_string(), last.request.content_type(), &mut last.request.matching_rules,
               &mut last.request.generators) {
               Ok(body) => {
@@ -460,10 +465,17 @@ declare_types! {
               Err(err) => panic!(err)
             }
           } else if body.is_a::<JsObject>() {
+            trace!("JsPact.addRequest - body is a JsObject");
+            trace!("JsPact.addRequest - body as JSON: {:?}", json_body);
             let category = last.request.matching_rules.add_category("body");
-            let processed = process_object(json_body.as_object().unwrap(), category, &mut last.request.generators, &"$".to_string(), false, false);
+            let processed = match json_body {
+              Value::Object(ref map) => process_object(map, category, &mut last.request.generators, &"$".to_string(), false, false),
+              Value::Array(ref array) => process_array(array, category, &mut last.request.generators, &"$".to_string(), false, false),
+              _ => json_body
+            };
             last.request.body = OptionalBody::Present(Bytes::from(json_to_string(&processed)), last.request.content_type());
           } else if !body.is_a::<JsNull>() && !body.is_a::<JsUndefined>() {
+            trace!("JsPact.addRequest - body is neither JsString, JsObject, JsNull, JsUndefined");
             last.request.body = OptionalBody::Present(Bytes::from(json_body.to_string()), last.request.content_type())
           }
 
@@ -485,6 +497,7 @@ declare_types! {
     }
 
     method addRequestBinaryFile(mut cx) {
+      trace!("JsPact.addRequestBinaryFile");
       let request = cx.argument::<JsObject>(0)?;
       let content_type = cx.argument::<JsString>(1)?;
       let file_path = cx.argument::<JsString>(2)?;
@@ -576,6 +589,7 @@ declare_types! {
     }
 
     method addRequestMultipartFileUpload(mut cx) {
+      trace!("JsPact.addRequestMultipartFileUpload");
       let request = cx.argument::<JsObject>(0)?;
       let content_type = cx.argument::<JsString>(1)?;
       let file_path = cx.argument::<JsString>(2)?;
@@ -657,6 +671,7 @@ declare_types! {
     }
 
     method addResponse(mut cx) {
+      trace!("JsPact.addResponse");
       let response = cx.argument::<JsObject>(0)?;
       let body = cx.argument::<JsValue>(1)?;
 
@@ -688,6 +703,7 @@ declare_types! {
           }
 
           if let Ok(body) = body.downcast::<JsString>() {
+            trace!("JsPact.addResponse - body is a JsString");
             match process_body(body.value().to_string(), last.response.content_type(), &mut last.response.matching_rules,
               &mut last.response.generators) {
               Ok(body) => {
@@ -697,11 +713,18 @@ declare_types! {
               Err(err) => panic!(err)
             }
           } else if body.is_a::<JsObject>() {
+            trace!("JsPact.addResponse - body is a JsObject");
+            trace!("JsPact.addResponse - body as JSON: {:?}", json_body);
             let category = last.response.matching_rules.add_category("body");
-            let processed = process_object(json_body.as_object().unwrap(), category, &mut last.response.generators, &"$".to_string(), false, false);
-            last.response.body = OptionalBody::Present(Bytes::from(json_to_string(&processed)), last.request.content_type());
+            let processed = match json_body {
+              Value::Object(ref map) => process_object(map, category, &mut last.response.generators, &"$".to_string(), false, false),
+              Value::Array(ref array) => process_array(array, category, &mut last.response.generators, &"$".to_string(), false, false),
+              _ => json_body
+            };
+            last.response.body = OptionalBody::Present(Bytes::from(json_to_string(&processed)), last.response.content_type());
           } else if !body.is_a::<JsNull>() && !body.is_a::<JsUndefined>() {
-            last.response.body = OptionalBody::Present(Bytes::from(json_body.to_string()), last.request.content_type())
+            trace!("JsPact.addResponse - body is neither JsString, JsObject, JsNull, JsUndefined");
+            last.response.body = OptionalBody::Present(Bytes::from(json_body.to_string()), last.response.content_type())
           }
 
           debug!("Response = {}", last.response);
@@ -722,6 +745,7 @@ declare_types! {
     }
 
     method addResponseBinaryFile(mut cx) {
+      trace!("JsPact.addResponseBinaryFile");
       let response = cx.argument::<JsObject>(0)?;
       let content_type = cx.argument::<JsString>(1)?;
       let file_path = cx.argument::<JsString>(2)?;
@@ -788,6 +812,7 @@ declare_types! {
     }
 
     method addResponseMultipartFileUpload(mut cx) {
+      trace!("JsPact.addResponseMultipartFileUpload");
       let response = cx.argument::<JsObject>(0)?;
       let content_type = cx.argument::<JsString>(1)?;
       let file_path = cx.argument::<JsString>(2)?;
@@ -844,6 +869,7 @@ declare_types! {
     }
 
     method executeTest(mut cx) {
+      trace!("JsPact.executeTest");
       let test_fn = cx.argument::<JsFunction>(0)?;
       let options: Handle<JsObject> = cx.argument::<JsObject>(1)?;
       let this = cx.this();
@@ -907,6 +933,7 @@ declare_types! {
     }
 
     method shutdownTest(mut cx) {
+      trace!("JsPact.shutdownTest");
       let test_result = cx.argument::<JsObject>(0)?;
       let mock_server = test_result.get(&mut cx, "mockServer")?.downcast::<JsObject>().unwrap();
       let mock_server_id = mock_server.get(&mut cx, "id")?.downcast::<JsString>().unwrap().value();
@@ -915,6 +942,7 @@ declare_types! {
     }
 
     method getTestResult(mut cx) {
+      trace!("JsPact.getTestResult");
       let mock_server_id = cx.argument::<JsString>(0)?.value();
 
       let js_test_result = JsObject::new(&mut cx);
@@ -941,6 +969,7 @@ declare_types! {
     }
 
     method writePactFile(mut cx) {
+      trace!("JsPact.writePactFile");
       let mock_server_id = cx.argument::<JsString>(0)?.value();
       let options: Handle<JsObject> = cx.argument::<JsObject>(1)?;
       let undefined = cx.undefined().upcast();
