@@ -37,11 +37,14 @@ export const like = <T extends AnyTemplate>(template: T): Matcher<T> => ({
  * @param keyTemplate Example key to use
  * @param template Example value template to base the comparison on
  */
-export const eachKeyLike = <T extends AnyTemplate>(keyTemplate: string, template: T): Matcher<AnyTemplate> => ({
+export const eachKeyLike = <T extends AnyTemplate>(
+  keyTemplate: string,
+  template: T
+): Matcher<AnyTemplate> => ({
   "pact:matcher:type": "values",
   value: {
-    [keyTemplate]: template
-  }
+    [keyTemplate]: template,
+  },
 })
 
 /**

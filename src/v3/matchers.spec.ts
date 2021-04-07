@@ -37,7 +37,7 @@ describe("V3 Matchers", () => {
         "pact:matcher:type": "values",
         value: {
           "004": {
-            id: "004"
+            id: "004",
           },
         },
       })
