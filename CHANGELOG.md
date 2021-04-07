@@ -23,13 +23,14 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Fixes and Improvements
 
+<<<<<<< HEAD
 * **pact-node:** bump dependency on pact-node ([a200414](https://github.com/pact-foundation/pact-js/commit/a2004143782be418b59a8266834c6aa8e6d2a1ef))
 
 ### [9.15.1](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.31...v9.15.1) (2021-02-23)
+* Bump pact-node version to get vulnerability fixes ([bc0e7f0](https://github.com/pact-foundation/pact-js/commit/bc0e7f019ef8585d4fc5c980575e0ec0a72f1b65))
 
-
-### Fixes and Improvements
-
+### [9.15.3](https://github.com/pact-foundation/pact-js/compare/v9.15.2...v9.15.3) (2021-03-10)
+<<<<<<< HEAD
 * package.json & package-lock.json to reduce vulnerabilities ([aa8036c](https://github.com/pact-foundation/pact-js/commit/aa8036c2dd424d351d2afab003c1e539e2bc6e85))
 
 ## [9.15.0](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.29...v9.15.0) (2021-02-02)
@@ -74,6 +75,11 @@ All notable changes to this project will be documented in this file. See [standa
 * add experimental 'allow missing' behind env var PACT_EXPERIMENTAL_FEATURE_ALLOW_MISSING_REQUESTS ([2d3a1fe](https://github.com/pact-foundation/pact-js/commit/2d3a1fec0c8989d58d0384bd39888cd8eb76d0a7))
 
 ## [10.0.0-beta.31](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.30...v10.0.0-beta.31) (2021-02-10)
+=======
+* **pact-web-types:** Fix issue where typescript types were not exposed in pact-web ([d529082](https://github.com/pact-foundation/pact-js/commit/d529082f0b1e7d969ebdedae091adc54ad4be464))
+
+### [9.15.2](https://github.com/pact-foundation/pact-js/compare/v9.15.1...v9.15.2) (2021-02-28)
+>>>>>>> master
 
 
 ### Fixes and Improvements
