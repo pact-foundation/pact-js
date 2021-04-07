@@ -2,6 +2,62 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.34](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.33...v10.0.0-beta.34) (2021-04-07)
+
+
+### Features
+
+* add support for ignoring keys via the eachKeyLike matcher ([2f59c9f](https://github.com/pact-foundation/pact-js/commit/2f59c9fd87aedfc37df8e746e695fe6c98f1773d))
+
+
+### Fixes and Improvements
+
+* Correct types for interaction chaining in graphql ([5043cc0](https://github.com/pact-foundation/pact-js/commit/5043cc0ad5a72559e2508175fffa15e076e77bb3))
+* Remove deprecated ability to provide options to Vverifier outside the constructor. Temporarily disable nestjs example accordingly ([a7a3c0e](https://github.com/pact-foundation/pact-js/commit/a7a3c0e97bb052ade32c13f174356c56172df522))
+* **package-name:** Use the new name (pact-core) for pact-node ([a42fee2](https://github.com/pact-foundation/pact-js/commit/a42fee28a630becdef4a85e61f4a03133d6aba4f))
+* **pact-web-types:** Fix issue where typescript types were not exposed in pact-web ([d529082](https://github.com/pact-foundation/pact-js/commit/d529082f0b1e7d969ebdedae091adc54ad4be464))
+* **typescript:** accept string array as query value ([69f74ba](https://github.com/pact-foundation/pact-js/commit/69f74ba81a100c2dbbadb1448141f4e8a7afdb2a))
+
+### [9.15.2](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.32...v9.15.2) (2021-02-28)
+
+
+### Fixes and Improvements
+
+* **pact-node:** bump dependency on pact-node ([a200414](https://github.com/pact-foundation/pact-js/commit/a2004143782be418b59a8266834c6aa8e6d2a1ef))
+
+### [9.15.1](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.31...v9.15.1) (2021-02-23)
+
+
+### Fixes and Improvements
+
+* package.json & package-lock.json to reduce vulnerabilities ([aa8036c](https://github.com/pact-foundation/pact-js/commit/aa8036c2dd424d351d2afab003c1e539e2bc6e85))
+
+## [9.15.0](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.29...v9.15.0) (2021-02-02)
+
+
+### Features
+
+* **provider-states:** Add beforeEach and afterEach hooks to provider verification ([#529](https://github.com/pact-foundation/pact-js/issues/529)) - Fixes [#526](https://github.com/pact-foundation/pact-js/issues/526) ([8147042](https://github.com/pact-foundation/pact-js/commit/8147042f8dcbc396e991331afaf6c23d6c362b10))
+
+### [9.14.2](https://github.com/pact-foundation/pact-js/compare/v9.14.1...v9.14.2) (2021-01-28)
+
+
+### Fixes and Improvements
+
+* **pact-node:** Bump dependency on pact-node to avoid regression in query string matching ([9c733ce](https://github.com/pact-foundation/pact-js/commit/9c733ce5bd72c25ad5b71bb8bec0ec1903c9bf52))
+* **pact-node:** bump dependency on pact-node to get verbose logging in verification [#583](https://github.com/pact-foundation/pact-js/issues/583) ([66e9dca](https://github.com/pact-foundation/pact-js/commit/66e9dcafd555b000de357b6dffa1b166cadb670e))
+
+### [9.14.1](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.26...v9.14.1) (2021-01-27)
+
+
+### Fixes and Improvements
+
+* set permissions for Ruby binaries on GH Actions ([8881ee7](https://github.com/pact-foundation/pact-js/commit/8881ee79bbd24a4ef3e98ad098dda0117e7c78f6))
+* set permissions for Ruby binaries on GH Actions ([5701c0f](https://github.com/pact-foundation/pact-js/commit/5701c0fbc290bddb97d1b9a035c615782b79f462))
+* **logger:** lowercase log level ([8388776](https://github.com/pact-foundation/pact-js/commit/8388776df0f576d3860cf11280cebb96e9cd5aab))
+* **logger:** replace bunyan with pino ([fe6dd30](https://github.com/pact-foundation/pact-js/commit/fe6dd302cc2de389d009eaf0136776d8366d0394))
+* **pact-node:** bump dependency on pact-node to get verbose logging in verification [#583](https://github.com/pact-foundation/pact-js/issues/583) ([8b26262](https://github.com/pact-foundation/pact-js/commit/8b26262c2cf970a7b86e76c68c12d89ee689f9a4))
+
 ## [10.0.0-beta.33](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.32...v10.0.0-beta.33) (2021-03-03)
 
 
