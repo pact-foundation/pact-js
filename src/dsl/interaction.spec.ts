@@ -1,7 +1,7 @@
 import chai from "chai"
 import chaiAsPromised from "chai-as-promised"
 import { HTTPMethods } from "../common/request"
-import { Interaction } from "./interaction"
+import { Interaction, InteractionState } from "./interaction"
 import { eachLike, term } from "./matchers"
 
 chai.use(chaiAsPromised)
@@ -213,7 +213,11 @@ describe("Interaction", () => {
   })
 
   describe("#willRespondWith", () => {
-    let interaction = new Interaction()
+    let interaction: Interaction
+
+    beforeEach(() => {
+      interaction = new Interaction()
+    })
 
     it("throws error when status is not provided", () => {
       expect(interaction.willRespondWith.bind(interaction, {})).to.throw(
@@ -229,10 +233,13 @@ describe("Interaction", () => {
     })
 
     describe("with only mandatory params", () => {
-      interaction = new Interaction()
-      interaction.uponReceiving("request")
-      interaction.willRespondWith({ status: 200 })
-      const actual = interaction.json()
+      let actual: InteractionState
+
+      beforeEach(() => {
+        interaction.uponReceiving("request")
+        interaction.willRespondWith({ status: 200 })
+        actual = interaction.json()
+      })
 
       it("has a state compacted with only present keys", () => {
         expect(actual).to.have.property("response")
@@ -245,15 +252,17 @@ describe("Interaction", () => {
     })
 
     describe("with all other parameters", () => {
-      interaction = new Interaction()
-      interaction.uponReceiving("request")
-      interaction.willRespondWith({
-        body: { id: 1, name: "Test", due: "tomorrow" },
-        headers: { "Content-Type": "application/json" },
-        status: 404,
-      })
+      let actual: InteractionState
 
-      const actual = interaction.json()
+      beforeEach(() => {
+        interaction.uponReceiving("request")
+        interaction.willRespondWith({
+          body: { id: 1, name: "Test", due: "tomorrow" },
+          headers: { "Content-Type": "application/json" },
+          status: 404,
+        })
+        actual = interaction.json()
+      })
 
       it("has a full state all available keys", () => {
         expect(actual).to.have.property("response")
@@ -263,7 +272,6 @@ describe("Interaction", () => {
 
     describe("response body", () => {
       it("is included when an empty string is specified", () => {
-        interaction = new Interaction()
         interaction.uponReceiving("request").willRespondWith({
           body: "",
           status: 204,
@@ -274,7 +282,6 @@ describe("Interaction", () => {
       })
 
       it("is not included when explicitly set to undefined", () => {
-        interaction = new Interaction()
         interaction.uponReceiving("request").willRespondWith({
           body: undefined,
           status: 204,

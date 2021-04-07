@@ -82,26 +82,34 @@ function displayHeaders(headers: TemplateHeaders, indent: string): string {
 }
 
 function displayRequest(request: MismatchRequest, indent: string): string {
-  let output = `\n${indent}Method: ${request.method}\n${indent}Path: ${request.path}`
+  const output: string[] = [""]
+
+  output.push(
+    `${indent}Method: ${request.method}\n${indent}Path: ${request.path}`
+  )
 
   if (request.query) {
-    output += `\n${indent}Query String: ${displayQuery(request.query)}`
+    output.push(`${indent}Query String: ${displayQuery(request.query)}`)
   }
 
   if (request.headers) {
-    output += `\n${indent}Headers:\n${indent}  ${displayHeaders(
-      request.headers,
-      `${indent}  `
-    )}`
+    output.push(
+      `${indent}Headers:\n${indent}  ${displayHeaders(
+        request.headers,
+        `${indent}  `
+      )}`
+    )
   }
 
   if (request.body) {
-    output += `\n${indent}Body: ${request.body.substr(0, 20)}... (${
-      request.body.length
-    } length)`
+    output.push(
+      `${indent}Body: ${request.body.substr(0, 20)}... (${
+        request.body.length
+      } length)`
+    )
   }
 
-  return output
+  return output.join("\n")
 }
 
 function filterMissingFeatureFlag(mismatches: Mismatch[]) {
@@ -166,10 +174,10 @@ export class PactV3 {
   }
 
   public withRequest(req: V3Request): PactV3 {
-    let { body } = req
-    if (typeof body !== "string") {
-      body = body && JSON.stringify(body)
-    }
+    const body =
+      typeof req.body !== "string" && req.body
+        ? JSON.stringify(req.body)
+        : req.body
     this.pact.addRequest(req, body)
     return this
   }
@@ -194,10 +202,10 @@ export class PactV3 {
   }
 
   public willRespondWith(res: V3Response): PactV3 {
-    let { body } = res
-    if (typeof body !== "string") {
-      body = body && JSON.stringify(body)
-    }
+    const body =
+      typeof res.body !== "string" && res.body
+        ? JSON.stringify(res.body)
+        : res.body
     this.pact.addResponse(res, body)
     this.states = []
     return this

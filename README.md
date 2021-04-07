@@ -298,7 +298,7 @@ Once you have created Pacts for your Consumer, you need to validate those Pacts 
 
 ```js
 const { Verifier } = require('@pact-foundation/pact');
-let opts = {
+const opts = {
   ...
 };
 
@@ -342,7 +342,7 @@ new Verifier(opts).verifyProvider().then(function () {
 To dynamically retrieve pacts from a Pact Broker for a provider, provide the broker URL, the name of the provider, and the consumer version tags that you want to verify:
 
 ```js
-let opts = {
+const opts = {
   pactBroker: "http://my-broker",
   provider: "Animal Profile Service",
   consumerVersionTag: ["master", "prod"],
@@ -352,7 +352,7 @@ let opts = {
 To verify a pact at a specific URL (eg. when running a pact verification triggered by a 'contract content changed' webhook, or when verifying a pact from your local machine, or a network location that's not the Pact Broker, set just the `pactUrls`, eg:
 
 ```js
-let opts = {
+const opts = {
   pactUrls: [process.env.PACT_URL],
 }
 ```
@@ -360,7 +360,7 @@ let opts = {
 To publish the verification results back to the Pact Broker, you need to enable the 'publish' flag, set the provider version and optional provider version tags:
 
 ```js
-let opts = {
+const opts = {
   publishVerificationResult: true, //generally you'd do something like `process.env.CI === 'true'`
   providerVersion: "version", //recommended to be the git sha
   providerVersionTag: "tag", //optional, recommended to be the git branch
@@ -479,7 +479,7 @@ For example, to have an `Authorization` bearer token header sent as part of the 
 
 ```js
 let token
-let opts = {
+const opts = {
   provider: 'Animal Profile Service',
   ...
   stateHandlers: {
@@ -582,7 +582,7 @@ It looks like this:
 To publish the verification results back to the Pact Broker, you need to enable the 'publish' flag, set the provider version and optional provider version tags:
 
 ```js
-let opts = {
+const opts = {
   publishVerificationResult: true, //recommended to only publish from CI by setting the value to `process.env.CI === 'true'`
   providerVersion: "version", //recommended to be the git sha eg. process.env.MY_CI_COMMIT
   providerVersionTag: "tag", //optional, recommended to be the git branch eg. process.env.MY_CI_BRANCH
@@ -1053,8 +1053,8 @@ For example:
       stateHandlers: {
         "Account Test001 exists": (setup, params) => {
           if (setup) {
-            let account = new Account(0, 0, "Test001", params.accountRef, new AccountNumber(0), Date.now(), Date.now())
-            let persistedAccount = accountRepository.save(account)
+            const account = new Account(0, 0, "Test001", params.accountRef, new AccountNumber(0), Date.now(), Date.now())
+            const persistedAccount = accountRepository.save(account)
             return { accountNumber: persistedAccount.accountNumber.id }
           } else {
             return null

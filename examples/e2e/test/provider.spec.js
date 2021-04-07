@@ -16,7 +16,7 @@ describe("Pact Verification", () => {
   it("validates the expectations of Matching Service", () => {
     let token = "INVALID TOKEN"
 
-    let opts = {
+    const opts = {
       provider: "e2e Provider Example",
       logLevel: "DEBUG",
       providerBaseUrl: "http://localhost:8081",

@@ -9,17 +9,12 @@ const authHeader = {
 
 // Fetch animals who are currently 'available' from the
 // Animal Service
-const availableAnimals = (api = getApiEndpoint, filter = {}) => {
-  let query = {}
-  for (const key in filter) {
-    query[key] = filter[key]
-  }
-  return request
+const availableAnimals = (api = getApiEndpoint, filter = {}) =>
+  request
     .get(`${api()}/animals/available`)
-    .query(query)
+    .query({ ...filter })
     .set(authHeader)
     .then((res) => res.body)
-}
 
 // Find animals by their ID from the Animal Service
 const getAnimalById = (
@@ -27,7 +22,7 @@ const getAnimalById = (
   api = getApiEndpoint,
   format = "application/json"
 ) => {
-  let r = request
+  const r = request
     .get(`${api()}/animals/${id}`)
     .set(authHeader)
     .set({ Accept: format })
