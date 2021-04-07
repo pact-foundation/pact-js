@@ -32,6 +32,19 @@ export const like = <T extends AnyTemplate>(template: T): Matcher<T> => ({
 })
 
 /**
+ * Object where the key itself is ignored, but the value template must match.
+ *
+ * @param keyTemplate Example key to use
+ * @param template Example value template to base the comparison on
+ */
+export const eachKeyLike = <T extends AnyTemplate>(keyTemplate: string, template: T): Matcher<AnyTemplate> => ({
+  "pact:matcher:type": "values",
+  value: {
+    [keyTemplate]: template
+  }
+})
+
+/**
  * Array where each element must match the given template
  * @param template Template to base the comparison on
  */

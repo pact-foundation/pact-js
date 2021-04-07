@@ -28,6 +28,22 @@ describe("V3 Matchers", () => {
     })
   })
 
+  describe("#eachKeylike", () => {
+    it("returns a JSON representation of an eachKeyLike matcher", () => {
+      const result = MatchersV3.eachKeyLike("004", {
+        id: "004",
+      })
+      expect(result).to.deep.equal({
+        "pact:matcher:type": "values",
+        value: {
+          "004": {
+            id: "004"
+          },
+        },
+      })
+    })
+  })
+
   describe("#eachLike", () => {
     it("returns a JSON representation of an eachLike matcher", () => {
       const result = MatchersV3.eachLike({

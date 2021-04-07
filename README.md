@@ -69,15 +69,15 @@ Read [Getting started with Pact] for more information for beginners.
   - [Examples](#examples)
     - [HTTP APIs](#http-apis)
     - [Asynchronous APIs](#asynchronous-apis)
-  - [Using Pact in non-Node environments](#using-pact-in-non-node-environments)
-    - [Using Pact with Karma](#using-pact-with-karma)
-    - [Using Pact with RequireJS](#using-pact-with-requirejs)
   - [Pact JS V3](#pact-js-v3)
     - [Using the V3 matching rules](#using-the-v3-matching-rules)
+      - [Array contains matcher](#array-contains-matcher)
+      - [Provider State Injected Values](#provider-state-injected-values)
     - [Using Pact with XML](#using-pact-with-xml)
     - [Verifying providers with VerifierV3](#verifying-providers-with-verifierv3)
       - [Request Filters](#request-filters)
       - [Provider state callbacks](#provider-state-callbacks)
+    - [Debugging issues with Pact-JS V3](#debugging-issues-with-pact-js-v3)
   - [Troubleshooting / FAQs](#troubleshooting--faqs)
     - [Alpine + Docker](#alpine--docker)
     - [Parallel tests](#parallel-tests)
@@ -998,6 +998,7 @@ const animalBodyExpectation = {
 | `includes`             | value: string                                      | Value that must include the example value as a substring.                                                                                                                                                                                                                                                                               |
 | `nullValue`            |                                                    | Value that must be null. This will only match the JSON Null value. For other content types, it will match if the attribute is missing.                                                                                                                                                                                                  |
 |`arrayContaining`| variants... | Matches the items in an array against a number of variants. Matching is successful if each variant occurs once in the array. Variants may be objects containing matching rules. |
+| `eachKeyLike` | key: string, template: any | Object where the keys itself is ignored, but the values must match a particular shape. Variants may be objects containing matching rules |
 |`fromProviderState`| expression: string, exampleValue: string | Sets a type matcher and a provider state generator. See the section below. |
 
 #### Array contains matcher

@@ -18,6 +18,7 @@ describe("Pact V3", () => {
     string,
     regex,
     like,
+    eachKeyLike,
   } = MatchersV3
 
   // Animal we want to match :)
@@ -67,6 +68,10 @@ describe("Pact V3", () => {
       previously_married: boolean(false),
     },
     interests: eachLike("walks in the garden/meadow"),
+    identifiers: eachKeyLike("004", {
+      "id": regex("[0-9]+", "004"),
+      "description": like("thing")
+    })
   }
 
   // Define animal list payload, reusing existing object matcher

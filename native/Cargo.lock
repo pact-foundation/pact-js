@@ -917,6 +917,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "77af24da69f9d9341038eba93a073b1fdaaa1b788221b00a69bce9e762cb32de"
 
 [[package]]
+name = "os_info"
+version = "3.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4181c9203e70e66f39def4240a7e33f74d1d95b42c08320f9ac298c580934ab2"
+dependencies = [
+ "log",
+ "winapi",
+]
+
+[[package]]
 name = "pact-js-v3"
 version = "0.0.6"
 dependencies = [
@@ -947,9 +957,9 @@ dependencies = [
 
 [[package]]
 name = "pact_matching"
-version = "0.8.11"
+version = "0.8.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4d52161e0117d19f6be024cc230e3464254811bb79779430ca05b87c51aa32a5"
+checksum = "5985d4ca667a4aff2dca34441e16d695f1f4a017f54720e1ce80323c28b3f24b"
 dependencies = [
  "ansi_term 0.12.1",
  "base64",
@@ -985,9 +995,9 @@ dependencies = [
 
 [[package]]
 name = "pact_mock_server"
-version = "0.7.15"
+version = "0.7.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e836267a44ac8ca068405848954f2616ddf27f31a7543a5b1b6700d015018cb5"
+checksum = "a48c8f169a997868b3d04e48ff48465e272fed64371907b70ee5e897490f7c73"
 dependencies = [
  "bytes",
  "futures",
@@ -999,6 +1009,7 @@ dependencies = [
  "maplit",
  "pact_matching",
  "rustls",
+ "serde",
  "serde_json",
  "tokio",
  "tokio-rustls",
@@ -1007,9 +1018,9 @@ dependencies = [
 
 [[package]]
 name = "pact_mock_server_ffi"
-version = "0.0.15"
+version = "0.0.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d786fe9d741cc87af5389e47c88eb90123958f41d29a5ac0dacdbe4f7fd816f1"
+checksum = "2f66fd9c1c34b7df270f7b711b990ce98ec39dbab31da09ad75b19da40083d86"
 dependencies = [
  "bytes",
  "cbindgen",
@@ -1023,6 +1034,7 @@ dependencies = [
  "maplit",
  "multipart",
  "onig",
+ "os_info",
  "pact_matching",
  "pact_mock_server",
  "rand 0.8.3",
@@ -1034,9 +1046,9 @@ dependencies = [
 
 [[package]]
 name = "pact_verifier"
-version = "0.10.4"
+version = "0.10.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "48b23ef48a501e1b972105c1ae4980ac2ff21742a1d95a81e6272ce63a163294"
+checksum = "0920dea0a37f99662f9358b61c742ddc1ed93769a1be436b56c583747612388b"
 dependencies = [
  "ansi_term 0.12.1",
  "async-trait",
@@ -1852,9 +1864,9 @@ dependencies = [
 
 [[package]]
 name = "tree_magic_mini"
-version = "1.0.1"
+version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "287a760af78a7d607cb231500c06009ea1e0599cd57b10c32760061979bab1f1"
+checksum = "172fbbcb75249161c738f00d693e883f4204a0c063658f505d6303f6c081f3da"
 dependencies = [
  "fnv",
  "lazy_static",
