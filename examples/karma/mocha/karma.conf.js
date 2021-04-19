@@ -1,23 +1,23 @@
 // Karma configuration
 // Generated on Thu Nov 20 2014 14:51:15 GMT+1100 (AEDT)
-var path = require("path")
-process.env.CHROME_BIN = require("puppeteer").executablePath()
+var path = require('path');
+process.env.CHROME_BIN = require('puppeteer').executablePath();
 
 module.exports = function (config) {
   config.set({
     // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: ".",
+    basePath: '.',
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ["mocha", "chai", "pact"],
+    frameworks: ['mocha', 'chai', 'pact'],
 
     // list of files / patterns to load in the browser
     files: [
       // Example Using NPM package
-      "../node_modules/@pact-foundation/pact-web/pact-web.js",
-      "client.js",
-      "client-spec.js",
+      '../node_modules/@pact-foundation/pact-web/pact-web.js',
+      'client.js',
+      'client-spec.js',
     ],
 
     // list of files to exclude
@@ -30,24 +30,24 @@ module.exports = function (config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ["progress"],
+    reporters: ['progress'],
 
     // Pact Providers
     pact: [
       {
         port: 1234,
-        consumer: "KarmaMochaConsumer",
-        provider: "KarmaMochaProvider",
-        logLevel: "DEBUG",
-        log: path.resolve(process.cwd(), "logs", "pact.log"),
-        dir: path.resolve(process.cwd(), "pacts"),
+        consumer: 'KarmaMochaConsumer',
+        provider: 'KarmaMochaProvider',
+        logLevel: 'DEBUG',
+        log: path.resolve(process.cwd(), 'logs', 'pact.log'),
+        dir: path.resolve(process.cwd(), 'pacts'),
       },
     ],
 
     // web server port
     port: 9876,
 
-    plugins: ["karma-*", "@pact-foundation/karma-pact"],
+    plugins: ['karma-*', '@pact-foundation/karma-pact'],
 
     // enable / disable colors in the output (reporters and logs)
     colors: true,
@@ -61,17 +61,17 @@ module.exports = function (config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ["Chrome_without_security"],
+    browsers: ['Chrome_without_security'],
 
     customLaunchers: {
       Chrome_without_security: {
-        base: "ChromeHeadless",
-        flags: ["--disable-web-security", "--disable-site-isolation-trials"],
+        base: 'ChromeHeadless',
+        flags: ['--disable-web-security', '--disable-site-isolation-trials'],
       },
     },
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
     singleRun: true,
-  })
-}
+  });
+};

@@ -1,1 +1,1 @@
-export * from "./stateHandler"
+export * from './stateHandler';

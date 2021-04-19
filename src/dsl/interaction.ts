@@ -3,42 +3,42 @@
  * @module Interaction
  */
 
-import { isNil, keys, omitBy } from "lodash"
-import { HTTPMethods, HTTPMethod } from "../common/request"
-import { Matcher, isMatcher, AnyTemplate } from "./matchers"
-import ConfigurationError from "../errors/configurationError"
+import { isNil, keys, omitBy } from 'lodash';
+import { HTTPMethods, HTTPMethod } from '../common/request';
+import { Matcher, isMatcher, AnyTemplate } from './matchers';
+import ConfigurationError from '../errors/configurationError';
 
 interface QueryObject {
-  [name: string]: string | Matcher<string> | string[]
+  [name: string]: string | Matcher<string> | string[];
 }
-export type Query = string | QueryObject
+export type Query = string | QueryObject;
 
 export interface RequestOptions {
-  method: HTTPMethods | HTTPMethod
-  path: string | Matcher<string>
-  query?: Query
-  headers?: { [name: string]: string | Matcher<string> }
-  body?: AnyTemplate
+  method: HTTPMethods | HTTPMethod;
+  path: string | Matcher<string>;
+  query?: Query;
+  headers?: { [name: string]: string | Matcher<string> };
+  body?: AnyTemplate;
 }
 
 export interface ResponseOptions {
-  status: number | Matcher<number>
-  headers?: { [name: string]: string | Matcher<string> }
-  body?: AnyTemplate
+  status: number | Matcher<number>;
+  headers?: { [name: string]: string | Matcher<string> };
+  body?: AnyTemplate;
 }
 
 export interface InteractionObject {
-  state: string | undefined
-  uponReceiving: string
-  withRequest: RequestOptions
-  willRespondWith: ResponseOptions
+  state: string | undefined;
+  uponReceiving: string;
+  withRequest: RequestOptions;
+  willRespondWith: ResponseOptions;
 }
 
 export interface InteractionState {
-  providerState?: string
-  description?: string
-  request?: RequestOptions
-  response?: ResponseOptions
+  providerState?: string;
+  description?: string;
+  request?: RequestOptions;
+  response?: ResponseOptions;
 }
 
 /**
@@ -47,20 +47,20 @@ export interface InteractionState {
  */
 const throwIfQueryObjectInvalid = (query: QueryObject) => {
   if (isMatcher(query)) {
-    return
+    return;
   }
 
   Object.values(query).forEach((value) => {
     if (
-      !(isMatcher(value) || Array.isArray(value) || typeof value === "string")
+      !(isMatcher(value) || Array.isArray(value) || typeof value === 'string')
     ) {
-      throw new ConfigurationError(`Query must only contain strings.`)
+      throw new ConfigurationError(`Query must only contain strings.`);
     }
-  })
-}
+  });
+};
 
 export class Interaction {
-  protected state: InteractionState = {}
+  protected state: InteractionState = {};
 
   /**
    * Gives a state the provider should be in for this interaction.
@@ -69,10 +69,10 @@ export class Interaction {
    */
   public given(providerState: string): this {
     if (providerState) {
-      this.state.providerState = providerState
+      this.state.providerState = providerState;
     }
 
-    return this
+    return this;
   }
 
   /**
@@ -83,12 +83,12 @@ export class Interaction {
   public uponReceiving(description: string): this {
     if (isNil(description)) {
       throw new ConfigurationError(
-        "You must provide a description for the interaction."
-      )
+        'You must provide a description for the interaction.'
+      );
     }
-    this.state.description = description
+    this.state.description = description;
 
-    return this
+    return this;
   }
 
   /**
@@ -103,26 +103,26 @@ export class Interaction {
    */
   public withRequest(requestOpts: RequestOptions): this {
     if (isNil(requestOpts.method)) {
-      throw new ConfigurationError("You must provide an HTTP method.")
+      throw new ConfigurationError('You must provide an HTTP method.');
     }
 
     if (keys(HTTPMethods).indexOf(requestOpts.method.toString()) < 0) {
       throw new ConfigurationError(
-        `You must provide a valid HTTP method: ${keys(HTTPMethods).join(", ")}.`
-      )
+        `You must provide a valid HTTP method: ${keys(HTTPMethods).join(', ')}.`
+      );
     }
 
     if (isNil(requestOpts.path)) {
-      throw new ConfigurationError("You must provide a path.")
+      throw new ConfigurationError('You must provide a path.');
     }
 
-    if (typeof requestOpts.query === "object") {
-      throwIfQueryObjectInvalid(requestOpts.query)
+    if (typeof requestOpts.query === 'object') {
+      throwIfQueryObjectInvalid(requestOpts.query);
     }
 
-    this.state.request = omitBy(requestOpts, isNil) as RequestOptions
+    this.state.request = omitBy(requestOpts, isNil) as RequestOptions;
 
-    return this
+    return this;
   }
 
   /**
@@ -138,7 +138,7 @@ export class Interaction {
       isNil(responseOpts.status) ||
       responseOpts.status.toString().trim().length === 0
     ) {
-      throw new ConfigurationError("You must provide a status code.")
+      throw new ConfigurationError('You must provide a status code.');
     }
 
     this.state.response = omitBy(
@@ -148,8 +148,8 @@ export class Interaction {
         status: responseOpts.status,
       },
       isNil
-    ) as ResponseOptions
-    return this
+    ) as ResponseOptions;
+    return this;
   }
 
   /**
@@ -159,9 +159,9 @@ export class Interaction {
   public json(): InteractionState {
     if (isNil(this.state.description)) {
       throw new ConfigurationError(
-        "You must provide a description for the Interaction"
-      )
+        'You must provide a description for the Interaction'
+      );
     }
-    return this.state
+    return this.state;
   }
 }

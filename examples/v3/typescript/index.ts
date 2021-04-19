@@ -1,4 +1,4 @@
-import axios, { AxiosPromise } from "axios"
+import axios, { AxiosPromise } from 'axios';
 
 export class DogService {
   constructor(private url: string) {}
@@ -7,9 +7,9 @@ export class DogService {
     return axios.request({
       baseURL: this.url,
       params: { from },
-      headers: { Accept: "application/json" },
-      method: "GET",
-      url: "/dogs",
-    })
-  }
+      headers: { Accept: 'application/json' },
+      method: 'GET',
+      url: '/dogs',
+    });
+  };
 }

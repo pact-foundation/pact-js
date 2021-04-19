@@ -1,5 +1,5 @@
-import { AnyJson } from "common/jsonTypes"
-import { Matcher, AnyTemplate } from "./matchers"
+import { AnyJson } from 'common/jsonTypes';
+import { Matcher, AnyTemplate } from './matchers';
 
 /**
  * Metadata is a map containing message context,
@@ -8,7 +8,7 @@ import { Matcher, AnyTemplate } from "./matchers"
  * @module Message
  */
 export interface Metadata {
-  [name: string]: string | Matcher<string>
+  [name: string]: string | Matcher<string>;
 }
 
 /**
@@ -17,17 +17,17 @@ export interface Metadata {
  * @module Message
  */
 export interface Message {
-  providerStates?: [{ name: string }]
-  description?: string
-  metadata?: Metadata
-  contents: AnyTemplate
+  providerStates?: [{ name: string }];
+  description?: string;
+  metadata?: Metadata;
+  contents: AnyTemplate;
 }
 
 export interface ConcreteMessage {
-  providerStates?: [{ name: string }]
-  description?: string
-  metadata?: Metadata
-  contents: AnyJson
+  providerStates?: [{ name: string }];
+  description?: string;
+  metadata?: Metadata;
+  contents: AnyJson;
 }
 
 /**
@@ -36,9 +36,9 @@ export interface ConcreteMessage {
  * @module Message
  */
 export interface MessageDescriptor {
-  providerStates?: [{ name: string }]
-  description: string
-  metadata?: Metadata
+  providerStates?: [{ name: string }];
+  description: string;
+  metadata?: Metadata;
 }
 
 /**
@@ -48,7 +48,7 @@ export interface MessageDescriptor {
  *
  * @module Message
  */
-export type MessageConsumer = (m: Message) => Promise<unknown>
+export type MessageConsumer = (m: Message) => Promise<unknown>;
 
 /**
  * A Message Provider is a function that will be invoked by the framework
@@ -58,12 +58,12 @@ export type MessageConsumer = (m: Message) => Promise<unknown>
  *
  * @module Message
  */
-export type MessageProvider = (m: MessageDescriptor) => Promise<unknown>
+export type MessageProvider = (m: MessageDescriptor) => Promise<unknown>;
 
 export interface MessageProviders {
-  [name: string]: MessageProvider
+  [name: string]: MessageProvider;
 }
 
 export interface StateHandlers {
-  [name: string]: (state: string) => Promise<unknown>
+  [name: string]: (state: string) => Promise<unknown>;
 }

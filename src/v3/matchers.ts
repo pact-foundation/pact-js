@@ -1,35 +1,35 @@
-import { isNil, pickBy, times } from "ramda"
-import { AnyJson } from "../common/jsonTypes"
+import { isNil, pickBy, times } from 'ramda';
+import { AnyJson } from '../common/jsonTypes';
 
-import PactNative from "../../native/index.node"
+import PactNative from '../../native/index.node';
 
 /**
  * Pact Matcher
  */
 export interface Matcher<T> {
-  "pact:matcher:type": string
-  "pact:generator:type"?: string
-  value?: T
+  'pact:matcher:type': string;
+  'pact:generator:type'?: string;
+  value?: T;
 }
 
 export type AnyTemplate =
   | AnyJson
   | TemplateMap
   | TemplateArray
-  | Matcher<unknown>
+  | Matcher<unknown>;
 interface TemplateMap {
-  [key: string]: AnyJson | AnyTemplate
+  [key: string]: AnyJson | AnyTemplate;
 }
-type TemplateArray = Array<AnyTemplate>
+type TemplateArray = Array<AnyTemplate>;
 
 /**
  * Value must match the given template
  * @param template Template to base the comparison on
  */
 export const like = <T extends AnyTemplate>(template: T): Matcher<T> => ({
-  "pact:matcher:type": "type",
+  'pact:matcher:type': 'type',
   value: template,
-})
+});
 
 /**
  * Object where the key itself is ignored, but the value template must match.
@@ -41,26 +41,26 @@ export const eachKeyLike = <T extends AnyTemplate>(
   keyTemplate: string,
   template: T
 ): Matcher<AnyTemplate> => ({
-  "pact:matcher:type": "values",
+  'pact:matcher:type': 'values',
   value: {
     [keyTemplate]: template,
   },
-})
+});
 
 /**
  * Array where each element must match the given template
  * @param template Template to base the comparison on
  */
 export const eachLike = <T extends AnyTemplate>(template: T): Matcher<T[]> => ({
-  "pact:matcher:type": "type",
+  'pact:matcher:type': 'type',
   value: [template],
-})
+});
 
 /**
  * Like Matcher with a minimum number of required values
  */
 export interface MinLikeMatcher<T> extends Matcher<T> {
-  min: number
+  min: number;
 }
 
 /**
@@ -73,9 +73,9 @@ export const atLeastOneLike = <T extends AnyTemplate>(
   count = 1
 ): MinLikeMatcher<T[]> => ({
   min: 1,
-  "pact:matcher:type": "type",
+  'pact:matcher:type': 'type',
   value: times(() => template, count),
-})
+});
 
 /**
  * An array that has to have at least the required number of elements and each element must match the given template
@@ -88,26 +88,26 @@ export const atLeastLike = <T extends AnyTemplate>(
   min: number,
   count?: number
 ): MinLikeMatcher<T[]> => {
-  const elements = count || min
+  const elements = count || min;
   if (count && count < min) {
     throw new Error(
       `atLeastLike has a minimum of ${min} but ${count} elements were requested.` +
         ` Make sure the count is greater than or equal to the min.`
-    )
+    );
   }
 
   return {
     min,
-    "pact:matcher:type": "type",
+    'pact:matcher:type': 'type',
     value: times(() => template, elements),
-  }
-}
+  };
+};
 
 /**
  * Like Matcher with a maximum number of required values
  */
 export interface MaxLikeMatcher<T> extends Matcher<T> {
-  max: number
+  max: number;
 }
 
 /**
@@ -121,20 +121,20 @@ export const atMostLike = <T extends AnyTemplate>(
   max: number,
   count?: number
 ): MaxLikeMatcher<T[]> => {
-  const elements = count || 1
+  const elements = count || 1;
   if (count && count > max) {
     throw new Error(
       `atMostLike has a maximum of ${max} but ${count} elements where requested.` +
         ` Make sure the count is less than or equal to the max.`
-    )
+    );
   }
 
   return {
     max,
-    "pact:matcher:type": "type",
+    'pact:matcher:type': 'type',
     value: times(() => template, elements),
-  }
-}
+  };
+};
 
 /**
  * An array whose size is constrained to the minimum and maximum number of elements and each element must match the given template
@@ -149,37 +149,37 @@ export const constrainedArrayLike = <T extends AnyTemplate>(
   max: number,
   count?: number
 ): MinLikeMatcher<T[]> & MaxLikeMatcher<T[]> => {
-  const elements = count || min
+  const elements = count || min;
   if (count) {
     if (count < min) {
       throw new Error(
         `constrainedArrayLike has a minimum of ${min} but ${count} elements where requested.` +
           ` Make sure the count is greater than or equal to the min.`
-      )
+      );
     } else if (count > max) {
       throw new Error(
         `constrainedArrayLike has a maximum of ${max} but ${count} elements where requested.` +
           ` Make sure the count is less than or equal to the max.`
-      )
+      );
     }
   }
 
   return {
     min,
     max,
-    "pact:matcher:type": "type",
+    'pact:matcher:type': 'type',
     value: times(() => template, elements),
-  }
-}
+  };
+};
 
 /**
  * Value must be a boolean
  * @param b Boolean example value. Defaults to true if unsupplied
  */
 export const boolean = (b = true): Matcher<boolean> => ({
-  "pact:matcher:type": "type",
+  'pact:matcher:type': 'type',
   value: b,
-})
+});
 
 /**
  * Value must be an integer (must be a number and have no decimal places)
@@ -188,16 +188,16 @@ export const boolean = (b = true): Matcher<boolean> => ({
 export const integer = (int?: number): Matcher<number> => {
   if (int) {
     return {
-      "pact:matcher:type": "integer",
+      'pact:matcher:type': 'integer',
       value: int,
-    }
+    };
   }
   return {
-    "pact:generator:type": "RandomInt",
-    "pact:matcher:type": "integer",
+    'pact:generator:type': 'RandomInt',
+    'pact:matcher:type': 'integer',
     value: 101,
-  }
-}
+  };
+};
 
 /**
  * Value must be a decimal number (must be a number and have decimal places)
@@ -206,16 +206,16 @@ export const integer = (int?: number): Matcher<number> => {
 export const decimal = (num?: number): Matcher<number> => {
   if (num) {
     return {
-      "pact:matcher:type": "decimal",
+      'pact:matcher:type': 'decimal',
       value: num,
-    }
+    };
   }
   return {
-    "pact:generator:type": "RandomDecimal",
-    "pact:matcher:type": "decimal",
+    'pact:generator:type': 'RandomDecimal',
+    'pact:matcher:type': 'decimal',
     value: 12.34,
-  }
-}
+  };
+};
 
 /**
  * Value must be a number
@@ -224,15 +224,15 @@ export const decimal = (num?: number): Matcher<number> => {
 export function number(num?: number): Matcher<number> {
   if (num) {
     return {
-      "pact:matcher:type": "number",
+      'pact:matcher:type': 'number',
       value: num,
-    }
+    };
   }
   return {
-    "pact:generator:type": "RandomInt",
-    "pact:matcher:type": "number",
+    'pact:generator:type': 'RandomInt',
+    'pact:matcher:type': 'number',
     value: 1234,
-  }
+  };
 }
 
 /**
@@ -241,14 +241,14 @@ export function number(num?: number): Matcher<number> {
  */
 export function string(str: string): Matcher<string> {
   return {
-    "pact:matcher:type": "type",
+    'pact:matcher:type': 'type',
     value: str,
-  }
+  };
 }
 
 export interface RegexMatcher extends Matcher<string> {
-  regex: string
-  example?: string
+  regex: string;
+  example?: string;
 }
 
 /**
@@ -259,16 +259,16 @@ export interface RegexMatcher extends Matcher<string> {
 export function regex(pattern: RegExp | string, str: string): RegexMatcher {
   if (pattern instanceof RegExp) {
     return {
-      "pact:matcher:type": "regex",
+      'pact:matcher:type': 'regex',
       regex: pattern.source,
       value: str,
-    }
+    };
   }
   return {
-    "pact:matcher:type": "regex",
+    'pact:matcher:type': 'regex',
     regex: pattern,
     value: str,
-  }
+  };
 }
 
 /**
@@ -276,12 +276,12 @@ export function regex(pattern: RegExp | string, str: string): RegexMatcher {
  * @param value Example value
  */
 export const equal = <T extends AnyTemplate>(value: T): Matcher<T> => ({
-  "pact:matcher:type": "equality",
+  'pact:matcher:type': 'equality',
   value,
-})
+});
 
 export interface DateTimeMatcher extends Matcher<string> {
-  format: string
+  format: string;
 }
 
 /**
@@ -291,11 +291,11 @@ export interface DateTimeMatcher extends Matcher<string> {
  */
 export function datetime(format: string, example?: string): DateTimeMatcher {
   return pickBy((v) => !isNil(v), {
-    "pact:generator:type": example ? undefined : "DateTime",
-    "pact:matcher:type": "timestamp",
+    'pact:generator:type': example ? undefined : 'DateTime',
+    'pact:matcher:type': 'timestamp',
     format,
     value: example || PactNative.generate_datetime_string(format),
-  })
+  });
 }
 
 /**
@@ -304,7 +304,7 @@ export function datetime(format: string, example?: string): DateTimeMatcher {
  * @param example Example value to use. If omitted a value using the current system date and time will be generated.
  */
 export function timestamp(format: string, example?: string): DateTimeMatcher {
-  return datetime(format, example)
+  return datetime(format, example);
 }
 
 /**
@@ -314,11 +314,11 @@ export function timestamp(format: string, example?: string): DateTimeMatcher {
  */
 export function time(format: string, example?: string): DateTimeMatcher {
   return {
-    "pact:generator:type": "Time",
-    "pact:matcher:type": "time",
+    'pact:generator:type': 'Time',
+    'pact:matcher:type': 'time',
     format,
     value: example || PactNative.generate_datetime_string(format),
-  }
+  };
 }
 
 /**
@@ -329,10 +329,10 @@ export function time(format: string, example?: string): DateTimeMatcher {
 export function date(format: string, example?: string): DateTimeMatcher {
   return {
     format,
-    "pact:generator:type": "Date",
-    "pact:matcher:type": "date",
+    'pact:generator:type': 'Date',
+    'pact:matcher:type': 'date',
     value: example || PactNative.generate_datetime_string(format),
-  }
+  };
 }
 
 /**
@@ -341,9 +341,9 @@ export function date(format: string, example?: string): DateTimeMatcher {
  */
 export function includes(value: string): Matcher<string> {
   return {
-    "pact:matcher:type": "include",
+    'pact:matcher:type': 'include',
     value,
-  }
+  };
 }
 
 /**
@@ -352,8 +352,8 @@ export function includes(value: string): Matcher<string> {
  */
 export function nullValue(): Matcher<null> {
   return {
-    "pact:matcher:type": "null",
-  }
+    'pact:matcher:type': 'null',
+  };
 }
 
 /**
@@ -366,47 +366,47 @@ export function url2(
   pathFragments: Array<string | RegexMatcher | RegExp>
 ): RegexMatcher {
   const regexpr = [
-    ".*(",
+    '.*(',
     ...pathFragments.map((p) => {
       if (p instanceof RegExp) {
-        return `\\/${p.source}`
+        return `\\/${p.source}`;
       }
-      if (p instanceof Object && p["pact:matcher:type"] === "regex") {
-        return `\\/${p.regex}`
+      if (p instanceof Object && p['pact:matcher:type'] === 'regex') {
+        return `\\/${p.regex}`;
       }
-      return `\\/${p.toString()}`
+      return `\\/${p.toString()}`;
     }),
-  ].join("")
+  ].join('');
 
   const example = [
-    basePath || "http://localhost:8080",
+    basePath || 'http://localhost:8080',
     ...pathFragments.map((p) => {
       if (p instanceof RegExp) {
-        return `/${PactNative.generate_regex_string(p.source)}`
+        return `/${PactNative.generate_regex_string(p.source)}`;
       }
-      if (p instanceof Object && p["pact:matcher:type"] === "regex") {
-        return `/${p.value}`
+      if (p instanceof Object && p['pact:matcher:type'] === 'regex') {
+        return `/${p.value}`;
       }
-      return `/${p.toString()}`
+      return `/${p.toString()}`;
     }),
-  ].join("")
+  ].join('');
 
   // Temporary fix for inconsistancies between matchers and generators. Matchers use "value" attribute for
   // example values, while generators use "example"
   if (basePath == null) {
     return {
-      "pact:matcher:type": "regex",
-      "pact:generator:type": "MockServerURL",
+      'pact:matcher:type': 'regex',
+      'pact:generator:type': 'MockServerURL',
       regex: `${regexpr})$`,
       value: example,
       example,
-    }
+    };
   }
   return {
-    "pact:matcher:type": "regex",
+    'pact:matcher:type': 'regex',
     regex: `${regexpr})$`,
     value: example,
-  }
+  };
 }
 
 /**
@@ -416,11 +416,11 @@ export function url2(
 export function url(
   pathFragments: Array<string | RegexMatcher | RegExp>
 ): RegexMatcher {
-  return url2(null, pathFragments)
+  return url2(null, pathFragments);
 }
 
 export interface ArrayContainsMatcher extends Matcher<AnyTemplate[]> {
-  variants: Array<AnyTemplate>
+  variants: Array<AnyTemplate>;
 }
 
 /**
@@ -431,13 +431,13 @@ export function arrayContaining(
   ...variants: AnyTemplate[]
 ): ArrayContainsMatcher {
   return {
-    "pact:matcher:type": "arrayContains",
+    'pact:matcher:type': 'arrayContains',
     variants,
-  }
+  };
 }
 
 export interface ProviderStateInjectedValue extends Matcher<string> {
-  expression: string
+  expression: string;
 }
 
 /**
@@ -450,11 +450,11 @@ export function fromProviderState(
   exampleValue: string
 ): ProviderStateInjectedValue {
   return {
-    "pact:matcher:type": "type",
-    "pact:generator:type": "ProviderState",
+    'pact:matcher:type': 'type',
+    'pact:generator:type': 'ProviderState',
     expression,
     value: exampleValue,
-  }
+  };
 }
 
 /**
@@ -462,24 +462,24 @@ export function fromProviderState(
  */
 export function uuid(example?: string): RegexMatcher {
   const regexStr =
-    "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+    '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}';
   if (example) {
-    const regexpr = new RegExp(`^${regexStr}$`)
+    const regexpr = new RegExp(`^${regexStr}$`);
     if (!example.match(regexpr)) {
       throw new Error(
         `regex: Example value '${example}' does not match the UUID regular expression '${regexStr}'`
-      )
+      );
     }
     return {
-      "pact:matcher:type": "regex",
+      'pact:matcher:type': 'regex',
       regex: regexStr,
       value: example,
-    }
+    };
   }
   return {
-    "pact:matcher:type": "regex",
+    'pact:matcher:type': 'regex',
     regex: regexStr,
-    "pact:generator:type": "Uuid",
-    value: "e2490de5-5bd3-43d5-b7c4-526e33f71304",
-  }
+    'pact:generator:type': 'Uuid',
+    value: 'e2490de5-5bd3-43d5-b7c4-526e33f71304',
+  };
 }

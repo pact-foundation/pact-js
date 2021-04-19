@@ -1,31 +1,31 @@
-"use strict"
+'use strict';
 
-const axios = require("axios")
+const axios = require('axios');
 
 exports.getMeDogs = (endpoint) => {
-  const url = endpoint.url
-  const port = endpoint.port
+  const url = endpoint.url;
+  const port = endpoint.port;
 
   return axios.request({
-    method: "GET",
+    method: 'GET',
     baseURL: `${url}:${port}`,
-    url: "/dogs",
+    url: '/dogs',
     headers: {
-      Accept: "application/json",
+      Accept: 'application/json',
     },
-  })
-}
+  });
+};
 
 exports.getMeDog = (endpoint) => {
-  const url = endpoint.url
-  const port = endpoint.port
+  const url = endpoint.url;
+  const port = endpoint.port;
 
   return axios.request({
-    method: "GET",
+    method: 'GET',
     baseURL: `${url}:${port}`,
-    url: "/dogs/1",
+    url: '/dogs/1',
     headers: {
-      Accept: "application/json",
+      Accept: 'application/json',
     },
-  })
-}
+  });
+};

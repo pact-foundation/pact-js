@@ -1,76 +1,78 @@
-const { VerifierV3 } = require("@pact-foundation/pact/v3")
-const chai = require("chai")
-const chaiAsPromised = require("chai-as-promised")
-chai.use(chaiAsPromised)
-const { server, importData, animalRepository } = require("../provider.js")
-const path = require("path")
+const { VerifierV3 } = require('@pact-foundation/pact/v3');
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+chai.use(chaiAsPromised);
+const { server, importData, animalRepository } = require('../provider.js');
+const path = require('path');
 
 server.listen(8081, () => {
-  console.log("Animal Profile Service listening on http://localhost:8081")
-})
+  console.log('Animal Profile Service listening on http://localhost:8081');
+});
 
-let pactBroker = "https://test.pact.dius.com.au"
+let pactBroker = 'https://test.pact.dius.com.au';
 if (process.env.CI && !process.env.APPVEYOR) {
-  pactBroker = "http://localhost:9292"
+  pactBroker = 'http://localhost:9292';
 }
 
 // Verify that the provider meets all consumer expectations
-describe("Pact Verification", () => {
-  it("validates the expectations of Matching Service", () => {
-    let token = "INVALID TOKEN"
+describe('Pact Verification', () => {
+  it('validates the expectations of Matching Service', () => {
+    let token = 'INVALID TOKEN';
 
     return new VerifierV3({
-      provider: "Animal Profile Service V3",
-      providerBaseUrl: "http://localhost:8081",
+      provider: 'Animal Profile Service V3',
+      providerBaseUrl: 'http://localhost:8081',
 
       requestFilter: (req) => {
         console.log(
-          "Middleware invoked before provider API - injecting Authorization token"
-        )
+          'Middleware invoked before provider API - injecting Authorization token'
+        );
 
-        req.headers["MY_SPECIAL_HEADER"] = "my special value"
+        req.headers['MY_SPECIAL_HEADER'] = 'my special value';
 
         // e.g. ADD Bearer token
-        req.headers["authorization"] = `Bearer ${token}`
+        req.headers['authorization'] = `Bearer ${token}`;
 
-        return req
+        return req;
       },
 
       stateHandlers: {
-        "Has no animals": (setup) => {
+        'Has no animals': (setup) => {
           if (setup) {
-            animalRepository.clear()
-            return Promise.resolve({ description: `Animals removed to the db` })
+            animalRepository.clear();
+            return Promise.resolve({
+              description: `Animals removed to the db`,
+            });
           }
         },
-        "Has some animals": (setup) => {
+        'Has some animals': (setup) => {
           if (setup) {
-            importData()
+            importData();
             return Promise.resolve({
               description: `Animals added to the db`,
               count: animalRepository.count(),
-            })
+            });
           }
         },
-        "Has an animal with ID": (setup, parameters) => {
+        'Has an animal with ID': (setup, parameters) => {
           if (setup) {
-            importData()
-            animalRepository.first().id = parameters.id
+            importData();
+            animalRepository.first().id = parameters.id;
             return Promise.resolve({
               description: `Animal with ID ${parameters.id} added to the db`,
               id: parameters.id,
-            })
+            });
           }
         },
-        "is not authenticated": () => {
-          token = ""
+        'is not authenticated': () => {
+          token = '';
           return Promise.resolve({
             description: `Invalid bearer token generated`,
-          })
+          });
         },
-        "is authenticated": () => {
-          token = "1234"
-          return Promise.resolve({ description: `Bearer token generated` })
+        'is authenticated': () => {
+          token = '1234';
+          return Promise.resolve({ description: `Bearer token generated` });
         },
       },
 
@@ -78,8 +80,8 @@ describe("Pact Verification", () => {
       pactBrokerUrl: pactBroker,
 
       // Fetch from broker with given tags
-      consumerVersionTags: ["prod"],
-      providerVersionTags: ["master"],
+      consumerVersionTags: ['prod'],
+      providerVersionTags: ['master'],
       enablePending: true,
 
       // Specific Remote pacts (doesn't need to be a broker)
@@ -92,15 +94,15 @@ describe("Pact Verification", () => {
       //   ),
       // ],
 
-      pactBrokerUsername: "dXfltyFMgNOFZAxr8io9wJ37iUpY42M",
-      pactBrokerPassword: "O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
+      pactBrokerUsername: 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
+      pactBrokerPassword: 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
       publishVerificationResult: true,
-      providerVersion: "1.0.0",
+      providerVersion: '1.0.0',
     })
       .verifyProvider()
       .then((output) => {
-        console.log("Pact Verification Complete!")
-        console.log("Result:", output)
-      })
-  })
-})
+        console.log('Pact Verification Complete!');
+        console.log('Result:', output);
+      });
+  });
+});

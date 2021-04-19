@@ -1,4 +1,4 @@
-import q from "q"
+import q from 'q';
 
 // Convert a q promise to regular Promise
 export function qToPromise<T>(promise: q.Promise<T>): Promise<T> {
@@ -6,6 +6,6 @@ export function qToPromise<T>(promise: q.Promise<T>): Promise<T> {
     promise.then(
       (value: T) => resolve(value),
       (error: Error) => reject(error)
-    )
-  })
+    );
+  });
 }

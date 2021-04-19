@@ -1,24 +1,24 @@
 // Simple object repository
 class Repository {
   constructor() {
-    this.entities = []
+    this.entities = [];
   }
 
   fetchAll() {
-    return this.entities
+    return this.entities;
   }
 
   getById(id) {
-    return this.entities.find((entity) => id == entity.id)
+    return this.entities.find((entity) => id == entity.id);
   }
 
   insert(entity) {
-    this.entities.push(entity)
+    this.entities.push(entity);
   }
 
   clear() {
-    this.entities = []
+    this.entities = [];
   }
 }
 
-module.exports = Repository
+module.exports = Repository;

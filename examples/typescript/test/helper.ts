@@ -1,6 +1,6 @@
-import wrapper from "@pact-foundation/pact-core"
+import wrapper from '@pact-foundation/pact-core';
 
 // used to kill any left over mock server instances
-process.on("SIGINT", () => {
-  wrapper.removeAllServers()
-})
+process.on('SIGINT', () => {
+  wrapper.removeAllServers();
+});

@@ -1,153 +1,153 @@
-import chai from "chai"
-import chaiAsPromised from "chai-as-promised"
-import nock from "nock"
-import { HTTPMethods } from "../common/request"
-import { Interaction } from "./interaction"
-import { MockService } from "./mockService"
+import chai from 'chai';
+import chaiAsPromised from 'chai-as-promised';
+import nock from 'nock';
+import { HTTPMethods } from '../common/request';
+import { Interaction } from './interaction';
+import { MockService } from './mockService';
 
-chai.use(chaiAsPromised)
-const { expect } = chai
+chai.use(chaiAsPromised);
+const { expect } = chai;
 
-describe("MockService", () => {
+describe('MockService', () => {
   after(() => {
-    nock.restore()
-  })
+    nock.restore();
+  });
 
-  describe("#constructor", () => {
-    it("creates a MockService when all mandatory parameters are provided", () => {
-      const mock = new MockService("consumer", "provider", 1234)
-      expect(mock.baseUrl).to.eql("http://127.0.0.1:1234")
-    })
+  describe('#constructor', () => {
+    it('creates a MockService when all mandatory parameters are provided', () => {
+      const mock = new MockService('consumer', 'provider', 1234);
+      expect(mock.baseUrl).to.eql('http://127.0.0.1:1234');
+    });
 
-    it("creates a MockService when all mandatory parameters are provided", () => {
+    it('creates a MockService when all mandatory parameters are provided', () => {
       const mock = new MockService(
-        "consumer",
-        "provider",
+        'consumer',
+        'provider',
         4443,
-        "127.0.0.2",
+        '127.0.0.2',
         true
-      )
-      expect(mock.baseUrl).to.eql("https://127.0.0.2:4443")
-    })
+      );
+      expect(mock.baseUrl).to.eql('https://127.0.0.2:4443');
+    });
 
-    it("creates a MockService when port is not provided", () => {
-      const mock = new MockService("consumer", "provider")
-      expect(mock).to.not.be.undefined
-      expect(mock.baseUrl).to.eql("http://127.0.0.1:1234")
-    })
+    it('creates a MockService when port is not provided', () => {
+      const mock = new MockService('consumer', 'provider');
+      expect(mock).to.not.be.undefined;
+      expect(mock.baseUrl).to.eql('http://127.0.0.1:1234');
+    });
 
-    it("does not create a MockService when consumer is not provided", () => {
+    it('does not create a MockService when consumer is not provided', () => {
       expect(() => {
-        new MockService("", "provider")
-      }).not.to.throw(Error)
-    })
+        new MockService('', 'provider');
+      }).not.to.throw(Error);
+    });
 
-    it("does not create a MockService when provider is not provided", () => {
+    it('does not create a MockService when provider is not provided', () => {
       expect(() => {
-        new MockService("consumer", "")
-      }).not.to.throw(Error)
-    })
-  })
+        new MockService('consumer', '');
+      }).not.to.throw(Error);
+    });
+  });
 
-  describe("#addInteraction", () => {
-    const mock = new MockService("consumer", "provider", 1234)
+  describe('#addInteraction', () => {
+    const mock = new MockService('consumer', 'provider', 1234);
 
-    const interaction = new Interaction()
+    const interaction = new Interaction();
     interaction
-      .uponReceiving("duh")
-      .withRequest({ method: HTTPMethods.GET, path: "/search" })
-      .willRespondWith({ status: 200 })
+      .uponReceiving('duh')
+      .withRequest({ method: HTTPMethods.GET, path: '/search' })
+      .willRespondWith({ status: 200 });
 
-    it("when Interaction added successfully", () => {
+    it('when Interaction added successfully', () => {
       nock(mock.baseUrl)
         .post(/interactions$/)
-        .reply(200)
+        .reply(200);
 
-      return expect(mock.addInteraction(interaction)).to.eventually
-    })
+      return expect(mock.addInteraction(interaction)).to.eventually;
+    });
 
-    it("when Interaction fails to be added", () => {
+    it('when Interaction fails to be added', () => {
       nock(mock.baseUrl)
         .post(/interactions$/)
-        .reply(500)
-      return expect(mock.addInteraction(interaction)).to.eventually.be.rejected
-    })
-  })
+        .reply(500);
+      return expect(mock.addInteraction(interaction)).to.eventually.be.rejected;
+    });
+  });
 
-  describe("#removeInteractions", () => {
-    const mock = new MockService("consumer", "provider", 1234)
+  describe('#removeInteractions', () => {
+    const mock = new MockService('consumer', 'provider', 1234);
 
-    it("when interactions are removed successfully", () => {
+    it('when interactions are removed successfully', () => {
       nock(mock.baseUrl)
         .delete(/interactions$/)
-        .reply(200)
+        .reply(200);
 
-      return expect(mock.removeInteractions()).to.eventually.be.fulfilled
-    })
+      return expect(mock.removeInteractions()).to.eventually.be.fulfilled;
+    });
 
-    it("when interactions fail to be removed", () => {
+    it('when interactions fail to be removed', () => {
       nock(mock.baseUrl)
         .delete(/interactions$/)
-        .reply(500)
+        .reply(500);
 
-      return expect(mock.removeInteractions()).to.eventually.be.rejected
-    })
-  })
+      return expect(mock.removeInteractions()).to.eventually.be.rejected;
+    });
+  });
 
-  describe("#verify", () => {
-    const mock = new MockService("consumer", "provider", 1234)
+  describe('#verify', () => {
+    const mock = new MockService('consumer', 'provider', 1234);
 
-    it("when verification is successful", () => {
+    it('when verification is successful', () => {
       nock(mock.baseUrl)
         .get(/interactions\/verification$/)
-        .reply(200)
+        .reply(200);
 
-      return expect(mock.verify()).to.eventually.be.fulfilled
-    })
+      return expect(mock.verify()).to.eventually.be.fulfilled;
+    });
 
-    it("when verification fails", () => {
+    it('when verification fails', () => {
       nock(mock.baseUrl)
         .get(/interactions\/verification$/)
-        .reply(500)
+        .reply(500);
 
-      return expect(mock.verify()).to.eventually.be.rejected
-    })
-  })
+      return expect(mock.verify()).to.eventually.be.rejected;
+    });
+  });
 
-  describe("#writePact", () => {
-    describe("when consumer and provider details provided", () => {
-      const mock = new MockService("aconsumer", "aprovider", 1234)
+  describe('#writePact', () => {
+    describe('when consumer and provider details provided', () => {
+      const mock = new MockService('aconsumer', 'aprovider', 1234);
 
-      describe("and writing is successful", () => {
-        it("writes the consumer and provider details into the pact", () => {
+      describe('and writing is successful', () => {
+        it('writes the consumer and provider details into the pact', () => {
           nock(mock.baseUrl)
             .post(/pact$/, {
-              consumer: { name: "aconsumer" },
-              pactfile_write_mode: "overwrite",
-              provider: { name: "aprovider" },
+              consumer: { name: 'aconsumer' },
+              pactfile_write_mode: 'overwrite',
+              provider: { name: 'aprovider' },
             })
-            .reply(200)
+            .reply(200);
 
-          return expect(mock.writePact()).to.eventually.be.fulfilled
-        })
-      })
+          return expect(mock.writePact()).to.eventually.be.fulfilled;
+        });
+      });
 
-      describe("and writing fails", () => {
-        it("returns a rejected promise", () => {
-          nock(mock.baseUrl).post(/pact$/, {}).reply(500)
+      describe('and writing fails', () => {
+        it('returns a rejected promise', () => {
+          nock(mock.baseUrl).post(/pact$/, {}).reply(500);
 
-          return expect(mock.writePact()).to.eventually.be.rejected
-        })
-      })
-    })
+          return expect(mock.writePact()).to.eventually.be.rejected;
+        });
+      });
+    });
 
-    describe("when consumer and provider details are not provided", () => {
-      const mock = new MockService(undefined, undefined, 1234)
-      it("does not write the consumer and provider details into the pact", () => {
-        nock(mock.baseUrl).post(/pact$/).reply(200)
+    describe('when consumer and provider details are not provided', () => {
+      const mock = new MockService(undefined, undefined, 1234);
+      it('does not write the consumer and provider details into the pact', () => {
+        nock(mock.baseUrl).post(/pact$/).reply(200);
 
-        return expect(mock.writePact()).to.eventually.be.fulfilled
-      })
-    })
-  })
-})
+        return expect(mock.writePact()).to.eventually.be.fulfilled;
+      });
+    });
+  });
+});

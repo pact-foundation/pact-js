@@ -1,146 +1,146 @@
-import chai from "chai"
-import chaiAsPromised from "chai-as-promised"
-import sinon from "sinon"
-import serviceFactory from "@pact-foundation/pact-core"
-import logger from "../../common/logger"
+import chai from 'chai';
+import chaiAsPromised from 'chai-as-promised';
+import sinon from 'sinon';
+import serviceFactory from '@pact-foundation/pact-core';
+import logger from '../../common/logger';
 
-import { VerifierOptions } from "./types"
+import { VerifierOptions } from './types';
 
-import * as proxy from "./proxy"
+import * as proxy from './proxy';
 
-import { Verifier } from "./verifier"
+import { Verifier } from './verifier';
 
-chai.use(chaiAsPromised)
+chai.use(chaiAsPromised);
 
-const { expect } = chai
+const { expect } = chai;
 
-describe("Verifier", () => {
+describe('Verifier', () => {
   afterEach(() => {
-    sinon.restore()
-  })
+    sinon.restore();
+  });
 
-  const state = "thing exists"
-  let v: Verifier
-  let opts: VerifierOptions
-  let executed: boolean
-  const providerBaseUrl = "http://not.exists"
+  const state = 'thing exists';
+  let v: Verifier;
+  let opts: VerifierOptions;
+  let executed: boolean;
+  const providerBaseUrl = 'http://not.exists';
 
   beforeEach(() => {
-    executed = false
+    executed = false;
     opts = {
       providerBaseUrl,
       requestFilter: (req, res, next) => {
-        next()
+        next();
       },
       stateHandlers: {
         [state]: () => {
-          executed = true
-          return Promise.resolve("done")
+          executed = true;
+          return Promise.resolve('done');
         },
       },
-    }
-  })
+    };
+  });
 
-  describe("#constructor", () => {
-    describe("when given configuration", () => {
-      it("sets the configuration on the object", () => {
-        v = new Verifier(opts)
+  describe('#constructor', () => {
+    describe('when given configuration', () => {
+      it('sets the configuration on the object', () => {
+        v = new Verifier(opts);
 
-        expect(v).to.have.deep.property("config").includes({
+        expect(v).to.have.deep.property('config').includes({
           providerBaseUrl,
-        })
-        expect(v).to.have.nested.property("config.stateHandlers")
-        expect(v).to.have.nested.property("config.requestFilter")
-      })
-    })
-  })
+        });
+        expect(v).to.have.nested.property('config.stateHandlers');
+        expect(v).to.have.nested.property('config.requestFilter');
+      });
+    });
+  });
 
-  describe("options handling", () => {
-    let spy: sinon.SinonSpy
+  describe('options handling', () => {
+    let spy: sinon.SinonSpy;
 
     beforeEach(() => {
-      spy = sinon.spy(serviceFactory, "logLevel")
-    })
+      spy = sinon.spy(serviceFactory, 'logLevel');
+    });
 
-    context("when logLevel is provided", () => {
-      it("sets the log level on pact node", () => {
+    context('when logLevel is provided', () => {
+      it('sets the log level on pact node', () => {
         v = new Verifier({
           ...opts,
-          logLevel: "debug",
-        })
-        expect(spy.callCount).to.eql(1)
-      })
-    })
+          logLevel: 'debug',
+        });
+        expect(spy.callCount).to.eql(1);
+      });
+    });
 
-    context("when logLevel is not provided", () => {
-      it("does not modify the log setting", () => {
+    context('when logLevel is not provided', () => {
+      it('does not modify the log setting', () => {
         v = new Verifier({
           ...opts,
-        })
-        expect(spy.callCount).to.eql(0)
-      })
-    })
-    context("when a deprecated field is provided", () => {
-      it("logs a warning", () => {
-        spy = sinon.spy(logger, "warn")
+        });
+        expect(spy.callCount).to.eql(0);
+      });
+    });
+    context('when a deprecated field is provided', () => {
+      it('logs a warning', () => {
+        spy = sinon.spy(logger, 'warn');
         v = new Verifier({
           ...opts,
-          providerStatesSetupUrl: "http://foo.com",
-        })
+          providerStatesSetupUrl: 'http://foo.com',
+        });
 
-        expect(spy.callCount).to.eql(1)
-      })
-    })
-  })
+        expect(spy.callCount).to.eql(1);
+      });
+    });
+  });
 
-  describe("#verifyProvider", () => {
+  describe('#verifyProvider', () => {
     beforeEach(() => {
-      sinon.stub(proxy, "createProxy" as any).returns({
+      sinon.stub(proxy, 'createProxy' as any).returns({
         close: () => {
-          executed = true
+          executed = true;
         },
-      })
-      sinon.stub(proxy, "waitForServerReady" as any).returns(Promise.resolve())
-    })
+      });
+      sinon.stub(proxy, 'waitForServerReady' as any).returns(Promise.resolve());
+    });
 
-    describe("when no configuration has been given", () => {
-      it("fails with an error", () =>
+    describe('when no configuration has been given', () => {
+      it('fails with an error', () =>
         expect(
           () => new Verifier((undefined as unknown) as VerifierOptions)
-        ).to.throw())
-    })
+        ).to.throw());
+    });
 
-    describe("when the verifier has been configured", () => {
+    describe('when the verifier has been configured', () => {
       beforeEach(() => {
-        v = new Verifier(opts)
-      })
-      context("and the verification runs successfully", () => {
-        it("closes the server and returns the result", () => {
+        v = new Verifier(opts);
+      });
+      context('and the verification runs successfully', () => {
+        it('closes the server and returns the result', () => {
           sinon
-            .stub(v, "runProviderVerification" as any)
-            .returns(Promise.resolve("done"))
+            .stub(v, 'runProviderVerification' as any)
+            .returns(Promise.resolve('done'));
 
-          const res = v.verifyProvider()
+          const res = v.verifyProvider();
 
           return expect(res).to.eventually.be.fulfilled.then(() => {
-            expect(executed).to.be.true
-          })
-        })
-      })
+            expect(executed).to.be.true;
+          });
+        });
+      });
 
-      context("and the verification fails", () => {
-        it("closes the server and returns the result", () => {
+      context('and the verification fails', () => {
+        it('closes the server and returns the result', () => {
           sinon
-            .stub(v, "runProviderVerification" as any)
-            .returns(() => Promise.reject(new Error("error")))
+            .stub(v, 'runProviderVerification' as any)
+            .returns(() => Promise.reject(new Error('error')));
 
-          const res = v.verifyProvider()
+          const res = v.verifyProvider();
 
           return expect(res).to.eventually.be.rejected.then(() => {
-            expect(executed).to.be.true
-          })
-        })
-      })
-    })
-  })
-})
+            expect(executed).to.be.true;
+          });
+        });
+      });
+    });
+  });
+});

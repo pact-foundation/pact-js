@@ -1,22 +1,22 @@
-import { XmlElement } from "./xmlElement"
+import { XmlElement } from './xmlElement';
 
 /**
  * XML Builder class for constructing XML documents with matchers
  */
 export class XmlBuilder {
-  private root: XmlElement
+  private root: XmlElement;
 
   constructor(
     private version: string,
     private charset: string,
     rootElement: string
   ) {
-    this.root = new XmlElement(rootElement)
+    this.root = new XmlElement(rootElement);
   }
 
   public build(callback: (doc: XmlElement) => void): XmlBuilder {
-    callback(this.root)
+    callback(this.root);
 
-    return this
+    return this;
   }
 }

@@ -16,79 +16,79 @@
  * @memberof Pact
  * @static
  */
-import * as MatchersStar from "./dsl/matchers"
+import * as MatchersStar from './dsl/matchers';
 
-export const Matchers = MatchersStar
+export const Matchers = MatchersStar;
 
-export * from "./httpPact"
+export * from './httpPact';
 
 /**
  * Exposes {@link MessageConsumerPact}
  * @memberof Pact
  * @static
  */
-export * from "./messageConsumerPact"
+export * from './messageConsumerPact';
 
 /**
  * Exposes {@link MessageProviderPact}
  * @memberof Pact
  * @static
  */
-export { MessageProviderPact } from "./messageProviderPact"
+export { MessageProviderPact } from './messageProviderPact';
 
 /**
  * Exposes {@link Message}
  * @memberof Pact
  * @static
  */
-export * from "./dsl/message"
+export * from './dsl/message';
 
 /**
  * Exposes {@link Verifier}
  * @memberof Pact
  * @static
  */
-export * from "./dsl/verifier/verifier"
+export * from './dsl/verifier/verifier';
 
 /**
  * Exposes {@link GraphQL}
  * @memberof Pact
  * @static
  */
-export * from "./dsl/graphql"
+export * from './dsl/graphql';
 /**
  * Exposes {@link ApolloGraphQL}
  * @memberof Pact
  * @static
  */
-export * from "./dsl/apolloGraphql"
+export * from './dsl/apolloGraphql';
 
 /**
  * Exposes {@link Interaction}
  * @memberof Pact
  * @static
  */
-export * from "./dsl/interaction"
+export * from './dsl/interaction';
 
 /**
  * Exposes {@link MockService}
  * @memberof Pact
  * @static
  */
-export * from "./dsl/mockService"
+export * from './dsl/mockService';
 
-export * from "./v3"
+export * from './v3';
 
 /**
  * Exposes {@link Publisher}
  * @memberof Pact
  * @static
  */
-export * from "./dsl/publisher"
+export * from './dsl/publisher';
 
 /**
  * Exposes {@link PactOptions}
  * @memberof Pact
  * @static
  */
-export * from "./dsl/options"
+export * from './dsl/options';

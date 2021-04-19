@@ -1,44 +1,44 @@
-const axios = require("axios")
-const parser = require("xml2json")
-const eyes = require("eyes")
-const R = require("ramda")
-const fs = require("fs")
+const axios = require('axios');
+const parser = require('xml2json');
+const eyes = require('eyes');
+const R = require('ramda');
+const fs = require('fs');
 
-let serverUrl = "http://localhost:2203"
+let serverUrl = 'http://localhost:2203';
 
 module.exports = {
-  getProjects: async (format = "json") => {
+  getProjects: async (format = 'json') => {
     return axios
-      .get(serverUrl + "/projects?from=today", {
+      .get(serverUrl + '/projects?from=today', {
         headers: {
-          Accept: "application/" + format,
+          Accept: 'application/' + format,
         },
       })
       .then((response) => {
-        console.log("todo response:")
-        eyes.inspect(response.data)
-        if (format.endsWith("xml")) {
-          const result = JSON.parse(parser.toJson(response.data))
-          console.dir(result, { depth: 10 })
-          return R.path(["ns1:projects"], result)
+        console.log('todo response:');
+        eyes.inspect(response.data);
+        if (format.endsWith('xml')) {
+          const result = JSON.parse(parser.toJson(response.data));
+          console.dir(result, { depth: 10 });
+          return R.path(['ns1:projects'], result);
         }
-        return response.data
+        return response.data;
       })
       .catch((error) => {
-        console.log("todo error", error.message)
-        return Promise.reject(error)
-      })
+        console.log('todo error', error.message);
+        return Promise.reject(error);
+      });
   },
   setUrl: function (url) {
-    serverUrl = url
-    return this
+    serverUrl = url;
+    return this;
   },
   postImage: (id, image) => {
-    const data = fs.readFileSync(image)
-    return axios.post(serverUrl + "/projects/" + id + "/images", data, {
+    const data = fs.readFileSync(image);
+    return axios.post(serverUrl + '/projects/' + id + '/images', data, {
       headers: {
-        "Content-Type": "application/octet-stream",
+        'Content-Type': 'application/octet-stream',
       },
-    })
+    });
   },
-}
+};

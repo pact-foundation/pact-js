@@ -2,23 +2,23 @@
  * @module Message
  */
 
-import { isEmpty, cloneDeep } from "lodash"
-import serviceFactory from "@pact-foundation/pact-core"
-import { AnyJson } from "common/jsonTypes"
-import { extractPayload, AnyTemplate } from "./dsl/matchers"
-import { qToPromise } from "./common/utils"
+import { isEmpty, cloneDeep } from 'lodash';
+import serviceFactory from '@pact-foundation/pact-core';
+import { AnyJson } from 'common/jsonTypes';
+import { extractPayload, AnyTemplate } from './dsl/matchers';
+import { qToPromise } from './common/utils';
 import {
   Metadata,
   Message,
   MessageConsumer,
   ConcreteMessage,
-} from "./dsl/message"
-import logger, { setLogLevel } from "./common/logger"
-import { MessageConsumerOptions } from "./dsl/options"
-import ConfigurationError from "./errors/configurationError"
+} from './dsl/message';
+import logger, { setLogLevel } from './common/logger';
+import { MessageConsumerOptions } from './dsl/options';
+import ConfigurationError from './errors/configurationError';
 
 const isMessage = (x: Message | unknown): x is Message =>
-  (x as Message).contents !== undefined
+  (x as Message).contents !== undefined;
 
 /**
  * A Message Consumer is analagous to a Provider in the HTTP Interaction model.
@@ -27,17 +27,17 @@ const isMessage = (x: Message | unknown): x is Message =>
  */
 export class MessageConsumerPact {
   // Build up a valid Message object
-  private state: Partial<Message> = {}
+  private state: Partial<Message> = {};
 
   // eslint-disable-next-line class-methods-use-this
   private getServiceFactory() {
-    return serviceFactory
+    return serviceFactory;
   }
 
   constructor(private config: MessageConsumerOptions) {
     if (!isEmpty(config.logLevel)) {
-      setLogLevel(config.logLevel)
-      serviceFactory.logLevel(config.logLevel)
+      setLogLevel(config.logLevel);
+      serviceFactory.logLevel(config.logLevel);
     }
   }
 
@@ -56,10 +56,10 @@ export class MessageConsumerPact {
         {
           name: providerState,
         },
-      ]
+      ];
     }
 
-    return this
+    return this;
   }
 
   /**
@@ -71,12 +71,12 @@ export class MessageConsumerPact {
   public expectsToReceive(description: string): MessageConsumerPact {
     if (isEmpty(description)) {
       throw new ConfigurationError(
-        "You must provide a description for the Message."
-      )
+        'You must provide a description for the Message.'
+      );
     }
-    this.state.description = description
+    this.state.description = description;
 
-    return this
+    return this;
   }
 
   /**
@@ -90,12 +90,12 @@ export class MessageConsumerPact {
   public withContent(content: AnyTemplate): MessageConsumerPact {
     if (isEmpty(content)) {
       throw new ConfigurationError(
-        "You must provide a valid JSON document or primitive for the Message."
-      )
+        'You must provide a valid JSON document or primitive for the Message.'
+      );
     }
-    this.state.contents = content
+    this.state.contents = content;
 
-    return this
+    return this;
   }
 
   /**
@@ -107,12 +107,12 @@ export class MessageConsumerPact {
   public withMetadata(metadata: Metadata): MessageConsumerPact {
     if (isEmpty(metadata)) {
       throw new ConfigurationError(
-        "You must provide valid metadata for the Message, or none at all"
-      )
+        'You must provide valid metadata for the Message, or none at all'
+      );
     }
-    this.state.metadata = metadata
+    this.state.metadata = metadata;
 
-    return this
+    return this;
   }
 
   /**
@@ -121,7 +121,7 @@ export class MessageConsumerPact {
    * @returns {Message}
    */
   public json(): Message {
-    return this.state as Message
+    return this.state as Message;
   }
 
   /**
@@ -131,7 +131,7 @@ export class MessageConsumerPact {
    * @returns {Promise}
    */
   public verify(handler: MessageConsumer): Promise<unknown> {
-    logger.info("Verifying message")
+    logger.info('Verifying message');
 
     return this.validate()
       .then(() => cloneDeep(this.state))
@@ -149,7 +149,7 @@ export class MessageConsumerPact {
             spec: 3,
           })
         )
-      )
+      );
   }
 
   /**
@@ -159,11 +159,11 @@ export class MessageConsumerPact {
    */
   public validate(): Promise<unknown> {
     if (isMessage(this.state)) {
-      return Promise.resolve()
+      return Promise.resolve();
     }
     return Promise.reject(
-      new Error("message has not yet been properly constructed")
-    )
+      new Error('message has not yet been properly constructed')
+    );
   }
 }
 
@@ -175,17 +175,17 @@ export function synchronousBodyHandler<R>(
   handler: (body: AnyJson) => R
 ): MessageConsumer {
   return (m: ConcreteMessage): Promise<R> => {
-    const body = m.contents
+    const body = m.contents;
 
     return new Promise((resolve, reject) => {
       try {
-        const res = handler(body)
-        resolve(res)
+        const res = handler(body);
+        resolve(res);
       } catch (e) {
-        reject(e)
+        reject(e);
       }
-    })
-  }
+    });
+  };
 }
 
 // bodyHandler takes an asynchronous (promisified) function and returns
@@ -194,5 +194,5 @@ export function synchronousBodyHandler<R>(
 export function asynchronousBodyHandler<R>(
   handler: (body: AnyJson) => Promise<R>
 ): MessageConsumer {
-  return (m: ConcreteMessage) => handler(m.contents)
+  return (m: ConcreteMessage) => handler(m.contents);
 }

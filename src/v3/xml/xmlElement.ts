@@ -1,34 +1,34 @@
-import { Matcher } from "v3/matchers"
-import { XmlNode } from "./xmlNode"
-import { XmlText } from "./xmlText"
+import { Matcher } from 'v3/matchers';
+import { XmlNode } from './xmlNode';
+import { XmlText } from './xmlText';
 
-export type XmlAttributes = Map<string, string>
-export type XmlCallback = (n: XmlElement) => void
+export type XmlAttributes = Map<string, string>;
+export type XmlCallback = (n: XmlElement) => void;
 
 const modifyElementWithCallback = (el: XmlElement, cb?: XmlCallback) => {
   if (cb) {
-    cb(el)
+    cb(el);
   }
-}
+};
 export class XmlElement extends XmlNode {
-  private attributes: XmlAttributes
+  private attributes: XmlAttributes;
 
-  private children: XmlNode[] = []
+  private children: XmlNode[] = [];
 
   constructor(public name: string) {
-    super()
+    super();
   }
 
   public setName(name: string): XmlElement {
-    this.name = name
+    this.name = name;
 
-    return this
+    return this;
   }
 
   public setAttributes(attributes: XmlAttributes): XmlElement {
-    this.attributes = attributes
+    this.attributes = attributes;
 
-    return this
+    return this;
   }
 
   /**
@@ -42,33 +42,33 @@ export class XmlElement extends XmlNode {
     attributes: XmlAttributes,
     arg?: string | XmlCallback | Matcher<string>
   ): XmlElement {
-    const el = new XmlElement(name).setAttributes(attributes)
+    const el = new XmlElement(name).setAttributes(attributes);
     if (arg) {
-      if (typeof arg !== "function") {
-        el.appendText(arg)
+      if (typeof arg !== 'function') {
+        el.appendText(arg);
       } else {
-        modifyElementWithCallback(el, arg)
+        modifyElementWithCallback(el, arg);
       }
     }
-    this.children.push(el)
+    this.children.push(el);
 
-    return this
+    return this;
   }
 
   public appendText(content: string | Matcher<string>): XmlElement {
-    if (typeof context === "string") {
-      this.children.push(new XmlText(content as string))
-    } else if (content as Matcher<string>["pact:matcher:type"]) {
+    if (typeof context === 'string') {
+      this.children.push(new XmlText(content as string));
+    } else if (content as Matcher<string>['pact:matcher:type']) {
       this.children.push(
         new XmlText(
-          (content as Matcher<string>).value || "",
+          (content as Matcher<string>).value || '',
           content as Matcher<string>
         )
-      )
+      );
     } else {
-      this.children.push(new XmlText(content.toString()))
+      this.children.push(new XmlText(content.toString()));
     }
-    return this
+    return this;
   }
 
   public eachLike(
@@ -77,20 +77,20 @@ export class XmlElement extends XmlNode {
     cb?: XmlCallback,
     options: EachLikeOptions = { examples: 1 }
   ): XmlElement {
-    const el = new XmlElement(name).setAttributes(attributes)
-    modifyElementWithCallback(el, cb)
+    const el = new XmlElement(name).setAttributes(attributes);
+    modifyElementWithCallback(el, cb);
     this.children.push({
-      "pact:matcher:type": "type",
+      'pact:matcher:type': 'type',
       value: el,
       examples: options.examples,
-    })
+    });
 
-    return this
+    return this;
   }
 }
 
 interface EachLikeOptions {
-  min?: number
-  max?: number
-  examples?: number
+  min?: number;
+  max?: number;
+  examples?: number;
 }

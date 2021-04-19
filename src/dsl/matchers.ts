@@ -4,29 +4,29 @@
  * but are fixed, to prevent contract invalidation after each run of the consumer test.
  */
 
-import { AnyJson, JsonMap } from "common/jsonTypes"
-import { isFunction, isNil, isEmpty, isUndefined } from "lodash"
-import MatcherError from "../errors/matcherError"
+import { AnyJson, JsonMap } from 'common/jsonTypes';
+import { isFunction, isNil, isEmpty, isUndefined } from 'lodash';
+import MatcherError from '../errors/matcherError';
 
 // Note: The following regexes are Ruby formatted,
 // so attempting to parse as JS without modification is probably not going to work as intended!
 /* tslint:disable:max-line-length */
-export const EMAIL_FORMAT = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$"
+export const EMAIL_FORMAT = '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$';
 export const ISO8601_DATE_FORMAT =
-  "^([\\+-]?\\d{4}(?!\\d{2}\\b))((-?)((0[1-9]|1[0-2])(\\3([12]\\d|0[1-9]|3[01]))?|W([0-4]\\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\\d|[12]\\d{2}|3([0-5]\\d|6[1-6])))?)$"
+  '^([\\+-]?\\d{4}(?!\\d{2}\\b))((-?)((0[1-9]|1[0-2])(\\3([12]\\d|0[1-9]|3[01]))?|W([0-4]\\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\\d|[12]\\d{2}|3([0-5]\\d|6[1-6])))?)$';
 export const ISO8601_DATETIME_FORMAT =
-  "^\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d([+-][0-2]\\d:[0-5]\\d|Z)$"
+  '^\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d([+-][0-2]\\d:[0-5]\\d|Z)$';
 export const ISO8601_DATETIME_WITH_MILLIS_FORMAT =
-  "^\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d\\.\\d+([+-][0-2]\\d(:?[0-5]\\d)?|Z)$"
+  '^\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d\\.\\d+([+-][0-2]\\d(:?[0-5]\\d)?|Z)$';
 export const ISO8601_TIME_FORMAT =
-  "^(T\\d\\d:\\d\\d(:\\d\\d)?(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?)?$"
+  '^(T\\d\\d:\\d\\d(:\\d\\d)?(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?)?$';
 export const RFC3339_TIMESTAMP_FORMAT =
-  "^(Mon|Tue|Wed|Thu|Fri|Sat|Sun),\\s\\d{2}\\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\\s\\d{4}\\s\\d{2}:\\d{2}:\\d{2}\\s(\\+|-)\\d{4}$"
-export const UUID_V4_FORMAT = "^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
-export const IPV4_FORMAT = "^(\\d{1,3}\\.)+\\d{1,3}$"
+  '^(Mon|Tue|Wed|Thu|Fri|Sat|Sun),\\s\\d{2}\\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\\s\\d{4}\\s\\d{2}:\\d{2}:\\d{2}\\s(\\+|-)\\d{4}$';
+export const UUID_V4_FORMAT = '^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$';
+export const IPV4_FORMAT = '^(\\d{1,3}\\.)+\\d{1,3}$';
 export const IPV6_FORMAT =
-  "^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$"
-export const HEX_FORMAT = "^[0-9a-fA-F]+$"
+  '^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$';
+export const HEX_FORMAT = '^[0-9a-fA-F]+$';
 /* tslint:enable */
 
 /**
@@ -37,7 +37,7 @@ export const HEX_FORMAT = "^[0-9a-fA-F]+$"
  */
 export function validateExample(example: string, matcher: string): boolean {
   // Note we escape the double \\ as these get sent over the wire as JSON
-  return new RegExp(matcher.replace("\\\\", "\\")).test(example)
+  return new RegExp(matcher.replace('\\\\', '\\')).test(example);
 }
 
 /**
@@ -52,24 +52,24 @@ export function eachLike<T>(
 ): ArrayMatcher<T> {
   if (isUndefined(content)) {
     throw new MatcherError(
-      "Error creating a Pact eachLike. Please provide a content argument"
-    )
+      'Error creating a Pact eachLike. Please provide a content argument'
+    );
   }
 
   if (opts && (isNil(opts.min) || opts.min < 1)) {
     throw new MatcherError(
-      "Error creating a Pact eachLike. Please provide opts.min that is > 0"
-    )
+      'Error creating a Pact eachLike. Please provide opts.min that is > 0'
+    );
   }
 
-  const min = !isEmpty(opts) && opts ? opts.min : 1
+  const min = !isEmpty(opts) && opts ? opts.min : 1;
 
   return {
     contents: content,
     getValue: () => Array.from(new Array(min), () => content),
-    json_class: "Pact::ArrayLike",
+    json_class: 'Pact::ArrayLike',
     min,
-  }
+  };
 }
 
 /**
@@ -79,15 +79,15 @@ export function eachLike<T>(
 export function somethingLike<T>(value: T): Matcher<T> {
   if (isNil(value) || isFunction(value)) {
     throw new MatcherError(
-      "Error creating a Pact somethingLike Match. Value cannot be a function or undefined"
-    )
+      'Error creating a Pact somethingLike Match. Value cannot be a function or undefined'
+    );
   }
 
   return {
     contents: value,
     getValue: () => value,
-    json_class: "Pact::SomethingLike",
-  }
+    json_class: 'Pact::SomethingLike',
+  };
 }
 
 /**
@@ -97,34 +97,34 @@ export function somethingLike<T>(value: T): Matcher<T> {
  * @param {string} opts.matcher - a Regex representing the value
  */
 export function term(opts: {
-  generate: string
-  matcher: string
+  generate: string;
+  matcher: string;
 }): Matcher<string> {
-  const { generate, matcher } = opts
+  const { generate, matcher } = opts;
 
   if (isNil(generate) || isNil(matcher)) {
     throw new MatcherError(`Error creating a Pact Term.
-      Please provide an object containing "generate" and "matcher" properties`)
+      Please provide an object containing "generate" and "matcher" properties`);
   }
 
   if (!validateExample(generate, matcher)) {
     throw new MatcherError(
       `Example '${generate}' does not match provided regular expression '${matcher}'`
-    )
+    );
   }
 
   return {
     data: {
       generate,
       matcher: {
-        json_class: "Regexp",
+        json_class: 'Regexp',
         o: 0,
         s: matcher,
       },
     },
     getValue: () => generate,
-    json_class: "Pact::Term",
-  }
+    json_class: 'Pact::Term',
+  };
 }
 
 /**
@@ -133,9 +133,9 @@ export function term(opts: {
  */
 export function email(address?: string): Matcher<string> {
   return term({
-    generate: address || "hello@pact.io",
+    generate: address || 'hello@pact.io',
     matcher: EMAIL_FORMAT,
-  })
+  });
 }
 
 /**
@@ -144,9 +144,9 @@ export function email(address?: string): Matcher<string> {
  */
 export function uuid(id?: string): Matcher<string> {
   return term({
-    generate: id || "ce118b6e-d8e1-11e7-9296-cec278b6b50a",
+    generate: id || 'ce118b6e-d8e1-11e7-9296-cec278b6b50a',
     matcher: UUID_V4_FORMAT,
-  })
+  });
 }
 
 /**
@@ -155,9 +155,9 @@ export function uuid(id?: string): Matcher<string> {
  */
 export function ipv4Address(ip?: string): Matcher<string> {
   return term({
-    generate: ip || "127.0.0.13",
+    generate: ip || '127.0.0.13',
     matcher: IPV4_FORMAT,
-  })
+  });
 }
 
 /**
@@ -166,9 +166,9 @@ export function ipv4Address(ip?: string): Matcher<string> {
  */
 export function ipv6Address(ip?: string): Matcher<string> {
   return term({
-    generate: ip || "::ffff:192.0.2.128",
+    generate: ip || '::ffff:192.0.2.128',
     matcher: IPV6_FORMAT,
-  })
+  });
 }
 
 /**
@@ -178,9 +178,9 @@ export function ipv6Address(ip?: string): Matcher<string> {
  */
 export function iso8601DateTime(date?: string): Matcher<string> {
   return term({
-    generate: date || "2015-08-06T16:53:10+01:00",
+    generate: date || '2015-08-06T16:53:10+01:00',
     matcher: ISO8601_DATETIME_FORMAT,
-  })
+  });
 }
 
 /**
@@ -189,9 +189,9 @@ export function iso8601DateTime(date?: string): Matcher<string> {
  */
 export function iso8601DateTimeWithMillis(date?: string): Matcher<string> {
   return term({
-    generate: date || "2015-08-06T16:53:10.123+01:00",
+    generate: date || '2015-08-06T16:53:10.123+01:00',
     matcher: ISO8601_DATETIME_WITH_MILLIS_FORMAT,
-  })
+  });
 }
 
 /**
@@ -200,9 +200,9 @@ export function iso8601DateTimeWithMillis(date?: string): Matcher<string> {
  */
 export function iso8601Date(date?: string): Matcher<string> {
   return term({
-    generate: date || "2013-02-01",
+    generate: date || '2013-02-01',
     matcher: ISO8601_DATE_FORMAT,
-  })
+  });
 }
 
 /**
@@ -211,9 +211,9 @@ export function iso8601Date(date?: string): Matcher<string> {
  */
 export function iso8601Time(time?: string): Matcher<string> {
   return term({
-    generate: time || "T22:44:30.652Z",
+    generate: time || 'T22:44:30.652Z',
     matcher: ISO8601_TIME_FORMAT,
-  })
+  });
 }
 
 /**
@@ -222,9 +222,9 @@ export function iso8601Time(time?: string): Matcher<string> {
  */
 export function rfc3339Timestamp(timestamp?: string): Matcher<string> {
   return term({
-    generate: timestamp || "Mon, 31 Oct 2016 15:21:41 -0400",
+    generate: timestamp || 'Mon, 31 Oct 2016 15:21:41 -0400',
     matcher: RFC3339_TIMESTAMP_FORMAT,
-  })
+  });
 }
 
 /**
@@ -233,9 +233,9 @@ export function rfc3339Timestamp(timestamp?: string): Matcher<string> {
  */
 export function hexadecimal(hex?: string): Matcher<string> {
   return term({
-    generate: hex || "3F",
+    generate: hex || '3F',
     matcher: HEX_FORMAT,
-  })
+  });
 }
 
 /**
@@ -243,7 +243,7 @@ export function hexadecimal(hex?: string): Matcher<string> {
  * @param {float} float - a decimal value.
  */
 export function decimal(float?: number): Matcher<number> {
-  return somethingLike<number>(isNil(float) ? 13.01 : float)
+  return somethingLike<number>(isNil(float) ? 13.01 : float);
 }
 
 /**
@@ -251,46 +251,46 @@ export function decimal(float?: number): Matcher<number> {
  * @param {integer} int - an int value.
  */
 export function integer(int?: number): Matcher<number> {
-  return somethingLike<number>(isNil(int) ? 13 : int)
+  return somethingLike<number>(isNil(int) ? 13 : int);
 }
 
 /**
  * Boolean Matcher.
  */
 export function boolean(value = true): Matcher<boolean> {
-  return somethingLike<boolean>(value)
+  return somethingLike<boolean>(value);
 }
 
 /**
  * String Matcher.
  */
-export function string(value = "iloveorange"): Matcher<string> {
-  return somethingLike<string>(value)
+export function string(value = 'iloveorange'): Matcher<string> {
+  return somethingLike<string>(value);
 }
 
 // Convenience alias'
-export { somethingLike as like }
-export { term as regex }
+export { somethingLike as like };
+export { term as regex };
 
 export interface Matcher<T> {
   data?: {
-    generate: string
-    matcher: { json_class: string; o: number; s: string }
-  }
-  contents?: T
-  json_class: string
-  getValue(): T
+    generate: string;
+    matcher: { json_class: string; o: number; s: string };
+  };
+  contents?: T;
+  json_class: string;
+  getValue(): T;
 }
 
 export interface ArrayMatcher<T> {
-  contents: T
-  json_class: string
-  getValue(): T[]
-  min: number
+  contents: T;
+  json_class: string;
+  getValue(): T[];
+  min: number;
 }
 
 export function isMatcher(x: AnyTemplate): x is Matcher<AnyTemplate> {
-  return x != null && (x as Matcher<AnyTemplate>).getValue !== undefined
+  return x != null && (x as Matcher<AnyTemplate>).getValue !== undefined;
 }
 
 export type AnyTemplate =
@@ -298,25 +298,25 @@ export type AnyTemplate =
   | Matcher<AnyTemplate>
   | ArrayMatcher<AnyTemplate>
   | TemplateMap
-  | ArrayTemplate
+  | ArrayTemplate;
 
 interface TemplateMap {
-  [key: string]: AnyTemplate
+  [key: string]: AnyTemplate;
 }
-type ArrayTemplate = Array<AnyTemplate>
+type ArrayTemplate = Array<AnyTemplate>;
 
 // Recurse the object removing any underlying matching guff, returning
 // the raw example content
 export function extractPayload(value: AnyTemplate): AnyJson {
   if (isMatcher(value)) {
-    return extractPayload(value.getValue())
+    return extractPayload(value.getValue());
   }
 
-  if (Object.prototype.toString.call(value) === "[object Array]") {
-    return (value as Array<AnyTemplate>).map(extractPayload)
+  if (Object.prototype.toString.call(value) === '[object Array]') {
+    return (value as Array<AnyTemplate>).map(extractPayload);
   }
 
-  if (value !== null && typeof value === "object") {
+  if (value !== null && typeof value === 'object') {
     return Object.keys(value).reduce(
       (acc: JsonMap, propName: string) => ({
         ...acc,
@@ -325,7 +325,7 @@ export function extractPayload(value: AnyTemplate): AnyJson {
         ),
       }),
       {}
-    )
+    );
   }
-  return value
+  return value;
 }

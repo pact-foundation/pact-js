@@ -1,5 +1,5 @@
-export type AnyJson = boolean | number | string | null | JsonArray | JsonMap
+export type AnyJson = boolean | number | string | null | JsonArray | JsonMap;
 export interface JsonMap {
-  [key: string]: AnyJson
+  [key: string]: AnyJson;
 }
-export type JsonArray = Array<AnyJson>
+export type JsonArray = Array<AnyJson>;

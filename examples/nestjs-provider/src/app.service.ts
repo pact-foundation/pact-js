@@ -1,6 +1,6 @@
-import { Injectable } from "@nestjs/common"
-import { AppRepository } from "./app.repository"
-import { Animal } from "./animal.interface"
+import { Injectable } from '@nestjs/common';
+import { AppRepository } from './app.repository';
+import { Animal } from './animal.interface';
 
 @Injectable()
 export class AppService {
@@ -8,7 +8,7 @@ export class AppService {
 
   public availableAnimals(): Animal[] {
     return this.repository.fetchAll().filter((animal) => {
-      return animal.eligibility.available
-    })
+      return animal.eligibility.available;
+    });
   }
 }

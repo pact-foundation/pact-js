@@ -1,13 +1,13 @@
-const path = require("path")
-const chai = require("chai")
-const chaiAsPromised = require("chai-as-promised")
-const expect = chai.expect
-const { PactV3, MatchersV3, XmlBuilder } = require("@pact-foundation/pact/v3")
-const LOG_LEVEL = process.env.LOG_LEVEL || "WARN"
+const path = require('path');
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+const expect = chai.expect;
+const { PactV3, MatchersV3, XmlBuilder } = require('@pact-foundation/pact/v3');
+const LOG_LEVEL = process.env.LOG_LEVEL || 'WARN';
 
-chai.use(chaiAsPromised)
+chai.use(chaiAsPromised);
 
-describe("Pact V3", () => {
+describe('Pact V3', () => {
   // Alias flexible matchers for simplicity
   const {
     eachLike,
@@ -19,30 +19,30 @@ describe("Pact V3", () => {
     regex,
     like,
     eachKeyLike,
-  } = MatchersV3
+  } = MatchersV3;
 
   // Animal we want to match :)
   const suitor = {
     id: 2,
-    available_from: "2017-12-04T14:47:18.582Z",
-    first_name: "Nanny",
-    animal: "goat",
-    last_name: "Doe",
+    available_from: '2017-12-04T14:47:18.582Z',
+    first_name: 'Nanny',
+    animal: 'goat',
+    last_name: 'Doe',
     age: 27,
-    gender: "F",
+    gender: 'F',
     location: {
-      description: "Werribee Zoo",
-      country: "Australia",
+      description: 'Werribee Zoo',
+      country: 'Australia',
       post_code: 3000,
     },
     eligibility: {
       available: true,
       previously_married: true,
     },
-    interests: ["walks in the garden/meadow", "parkour"],
-  }
+    interests: ['walks in the garden/meadow', 'parkour'],
+  };
 
-  const MIN_ANIMALS = 2
+  const MIN_ANIMALS = 2;
 
   // Define animal payload, with flexible matchers
   //
@@ -53,29 +53,29 @@ describe("Pact V3", () => {
   const animalBodyExpectation = {
     id: integer(1),
     available_from: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
-    first_name: string("Billy"),
-    last_name: string("Goat"),
-    animal: string("goat"),
+    first_name: string('Billy'),
+    last_name: string('Goat'),
+    animal: string('goat'),
     age: integer(21),
-    gender: regex("F|M", "M"),
+    gender: regex('F|M', 'M'),
     location: {
-      description: string("Melbourne Zoo"),
-      country: string("Australia"),
+      description: string('Melbourne Zoo'),
+      country: string('Australia'),
       post_code: integer(3000),
     },
     eligibility: {
       available: boolean(true),
       previously_married: boolean(false),
     },
-    interests: eachLike("walks in the garden/meadow"),
-    identifiers: eachKeyLike("004", {
-      id: regex("[0-9]+", "004"),
-      description: like("thing"),
+    interests: eachLike('walks in the garden/meadow'),
+    identifiers: eachKeyLike('004', {
+      id: regex('[0-9]+', '004'),
+      description: like('thing'),
     }),
-  }
+  };
 
   // Define animal list payload, reusing existing object matcher
-  const animalListExpectation = atLeastLike(animalBodyExpectation, MIN_ANIMALS)
+  const animalListExpectation = atLeastLike(animalBodyExpectation, MIN_ANIMALS);
 
   // Configure and import consumer API
   // Note that we update the API endpoint to point at the Mock Service
@@ -85,489 +85,489 @@ describe("Pact V3", () => {
     getAnimalById,
     getAnimalsAsXML,
     availableAnimals,
-  } = require("../consumer")
+  } = require('../consumer');
 
   // Verify service client works as expected.
   //
   // Note that we don't call the consumer API endpoints directly, but
   // use unit-style tests that test the collaborating function behaviour -
   // we want to test the function that is calling the external service.
-  describe("when a call to list all animals from the Animal Service is made", () => {
-    describe("and the user is not authenticated", () => {
+  describe('when a call to list all animals from the Animal Service is made', () => {
+    describe('and the user is not authenticated', () => {
       const provider = new PactV3({
-        consumer: "Matching Service V3",
-        provider: "Animal Profile Service V3",
-        dir: path.resolve(process.cwd(), "pacts"),
+        consumer: 'Matching Service V3',
+        provider: 'Animal Profile Service V3',
+        dir: path.resolve(process.cwd(), 'pacts'),
         cors: true,
-      })
+      });
 
       before(() =>
         provider
-          .given("is not authenticated")
-          .uponReceiving("a request for all animals")
+          .given('is not authenticated')
+          .uponReceiving('a request for all animals')
           .withRequest({
-            path: "/animals/available",
+            path: '/animals/available',
           })
           .willRespondWith({
             status: 401,
           })
-      )
+      );
 
-      it("returns a 401 unauthorized", () => {
+      it('returns a 401 unauthorized', () => {
         return provider.executeTest((mockserver) => {
           return expect(
             suggestion(suitor, () => mockserver.url)
-          ).to.eventually.be.rejectedWith("Unauthorized")
-        })
-      })
-    })
-    describe("and the user is authenticated", () => {
-      describe("and there are animals in the database", () => {
-        it("returns a list of animals", () => {
+          ).to.eventually.be.rejectedWith('Unauthorized');
+        });
+      });
+    });
+    describe('and the user is authenticated', () => {
+      describe('and there are animals in the database', () => {
+        it('returns a list of animals', () => {
           const provider = new PactV3({
-            consumer: "Matching Service V3",
-            provider: "Animal Profile Service V3",
-            dir: path.resolve(process.cwd(), "pacts"),
-          })
+            consumer: 'Matching Service V3',
+            provider: 'Animal Profile Service V3',
+            dir: path.resolve(process.cwd(), 'pacts'),
+          });
           provider
-            .given("is authenticated")
-            .given("Has some animals")
-            .uponReceiving("a request for all animals")
+            .given('is authenticated')
+            .given('Has some animals')
+            .uponReceiving('a request for all animals')
             .withRequest({
-              path: "/animals/available",
-              headers: { Authorization: "Bearer token" },
+              path: '/animals/available',
+              headers: { Authorization: 'Bearer token' },
             })
             .willRespondWith({
               status: 200,
               headers: {
-                "Content-Type": "application/json; charset=utf-8",
+                'Content-Type': 'application/json; charset=utf-8',
               },
               body: animalListExpectation,
-            })
+            });
 
           return provider.executeTest((mockserver) => {
-            const suggestedMates = suggestion(suitor, () => mockserver.url)
+            const suggestedMates = suggestion(suitor, () => mockserver.url);
             return Promise.all([
               expect(suggestedMates).to.eventually.have.deep.property(
-                "suggestions[0].score",
+                'suggestions[0].score',
                 94
               ),
               expect(suggestedMates)
-                .to.eventually.have.property("suggestions")
+                .to.eventually.have.property('suggestions')
                 .with.lengthOf(MIN_ANIMALS),
-            ])
-          })
-        })
+            ]);
+          });
+        });
 
-        it("returns a filtered list of animals", () => {
+        it('returns a filtered list of animals', () => {
           const provider = new PactV3({
-            consumer: "Matching Service V3",
-            provider: "Animal Profile Service V3",
-            dir: path.resolve(process.cwd(), "pacts"),
+            consumer: 'Matching Service V3',
+            provider: 'Animal Profile Service V3',
+            dir: path.resolve(process.cwd(), 'pacts'),
             port: 1234,
-          })
+          });
           provider
-            .given("is authenticated")
-            .given("Has some animals")
-            .uponReceiving("a request for all animals filtered by query")
+            .given('is authenticated')
+            .given('Has some animals')
+            .uponReceiving('a request for all animals filtered by query')
             .withRequest({
-              path: "/animals/available",
-              headers: { Authorization: "Bearer token" },
+              path: '/animals/available',
+              headers: { Authorization: 'Bearer token' },
               query: {
-                first_name: "Billy",
+                first_name: 'Billy',
               },
             })
             .willRespondWith({
               status: 200,
               headers: {
-                "Content-Type": "application/json; charset=utf-8",
+                'Content-Type': 'application/json; charset=utf-8',
               },
               body: [
                 {
                   id: integer(1),
                   available_from: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
-                  first_name: string("Billy"),
-                  last_name: string("Goat"),
-                  animal: string("goat"),
+                  first_name: string('Billy'),
+                  last_name: string('Goat'),
+                  animal: string('goat'),
                   age: integer(21),
-                  gender: regex("F|M", "M"),
+                  gender: regex('F|M', 'M'),
                   location: {
-                    description: string("Melbourne Zoo"),
-                    country: string("Australia"),
+                    description: string('Melbourne Zoo'),
+                    country: string('Australia'),
                     post_code: integer(3000),
                   },
                   eligibility: {
                     available: boolean(true),
                     previously_married: boolean(false),
                   },
-                  interests: eachLike("walks in the garden/meadow"),
+                  interests: eachLike('walks in the garden/meadow'),
                 },
               ],
-            })
+            });
           return provider.executeTest((mockserver) => {
             return availableAnimals(() => mockserver.url, {
-              first_name: "Billy",
+              first_name: 'Billy',
             }).then((available) => {
-              expect(available[0]).to.contain({ first_name: "Billy" })
-              expect(available).to.have.lengthOf(1)
-            })
-          })
-        })
-        it("returns a filtered list of animals (query containing chinese characters)", () => {
+              expect(available[0]).to.contain({ first_name: 'Billy' });
+              expect(available).to.have.lengthOf(1);
+            });
+          });
+        });
+        it('returns a filtered list of animals (query containing chinese characters)', () => {
           const provider = new PactV3({
-            consumer: "Matching Service V3",
-            provider: "Animal Profile Service V3",
-            dir: path.resolve(process.cwd(), "pacts"),
-          })
+            consumer: 'Matching Service V3',
+            provider: 'Animal Profile Service V3',
+            dir: path.resolve(process.cwd(), 'pacts'),
+          });
           provider
-            .given("is authenticated")
-            .given("Has some animals")
+            .given('is authenticated')
+            .given('Has some animals')
             .uponReceiving(
-              "a request for all animals filtered by a query containing chinese characters"
+              'a request for all animals filtered by a query containing chinese characters'
             )
             .withRequest({
-              path: "/animals/available",
-              headers: { Authorization: "Bearer token" },
+              path: '/animals/available',
+              headers: { Authorization: 'Bearer token' },
               query: {
-                first_name: "比利",
+                first_name: '比利',
               },
             })
             .willRespondWith({
               status: 200,
               headers: {
-                "Content-Type": "application/json; charset=utf-8",
+                'Content-Type': 'application/json; charset=utf-8',
               },
               body: [
                 {
                   id: integer(1),
                   available_from: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
-                  first_name: string("比利"),
-                  last_name: string("Goat"),
-                  animal: string("goat"),
+                  first_name: string('比利'),
+                  last_name: string('Goat'),
+                  animal: string('goat'),
                   age: integer(21),
-                  gender: regex("F|M", "M"),
+                  gender: regex('F|M', 'M'),
                   location: {
-                    description: string("Melbourne Zoo"),
-                    country: string("Australia"),
+                    description: string('Melbourne Zoo'),
+                    country: string('Australia'),
                     post_code: integer(3000),
                   },
                   eligibility: {
                     available: boolean(true),
                     previously_married: boolean(false),
                   },
-                  interests: eachLike("walks in the garden/meadow"),
+                  interests: eachLike('walks in the garden/meadow'),
                 },
               ],
-            })
+            });
           return provider.executeTest((mockserver) => {
             return availableAnimals(() => mockserver.url, {
-              first_name: "比利",
+              first_name: '比利',
             }).then((available) => {
-              expect(available[0]).to.contain({ first_name: "比利" })
-              expect(available).to.have.lengthOf(1)
-            })
-          })
-        })
-        it("returns a filtered list of animals (query containing devanagari characters)", () => {
+              expect(available[0]).to.contain({ first_name: '比利' });
+              expect(available).to.have.lengthOf(1);
+            });
+          });
+        });
+        it('returns a filtered list of animals (query containing devanagari characters)', () => {
           const provider = new PactV3({
-            consumer: "Matching Service V3",
-            provider: "Animal Profile Service V3",
-            dir: path.resolve(process.cwd(), "pacts"),
-          })
+            consumer: 'Matching Service V3',
+            provider: 'Animal Profile Service V3',
+            dir: path.resolve(process.cwd(), 'pacts'),
+          });
           provider
-            .given("is authenticated")
-            .given("Has some animals")
+            .given('is authenticated')
+            .given('Has some animals')
             .uponReceiving(
-              "a request for all animals filtered by a query containing devanagari characters"
+              'a request for all animals filtered by a query containing devanagari characters'
             )
             .withRequest({
-              path: "/animals/available",
-              headers: { Authorization: "Bearer token" },
+              path: '/animals/available',
+              headers: { Authorization: 'Bearer token' },
               query: {
-                first_name: "बिल्ली",
+                first_name: 'बिल्ली',
               },
             })
             .willRespondWith({
               status: 200,
               headers: {
-                "Content-Type": "application/json; charset=utf-8",
+                'Content-Type': 'application/json; charset=utf-8',
               },
               body: [
                 {
                   id: integer(1),
                   available_from: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
-                  first_name: string("बिल्ली"),
-                  last_name: string("Goat"),
-                  animal: string("goat"),
+                  first_name: string('बिल्ली'),
+                  last_name: string('Goat'),
+                  animal: string('goat'),
                   age: integer(21),
-                  gender: regex("F|M", "M"),
+                  gender: regex('F|M', 'M'),
                   location: {
-                    description: string("Melbourne Zoo"),
-                    country: string("Australia"),
+                    description: string('Melbourne Zoo'),
+                    country: string('Australia'),
                     post_code: integer(3000),
                   },
                   eligibility: {
                     available: boolean(true),
                     previously_married: boolean(false),
                   },
-                  interests: eachLike("walks in the garden/meadow"),
+                  interests: eachLike('walks in the garden/meadow'),
                 },
               ],
-            })
+            });
           return provider.executeTest((mockserver) => {
             return availableAnimals(() => mockserver.url, {
-              first_name: "बिल्ली",
+              first_name: 'बिल्ली',
             }).then((available) => {
-              expect(available[0]).to.contain({ first_name: "बिल्ली" })
-              expect(available).to.have.lengthOf(1)
-            })
-          })
-        })
-      })
-    })
-  })
+              expect(available[0]).to.contain({ first_name: 'बिल्ली' });
+              expect(available).to.have.lengthOf(1);
+            });
+          });
+        });
+      });
+    });
+  });
 
-  describe("when a call to the Animal Service is made to retrieve a single animal by ID", () => {
-    describe("and there is an animal in the DB with ID 100", () => {
-      let responseBody = animalBodyExpectation
-      responseBody.id = 100
+  describe('when a call to the Animal Service is made to retrieve a single animal by ID', () => {
+    describe('and there is an animal in the DB with ID 100', () => {
+      let responseBody = animalBodyExpectation;
+      responseBody.id = 100;
       const provider = new PactV3({
-        consumer: "Matching Service V3",
-        provider: "Animal Profile Service V3",
-        dir: path.resolve(process.cwd(), "pacts"),
-      })
+        consumer: 'Matching Service V3',
+        provider: 'Animal Profile Service V3',
+        dir: path.resolve(process.cwd(), 'pacts'),
+      });
 
       before(() =>
         provider
-          .given("is authenticated")
-          .given("Has an animal with ID", {
+          .given('is authenticated')
+          .given('Has an animal with ID', {
             id: 100,
           })
-          .uponReceiving("a request for an animal with an ID")
+          .uponReceiving('a request for an animal with an ID')
           .withRequest({
-            path: regex("/animals/[0-9]+", "/animals/100"),
-            headers: { Authorization: "Bearer token" },
+            path: regex('/animals/[0-9]+', '/animals/100'),
+            headers: { Authorization: 'Bearer token' },
           })
           .willRespondWith({
             status: 200,
             headers: {
-              "Content-Type": "application/json; charset=utf-8",
+              'Content-Type': 'application/json; charset=utf-8',
             },
             body: responseBody,
           })
-      )
+      );
 
-      it("returns the animal", () => {
+      it('returns the animal', () => {
         return provider.executeTest((mockserver) => {
-          const animal = getAnimalById(100, () => mockserver.url)
+          const animal = getAnimalById(100, () => mockserver.url);
 
-          return expect(animal).to.eventually.have.deep.property("id", 100)
-        })
-      })
-    })
+          return expect(animal).to.eventually.have.deep.property('id', 100);
+        });
+      });
+    });
 
-    describe("and there no animals in the database", () => {
+    describe('and there no animals in the database', () => {
       const provider = new PactV3({
-        consumer: "Matching Service V3",
-        provider: "Animal Profile Service V3",
-        dir: path.resolve(process.cwd(), "pacts"),
-      })
+        consumer: 'Matching Service V3',
+        provider: 'Animal Profile Service V3',
+        dir: path.resolve(process.cwd(), 'pacts'),
+      });
 
       before(() =>
         provider
-          .given("is authenticated")
-          .given("Has no animals")
-          .uponReceiving("a request for an animal by ID")
+          .given('is authenticated')
+          .given('Has no animals')
+          .uponReceiving('a request for an animal by ID')
           .withRequest({
-            method: "GET",
-            path: regex("/animals/[0-9]+", "/animals/100"),
-            headers: { Authorization: "Bearer token" },
+            method: 'GET',
+            path: regex('/animals/[0-9]+', '/animals/100'),
+            headers: { Authorization: 'Bearer token' },
           })
           .willRespondWith({
             status: 404,
           })
-      )
+      );
 
-      it("returns a 404", () => {
+      it('returns a 404', () => {
         return provider.executeTest((mockserver) => {
-          const animal = getAnimalById(123, () => mockserver.url)
+          const animal = getAnimalById(123, () => mockserver.url);
 
-          return expect(animal).to.eventually.be.a("null")
-        })
-      })
-    })
-  })
+          return expect(animal).to.eventually.be.a('null');
+        });
+      });
+    });
+  });
 
-  describe("when a call to the Animal Service is made to retrieve a single animal in text by ID", () => {
-    describe("and there is an animal in the DB with ID 100", () => {
+  describe('when a call to the Animal Service is made to retrieve a single animal in text by ID', () => {
+    describe('and there is an animal in the DB with ID 100', () => {
       const provider = new PactV3({
-        consumer: "Matching Service V3",
-        provider: "Animal Profile Service V3",
-        dir: path.resolve(process.cwd(), "pacts"),
-      })
+        consumer: 'Matching Service V3',
+        provider: 'Animal Profile Service V3',
+        dir: path.resolve(process.cwd(), 'pacts'),
+      });
 
       before(() =>
         provider
-          .given("is authenticated")
-          .given("Has an animal with ID", {
+          .given('is authenticated')
+          .given('Has an animal with ID', {
             id: 100,
           })
-          .uponReceiving("a request for an animal as text with an ID")
+          .uponReceiving('a request for an animal as text with an ID')
           .withRequest({
-            path: regex("/animals/[0-9]+", "/animals/100"),
+            path: regex('/animals/[0-9]+', '/animals/100'),
             headers: {
-              Authorization: "Bearer token",
-              Accept: "text/plain",
+              Authorization: 'Bearer token',
+              Accept: 'text/plain',
             },
           })
           .willRespondWith({
             status: 200,
             headers: {
-              "Content-Type": "text/plain; charset=utf-8",
+              'Content-Type': 'text/plain; charset=utf-8',
             },
-            body: "id=100;first_name=Nanny;last_name=Doe;animal=goat",
+            body: 'id=100;first_name=Nanny;last_name=Doe;animal=goat',
           })
-      )
+      );
 
-      it("returns the animal", async () => {
+      it('returns the animal', async () => {
         return provider.executeTest(async (mockserver) => {
           const animal = await getAnimalById(
             100,
             () => mockserver.url,
-            "text/plain"
-          )
+            'text/plain'
+          );
           return expect(animal).to.equal(
-            "id=100;first_name=Nanny;last_name=Doe;animal=goat"
-          )
-        })
-      })
-    })
-  })
+            'id=100;first_name=Nanny;last_name=Doe;animal=goat'
+          );
+        });
+      });
+    });
+  });
 
-  describe("when a call to the Animal Service is made to create a new mate", () => {
+  describe('when a call to the Animal Service is made to create a new mate', () => {
     const provider = new PactV3({
-      consumer: "Matching Service V3",
-      provider: "Animal Profile Service V3",
-      dir: path.resolve(process.cwd(), "pacts"),
-    })
+      consumer: 'Matching Service V3',
+      provider: 'Animal Profile Service V3',
+      dir: path.resolve(process.cwd(), 'pacts'),
+    });
 
     before(() =>
       provider
-        .given("is authenticated")
-        .uponReceiving("a request to create a new mate")
+        .given('is authenticated')
+        .uponReceiving('a request to create a new mate')
         .withRequest({
-          method: "POST",
-          path: "/animals",
+          method: 'POST',
+          path: '/animals',
           body: like(suitor),
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
         })
         .willRespondWith({
           status: 200,
           headers: {
-            "Content-Type": "application/json; charset=utf-8",
+            'Content-Type': 'application/json; charset=utf-8',
           },
           body: like(suitor),
         })
-    )
+    );
 
-    it("creates a new mate", () => {
+    it('creates a new mate', () => {
       return provider.executeTest((mockserver) => {
         return expect(createMateForDates(suitor, () => mockserver.url)).to
-          .eventually.be.fulfilled
-      })
-    })
-  })
+          .eventually.be.fulfilled;
+      });
+    });
+  });
 
-  describe("when a call to the Animal Service is made to create a new mate using form-data body", () => {
+  describe('when a call to the Animal Service is made to create a new mate using form-data body', () => {
     const provider = new PactV3({
-      consumer: "Matching Service V3",
-      provider: "Animal Profile Service V3",
-      dir: path.resolve(process.cwd(), "pacts"),
-    })
+      consumer: 'Matching Service V3',
+      provider: 'Animal Profile Service V3',
+      dir: path.resolve(process.cwd(), 'pacts'),
+    });
 
     before(() =>
       provider
-        .given("is authenticated")
-        .uponReceiving("a request to create a new mate")
+        .given('is authenticated')
+        .uponReceiving('a request to create a new mate')
         .withRequest({
-          method: "POST",
-          path: "/animals",
-          body: "first_name=Nanny&last_name=Doe",
+          method: 'POST',
+          path: '/animals',
+          body: 'first_name=Nanny&last_name=Doe',
           headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
+            'Content-Type': 'application/x-www-form-urlencoded',
           },
         })
         .willRespondWith({
           status: 200,
           headers: {
-            "Content-Type": "application/json; charset=utf-8",
+            'Content-Type': 'application/json; charset=utf-8',
           },
           body: like(suitor),
         })
-    )
+    );
 
-    it("creates a new mate with application/x-www-form-urlencoded", () => {
+    it('creates a new mate with application/x-www-form-urlencoded', () => {
       return provider.executeTest((mockserver) => {
         return expect(
           createMateForDates(
-            "first_name=Nanny&last_name=Doe",
+            'first_name=Nanny&last_name=Doe',
             () => mockserver.url,
-            "application/x-www-form-urlencoded"
+            'application/x-www-form-urlencoded'
           )
-        ).to.eventually.be.fulfilled
-      })
-    })
-  })
+        ).to.eventually.be.fulfilled;
+      });
+    });
+  });
 
-  describe("when a call to the Animal Service is made to get animals in XML format", () => {
+  describe('when a call to the Animal Service is made to get animals in XML format', () => {
     const provider = new PactV3({
-      consumer: "Matching Service V3",
-      provider: "Animal Profile Service V3",
-      dir: path.resolve(process.cwd(), "pacts"),
-    })
+      consumer: 'Matching Service V3',
+      provider: 'Animal Profile Service V3',
+      dir: path.resolve(process.cwd(), 'pacts'),
+    });
 
     before(() =>
       provider
-        .given("is authenticated")
-        .given("Has some animals")
-        .uponReceiving("a request to get animals as XML")
+        .given('is authenticated')
+        .given('Has some animals')
+        .uponReceiving('a request to get animals as XML')
         .withRequest({
-          path: "/animals/available/xml",
-          headers: { Authorization: "Bearer token" },
+          path: '/animals/available/xml',
+          headers: { Authorization: 'Bearer token' },
         })
         .willRespondWith({
           status: 200,
           headers: {
-            "Content-Type": "application/xml; charset=utf-8",
+            'Content-Type': 'application/xml; charset=utf-8',
           },
-          body: new XmlBuilder("1.0", "UTF-8", "animals").build((el) => {
-            el.eachLike("lion", {
+          body: new XmlBuilder('1.0', 'UTF-8', 'animals').build((el) => {
+            el.eachLike('lion', {
               id: integer(1),
               available_from: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
-              first_name: string("Slinky"),
-              last_name: string("Malinky"),
+              first_name: string('Slinky'),
+              last_name: string('Malinky'),
               age: integer(27),
-              gender: regex("M|F", "F"),
-            })
-            el.eachLike("goat", {
+              gender: regex('M|F', 'F'),
+            });
+            el.eachLike('goat', {
               id: integer(3),
               available_from: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
-              first_name: string("Head"),
-              last_name: string("Butts"),
+              first_name: string('Head'),
+              last_name: string('Butts'),
               age: integer(27),
-              gender: regex("M|F", "F"),
-            })
+              gender: regex('M|F', 'F'),
+            });
           }),
         })
-    )
+    );
 
-    it("creates a new mate", () => {
+    it('creates a new mate', () => {
       return provider.executeTest((mockserver) => {
         return expect(getAnimalsAsXML(() => mockserver.url)).to.eventually.be
-          .fulfilled
-      })
-    })
-  })
-})
+          .fulfilled;
+      });
+    });
+  });
+});

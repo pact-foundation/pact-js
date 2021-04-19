@@ -1,7 +1,7 @@
-import express from "express"
+import express from 'express';
 
-import logger from "../../../common/logger"
-import { ProxyOptions } from "./types"
+import logger from '../../../common/logger';
+import { ProxyOptions } from './types';
 
 export const registerBeforeHook = (
   app: express.Express,
@@ -10,20 +10,20 @@ export const registerBeforeHook = (
 ): void => {
   app.use(async (req, res, next) => {
     if (config.beforeEach !== undefined) {
-      logger.trace("registered 'beforeEach' hook")
+      logger.trace("registered 'beforeEach' hook");
       if (req.path === stateSetupPath) {
-        logger.debug("executing 'beforeEach' hook")
+        logger.debug("executing 'beforeEach' hook");
         try {
-          await config.beforeEach()
+          await config.beforeEach();
         } catch (e) {
-          logger.error("error executing 'beforeEach' hook: ", e)
-          next(new Error(`error executing 'beforeEach' hook: ${e}`))
+          logger.error("error executing 'beforeEach' hook: ", e);
+          next(new Error(`error executing 'beforeEach' hook: ${e}`));
         }
       }
     }
-    next()
-  })
-}
+    next();
+  });
+};
 
 export const registerAfterHook = (
   app: express.Express,
@@ -32,19 +32,19 @@ export const registerAfterHook = (
 ): void => {
   app.use(async (req, res, next) => {
     if (config.afterEach !== undefined) {
-      logger.trace("registered 'afterEach' hook")
-      next()
+      logger.trace("registered 'afterEach' hook");
+      next();
       if (req.path !== stateSetupPath) {
-        logger.debug("executing 'afterEach' hook")
+        logger.debug("executing 'afterEach' hook");
         try {
-          await config.afterEach()
+          await config.afterEach();
         } catch (e) {
-          logger.error("error executing 'afterEach' hook: ", e)
-          next(new Error(`error executing 'afterEach' hook: ${e}`))
+          logger.error("error executing 'afterEach' hook: ", e);
+          next(new Error(`error executing 'afterEach' hook: ${e}`));
         }
       }
     } else {
-      next()
+      next();
     }
-  })
-}
+  });
+};
