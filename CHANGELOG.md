@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [9.15.5](https://github.com/pact-foundation/pact-js/compare/v9.15.4...v9.15.5) (2021-04-21)
+
+
+### Fixes and Improvements
+
+* **pact-node:** Fix for [#635](https://github.com/pact-foundation/pact-js/issues/635) (issue with message pact not respecting matching rules) ([5063b7e](https://github.com/pact-foundation/pact-js/commit/5063b7e833ce736fd0916dee15cfce40683c871a))
+
 ### [9.15.4](https://github.com/pact-foundation/pact-js/compare/v9.15.3...v9.15.4) (2021-03-31)
 
 
