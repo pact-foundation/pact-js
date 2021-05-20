@@ -99,6 +99,7 @@ Read [Getting started with Pact] for more information for beginners.
 ```
 npm i -S @pact-foundation/pact@latest
 ```
+Make sure the `ignore-scripts` option is disabled, pact uses npm scripts to download further dependencies. 
 
 ### Do Not Track
 
