@@ -1190,7 +1190,7 @@ You can change the log levels using the `LOG_LEVEL` environment variable.
 
 ## Troubleshooting / FAQs
 
-If you are having issues, a good place to start is setting `logLevel: 'debug'` when configuring the `new Pact({...})` object. Setting it to `trace` will give you detailed in/out requests as far as Pact sees it.
+If you are having issues, a good place to start is setting `logLevel: 'debug'` when configuring the `new Pact({...})` object. This will give you detailed in/out requests as far as Pact sees them during verification.
 
 ### Alpine + Docker
 
@@ -1360,7 +1360,7 @@ See [this issue](https://github.com/angular/angular/issues/13554) for background
 
 ### Debugging
 
-If your standard tricks don't get you anywhere, setting the logLevel to `trace` and increasing the timeout doesn't help and you don't know where else to look, it could be that the binaries we use to do much of the Pact magic aren't starting as expected.
+If your standard tricks don't get you anywhere, setting the logLevel to `debug` and increasing the timeout doesn't help and you don't know where else to look, it could be that the binaries we use to do much of the Pact magic aren't starting as expected.
 
 Try starting the mock service manually and seeing if it comes up. When submitting a bug report, it would be worth running these commands before hand as it will greatly help us:
 
