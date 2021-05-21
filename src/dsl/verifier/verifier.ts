@@ -11,7 +11,6 @@ import logger, { setLogLevel } from '../../common/logger';
 
 import ConfigurationError from '../../errors/configurationError';
 import { localAddresses } from '../../common/net';
-import { qToPromise } from '../../common/utils';
 import { createProxy, waitForServerReady } from './proxy';
 import { VerifierOptions } from './types';
 
@@ -97,7 +96,7 @@ export class Verifier {
         providerBaseUrl: `${this.address}:${server.address().port}`,
       };
 
-      return qToPromise<string>(serviceFactory.verifyPacts(opts));
+      return serviceFactory.verifyPacts(opts);
     };
   }
 

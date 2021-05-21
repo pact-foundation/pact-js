@@ -11,7 +11,6 @@ import bodyParser from 'body-parser';
 import { MessageDescriptor, MessageProvider } from './dsl/message';
 import logger, { setLogLevel } from './common/logger';
 import { PactMessageProviderOptions } from './dsl/options';
-import { qToPromise } from './common/utils';
 
 // Listens for the server start event
 // Converts event Emitter to a Promise
@@ -75,7 +74,7 @@ export class MessageProviderPact {
         ...{ providerBaseUrl: `http://localhost:${server.address().port}` },
       } as VerifierOptions;
 
-      return qToPromise<string>(serviceFactory.verifyPacts(opts));
+      return serviceFactory.verifyPacts(opts);
     };
   }
 

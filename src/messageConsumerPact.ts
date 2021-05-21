@@ -6,7 +6,6 @@ import { isEmpty, cloneDeep } from 'lodash';
 import serviceFactory from '@pact-foundation/pact-core';
 import { AnyJson } from 'common/jsonTypes';
 import { extractPayload, AnyTemplate } from './dsl/matchers';
-import { qToPromise } from './common/utils';
 import {
   Metadata,
   Message,
@@ -139,16 +138,14 @@ export class MessageConsumerPact {
         handler({ ...clone, contents: extractPayload(clone.contents) })
       )
       .then(() =>
-        qToPromise<unknown>(
-          this.getServiceFactory().createMessage({
-            consumer: this.config.consumer,
-            content: JSON.stringify(this.state),
-            dir: this.config.dir,
-            pactFileWriteMode: this.config.pactfileWriteMode,
-            provider: this.config.provider,
-            spec: 3,
-          })
-        )
+        this.getServiceFactory().createMessage({
+          consumer: this.config.consumer,
+          content: JSON.stringify(this.state),
+          dir: this.config.dir,
+          pactFileWriteMode: this.config.pactfileWriteMode,
+          provider: this.config.provider,
+          spec: 3,
+        })
       );
   }
 
