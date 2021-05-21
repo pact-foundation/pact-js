@@ -2,6 +2,347 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.35](https://github.com/pact-foundation/pact-js/compare/v9.15.5...v10.0.0-beta.35) (2021-05-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* Pact-js no longer officially supports node less than 10 (10 is only supported by nodejs for another few months anyway, so I doubt this will affect many users)
+* Since some of the interface of pact-core is exposed, there are some breaking changes:
+   * In `VerifierOptions`: replace use of `tags`, `consumerVersionTag` and `providerVersionTag` with the appropriate `consumerVersionTags` or `providerVersionTags` option.
+   * The type for consumer version selectors in the verifier options has been corrected. This will affect typescript users who were using consumerVersionSelectors with the fields `pacticipant`, `all` or `version`. These fields never worked, and now will no longer compile in typescript. The correct type is:
+    ```
+    ConsumerVersionSelector {
+      tag?: string;
+      latest?: boolean;
+      consumer?: string;
+      fallbackTag?: string;
+    }
+    ```
+
+* Drop support for node < 10 ([328de85](https://github.com/pact-foundation/pact-js/commit/328de859e0699f849cc515e8240f71d1fe296aec))
+* Update pact-core to v11. ([9e5a67d](https://github.com/pact-foundation/pact-js/commit/9e5a67da37fbfbd3433c31760ec6c020ccb2527d))
+
+## [10.0.0-beta.34](https://github.com/pact-foundation/pact-js/compare/v9.15.4...v10.0.0-beta.34) (2021-04-07)
+
+
+### Features
+
+* add support for ignoring keys via the eachKeyLike matcher ([2f59c9f](https://github.com/pact-foundation/pact-js/commit/2f59c9fd87aedfc37df8e746e695fe6c98f1773d))
+
+
+### Fixes and Improvements
+
+* Correct types for interaction chaining in graphql ([5043cc0](https://github.com/pact-foundation/pact-js/commit/5043cc0ad5a72559e2508175fffa15e076e77bb3))
+* Remove deprecated ability to provide options to Vverifier outside the constructor. Temporarily disable nestjs example accordingly ([a7a3c0e](https://github.com/pact-foundation/pact-js/commit/a7a3c0e97bb052ade32c13f174356c56172df522))
+* **package-name:** Use the new name (pact-core) for pact-node ([a42fee2](https://github.com/pact-foundation/pact-js/commit/a42fee28a630becdef4a85e61f4a03133d6aba4f))
+* **typescript:** accept string array as query value ([69f74ba](https://github.com/pact-foundation/pact-js/commit/69f74ba81a100c2dbbadb1448141f4e8a7afdb2a))
+
+## [10.0.0-beta.33](https://github.com/pact-foundation/pact-js/compare/v9.15.2...v10.0.0-beta.33) (2021-03-03)
+
+
+### Fixes and Improvements
+
+* use example in datetime matcher instead of generator if provided. Fixes [#620](https://github.com/pact-foundation/pact-js/issues/620) ([c0ca78b](https://github.com/pact-foundation/pact-js/commit/c0ca78b6995354154ed387f18c1d896789acf778))
+
+## [10.0.0-beta.32](https://github.com/pact-foundation/pact-js/compare/v9.15.1...v10.0.0-beta.32) (2021-02-23)
+
+
+### Features
+
+* add experimental 'allow missing' behind env var PACT_EXPERIMENTAL_FEATURE_ALLOW_MISSING_REQUESTS ([2d3a1fe](https://github.com/pact-foundation/pact-js/commit/2d3a1fec0c8989d58d0384bd39888cd8eb76d0a7))
+
+
+### Fixes and Improvements
+
+* **pact-node:** Bump dependency on pact-node ([812e09e](https://github.com/pact-foundation/pact-js/commit/812e09e67a9789b8ab02c852fe689a7b39d092c0))
+
+## [10.0.0-beta.31](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.30...v10.0.0-beta.31) (2021-02-10)
+
+
+### Fixes and Improvements
+
+* improve file locking behaviour ([0f73466](https://github.com/pact-foundation/pact-js/commit/0f7346663d3edd9ef36cdfa7f08adfbe8f4ab4d8))
+
+## [10.0.0-beta.30](https://github.com/pact-foundation/pact-js/compare/v9.15.0...v10.0.0-beta.30) (2021-02-08)
+
+
+### Features
+
+* fix file locking, add 'overwrite' and 'callbackTimeout' flags ([e891fcc](https://github.com/pact-foundation/pact-js/commit/e891fccb5802491cf148f398c81406bf06ae43c8)), closes [#599](https://github.com/pact-foundation/pact-js/issues/599) [#600](https://github.com/pact-foundation/pact-js/issues/600)
+
+
+### Fixes and Improvements
+
+* make the callback timeout configurable with a 5 sec default ([a0f0876](https://github.com/pact-foundation/pact-js/commit/a0f0876b93e728379a289a5bfa6e2e8613ec1768))
+
+## [10.0.0-beta.29](https://github.com/pact-foundation/pact-js/compare/v9.14.2...v10.0.0-beta.29) (2021-01-29)
+
+
+### Fixes and Improvements
+
+* added export to V3 matcher interfaces ([8d11c1a](https://github.com/pact-foundation/pact-js/commit/8d11c1a6d6d8033ae96f471665245baec750ca51))
+* don't strigify response that is already a string ([a867147](https://github.com/pact-foundation/pact-js/commit/a867147566b182e1f9244d72d96c29db59a51007))
+
+## [10.0.0-beta.26](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.25...v10.0.0-beta.26) (2021-01-27)
+
+
+### Features
+
+* add uuid matcher function ([49c3da8](https://github.com/pact-foundation/pact-js/commit/49c3da8183ae729fe6063bd27e3eeba57750d853))
+
+
+### Fixes and Improvements
+
+* don't JSON.stringify body if its already a string ([6d44059](https://github.com/pact-foundation/pact-js/commit/6d44059db1917c17e40f128a4b3eedfda16fd2c1))
+* local pact URL ([1fd5fe4](https://github.com/pact-foundation/pact-js/commit/1fd5fe4806c62581be7c80504c806257a7b9020a))
+* use correct id in consumer test ([3d7e9c0](https://github.com/pact-foundation/pact-js/commit/3d7e9c0fa1ccc36734d864bfa02eab220b054af1))
+
+## [10.0.0-beta.25](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.24...v10.0.0-beta.25) (2021-01-12)
+
+
+### Fixes and Improvements
+
+* change the release trigger for native libs ([3f1bbfa](https://github.com/pact-foundation/pact-js/commit/3f1bbfa79a4eb11593bc26ad96d34cc852b82c9e))
+* URLs were not being generated correctly when used with an array contains matcher ([4fccb8d](https://github.com/pact-foundation/pact-js/commit/4fccb8df1ac19fa858cd7c4f1ca2da68c068bd04))
+
+## [10.0.0-beta.24](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.23...v10.0.0-beta.24) (2021-01-12)
+
+
+### Fixes and Improvements
+
+* exclude openssl from native build for musl versions ([3db75af](https://github.com/pact-foundation/pact-js/commit/3db75afe2e42da0747deabff946ade6afca30ba4))
+* exclude the native lib from the NPM package ([208e750](https://github.com/pact-foundation/pact-js/commit/208e750c5d51968f7e643ed835a299c4bb48f00a))
+* exclude the native lib from the NPM package ([69a6e5b](https://github.com/pact-foundation/pact-js/commit/69a6e5b5263750bbef84ae7cadbc20d95294ee1c))
+
+## [10.0.0-beta.23](https://github.com/pact-foundation/pact-js/compare/v9.14.0...v10.0.0-beta.23) (2021-01-11)
+
+
+### Features
+
+* initial pacts for verification integration ([6428bbe](https://github.com/pact-foundation/pact-js/commit/6428bbef3c056b884c4225a1d05f9f3b7b2d1691))
+* support for matchers on headers ([aa3d55e](https://github.com/pact-foundation/pact-js/commit/aa3d55e4bbc60a210cc4be568d1c9dab9b0998b7))
+* Update URL matching functions to support mock server URL generation ([2733af9](https://github.com/pact-foundation/pact-js/commit/2733af9aa0f936928358ad6e40e2c17d3aeb48b5))
+
+
+### Fixes and Improvements
+
+* correct V3 matcher spec ([6b6ac6c](https://github.com/pact-foundation/pact-js/commit/6b6ac6c71878e96ccaf3f19a81903ba620d16b5d))
+
+## [10.0.0-beta.22](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.21...v10.0.0-beta.22) (2020-11-17)
+
+
+### Features
+
+* add example consumer test with provider state injected values [#516](https://github.com/pact-foundation/pact-js/issues/516) ([190f332](https://github.com/pact-foundation/pact-js/commit/190f332559fe0b1717054796614aa2624e81818c))
+* added consumer for provider state injected example ([bdc333c](https://github.com/pact-foundation/pact-js/commit/bdc333c57107ac62f44abfac83ec62645470cc71))
+* got provider state injected values working with provider test [#516](https://github.com/pact-foundation/pact-js/issues/516) ([5fdf7eb](https://github.com/pact-foundation/pact-js/commit/5fdf7eb8284d73030049e1abf19c34445981510b))
+* implemented matching query parameters and provider state injected values (in consumer DSL) [#516](https://github.com/pact-foundation/pact-js/issues/516) ([f798c13](https://github.com/pact-foundation/pact-js/commit/f798c13494b690d9f5348c61d143855e7117de33))
+
+
+### Fixes and Improvements
+
+* if query parameters are not supplied they will be null or undefined [#516](https://github.com/pact-foundation/pact-js/issues/516) ([17397be](https://github.com/pact-foundation/pact-js/commit/17397bea50f25d3ded1dc71739a935e39b1f9a52))
+
+## [10.0.0-beta.21](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.20...v10.0.0-beta.21) (2020-10-30)
+
+
+### Fixes and Improvements
+
+* improve the test error to include the original stack trace ([c14cb97](https://github.com/pact-foundation/pact-js/commit/c14cb97492ad38f16d442bef5a6411999149501d))
+* update to latest mock server crate, fixes [#520](https://github.com/pact-foundation/pact-js/issues/520) ([21774de](https://github.com/pact-foundation/pact-js/commit/21774de2cc83b62224cb5315e888fb9ccd09c20b))
+
+## [10.0.0-beta.20](https://github.com/pact-foundation/pact-js/compare/v9.13.0...v10.0.0-beta.20) (2020-10-29)
+
+
+### Fixes and Improvements
+
+* can not use matrix expressions in uses: with GH actions ([d6942a4](https://github.com/pact-foundation/pact-js/commit/d6942a412a64d1edd11d4f0f4ce2836e020da1e5))
+* support any values for provider state parameters ([df4df0b](https://github.com/pact-foundation/pact-js/commit/df4df0bcd944d18088c6f7241b925c66a83a2039))
+* update the MUSL docker container for use with GH actions ([5647032](https://github.com/pact-foundation/pact-js/commit/564703202e6bb22443eb7d6b90a533d1f7a54a6e))
+
+## [10.0.0-beta.19](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.18...v10.0.0-beta.19) (2020-10-19)
+
+## [10.0.0-beta.18](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.17...v10.0.0-beta.18) (2020-10-16)
+
+
+### Features
+
+* add support for array contains matcher ([57bcc79](https://github.com/pact-foundation/pact-js/commit/57bcc792037eb05d17a6e6268d14dcabe0262712))
+
+
+### Fixes and Improvements
+
+* typo in comment ([7491383](https://github.com/pact-foundation/pact-js/commit/7491383ded889a4b25f3480c2601f715b4f49c69))
+* update to latest matching lib ([23e1f39](https://github.com/pact-foundation/pact-js/commit/23e1f39bd690f2bbf80cf78cb2922939484c6838))
+
+## [10.0.0-beta.17](https://github.com/pact-foundation/pact-js/compare/v9.12.2...v10.0.0-beta.17) (2020-10-12)
+
+
+### Features
+
+* improve the error messages for a failed test ([f01b57e](https://github.com/pact-foundation/pact-js/commit/f01b57e9b0606735669bc684517ceaac19269be1))
+
+
+### Fixes and Improvements
+
+* allow the mock server port to be configured ([9c63d28](https://github.com/pact-foundation/pact-js/commit/9c63d28eb6d0c3d361b07b2053dcd3853649b160))
+* correct the imports [#514](https://github.com/pact-foundation/pact-js/issues/514) ([6764a84](https://github.com/pact-foundation/pact-js/commit/6764a84e5b3004cd7f0f814a9ef694e606481ebe))
+
+## [10.0.0-beta.16](https://github.com/pact-foundation/pact-js/compare/v9.12.1...v10.0.0-beta.16) (2020-09-28)
+
+
+### Features
+
+* add flag to enable handling CORS pre-flight requests ([0adb3fc](https://github.com/pact-foundation/pact-js/commit/0adb3fcab90bcf491f291c3874dd8bff93d3ac48))
+
+
+### Fixes and Improvements
+
+* correct Rust code after upgrade to upstream libs ([aa6d803](https://github.com/pact-foundation/pact-js/commit/aa6d803bb611f7d89692abf4e4409c14e43e7cc9))
+* need .mocharc.json after merge from master ([2525bf6](https://github.com/pact-foundation/pact-js/commit/2525bf6563e8cc93cd3522bcff8cdb9cb5931c4e))
+* package.json after merge from master ([aef422b](https://github.com/pact-foundation/pact-js/commit/aef422b70d850032575bac8efc442bc6eecb0205))
+
+## [10.0.0-beta.15](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.14...v10.0.0-beta.15) (2020-08-05)
+
+
+### Fixes and Improvements
+
+* correct matcher paths for text nodes in XML ([a217793](https://github.com/pact-foundation/pact-js/commit/a217793a5e538d9e9616ae1bab8cbd561fdd5377))
+
+## [10.0.0-beta.14](https://github.com/pact-foundation/pact-js/compare/v9.11.1...v10.0.0-beta.14) (2020-08-04)
+
+
+### Fixes and Improvements
+
+* lint ([ae8397a](https://github.com/pact-foundation/pact-js/commit/ae8397af7a30af95fdcade718a6bd5c458da9e25))
+* PactNative.init needs to be re-entrant ([16c22f6](https://github.com/pact-foundation/pact-js/commit/16c22f64e3b174b18f3a51cb1d157af66ea019ab))
+
+## [10.0.0-beta.13](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.12...v10.0.0-beta.13) (2020-06-27)
+
+
+### Features
+
+* add some tests around the conusmer DSL matchers ([e6a153f](https://github.com/pact-foundation/pact-js/commit/e6a153fd62d48644b97018d69e5f23d1710e510f))
+* handle XML matching with different types of child elements ([2143ca4](https://github.com/pact-foundation/pact-js/commit/2143ca4c968969e1c6218dd8e538097733ccfa56))
+* implemented consumer DSL URL matcher ([f27a444](https://github.com/pact-foundation/pact-js/commit/f27a44409aed3ece1adbab6af9e853b7684c101c))
+
+
+### Fixes and Improvements
+
+* after upgrading crates ([9a5a36d](https://github.com/pact-foundation/pact-js/commit/9a5a36db9d733bd13a1d68bb5b8d893720a915cb))
+* import for metadata was wrong ([ba2a975](https://github.com/pact-foundation/pact-js/commit/ba2a9755aee672cbed73b236c44f68aab14939f0))
+* lint ([78b4692](https://github.com/pact-foundation/pact-js/commit/78b46927bbeb96a4da6a924b7d8e86084ff6c355))
+
+## [10.0.0-beta.12](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.11...v10.0.0-beta.12) (2020-06-12)
+
+## [10.0.0-beta.11](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.10...v10.0.0-beta.11) (2020-06-12)
+
+## [10.0.0-beta.10](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.9...v10.0.0-beta.10) (2020-06-12)
+
+## [10.0.0-beta.9](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.8...v10.0.0-beta.9) (2020-06-11)
+
+## [10.0.0-beta.8](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.7...v10.0.0-beta.8) (2020-06-11)
+
+## [10.0.0-beta.7](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.6...v10.0.0-beta.7) (2020-06-11)
+
+## [10.0.0-beta.6](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.5...v10.0.0-beta.6) (2020-06-11)
+
+
+### Features
+
+* enable publishing of verification results ([fcbdb3e](https://github.com/pact-foundation/pact-js/commit/fcbdb3e9729365039c30267996a7364e23ccdef1))
+* release node 14 native binaries ([9ee832c](https://github.com/pact-foundation/pact-js/commit/9ee832c8dcfd896432ef34fb57595496bcac0077))
+
+## [10.0.0-beta.5](https://github.com/pact-foundation/pact-js/compare/v9.11.0...v10.0.0-beta.5) (2020-05-27)
+
+
+### Features
+
+* support MIME multipart form posts with binary files ([d72a210](https://github.com/pact-foundation/pact-js/commit/d72a2103b4fb0d348d2601e88d9a34befc4f31a7))
+* support regex matcher with a regexp object ([d92f6f5](https://github.com/pact-foundation/pact-js/commit/d92f6f5eee92667e5a3ce0ecdd44177d18a6b7ff))
+* support text nodes configured from XML builder ([a2a7f55](https://github.com/pact-foundation/pact-js/commit/a2a7f55eff4a187cbe30a3e56917745ebc40e33d))
+* support using matchers on XML text nodes ([b3b5e62](https://github.com/pact-foundation/pact-js/commit/b3b5e6231e9f0ade7be045ff117b441d0169114a))
+
+
+### Fixes and Improvements
+
+* correct the version of the pact_mock_server crate ([a17f2bb](https://github.com/pact-foundation/pact-js/commit/a17f2bb26d2964ac45b19704d91019ab2e7cdc4d))
+* date/time matchers were being skipped due to defect in upstream matching lib ([dcc3a7f](https://github.com/pact-foundation/pact-js/commit/dcc3a7fbf212cfce02c7d3dcf50bdb8f47baf45e))
+* travis matrix was doubled up ([fe08a70](https://github.com/pact-foundation/pact-js/commit/fe08a70769dbf7b3525b074f93731fb8d9ab3916))
+* travis was not running the E2E tests after merge from master ([73257dc](https://github.com/pact-foundation/pact-js/commit/73257dc3f43e229103aca119b3369d5d3ec228eb))
+
+## [10.0.0-beta.4](https://github.com/pact-foundation/pact-js/compare/v9.10.0...v10.0.0-beta.4) (2020-05-20)
+
+
+### Features
+
+* add support for binary payloads ([658ffa0](https://github.com/pact-foundation/pact-js/commit/658ffa0ee17adfe380b7cb1c68e10c48078c9cb6))
+
+
+### Fixes and Improvements
+
+* accidentially commited development paths in cargo manefest ([03cc16f](https://github.com/pact-foundation/pact-js/commit/03cc16f71d5f6a6cd646cdb6cf5421a134cb159e))
+* format the error messages in a better way ([0a15772](https://github.com/pact-foundation/pact-js/commit/0a15772a710d3d159648672470084a1c99b45cc8))
+* handle error when pact file cannot be written ([82832a8](https://github.com/pact-foundation/pact-js/commit/82832a81c115d06ef2d9c1fadd18c54f6f629e59))
+* throw an exception when a request is configured but no interaction defined ([b317da7](https://github.com/pact-foundation/pact-js/commit/b317da79f28dce45102a55bcdcbc415d3fbdb9ab))
+* throw an exception when a response is configured but no interaction defined ([6feacbe](https://github.com/pact-foundation/pact-js/commit/6feacbeef513420eddd9cbaed36abea80344de13))
+
+## [10.0.0-beta.3](https://github.com/pact-foundation/pact-js/compare/v9.9.2...v10.0.0-beta.3) (2020-04-08)
+
+
+### Fixes and Improvements
+
+* correct invalid logger import ([5d4ba5b](https://github.com/pact-foundation/pact-js/commit/5d4ba5be629693b6608ea5f671b116a2ec3dad14))
+* don't bundle the native lib in the NPM package ([24f43f3](https://github.com/pact-foundation/pact-js/commit/24f43f36f78269aef935381999dfe1e5802ea185))
+* guard against panics in background thread ([b35aecd](https://github.com/pact-foundation/pact-js/commit/b35aecd2e907f4cb80ac4ba8ec3d99c9801f8c15))
+* integer, decimal and number parameters are optional ([69f3983](https://github.com/pact-foundation/pact-js/commit/69f398333a10b649be4bf5a929234620d13d68d8))
+* throw a JS error if there are no pacts to verify ([3bfd9da](https://github.com/pact-foundation/pact-js/commit/3bfd9dac007320e3ff14e476851d2f0aabef7ca0))
+* try get the cause of any Rust panic ([f1f3d4a](https://github.com/pact-foundation/pact-js/commit/f1f3d4a4e287ec2c78a5b8f8eacfda459540dd5a))
+* typo ([5d8dd37](https://github.com/pact-foundation/pact-js/commit/5d8dd37cf338478cc2a16532b9f2664e301294bf))
+* update pact matching crate to 0.5.10 to fix invalid path matcher format ([ecce929](https://github.com/pact-foundation/pact-js/commit/ecce929af3d9aa51c3163d58e119924137a15195))
+
+## [10.0.0-beta.2](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.1...v10.0.0-beta.2) (2020-03-18)
+
+
+### Fixes and Improvements
+
+* correct the path to the native lib in the NPM package ([300d915](https://github.com/pact-foundation/pact-js/commit/300d91516afebeefe979039566b02162e09992c0))
+
+## [10.0.0-beta.1](https://github.com/pact-foundation/pact-js/compare/v9.8.1...v10.0.0-beta.1) (2020-03-17)
+
+
+### Features
+
+* got E2E consumer test passing ([904ed0b](https://github.com/pact-foundation/pact-js/commit/904ed0ba1115c81a07229e6a27c9e2d103c2dc36))
+* got request filters working. Yay! ([de16880](https://github.com/pact-foundation/pact-js/commit/de16880171ee76fdb134593a7fc78725c81158ec))
+* got the example V3 test working ([9ab43cc](https://github.com/pact-foundation/pact-js/commit/9ab43cc3541600653195c701b770dbdf1f44d5b0))
+* handle the parameters and results from provider state callbacks [#372](https://github.com/pact-foundation/pact-js/issues/372) ([d3f73e5](https://github.com/pact-foundation/pact-js/commit/d3f73e5845023aa5168647daf711829a2d90f9ce))
+* implement provider state parameters in consumer tests [#372](https://github.com/pact-foundation/pact-js/issues/372) ([af8bf32](https://github.com/pact-foundation/pact-js/commit/af8bf32f15551a7b86dc73682272074347143ffc))
+* implemented provider state callbacks with parameters [#372](https://github.com/pact-foundation/pact-js/issues/372) ([50e4e61](https://github.com/pact-foundation/pact-js/commit/50e4e6199b6d9ce37cca8f10bdcd0d403cc1ad5d))
+* Introduce an authenticated state [#372](https://github.com/pact-foundation/pact-js/issues/372) ([debebd7](https://github.com/pact-foundation/pact-js/commit/debebd73cce92a3988f99afbccc4d0091af4a3c9))
+
+
+### Fixes and Improvements
+
+* changes needed for the E2E consumer test ([6022f8b](https://github.com/pact-foundation/pact-js/commit/6022f8b33fce1cea1f60ba1cf62625f557a00572))
+* correct the paths for the attribute matchers ([7629c92](https://github.com/pact-foundation/pact-js/commit/7629c9232308e1e51730f1567a2e6010ce852aac))
+* correct the v3-todo example tests ([de205c7](https://github.com/pact-foundation/pact-js/commit/de205c7e5ca7c1922b187e29a6d44f0010afb27b))
+* datetime matchers now generate a value if one is not given ([a910840](https://github.com/pact-foundation/pact-js/commit/a910840001f0e86201e82b2ca5759841392c9cca))
+* fucking lint ([cdb72db](https://github.com/pact-foundation/pact-js/commit/cdb72db91eb1283423d21e3841ed3329a128a0af))
+* Gah! Lint Nazis ([79082fd](https://github.com/pact-foundation/pact-js/commit/79082fddafbb7e76293103a3457292b02b8dfc95))
+* got eachlike with number of examples working ([88c9a72](https://github.com/pact-foundation/pact-js/commit/88c9a72a8e11456d0afe94bbfc6ce212bd22153e))
+* lint ([772224d](https://github.com/pact-foundation/pact-js/commit/772224d4d7eeaa7beafe27b55816e441a5d1ddb4))
+* lint ([9717b47](https://github.com/pact-foundation/pact-js/commit/9717b47e2bc06087f0d8eafdeb86f73bdca46683))
+* neon build should point to native directory ([fdea3eb](https://github.com/pact-foundation/pact-js/commit/fdea3eb6619f9281a377300b39d281b342ab588d))
+* neon build should point to native directory ([16957a2](https://github.com/pact-foundation/pact-js/commit/16957a2dff8a7669ad848437591a02f306038dca))
+* neon requires a C++ compiler ([bb8731f](https://github.com/pact-foundation/pact-js/commit/bb8731fae1dcf8797bbfa1ecfd0ad3a95a7ef3d5))
+* removed node 6 and 7 because ancient ([2b45cfc](https://github.com/pact-foundation/pact-js/commit/2b45cfcca9adc92834cdfe74bf1dda5550f4d0ec))
+* rustup: Unable to run interactively. Run with -y to accept defaults ([abfa9c9](https://github.com/pact-foundation/pact-js/commit/abfa9c9151eb27c3b5c503131bda4907a809c677))
+* travis build needs the Rust source in dist ([e64402e](https://github.com/pact-foundation/pact-js/commit/e64402eae49ed2d5e290686860b357f1b4748812))
+* travis build needs the Rust source in dist ([519fee5](https://github.com/pact-foundation/pact-js/commit/519fee59d6798771e6fc7aaf6fcde8babd340356))
+* use 0.5.6 of matching lib to avoid dup rules ([d30d7b9](https://github.com/pact-foundation/pact-js/commit/d30d7b974bcdcf25cfd73fd93ade68fbcd73ecdb))
+
 ## [10.0.0-beta.34](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.33...v10.0.0-beta.34) (2021-04-07)
 
 
