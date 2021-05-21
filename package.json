@@ -13,7 +13,7 @@
     "clean:native": "rimraf native/target",
     "coverage": "nyc report --reporter=lcov",
     "dist": "tsc && copyfiles package.json ./dist",
-    "lint": "eslint --config .eslintrc.json \"{src,test}/**/*.ts\"",
+    "lint": "eslint --config .eslintrc.json \"{src,test}/**/*.ts'",
     "lint:fix": "npm run lint -- --fix",
     "format:base": "prettier \"{src,test,examples}/**/*.{ts,js}\"",
     "format:fix": "npm run format:base -- --write",
@@ -31,7 +31,7 @@
     "url": "git+https://github.com/pact-foundation/pact-js.git"
   },
   "engines": {
-    "node": ">=6"
+    "node": ">=10"
   },
   "keywords": [
     "pact",
