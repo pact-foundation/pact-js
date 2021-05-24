@@ -1,4 +1,4 @@
-const pact = require('@pact-foundation/pact-node');
+const pact = require('@pact-foundation/pact-core');
 const path = require('path');
 let pactBroker = 'https://test.pact.dius.com.au';
 if (process.env.CI && !process.env.APPVEYOR) {
