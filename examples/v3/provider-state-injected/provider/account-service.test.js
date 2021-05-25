@@ -34,14 +34,14 @@ describe('Account Service', () => {
             return null;
           }
         },
-        "set id": (setup, params) => {
+        'set id': (setup, params) => {
           if (setup) {
-            return { id: params.id }
+            return { id: params.id };
           }
         },
-        "set path": (setup, params) => {
+        'set path': (setup, params) => {
           if (setup) {
-            return { id: params.id, path: params.path }
+            return { id: params.id, path: params.path };
           }
         },
       },

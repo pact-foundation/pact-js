@@ -12,7 +12,7 @@ const {
 } = MatchersV3;
 
 describe('Transaction service - create a new transaction for an account', () => {
-  let provider
+  let provider;
   beforeEach(() => {
     provider = new PactV3({
       consumer: 'TransactionService',
@@ -73,27 +73,27 @@ describe('Transaction service - create a new transaction for an account', () => 
   });
 
   // MatchersV3.fromProviderState on body
-  it("test text data", () => {
+  it('test text data', () => {
     provider
-      .given("set id", { id: "42" })
-      .uponReceiving("a request to get the plain data")
+      .given('set id', { id: '42' })
+      .uponReceiving('a request to get the plain data')
       .withRequest({
-        method: "GET",
-        path: MatchersV3.fromProviderState("/data/${id}", "/data/42"),
+        method: 'GET',
+        path: MatchersV3.fromProviderState('/data/${id}', '/data/42'),
       })
       .willRespondWith({
         status: 200,
-        headers: { "Content-Type": "text/plain; charset=utf-8" },
+        headers: { 'Content-Type': 'text/plain; charset=utf-8' },
         body: MatchersV3.fromProviderState(
-          "data: testData, id: ${id}",
-          "data: testData, id: 42"
+          'data: testData, id: ${id}',
+          'data: testData, id: 42'
         ),
       });
 
     return provider.executeTest(async (mockserver) => {
-      transactionService.setAccountServiceUrl(mockserver.url)
+      transactionService.setAccountServiceUrl(mockserver.url);
       return transactionService.getText(42).then((result) => {
-        expect(result.data).to.equal("data: testData, id: 42")
+        expect(result.data).to.equal('data: testData, id: 42');
       });
     });
   });

@@ -35,8 +35,8 @@ module.exports = {
   },
 
   getText: (id) => {
-    return axios.get(accountServiceUrl + "/data/" + id).then((data) => {
-      return data
+    return axios.get(accountServiceUrl + '/data/' + id).then((data) => {
+      return data;
     });
   },
 };

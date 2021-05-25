@@ -174,7 +174,7 @@ export class PactV3 {
   }
 
   public withRequest(req: V3Request): PactV3 {
-    this.pact.addRequest(req, req.body)
+    this.pact.addRequest(req, req.body);
     return this;
   }
 
@@ -198,8 +198,8 @@ export class PactV3 {
   }
 
   public willRespondWith(res: V3Response): PactV3 {
-    this.pact.addResponse(res, res.body)
-    this.states = []
+    this.pact.addResponse(res, res.body);
+    this.states = [];
     return this;
   }
 
