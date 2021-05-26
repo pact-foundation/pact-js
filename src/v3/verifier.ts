@@ -66,7 +66,10 @@ export class VerifierV3 {
       if (!this.config.provider) {
         reject(new ConfigurationError('Provider name is required'));
       }
-      if (isEmpty(this.config.pactUrls) && !this.config.pactBrokerUrl) {
+      if (
+        (isEmpty(this.config.pactUrls) || !this.config.pactUrls) &&
+        !this.config.pactBrokerUrl
+      ) {
         reject(
           new ConfigurationError(
             'Either a list of pactUrls or a pactBrokerUrl must be provided'
