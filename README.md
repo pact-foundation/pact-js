@@ -99,7 +99,7 @@ Read [Getting started with Pact] for more information for beginners.
 ```
 npm i -S @pact-foundation/pact@latest
 ```
-Make sure the `ignore-scripts` option is disabled, pact uses npm scripts to download further dependencies. 
+Make sure the `ignore-scripts` option is disabled, pact uses npm scripts to download further dependencies.
 
 ### Do Not Track
 
@@ -1290,7 +1290,13 @@ See above - you probably have not returned a Promise when you should have.
 
 ### Re-run specific verification failures
 
-If you prefix your test command (e.g. `npm t`) with the following two environment variables, you can selectively run a specific interaction during provider verification.
+If you prefix your test command (e.g. `npm t`) with the following environment variables, you can selectively run a specific interaction during provider verification.
+
+| variable name          | description                                                                                            | comments    |
+| ---------------------- | ------------------------------------------------------------------------------------------------------ | ----------- |
+| PACT_DESCRIPTION       | select all tests that contain this string in its `description`(from the test output, or the pact file) |             |
+| PACT_PROVIDER_STATE    | select all tests that contain this string in on of its `providerState`                                 |             |
+| PACT_PROVIDER_NO_STATE | set to `TRUE` to select all tests what don't have any `providerState`                                  | only for V3 |
 
 For the e2e example, let's assume we have the following failure:
 
@@ -1307,10 +1313,8 @@ Failed interactions:
 If we wanted to target the second failure, we can extract the description and state as the bits before and after the word "given":
 
 ```sh
-PACT_DESCRIPTION="a request for an animal with ID 1" PACT_PROVIDER_STATE="Has an animal with ID 1" npm t
+PACT_DESCRIPTION="A request for an animal with ID 1" PACT_PROVIDER_STATE="Has an animal with ID 1" npm t
 ```
-
-Also note that `PACT_DESCRIPTION` is the failing `description` and `PACT_PROVIDER_STATE` is the corresponding `providerState` from the pact file itself.
 
 ### Timeout
 
