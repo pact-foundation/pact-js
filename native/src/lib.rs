@@ -5,13 +5,15 @@
 #[macro_use] extern crate serde_json;
 #[macro_use] extern crate maplit;
 
+use pact_models::content_types::ContentType;
+use pact_models::bodies::OptionalBody;
+use pact_models::{Consumer, Provider};
+use pact_models::provider_states::ProviderState;
 use pact_matching::models::matchingrules::MatchingRuleCategory;
 use pact_mock_server::mock_server::MockServerConfig;
-use pact_matching::models::content_types::ContentType;
 use neon::prelude::*;
 use pact_matching::models::*;
 use pact_matching::models::json_utils::json_to_string;
-use pact_matching::models::provider_states::ProviderState;
 use pact_matching::models::matchingrules::{MatchingRules, MatchingRule, RuleLogic};
 use pact_matching::models::generators::{Generators, GeneratorCategory, Generator};
 use pact_matching::time_utils::generate_string;
@@ -19,10 +21,10 @@ use pact_mock_server::server_manager::ServerManager;
 use pact_mock_server_ffi::bodies::{
   process_object,
   process_array,
-  process_json, 
-  request_multipart, 
-  response_multipart, 
-  file_as_multipart_body, 
+  process_json,
+  request_multipart,
+  response_multipart,
+  file_as_multipart_body,
   from_integration_json
 };
 use pact_mock_server_ffi::{generate_regex_value, StringResult};
@@ -239,7 +241,7 @@ fn process_query(cx: &mut CallContext<JsPact>, js_query: Handle<JsValue>) -> Neo
         for (index, item) in vec.iter().enumerate() {
           let (value, matcher, generator) = get_parameter(cx, &item)?;
           if let Some(rule) = matcher {
-            rules.add_rule(prop_name.clone(), rule, &RuleLogic::And);
+            rules.add_rule(prop_name.clone().as_str(), rule, &RuleLogic::And);
           }
           if let Some(generator) = generator {
             generators.insert(format!("{}[{}]", prop_name.clone(), index), generator);
@@ -250,7 +252,7 @@ fn process_query(cx: &mut CallContext<JsPact>, js_query: Handle<JsValue>) -> Neo
       } else {
         let (value, matcher, generator) = get_parameter(cx, &prop_val)?;
         if let Some(rule) = matcher {
-          rules.add_rule(prop_name.clone(), rule, &RuleLogic::And);
+          rules.add_rule(prop_name.clone().as_str(), rule, &RuleLogic::And);
         }
         if let Some(generator) = generator {
           generators.insert(prop_name.clone(), generator);
@@ -282,7 +284,7 @@ fn process_headers(cx: &mut CallContext<JsPact>, obj: Handle<JsObject>) -> NeonR
         for (index, item) in vec.iter().enumerate() {
           let (value, matcher, generator) = get_parameter(cx, &item)?;
           if let Some(rule) = matcher {
-            rules.add_rule(prop_name.clone(), rule, &RuleLogic::And);
+            rules.add_rule(prop_name.clone().as_str(), rule, &RuleLogic::And);
           }
           if let Some(generator) = generator {
             generators.insert(format!("{}[{}]", prop_name.clone(), index), generator);
@@ -293,7 +295,7 @@ fn process_headers(cx: &mut CallContext<JsPact>, obj: Handle<JsObject>) -> NeonR
       } else {
         let (value, matcher, generator) = get_parameter(cx, &prop_val)?;
         if let Some(rule) = matcher {
-          rules.add_rule(prop_name.clone(), rule, &RuleLogic::And);
+          rules.add_rule(prop_name.clone().as_str(), rule, &RuleLogic::And);
         }
         if let Some(generator) = generator {
           generators.insert(prop_name.clone(), generator);
@@ -898,7 +900,7 @@ declare_types! {
         let guard = cx.lock();
         let pact = this.borrow(&guard);
         match MANAGER.lock().unwrap()
-          .start_mock_server(mock_server_id.clone(), pact.clone(), mock_server_port, mock_server_config)
+          .start_mock_server(mock_server_id.clone(), Box::new(pact.clone()), mock_server_port, mock_server_config)
           .map(|port| port as i32) {
             Ok(port) => port,
             Err(err) => panic!(err)

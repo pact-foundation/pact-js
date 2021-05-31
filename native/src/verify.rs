@@ -10,7 +10,7 @@ use url::Url;
 use std::sync::mpsc;
 use std::time::Duration;
 use async_trait::async_trait;
-use pact_matching::models::provider_states::ProviderState;
+use pact_models::provider_states::ProviderState;
 use maplit::*;
 use std::collections::HashMap;
 use crate::utils::{serde_value_to_js_object_attr, js_value_to_serde_value};
@@ -277,7 +277,7 @@ impl Task for BackgroundTask {
         Ok(runtime) => runtime.block_on(async {
           let provider_state_executor = ProviderStateCallback {
             callback_handlers: &self.state_handlers,
-            timeout: self.options.callback_timeout
+            timeout: self.options.request_timeout
           };
           pact_verifier::verify_provider_async(self.provider_info.clone(), self.pacts.clone(), self.filter_info.clone(), self.consumers_filter.clone(), self.options.clone(), &Arc::new(provider_state_executor)).await
         }),
@@ -449,7 +449,7 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
 
   debug!("provider_info = {:?}", provider_info);
 
-  let callback_timeout = get_integer_value(&mut cx, &config, "callbackTimeout").unwrap_or(5000);
+  let request_timeout = get_integer_value(&mut cx, &config, "callbackTimeout").unwrap_or(5000);
 
   let request_filter = match config.get(&mut cx, "requestFilter") {
     Ok(request_filter) => match request_filter.downcast::<JsFunction>() {
@@ -457,7 +457,7 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
         let this = cx.this();
         Some(Arc::new(RequestFilterCallback {
           callback_handler: EventHandler::new(&cx, this, val),
-          timeout: callback_timeout
+          timeout: request_timeout
         }))
       },
       Err(_) => None
@@ -537,7 +537,7 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
     request_filter,
     provider_tags,
     disable_ssl_verification,
-    callback_timeout,
+    request_timeout,
     .. VerificationOptions::default()
   };
 

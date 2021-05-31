@@ -45,12 +45,12 @@ pub fn generate_xml_body(attributes: &Map<String, Value>, matching_rules: &mut M
 }
 
 fn create_element_from_json<'a>(
-  doc: Document<'a>, 
-  parent: Option<Element<'a>>, 
-  object: &Map<String, Value>, 
-  matching_rules: &mut MatchingRuleCategory, 
-  generators: &mut Generators, 
-  path: &Vec<&str>, 
+  doc: Document<'a>,
+  parent: Option<Element<'a>>,
+  object: &Map<String, Value>,
+  matching_rules: &mut MatchingRuleCategory,
+  generators: &mut Generators,
+  path: &Vec<&str>,
   type_matcher: bool,
   namespaces: &mut HashMap<String, String>
 ) -> Either<Element<'a>, Text<'a>> {
@@ -64,7 +64,7 @@ fn create_element_from_json<'a>(
         let name = json_to_string(attr.get("name").unwrap());
         updated_path.push(&name);
         if let Some(rule) = from_integration_json(object) {
-          matching_rules.add_rule(updated_path.join("."), rule, &RuleLogic::And);
+          matching_rules.add_rule(updated_path.join(".").as_str(), rule, &RuleLogic::And);
         }
         if let Some(gen) = object.get("pact:generator:type") {
           match Generator::from_map(&json_to_string(gen), object) {
@@ -189,10 +189,10 @@ fn create_element_from_json<'a>(
 }
 
 fn add_attributes(
-  element: &Element, 
-  attributes: &Map<String, Value>, 
-  matching_rules: &mut MatchingRuleCategory, 
-  generators: &mut Generators, 
+  element: &Element,
+  attributes: &Map<String, Value>,
+  matching_rules: &mut MatchingRuleCategory,
+  generators: &mut Generators,
   path: &Vec<&str>
 ) {
   trace!("add_attributes: attributes = {:?}", attributes);
