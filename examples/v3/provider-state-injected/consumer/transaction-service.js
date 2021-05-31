@@ -33,4 +33,15 @@ module.exports = {
         };
       });
   },
+
+  getText: (id) => {
+    return axios.get(accountServiceUrl + '/data/' + id).then((data) => {
+      return data;
+    });
+  },
+  getXml: (id) => {
+    return axios.get(accountServiceUrl + '/data/xml/' + id).then((data) => {
+      return data;
+    });
+  },
 };

@@ -1,6 +1,6 @@
 const path = require('path');
 const transactionService = require('./transaction-service');
-const { PactV3, MatchersV3 } = require('@pact-foundation/pact/v3');
+const { PactV3, MatchersV3, XmlBuilder } = require('@pact-foundation/pact/v3');
 const { expect } = require('chai');
 const {
   string,
@@ -13,7 +13,7 @@ const {
 
 describe('Transaction service - create a new transaction for an account', () => {
   let provider;
-  beforeAll(() => {
+  beforeEach(() => {
     provider = new PactV3({
       consumer: 'TransactionService',
       provider: 'AccountService',
@@ -69,6 +69,69 @@ describe('Transaction service - create a new transaction for an account', () => 
           expect(result.account.accountNumber).to.equal(100);
           expect(result.transaction.amount).to.equal(100000);
         });
+    });
+  });
+
+  // MatchersV3.fromProviderState on body
+  it('test text data', () => {
+    provider
+      .given('set id', { id: '42' })
+      .uponReceiving('a request to get the plain data')
+      .withRequest({
+        method: 'GET',
+        path: MatchersV3.fromProviderState('/data/${id}', '/data/42'),
+      })
+      .willRespondWith({
+        status: 200,
+        headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+        body: MatchersV3.fromProviderState(
+          'data: testData, id: ${id}',
+          'data: testData, id: 42'
+        ),
+      });
+
+    return provider.executeTest(async (mockserver) => {
+      transactionService.setAccountServiceUrl(mockserver.url);
+      return transactionService.getText(42).then((result) => {
+        expect(result.data).to.equal('data: testData, id: 42');
+      });
+    });
+  });
+
+  // MatchersV3.string doesn't work within XmlBuilder with namespaced xml
+  it('test xml data', () => {
+    provider
+      .given('set id', { id: '52' })
+      .uponReceiving('a request to get the plain data')
+      .withRequest({
+        method: 'GET',
+        path: MatchersV3.fromProviderState('/data/xml/${id}', '/data/42'),
+      })
+      .willRespondWith({
+        status: 200,
+        headers: { 'Content-Type': 'application/xml; charset=utf-8' },
+        body: new XmlBuilder('1.0', '', 'root').build((root) => {
+          root.setAttributes({ 'xmlns:h': 'http://www.w3.org/TR/html4/' });
+          root.appendElement('data', '', (data) => {
+            data
+              .appendElement('h:data', '', MatchersV3.string('random'))
+              .appendElement(
+                'id',
+                '',
+                MatchersV3.fromProviderState('${id}', '42')
+              );
+          });
+        }),
+      });
+
+    return provider.executeTest(async (mockserver) => {
+      transactionService.setAccountServiceUrl(mockserver.url);
+      return transactionService.getXml(42).then((result) => {
+        console.log(result.data);
+        expect(result.data).to.equal(
+          `<?xml version='1.0'?><root xmlns:h='http://www.w3.org/TR/html4/'><data><h:data>random</h:data><id>42</id></data></root>`
+        );
+      });
     });
   });
 });

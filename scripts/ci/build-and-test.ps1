@@ -1,4 +1,5 @@
 npm ci
+git checkout native
 npm run dist
 npm run build:v3
 Copy-Item "package.json" -Destination "dist"

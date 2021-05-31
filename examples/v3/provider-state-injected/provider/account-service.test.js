@@ -34,6 +34,16 @@ describe('Account Service', () => {
             return null;
           }
         },
+        'set id': (setup, params) => {
+          if (setup) {
+            return { id: params.id };
+          }
+        },
+        'set path': (setup, params) => {
+          if (setup) {
+            return { id: params.id, path: params.path };
+          }
+        },
       },
 
       pactUrls: [
