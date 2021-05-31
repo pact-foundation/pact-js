@@ -464,7 +464,7 @@ declare_types! {
                 debug!("Request body = {}", body.str_value());
                 last.request.body = body;
               },
-              Err(err) => panic!(err)
+              Err(err) => panic!("{}", err)
             }
           } else if body.is_a::<JsObject>() {
             trace!("JsPact.addRequest - body is a JsObject");
@@ -712,7 +712,7 @@ declare_types! {
                 debug!("Response body = {}", body.str_value());
                 last.response.body = body;
               },
-              Err(err) => panic!(err)
+              Err(err) => panic!("{}", err)
             }
           } else if body.is_a::<JsObject>() {
             trace!("JsPact.addResponse - body is a JsObject");
@@ -903,7 +903,7 @@ declare_types! {
           .start_mock_server(mock_server_id.clone(), Box::new(pact.clone()), mock_server_port, mock_server_config)
           .map(|port| port as i32) {
             Ok(port) => port,
-            Err(err) => panic!(err)
+            Err(err) => panic!("{}", err)
           }
       };
 

@@ -51,7 +51,7 @@ fn create_element_from_json<'a>(
   matching_rules: &mut MatchingRuleCategory,
   generators: &mut Generators,
   path: &Vec<&str>,
-  type_matcher: bool,
+  _type_matcher: bool,
   namespaces: &mut HashMap<String, String>
 ) -> Either<Element<'a>, Text<'a>> {
   trace!("create_element_from_json {:?}: object = {:?}", path, object);
