@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.36](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.35...v10.0.0-beta.36) (2021-05-31)
+
+
+### Features
+
+* filter verification by description & state ([2eb529a](https://github.com/pact-foundation/pact-js/commit/2eb529a6ee5d56bc8a40d280e238c36405bb8f58))
+
+
+### Fixes and Improvements
+
+* **build:** restore to files from git before build ([dfb9b08](https://github.com/pact-foundation/pact-js/commit/dfb9b08693522557e509c508d90e2a97f370ec4c))
+* Error message with no pactBrokerUrl and no pactUrls ([3f6b036](https://github.com/pact-foundation/pact-js/commit/3f6b036779382f826f3449999855931abd12174f))
+* internal error in Neon module: called `Option::unwrap()` on a `None` value ([7cb6822](https://github.com/pact-foundation/pact-js/commit/7cb6822d35c0447bead4a9ddcf863dacc7562ee8))
+* linting ([3b1d394](https://github.com/pact-foundation/pact-js/commit/3b1d3945516ad924c47b47ffa70f8f33550a1136))
+* process body intermediate format when the content type is not JSON [#633](https://github.com/pact-foundation/pact-js/issues/633) ([2683224](https://github.com/pact-foundation/pact-js/commit/26832240ab4977897a77a87f5f6f32e9af9da975))
+* rename pact-node to pact-core ([553c525](https://github.com/pact-foundation/pact-js/commit/553c525a73e244d00726e933aa000ca4b81cf137))
+* windows tests ([c56db1b](https://github.com/pact-foundation/pact-js/commit/c56db1b4b9477288f041063ca4b6c44b742b1b6f))
+* windows tests ([1ef2f7c](https://github.com/pact-foundation/pact-js/commit/1ef2f7cd5869d0f4778e22a92c60f0aeabb785e2))
+* XMLBuilder needs to return intermediate format ([002d6bc](https://github.com/pact-foundation/pact-js/commit/002d6bcba1ec495e82d10ba3367d91831d02e62b))
+
 ## [10.0.0-beta.35](https://github.com/pact-foundation/pact-js/compare/v9.15.5...v10.0.0-beta.35) (2021-05-21)
 
 
