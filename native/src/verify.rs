@@ -511,8 +511,8 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
   };
 
   if publish && provider_version.is_none() {
-    println!("    {}", Red.paint("ERROR: providerVersion must be provided if publishing verification results in enabled (publishVerificationResult == true)"));
-    return cx.throw_error("providerVersion must be provided if publishing verification results in enabled (publishVerificationResult == true)")?
+    println!("    {}", Red.paint("ERROR: providerVersion must be provided if publishing verification results is enabled (publishVerificationResult == true)"));
+    return cx.throw_error("providerVersion must be provided if publishing verification results is enabled (publishVerificationResult == true)")?
   }
 
   let disable_ssl_verification = match config.get(&mut cx, "disableSSLVerification") {
