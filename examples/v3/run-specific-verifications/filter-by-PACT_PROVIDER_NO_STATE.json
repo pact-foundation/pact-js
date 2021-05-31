@@ -1,0 +1,131 @@
+{
+  "consumer": {
+    "name": "Filter Service V3"
+  },
+  "interactions": [
+    {
+      "description": "a request to be used",
+      "providerStates": [
+      ],
+      "request": {
+        "body": {
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "method": "GET",
+        "path": "/pass"
+      },
+      "response": {
+        "body": {
+          "result": "OK"
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "a request to be skipped",
+      "providerStates": [
+        {
+          "name": "state to be skipped",
+          "params": {
+            "some": "data"
+          }
+        }
+      ],
+      "request": {
+        "body": {
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "method": "GET",
+        "path": "/fail"
+      },
+      "response": {
+        "body": {
+          "result": "OK"
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "a other request to be skipped",
+      "providerStates": [
+        {
+          "name": "state 1",
+          "params": {
+            "some": "data"
+          }
+        },
+        {
+          "name": "state 2",
+          "params": {
+            "some": "data"
+          }
+        }
+      ],
+      "request": {
+        "body": {
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "method": "GET",
+        "path": "/fail"
+      },
+      "response": {
+        "body": {
+          "result": "OK"
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "an other request to be used",
+      "providerStates": [
+      ],
+      "request": {
+        "body": {
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "method": "GET",
+        "path": "/pass"
+      },
+      "response": {
+        "body": {
+          "result": "OK"
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "status": 200
+      }
+    }
+  ],
+  "metadata": {
+    "pactJs": {
+      "version": "10.0.0-beta.35"
+    },
+    "pactRust": {
+      "version": "0.8.14"
+    },
+    "pactSpecification": {
+      "version": "3.0.0"
+    }
+  },
+  "provider": {
+    "name": "filter-provider"
+  }
+}

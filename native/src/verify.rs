@@ -16,6 +16,7 @@ use std::collections::HashMap;
 use crate::utils::{serde_value_to_js_object_attr, js_value_to_serde_value};
 use log::*;
 use std::panic;
+use std::env;
 
 fn get_string_value(cx: &mut FunctionContext, obj: &JsObject, name: &str) -> Option<String> {
   match obj.get(cx, name) {
@@ -319,6 +320,45 @@ fn consumer_tags_to_selectors(tags: Vec<String>) -> Vec<pact_verifier::ConsumerV
   }).collect()
 }
 
+fn interaction_filter() -> FilterInfo {
+  let mut pact_description_set = true;
+  let mut pact_description = "".to_string();
+  match env::var("PACT_DESCRIPTION") {
+    Ok(val) => pact_description = val,
+    Err(_e) => pact_description_set = false,
+  };
+
+
+  let mut pact_provider_state_set = true;
+  let mut pact_provider_state = "".to_string();
+  match env::var("PACT_PROVIDER_STATE") {
+    Ok(val) => pact_provider_state = val,
+    Err(_e) => pact_provider_state_set = false,
+  };
+
+  let pact_provider_no_state = match env::var("PACT_PROVIDER_NO_STATE") {
+    Ok(val) => val.eq("TRUE"),
+    Err(_e) => false,
+  };
+
+
+  if pact_description_set && (pact_provider_state_set || pact_provider_no_state) {
+    if pact_provider_state_set {
+      FilterInfo::DescriptionAndState(pact_description, pact_provider_state)
+    } else {
+      FilterInfo::DescriptionAndState(pact_description, "".to_string())
+    }
+  } else if pact_description_set {
+    FilterInfo::Description(pact_description)
+  } else if pact_provider_state_set {
+    FilterInfo::State(pact_provider_state)
+  } else if pact_provider_no_state {
+    FilterInfo::State("".to_string())
+  } else {
+    FilterInfo::None
+  }
+}
+
 pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
   let config = cx.argument::<JsObject>(0)?;
   let callback = cx.argument::<JsFunction>(1)?;
@@ -488,7 +528,7 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
     _ => false
   };
 
-  let filter_info = FilterInfo::None;
+  let filter_info = interaction_filter();
   let consumers_filter: Vec<String> = vec![];
   let options = VerificationOptions {
     publish,
