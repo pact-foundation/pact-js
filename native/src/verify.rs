@@ -529,6 +529,16 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
   };
 
   let filter_info = interaction_filter();
+
+  match filter_info {
+    FilterInfo::None => (),
+    _ => {
+      if publish {
+        warn!("\n\nWARNING: you have enabled publishing of verification results and are also filtering interactions - this can lead to invalid results published to your Pact Broker. I hope you know what you're doing!\n\n");
+      }
+    }
+  };
+
   let consumers_filter: Vec<String> = vec![];
   let options = VerificationOptions {
     publish,
