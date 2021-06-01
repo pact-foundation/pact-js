@@ -16,11 +16,11 @@ neon-build = "0.6.0"
 
 [dependencies]
 neon = { version = "0.6.0", features = ["event-handler-api"] }
-pact_mock_server = "0.7.17"
-pact_mock_server_ffi = ">=0.0.17"
-pact_matching = "0.9.2"
-pact_verifier = "0.10.7"
-pact_models = "0.0.3"
+pact_mock_server = "0.7"
+pact_mock_server_ffi = "0.0"
+pact_matching = "0.9"
+pact_verifier = "0.10"
+pact_models = "0.0"
 env_logger = "0.8"
 log = "0.4.6"
 uuid = { version = "0.8.1", features = ["v4"] }
