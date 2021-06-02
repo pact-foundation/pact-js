@@ -56,9 +56,7 @@ export class XmlElement extends XmlNode {
   }
 
   public appendText(content: string | Matcher<string>): XmlElement {
-    if (typeof context === 'string') {
-      this.children.push(new XmlText(content as string));
-    } else if (content as Matcher<string>['pact:matcher:type']) {
+    if (typeof content === 'object' && content['pact:matcher:type']) {
       this.children.push(
         new XmlText(
           (content as Matcher<string>).value || '',
