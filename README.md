@@ -1019,14 +1019,7 @@ npm i @pact-foundation/pact@beta
 
 For examples on how to use it, see [examples/v3/e2e](https://github.com/pact-foundation/pact-js/tree/feat/v3.0.0/examples/v3/e2e) and [examples/v3/todo-consumer](https://github.com/pact-foundation/pact-js/tree/feat/v3.0.0/examples/v3/todo-consumer) in the `v3.0.0` branch.
 
-**NOTE: This implementation is not ready for production use yet, as it DOES NOT yet support the following features:**
-
-* Verifying a pact by direct URL
-* `consumerVersionTags` to specify which pacts to verify - only the latest pact will be verified.
-* Any features that make use of the "Pacts for Verification" API which include:
-    * Support for `consumerVersionSelectors`
-    * Pending pacts
-    * WIP pacts
+**NOTE: The API of this implementation is likely to change. See this [discussion](https://github.com/pact-foundation/pact-js/discussions/681) for more**
 
 ### Using the V3 matching rules
 
