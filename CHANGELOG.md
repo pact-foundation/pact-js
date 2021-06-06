@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.37](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.36...v10.0.0-beta.37) (2021-06-06)
+
+
+### Features
+
+* add consumer version selectors to v3 pact verifier ([3fe65ad](https://github.com/pact-foundation/pact-js/commit/3fe65ade2a478929309392e2fab030676373c4b4))
+
+
+### Fixes and Improvements
+
+* append text only works with Matchers ([ef56513](https://github.com/pact-foundation/pact-js/commit/ef56513b96d046a36ec1ff068a1a707591f986a9)), closes [/github.com/pact-foundation/pact-js/commit/b3b5e6231e9f0ade7be045ff117b441d0169114a#diff-254dbea027a5c57e2b14fb8ff30edc28fea1d39ff2392d95731f7a16f60d5782R70](https://github.com/pact-foundation//github.com/pact-foundation/pact-js/commit/b3b5e6231e9f0ade7be045ff117b441d0169114a/issues/diff-254dbea027a5c57e2b14fb8ff30edc28fea1d39ff2392d95731f7a16f60d5782R70)
+
 ## [10.0.0-beta.36](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.35...v10.0.0-beta.36) (2021-05-31)
 
 
