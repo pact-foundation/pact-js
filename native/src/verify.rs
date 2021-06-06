@@ -405,7 +405,7 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
           Ok(tags) => Some(tags),
           Err(e) => return cx.throw_error(e)
         };
-        let consumer_version_selectors = match get_string_array(&mut cx, &config, "consumerVersionSelectors") {
+        let consumer_version_selectors = match get_string_array(&mut cx, &config, "consumerVersionSelectorsString") {
           Ok(tags) => Some(tags),
           Err(e) => return cx.throw_error(e)
         };

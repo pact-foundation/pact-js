@@ -80,8 +80,15 @@ describe('Pact Verification', () => {
       pactBrokerUrl: pactBroker,
 
       // Fetch from broker with given tags
-      consumerVersionTags: ['prod'],
       providerVersionTags: ['master'],
+      // consumerVersionTags: ['prod'], // simple syntax
+      // Advanced selectors
+      consumerVersionSelectors: [
+        {
+            tag: "prod",
+            latest: true
+        }
+      ],
       enablePending: true,
 
       // Specific Remote pacts (doesn't need to be a broker)
