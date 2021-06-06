@@ -29,14 +29,13 @@ export interface VerifierV3Options {
 
   consumerVersionTags?: string | string[];
   providerVersionTags?: string | string[];
-  // consumerVersionSelectors?: ConsumerVersionSelector[];
+  consumerVersionSelectors?: ConsumerVersionSelector[];
   enablePending?: boolean;
   // timeout?: number;
   // verbose?: boolean;
   includeWipPactsSince?: string;
   // out?: string;
   // logDir?: string;
-  // logLevel?: LogLevel;
   disableSSLVerification?: boolean;
 }
 

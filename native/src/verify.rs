@@ -320,6 +320,12 @@ fn consumer_tags_to_selectors(tags: Vec<String>) -> Vec<pact_verifier::ConsumerV
   }).collect()
 }
 
+fn json_to_selectors(selectors: Vec<String>) -> Vec<pact_verifier::ConsumerVersionSelector> {
+  selectors.iter().map(|s| serde_json::from_str(s.as_str()))
+  .flatten()
+  .collect()
+}
+
 fn interaction_filter() -> FilterInfo {
   let mut pact_description_set = true;
   let mut pact_description = "".to_string();
@@ -396,10 +402,19 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
         let pending = get_bool_value(&mut cx, &config, "enablePending");
         let wip = get_string_value(&mut cx, &config, "includeWipPactsSince");
         let consumer_version_tags = match get_string_array(&mut cx, &config, "consumerVersionTags") {
-          Ok(tags) => tags,
+          Ok(tags) => Some(tags),
           Err(e) => return cx.throw_error(e)
         };
-        let selectors = consumer_tags_to_selectors(consumer_version_tags);
+        let consumer_version_selectors = match get_string_array(&mut cx, &config, "consumerVersionSelectors") {
+          Ok(tags) => Some(tags),
+          Err(e) => return cx.throw_error(e)
+        };
+
+        let selectors = match (consumer_version_selectors, consumer_version_tags) {
+          (Some(vs), _) => json_to_selectors(vs),
+          (_, Some(vt)) => consumer_tags_to_selectors(vt),
+          _ => vec![]
+        };
 
         if let Some(username) = get_string_value(&mut cx, &config, "pactBrokerUsername") {
           let password = get_string_value(&mut cx, &config, "pactBrokerPassword");
