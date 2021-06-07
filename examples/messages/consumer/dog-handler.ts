@@ -2,7 +2,7 @@
 // It expects to receive a valid "dog" object
 // and returns a failed promise if not
 export function dogApiHandler(dog: any): void {
-  if (!dog.id && !dog.name && !dog.type) {
+  if (!dog.id || !dog.name || !dog.type) {
     throw new Error("missing fields")
   }
 
