@@ -4,8 +4,8 @@
  * but are fixed, to prevent contract invalidation after each run of the consumer test.
  */
 
-import { AnyJson, JsonMap } from 'common/jsonTypes';
 import { isFunction, isNil, isEmpty, isUndefined } from 'lodash';
+import { AnyJson, JsonMap } from '../common/jsonTypes';
 import MatcherError from '../errors/matcherError';
 
 // Note: The following regexes are Ruby formatted,

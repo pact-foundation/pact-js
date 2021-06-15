@@ -1,4 +1,4 @@
-import { AnyJson } from 'common/jsonTypes';
+import { AnyJson } from '../common/jsonTypes';
 import { Matcher, AnyTemplate } from './matchers';
 
 /**
