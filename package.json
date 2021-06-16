@@ -126,12 +126,10 @@
     "ramda": "^0.26.1"
   },
   "devDependencies": {
-    "@babel/cli": "~7.6.0",
+    "@babel/cli": "^7.14.5",
     "@babel/core": "^7.6.4",
     "@babel/preset-env": "^7.6.3",
     "@octokit/rest": "^18.0.3",
-    "@types/pino": "^6.3.0",
-    "@types/ramda": "^0.26.43",
     "@pact-foundation/pact-js-prettier-config": "^1.0.0",
     "@types/chai": "^4.1.2",
     "@types/chai-as-promised": "^7.1.1",
@@ -144,6 +142,8 @@
     "@types/mockery": "^1.4.29",
     "@types/nock": "^9.1.2",
     "@types/node": "^8.0.24",
+    "@types/pino": "^6.3.0",
+    "@types/ramda": "^0.26.43",
     "@types/sinon": "^7.0.6",
     "@types/sinon-chai": "^2.7.29",
     "@types/superagent": "^3.5.7",
