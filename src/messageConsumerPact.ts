@@ -4,7 +4,7 @@
 
 import { isEmpty, cloneDeep } from 'lodash';
 import serviceFactory from '@pact-foundation/pact-core';
-import { AnyJson } from 'common/jsonTypes';
+import { AnyJson } from './common/jsonTypes';
 import { extractPayload, AnyTemplate } from './dsl/matchers';
 import {
   Metadata,
