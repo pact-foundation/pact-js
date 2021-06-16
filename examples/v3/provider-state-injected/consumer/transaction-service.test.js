@@ -2,8 +2,14 @@ const path = require('path');
 const transactionService = require('./transaction-service');
 const { PactV3, MatchersV3, XmlBuilder } = require('@pact-foundation/pact/v3');
 const { expect } = require('chai');
-const { string, integer, url2, regex, datetime, fromProviderState } =
-  MatchersV3;
+const {
+  string,
+  integer,
+  url2,
+  regex,
+  datetime,
+  fromProviderState,
+} = MatchersV3;
 
 describe('Transaction service - create a new transaction for an account', () => {
   let provider;
