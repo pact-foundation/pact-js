@@ -5,6 +5,14 @@ import logger from '../common/logger';
 
 import PactNative from '../../native/index.node';
 
+/**
+ * Define needed state for given pacts
+ */
+export type StateHandler = (
+  setup: boolean,
+  parameters: Record<string, unknown>
+) => void;
+
 // Commented out fields highlight areas we need to look at for compatibility
 // with existing API, as a sort of "TODO" list.
 export interface VerifierV3Options {
@@ -18,14 +26,16 @@ export interface VerifierV3Options {
   pactBrokerPassword?: string;
   pactBrokerToken?: string;
 
-  // The timeout in milliseconds for request filters and provider state handlers
-  // to execute within
+  /**
+   * The timeout in milliseconds for request filters and provider state handlers
+   * to execute within
+   */
   callbackTimeout?: number;
   // customProviderHeaders?: string[]
   publishVerificationResult?: boolean;
   providerVersion?: string;
   requestFilter?: express.RequestHandler;
-  stateHandlers?: Record<string, () => void>;
+  stateHandlers?: Record<string, StateHandler>;
 
   consumerVersionTags?: string | string[];
   providerVersionTags?: string | string[];
