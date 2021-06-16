@@ -63,7 +63,9 @@ export class VerifierV3 {
    */
   public verifyProvider(): Promise<unknown> {
     return new Promise((resolve, reject) => {
-      const config: VerifierV3Options & InternalVerifierOptions = { ...this.config }
+      const config: VerifierV3Options & InternalVerifierOptions = {
+        ...this.config,
+      };
 
       if (isEmpty(this.config)) {
         reject(new ConfigurationError('No configuration provided to verifier'));
@@ -72,9 +74,8 @@ export class VerifierV3 {
       // This is just too messy to do on the rust side. neon-serde would have helped, but appears unmaintained
       // and is currently incompatible
       if (this.config.consumerVersionSelectors) {
-        config.consumerVersionSelectorsString = this.config.consumerVersionSelectors.map(
-          (s) => JSON.stringify(s)
-        );
+        config.consumerVersionSelectorsString =
+          this.config.consumerVersionSelectors.map((s) => JSON.stringify(s));
       }
 
       if (!this.config.provider) {

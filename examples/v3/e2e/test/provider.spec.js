@@ -85,9 +85,9 @@ describe('Pact Verification', () => {
       // Advanced selectors
       consumerVersionSelectors: [
         {
-            tag: "prod",
-            latest: true
-        }
+          tag: 'prod',
+          latest: true,
+        },
       ],
       enablePending: true,
 

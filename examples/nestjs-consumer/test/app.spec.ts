@@ -21,13 +21,8 @@ pactWith(
     });
 
     // Alias flexible matchers for simplicity
-    const {
-      eachLike,
-      like,
-      term,
-      iso8601DateTimeWithMillis,
-      extractPayload,
-    } = Matchers;
+    const { eachLike, like, term, iso8601DateTimeWithMillis, extractPayload } =
+      Matchers;
 
     // Animal we want to match :)
     const suitor: Animal = {

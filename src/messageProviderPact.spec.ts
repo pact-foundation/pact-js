@@ -70,9 +70,9 @@ describe('MesageProvider', () => {
   describe('#setupVerificationHandler', () => {
     describe('when their is a valid setup', () => {
       it('creates a valid express handler', (done) => {
-        const setupVerificationHandler = (provider as any).setupVerificationHandler.bind(
-          provider
-        )();
+        const setupVerificationHandler = (
+          provider as any
+        ).setupVerificationHandler.bind(provider)();
         const req = { body: successfulMessage };
         const res = {
           json: () => done(), // Expect a response
@@ -83,9 +83,9 @@ describe('MesageProvider', () => {
     });
     describe('when their is an invalid setup', () => {
       it('creates a valid express handler that rejects the message', (done) => {
-        const setupVerificationHandler = (provider as any).setupVerificationHandler.bind(
-          provider
-        )();
+        const setupVerificationHandler = (
+          provider as any
+        ).setupVerificationHandler.bind(provider)();
         const req = { body: nonExistentMessage };
         const res = {
           status: (status: number) => {
@@ -163,9 +163,9 @@ describe('MesageProvider', () => {
   });
   describe('#setupProxyApplication', () => {
     it('returns a valid express app', () => {
-      const setupProxyApplication = (provider as any).setupProxyApplication.bind(
-        provider
-      );
+      const setupProxyApplication = (
+        provider as any
+      ).setupProxyApplication.bind(provider);
       expect(setupProxyApplication().listen).to.be.a('function');
     });
   });
