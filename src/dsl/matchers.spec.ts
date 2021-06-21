@@ -22,9 +22,80 @@ import {
   validateExample,
   extractPayload,
   isMatcher,
+  like,
+  AnyTemplate,
+  InterfaceToTemplate,
 } from './matchers';
 
+interface ExampleInterface {
+  someString: string;
+  someArray: Array<string>;
+  someNumber: number;
+  someObject: {
+    foo: string;
+    bar: string;
+  };
+}
+
+type ExampleType = {
+  someString: string;
+  someArray: Array<string>;
+  someNumber: number;
+  someObject: {
+    foo: string;
+    bar: string;
+  };
+};
+
 describe('Matcher', () => {
+  describe('can compile the types', () => {
+    describe('with interfaces', () => {
+      it('compiles when InterfaceToTemplate is used', () => {
+        const template: InterfaceToTemplate<ExampleInterface> = {
+          someArray: ['one', 'two'],
+          someNumber: 1,
+          someString: "it's a string",
+          someObject: {
+            foo: 'some string',
+            bar: 'some other string',
+          },
+        };
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const a: AnyTemplate = like(template);
+      });
+    });
+    describe('with types', () => {
+      it('compiles', () => {
+        const template: ExampleType = {
+          someArray: ['one', 'two'],
+          someNumber: 1,
+          someString: "it's a string",
+          someObject: {
+            foo: 'some string',
+            bar: 'some other string',
+          },
+        };
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const a: AnyTemplate = like(template);
+      });
+    });
+
+    it('compiles nested likes', () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const a: AnyTemplate = like({
+        someArray: ['one', 'two'],
+        someNumber: like(1),
+        someString: "it's a string",
+        someObject: like({
+          foo: like('some string'),
+          bar: 'some other string',
+        }),
+      });
+    });
+  });
+
   describe('#validateExample', () => {
     describe('when given a valid regex', () => {
       describe('and a matching example', () => {

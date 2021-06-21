@@ -20,6 +20,8 @@ import * as MatchersStar from './dsl/matchers';
 
 export const Matchers = MatchersStar;
 
+export { InterfaceToTemplate } from './dsl/matchers';
+
 export * from './httpPact';
 
 /**

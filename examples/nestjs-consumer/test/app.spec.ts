@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 import { pactWith } from 'jest-pact';
 import { HttpStatus } from '@nestjs/common';
 import { AppModule } from '../src/app.module';
-import { Matchers, Pact } from '@pact-foundation/pact';
+import { Matchers, Pact, InterfaceToTemplate } from '@pact-foundation/pact';
 import { AppService } from '../src/app.service';
 import { Animal } from '../src/animal.interface';
 
@@ -30,7 +30,7 @@ pactWith(
     } = Matchers;
 
     // Animal we want to match :)
-    const suitor: Animal = {
+    const suitor: InterfaceToTemplate<Animal> = {
       id: 2,
       available_from: new Date('2017-12-04T14:47:18.582Z'),
       first_name: 'Nanny',

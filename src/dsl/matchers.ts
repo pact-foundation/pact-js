@@ -300,6 +300,8 @@ export type AnyTemplate =
   | TemplateMap
   | ArrayTemplate;
 
+export type InterfaceToTemplate<O> = { [K in keyof O]: AnyTemplate };
+
 interface TemplateMap {
   [key: string]: AnyTemplate;
 }
