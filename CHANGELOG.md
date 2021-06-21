@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.38](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.37...v10.0.0-beta.38) (2021-06-21)
+
+
+### Fixes and Improvements
+
+* Add InterfaceToTemplate<> generic type to address compile errors if users are using interfaces with matchers ([982c4d2](https://github.com/pact-foundation/pact-js/commit/982c4d2ccd47254e4a8466a38e07b35a7d066a5c))
+* **verifier:** added StateHandler type and improved JSDocs ([4cad265](https://github.com/pact-foundation/pact-js/commit/4cad265e48a05539b7e99770852f7eaeba0bbd67))
+
 ## [10.0.0-beta.37](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.36...v10.0.0-beta.37) (2021-06-06)
 
 
