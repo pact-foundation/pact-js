@@ -22,21 +22,6 @@ export class GraphQLInteraction extends Interaction {
   protected variables?: GraphQLVariables = undefined
   protected query: string
 
-  private queryOrMutation(query: string, type: string) {
-    if (isNil(query)) {
-      throw new ConfigurationError(`You must provide a GraphQL ${type}.`)
-    }
-
-    try {
-      gql(query)
-    } catch (e) {
-      throw new GraphQLQueryError(`GraphQL ${type} is invalid: ${e.message}`)
-    }
-
-    this.query = query
-
-    return this
-  }
   /**
    * The type of GraphQL operation. Generally not required.
    */
@@ -128,6 +113,22 @@ export class GraphQLInteraction extends Interaction {
     )
 
     return this.state
+  }
+
+  private queryOrMutation(query: string, type: string) {
+    if (isNil(query)) {
+      throw new ConfigurationError(`You must provide a GraphQL ${type}.`)
+    }
+
+    try {
+      gql(query)
+    } catch (e) {
+      throw new GraphQLQueryError(`GraphQL ${type} is invalid: ${e.message}`)
+    }
+
+    this.query = query
+
+    return this
   }
 }
 
