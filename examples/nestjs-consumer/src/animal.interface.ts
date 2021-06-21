@@ -4,7 +4,7 @@ export interface Animal {
   last_name: string;
   animal: string;
   age: number;
-  available_from: Date;
+  available_from: string;
   gender: 'M' | 'F';
   location: {
     description: string;

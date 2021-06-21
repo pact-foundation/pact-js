@@ -30,9 +30,9 @@ pactWith(
     } = Matchers;
 
     // Animal we want to match :)
-    const suitor: InterfaceToTemplate<Animal> = {
+    const suitor: Animal = {
       id: 2,
-      available_from: new Date('2017-12-04T14:47:18.582Z'),
+      available_from: new Date('2017-12-04T14:47:18.582Z').toISOString(),
       first_name: 'Nanny',
       animal: 'goat',
       last_name: 'Doe',
@@ -49,6 +49,8 @@ pactWith(
       },
       interests: ['walks in the garden/meadow', 'parkour'],
     };
+
+    const suitorBodyTemplate: InterfaceToTemplate<Animal> = suitor;
 
     const MIN_ANIMALS = 2;
 
@@ -218,7 +220,7 @@ pactWith(
           withRequest: {
             method: 'POST',
             path: '/animals',
-            body: like(suitor),
+            body: like(suitorBodyTemplate),
             headers: {
               'Content-Type': 'application/json; charset=utf-8',
             },
@@ -228,7 +230,7 @@ pactWith(
             headers: {
               'Content-Type': 'application/json; charset=utf-8',
             },
-            body: like(suitor),
+            body: like(suitorBodyTemplate),
           },
         })
       );
