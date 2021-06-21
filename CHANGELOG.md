@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [9.16.0](https://github.com/pact-foundation/pact-js/compare/v9.15.5...v9.16.0) (2021-06-21)
+
+
+### Features
+
+* add withMutation alias for withQuery for graphql interactions ([1564a76](https://github.com/pact-foundation/pact-js/commit/1564a76b6a9b43f1eecb5f365b45b2ba29dcda1a))
+
+
+### Fixes and Improvements
+
+* Print a much better error when the mock service fails to start ([bbbc6f2](https://github.com/pact-foundation/pact-js/commit/bbbc6f21bcdd2e09a74ecf338b4f683e5826d7b7))
+
 ### [9.15.5](https://github.com/pact-foundation/pact-js/compare/v9.15.4...v9.15.5) (2021-04-21)
 
 
