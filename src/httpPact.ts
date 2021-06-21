@@ -112,6 +112,14 @@ export class Pact {
    * @returns {Promise}
    */
   public verify(): Promise<string> {
+    if (!this.mockService) {
+      return Promise.reject(
+        new Error(
+          "The Pact mock service does not appear to be running. Please check the log above, or try setting `logLevel: 'DEBUG'`"
+        )
+      )
+    }
+
     return this.mockService
       .verify()
       .then(() => this.mockService.removeInteractions())
@@ -146,6 +154,14 @@ export class Pact {
       )
     }
     this.finalized = true
+
+    if (!this.mockService) {
+      return Promise.reject(
+        new Error(
+          "The Pact mock service does not appear to be running. Please check the log above, or try setting `logLevel: 'DEBUG'`"
+        )
+      )
+    }
 
     return this.mockService
       .writePact()
