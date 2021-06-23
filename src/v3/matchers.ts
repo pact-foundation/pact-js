@@ -436,18 +436,18 @@ export function arrayContaining(
   };
 }
 
-export interface ProviderStateInjectedValue extends Matcher<string> {
+export interface ProviderStateInjectedValue extends Matcher<AnyJson> {
   expression: string;
 }
 
 /**
- * Marks a item as to be injected from the provider state
+ * Marks an item to be injected from the provider state
  * @param expression Expression to lookup in the provider state context
  * @param exampleValue Example value to use in the consumer test
  */
 export function fromProviderState(
   expression: string,
-  exampleValue: string
+  exampleValue: AnyJson
 ): ProviderStateInjectedValue {
   return {
     'pact:matcher:type': 'type',
