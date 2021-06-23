@@ -102,8 +102,8 @@ function displayRequest(request: MismatchRequest, indent: string): string {
   }
 
   if (request.body) {
+    const body = JSON.stringify(request.body);
     output.push(
-      const body = JSON.stringify(request.body);
       `${indent}Body: ${body.substr(0, 20)}... (${
         body.length
       } length)`
