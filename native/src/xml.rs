@@ -8,7 +8,7 @@ use sxd_document::Package;
 use sxd_document::writer::format_document;
 use pact_matching::models::matchingrules::RuleLogic;
 use pact_matching::models::generators::{Generators, GeneratorCategory, Generator};
-use pact_matching::models::json_utils::json_to_string;
+use pact_models::json_utils::json_to_string;
 use pact_mock_server_ffi::bodies::from_integration_json;
 use log::*;
 use std::collections::HashMap;

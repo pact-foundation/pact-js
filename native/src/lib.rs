@@ -13,10 +13,10 @@ use pact_matching::models::matchingrules::MatchingRuleCategory;
 use pact_mock_server::mock_server::MockServerConfig;
 use neon::prelude::*;
 use pact_matching::models::*;
-use pact_matching::models::json_utils::json_to_string;
+use pact_models::json_utils::json_to_string;
 use pact_matching::models::matchingrules::{MatchingRules, MatchingRule, RuleLogic};
 use pact_matching::models::generators::{Generators, GeneratorCategory, Generator};
-use pact_matching::time_utils::generate_string;
+use pact_models::time_utils::generate_string;
 use pact_mock_server::server_manager::ServerManager;
 use pact_mock_server_ffi::bodies::{
   process_object,
