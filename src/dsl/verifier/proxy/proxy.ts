@@ -48,7 +48,8 @@ export const createProxy = (
 
   // Proxy server will respond to Verifier process
   app.all('/*', (req, res) => {
-    logger.debug('Proxing', req.path);
+    logger.debug(`Proxying ${req.path}`);
+
     proxy.web(req, res, {
       changeOrigin: config.changeOrigin === true,
       secure: config.validateSSL === true,

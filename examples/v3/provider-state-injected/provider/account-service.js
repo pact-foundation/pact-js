@@ -45,6 +45,48 @@ server.get('/accounts/search/findOneByAccountNumberId', (req, res) => {
     });
 });
 
+server.post('/accounts/search/findOneByAccountNumberIdInBody', (req, res) => {
+  // To check and demonstrate typed responses. See https://github.com/pact-foundation/pact-reference/issues/116
+  if (typeof req.body.accountNumber !== 'number') {
+    console.log(
+      `accountNumber should be a number, got a ${typeof req.body.accountNumber}`
+    );
+    return res.status(400);
+  }
+
+  return accountRepository
+    .findByAccountNumber(req.body.accountNumber)
+    .then((account) => {
+      if (account) {
+        res.header('Content-Type', 'application/hal+json; charset=utf-8');
+        let baseUrl =
+          req.protocol + '://' + req.hostname + ':' + req.socket.localPort;
+        let body = {
+          _links: {
+            account: {
+              href: baseUrl + '/accounts/' + account.accountNumber.id,
+            },
+            self: {
+              href: baseUrl + '/accounts/' + account.accountNumber.id,
+            },
+          },
+          accountNumber: {
+            id: +account.accountNumber.id,
+          },
+          accountRef: account.referenceId,
+          createdDate: new Date(account.created).toISOString(),
+          id: account.id,
+          lastModifiedDate: new Date(account.updated).toISOString(),
+          name: account.name,
+          version: account.version,
+        };
+        res.json(body);
+      } else {
+        res.status(404).end();
+      }
+    });
+});
+
 server.get('/data/xml/:id', (req, res) => {
   res.header('Content-Type', 'application/xml; charset=utf-8');
   res.send(`<?xml version="1.0" encoding="UTF-8"?>

@@ -1,24 +1,58 @@
 import logger from '../../../../common/logger';
-import { ProviderState, ProxyOptions } from '../types';
+import {
+  ProxyOptions,
+  StateFunc,
+  StateFuncWithSetup,
+  ProviderState,
+  StateHandler,
+} from '../types';
+import { JsonMap } from '../../../../common/jsonTypes';
 
-// Lookup the handler based on the description, or get the default handler
+const isStateFuncWithSetup = (
+  fn: StateFuncWithSetup | StateFunc
+): fn is StateFuncWithSetup =>
+  (fn as StateFuncWithSetup).setup !== undefined ||
+  (fn as StateFuncWithSetup).teardown !== undefined;
+
+// Transform a regular state function to one with the setup/teardown functions
+const transformStateFunc = (fn: StateHandler): StateFuncWithSetup =>
+  isStateFuncWithSetup(fn) ? fn : { setup: fn };
+
+// Lookup the handler based on the description
 export const setupStates = (
-  descriptor: ProviderState,
+  state: ProviderState,
   config: ProxyOptions
-): Promise<unknown> => {
-  const promises: Array<Promise<unknown>> = [];
+): Promise<JsonMap | void> => {
+  logger.debug({ state }, 'setting up state');
 
-  if (descriptor.states) {
-    descriptor.states.forEach((state) => {
-      const handler = config.stateHandlers ? config.stateHandlers[state] : null;
+  const handler = config.stateHandlers
+    ? config.stateHandlers[state.state]
+    : null;
 
-      if (handler) {
-        promises.push(handler());
-      } else {
-        logger.warn(`No state handler found for "${state}", ignoring`);
-      }
-    });
+  if (!handler) {
+    if (state.action === 'setup') {
+      logger.warn(`no state handler found for state: "${state.state}"`);
+    }
+    return Promise.resolve();
   }
 
-  return Promise.all(promises);
+  const stateFn = transformStateFunc(handler);
+  switch (state.action) {
+    case 'setup':
+      if (stateFn.setup) {
+        logger.debug(`setting up state '${state.state}'`);
+        return stateFn.setup(state.params);
+      }
+      break;
+    case 'teardown':
+      if (stateFn.teardown) {
+        logger.debug(`tearing down state '${state.state}'`);
+        return stateFn.teardown(state.params);
+      }
+      break;
+    default:
+      logger.debug(`unknown state action '${state.action}' received, ignoring`);
+  }
+
+  return Promise.resolve();
 };

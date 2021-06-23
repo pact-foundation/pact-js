@@ -3,6 +3,7 @@ import * as MatchersV3 from './matchers';
 import { version as pactPackageVersion } from '../../package.json';
 
 import PactNative, { Mismatch, MismatchRequest } from '../../native/index.node';
+import { JsonMap } from '../common/jsonTypes';
 
 /**
  * Options for the mock server
@@ -32,7 +33,7 @@ export interface PactV3Options {
 
 export interface V3ProviderState {
   description: string;
-  parameters?: unknown;
+  parameters?: JsonMap;
 }
 
 type TemplateHeaders = {
@@ -162,7 +163,7 @@ export class PactV3 {
     );
   }
 
-  public given(providerState: string, parameters?: unknown): PactV3 {
+  public given(providerState: string, parameters?: JsonMap): PactV3 {
     this.states.push({ description: providerState, parameters });
     return this;
   }

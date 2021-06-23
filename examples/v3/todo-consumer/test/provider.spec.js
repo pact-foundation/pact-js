@@ -21,8 +21,8 @@ describe('Pact XML Verification', () => {
       providerBaseUrl: 'http://localhost:8081',
       pactUrls: ['./pacts/TodoApp-TodoServiceV3.json'],
       stateHandlers: {
-        'i have a list of projects': (setup) => {},
-        'i have a project': (setup) => {},
+        'i have a list of projects': (params) => {},
+        'i have a project': (params) => {},
       },
     };
 

@@ -20,49 +20,41 @@ describe('Pact Verification', () => {
     let token = 'INVALID TOKEN';
 
     return new VerifierV3({
+      logLevel: 'info',
       provider: 'Animal Profile Service V3',
       providerBaseUrl: 'http://localhost:8081',
-
-      requestFilter: (req) => {
+      requestFilter: (req, res, next) => {
         console.log(
           'Middleware invoked before provider API - injecting Authorization token'
         );
-
         req.headers['MY_SPECIAL_HEADER'] = 'my special value';
 
         // e.g. ADD Bearer token
         req.headers['authorization'] = `Bearer ${token}`;
-
-        return req;
+        next();
       },
 
       stateHandlers: {
-        'Has no animals': (setup) => {
-          if (setup) {
-            animalRepository.clear();
-            return Promise.resolve({
-              description: `Animals removed to the db`,
-            });
-          }
+        'Has no animals': () => {
+          animalRepository.clear();
+          return Promise.resolve({
+            description: `Animals removed to the db`,
+          });
         },
-        'Has some animals': (setup) => {
-          if (setup) {
-            importData();
-            return Promise.resolve({
-              description: `Animals added to the db`,
-              count: animalRepository.count(),
-            });
-          }
+        'Has some animals': () => {
+          importData();
+          return Promise.resolve({
+            description: `Animals added to the db`,
+            count: animalRepository.count(),
+          });
         },
-        'Has an animal with ID': (setup, parameters) => {
-          if (setup) {
-            importData();
-            animalRepository.first().id = parameters.id;
-            return Promise.resolve({
-              description: `Animal with ID ${parameters.id} added to the db`,
-              id: parameters.id,
-            });
-          }
+        'Has an animal with ID': (parameters) => {
+          importData();
+          animalRepository.first().id = parameters.id;
+          return Promise.resolve({
+            description: `Animal with ID ${parameters.id} added to the db`,
+            id: parameters.id,
+          });
         },
         'is not authenticated': () => {
           token = '';

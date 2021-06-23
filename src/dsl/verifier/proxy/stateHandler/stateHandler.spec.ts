@@ -15,32 +15,30 @@ const { expect } = chai;
 describe('#createProxyStateHandler', () => {
   let res: any;
   const mockResponse = {
-    sendStatus: (status: number) => {
-      res = status;
-    },
     status: (status: number) => {
       res = status;
       return {
         send: () => {},
       };
     },
+    json: (data: any) => data,
   };
 
   context('when valid state handlers are provided', () => {
     beforeEach(() => {
-      sinon.stub(setupStatesModule, 'setupStates').returns(Promise.resolve());
+      sinon.stub(setupStatesModule, 'setupStates').returns(Promise.resolve({}));
     });
     afterEach(() => {
       (setupStatesModule.setupStates as SinonSpy).restore();
     });
-    it('returns a 200', () => {
+    it('returns a 200', async () => {
       const h = createProxyStateHandler({} as ProxyOptions);
+      const data = await h(
+        {} as express.Request,
+        mockResponse as express.Response
+      );
 
-      return expect(
-        h({} as express.Request, mockResponse as express.Response)
-      ).to.eventually.be.fulfilled.then(() => {
-        expect(res).to.eql(200);
-      });
+      expect(data).to.deep.eq({});
     });
   });
 
@@ -53,14 +51,11 @@ describe('#createProxyStateHandler', () => {
     afterEach(() => {
       (setupStatesModule.setupStates as SinonSpy).restore();
     });
-    it('returns a 500', () => {
+    it('returns a 500', async () => {
       const h = createProxyStateHandler({} as ProxyOptions);
+      await h({} as express.Request, mockResponse as express.Response);
 
-      return expect(
-        h({} as express.Request, mockResponse as express.Response)
-      ).to.eventually.be.fulfilled.then(() => {
-        expect(res).to.eql(500);
-      });
+      expect(res).to.eql(500);
     });
   });
 });

@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { ProviderState, ProxyOptions } from '../types';
+import { ProxyOptions, ProviderState } from '../types';
 import { setupStates } from './setupStates';
 
 export const createProxyStateHandler = (config: ProxyOptions) => (
@@ -10,6 +10,6 @@ export const createProxyStateHandler = (config: ProxyOptions) => (
   const message: ProviderState = req.body;
 
   return setupStates(message, config)
-    .then(() => res.sendStatus(200))
+    .then((data) => res.json(data))
     .catch((e) => res.status(500).send(e));
 };

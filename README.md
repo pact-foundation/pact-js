@@ -64,6 +64,7 @@ Read [Getting started with Pact] for more information for beginners.
     - [Match based on type](#match-based-on-type)
     - [Match based on arrays](#match-based-on-arrays)
     - [Match by regular expression](#match-by-regular-expression)
+    - [A note about typescript](#a-note-about-typescript)
   - [GraphQL API](#graphql-api)
   - [Tutorial (60 minutes)](#tutorial-60-minutes)
   - [Examples](#examples)
@@ -325,7 +326,7 @@ new Verifier(opts).verifyProvider().then(function () {
 | `pactUrls`                  | false     | array                          | Array of local pact file paths or HTTP-based URLs. Required if _not_ using a Pact Broker.                                                                                                          |
 | `providerStatesSetupUrl`    | false     | string                         | Deprecated (use URL to send PUT requests to setup a given provider state                                                                                                                           |
 | `stateHandlers`             | false     | object                         | Map of "state" to a function that sets up a given provider state. See docs below for more information                                                                                              |
-| `requestFilter`             | false     | function                       | Function that may be used to alter the incoming request or outgoing response from the verification process. See below for use.                                                                     |
+| `requestFilter`             | false     | function ([Express middleware](https://expressjs.com/en/guide/using-middleware.html))                       | Function that may be used to alter the incoming request or outgoing response from the verification process. See below for use.                                                                     |
 | `beforeEach`                | false     | function                       | Function to execute prior to each interaction being validated                                                                                                                                      |
 | `afterEach`                 | false     | function                       | Function to execute after each interaction has been validated                                                                                                                                      |
 | `pactBrokerUsername`        | false     | string                         | Username for Pact Broker basic authentication                                                                                                                                                      |
@@ -1096,20 +1097,14 @@ Then when the provider is verified, the provider state callback can return a map
 For example:
 
 ```js
-      stateHandlers: {
-        "Account Test001 exists": (setup, params) => {
-          if (setup) {
-            const account = new Account(0, 0, "Test001", params.accountRef, new AccountNumber(0), Date.now(), Date.now())
-            const persistedAccount = accountRepository.save(account)
-            return { accountNumber: persistedAccount.accountNumber.id }
-          } else {
-            return null
-          }
-        }
-      },
+stateHandlers: {
+  "Account Test001 exists": (params) => {
+    const account = new Account(0, 0, "Test001", params.accountRef, new AccountNumber(0), Date.now(), Date.now())
+    const persistedAccount = accountRepository.save(account)
+    return { accountNumber: persistedAccount.accountNumber.id }
+  }
+},
 ```
-
-**NOTE:** Async callbacks and returning promises from the provider state callbacks is not currently supported.
 
 ### Using Pact with XML
 
@@ -1173,7 +1168,7 @@ The `VerifierV3` class can verify your provider in a similar way to the existing
 | `callbackTimeout`           | false     | number                         | Timeout in milliseconds for request filters and provider state handlers to execute within                                                                                                          |
 | `publishVerificationResult` | false     | boolean                        | Publish verification result to Broker (_NOTE_: you should only enable this during CI builds)                                                                                                       |
 | `providerVersion`           | false     | string                         | Provider version, required to publish verification result to Broker. Optional otherwise.                                                                                                     |
-| `requestFilter  `           | false     | RequestHandler                 |                                                                                                                                                                                                    |
+| `requestFilter`           | false     | function ([Express middleware](https://expressjs.com/en/guide/using-middleware.html))                |                                                                                                                                                                                                    |
 | `stateHandlers`             | false     | object                         | Map of "state" to a function that sets up a given provider state. See docs [below](#provider-state-callbacks) for more information                                                                 |
 | `consumerVersionTags`       | false     | string\|array                  | Retrieve the latest pacts with given tag(s)                                                                                                                                                        |
 | `providerVersionTags`       | false     | string\|array                  | Tag(s) to apply to the provider application                                                                                                                                                        |
@@ -1186,56 +1181,63 @@ The `VerifierV3` class can verify your provider in a similar way to the existing
 
 #### Request Filters
 
-Request filters now take a request object as a parameter, and need to return the mutated one.
+Request filters are simple [Express middleware functions](https://expressjs.com/en/guide/using-middleware.html):
 
 ```javascript
-requestFilter: req => {
+requestFilter: (req, res, next) => {
     req.headers["MY_SPECIAL_HEADER"] = "my special value"
 
     // e.g. ADD Bearer token
     req.headers["authorization"] = `Bearer ${token}`
 
-    // Need to return the request back again
-    return req
+    // Need to call the next middleware in the chain
+    next()
 },
 ```
 
 #### Provider state callbacks
 
-Provider state callbacks have been updated to support parameters and return values. The first parameter is a boolean indicating whether it is a setup call
-(run before the verification) or a tear down call (run afterwards). The second optional parameter is a key-value map of any parameters defined in the
-pact file. Provider state callbacks can also return a map of key-value values. These are used with provider-state injected values (see the section on that above).
+Provider state callbacks have been updated to support parameters and return values.
+
+Simple callbacks run before the verification and receive optional parameters containing any key-value  parameters defined in the pact file.
+
+The second form of callback accepts a `setup` and `teardown` function that execute on the lifecycle of the state setup. `setup` runs prior to the test, and `teardown` runs after the actual request has been sent to the provider.
+
+Provider state callbacks can also return a map of key-value values. These are used with provider-state injected values (see the section on that above).
 
 ```javascript
 stateHandlers: {
-  "Has no animals": setup => {
-    if (setup) {
-      animalRepository.clear()
-      return { description: `Animals removed to the db` }
+  // Simple state handler, runs before the verification
+  "Has no animals": () => {
+    return animalRepository.clear()
+  },
+  // Runs only on setup phase (no teardown)
+  "Has some animals": {
+    setup: () => {
+      return importData()
     }
   },
-  "Has some animals": setup => {
-    if (setup) {
-      importData()
-      return {
-        description: `Animals added to the db`,
-        count: animalRepository.count(),
-      }
+  // Runs only on teardown phase (no setup)
+  "Has a broken dependency": {
+    setup: () => {
+      // make some dependency fail...
+      return Promise.resolve()
+    },
+    teardown: () => {
+      // fix the broken dependency!
+      return Promise.resolve()
     }
   },
-  "Has an animal with ID": (setup, parameters) => {
-    if (setup) {
-      importData()
-      animalRepository.first().id = parameters.id
-      return {
-        description: `Animal with ID ${parameters.id} added to the db`,
-        id: parameters.id,
-      }
+  // Return provider specific IDs
+  "Has an animal with ID": async (parameters) => {
+    await importData()
+    animalRepository.first().id = parameters.id
+    return {
+      description: `Animal with ID ${parameters.id} added to the db`,
+      id: parameters.id,
     }
   },
 ```
-
-**NOTE:** Async callbacks and returning promises from the provider state callbacks is not currently supported.
 
 ### Debugging issues with Pact-JS V3
 
