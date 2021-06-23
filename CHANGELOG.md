@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.39](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.38...v10.0.0-beta.39) (2021-06-23)
+
+
+### Fixes and Improvements
+
+* fromProviderState should accept any valid JSON. Fixes [#696](https://github.com/pact-foundation/pact-js/issues/696) ([1b03b2d](https://github.com/pact-foundation/pact-js/commit/1b03b2d35752529f1d77ce418ad2bb9c73e4b915))
+
 ## [10.0.0-beta.38](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.37...v10.0.0-beta.38) (2021-06-21)
 
 
