@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.40](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.39...v10.0.0-beta.40) (2021-06-24)
+
+
+### Fixes and Improvements
+
+* make fromProviderState Matcher compatible ([b608094](https://github.com/pact-foundation/pact-js/commit/b6080942f60c659c3947ecdd99e711eba088c5e8))
+
 ## [10.0.0-beta.39](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.38...v10.0.0-beta.39) (2021-06-23)
 
 
