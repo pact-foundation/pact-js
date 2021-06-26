@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.41](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.40...v10.0.0-beta.41) (2021-06-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* the signature of state handlers has been updated to
+accept either a single function with parameters, or an object that
+can specify optional teardown and setup functions that run on the
+different state phases.
+* callbackTimeout is now timeout
+
+### Features
+
+* support promises in filters + state handlers ([456567c](https://github.com/pact-foundation/pact-js/commit/456567c83a5f155381eebb7dd3f6b60d3bc0060b))
+
+
+### Fixes and Improvements
+
+* Make request tracer log in debug instead of trace ([24742e4](https://github.com/pact-foundation/pact-js/commit/24742e4c3d314de346e7fe430da2078cb475d7b1))
+
 ## [10.0.0-beta.40](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.39...v10.0.0-beta.40) (2021-06-24)
 
 
