@@ -1,3 +1,4 @@
+use pact_verifier::callback_executors::HttpRequestProviderStateExecutor;
 use std::sync::Arc;
 use serde_json::Value;
 use neon::prelude::*;
@@ -80,179 +81,22 @@ fn get_integer_value(cx: &mut FunctionContext, obj: &JsObject, name: &str) -> Op
 }
 
 #[derive(Clone)]
-struct RequestFilterCallback {
-  callback_handler: EventHandler,
-  timeout: u64
-}
-
-impl RequestFilterExecutor for RequestFilterCallback {
-  fn call(self: Arc<Self>, request: &Request) -> Request {
-    let (sender, receiver) = mpsc::channel();
-    let request_copy = request.clone();
-    self.callback_handler.schedule_with(move |cx, this, callback| {
-      let js_method = cx.string(request_copy.method);
-      let js_path = cx.string(request_copy.path);
-      let js_query = JsObject::new(cx);
-      let js_headers = JsObject::new(cx);
-      let js_request = JsObject::new(cx);
-      let js_body = cx.string(request_copy.body.str_value());
-
-      if let Some(query) = request_copy.query {
-        query.iter().for_each(|(k, v)| {
-          let vars = JsArray::new(cx, v.len() as u32);
-          v.iter().enumerate().for_each(|(i, val)| {
-            let qval = cx.string(val);
-            vars.set(cx, i as u32, qval).unwrap();
-          });
-          js_query.set(cx, k.as_str(), vars).unwrap();
-        });
-      };
-
-      if let Some(headers) = request_copy.headers {
-        headers.iter().for_each(|(k, v)| {
-          let vars = JsArray::new(cx, v.len() as u32);
-          v.iter().enumerate().for_each(|(i, val)| {
-            let hval = cx.string(val);
-            vars.set(cx, i as u32, hval).unwrap();
-          });
-          js_headers.set(cx, k.to_lowercase().as_str(), vars).unwrap();
-        });
-      };
-
-      js_request.set(cx, "method", js_method).unwrap();
-      js_request.set(cx, "path", js_path).unwrap();
-      js_request.set(cx, "headers", js_headers).unwrap();
-      js_request.set(cx, "query", js_query).unwrap();
-      js_request.set(cx, "body", js_body).unwrap();
-      let args = vec![js_request];
-      let result = callback.call(cx, this, args);
-
-      match result {
-        Ok(val) => {
-          if let Ok(js_obj) = val.downcast::<JsObject>() {
-            let mut request = Request::default();
-            if let Ok(val) = js_obj.get(cx, "method").unwrap().downcast::<JsString>() {
-              request.method = val.value();
-            }
-            if let Ok(val) = js_obj.get(cx, "path").unwrap().downcast::<JsString>() {
-              request.path = val.value();
-            }
-            if let Ok(val) = js_obj.get(cx, "body").unwrap().downcast::<JsString>() {
-              request.body = val.value().into();
-            }
-
-            if let Ok(query_map) = js_obj.get(cx, "query").unwrap().downcast::<JsObject>() {
-              let mut map = hashmap!{};
-              let props = query_map.get_own_property_names(cx).unwrap();
-              for prop in props.to_vec(cx).unwrap() {
-                let prop_name = prop.downcast::<JsString>().unwrap().value();
-                let prop_val = query_map.get(cx, prop_name.as_str()).unwrap();
-                if let Ok(array) = prop_val.downcast::<JsArray>() {
-                  let vec = array.to_vec(cx).unwrap();
-                  map.insert(prop_name, vec.iter().map(|item| {
-                    item.downcast::<JsString>().unwrap().value()
-                  }).collect());
-                } else {
-                  map.insert(prop_name, vec![prop_val.downcast::<JsString>().unwrap().value()]);
-                }
-              }
-              request.query = Some(map)
-            }
-
-            if let Ok(header_map) = js_obj.get(cx, "headers").unwrap().downcast::<JsObject>() {
-              let mut map = hashmap!{};
-              let props = header_map.get_own_property_names(cx).unwrap();
-              for prop in props.to_vec(cx).unwrap() {
-                let prop_name = prop.downcast::<JsString>().unwrap().value();
-                let prop_val = header_map.get(cx, prop_name.as_str()).unwrap();
-                if let Ok(array) = prop_val.downcast::<JsArray>() {
-                  let vec = array.to_vec(cx).unwrap();
-                  map.insert(prop_name, vec.iter().map(|item| {
-                    item.downcast::<JsString>().unwrap().value()
-                  }).collect());
-                } else {
-                  map.insert(prop_name, vec![prop_val.downcast::<JsString>().unwrap().value()]);
-                }
-              }
-              request.headers = Some(map)
-            }
-
-            sender.send(request).unwrap();
-          } else {
-            error!("Request filter did not return an object");
-          }
-        },
-        Err(err) => {
-          error!("Request filter threw an exception: {}", err);
-        }
-      }
-    });
-
-    receiver.recv_timeout(Duration::from_millis(self.timeout)).unwrap_or(request.clone())
-  }
-}
-
-#[derive(Clone)]
 struct ProviderStateCallback<'a> {
   callback_handlers: &'a HashMap<String, EventHandler>,
   timeout: u64
 }
 
-#[async_trait]
-impl ProviderStateExecutor for ProviderStateCallback<'_> {
-  async fn call(self: Arc<Self>, interaction_id: Option<String>, provider_state: &ProviderState, setup: bool, _client: Option<&reqwest::Client>) -> Result<HashMap<String, serde_json::Value>, ProviderStateError> {
-    match self.callback_handlers.get(&provider_state.name) {
-      Some(callback) => {
-        let (sender, receiver) = mpsc::channel();
-        let state = provider_state.clone();
-        let iid = interaction_id.clone();
-        callback.schedule_with(move |cx, this, callback| {
-          let args = if !state.params.is_empty() {
-            let js_parameter = JsObject::new(cx);
-            for (ref parameter, ref value) in state.params {
-              serde_value_to_js_object_attr(cx, &js_parameter, parameter, value).unwrap();
-            };
-            vec![cx.boolean(setup).upcast::<JsValue>(), js_parameter.upcast::<JsValue>()]
-          } else {
-            vec![cx.boolean(setup).upcast::<JsValue>()]
-          };
-          let callback_result = callback.call(cx, this, args);
-          match callback_result {
-            Ok(val) => {
-              if let Ok(vals) = val.downcast::<JsObject>() {
-                let js_props = vals.get_own_property_names(cx).unwrap();
-                let props: HashMap<String, Value> = js_props.to_vec(cx).unwrap().iter().map(|prop| {
-                  let prop_name = prop.downcast::<JsString>().unwrap().value();
-                  let prop_val = vals.get(cx, prop_name.as_str()).unwrap();
-                  (prop_name, js_value_to_serde_value(&prop_val, cx))
-                }).collect();
-                debug!("Provider state callback result = {:?}", props);
-                sender.send(Ok(props)).unwrap();
-              } else {
-                debug!("Provider state callback did not return a map of values. Ignoring.");
-                sender.send(Ok(hashmap!{})).unwrap();
-              }
-            },
-            Err(err) => {
-              error!("Provider state callback for '{}' failed: {}", state.name, err);
-              let error = ProviderStateError { description: format!("Provider state callback for '{}' failed: {}", state.name, err), interaction_id: iid };
-              sender.send(Result::<HashMap<String, serde_json::Value>, ProviderStateError>::Err(error)).unwrap();
-            }
-          };
-        });
-        match receiver.recv_timeout(Duration::from_millis(self.timeout)) {
-          Ok(result) => {
-            debug!("Received {:?} from callback", result);
-            result
-          },
-          Err(_) => Err(ProviderStateError { description: format!("Provider state callback for '{}' timed out after {} ms", provider_state.name, self.timeout), interaction_id })
-        }
-      },
-      None => {
-        error!("No provider state callback defined for '{}'", provider_state.name);
-        Err(ProviderStateError { description: format!("No provider state callback defined for '{}'", provider_state.name), interaction_id })
-      }
-    }
+#[derive(Clone)]
+pub struct NullRequestFilterExecutor {
+  // This field is added (and is private) to guarantee that this struct
+  // is never instantiated accidentally, and is instead only able to be
+  // used for type-level programming.
+  _private_field: (),
+}
+
+impl RequestFilterExecutor for NullRequestFilterExecutor {
+  fn call(self: Arc<Self>, _request: &Request) -> Request {
+    unimplemented!("NullRequestFilterExecutor should never be called")
   }
 }
 
@@ -261,8 +105,9 @@ struct BackgroundTask {
   pub pacts: Vec<PactSource>,
   pub filter_info: FilterInfo,
   pub consumers_filter: Vec<String>,
-  pub options: VerificationOptions<RequestFilterCallback>,
-  pub state_handlers: HashMap<String, EventHandler>
+  pub options: VerificationOptions<NullRequestFilterExecutor>,
+  pub state_handlers: HashMap<String, EventHandler>,
+  pub state_change_url: Option<String>
 }
 
 impl Task for BackgroundTask {
@@ -275,11 +120,12 @@ impl Task for BackgroundTask {
     panic::catch_unwind(|| {
       match tokio::runtime::Builder::new_current_thread().enable_all().build() {
         Ok(runtime) => runtime.block_on(async {
-          let provider_state_executor = ProviderStateCallback {
-            callback_handlers: &self.state_handlers,
-            timeout: self.options.request_timeout
-          };
-          pact_verifier::verify_provider_async(self.provider_info.clone(), self.pacts.clone(), self.filter_info.clone(), self.consumers_filter.clone(), self.options.clone(), &Arc::new(provider_state_executor)).await
+          let provider_state_executor = Arc::new(HttpRequestProviderStateExecutor {
+            state_change_url: self.state_change_url.clone(),
+            state_change_body: true,
+            state_change_teardown: true,
+          });
+          pact_verifier::verify_provider_async(self.provider_info.clone(), self.pacts.clone(), self.filter_info.clone(), self.consumers_filter.clone(), self.options.clone(), &provider_state_executor).await
         }),
         Err(err) => {
           error!("Verify process failed to start the tokio runtime: {}", err);
@@ -464,42 +310,9 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
 
   debug!("provider_info = {:?}", provider_info);
 
-  let request_timeout = get_integer_value(&mut cx, &config, "callbackTimeout").unwrap_or(5000);
+  let request_timeout = get_integer_value(&mut cx, &config, "timeout").unwrap_or(5000);
 
-  let request_filter = match config.get(&mut cx, "requestFilter") {
-    Ok(request_filter) => match request_filter.downcast::<JsFunction>() {
-      Ok(val) => {
-        let this = cx.this();
-        Some(Arc::new(RequestFilterCallback {
-          callback_handler: EventHandler::new(&cx, this, val),
-          timeout: request_timeout
-        }))
-      },
-      Err(_) => None
-    },
-    _ => None
-  };
-
-  debug!("request_filter done");
-
-  let mut callbacks = hashmap![];
-  match config.get(&mut cx, "stateHandlers") {
-    Ok(state_handlers) => match state_handlers.downcast::<JsObject>() {
-      Ok(state_handlers) => {
-        let this = cx.this();
-        let props = state_handlers.get_own_property_names(&mut cx).unwrap();
-        for prop in props.to_vec(&mut cx).unwrap() {
-          let prop_name = prop.downcast::<JsString>().unwrap().value();
-          let prop_val = state_handlers.get(&mut cx, prop_name.as_str()).unwrap();
-          if let Ok(callback) = prop_val.downcast::<JsFunction>() {
-            callbacks.insert(prop_name, EventHandler::new(&cx, this, callback));
-          }
-        };
-      },
-      Err(_) => ()
-    },
-    _ => ()
-  };
+  let callbacks = hashmap![];
 
   let publish = match config.get(&mut cx, "publishVerificationResult") {
     Ok(publish) => match publish.downcast::<JsBoolean>() {
@@ -543,6 +356,8 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
     _ => false
   };
 
+  let state_change_url = get_string_value(&mut cx, &config, "providerStatesSetupUrl");
+
   let filter_info = interaction_filter();
 
   match filter_info {
@@ -559,7 +374,7 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
     publish,
     provider_version,
     build_url: None,
-    request_filter,
+    request_filter: None,
     provider_tags,
     disable_ssl_verification,
     request_timeout,
@@ -567,7 +382,7 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
   };
 
   debug!("Starting background task");
-  BackgroundTask { provider_info, pacts, filter_info, consumers_filter, options, state_handlers: callbacks }.schedule(callback);
+  BackgroundTask { provider_info, pacts, filter_info, consumers_filter, options, state_handlers: callbacks, state_change_url }.schedule(callback);
 
   debug!("Done");
   Ok(cx.undefined())

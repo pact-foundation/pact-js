@@ -53,7 +53,7 @@ export const createResponseTracer = (): express.RequestHandler => (
       chunks.push(Buffer.from(chunk));
     }
     const body = Buffer.concat(chunks).toString('utf8');
-    logger.debug('outgoing response', removeEmptyResponseProperties(body, res));
+    logger.debug(removeEmptyResponseProperties(body, res), 'outgoing response');
     oldEnd.apply(res, [chunk]);
   };
   if (typeof next === 'function') {
@@ -66,6 +66,6 @@ export const createRequestTracer = (): express.RequestHandler => (
   _,
   next
 ) => {
-  logger.debug('incoming request', removeEmptyRequestProperties(req));
+  logger.debug(removeEmptyRequestProperties(req), 'incoming request');
   next();
 };

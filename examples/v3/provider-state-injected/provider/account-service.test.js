@@ -15,10 +15,9 @@ describe('Account Service', () => {
     let opts = {
       provider: 'Account Service',
       providerBaseUrl: 'http://localhost:8081',
-
       stateHandlers: {
-        'Account Test001 exists': (setup, params) => {
-          if (setup) {
+        'Account Test001 exists': {
+          setup: (params) => {
             let account = new Account(
               0,
               0,
@@ -29,20 +28,17 @@ describe('Account Service', () => {
               Date.now()
             );
             let persistedAccount = accountRepository.save(account);
-            return { accountNumber: persistedAccount.accountNumber.id };
-          } else {
-            return null;
-          }
+            return Promise.resolve({
+              accountNumber: persistedAccount.accountNumber.id,
+            });
+          },
         },
-        'set id': (setup, params) => {
-          if (setup) {
-            return { id: params.id };
-          }
+        'set id': {
+          setup: (params) => Promise.resolve({ id: params.id }),
         },
-        'set path': (setup, params) => {
-          if (setup) {
-            return { id: params.id, path: params.path };
-          }
+        'set path': {
+          setup: (params) =>
+            Promise.resolve({ id: params.id, path: params.path }),
         },
       },
 
@@ -54,6 +50,6 @@ describe('Account Service', () => {
       ],
     };
 
-    return new VerifierV3(opts).verifyProvider().then((output) => true);
+    return new VerifierV3(opts).verifyProvider();
   });
 });

@@ -5,11 +5,11 @@ check:
     statements: 80
     lines: 80
     branches: 80
-    functions: 80
+    functions: 75
     excludes: []
   each:
     statements: 60
     lines: 60
     branches: 65
-    functions: 80
+    functions: 75
     excludes: ['src/dsl/verifier.ts']
