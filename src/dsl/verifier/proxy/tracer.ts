@@ -35,37 +35,34 @@ const removeEmptyRequestProperties = (req: express.Request) =>
     identity
   );
 
-export const createResponseTracer = (): express.RequestHandler => (
-  _,
-  res,
-  next
-) => {
-  const [oldWrite, oldEnd] = [res.write, res.end];
-  const chunks: Buffer[] = [];
+export const createResponseTracer =
+  (): express.RequestHandler => (_, res, next) => {
+    const [oldWrite, oldEnd] = [res.write, res.end];
+    const chunks: Buffer[] = [];
 
-  res.write = (chunk: Parameters<typeof res.write>[0]) => {
-    chunks.push(Buffer.from(chunk));
-    return oldWrite.apply(res, [chunk]);
-  };
-
-  res.end = (chunk: Parameters<typeof res.write>[0]) => {
-    if (chunk) {
+    res.write = (chunk: Parameters<typeof res.write>[0]) => {
       chunks.push(Buffer.from(chunk));
-    }
-    const body = Buffer.concat(chunks).toString('utf8');
-    logger.debug(removeEmptyResponseProperties(body, res), 'outgoing response');
-    oldEnd.apply(res, [chunk]);
-  };
-  if (typeof next === 'function') {
-    next();
-  }
-};
+      return oldWrite.apply(res, [chunk]);
+    };
 
-export const createRequestTracer = (): express.RequestHandler => (
-  req,
-  _,
-  next
-) => {
-  logger.debug(removeEmptyRequestProperties(req), 'incoming request');
-  next();
-};
+    res.end = (chunk: Parameters<typeof res.write>[0]) => {
+      if (chunk) {
+        chunks.push(Buffer.from(chunk));
+      }
+      const body = Buffer.concat(chunks).toString('utf8');
+      logger.debug(
+        removeEmptyResponseProperties(body, res),
+        'outgoing response'
+      );
+      oldEnd.apply(res, [chunk]);
+    };
+    if (typeof next === 'function') {
+      next();
+    }
+  };
+
+export const createRequestTracer =
+  (): express.RequestHandler => (req, _, next) => {
+    logger.debug(removeEmptyRequestProperties(req), 'incoming request');
+    next();
+  };
