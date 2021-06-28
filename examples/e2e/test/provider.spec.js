@@ -50,7 +50,7 @@ describe('Pact Verification', () => {
         },
         'is not authenticated': () => {
           token = '';
-          Promise.resolve(`Invalid bearer token generated`);
+          return Promise.resolve(`Invalid bearer token generated`);
         },
       },
 
@@ -58,10 +58,10 @@ describe('Pact Verification', () => {
       pactBrokerUrl: 'https://test.pact.dius.com.au/',
 
       // Fetch from broker with given tags
-      consumerVersionTag: ['prod'],
+      consumerVersionTags: ['master'],
 
       // Tag provider with given tags
-      providerVersionTag: ['prod'],
+      providerVersionTags: ['prod'],
 
       // Find _all_ pacts (not just latest) with tag prod
       //   consumerVersionSelectors: [{
