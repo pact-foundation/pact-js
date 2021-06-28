@@ -25,6 +25,7 @@ export const createProxy = (
 ): http.Server => {
   const app = express();
   const proxy = new HttpProxy();
+  logger.trace(`Setting up state proxy with path: ${stateSetupPath}`);
 
   app.use(stateSetupPath, bodyParser.json());
   app.use(stateSetupPath, bodyParser.urlencoded({ extended: true }));

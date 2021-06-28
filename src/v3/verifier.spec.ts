@@ -19,7 +19,7 @@ describe('V3 Verifier', () => {
       expect(
         () =>
           new VerifierV3({
-            logLevel: 'fatal',
+            logLevel: 'info',
             provider: '',
             providerBaseUrl: 'http://localhost',
           })
@@ -29,7 +29,7 @@ describe('V3 Verifier', () => {
       expect(
         () =>
           new VerifierV3({
-            logLevel: 'fatal',
+            logLevel: 'info',
             provider: 'unitTest',
             providerBaseUrl: 'http://localhost',
             pactUrls: [],
@@ -40,7 +40,7 @@ describe('V3 Verifier', () => {
       expect(
         () =>
           new VerifierV3({
-            logLevel: 'fatal',
+            logLevel: 'info',
             provider: 'unitTest',
             providerBaseUrl: 'http://localhost',
           })

@@ -1,12 +1,12 @@
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
-import serviceFactory from '@pact-foundation/pact-core';
+import serviceFactory, { LogLevel } from '@pact-foundation/pact-core';
+
+import * as proxy from './proxy/proxy';
 import logger from '../../common/logger';
 
 import { VerifierOptions } from './types';
-
-import * as proxy from './proxy';
 
 import { Verifier } from './verifier';
 
@@ -74,8 +74,9 @@ describe('Verifier', () => {
 
     context('when logLevel is not provided', () => {
       it('does not modify the log setting', () => {
+        const { logLevel, ...rest } = opts;
         v = new Verifier({
-          ...opts,
+          ...rest,
         });
         expect(spy.callCount).to.eql(0);
       });
@@ -99,6 +100,7 @@ describe('Verifier', () => {
         close: () => {
           executed = true;
         },
+        address: () => 'https://mock.server.example.com',
       });
       sinon.stub(proxy, 'waitForServerReady' as any).returns(Promise.resolve());
     });
@@ -112,7 +114,7 @@ describe('Verifier', () => {
 
     describe('when the verifier has been configured', () => {
       beforeEach(() => {
-        v = new Verifier(opts);
+        v = new Verifier({ ...opts, logLevel: 'trace' as LogLevel });
       });
       context('and the verification runs successfully', () => {
         it('closes the server and returns the result', () => {

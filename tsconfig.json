@@ -17,7 +17,7 @@
     "declaration": true,
     "experimentalDecorators": true,
     "target": "es5",
-    "lib": ["es2016", "dom", "esnext.asynciterable", "esnext"]
+    "lib": ["es2016", "es2017", "dom", "esnext.asynciterable", "esnext"]
   },
   "include": ["src", "test", "native/index.node.d.ts", "v3"],
   "exclude": ["./node_modules/**", "dist", "examples"]
