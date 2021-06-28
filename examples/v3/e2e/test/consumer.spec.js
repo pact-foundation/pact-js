@@ -2,7 +2,7 @@ const path = require('path');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const expect = chai.expect;
-const { PactV3, MatchersV3, XmlBuilder } = require('@pact-foundation/pact/v3');
+const { PactV3, MatchersV3, XmlBuilder } = require('../../../../dist/v3');
 const LOG_LEVEL = process.env.LOG_LEVEL || 'WARN';
 
 chai.use(chaiAsPromised);
@@ -87,6 +87,13 @@ describe('Pact V3', () => {
     availableAnimals,
   } = require('../consumer');
 
+  const provider = new PactV3({
+    consumer: 'Matching Service V3',
+    provider: 'Animal Profile Service V3',
+    dir: path.resolve(process.cwd(), 'pacts'),
+    cors: true,
+  });
+
   // Verify service client works as expected.
   //
   // Note that we don't call the consumer API endpoints directly, but
@@ -94,13 +101,6 @@ describe('Pact V3', () => {
   // we want to test the function that is calling the external service.
   describe('when a call to list all animals from the Animal Service is made', () => {
     describe('and the user is not authenticated', () => {
-      const provider = new PactV3({
-        consumer: 'Matching Service V3',
-        provider: 'Animal Profile Service V3',
-        dir: path.resolve(process.cwd(), 'pacts'),
-        cors: true,
-      });
-
       before(() =>
         provider
           .given('is not authenticated')
@@ -124,11 +124,6 @@ describe('Pact V3', () => {
     describe('and the user is authenticated', () => {
       describe('and there are animals in the database', () => {
         it('returns a list of animals', () => {
-          const provider = new PactV3({
-            consumer: 'Matching Service V3',
-            provider: 'Animal Profile Service V3',
-            dir: path.resolve(process.cwd(), 'pacts'),
-          });
           provider
             .given('is authenticated')
             .given('Has some animals')
@@ -160,12 +155,6 @@ describe('Pact V3', () => {
         });
 
         it('returns a filtered list of animals', () => {
-          const provider = new PactV3({
-            consumer: 'Matching Service V3',
-            provider: 'Animal Profile Service V3',
-            dir: path.resolve(process.cwd(), 'pacts'),
-            port: 1234,
-          });
           provider
             .given('is authenticated')
             .given('Has some animals')
@@ -214,11 +203,6 @@ describe('Pact V3', () => {
           });
         });
         it('returns a filtered list of animals (query containing chinese characters)', () => {
-          const provider = new PactV3({
-            consumer: 'Matching Service V3',
-            provider: 'Animal Profile Service V3',
-            dir: path.resolve(process.cwd(), 'pacts'),
-          });
           provider
             .given('is authenticated')
             .given('Has some animals')
@@ -269,11 +253,6 @@ describe('Pact V3', () => {
           });
         });
         it('returns a filtered list of animals (query containing devanagari characters)', () => {
-          const provider = new PactV3({
-            consumer: 'Matching Service V3',
-            provider: 'Animal Profile Service V3',
-            dir: path.resolve(process.cwd(), 'pacts'),
-          });
           provider
             .given('is authenticated')
             .given('Has some animals')
@@ -331,11 +310,6 @@ describe('Pact V3', () => {
     describe('and there is an animal in the DB with ID 100', () => {
       let responseBody = animalBodyExpectation;
       responseBody.id = 100;
-      const provider = new PactV3({
-        consumer: 'Matching Service V3',
-        provider: 'Animal Profile Service V3',
-        dir: path.resolve(process.cwd(), 'pacts'),
-      });
 
       before(() =>
         provider
@@ -367,12 +341,6 @@ describe('Pact V3', () => {
     });
 
     describe('and there no animals in the database', () => {
-      const provider = new PactV3({
-        consumer: 'Matching Service V3',
-        provider: 'Animal Profile Service V3',
-        dir: path.resolve(process.cwd(), 'pacts'),
-      });
-
       before(() =>
         provider
           .given('is authenticated')
@@ -400,12 +368,6 @@ describe('Pact V3', () => {
 
   describe('when a call to the Animal Service is made to retrieve a single animal in text by ID', () => {
     describe('and there is an animal in the DB with ID 100', () => {
-      const provider = new PactV3({
-        consumer: 'Matching Service V3',
-        provider: 'Animal Profile Service V3',
-        dir: path.resolve(process.cwd(), 'pacts'),
-      });
-
       before(() =>
         provider
           .given('is authenticated')
@@ -445,12 +407,6 @@ describe('Pact V3', () => {
   });
 
   describe('when a call to the Animal Service is made to create a new mate', () => {
-    const provider = new PactV3({
-      consumer: 'Matching Service V3',
-      provider: 'Animal Profile Service V3',
-      dir: path.resolve(process.cwd(), 'pacts'),
-    });
-
     before(() =>
       provider
         .given('is authenticated')
@@ -481,12 +437,6 @@ describe('Pact V3', () => {
   });
 
   describe('when a call to the Animal Service is made to create a new mate using form-data body', () => {
-    const provider = new PactV3({
-      consumer: 'Matching Service V3',
-      provider: 'Animal Profile Service V3',
-      dir: path.resolve(process.cwd(), 'pacts'),
-    });
-
     before(() =>
       provider
         .given('is authenticated')
@@ -522,12 +472,6 @@ describe('Pact V3', () => {
   });
 
   describe('when a call to the Animal Service is made to get animals in XML format', () => {
-    const provider = new PactV3({
-      consumer: 'Matching Service V3',
-      provider: 'Animal Profile Service V3',
-      dir: path.resolve(process.cwd(), 'pacts'),
-    });
-
     before(() =>
       provider
         .given('is authenticated')

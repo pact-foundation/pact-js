@@ -155,12 +155,7 @@ export class PactV3 {
 
   constructor(opts: PactV3Options) {
     this.opts = opts;
-    this.pact = new PactNative.Pact(
-      opts.consumer,
-      opts.provider,
-      pactPackageVersion,
-      omit(['consumer', 'provider', 'dir'], opts)
-    );
+    this.setup();
   }
 
   public given(providerState: string, parameters?: JsonMap): PactV3 {
@@ -272,9 +267,22 @@ export class PactV3 {
         })
         .finally(() => {
           this.pact.shutdownTest(result);
+          this.setup();
         });
     }
     this.pact.shutdownTest(result);
+    this.setup();
     return Promise.reject(result.testError);
+  }
+
+  // reset the internal state
+  // (this.pact cannot be re-used between tests)
+  private setup() {
+    this.pact = new PactNative.Pact(
+      this.opts.consumer,
+      this.opts.provider,
+      pactPackageVersion,
+      omit(['consumer', 'provider', 'dir'], this.opts)
+    );
   }
 }
