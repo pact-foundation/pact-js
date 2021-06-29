@@ -5,8 +5,7 @@ import { AppRepository } from '../../src/app.repository';
 
 @Injectable()
 export class PactProviderConfigOptionsService
-  implements PactProviderOptionsFactory
-{
+  implements PactProviderOptionsFactory {
   public constructor(private readonly animalRepository: AppRepository) {}
 
   public createPactProviderOptions(): PactProviderOptions {

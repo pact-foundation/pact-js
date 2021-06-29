@@ -43,7 +43,7 @@ describe('Pact', () => {
   });
 
   beforeEach(() => {
-    pact = Object.create(Pact.prototype) as any as Pact;
+    pact = (Object.create(Pact.prototype) as any) as Pact;
     pact.opts = fullOpts;
   });
 

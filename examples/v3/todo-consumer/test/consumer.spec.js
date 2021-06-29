@@ -2,8 +2,15 @@ const path = require('path');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const { PactV3, MatchersV3, XmlBuilder } = require('@pact-foundation/pact/v3');
-const { string, eachLike, integer, boolean, atLeastOneLike, timestamp, regex } =
-  MatchersV3;
+const {
+  string,
+  eachLike,
+  integer,
+  boolean,
+  atLeastOneLike,
+  timestamp,
+  regex,
+} = MatchersV3;
 
 const TodoApp = require('../src/todo');
 
@@ -12,16 +19,16 @@ const expect = chai.expect;
 chai.use(chaiAsPromised);
 
 describe('Pact V3', () => {
+  const provider = new PactV3({
+    consumer: 'TodoApp',
+    provider: 'TodoServiceV3',
+    dir: path.resolve(process.cwd(), 'pacts'),
+  });
+
   context('when there are a list of projects', () => {
     describe('and there is a valid user session', () => {
       describe('with JSON request', () => {
-        let provider;
         before(() => {
-          provider = new PactV3({
-            consumer: 'TodoApp',
-            provider: 'TodoServiceV3',
-            dir: path.resolve(process.cwd(), 'pacts'),
-          });
           provider
             .given('i have a list of projects')
             .uponReceiving('a request for projects')
@@ -72,11 +79,6 @@ describe('Pact V3', () => {
 
     describe('with XML requests', () => {
       before(() => {
-        provider = new PactV3({
-          consumer: 'TodoApp',
-          provider: 'TodoServiceV3',
-          dir: path.resolve(process.cwd(), 'pacts'),
-        });
         provider
           .given('i have a list of projects')
           .uponReceiving('a request for projects in XML')
@@ -151,11 +153,6 @@ describe('Pact V3', () => {
 
     describe('with image uploads', () => {
       before(() => {
-        provider = new PactV3({
-          consumer: 'TodoApp',
-          provider: 'TodoServiceV3',
-          dir: path.resolve(process.cwd(), 'pacts'),
-        });
         provider
           .given('i have a project', { id: '1001', name: 'Home Chores' })
           .uponReceiving('a request to store an image against the project')

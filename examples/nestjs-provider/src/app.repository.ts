@@ -13,10 +13,10 @@ export class AppRepository {
   }
 
   public importData(): void {
-    const data = fs.readFileSync(
+    const data = (fs.readFileSync(
       path.resolve('./data/animal-data.json'),
       'utf-8'
-    ) as unknown as string;
+    ) as unknown) as string;
 
     JSON.parse(data).reduce((animal, value) => {
       value.id = animal + 1;
