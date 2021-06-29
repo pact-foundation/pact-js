@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.42](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.41...v10.0.0-beta.42) (2021-06-29)
+
+
+### Features
+
+* reset consumer test state to enable re-use of PactV3 class ([0134ea8](https://github.com/pact-foundation/pact-js/commit/0134ea8252b49a1639fdd78be4fe16283e1a7d70))
+
 ## [10.0.0-beta.41](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.40...v10.0.0-beta.41) (2021-06-26)
 
 
