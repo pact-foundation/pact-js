@@ -91,7 +91,9 @@ export class MessageProviderPact {
       this.setupStates(message)
         .then(() => this.findHandler(message))
         .then((handler) => handler(message))
-        .then((o) => res.json({ contents: o }))
+        // TODO: need to review signature for message here
+        // how do we do "messageWithMetadata" type thing?
+        .then((o) => res.json(o))
         .catch((e) => res.status(500).send(e));
     };
   }
@@ -103,6 +105,7 @@ export class MessageProviderPact {
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use((req, res, next) => {
+      // TODO: this seems to override the metadat for content-type
       res.header('Content-Type', 'application/json; charset=utf-8');
       next();
     });

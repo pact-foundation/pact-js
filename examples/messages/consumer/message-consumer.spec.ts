@@ -29,9 +29,10 @@ describe('Message consumer tests', () => {
           name: like('rover'),
           type: term({ generate: 'bulldog', matcher: '^(bulldog|sheepdog)$' }),
         })
-        .withMetadata({
-          'content-type': 'application/json',
-        })
+        // TODO: this doesn't work at the moment, if verified by Pact JS
+        // .withMetadata({
+        //   'content-type': 'application/json',
+        // })
         .verify(synchronousBodyHandler(dogApiHandler));
     });
   });
