@@ -12,7 +12,7 @@ const {
 } = MatchersV3;
 
 describe('Transaction service - create a new transaction for an account', () => {
-  const provider =  new PactV3({
+  const provider = new PactV3({
     consumer: 'TransactionService',
     provider: 'AccountService',
     dir: path.resolve(process.cwd(), 'pacts'),
