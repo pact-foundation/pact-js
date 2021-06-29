@@ -8,7 +8,11 @@ import serviceFactory, { VerifierOptions } from '@pact-foundation/pact-core';
 import express from 'express';
 import * as http from 'http';
 import bodyParser from 'body-parser';
-import { MessageDescriptor, MessageProvider } from './dsl/message';
+import {
+  MessageDescriptor,
+  MessageFromProviderWithMetadata,
+  MessageProvider,
+} from './dsl/message';
 import logger, { setLogLevel } from './common/logger';
 import { PactMessageProviderOptions } from './dsl/options';
 
@@ -24,6 +28,29 @@ export const waitForServerReady = (server: http.Server): Promise<http.Server> =>
 export const setupProxyServer = (
   app: (request: http.IncomingMessage, response: http.ServerResponse) => void
 ): http.Server => http.createServer(app).listen();
+
+const hasMetadata = (
+  o: unknown | MessageFromProviderWithMetadata
+): o is MessageFromProviderWithMetadata =>
+  Boolean((o as MessageFromProviderWithMetadata).__pactMessageMetadata);
+
+export const providerWithMetadata =
+  (
+    provider: MessageProvider,
+    metadata: Record<string, string>
+  ): MessageProvider =>
+  (descriptor: MessageDescriptor) =>
+    Promise.resolve(provider(descriptor)).then((message) =>
+      hasMetadata(message)
+        ? {
+            __pactMessageMetadata: {
+              ...message.__pactMessageMetadata,
+              ...metadata,
+            },
+            message,
+          }
+        : { __pactMessageMetadata: metadata, message }
+    );
 
 /**
  * A Message Provider is analagous to Consumer in the HTTP Interaction model.
@@ -91,9 +118,23 @@ export class MessageProviderPact {
       this.setupStates(message)
         .then(() => this.findHandler(message))
         .then((handler) => handler(message))
-        // TODO: need to review signature for message here
-        // how do we do "messageWithMetadata" type thing?
-        .then((o) => res.json(o))
+
+        .then((messageFromHandler) => {
+          if (hasMetadata(messageFromHandler)) {
+            // TODO: need to review signature for message here
+            // how do we do "messageWithMetadata" type thing?
+            // Object.keys(messageFromHandler.__pactMessageMetadata).forEach(
+            //   (key) => {
+            //     logger.debug(
+            //       `Setting metadata key '${key}' to value '${messageFromHandler.__pactMessageMetadata[key]}'`
+            //     );
+            //     res.header(key, messageFromHandler.__pactMessageMetadata[key]);
+            //   }
+            // );
+            return res.json(messageFromHandler.message);
+          }
+          return res.json(messageFromHandler);
+        })
         .catch((e) => res.status(500).send(e));
     };
   }
@@ -105,7 +146,7 @@ export class MessageProviderPact {
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use((req, res, next) => {
-      // TODO: this seems to override the metadat for content-type
+      // TODO: this seems to override the metadata for content-type
       res.header('Content-Type', 'application/json; charset=utf-8');
       next();
     });
@@ -142,7 +183,7 @@ export class MessageProviderPact {
     const handler = this.config.messageProviders[message.description || ''];
 
     if (!handler) {
-      logger.warn(`no handler found for message ${message.description}`);
+      logger.error(`no handler found for message ${message.description}`);
 
       return Promise.reject(
         new Error(

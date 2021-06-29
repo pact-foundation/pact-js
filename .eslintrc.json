@@ -23,7 +23,8 @@
   "rules": {
     "@typescript-eslint/no-unused-vars": "error",
     "@typescript-eslint/no-explicit-any": "error",
-    "import/prefer-default-export": "off"
+    "import/prefer-default-export": "off",
+    "no-underscore-dangle": ["error", { "allow": ["__pactMessageMetadata"] }]
   },
   "overrides": [
     {

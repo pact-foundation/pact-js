@@ -36,7 +36,10 @@ export * from './messageConsumerPact';
  * @memberof Pact
  * @static
  */
-export { MessageProviderPact } from './messageProviderPact';
+export {
+  MessageProviderPact,
+  providerWithMetadata,
+} from './messageProviderPact';
 
 /**
  * Exposes {@link Message}
