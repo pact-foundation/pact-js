@@ -21,19 +21,24 @@ describe('Message consumer tests', () => {
 
   describe('receive dog event', () => {
     it('accepts a valid dog', () => {
-      return messagePact
-        .given('some state')
-        .expectsToReceive('a request for a dog')
-        .withContent({
-          id: like(1),
-          name: like('rover'),
-          type: term({ generate: 'bulldog', matcher: '^(bulldog|sheepdog)$' }),
-        })
-        // TODO: this doesn't work at the moment, if verified by Pact JS
-        // .withMetadata({
-        //   'content-type': 'application/json',
-        // })
-        .verify(synchronousBodyHandler(dogApiHandler));
+      return (
+        messagePact
+          .given('some state')
+          .expectsToReceive('a request for a dog')
+          .withContent({
+            id: like(1),
+            name: like('rover'),
+            type: term({
+              generate: 'bulldog',
+              matcher: '^(bulldog|sheepdog)$',
+            }),
+          })
+          // TODO: this doesn't work at the moment, if verified by Pact JS
+          // .withMetadata({
+          //   'content-type': 'application/json',
+          // })
+          .verify(synchronousBodyHandler(dogApiHandler))
+      );
     });
   });
 
