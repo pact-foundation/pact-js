@@ -101,7 +101,7 @@
     ]
   },
   "dependencies": {
-    "@pact-foundation/pact-core": "12.0.0-beta.4",
+    "@pact-foundation/pact-core": "12.0.0-beta.5",
     "@types/bluebird": "^3.5.20",
     "@types/express": "^4.17.11",
     "bluebird": "~3.5.1",
@@ -119,8 +119,6 @@
     "lodash.omit": "^4.5.0",
     "lodash.omitby": "4.6.0",
     "node-pre-gyp": "^0.13.0",
-    "pino": "^6.5.1",
-    "pino-pretty": "^4.1.0",
     "pkginfo": "^0.4.1",
     "popsicle": "^9.2.0",
     "ramda": "^0.26.1"
@@ -142,7 +140,6 @@
     "@types/mockery": "^1.4.29",
     "@types/nock": "^9.1.2",
     "@types/node": "^8.0.24",
-    "@types/pino": "^6.3.0",
     "@types/ramda": "^0.26.43",
     "@types/sinon": "^7.0.6",
     "@types/sinon-chai": "^2.7.29",

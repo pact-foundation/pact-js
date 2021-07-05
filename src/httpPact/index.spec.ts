@@ -4,11 +4,11 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import serviceFactory from '@pact-foundation/pact-core';
 import { ImportMock } from 'ts-mock-imports';
-import { HTTPMethods } from './common/request';
-import { Interaction, InteractionObject } from './dsl/interaction';
-import { MockService } from './dsl/mockService';
-import { PactOptions, PactOptionsComplete } from './dsl/options';
-import { Pact } from './httpPact';
+import { HTTPMethods } from '../common/request';
+import { Interaction, InteractionObject } from '../dsl/interaction';
+import { MockService } from '../dsl/mockService';
+import { PactOptions, PactOptionsComplete } from '../dsl/options';
+import { Pact } from '.';
 
 // Mock out the PactNode interfaces
 class PactServer {

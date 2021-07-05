@@ -4,13 +4,15 @@ import clc from 'cli-color';
 import process from 'process';
 import { isEmpty } from 'lodash';
 import { Server } from '@pact-foundation/pact-core/src/server';
-import { Interaction, InteractionObject } from './dsl/interaction';
-import { isPortAvailable } from './common/net';
-import logger, { traceHttpInteractions, setLogLevel } from './common/logger';
-import { MockService } from './dsl/mockService';
-import { LogLevel, PactOptions, PactOptionsComplete } from './dsl/options';
-import VerificationError from './errors/verificationError';
-import ConfigurationError from './errors/configurationError';
+
+import { Interaction, InteractionObject } from '../dsl/interaction';
+import { isPortAvailable } from '../common/net';
+import logger, { setLogLevel } from '../common/logger';
+import { MockService } from '../dsl/mockService';
+import { LogLevel, PactOptions, PactOptionsComplete } from '../dsl/options';
+import VerificationError from '../errors/verificationError';
+import ConfigurationError from '../errors/configurationError';
+import { traceHttpInteractions } from './tracing';
 
 /**
  * Creates a new {@link PactProvider}.

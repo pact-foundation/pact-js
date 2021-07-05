@@ -1,6 +1,7 @@
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
+import { Server } from 'http';
 import serviceFactory, { LogLevel } from '@pact-foundation/pact-core';
 
 import * as proxy from './proxy/proxy';
@@ -96,12 +97,17 @@ describe('Verifier', () => {
 
   describe('#verifyProvider', () => {
     beforeEach(() => {
-      sinon.stub(proxy, 'createProxy' as any).returns({
-        close: () => {
+      sinon.stub(proxy, 'createProxy').returns({
+        close: (): Server => {
           executed = true;
+          return {} as Server;
         },
-        address: () => 'https://mock.server.example.com',
-      });
+        address: () => ({
+          port: 1234,
+          family: 'https',
+          address: 'mock.server.example.com',
+        }),
+      } as Server);
       sinon.stub(proxy, 'waitForServerReady' as any).returns(Promise.resolve());
     });
 

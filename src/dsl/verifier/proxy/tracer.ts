@@ -48,15 +48,31 @@ export const createResponseTracer = (): express.RequestHandler => (
     return oldWrite.apply(res, [chunk]);
   };
 
-  res.end = (chunk: Parameters<typeof res.write>[0]) => {
-    if (chunk) {
-      chunks.push(Buffer.from(chunk));
+    res.end = (chunk: Parameters<typeof res.write>[0]) => {
+      if (chunk) {
+        chunks.push(Buffer.from(chunk));
+      }
+      const body = Buffer.concat(chunks).toString('utf8');
+      logger.debug(
+        `outgoing response: ${JSON.stringify(
+          removeEmptyResponseProperties(body, res)
+        )}`
+      );
+      oldEnd.apply(res, [chunk]);
+    };
+    if (typeof next === 'function') {
+      next();
     }
     const body = Buffer.concat(chunks).toString('utf8');
     logger.debug(removeEmptyResponseProperties(body, res), 'outgoing response');
     oldEnd.apply(res, [chunk]);
   };
-  if (typeof next === 'function') {
+
+export const createRequestTracer =
+  (): express.RequestHandler => (req, _, next) => {
+    logger.debug(
+      `incoming request: ${JSON.stringify(removeEmptyRequestProperties(req))}`
+    );
     next();
   }
 };

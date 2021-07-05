@@ -158,10 +158,10 @@ export class VerifierV3 {
         try {
           PactNative.verify_provider(opts, (err, val) => {
             if (err || !val) {
-              logger.trace({ err, val }, 'verification failed');
+              logger.trace(`verification failed (err=${err}, val=${val})`);
               reject(err);
             } else {
-              logger.trace({ val }, 'verification succeeded');
+              logger.trace(`verification succeeded (val=${val})`);
               resolve(val);
             }
           });
