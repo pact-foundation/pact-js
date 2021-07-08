@@ -318,8 +318,8 @@ new Verifier(opts).verifyProvider().then(function () {
 | `pactBrokerUrl`             | false     | string                         | Base URL of the Pact Broker from which to retrieve the pacts. Required if `pactUrls` not given.                                                       |
 | `provider`                  | false     | string                         | Name of the provider if fetching from a Broker                                                                                                        |
 | `consumerVersionSelectors`  | false     | ConsumerVersionSelector\|array | Using [Selectors](https://docs.pact.io/pact_broker/advanced_topics/consumer_version_selectors/) is a way we specify which pacticipants and versions we want to use when configuring verifications. |
-| `consumerVersionTag`        | false     | string\|array                  | Retrieve the latest pacts with given tag(s)                                                                                                           |
-| `providerVersionTag`        | false     | string\|array                  | Tag(s) to apply to the provider application                                                                                                           |
+| `consumerVersionTags`        | false     | string\|array                  | Retrieve the latest pacts with given tag(s)                                                                                                           |
+| `providerVersionTags`        | false     | string\|array                  | Tag(s) to apply to the provider application                                                                                                           |
 | `includeWipPactsSince`      | false     | string                         | Includes pact marked as WIP since this date. String in the format %Y-%m-%d or %Y-%m-%dT%H:%M:%S.000%:z                                                |
 | `pactUrls`                  | false     | array                          | Array of local pact file paths or HTTP-based URLs. Required if _not_ using a Pact Broker.                                                             |
 | `providerStatesSetupUrl`    | false     | string                         | Deprecated (use URL to send PUT requests to setup a given provider state                                                                              |
@@ -346,7 +346,7 @@ To dynamically retrieve pacts from a Pact Broker for a provider, provide the bro
 let opts = {
   pactBroker: "http://my-broker",
   provider: "Animal Profile Service",
-  consumerVersionTag: ["master", "prod"],
+  consumerVersionTags: ["master", "test", "prod"],
 }
 ```
 
@@ -364,7 +364,7 @@ To publish the verification results back to the Pact Broker, you need to enable 
 let opts = {
   publishVerificationResult: true, //generally you'd do something like `process.env.CI === 'true'`
   providerVersion: "version", //recommended to be the git sha
-  providerVersionTag: "tag", //optional, recommended to be the git branch
+  providerVersionTags: ["tag"], //optional, recommended to be the git branch
 }
 ```
 
@@ -586,7 +586,7 @@ To publish the verification results back to the Pact Broker, you need to enable 
 let opts = {
   publishVerificationResult: true, //recommended to only publish from CI by setting the value to `process.env.CI === 'true'`
   providerVersion: "version", //recommended to be the git sha eg. process.env.MY_CI_COMMIT
-  providerVersionTag: "tag", //optional, recommended to be the git branch eg. process.env.MY_CI_BRANCH
+  providerVersionTags: ["tag"], //optional, recommended to be the git branch eg. process.env.MY_CI_BRANCH
 }
 ```
 

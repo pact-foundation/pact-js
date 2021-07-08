@@ -51,8 +51,8 @@ export class PactProviderConfigOptionsService
 
       // Fetch pacts from broker
       pactBrokerUrl: "https://test.pact.dius.com.au/",
-      consumerVersionTags: ["prod"],
-      providerVersionTags: ["prod"],
+      consumerVersionTags: ["master", "test", "prod"],
+      providerVersionTags: ["master"], // in real code, this would be dynamically set by process.env.GIT_BRANCH
       enablePending: true,
       pactBrokerUsername: "dXfltyFMgNOFZAxr8io9wJ37iUpY42M",
       pactBrokerPassword: "O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",

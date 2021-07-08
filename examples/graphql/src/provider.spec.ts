@@ -27,7 +27,7 @@ describe("Pact Verification", () => {
       // If you use git tags, then you can use @pact-foundation/absolute-version as we do here.
       providerVersion: versionFromGitTag(),
       publishVerificationResult: true,
-      consumerVersionTags: ["prod"],
+      consumerVersionTags: ["master", "test", "prod"],
     }
 
     return new Verifier(opts).verifyProvider().then(output => {
