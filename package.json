@@ -56,7 +56,7 @@
   "bugs": {
     "url": "https://github.com/pact-foundation/pact-js/issues"
   },
-  "homepage": "http://docs.pact.io/documentation/javascript.html",
+  "homepage": "https://docs.pact.io/implementation_guides/javascript/",
   "standard-version": {
     "types": [
       {
