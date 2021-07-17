@@ -70,7 +70,7 @@ describe('Transaction service - create a new transaction for an account', () => 
   });
 
   // Uncomment when https://github.com/pact-foundation/pact-reference/issues/116 is resolved
-  it.skip('queries the account service for the account details using POST body', () => {
+  it('queries the account service for the account details using POST body', () => {
     provider
       .given('Account Test001 exists', { accountRef: 'Test001' })
       .uponReceiving('a request to get the account details via POST')
