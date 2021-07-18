@@ -9,25 +9,26 @@ use pact_models::content_types::ContentType;
 use pact_models::bodies::OptionalBody;
 use pact_models::{Consumer, Provider};
 use pact_models::provider_states::ProviderState;
-use pact_matching::models::matchingrules::MatchingRuleCategory;
+use pact_models::generators::{Generator, GeneratorCategory, Generators};
+use pact_models::matchingrules::{MatchingRule, MatchingRules, MatchingRuleCategory, RuleLogic};
+use pact_models::http_parts::HttpPart;
+
 use pact_mock_server::mock_server::MockServerConfig;
 use neon::prelude::*;
 use pact_matching::models::*;
 use pact_models::json_utils::json_to_string;
-use pact_matching::models::matchingrules::{MatchingRules, MatchingRule, RuleLogic};
-use pact_matching::models::generators::{Generators, GeneratorCategory, Generator};
 use pact_models::time_utils::generate_string;
 use pact_mock_server::server_manager::ServerManager;
-use pact_mock_server_ffi::bodies::{
+use pact_ffi::mock_server::bodies::{
   process_object,
   process_array,
   process_json,
   request_multipart,
   response_multipart,
   file_as_multipart_body,
-  from_integration_json
+  matcher_from_integration_json
 };
-use pact_mock_server_ffi::{generate_regex_value, StringResult};
+use pact_ffi::mock_server::{generate_regex_value_internal, StringResult};
 use env_logger::{Builder, Target};
 use uuid::Uuid;
 use std::sync::Mutex;
@@ -101,7 +102,7 @@ fn matching_rule_from_js_object<'a>(obj: Handle<JsObject>, ctx: &mut CallContext
       matcher_vals.insert(prop_name, json!(val.value()));
     }
   }
-  from_integration_json(&matcher_vals)
+  matcher_from_integration_json(&matcher_vals)
 }
 
 fn generator_from_js_object<'a>(obj: Handle<JsObject>, ctx: &mut CallContext<JsPact>) -> Option<Generator> {
@@ -144,22 +145,13 @@ fn generate_datetime_string(mut cx: FunctionContext) -> JsResult<JsString> {
 
 fn generate_regex_string(mut cx: FunctionContext) -> JsResult<JsString> {
   let pattern = cx.argument::<JsString>(0)?;
-  let c_str = CString::new(pattern.value()).unwrap();
-  let result = unsafe { generate_regex_value(c_str.into_raw()) };
+  let result = generate_regex_value_internal(&pattern.value());
   match result {
-    StringResult::Ok(value) => {
-      let c_str = unsafe { CStr::from_ptr(value) };
-      match c_str.to_str() {
-        Ok(value) => Ok(cx.string(value)),
-        Err(err) => cx.throw_error(err.to_string())
-      }
+    Ok(value) => {
+      Ok(cx.string(value))
     },
-    StringResult::Failed(err) => {
-      let c_str = unsafe { CStr::from_ptr(err) };
-      match c_str.to_str() {
-        Ok(value) => cx.throw_error(value),
-        Err(err) => cx.throw_error(err.to_string())
-      }
+    Err(err) => {
+      cx.throw_error(err.to_string())
     }
   }
 }
