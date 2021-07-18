@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.43](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.42...v10.0.0-beta.43) (2021-07-18)
+
+
+### Fixes and Improvements
+
+* return correct data type in fromProviderState ([#710](https://github.com/pact-foundation/pact-js/issues/710)) ([ec9192f](https://github.com/pact-foundation/pact-js/commit/ec9192fb44986b001634b8c44c877a8e3dd29c64)), closes [#633](https://github.com/pact-foundation/pact-js/issues/633)
+
 ## [10.0.0-beta.42](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.41...v10.0.0-beta.42) (2021-06-29)
 
 
