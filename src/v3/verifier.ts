@@ -1,9 +1,9 @@
 import { isEmpty } from 'ramda';
-import { ProxyOptions, StateHandlers } from 'dsl/verifier/proxy/types';
 
 import * as express from 'express';
 import * as http from 'http';
 import * as url from 'url';
+import { ProxyOptions, StateHandlers } from '../dsl/verifier/proxy/types';
 import { localAddresses } from '../common/net';
 import { createProxy, waitForServerReady } from '../dsl/verifier/proxy';
 
