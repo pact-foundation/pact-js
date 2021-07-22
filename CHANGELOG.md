@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.44](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.43...v10.0.0-beta.44) (2021-07-22)
+
+
+### Fixes and Improvements
+
+* consumerVersionTags were overwritten with empty array ([#714](https://github.com/pact-foundation/pact-js/issues/714)) ([838d1cb](https://github.com/pact-foundation/pact-js/commit/838d1cbc8730592518abff16733a9a703437abb7))
+
 ## [10.0.0-beta.43](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.42...v10.0.0-beta.43) (2021-07-18)
 
 
