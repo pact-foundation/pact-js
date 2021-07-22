@@ -39,35 +39,42 @@ fn get_bool_value(cx: &mut FunctionContext, obj: &JsObject, name: &str) -> bool 
   }
 }
 
-fn get_string_array(cx: &mut FunctionContext, obj: &JsObject, name: &str) -> Result<Vec<String>, String> {
-  match obj.get(cx, name) {
-    Ok(items) => match items.downcast::<JsString>() {
-      Ok(item) => Ok(vec![ item.value().to_string() ]),
-      Err(_) => match items.downcast::<JsArray>() {
-        Ok(items) => {
-          let mut tags = vec![];
-          if let Ok(items) = items.to_vec(cx) {
-            for tag in items {
-              match tag.downcast::<JsString>() {
-                Ok(val) => tags.push(val.value().to_string()),
-                Err(_) => {
-                  println!("    {}", Red.paint(format!("ERROR: {} must be a string or array of strings", name)));
-                }
+fn get_string_array(
+    cx: &mut FunctionContext,
+    obj: &JsObject,
+    name: &str,
+) -> Result<Option<Vec<String>>, String> {
+  if let Ok(items) = obj.get(cx, name) {
+      match items.downcast::<JsString>() {
+          Ok(item) => return Ok(Some(vec![item.value().to_string()])),
+          Err(_) => match items.downcast::<JsArray>() {
+              Ok(items) => {
+                  let mut tags = vec![];
+                  if let Ok(items) = items.to_vec(cx) {
+                      for tag in items {
+                          match tag.downcast::<JsString>() {
+                              Ok(val) => tags.push(val.value().to_string()),
+                              Err(_) => {
+                                  return Err(format!(
+                                      "{} must be a string or array of strings",
+                                      name
+                                  ));
+                              }
+                          }
+                      }
+                  };
+                  return Ok(Some(tags));
               }
-            }
-          };
-          Ok(tags)
-        },
-        Err(_) => if !items.is_a::<JsUndefined>() {
-          println!("    {}", Red.paint(format!("ERROR: {} must be a string or array of strings", name)));
-          Err(format!("{} must be a string or array of strings", name))
-        } else {
-          Ok(vec![])
-        }
+              Err(_) => {
+                  if !items.is_a::<JsUndefined>() {
+                      return Err(format!("{} must be a string or array of strings", name));
+                  }
+              }
+          },
       }
-    },
-    _ => Ok(vec![])
-  }
+  };
+
+  Ok(None)
 }
 
 fn get_integer_value(cx: &mut FunctionContext, obj: &JsObject, name: &str) -> Option<u64> {
@@ -238,8 +245,11 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
   };
 
   let provider_tags = match get_string_array(&mut cx, &config, "providerVersionTags") {
-    Ok(tags) => tags,
-    Err(e) => return cx.throw_error(e)
+      Ok(tags) => tags.unwrap_or(vec![]),
+      Err(e) => {
+        eprintln!("    {}", Red.paint(format!("ERROR: {}", e)));
+        return cx.throw_error(e);
+      }
   };
 
   match config.get(&mut cx, "pactBrokerUrl") {
@@ -247,14 +257,22 @@ pub fn verify_provider(mut cx: FunctionContext) -> JsResult<JsUndefined> {
       Ok(url) => {
         let pending = get_bool_value(&mut cx, &config, "enablePending");
         let wip = get_string_value(&mut cx, &config, "includeWipPactsSince");
-        let consumer_version_tags = match get_string_array(&mut cx, &config, "consumerVersionTags") {
-          Ok(tags) => Some(tags),
-          Err(e) => return cx.throw_error(e)
-        };
-        let consumer_version_selectors = match get_string_array(&mut cx, &config, "consumerVersionSelectorsString") {
-          Ok(tags) => Some(tags),
-          Err(e) => return cx.throw_error(e)
-        };
+        let consumer_version_tags =
+          match get_string_array(&mut cx, &config, "consumerVersionTags") {
+            Ok(vt) => vt,
+            Err(e) => {
+              eprintln!("    {}", Red.paint(format!("ERROR: {}", e)));
+              return cx.throw_error(e);
+            }
+          };
+        let consumer_version_selectors =
+          match get_string_array(&mut cx, &config, "consumerVersionSelectorsString") {
+            Ok(vs) => vs,
+            Err(e) => {
+                eprintln!("    {}", Red.paint(format!("ERROR: {}", e)));
+                return cx.throw_error(e);
+            }
+          };
 
         let selectors = match (consumer_version_selectors, consumer_version_tags) {
           (Some(vs), _) => json_to_selectors(vs),
