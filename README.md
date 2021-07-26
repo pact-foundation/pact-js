@@ -680,6 +680,7 @@ As per the Consumer case, Pact takes the position of the intermediary (MQ/broker
 
 ```js
 const { MessageProviderPact } = require("@pact-foundation/pact")
+const path = require("path")
 
 // 1 Messaging integration client
 const dogApiClient = {
