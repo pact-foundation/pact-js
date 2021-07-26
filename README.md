@@ -613,6 +613,7 @@ From a Pact testing point of view, Pact takes the place of the intermediary (MQ/
 The following test creates a contract for a Dog API handler:
 
 ```js
+const path = require("path")
 const {
   MessageConsumerPact,
   synchronousBodyHandler,
@@ -679,6 +680,7 @@ A Provider (Producer in messaging parlance) is the system that will be putting a
 As per the Consumer case, Pact takes the position of the intermediary (MQ/broker) and checks to see whether or not the Provider sends a message that matches the Consumer's expectations.
 
 ```js
+const path = require("path")
 const { MessageProviderPact } = require("@pact-foundation/pact")
 
 // 1 Messaging integration client
