@@ -8,6 +8,8 @@ import serviceFactory, { VerifierOptions } from '@pact-foundation/pact-core';
 import express from 'express';
 import * as http from 'http';
 import bodyParser from 'body-parser';
+import { encode as encodeBase64 } from 'js-base64';
+
 import {
   MessageDescriptor,
   MessageFromProviderWithMetadata,
@@ -121,16 +123,12 @@ export class MessageProviderPact {
 
         .then((messageFromHandler) => {
           if (hasMetadata(messageFromHandler)) {
-            // TODO: need to review signature for message here
-            // how do we do "messageWithMetadata" type thing?
-            // Object.keys(messageFromHandler.__pactMessageMetadata).forEach(
-            //   (key) => {
-            //     logger.debug(
-            //       `Setting metadata key '${key}' to value '${messageFromHandler.__pactMessageMetadata[key]}'`
-            //     );
-            //     res.header(key, messageFromHandler.__pactMessageMetadata[key]);
-            //   }
-            // );
+            const metadata = encodeBase64(
+              JSON.stringify(messageFromHandler.__pactMessageMetadata)
+            );
+            res.header('Pact-Message-Metadata', metadata);
+            res.header('PACT_MESSAGE_METADATA', metadata);
+
             return res.json(messageFromHandler.message);
           }
           return res.json(messageFromHandler);
