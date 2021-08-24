@@ -114,7 +114,7 @@ describe('Verifier', () => {
     describe('when no configuration has been given', () => {
       it('fails with an error', () =>
         expect(
-          () => new Verifier((undefined as unknown) as VerifierOptions)
+          () => new Verifier(undefined as unknown as VerifierOptions)
         ).to.throw());
     });
 
