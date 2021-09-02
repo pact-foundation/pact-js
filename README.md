@@ -53,7 +53,9 @@ Read [Getting started with Pact] for more information for beginners.
       - [Modify Requests Prior to Verification (Request Filters)](#modify-requests-prior-to-verification-request-filters)
       - [Lifecycle of a provider verification](#lifecycle-of-a-provider-verification)
     - [Publishing Pacts to a Broker](#publishing-pacts-to-a-broker)
-      - [Pact publishing options](#pact-publishing-options)
+      - [Publish in npm scripts](#publish-in-npm-scripts)
+      - [Publish in a custom script](#publish-in-a-custom-script)
+        - [Pact publishing options](#pact-publishing-options)
       - [Publishing Verification Results to a Pact Broker](#publishing-verification-results-to-a-pact-broker)
   - [Asynchronous API Testing](#asynchronous-api-testing)
     - [Consumer](#consumer)
@@ -99,7 +101,8 @@ Read [Getting started with Pact] for more information for beginners.
 ```
 npm i -S @pact-foundation/pact@latest
 ```
-Make sure the `ignore-scripts` option is disabled, pact uses npm scripts to download further dependencies. 
+
+Make sure the `ignore-scripts` option is disabled, pact uses npm scripts to download further dependencies.
 
 ### Do Not Track
 
@@ -312,31 +315,31 @@ new Verifier(opts).verifyProvider().then(function () {
 
 <details><summary>Verification Options</summary>
 
-| Parameter                   | Required? | Type                           | Description                                                                                                                                           |
-| --------------------------- | --------- | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `providerBaseUrl`           | true      | string                         | Running API provider host endpoint.                                                                                                                   |
-| `pactBrokerUrl`             | false     | string                         | Base URL of the Pact Broker from which to retrieve the pacts. Required if `pactUrls` not given.                                                       |
-| `provider`                  | false     | string                         | Name of the provider if fetching from a Broker                                                                                                        |
+| Parameter                   | Required? | Type                           | Description                                                                                                                                                                                        |
+| --------------------------- | --------- | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- | --------------------------------------------------- |
+| `providerBaseUrl`           | true      | string                         | Running API provider host endpoint.                                                                                                                                                                |
+| `pactBrokerUrl`             | false     | string                         | Base URL of the Pact Broker from which to retrieve the pacts. Required if `pactUrls` not given.                                                                                                    |
+| `provider`                  | false     | string                         | Name of the provider if fetching from a Broker                                                                                                                                                     |
 | `consumerVersionSelectors`  | false     | ConsumerVersionSelector\|array | Using [Selectors](https://docs.pact.io/pact_broker/advanced_topics/consumer_version_selectors/) is a way we specify which pacticipants and versions we want to use when configuring verifications. |
-| `consumerVersionTags`        | false     | string\|array                  | Retrieve the latest pacts with given tag(s)                                                                                                           |
-| `providerVersionTags`        | false     | string\|array                  | Tag(s) to apply to the provider application                                                                                                           |
-| `includeWipPactsSince`      | false     | string                         | Includes pact marked as WIP since this date. String in the format %Y-%m-%d or %Y-%m-%dT%H:%M:%S.000%:z                                                |
-| `pactUrls`                  | false     | array                          | Array of local pact file paths or HTTP-based URLs. Required if _not_ using a Pact Broker.                                                             |
-| `providerStatesSetupUrl`    | false     | string                         | Deprecated (use URL to send PUT requests to setup a given provider state                                                                              |
-| `stateHandlers`             | false     | object                         | Map of "state" to a function that sets up a given provider state. See docs below for more information                                                 |
-| `requestFilter`             | false     | function                       | Function that may be used to alter the incoming request or outgoing response from the verification process. See below for use.                        |
-| `beforeEach`                    | false     | function                       | Function to execute prior to each interaction being validated                                                                                          |
-| `afterEach`                     | false     | function                       | Function to execute after each interaction has been validated                                                                                         |
-| `pactBrokerUsername`        | false     | string                         | Username for Pact Broker basic authentication                                                                                                         |
-| `pactBrokerPassword`        | false     | string                         | Password for Pact Broker basic authentication                                                                                                         |
-| `pactBrokerToken`           | false     | string                         | Bearer token for Pact Broker authentication                                                                                                           |
-| `publishVerificationResult` | false     | boolean                        | Publish verification result to Broker (_NOTE_: you should only enable this during CI builds)                                                          |
-| `customProviderHeaders`     | false     | array                          | Header(s) to add to provider state set up and pact verification                                                                                       |  | `requests`. eg 'Authorization: Basic cGFjdDpwYWN0'. |
-| `providerVersion`           | false     | string                         | Provider version, required to publish verification result to Broker. Optional otherwise.                                                              |
-| `enablePending`             | false     | boolean                        | Enable the [pending pacts](https://docs.pact.io/pending) feature.                                                                                     |
-| `timeout`                   | false     | number                         | The duration in ms we should wait to confirm verification process was successful. Defaults to 30000.                                                  |
-| `format`                    | false     | string                         | What format the verification results are printed in. Options are `json`, `xml`, `progress` and `RspecJunitFormatter` (which is a synonym for `xml`)   |
-| `verbose`                   | false     | boolean                        | Enables verbose output for underlying pact binary.                                                                                                    |
+| `consumerVersionTags`       | false     | string\|array                  | Retrieve the latest pacts with given tag(s)                                                                                                                                                        |
+| `providerVersionTags`       | false     | string\|array                  | Tag(s) to apply to the provider application                                                                                                                                                        |
+| `includeWipPactsSince`      | false     | string                         | Includes pact marked as WIP since this date. String in the format %Y-%m-%d or %Y-%m-%dT%H:%M:%S.000%:z                                                                                             |
+| `pactUrls`                  | false     | array                          | Array of local pact file paths or HTTP-based URLs. Required if _not_ using a Pact Broker.                                                                                                          |
+| `providerStatesSetupUrl`    | false     | string                         | Deprecated (use URL to send PUT requests to setup a given provider state                                                                                                                           |
+| `stateHandlers`             | false     | object                         | Map of "state" to a function that sets up a given provider state. See docs below for more information                                                                                              |
+| `requestFilter`             | false     | function                       | Function that may be used to alter the incoming request or outgoing response from the verification process. See below for use.                                                                     |
+| `beforeEach`                | false     | function                       | Function to execute prior to each interaction being validated                                                                                                                                      |
+| `afterEach`                 | false     | function                       | Function to execute after each interaction has been validated                                                                                                                                      |
+| `pactBrokerUsername`        | false     | string                         | Username for Pact Broker basic authentication                                                                                                                                                      |
+| `pactBrokerPassword`        | false     | string                         | Password for Pact Broker basic authentication                                                                                                                                                      |
+| `pactBrokerToken`           | false     | string                         | Bearer token for Pact Broker authentication                                                                                                                                                        |
+| `publishVerificationResult` | false     | boolean                        | Publish verification result to Broker (_NOTE_: you should only enable this during CI builds)                                                                                                       |
+| `customProviderHeaders`     | false     | array                          | Header(s) to add to provider state set up and pact verification                                                                                                                                    |     | `requests`. eg 'Authorization: Basic cGFjdDpwYWN0'. |
+| `providerVersion`           | false     | string                         | Provider version, required to publish verification result to Broker. Optional otherwise.                                                                                                           |
+| `enablePending`             | false     | boolean                        | Enable the [pending pacts](https://docs.pact.io/pending) feature.                                                                                                                                  |
+| `timeout`                   | false     | number                         | The duration in ms we should wait to confirm verification process was successful. Defaults to 30000.                                                                                               |
+| `format`                    | false     | string                         | What format the verification results are printed in. Options are `json`, `xml`, `progress` and `RspecJunitFormatter` (which is a synonym for `xml`)                                                |
+| `verbose`                   | false     | boolean                        | Enables verbose output for underlying pact binary.                                                                                                                                                 |
 
 </details>
 
@@ -538,6 +541,28 @@ The Broker:
 
 [Host your own](https://github.com/pact-foundation/pact_broker), or signup for a free hosted [Pact Broker](https://pactflow.io).
 
+#### Publish in npm scripts
+
+The easiest way to publish pacts to the broker is via an npm script in your package.json:
+
+```
+
+   "pact:publish": "pact-broker publish <YOUR_PACT_FILES_OR_DIR> --consumer-app-version=\"$(npx @pact-foundation/absolute-version)\" --tag-with-git-branch --broker-base-url=https://your-broker-url.example.com"
+```
+
+For a full list of the options, see the [CLI usage instructions](https://github.com/pact-foundation/pact-ruby-standalone/releases).
+All CLI binaries are available in npm scripts when using pact-js.
+
+If you want to pass your username and password to the broker without including
+them in scripts, you can provide it via the environment variables
+`PACT_BROKER_USERNAME` and `PACT_BROKER_PASSWORD`. If your broker supports an
+access token instead of a password, use the environment variable
+`PACT_BROKER_TOKEN`.
+
+#### Publish in a custom script
+
+If you require finer control over your pact publication, you can programatically publish in a custom script:
+
 ```js
 const { Publisher } = require("@pact-foundation/pact")
 const opts = {
@@ -620,7 +645,7 @@ const {
 } = require("@pact-foundation/pact")
 
 // 1 Dog API Handler
-const dogApiHandler = function(dog) {
+const dogApiHandler = function (dog) {
   if (!dog.id && !dog.name && !dog.type) {
     throw new Error("missing fields")
   }
@@ -1079,8 +1104,8 @@ const animalBodyExpectation = {
 | `regex`                | pattern, example: string                           | Value that must match the given regular expression.                                                                                                                                                                                                                                                                                     |
 | `equal`                | example                                            | Value that must be equal to the example. This is mainly used to reset the matching rules which cascade.                                                                                                                                                                                                                                 |
 | `timestamp`            | format: string, example?: string                   | String value that must match the provided datetime format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) for details on the format string. If the example value is omitted, a value will be generated using a Timestamp generator and the current system date and time. |
-| `time`                 | format: string, example?: string                   | String value that must match the provided time format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) for details on the format string. If the example value is omitted, a value will be generated using a Time generator and the current system time.                  |
-| `date`                 | format: string, example?: string                   | String value that must match the provided date format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) for details on the format string. If the example value is omitted, a value will be generated using a Date generator and the current system date.                  |
+| `time`                 | format: string, example?: string                   | String value that must match the provided time format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) for details on the format string. If the example value is omitted, a value will be generated using a Time generator and the current system time.                   |
+| `date`                 | format: string, example?: string                   | String value that must match the provided date format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) for details on the format string. If the example value is omitted, a value will be generated using a Date generator and the current system date.                   |
 | `includes`             | value: string                                      | Value that must include the example value as a substring.                                                                                                                                                                                                                                                                               |
 | `nullValue`            |                                                    | Value that must be null. This will only match the JSON Null value. For other content types, it will match if the attribute is missing.                                                                                                                                                                                                  |
 
@@ -1092,7 +1117,7 @@ There is an `XmlBuilder` class that provides a DSL to help construct XML bodies 
 for example:
 
 ```javascript
-body: new XmlBuilder("1.0", "UTF-8", "ns1:projects").build(el => {
+body: new XmlBuilder("1.0", "UTF-8", "ns1:projects").build((el) => {
   el.setAttributes({
     id: "1234",
     "xmlns:ns1": "http://some.namespace/and/more/stuff",
@@ -1105,8 +1130,8 @@ body: new XmlBuilder("1.0", "UTF-8", "ns1:projects").build(el => {
       name: string("Project 1"),
       due: timestamp("yyyy-MM-dd'T'HH:mm:ss.SZ", "2016-02-11T09:46:56.023Z"),
     },
-    project => {
-      project.appendElement("ns1:tasks", {}, task => {
+    (project) => {
+      project.appendElement("ns1:tasks", {}, (task) => {
         task.eachLike(
           "ns1:task",
           {
@@ -1182,7 +1207,7 @@ stateHandlers: {
 
 ### Debugging issues with Pact-JS V3
 
-You can change the log levels using the `LOG_LEVEL` environment variable. 
+You can change the log levels using the `LOG_LEVEL` environment variable.
 
 ## Troubleshooting / FAQs
 
