@@ -4,7 +4,7 @@
   "description": "Jest Pact example",
   "main": "index.js",
   "scripts": {
-    "test": "jest __tests__/ --runInBand",
+    "test": "jest __tests__/ --runInBand --testTimeout=300000",
     "publish:pact": "node ./publish.js"
   },
   "license": "MIT",
@@ -15,7 +15,7 @@
     "@pact-foundation/absolute-version": "0.0.4",
     "@pact-foundation/pact": "^9.16.0",
     "axios": "^0.21.1",
-    "jest": "^26.6.3",
+    "jest": "^27.1.0",
     "jest-pact": "^0.9.1"
   }
 }
