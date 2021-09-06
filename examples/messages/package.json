@@ -14,8 +14,8 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@pact-foundation/absolute-version": "0.0.1",
-    "@pact-foundation/pact": "^9.11.1",
+    "@pact-foundation/absolute-version": "0.0.4",
+    "@pact-foundation/pact": "^9.16.0",
     "@types/chai": "^4.0.3",
     "@types/chai-as-promised": "0.0.31",
     "@types/mocha": "^2.2.48",

@@ -8,7 +8,7 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@pact-foundation/pact": "^9.11.1",
+    "@pact-foundation/pact": "^9.16.0",
     "axios": "^0.21.1",
     "chai": "^3.5.0",
     "mocha": "^8.2.1",
