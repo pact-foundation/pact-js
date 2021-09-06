@@ -15,7 +15,7 @@ module.exports = {
     filename: "pact-web.js",
   },
   resolve: {
-    extensions: [".ts", ".tsx", ".js"],
+    extensions: [".mjs", ".ts", ".tsx", ".js"],
   },
   target: "web",
   node: {
