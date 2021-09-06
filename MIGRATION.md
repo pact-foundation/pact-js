@@ -2,7 +2,7 @@
 
 This guide is for migrating to a new version of pact-js.
 
-# v10.x.x from v9.x.x
+# beta.44 to beta.45
 
 ## Verifier Options
 
