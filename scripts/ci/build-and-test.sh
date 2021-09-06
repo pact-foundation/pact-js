@@ -1,5 +1,6 @@
 #!/bin/bash -eu
-
+set -e
+set -u
 set -x
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
