@@ -18,7 +18,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12
-          registry-url: "https://registry.npmjs.org"
+          registry-url: 'https://registry.npmjs.org'
       - id: publish
         run: scripts/ci/release-beta.sh
         env:
@@ -41,7 +41,7 @@ jobs:
     strategy:
       matrix:
         operating-system: [ubuntu-latest, windows-latest, macos-latest]
-        node-version: [10.x, 12.x, 13.x, 14.x]
+        node-version: [10.x, 12.x, 13.x, 14.x 16.x]
     steps:
       - uses: actions/checkout@v2
         with:
