@@ -6,7 +6,7 @@ const { Matchers } = require('@pact-foundation/pact');
 const { getMeDogs, getMeCats } = require('../index');
 
 pactWith(
-  { consumer: 'Jest Consumer Example', provider: 'Jest Provider Example' },
+  { consumer: 'Jest-Consumer-Example', provider: 'Jest-Provider-Example' },
   (provider) => {
     describe('Dogs API', () => {
       const DOGS_DATA = [
