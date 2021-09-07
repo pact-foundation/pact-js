@@ -19,7 +19,7 @@ rm -rf dist/native/target
 
 # Link the build so that the examples are always testing the
 # current build, in it's properly exported format
-(cd dist && npm link)
+(cd dist && npm install && npm link)
 
 echo "Running e2e examples build for node version $(node --version)"
 for i in examples/*; do
