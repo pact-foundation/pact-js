@@ -320,8 +320,8 @@ new Verifier(opts).verifyProvider().then(function () {
 | `pactBrokerUrl`             | false     | string                         | Base URL of the Pact Broker from which to retrieve the pacts. Required if `pactUrls` not given.                                                                                                    |
 | `provider`                  | false     | string                         | Name of the provider if fetching from a Broker                                                                                                                                                     |
 | `consumerVersionSelectors`  | false     | ConsumerVersionSelector\|array | Using [Selectors](https://docs.pact.io/pact_broker/advanced_topics/consumer_version_selectors/) is a way we specify which pacticipants and versions we want to use when configuring verifications. |
-| `consumerVersionTag`        | false     | string\|array                  | Retrieve the latest pacts with given tag(s)                                                                                                                                                        |
-| `providerVersionTag`        | false     | string\|array                  | Tag(s) to apply to the provider application                                                                                                                                                        |
+| `consumerVersionTags`        | false     | array                  | Retrieve the latest pacts with given tag(s)                                                                                                                                                        |
+| `providerVersionTags`        | false     | array                  | Tag(s) to apply to the provider application                                                                                                                                                        |
 | `includeWipPactsSince`      | false     | string                         | Includes pact marked as WIP since this date. String in the format %Y-%m-%d or %Y-%m-%dT%H:%M:%S.000%:z                                                                                             |
 | `pactUrls`                  | false     | array                          | Array of local pact file paths or HTTP-based URLs. Required if _not_ using a Pact Broker.                                                                                                          |
 | `providerStatesSetupUrl`    | false     | string                         | Deprecated (use URL to send PUT requests to setup a given provider state                                                                                                                           |
@@ -333,12 +333,10 @@ new Verifier(opts).verifyProvider().then(function () {
 | `pactBrokerPassword`        | false     | string                         | Password for Pact Broker basic authentication                                                                                                                                                      |
 | `pactBrokerToken`           | false     | string                         | Bearer token for Pact Broker authentication                                                                                                                                                        |
 | `publishVerificationResult` | false     | boolean                        | Publish verification result to Broker (_NOTE_: you should only enable this during CI builds)                                                                                                       |
-| `customProviderHeaders`     | false     | array                          | Header(s) to add to provider state set up and pact verification                                                                                                                                    |  | `requests`. eg 'Authorization: Basic cGFjdDpwYWN0'. |
 | `providerVersion`           | false     | string                         | Provider version, required to publish verification result to Broker. Optional otherwise.                                                                                                           |
 | `enablePending`             | false     | boolean                        | Enable the [pending pacts](https://docs.pact.io/pending) feature.                                                                                                                                  |
 | `timeout`                   | false     | number                         | The duration in ms we should wait to confirm verification process was successful. Defaults to 30000.                                                                                               |
-| `format`                    | false     | string                         | What format the verification results are printed in. Options are `json`, `xml`, `progress` and `RspecJunitFormatter` (which is a synonym for `xml`)                                                |
-| `verbose`                   | false     | boolean                        | Enables verbose output for underlying pact binary.                                                                                                                                                 |
+| `logLevel`                  | false     | string                         | not used, log level is set by [environment variable](#debugging-issues-with-pact-js-v3)                                                                                                            |
 
 </details>
 
@@ -471,10 +469,7 @@ _NOTE: Using the `all` flag requires you to ensure you delete any tags associate
 
 Sometimes you may need to add things to the requests that can't be persisted in a pact file. Examples of these are authentication tokens with a small life span. e.g. an OAuth bearer token: `Authorization: Bearer 0b79bab50daca910b000d4f1a2b675d604257e42`.
 
-For these cases, we have two facilities that should be carefully used during verification:
-
-1. the ability to specify custom headers to be sent during provider verification. The flag to achieve this is `customProviderHeaders`.
-2. the ability to modify a request/response and modify the payload. The flag to achieve this is `requestFilter`.
+For these cases, we the ability to modify a request/response and modify the payload. The flag to achieve this is `requestFilter`.
 
 **Example API with Authorization**
 
@@ -503,10 +498,6 @@ const opts = {
     req.headers["Authorization"] = `Bearer: ${token}`
     next()
   },
-
-  // This header will always be sent for each and every request, and can't be dynamic
-  // (i.e. passing a variable instead of the bearer token)
-  customProviderHeaders: ["Authorization: Bearer 1234"]
 }
 
 return new Verifier(opts).verifyProvider().then(...)
@@ -1148,52 +1139,8 @@ body: new XmlBuilder("1.0", "UTF-8", "ns1:projects").build(el => {
 
 ### Verifying providers with VerifierV3
 
-The `VerifierV3` class can verify your provider in a similar way to the existing one.
-
-#### Verification Options with VerifierV3
-
-<details><summary>Verification Options</summary>
-
-| Parameter                   | Required? | Type                           | Description                                                                                                                                                                                        |
-| --------------------------- | --------- | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `provider`                  | false     | string                         | Name of the provider if fetching from a Broker                                                                                                                                                     |
-| `logLevel`                  | false     | string                         | not used, log level is set by [environment variable](#debugging-issues-with-pact-js-v3)                                                                                                            |
-| `providerBaseUrl`           | true      | string                         | Running API provider host endpoint.                                                                                                                                                                |
-| `pactUrls`                  | false     | array                          | Array of local pact file paths or HTTP-based URLs. Required if _not_ using a Pact Broker.                                                                                                          |
-| `pactBrokerUrl`             | false     | string                         | Base URL of the Pact Broker from which to retrieve the pacts. Required if `pactUrls` not given.                                                                                                   |
-| `providerStatesSetupUrl`    | false     | string                         | Deprecated (use URL to send PUT requests to setup a given provider state                                                                                                                           |
-| `pactBrokerUsername`        | false     | string                         | Username for Pact Broker basic authentication                                                                                                                                                      |
-| `pactBrokerPassword`        | false     | string                         | Password for Pact Broker basic authentication                                                                                                                                                      |
-| `pactBrokerToken`           | false     | string                         | Bearer token for Pact Broker authentication                                                                                                                                                        |
-| `callbackTimeout`           | false     | number                         | Timeout in milliseconds for request filters and provider state handlers to execute within                                                                                                          |
-| `publishVerificationResult` | false     | boolean                        | Publish verification result to Broker (_NOTE_: you should only enable this during CI builds)                                                                                                       |
-| `providerVersion`           | false     | string                         | Provider version, required to publish verification result to Broker. Optional otherwise.                                                                                                     |
-| `requestFilter`           | false     | function ([Express middleware](https://expressjs.com/en/guide/using-middleware.html))                |                                                                                                                                                                                                    |
-| `stateHandlers`             | false     | object                         | Map of "state" to a function that sets up a given provider state. See docs [below](#provider-state-callbacks) for more information                                                                 |
-| `consumerVersionTags`       | false     | string\|array                  | Retrieve the latest pacts with given tag(s)                                                                                                                                                        |
-| `providerVersionTags`       | false     | string\|array                  | Tag(s) to apply to the provider application                                                                                                                                                        |
-| `enablePending`             | false     | boolean                        | Enable the [pending pacts](https://docs.pact.io/pending) feature.                                                                                                                                  |
-| `includeWipPactsSince`      | false     | string                         | Includes pact marked as WIP since this date. String in the format %Y-%m-%d or %Y-%m-%dT%H:%M:%S.000%:z                                                                                             |
-| `disableSSLVerification`    | false     | boolean                        | Ignore invalid/self-signed SSL certificates                                                                                                                                                        |
-</details>
-
-
-
-#### Request Filters
-
-Request filters are simple [Express middleware functions](https://expressjs.com/en/guide/using-middleware.html):
-
-```javascript
-requestFilter: (req, res, next) => {
-    req.headers["MY_SPECIAL_HEADER"] = "my special value"
-
-    // e.g. ADD Bearer token
-    req.headers["authorization"] = `Bearer ${token}`
-
-    // Need to call the next middleware in the chain
-    next()
-},
-```
+The `VerifierV3` class is no longer necessary. The `Verifier` class now supports
+all the same options. `VerifierV3` still exists, but delegates to the `Verifier` class.
 
 #### Provider state callbacks
 
