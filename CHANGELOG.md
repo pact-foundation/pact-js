@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [9.16.1](https://github.com/pact-foundation/pact-js/compare/v9.16.0...v9.16.1) (2021-09-08)
+
+
+### Fixes and Improvements
+
+* Add `timeout` option to PactOptions for waiting for the mock server to start ([85c1d36](https://github.com/pact-foundation/pact-js/commit/85c1d36d8a2ecc7cddb19fd5e5ab128c690facb4))
+* bump dependency on pact-node to avoid broken 10.13.6 ([de5db6b](https://github.com/pact-foundation/pact-js/commit/de5db6b88ae4a36c7f102201362942c35c76d0c8))
+* Bump version of pact-node to pick up less vulnerable dependencies ([0ab095e](https://github.com/pact-foundation/pact-js/commit/0ab095e272ebb4f7e9ac7979d9a3ed5ac5cfc1d5))
+* update examples with path dependency ([#717](https://github.com/pact-foundation/pact-js/issues/717)) ([7c91c33](https://github.com/pact-foundation/pact-js/commit/7c91c33a7a81f74c801f03a957b06905839d8743))
+
 ## [9.16.0](https://github.com/pact-foundation/pact-js/compare/v9.15.5...v9.16.0) (2021-06-21)
 
 
