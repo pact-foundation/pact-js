@@ -257,6 +257,7 @@ export class Pact {
       ssl: this.opts.ssl,
       sslcert: this.opts.sslcert,
       sslkey: this.opts.sslkey,
+      timeout: this.opts.timeout || 30000,
     })
   }
 }
