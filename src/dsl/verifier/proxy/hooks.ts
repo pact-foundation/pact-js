@@ -16,8 +16,9 @@ export const registerBeforeHook = (
         try {
           await config.beforeEach();
         } catch (e) {
-          logger.error("error executing 'beforeEach' hook: ", e);
-          next(new Error(`error executing 'beforeEach' hook: ${e}`));
+          logger.error(`error executing 'beforeEach' hook: ${e.message}`);
+          logger.debug(`Stack trace was: ${e.stack}`);
+          next(new Error(`error executing 'beforeEach' hook: ${e.message}`));
         }
       }
     }
@@ -39,8 +40,9 @@ export const registerAfterHook = (
         try {
           await config.afterEach();
         } catch (e) {
-          logger.error("error executing 'afterEach' hook: ", e);
-          next(new Error(`error executing 'afterEach' hook: ${e}`));
+          logger.error(`error executing 'afterEach' hook: ${e.message}`);
+          logger.debug(`Stack trace was: ${e.stack}`);
+          next(new Error(`error executing 'afterEach' hook: ${e.message}`));
         }
       }
     } else {

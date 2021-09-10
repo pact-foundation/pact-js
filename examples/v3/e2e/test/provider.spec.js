@@ -9,10 +9,7 @@ server.listen(8081, () => {
   console.log('Animal Profile Service listening on http://localhost:8081');
 });
 
-let pactBroker = 'https://test.pact.dius.com.au';
-if (process.env.CI && !process.env.APPVEYOR) {
-  pactBroker = 'http://localhost:9292';
-}
+const pactBroker = 'https://test.pact.dius.com.au';
 
 // Verify that the provider meets all consumer expectations
 describe('Pact Verification', () => {

@@ -71,15 +71,22 @@ export class Verifier {
 
     // Start the verification CLI proxy server
     const server = createProxy(this.config, this.stateSetupPath);
+    logger.trace(`proxy created, waiting for startup`);
 
     // Run the verification once the proxy server is available
     return waitForServerReady(server)
+      .then((passOn) => {
+        logger.trace(`Proxy is ready at ${server.address().address}`);
+        return passOn;
+      })
       .then(this.runProviderVerification())
       .then((result) => {
+        logger.trace('Verification completed, closing server');
         server.close();
         return result;
       })
       .catch((e) => {
+        logger.trace(`Verification failed(${e.message}), closing server`);
         server.close();
         throw e;
       });
@@ -95,7 +102,7 @@ export class Verifier {
         ...omit(this.config, 'handlers'),
         providerBaseUrl: `${this.address}:${server.address().port}`,
       };
-
+      logger.trace(`Verifying pacts with: ${JSON.stringify(opts)}`);
       return serviceFactory.verifyPacts(opts);
     };
   }

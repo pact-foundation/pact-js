@@ -50,6 +50,12 @@ export interface MessageDescriptor {
  */
 export type MessageConsumer = (m: Message) => Promise<unknown>;
 
+export type MessageFromProvider = unknown;
+export type MessageFromProviderWithMetadata = {
+  __pactMessageMetadata: Record<string, string>;
+  message: unknown;
+};
+
 /**
  * A Message Provider is a function that will be invoked by the framework
  * in order to _produce_ a message for a consumer. The response must match what
@@ -58,7 +64,12 @@ export type MessageConsumer = (m: Message) => Promise<unknown>;
  *
  * @module Message
  */
-export type MessageProvider = (m: MessageDescriptor) => Promise<unknown>;
+export type MessageProvider = (
+  m: MessageDescriptor
+) =>
+  | Promise<MessageFromProvider | MessageFromProviderWithMetadata>
+  | MessageFromProvider
+  | MessageFromProviderWithMetadata;
 
 export interface MessageProviders {
   [name: string]: MessageProvider;

@@ -1,19 +1,16 @@
 const pact = require('@pact-foundation/pact-core');
 const path = require('path');
-let pactBroker = 'https://test.pact.dius.com.au';
-if (process.env.CI && !process.env.APPVEYOR) {
+const { versionFromGitTag } = require('@pact-foundation/absolute-version');
+
+const pactBroker = 'https://test.pact.dius.com.au';
+/* if (process.env.CI && !process.env.APPVEYOR) {
   pactBroker = 'http://localhost:9292';
-}
+} */
 
-let consumerVersion = '1.0.';
-
-if (process.env.APPVEYOR) {
-  consumerVersion = consumerVersion + process.env.APPVEYOR_BUILD_NUMBER;
-} else if (process.env.GITHUB_ACTIONS) {
-  consumerVersion = consumerVersion + process.env.GITHUB_ACTION;
-} else {
-  consumerVersion = consumerVersion + Math.floor(new Date() / 1000);
-}
+// Your version numbers need to be unique for every different version of your consumer
+// see https://docs.pact.io/getting_started/versioning_in_the_pact_broker/ for details.
+// If you use git tags, then you can use @pact-foundation/absolute-version as we do here.
+const consumerVersion = versionFromGitTag();
 
 const opts = {
   pactFilesOrDirs: [

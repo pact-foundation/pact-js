@@ -1,4 +1,7 @@
-const { MessageProviderPact } = require('@pact-foundation/pact');
+const {
+  MessageProviderPact,
+  providerWithMetadata,
+} = require('@pact-foundation/pact');
 const { versionFromGitTag } = require('@pact-foundation/absolute-version');
 const path = require('path');
 const { createEvent } = require('./index');
@@ -6,7 +9,9 @@ const { createEvent } = require('./index');
 describe('Message provider tests', () => {
   const p = new MessageProviderPact({
     messageProviders: {
-      'a request to save an event': () => createEvent(),
+      'a request to save an event': providerWithMetadata(() => createEvent(), {
+        'content-type': 'application/json',
+      }),
     },
     logLevel: 'WARN',
     provider: 'SNSPactEventProvider',
@@ -25,7 +30,7 @@ describe('Message provider tests', () => {
     pactBrokerPassword: 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
     publishVerificationResult: true,
 
-    consumerVersionTags: ['latest'],
+    consumerVersionSelectors: [{ latest: true }],
   });
 
   describe('send an event', () => {

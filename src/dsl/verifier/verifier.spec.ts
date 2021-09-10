@@ -1,12 +1,13 @@
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
-import serviceFactory from '@pact-foundation/pact-core';
+import { Server } from 'http';
+import serviceFactory, { LogLevel } from '@pact-foundation/pact-core';
+
+import * as proxy from './proxy/proxy';
 import logger from '../../common/logger';
 
 import { VerifierOptions } from './types';
-
-import * as proxy from './proxy';
 
 import { Verifier } from './verifier';
 
@@ -74,8 +75,9 @@ describe('Verifier', () => {
 
     context('when logLevel is not provided', () => {
       it('does not modify the log setting', () => {
+        const { logLevel, ...rest } = opts;
         v = new Verifier({
-          ...opts,
+          ...rest,
         });
         expect(spy.callCount).to.eql(0);
       });
@@ -95,24 +97,30 @@ describe('Verifier', () => {
 
   describe('#verifyProvider', () => {
     beforeEach(() => {
-      sinon.stub(proxy, 'createProxy' as any).returns({
-        close: () => {
+      sinon.stub(proxy, 'createProxy').returns({
+        close: (): Server => {
           executed = true;
+          return {} as Server;
         },
-      });
+        address: () => ({
+          port: 1234,
+          family: 'https',
+          address: 'mock.server.example.com',
+        }),
+      } as Server);
       sinon.stub(proxy, 'waitForServerReady' as any).returns(Promise.resolve());
     });
 
     describe('when no configuration has been given', () => {
       it('fails with an error', () =>
         expect(
-          () => new Verifier((undefined as unknown) as VerifierOptions)
+          () => new Verifier(undefined as unknown as VerifierOptions)
         ).to.throw());
     });
 
     describe('when the verifier has been configured', () => {
       beforeEach(() => {
-        v = new Verifier(opts);
+        v = new Verifier({ ...opts, logLevel: 'trace' as LogLevel });
       });
       context('and the verification runs successfully', () => {
         it('closes the server and returns the result', () => {

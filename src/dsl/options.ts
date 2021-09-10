@@ -6,7 +6,7 @@ import { VerifierOptions as PactCoreVerifierOptions } from '@pact-foundation/pac
 import { PactfileWriteMode } from './mockService';
 import { MessageProviders, StateHandlers } from './message';
 
-export type LogLevel = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal';
+export type LogLevel = 'trace' | 'debug' | 'info' | 'warn' | 'error';
 
 export interface PactOptions {
   // The name of the consumer

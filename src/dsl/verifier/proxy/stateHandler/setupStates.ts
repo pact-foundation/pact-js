@@ -23,7 +23,7 @@ export const setupStates = (
   state: ProviderState,
   config: ProxyOptions
 ): Promise<JsonMap | void> => {
-  logger.debug({ state }, 'setting up state');
+  logger.debug(`setting up state '${JSON.stringify(state)}'`);
 
   const handler = config.stateHandlers
     ? config.stateHandlers[state.state]
