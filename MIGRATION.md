@@ -4,6 +4,16 @@ This guide is for migrating to a new version of pact-js.
 
 # beta.44 to beta.45
 
+You no longer need to use `VerifierV3`. You may now do:
+
+```
+import { Verifier } from '@pact-foundation/pact'
+```
+
+If migrating from VerifierV3, note that `disableSSLVerification` has been
+renamed `disableSslVerification` for consistency with other options.
+The `VerifierV3` still exists with the old options, it now delegates to the main verifier.
+
 ## Verifier Options
 
 There are several changes to the `VerifierOptions`. To migrate:

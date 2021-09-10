@@ -38,8 +38,15 @@ export type VerifierOptions = VerifierV3Options & ProxyOptions;
 export class VerifierV3 {
   private internalVerifier: Verifier;
 
+  private config: VerifierOptions;
+
   constructor(config: VerifierOptions) {
-    this.internalVerifier = new Verifier(config);
+    this.config = config;
+    this.internalVerifier = new Verifier({
+      ...config,
+      // Casing has changed for this option
+      disableSslVerification: config.disableSSLVerification,
+    });
   }
 
   /**
@@ -47,11 +54,21 @@ export class VerifierV3 {
    */
   public verifyProvider(): Promise<unknown> {
     logger.warn(
-      'You no longer need to import the verifier from @pact-foundation/pact/v3'
+      `VerifierV3 is now deprecated
+      
+  You no longer need to import the verifier from @pact-foundation/pact/v3
+  You may now update your imports to:
+
+      import { Verifier } from '@pact-foundation/pact'
+      
+  Thank you for being part of pact-js beta!`
     );
-    logger.warn(
-      " - you may now update your imports to import { Verifier } from '@pact-foundation/pact'"
-    );
+
+    if (this.config.disableSSLVerification) {
+      logger.warn(
+        'When migrating from VerifierV3, you will need to change disableSSLVerification to disableSslVerification'
+      );
+    }
     return this.internalVerifier.verifyProvider();
   }
 }
