@@ -1,7 +1,7 @@
-import { ProxyOptions, StateHandlers } from 'dsl/verifier/proxy/types';
-
 import * as express from 'express';
 import { ConsumerVersionSelector } from '@pact-foundation/pact-core';
+
+import { ProxyOptions, StateHandlers } from '../dsl/verifier/proxy/types';
 
 import logger from '../common/logger';
 

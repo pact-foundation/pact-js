@@ -29,24 +29,24 @@ export class PactProviderConfigOptionsService
           this.animalRepository.clear();
           token = '1234';
 
-          return 'Animals removed to the db';
+          return { description: 'Animals removed to the db' };
         },
         'Has some animals': async () => {
           token = '1234';
           this.animalRepository.importData();
 
-          return 'Animals added to the db';
+          return { description: 'Animals added to the db' };
         },
         'Has an animal with ID 1': async () => {
           token = '1234';
           this.animalRepository.importData();
 
-          return 'Animals added to the db';
+          return { description: 'Animals added to the db' };
         },
         'is not authenticated': async () => {
           token = '';
 
-          return 'Invalid bearer token generated';
+          return { description: 'Invalid bearer token generated' };
         },
       },
 
