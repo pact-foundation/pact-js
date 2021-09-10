@@ -2,6 +2,45 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.45](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.44...v10.0.0-beta.45) (2021-09-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* There are several changes to the `VerifierOptions`. To migrate:
+
+  * Replace `verbose` with `logLevel: "DEBUG"` (logLevels of `DEBUG` and below now imply `verbose` where appropriate)
+  * Replace `consumerVersionTag` with the `consumerVersionTags` array
+  * Replace `providerVersionTag` with the `providerVersionTags` array
+  * Replace `tags` with `consumerVersionTags` or `providerVersionTags` as appropriate.
+* Some `VerifierOptions` have been removed entirely:
+  * `customProviderHeaders` has been removed. If you need this functionality, set an
+    appropriate request filter with the `requestFilters` option instead.
+  * All logging and reporting is now on standard out (this was the default before).
+    This means `logDir` / `format` / `out` have all been removed. If your ecosystem needs
+    the ability to customise logging and reporting, please let us know by opening an issue.
+  * The undocumented option `monkeypatch` has been removed. The use cases for this
+    feature are mostly covered by other options.
+* **logging:** 'fatal' log level has been removed. Nothing was logged at fatal, and the underlying core doesn't support it.
+
+### Features
+
+* Actually send message metadata during verification ([c373144](https://github.com/pact-foundation/pact-js/commit/c373144e040c78babaf48d5b14575dfe33233b88))
+* Add ability to specify metadata in provider tests with ([824e49b](https://github.com/pact-foundation/pact-js/commit/824e49b5f7f6cfc9555fb988430dceb0a4ab875b))
+* State handlers respect promises for all pact file formats ([72bfc0b](https://github.com/pact-foundation/pact-js/commit/72bfc0b78df471e1a37fd3c93658199493bb066f))
+
+
+* **logging:** Improve trace logging and use clearer types ([060daa9](https://github.com/pact-foundation/pact-js/commit/060daa964e7b57a5e4ada634702de21c1e434921))
+* update verifier options ([6df54b0](https://github.com/pact-foundation/pact-js/commit/6df54b01a68057e88cabee18743048a69db7c28e))
+
+
+### Fixes and Improvements
+
+* broken pact provider test not consistent with types ([29af342](https://github.com/pact-foundation/pact-js/commit/29af34250cdc308a5298553f5ee9bbb9daf182cb))
+* correct VerfierV3Options so that it doesn't clobber VeriferOptions ([5796fde](https://github.com/pact-foundation/pact-js/commit/5796fdeb96c354316fe9606f0a9a7fc0c3d43532))
+* using relative import. fixes problems with intellisense in vscode ([35de1c5](https://github.com/pact-foundation/pact-js/commit/35de1c57d744d5bc747e6af114c8d272b2a8cec4))
+* You no longer need to import the verifier from /v3, it can be imported directly from @pact-foundation/pact ([c268497](https://github.com/pact-foundation/pact-js/commit/c268497e1fd848d3423d379a2671361ea56c9b53))
+
 ## [10.0.0-beta.44](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.43...v10.0.0-beta.44) (2021-07-22)
 
 
