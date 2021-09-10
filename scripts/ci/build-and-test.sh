@@ -17,18 +17,20 @@ echo "    Copying ./native => dist/native"
 mkdir -p dist/native && cp -r native dist/
 rm -rf dist/native/target
 
+
+cp package-lock.json dist
 # Link the build so that the examples are always testing the
 # current build, in it's properly exported format
-(cd dist && npm install && npm link)
+(cd dist && npm ci && npm link)
 
 echo "Running e2e examples build for node version $(node --version)"
 for i in examples/*; do
   [ -e "$i" ] || continue # prevent failure if there are no examples
   echo "--> running tests for: $i"
   if [[ "$i" =~ "karma" ]]; then
-    (cd "$i" && npm install && npm test)
+    (cd "$i" && npm ci && npm test)
   else
-    (cd "$i" && npm install && npm link @pact-foundation/pact && npm test)
+    (cd "$i" &&  npm ci && npm link @pact-foundation/pact && npm test)
   fi
 done
 
