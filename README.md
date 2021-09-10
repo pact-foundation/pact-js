@@ -975,6 +975,8 @@ For examples on how to use it, see [examples/v3/e2e](https://github.com/pact-fou
 
 **NOTE: The API of this implementation is likely to change. See this [discussion](https://github.com/pact-foundation/pact-js/discussions/681) for more**
 
+If migrating between beta versions, please see [MIGRATION.md](MIGRATION.md) for guidelines.
+
 ### Using the V3 matching rules
 
 There are a number of new matchers that can be used, like `integer` and `timestamp`. There are defined in the `MatchersV3` class that needs to be used with `PactV3` DSL.
