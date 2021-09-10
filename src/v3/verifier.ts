@@ -1,13 +1,11 @@
 import * as express from 'express';
 import { ConsumerVersionSelector } from '@pact-foundation/pact-core';
 
-import { ProxyOptions, StateHandlers } from '../dsl/verifier/proxy/types';
-
 import logger from '../common/logger';
-
+import { ProxyOptions, StateHandlers } from '../dsl/verifier/proxy/types';
 import { Verifier } from '../dsl/verifier';
 
-export interface VerifierV3Options {
+export interface VerifierV3OptionsInternal {
   provider: string;
   logLevel: string;
   providerBaseUrl: string;
@@ -34,13 +32,13 @@ export interface VerifierV3Options {
 
 export { ConsumerVersionSelector };
 
-export type VerifierOptions = VerifierV3Options & ProxyOptions;
+export type VerifierV3Options = VerifierV3OptionsInternal & ProxyOptions;
 export class VerifierV3 {
   private internalVerifier: Verifier;
 
-  private config: VerifierOptions;
+  private config: VerifierV3Options;
 
-  constructor(config: VerifierOptions) {
+  constructor(config: VerifierV3Options) {
     this.config = config;
     this.internalVerifier = new Verifier({
       ...config,
