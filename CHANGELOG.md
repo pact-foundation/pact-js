@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.46](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.45...v10.0.0-beta.46) (2021-09-13)
+
+
+### Features
+
+* Support node 16 with native build ([79d43ff](https://github.com/pact-foundation/pact-js/commit/79d43ff695ae64137d083e9651c62482691cf1b8))
+
 ## [10.0.0-beta.45](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.44...v10.0.0-beta.45) (2021-09-10)
 
 
