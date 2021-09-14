@@ -54,7 +54,7 @@ for i in examples/v3/*; do
   echo "------------> continuing to test V3 example project: $i"
   node --version
   pushd "$i"
-  npm install
+  npm ci
   rm -rf "node_modules/@pact-foundation/pact"
   echo "linking pact"
   npm link @pact-foundation/pact
