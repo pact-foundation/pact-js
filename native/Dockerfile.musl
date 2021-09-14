@@ -1,5 +1,5 @@
 FROM alpine:latest
-ARG NODE_VERSION=14
+ARG NODE_VERSION=16
 
 RUN addgroup -S -g 1000 rust && adduser -S -u 1000 rust -G rust
 RUN apk add --no-cache curl bash python3 gcc musl-dev libstdc++ ca-certificates openssl ncurses coreutils python2 make \
