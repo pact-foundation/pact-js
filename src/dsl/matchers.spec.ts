@@ -13,7 +13,7 @@ import {
   iso8601DateTime,
   iso8601DateTimeWithMillis,
   iso8601Time,
-  rfc3339Timestamp,
+  rfc1123Timestamp,
   somethingLike,
   string,
   term,
@@ -576,16 +576,16 @@ describe('Matcher', () => {
     describe('#rfc3339Timestamp', () => {
       describe('when given a valid rfc3339Timestamp', () => {
         it('creates a valid matcher', () => {
-          expect(rfc3339Timestamp('Mon, 31 Oct 2016 15:21:41 -0400')).to.be.an(
+          expect(rfc1123Timestamp('Mon, 31 Oct 2016 15:21:41 -0400')).to.be.an(
             'object'
           );
-          expect(rfc3339Timestamp()).to.be.an('object');
+          expect(rfc1123Timestamp()).to.be.an('object');
         });
       });
       describe('when given an invalid rfc3339Timestamp', () => {
         it('returns an error', () => {
           expect(() => {
-            rfc3339Timestamp('abc');
+            rfc1123Timestamp('abc');
           }).to.throw(Error);
         });
       });

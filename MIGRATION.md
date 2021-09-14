@@ -2,6 +2,12 @@
 
 This guide is for migrating to a new version of pact-js.
 
+# beta.47
+
+Change uses of `RFC3339_TIMESTAMP_FORMAT` or `Matchers.rfc1123Timestamp()` to
+`RFC1123_TIMESTAMP_FORMAT` and `rfc1123Timestamp` respectively (this matcher
+has always been RFC1123, not RFC3339).
+
 # beta.44 to beta.45
 
 You no longer need to use `VerifierV3`. You may now do:

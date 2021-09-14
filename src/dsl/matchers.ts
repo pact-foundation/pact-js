@@ -20,7 +20,7 @@ export const ISO8601_DATETIME_WITH_MILLIS_FORMAT =
   '^\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d\\.\\d+([+-][0-2]\\d(:?[0-5]\\d)?|Z)$';
 export const ISO8601_TIME_FORMAT =
   '^(T\\d\\d:\\d\\d(:\\d\\d)?(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?)?$';
-export const RFC3339_TIMESTAMP_FORMAT =
+export const RFC1123_TIMESTAMP_FORMAT =
   '^(Mon|Tue|Wed|Thu|Fri|Sat|Sun),\\s\\d{2}\\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\\s\\d{4}\\s\\d{2}:\\d{2}:\\d{2}\\s(\\+|-)\\d{4}$';
 export const UUID_V4_FORMAT = '^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$';
 export const IPV4_FORMAT = '^(\\d{1,3}\\.)+\\d{1,3}$';
@@ -217,13 +217,14 @@ export function iso8601Time(time?: string): Matcher<string> {
 }
 
 /**
- * RFC3339 Timestamp matcher, a subset of ISO8609
- * @param {string} date - an RFC3339 Date and Time string, e.g. Mon, 31 Oct 2016 15:21:41 -0400
+ * RFC1123 Timestamp matcher "DAY, DD MON YYY hh:mm:ss"
+ *
+ * @param {string} date - an RFC1123 Date and Time string, e.g. Mon, 31 Oct 2016 15:21:41 -0400
  */
-export function rfc3339Timestamp(timestamp?: string): Matcher<string> {
+export function rfc1123Timestamp(timestamp?: string): Matcher<string> {
   return term({
     generate: timestamp || 'Mon, 31 Oct 2016 15:21:41 -0400',
-    matcher: RFC3339_TIMESTAMP_FORMAT,
+    matcher: RFC1123_TIMESTAMP_FORMAT,
   });
 }
 
