@@ -573,8 +573,8 @@ describe('Matcher', () => {
   });
 
   describe('Date Matchers', () => {
-    describe('#rfc3339Timestamp', () => {
-      describe('when given a valid rfc3339Timestamp', () => {
+    describe('#rfc1123Timestamp', () => {
+      describe('when given a valid rfc1123Timestamp', () => {
         it('creates a valid matcher', () => {
           expect(rfc1123Timestamp('Mon, 31 Oct 2016 15:21:41 -0400')).to.be.an(
             'object'
@@ -582,7 +582,7 @@ describe('Matcher', () => {
           expect(rfc1123Timestamp()).to.be.an('object');
         });
       });
-      describe('when given an invalid rfc3339Timestamp', () => {
+      describe('when given an invalid rfc1123Timestamp', () => {
         it('returns an error', () => {
           expect(() => {
             rfc1123Timestamp('abc');
