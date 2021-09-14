@@ -73,5 +73,11 @@ module.exports = function (config) {
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
     singleRun: true,
+
+    client: {
+      mocha: {
+        timeout: 30000, // 30 seconds - upped from 2 seconds
+      },
+    },
   });
 };
