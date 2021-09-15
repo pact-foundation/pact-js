@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.47](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.46...v10.0.0-beta.47) (2021-09-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* **matchers:** `Matchers.rfc3339Timestamp()` has been renamed to `Matchers.rfc1123Timestamp()`. The behaviour is unchanged - it was always RFC1123, and never did match RFC3339 timestamps.
+
+### Features
+
+* support node 16 with native build ([5c5753e](https://github.com/pact-foundation/pact-js/commit/5c5753e3a8ac2ac93bc6c3ce68e9439388b8b639))
+
+
+### Fixes and Improvements
+
+* add support for request-mismatch error types ([fa63933](https://github.com/pact-foundation/pact-js/commit/fa639330f7bd535d597b765983216bbaed662742))
+* Bump version of pact-core to obtain fix for Verifier not accepting broker token correctly ([#738](https://github.com/pact-foundation/pact-js/issues/738)) ([79d9930](https://github.com/pact-foundation/pact-js/commit/79d993016f907a6859a2cdeb950bc42ec9096a8f))
+* **matchers:** Rename rfc3339Timestamp to rfc1123Timestamp ([#451](https://github.com/pact-foundation/pact-js/issues/451)) ([8e9c378](https://github.com/pact-foundation/pact-js/commit/8e9c378459c2de0f95ee1b91a7bb8dfaa1d9a60b))
+
 ## [10.0.0-beta.46](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.45...v10.0.0-beta.46) (2021-09-13)
 
 
