@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.49](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.48...v10.0.0-beta.49) (2021-09-15)
+
+
+### Fixes and Improvements
+
+* give up on node 16 musl until we can remove neon ([c8e5275](https://github.com/pact-foundation/pact-js/commit/c8e5275af5215f1259e524a2d6ce52270f261a2d))
+* update or remove all packages that caused dependency warnings ([e1bb6ec](https://github.com/pact-foundation/pact-js/commit/e1bb6ecb31874ff07be603bde6683d9113a4dc30))
+
 ## [10.0.0-beta.48](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.47...v10.0.0-beta.48) (2021-09-15)
 
 
