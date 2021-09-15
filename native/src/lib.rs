@@ -28,7 +28,7 @@ use pact_ffi::mock_server::bodies::{
   file_as_multipart_body,
   matcher_from_integration_json
 };
-use pact_ffi::mock_server::{generate_regex_value_internal, StringResult};
+use pact_ffi::mock_server::{generate_regex_value_internal};
 use env_logger::{Builder, Target};
 use uuid::Uuid;
 use std::sync::Mutex;
@@ -36,11 +36,8 @@ use serde_json::Value;
 use log::*;
 use std::collections::HashMap;
 use std::fs;
-use std::ffi::CStr;
-use std::ffi::CString;
 use bytes::{Bytes};
 
-mod verify;
 mod xml;
 mod utils;
 
@@ -997,7 +994,6 @@ declare_types! {
 register_module!(mut m, {
     m.export_function("init", init)?;
     m.export_class::<JsPact>("Pact")?;
-    m.export_function("verify_provider", verify::verify_provider)?;
     m.export_function("generate_datetime_string", generate_datetime_string)?;
     m.export_function("generate_regex_string", generate_regex_string)?;
     Ok(())
