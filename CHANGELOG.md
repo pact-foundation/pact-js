@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.48](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.47...v10.0.0-beta.48) (2021-09-15)
+
+
+### Fixes and Improvements
+
+* upgrade neon to (finally) support Node 16 (hopefully) ([6734a52](https://github.com/pact-foundation/pact-js/commit/6734a52f60a1a3881396c7b5f63b7b4745550f94))
+
 ## [10.0.0-beta.47](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.46...v10.0.0-beta.47) (2021-09-15)
 
 
