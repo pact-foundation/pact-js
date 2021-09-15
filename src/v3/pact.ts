@@ -2,10 +2,7 @@ import { omit, join, toPairs, map, flatten } from 'ramda';
 import * as MatchersV3 from './matchers';
 import { version as pactPackageVersion } from '../../package.json';
 
-import PactNative, {
-  Mismatch,
-  MismatchRequest,
-} from '../../native/index.node';
+import PactNative, { Mismatch, MismatchRequest } from '../../native/index.node';
 import { JsonMap } from '../common/jsonTypes';
 
 /**
@@ -137,7 +134,7 @@ function generateMockServerError(mismatches: Mismatch[], indent: string) {
         ${indent}${mismatch.method} ${mismatch.path}
         ${mismatch.mismatches
           ?.map((d, j) => `\n${indent}${indent}${indent} 1.${j} ${d.mismatch}`)
-          .join("")}`
+          .join('')}`;
       }
       if (mismatch.type === 'request-not-found') {
         return `\n${indent}${i}) The following request was not expected: ${displayRequest(
