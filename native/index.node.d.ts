@@ -57,11 +57,22 @@ export type MismatchRequest = Omit<V3Request, "query" | "body"> & {
   body?: string
 }
 
+export interface MismatchDetail {
+  actualBody?: string
+  expectedBody?: string
+  actual?: string
+  expected?: string
+  key?: string
+  mismatch?: string
+  type?: string
+}
+
 export interface Mismatch {
   path?: string
   method?: string
   type: string
-  request: MismatchRequest
+  request?: MismatchRequest
+  mismatches?: Array<MismatchDetail>
 }
 
 export interface PactTestResult {

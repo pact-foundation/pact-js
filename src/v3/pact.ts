@@ -2,7 +2,10 @@ import { omit, join, toPairs, map, flatten } from 'ramda';
 import * as MatchersV3 from './matchers';
 import { version as pactPackageVersion } from '../../package.json';
 
-import PactNative, { Mismatch, MismatchRequest } from '../../native/index.node';
+import PactNative, {
+  Mismatch,
+  MismatchRequest,
+} from '../../native/index.node';
 import { JsonMap } from '../common/jsonTypes';
 
 /**
@@ -82,8 +85,10 @@ function displayHeaders(headers: TemplateHeaders, indent: string): string {
   );
 }
 
-function displayRequest(request: MismatchRequest, indent: string): string {
+function displayRequest(request?: MismatchRequest, indent = ''): string {
   const output: string[] = [''];
+
+  if (!request) return '';
 
   output.push(
     `${indent}Method: ${request.method}\n${indent}Path: ${request.path}`
@@ -127,15 +132,22 @@ function generateMockServerError(mismatches: Mismatch[], indent: string) {
   return [
     'Mock server failed with the following mismatches:',
     ...mismatches.map((mismatch, i) => {
+      if (mismatch.type === 'request-mismatch') {
+        return `\n${indent}${i}) The following request was incorrect: \n
+        ${indent}${mismatch.method} ${mismatch.path}
+        ${mismatch.mismatches
+          ?.map((d, j) => `\n${indent}${indent}${indent} 1.${j} ${d.mismatch}`)
+          .join("")}`
+      }
       if (mismatch.type === 'request-not-found') {
         return `\n${indent}${i}) The following request was not expected: ${displayRequest(
-          mismatch.request,
+          mismatch?.request,
           `${indent}    `
         )}`;
       }
       if (mismatch.type === 'missing-request') {
         return `\n${indent}${i}) The following request was expected but not received: ${displayRequest(
-          mismatch.request,
+          mismatch?.request,
           `${indent}    `
         )}`;
       }
@@ -235,7 +247,7 @@ export class PactV3 {
             if (filterMissingFeatureFlag(mismatches).length > 0) {
               // Feature flag: allow missing requests on the mock service
               return Promise.reject(
-                new Error(generateMockServerError(mismatches, '  '))
+                new Error(generateMockServerError(mismatches, '\t'))
               );
             }
           }
@@ -247,10 +259,6 @@ export class PactV3 {
           const testResult = this.pact.getTestResult(result.mockServer.id);
           if (testResult.mockServerError || testResult.mockServerMismatches) {
             let error = 'Test failed for the following reasons:';
-            error += `\n\n  Test code failed with an error: ${err.message}`;
-            if (err.stack) {
-              error += `\n${err.stack}\n`;
-            }
 
             if (testResult.mockServerError) {
               error += `\n\n  ${testResult.mockServerError}`;
@@ -258,9 +266,10 @@ export class PactV3 {
             if (testResult.mockServerMismatches) {
               error += `\n\n  ${generateMockServerError(
                 extractMismatches(testResult.mockServerMismatches),
-                '    '
+                '\t'
               )}`;
             }
+
             return Promise.reject(new Error(error));
           }
           return Promise.reject(err);
