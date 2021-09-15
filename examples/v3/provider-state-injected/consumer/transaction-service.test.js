@@ -74,7 +74,7 @@ describe('Transaction service - create a new transaction for an account', () => 
         body: { accountNumber: fromProviderState('${accountNumber}', 100) },
         headers: {
           Accept: 'application/hal+json',
-          'Content-Type': 'application/json; charset=utf-8',
+          'Content-Type': 'application/json',
         },
       })
       .willRespondWith({
