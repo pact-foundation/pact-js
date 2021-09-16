@@ -30,7 +30,7 @@ for i in examples/*; do
   if [[ "$i" =~ "karma" ]]; then
     (cd "$i" && npm ci && npm test)
   else
-    (cd "$i" &&  npm ci && npm link @pact-foundation/pact && npm test)
+    (cd "$i" &&  npm ci && npm link @pact-foundation/pact --legacy-peer-deps && npm test)
   fi
 done
 
