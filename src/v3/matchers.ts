@@ -186,12 +186,18 @@ export const boolean = (b = true): Matcher<boolean> => ({
  * @param int Example value. If omitted a random value will be generated.
  */
 export const integer = (int?: number): Matcher<number> => {
-  if (int) {
+  if (Number.isInteger(int)) {
     return {
       'pact:matcher:type': 'integer',
       value: int,
     };
   }
+  if (int) {
+    throw new Error(
+      `The integer matcher was passed '${int}' which is not an integer.`
+    );
+  }
+
   return {
     'pact:generator:type': 'RandomInt',
     'pact:matcher:type': 'integer',
@@ -204,11 +210,16 @@ export const integer = (int?: number): Matcher<number> => {
  * @param num Example value. If omitted a random value will be generated.
  */
 export const decimal = (num?: number): Matcher<number> => {
-  if (num) {
+  if (Number.isFinite(num)) {
     return {
       'pact:matcher:type': 'decimal',
       value: num,
     };
+  }
+  if (num) {
+    throw new Error(
+      `The decimal matcher was passed '${num}' which is not a number.`
+    );
   }
   return {
     'pact:generator:type': 'RandomDecimal',

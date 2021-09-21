@@ -241,6 +241,16 @@ describe('V3 Matchers', () => {
       });
     });
 
+    describe('when the example is zero', () => {
+      it('returns a JSON representation of an integer matcher', () => {
+        const result = MatchersV3.integer(0);
+        expect(result).to.deep.equal({
+          'pact:matcher:type': 'integer',
+          value: 0,
+        });
+      });
+    });
+
     describe('when no example is given', () => {
       it('also includes a random integer generator', () => {
         const result = MatchersV3.integer();
@@ -259,6 +269,16 @@ describe('V3 Matchers', () => {
       expect(result).to.deep.equal({
         'pact:matcher:type': 'decimal',
         value: 100.3,
+      });
+    });
+
+    describe('when the example is zero', () => {
+      it('returns a JSON representation of an integer matcher', () => {
+        const result = MatchersV3.decimal(0.0);
+        expect(result).to.deep.equal({
+          'pact:matcher:type': 'decimal',
+          value: 0.0,
+        });
       });
     });
 
