@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.50](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.49...v10.0.0-beta.50) (2021-09-21)
+
+
+### Fixes and Improvements
+
+* Don't generate random numbers when the example given to V3 integer or decimal matchers is 0 ([#742](https://github.com/pact-foundation/pact-js/issues/742)) ([e5a443c](https://github.com/pact-foundation/pact-js/commit/e5a443c55a98c3e3011580d04f639260522e18db))
+
 ## [10.0.0-beta.49](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.48...v10.0.0-beta.49) (2021-09-15)
 
 
