@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.51](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.50...v10.0.0-beta.51) (2021-09-22)
+
+
+### Fixes and Improvements
+
+* Bump version of pact-core to obtain fix for a regression in VerifierOptions where the option was set to undefined ([b424136](https://github.com/pact-foundation/pact-js/commit/b4241363276d26ef5947f3b3637e52ce09a4e8e3))
+
 ## [10.0.0-beta.50](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.49...v10.0.0-beta.50) (2021-09-21)
 
 
