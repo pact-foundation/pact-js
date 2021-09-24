@@ -1,14 +1,4 @@
-import * as mockery from 'mockery';
-
 import * as chai from 'chai';
-
-const MockNative = {
-  generate_datetime_string: () => '',
-  generate_regex_string: () => '',
-};
-mockery.registerMock('../../native/index.node', MockNative);
-
-// eslint-disable-next-line import/first
 import * as MatchersV3 from './matchers';
 
 const { expect } = chai;
@@ -381,19 +371,6 @@ describe('V3 Matchers', () => {
         });
       });
     });
-
-    describe('when no example is given', () => {
-      it('generates a datetime from the current system time', () => {
-        MockNative.generate_datetime_string = () => '2016-02-11T09:46:56.023Z';
-        const result = MatchersV3.datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX");
-        expect(result).to.deep.equal({
-          'pact:generator:type': 'DateTime',
-          'pact:matcher:type': 'timestamp',
-          format: "yyyy-MM-dd'T'HH:mm:ss.SSSX",
-          value: '2016-02-11T09:46:56.023Z',
-        });
-      });
-    });
   });
 
   describe('#time', () => {
@@ -406,19 +383,6 @@ describe('V3 Matchers', () => {
         value: '09:46:56',
       });
     });
-
-    describe('when no example is given', () => {
-      it('generates a time from the current system time', () => {
-        MockNative.generate_datetime_string = () => '10:46:56.023';
-        const result = MatchersV3.time('HH:mm:ss.SSS');
-        expect(result).to.deep.equal({
-          'pact:generator:type': 'Time',
-          'pact:matcher:type': 'time',
-          format: 'HH:mm:ss.SSS',
-          value: '10:46:56.023',
-        });
-      });
-    });
   });
 
   describe('#date', () => {
@@ -429,19 +393,6 @@ describe('V3 Matchers', () => {
         'pact:matcher:type': 'date',
         format: 'yyyy-MM-dd',
         value: '2016-02-11',
-      });
-    });
-
-    describe('when no example is given', () => {
-      it('generates a date from the current system time', () => {
-        MockNative.generate_datetime_string = () => '2020-02-11';
-        const result = MatchersV3.date('yyyy-MM-dd');
-        expect(result).to.deep.equal({
-          'pact:generator:type': 'Date',
-          'pact:matcher:type': 'date',
-          format: 'yyyy-MM-dd',
-          value: '2020-02-11',
-        });
       });
     });
   });
@@ -498,18 +449,17 @@ describe('V3 Matchers', () => {
 
     describe('when provided with a regular expression', () => {
       it('returns a JSON representation of a regex matcher for the URL', () => {
-        MockNative.generate_regex_string = () => '12345678';
         const result = MatchersV3.url2('http://localhost:8080', [
           'users',
           /\d+/,
           'posts',
           'latest',
         ]);
-        expect(result).to.deep.equal({
+        expect(result).to.deep.contain({
           'pact:matcher:type': 'regex',
           regex: '.*(\\/users\\/\\d+\\/posts\\/latest)$',
-          value: 'http://localhost:8080/users/12345678/posts/latest',
         });
+        expect(result.value).to.match(/\/users\/\d+\/posts\/latest$/);
       });
     });
 

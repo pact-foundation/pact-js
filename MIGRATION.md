@@ -1,6 +1,13 @@
 # Pact-js migration guide
 
 This guide is for migrating to a new version of pact-js.
+# beta.52
+
+The following matchers now must have an explicit example provided:
+
+* `datetime`
+* `timestamp`
+* `time`
 
 # beta.47
 

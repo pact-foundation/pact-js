@@ -121,7 +121,8 @@
     "@mapbox/node-pre-gyp": "1.0.5",
     "pkginfo": "^0.4.1",
     "popsicle": "^9.2.0",
-    "ramda": "^0.26.1"
+    "ramda": "^0.26.1",
+    "randexp": "^0.5.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.5",

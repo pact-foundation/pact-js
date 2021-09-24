@@ -1,7 +1,6 @@
 import { isNil, pickBy, times } from 'ramda';
+import RandExp from 'randexp';
 import { AnyJson } from '../common/jsonTypes';
-
-import PactNative from '../../native/index.node';
 
 /**
  * Pact Matcher
@@ -300,12 +299,12 @@ export interface DateTimeMatcher extends Matcher<string> {
  * @param format Datetime format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html)
  * @param example Example value to use. If omitted a value using the current system date and time will be generated.
  */
-export function datetime(format: string, example?: string): DateTimeMatcher {
+export function datetime(format: string, example: string): DateTimeMatcher {
   return pickBy((v) => !isNil(v), {
     'pact:generator:type': example ? undefined : 'DateTime',
     'pact:matcher:type': 'timestamp',
     format,
-    value: example || PactNative.generate_datetime_string(format),
+    value: example,
   });
 }
 
@@ -314,7 +313,7 @@ export function datetime(format: string, example?: string): DateTimeMatcher {
  * @param format Datetime format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html)
  * @param example Example value to use. If omitted a value using the current system date and time will be generated.
  */
-export function timestamp(format: string, example?: string): DateTimeMatcher {
+export function timestamp(format: string, example: string): DateTimeMatcher {
   return datetime(format, example);
 }
 
@@ -323,12 +322,12 @@ export function timestamp(format: string, example?: string): DateTimeMatcher {
  * @param format Time format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html)
  * @param example Example value to use. If omitted a value using the current system time will be generated.
  */
-export function time(format: string, example?: string): DateTimeMatcher {
+export function time(format: string, example: string): DateTimeMatcher {
   return {
     'pact:generator:type': 'Time',
     'pact:matcher:type': 'time',
     format,
-    value: example || PactNative.generate_datetime_string(format),
+    value: example,
   };
 }
 
@@ -337,12 +336,12 @@ export function time(format: string, example?: string): DateTimeMatcher {
  * @param format Date format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html)
  * @param example Example value to use. If omitted a value using the current system date will be generated.
  */
-export function date(format: string, example?: string): DateTimeMatcher {
+export function date(format: string, example: string): DateTimeMatcher {
   return {
     format,
     'pact:generator:type': 'Date',
     'pact:matcher:type': 'date',
-    value: example || PactNative.generate_datetime_string(format),
+    value: example,
   };
 }
 
@@ -365,6 +364,10 @@ export function nullValue(): Matcher<null> {
   return {
     'pact:matcher:type': 'null',
   };
+}
+
+function stringFromRegex(r: RegExp): string {
+  return new RandExp(r).gen();
 }
 
 /**
@@ -393,7 +396,7 @@ export function url2(
     basePath || 'http://localhost:8080',
     ...pathFragments.map((p) => {
       if (p instanceof RegExp) {
-        return `/${PactNative.generate_regex_string(p.source)}`;
+        return `/${stringFromRegex(p)}`;
       }
       if (p instanceof Object && p['pact:matcher:type'] === 'regex') {
         return `/${p.value}`;
