@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [9.16.2](https://github.com/pact-foundation/pact-js/compare/v9.16.1...v9.16.2) (2021-09-30)
+
+
+### Fixes and Improvements
+
+* give up on node 16 musl until we can remove neon ([d2e2a7c](https://github.com/pact-foundation/pact-js/commit/d2e2a7c3139531accacdf7be1f41b5b4f5c32e70))
+* Remove unused package (fixes [#752](https://github.com/pact-foundation/pact-js/issues/752)) ([35584fb](https://github.com/pact-foundation/pact-js/commit/35584fbb34817577dd50be267773fabe603172a1))
+
 ### [9.16.1](https://github.com/pact-foundation/pact-js/compare/v9.16.0...v9.16.1) (2021-09-08)
 
 
