@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest __tests__/ --runInBand",
-    "publish:pact": "node ./publish.js"
+    "pact:publish": "pact-broker publish pact/pacts --consumer-app-version=\"$(npx @pact-foundation/absolute-version)\" --tag-with-git-branch --broker-base-url=https://test.pact.dius.com.au"
   },
   "license": "MIT",
   "jest": {
