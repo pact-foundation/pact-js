@@ -12,8 +12,8 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
-    "test:publish": "node -r ts-node/register test/pact/publish.ts",
-    "test": "jest && npm run test:publish",
+    "pact:publish": "pact-broker publish pact/pacts --consumer-app-version=\"$(npx @pact-foundation/absolute-version)\" --tag-with-git-branch --broker-base-url=https://test.pact.dius.com.au",
+    "test": "jest && npm run pact:publish",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand"
