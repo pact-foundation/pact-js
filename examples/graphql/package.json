@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "clean": "rimraf pacts",
-    "test": "npm run clean && npm run test:consumer && npm run test:publish && npm run test:provider",
+    "test": "npm run clean && npm run test:consumer && npm run pact:publish && npm run test:provider",
     "test:consumer": "nyc --reporter=text-summary mocha src/consumer.spec.ts",
     "pact:publish": "pact-broker publish pact/pacts --consumer-app-version=\"$(npx @pact-foundation/absolute-version)\" --tag-with-git-branch --broker-base-url=https://test.pact.dius.com.au",
     "test:provider": "nyc --reporter=text-summary mocha -t 30000 src/provider.spec.ts"

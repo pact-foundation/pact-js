@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Pact JS E2E Example",
   "scripts": {
-    "test": "npm run test:consumer && npm run test:publish && npm run test:provider",
+    "test": "npm run test:consumer && npm run pact:publish && npm run test:provider",
     "test:consumer": "./node_modules/.bin/mocha test/consumer.spec.js",
     "pact:publish": "pact-broker publish pact/pacts --consumer-app-version=\"$(npx @pact-foundation/absolute-version)\" --tag-with-git-branch --broker-base-url=https://test.pact.dius.com.au",
     "test:provider": "./node_modules/.bin/mocha test/provider.spec.js",
