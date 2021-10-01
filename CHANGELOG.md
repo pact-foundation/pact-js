@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [9.16.3](https://github.com/pact-foundation/pact-js/compare/v9.16.2...v9.16.3) (2021-10-01)
+
+
+### Fixes and Improvements
+
+* **pact-node:** bump dependency on pact-node ([2ab2478](https://github.com/pact-foundation/pact-js/commit/2ab2478b7dc3d44327bc71bb162dc197299e3655))
+
 ### [9.16.2](https://github.com/pact-foundation/pact-js/compare/v9.16.1...v9.16.2) (2021-09-30)
 
 
