@@ -1,9 +1,24 @@
-import { omit, join, toPairs, map, flatten } from 'ramda';
+import { join, toPairs, map, flatten, forEachObjIndexed } from 'ramda';
 import * as MatchersV3 from './matchers';
 import { version as pactPackageVersion } from '../../package.json';
-
-import PactNative, { Mismatch, MismatchRequest } from '../../native/index.node';
+import { makeConsumerPact } from '@pact-foundation/pact-core';
+import fs = require('fs');
 import { JsonMap } from '../common/jsonTypes';
+import {
+  ConsumerPact,
+  ConsumerInteraction,
+  Mismatch,
+  MatchingResult,
+  RequestMismatch,
+  MatchingResultRequestNotFound,
+  MatchingResultMissingRequest,
+} from '@pact-foundation/pact-core/src/consumer/types';
+import { isArray } from 'util';
+
+export enum SpecificationVersion {
+  SPECIFICATION_VERSION_V2 = 3,
+  SPECIFICATION_VERSION_V3 = 4,
+}
 
 /**
  * Options for the mock server
@@ -29,7 +44,27 @@ export interface PactV3Options {
    * Port to run the mock server on. Defaults to a random port
    */
   port?: number;
+  /**
+   * Specification version to use
+   */
+  spec?: SpecificationVersion;
+  /**
+   * Specification version to use
+   */
+  logLevel?: "trace" | "debug" | "info" | "warn" | "error";
 }
+
+const logInvalidOperation = (op: string) => {
+  throw new Error(
+    `unable to call operation ${op}, this is probably a bug in Pact JS`
+  );
+};
+
+const matcherValueOrString = (obj: any): string => {
+  if (typeof obj === 'string') return obj;
+
+  return JSON.stringify(obj);
+};
 
 export interface V3ProviderState {
   description: string;
@@ -48,8 +83,8 @@ type TemplateQuery = Record<
 >;
 
 export interface V3Request {
-  method?: string;
-  path?: string | MatchersV3.Matcher<string>;
+  method: string;
+  path: string | MatchersV3.Matcher<string>;
   query?: TemplateQuery;
   headers?: TemplateHeaders;
   body?: MatchersV3.AnyTemplate;
@@ -75,17 +110,18 @@ function displayQuery(query: Record<string, string[]>): string {
   return join('&', mapped);
 }
 
-function displayHeaders(headers: TemplateHeaders, indent: string): string {
+function displayHeaders(
+  headers: Record<string, string[]>,
+  indent: string
+): string {
   return join(
     `\n${indent}`,
     map(([k, v]) => `${k}: ${v}`, toPairs(headers))
   );
 }
 
-function displayRequest(request?: MismatchRequest, indent = ''): string {
+function displayRequest(request: RequestMismatch, indent = ''): string {
   const output: string[] = [''];
-
-  if (!request) return '';
 
   output.push(
     `${indent}Method: ${request.method}\n${indent}Path: ${request.path}`
@@ -114,18 +150,14 @@ function displayRequest(request?: MismatchRequest, indent = ''): string {
   return output.join('\n');
 }
 
-function filterMissingFeatureFlag(mismatches: Mismatch[]) {
+function filterMissingFeatureFlag(mismatches: MatchingResult[]) {
   if (process.env.PACT_EXPERIMENTAL_FEATURE_ALLOW_MISSING_REQUESTS) {
-    return mismatches.filter((m) => m.type !== 'missing-request');
+    return mismatches.filter((m) => m.type !== 'request-mismatch');
   }
   return mismatches;
 }
 
-function extractMismatches(mockServerMismatches: string[]): Mismatch[] {
-  return mockServerMismatches.map((mismatchJson) => JSON.parse(mismatchJson));
-}
-
-function generateMockServerError(mismatches: Mismatch[], indent: string) {
+function generateMockServerError(mismatches: MatchingResult[], indent: string) {
   return [
     'Mock server failed with the following mismatches:',
     ...mismatches.map((mismatch, i) => {
@@ -133,34 +165,42 @@ function generateMockServerError(mismatches: Mismatch[], indent: string) {
         return `\n${indent}${i}) The following request was incorrect: \n
         ${indent}${mismatch.method} ${mismatch.path}
         ${mismatch.mismatches
-          ?.map((d, j) => `\n${indent}${indent}${indent} 1.${j} ${d.mismatch}`)
+          ?.map(
+            (d, j) => `\n${indent}${indent}${indent} 1.${j} ${printMismatch(d)}`
+          )
           .join('')}`;
       }
       if (mismatch.type === 'request-not-found') {
         return `\n${indent}${i}) The following request was not expected: ${displayRequest(
-          mismatch?.request,
+          (mismatch as MatchingResultRequestNotFound).request,
           `${indent}    `
         )}`;
       }
       if (mismatch.type === 'missing-request') {
         return `\n${indent}${i}) The following request was expected but not received: ${displayRequest(
-          mismatch?.request,
+          (mismatch as MatchingResultMissingRequest).request,
           `${indent}    `
         )}`;
       }
-      return `${indent}${i}) ${mismatch.type} ${
-        mismatch.path ? `(at ${mismatch.path}) ` : ''
-      }${mismatch}`;
+      return '';
     }),
   ].join('\n');
 }
 
+function printMismatch(m: Mismatch): string {
+  switch (m.type) {
+    case 'MethodMismatch':
+      return `Expected ${m.expected}, got: ${m.actual}`;
+    default:
+      return m.mismatch;
+  }
+}
+
 export class PactV3 {
   private opts: PactV3Options;
-
   private states: V3ProviderState[] = [];
-
-  private pact: PactNative.Pact;
+  private pact: ConsumerPact;
+  private interaction: ConsumerInteraction;
 
   constructor(opts: PactV3Options) {
     this.opts = opts;
@@ -173,12 +213,28 @@ export class PactV3 {
   }
 
   public uponReceiving(desc: string): PactV3 {
-    this.pact.addInteraction(desc, this.states);
+    this.interaction = this.pact.newInteraction(desc);
+    this.states.forEach((s) => {
+      if (s.parameters) {
+        forEachObjIndexed((v, k) => {
+          this.interaction.givenWithParam(s.description, k, v)
+        })
+      } else {
+        this.interaction.given(s.description)
+      }
+    })
     return this;
   }
 
   public withRequest(req: V3Request): PactV3 {
-    this.pact.addRequest(req, req.body);
+    if (req.body) {
+      this.interaction.withRequestBody(
+        matcherValueOrString(req.body),
+        'application/json'
+      );
+    }
+
+    this.setRequestDetails(req);
     return this;
   }
 
@@ -187,7 +243,10 @@ export class PactV3 {
     contentType: string,
     file: string
   ): PactV3 {
-    this.pact.addRequestBinaryFile(req, contentType, file);
+    const body = readBinaryData(file);
+    this.interaction.withRequestBinaryBody(body, contentType);
+    this.setRequestDetails(req);
+
     return this;
   }
 
@@ -197,12 +256,19 @@ export class PactV3 {
     file: string,
     part: string
   ): PactV3 {
-    this.pact.addRequestMultipartFileUpload(req, contentType, file, part);
+    this.interaction.withRequestMultipartBody(contentType, file, part);
+    this.setRequestDetails(req);
     return this;
   }
 
   public willRespondWith(res: V3Response): PactV3 {
-    this.pact.addResponse(res, res.body);
+    this.setResponseDetails(res);
+    if (res.body) {
+      this.interaction.withResponseBody(
+        matcherValueOrString(res.body),
+        'application/json'
+      );
+    }
     this.states = [];
     return this;
   }
@@ -212,83 +278,111 @@ export class PactV3 {
     contentType: string,
     file: string
   ): PactV3 {
-    this.pact.addResponseBinaryFile(res, contentType, file);
+    const body = readBinaryData(file);
+    this.interaction.withResponseBinaryBody(body, contentType);
+    this.setResponseDetails(res);
     return this;
   }
 
   public withResponseMultipartFileUpload(
-    req: V3Response,
+    res: V3Response,
     contentType: string,
     file: string,
     part: string
   ): PactV3 {
-    this.pact.addResponseMultipartFileUpload(req, contentType, file, part);
+    this.interaction.withResponseMultipartBody(contentType, file, part);
+    this.setResponseDetails(res);
     return this;
   }
 
-  public executeTest<T>(
+  public async executeTest<T>(
     testFn: (mockServer: V3MockServer) => Promise<T>
-  ): Promise<T> {
-    const result = this.pact.executeTest(testFn, this.opts);
-    if (result.testResult) {
-      return result.testResult
-        .then((val: T) => {
-          const testResult = this.pact.getTestResult(result.mockServer.id);
-          if (testResult.mockServerError) {
-            return Promise.reject(new Error(testResult.mockServerError));
-          }
-          if (testResult.mockServerMismatches) {
-            const mismatches = extractMismatches(
-              testResult.mockServerMismatches
-            );
-            if (filterMissingFeatureFlag(mismatches).length > 0) {
-              // Feature flag: allow missing requests on the mock service
-              return Promise.reject(
-                new Error(generateMockServerError(mismatches, '\t'))
-              );
-            }
-          }
+  ): Promise<T|undefined> {
+    const scheme = 'http';
+    const host = '127.0.0.1';
 
-          this.pact.writePactFile(result.mockServer.id, this.opts);
-          return val;
-        })
-        .catch((err: Error) => {
-          const testResult = this.pact.getTestResult(result.mockServer.id);
-          if (testResult.mockServerError || testResult.mockServerMismatches) {
-            let error = 'Test failed for the following reasons:';
+    const port = this.pact.createMockServer(host, this.opts.port);
+    const server = { port, url: `${scheme}://${host}:${port}`, id: 'unknown' };
+    let err: Error
+    let val: T|undefined;
 
-            if (testResult.mockServerError) {
-              error += `\n\n  ${testResult.mockServerError}`;
-            }
-            if (testResult.mockServerMismatches) {
-              error += `\n\n  ${generateMockServerError(
-                extractMismatches(testResult.mockServerMismatches),
-                '\t'
-              )}`;
-            }
-
-            return Promise.reject(new Error(error));
-          }
-          return Promise.reject(err);
-        })
-        .finally(() => {
-          this.pact.shutdownTest(result);
-          this.setup();
-        });
+    try {
+      val = await testFn(server);
+    } catch (e) {
+      err = e
     }
-    this.pact.shutdownTest(result);
+
+    const matchingResults = this.pact.mockServerMismatches(port);
+    const success = this.pact.mockServerMatchedSuccessfully(port);
+
+    // Feature flag: allow missing requests on the mock service
+    if (!success && filterMissingFeatureFlag(matchingResults).length > 0) {
+      let error = 'Test failed for the following reasons:';
+      error += `\n\n  ${generateMockServerError(matchingResults, '\t')}`;
+
+      this.cleanup(false, server);
+      return Promise.reject(new Error(error));
+    }
+
+    this.cleanup(true, server);
+    return val;
+  }
+
+  private cleanup(success: boolean, server: V3MockServer) {
+    if (success) {
+      this.pact.writePactFile(server.port, this.opts.dir);
+    }
+    this.pact.cleanupMockServer(server.port);
     this.setup();
-    return Promise.reject(result.testError);
+  }
+
+  private setRequestDetails(req: V3Request) {
+    this.interaction.withRequest(req.method, matcherValueOrString(req.path));
+    forEachObjIndexed((v, k) => {
+      this.interaction.withRequestHeader(k, 0, matcherValueOrString(v));
+    }, req.headers);
+
+    forEachObjIndexed((v, k) => {
+      if (isArray(v)) {
+        (v as any[]).forEach((vv, i) => {
+          console.log(`Query: ${k} => ${matcherValueOrString(v)}`)
+          this.interaction.withQuery(k, i, matcherValueOrString(v));
+        });
+      } else {
+        console.log(`Query: ${k} => ${matcherValueOrString(v)}`)
+        this.interaction.withQuery(k, 0, matcherValueOrString(v));
+      }
+    }, req.query);
+  }
+
+  private setResponseDetails(res: V3Response) {
+    this.interaction.withStatus(res.status);
+
+    forEachObjIndexed((v, k) => {
+      this.interaction.withResponseHeader(k, 0, matcherValueOrString(v));
+    }, res.headers);
   }
 
   // reset the internal state
   // (this.pact cannot be re-used between tests)
   private setup() {
-    this.pact = new PactNative.Pact(
+    this.states = [];
+    this.pact = makeConsumerPact(
       this.opts.consumer,
       this.opts.provider,
-      pactPackageVersion,
-      omit(['consumer', 'provider', 'dir'], this.opts)
+      this.opts.spec ?? SpecificationVersion.SPECIFICATION_VERSION_V3,
+      this.opts.logLevel ?? "info"
     );
+    this.pact.addMetadata('pact-js', 'version', pactPackageVersion);
   }
 }
+
+const readBinaryData = (file: string): Buffer => {
+  try {
+    const body = fs.readFileSync(file);
+
+    return body;
+  } catch (e) {
+    throw new Error(`unable to read file for binary request: ${e.message}`);
+  }
+};

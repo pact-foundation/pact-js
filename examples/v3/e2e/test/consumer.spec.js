@@ -52,7 +52,7 @@ describe('Pact V3', () => {
   // API we don't care about
   const animalBodyExpectation = {
     id: integer(1),
-    available_from: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
+    available_from: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX", "2016-02-11T09:46:56.023Z"),
     first_name: string('Billy'),
     last_name: string('Goat'),
     animal: string('goat'),
@@ -91,6 +91,8 @@ describe('Pact V3', () => {
     consumer: 'Matching Service V3',
     provider: 'Animal Profile Service V3',
     dir: path.resolve(process.cwd(), 'pacts'),
+    spec: SpecificationVersion.SPECIFICATION_VERSION_V3,
+    logLevel: "trace",
     cors: true,
   });
 
@@ -174,7 +176,7 @@ describe('Pact V3', () => {
               body: [
                 {
                   id: integer(1),
-                  available_from: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
+                  available_from: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX", "2016-02-11T09:46:56.023Z"),
                   first_name: string('Billy'),
                   last_name: string('Goat'),
                   animal: string('goat'),
@@ -224,7 +226,7 @@ describe('Pact V3', () => {
               body: [
                 {
                   id: integer(1),
-                  available_from: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
+                  available_from: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX", "2016-02-11T09:46:56.023Z"),
                   first_name: string('比利'),
                   last_name: string('Goat'),
                   animal: string('goat'),
@@ -274,7 +276,7 @@ describe('Pact V3', () => {
               body: [
                 {
                   id: integer(1),
-                  available_from: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
+                  available_from: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX", "2016-02-11T09:46:56.023Z"),
                   first_name: string('बिल्ली'),
                   last_name: string('Goat'),
                   animal: string('goat'),
@@ -489,7 +491,7 @@ describe('Pact V3', () => {
           body: new XmlBuilder('1.0', 'UTF-8', 'animals').build((el) => {
             el.eachLike('lion', {
               id: integer(1),
-              available_from: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
+              available_from: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX", "2016-02-11T09:46:56.023Z"),
               first_name: string('Slinky'),
               last_name: string('Malinky'),
               age: integer(27),
@@ -497,7 +499,7 @@ describe('Pact V3', () => {
             });
             el.eachLike('goat', {
               id: integer(3),
-              available_from: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
+              available_from: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX", "2016-02-11T09:46:56.023Z"),
               first_name: string('Head'),
               last_name: string('Butts'),
               age: integer(27),

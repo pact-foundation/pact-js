@@ -9,6 +9,7 @@ describe('Transaction service - create a new transaction for an account', () => 
   const provider = new PactV3({
     consumer: 'TransactionService',
     provider: 'AccountService',
+    logLevel: "trace",
     dir: path.resolve(process.cwd(), 'pacts'),
   });
 
@@ -30,8 +31,8 @@ describe('Transaction service - create a new transaction for an account', () => 
           version: integer(0),
           name: string('Test'),
           accountRef: string('Test001'),
-          createdDate: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
-          lastModifiedDate: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
+          createdDate: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX", "2017-12-04T14:47:18.582Z"),
+          lastModifiedDate: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX", "2017-12-04T14:47:18.582Z"),
           accountNumber: {
             id: fromProviderState('${accountNumber}', 100),
           },
@@ -85,8 +86,8 @@ describe('Transaction service - create a new transaction for an account', () => 
           version: integer(0),
           name: string('Test'),
           accountRef: string('Test001'),
-          createdDate: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
-          lastModifiedDate: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
+          createdDate: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX", "2017-12-04T14:47:18.582Z"),
+          lastModifiedDate: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX", "2017-12-04T14:47:18.582Z"),
           accountNumber: {
             id: fromProviderState('${accountNumber}', 100),
           },
@@ -118,40 +119,43 @@ describe('Transaction service - create a new transaction for an account', () => 
     });
   });
 
-  // MatchersV3.fromProviderState on body
+  // broken?????????????
   it('test text data', () => {
     provider
       .given('set id', { id: '42' })
       .uponReceiving('a request to get the plain data')
       .withRequest({
         method: 'GET',
-        path: MatchersV3.fromProviderState('/data/${id}', '/data/42'),
+        path: fromProviderState('/data/${id}', '/data/42'),
       })
       .willRespondWith({
         status: 200,
         headers: { 'Content-Type': 'text/plain; charset=utf-8' },
-        body: MatchersV3.fromProviderState(
+        body: fromProviderState(
           'data: testData, id: ${id}',
-          'data: testData, id: 42'
+          42
         ),
       });
 
+    // TODO: this test passes but it should definitely not pass
+    //       may be a regression, or may never have worked
+    //       the data that is returned is not a string, it's a matcher-shaped
+    //       object
     return provider.executeTest(async (mockserver) => {
       transactionService.setAccountServiceUrl(mockserver.url);
-      return transactionService.getText(42).then((result) => {
-        expect(result.data).to.equal('data: testData, id: 42');
-      });
+      const result = await transactionService.getText(42)
+      expect(result.data).to.equal('data: testData, id: 42');
     });
   });
 
-  // MatchersV3.string doesn't work within XmlBuilder with namespaced xml
+  // string doesn't work within XmlBuilder with namespaced xml
   it('test xml data', () => {
     provider
       .given('set id', { id: '52' })
-      .uponReceiving('a request to get the plain data')
+      .uponReceiving('a request to get the xml data')
       .withRequest({
         method: 'GET',
-        path: MatchersV3.fromProviderState('/data/xml/${id}', '/data/42'),
+        path: fromProviderState('/data/xml/${id}', '/data/42'),
       })
       .willRespondWith({
         status: 200,
@@ -160,11 +164,11 @@ describe('Transaction service - create a new transaction for an account', () => 
           root.setAttributes({ 'xmlns:h': 'http://www.w3.org/TR/html4/' });
           root.appendElement('data', '', (data) => {
             data
-              .appendElement('h:data', '', MatchersV3.string('random'))
+              .appendElement('h:data', '', string('random'))
               .appendElement(
                 'id',
                 '',
-                MatchersV3.fromProviderState('${id}', '42')
+                fromProviderState('${id}', '42')
               );
           });
         }),

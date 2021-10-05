@@ -300,6 +300,10 @@ export interface DateTimeMatcher extends Matcher<string> {
  * @param example Example value to use. If omitted a value using the current system date and time will be generated.
  */
 export function datetime(format: string, example: string): DateTimeMatcher {
+  if (!example) {
+    throw new Error(`you must provide an example datetime`);
+  }
+
   return pickBy((v) => !isNil(v), {
     'pact:generator:type': example ? undefined : 'DateTime',
     'pact:matcher:type': 'timestamp',
@@ -314,6 +318,9 @@ export function datetime(format: string, example: string): DateTimeMatcher {
  * @param example Example value to use. If omitted a value using the current system date and time will be generated.
  */
 export function timestamp(format: string, example: string): DateTimeMatcher {
+  if (!example) {
+    throw new Error(`you must provide an example timestamp`);
+  }
   return datetime(format, example);
 }
 
@@ -323,6 +330,9 @@ export function timestamp(format: string, example: string): DateTimeMatcher {
  * @param example Example value to use. If omitted a value using the current system time will be generated.
  */
 export function time(format: string, example: string): DateTimeMatcher {
+  if (!example) {
+    throw new Error(`you must provide an example time`);
+  }
   return {
     'pact:generator:type': 'Time',
     'pact:matcher:type': 'time',
@@ -337,6 +347,9 @@ export function time(format: string, example: string): DateTimeMatcher {
  * @param example Example value to use. If omitted a value using the current system date will be generated.
  */
 export function date(format: string, example: string): DateTimeMatcher {
+  if (!example) {
+    throw new Error(`you must provide an example date`);
+  }
   return {
     format,
     'pact:generator:type': 'Date',

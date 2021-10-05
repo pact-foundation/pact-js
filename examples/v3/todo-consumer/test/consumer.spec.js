@@ -15,6 +15,7 @@ describe('Pact V3', () => {
   const provider = new PactV3({
     consumer: 'TodoApp',
     provider: 'TodoServiceV3',
+    logLevel: 'trace',
     dir: path.resolve(process.cwd(), 'pacts'),
   });
 
