@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [9.16.4](https://github.com/pact-foundation/pact-js/compare/v9.16.3...v9.16.4) (2021-10-10)
+
+
+### Fixes and Improvements
+
+* support null values in matchers ([5bee9fc](https://github.com/pact-foundation/pact-js/commit/5bee9fc10391f7ffb0c7e3e135b40b853ba451b2))
+
 ### [9.16.3](https://github.com/pact-foundation/pact-js/compare/v9.16.2...v9.16.3) (2021-10-01)
 
 
