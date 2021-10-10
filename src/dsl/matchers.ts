@@ -296,7 +296,7 @@ export function extractPayload(value: any): any {
     return value.map(extractPayload)
   }
 
-  if (typeof value === "object") {
+  if (value !== null && typeof value === "object") {
     return Object.keys(value).reduce(
       (acc: object, propName: string) => ({
         ...acc,
