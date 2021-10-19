@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.53](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.52...v10.0.0-beta.53) (2021-10-19)
+
+
+### Fixes and Improvements
+
+* Bump version of pact-core to fix regression in publisher API ([db434a5](https://github.com/pact-foundation/pact-js/commit/db434a5bf0acd726070c1db8a357cd68e81f6714))
+
 ## [10.0.0-beta.52](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.51...v10.0.0-beta.52) (2021-10-16)
 
 
