@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [9.16.5](https://github.com/pact-foundation/pact-js/compare/v9.16.4...v9.16.5) (2021-10-24)
+
+
+### Fixes and Improvements
+
+* Bump version of pact-node to ensure the fix for the SSL certificate issue is included ([20bbf7a](https://github.com/pact-foundation/pact-js/commit/20bbf7a1f666dcf08e11b41b0fb6b88a28e4688d))
+* **consumer-tests:** Further improve the error message when a consumer test doesn't seem to have the mock server running ([c2d789c](https://github.com/pact-foundation/pact-js/commit/c2d789c7e051cdb31375685d85490e8e0a1b97f8))
+
 ### [9.16.4](https://github.com/pact-foundation/pact-js/compare/v9.16.3...v9.16.4) (2021-10-10)
 
 
