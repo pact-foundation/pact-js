@@ -21,7 +21,7 @@ rm -rf dist/native/target
 cp package-lock.json dist
 # Link the build so that the examples are always testing the
 # current build, in it's properly exported format
-(cd dist && npm ci && npm link)
+(cd dist && npm ci)
 
 echo "Running e2e examples build for node version $(node --version)"
 for i in examples/*; do
@@ -30,7 +30,14 @@ for i in examples/*; do
   if [[ "$i" =~ "karma" ]]; then
     (cd "$i" && npm ci && npm test)
   else
-    (cd "$i" &&  npm ci && npm link @pact-foundation/pact --legacy-peer-deps && npm test)
+    pushd "$i"
+    # replace pact dependency with locally build version
+    contents="$(jq '.devDependencies."@pact-foundation/pact" = "file:../../dist"' package.json)" && \
+         echo "${contents}" > package.json
+    # npm ci does not work because we have just changed the package.json file
+    npm install
+    npm test
+    popd
   fi
 done
 
@@ -54,10 +61,11 @@ for i in examples/v3/*; do
   echo "------------> continuing to test V3 example project: $i"
   node --version
   pushd "$i"
-  npm ci
-  rm -rf "node_modules/@pact-foundation/pact"
-  echo "linking pact"
-  npm link @pact-foundation/pact
+  # replace pact dependency with locally build version
+  contents="$(jq '.devDependencies."@pact-foundation/pact" = "file:../../../dist"' package.json)" && \
+     echo "${contents}" > package.json
+  # npm ci does not work because we have just changed the package.json file
+  npm install
   npm test
   popd
 done
