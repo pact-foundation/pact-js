@@ -22,7 +22,7 @@
     "@types/node": "^8.0.24",
     "@types/sinon": "^7.0.6",
     "@types/sinon-chai": "^2.7.29",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "lodash": "^4.17.21",
