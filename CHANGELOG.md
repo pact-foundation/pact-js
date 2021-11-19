@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [9.17.0](https://github.com/pact-foundation/pact-js/compare/v9.16.5...v9.17.0) (2021-11-19)
+
+
+### Features
+
+* upgrade pact-node to support branches in verifications. Fixes [#750](https://github.com/pact-foundation/pact-js/issues/750) ([a5ef42e](https://github.com/pact-foundation/pact-js/commit/a5ef42ed41baf51652ebdf5b59e1d1ba5b9a6239))
+
 ### [9.16.5](https://github.com/pact-foundation/pact-js/compare/v9.16.4...v9.16.5) (2021-10-24)
 
 
