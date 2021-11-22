@@ -80,7 +80,10 @@ Read [Getting started with Pact] for more information for beginners.
     - [Verifying providers with VerifierV3](#verifying-providers-with-verifierv3)
       - [Request Filters](#request-filters)
       - [Provider state callbacks](#provider-state-callbacks)
+    - [Debugging issues with Pact-JS V3](#debugging-issues-with-pact-js-v3)
+    - [Debugging](#debugging)
   - [Troubleshooting / FAQs](#troubleshooting--faqs)
+    - [Corporate Proxies / Firewalls](#corporate-proxies--firewalls)
     - [Alpine + Docker](#alpine--docker)
     - [Parallel tests](#parallel-tests)
     - [Splitting tests across multiple files](#splitting-tests-across-multiple-files)
@@ -90,7 +93,6 @@ Read [Getting started with Pact] for more information for beginners.
     - [Timeout](#timeout)
     - [Usage with Jest](#usage-with-jest)
     - [Usage with Angular](#usage-with-angular)
-    - [Debugging](#debugging)
   - [Contributing](#contributing)
   - [Contact](#contact)
 
@@ -1210,9 +1212,42 @@ stateHandlers: {
 
 You can change the log levels using the `LOG_LEVEL` environment variable.
 
+### Debugging
+
+If your standard tricks don't get you anywhere, setting the logLevel to `debug` and increasing the timeout doesn't help and you don't know where else to look, it could be that the binaries we use to do much of the Pact magic aren't starting as expected.
+
+Try starting the mock service manually and seeing if it comes up. When submitting a bug report, it would be worth running these commands before hand as it will greatly help us:
+
+```
+./node_modules/.bin/pact-mock-service
+```
+
+...and also the verifier (it will whinge about missing params, but that means it works):
+
+```
+./node_modules/.bin/pact-provider-verifier
+```
+
 ## Troubleshooting / FAQs
 
 If you are having issues, a good place to start is setting `logLevel: 'debug'` when configuring the `new Pact({...})` object. This will give you detailed in/out requests as far as Pact sees them during verification.
+
+### Corporate Proxies / Firewalls
+
+If you're on a corporate machine, it's common for all network calls to route through a proxy - even requests that go to your own machine!
+
+The symptom presents as follows:
+
+1. The mock server starts up correctly, as shown by a debug level log message such as this:
+
+    ```
+    [2021-11-22 11:16:01.214 +0000] DEBUG (3863 on Matts-iMac): pact-core@11.0.1: INFO  WEBrick::HTTPServer#start: pid=3864 port=50337
+    ```
+2. You receive a conflicting message such as "The pact mock service doesn't appear to be running" and the tests never run or any before all blocks fail to complete.
+
+The problem is that the Pact framework attempts to ensure the mock service can be communicated with before the tests run. It does so via an HTTP call, which will be sent via any intermediate proxies if configured. The proxy is unlikely to know how send the request back to your machine, which results in a timeout or error.
+
+This may be resolved by ensuring the `http_proxy` and `no_proxy` directives are correctly set (usually, by excluding the address of the mock server such as `localhost` or `127.0.0.1`).
 
 ### Alpine + Docker
 
@@ -1380,21 +1415,7 @@ You'll need to add the additional header `Access-Control-Expose-Headers`, this w
 
 See [this issue](https://github.com/angular/angular/issues/13554) for background.
 
-### Debugging
 
-If your standard tricks don't get you anywhere, setting the logLevel to `debug` and increasing the timeout doesn't help and you don't know where else to look, it could be that the binaries we use to do much of the Pact magic aren't starting as expected.
-
-Try starting the mock service manually and seeing if it comes up. When submitting a bug report, it would be worth running these commands before hand as it will greatly help us:
-
-```
-./node_modules/.bin/pact-mock-service
-```
-
-...and also the verifier (it will whinge about missing params, but that means it works):
-
-```
-./node_modules/.bin/pact-provider-verifier
-```
 
 ## Contributing
 
