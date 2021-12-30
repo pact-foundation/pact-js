@@ -22,7 +22,7 @@ export interface RequestOptions {
 }
 
 export interface ResponseOptions {
-  status: number | MatcherResult
+  status: number
   headers?: { [name: string]: string | MatcherResult }
   body?: any
 }
