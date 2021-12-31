@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [9.17.1](https://github.com/pact-foundation/pact-js/compare/v9.17.0...v9.17.1) (2021-12-31)
+
+
+### Fixes and Improvements
+
+* Interaction response status can only be a number not a Matcher (Typescript type) ([9904eca](https://github.com/pact-foundation/pact-js/commit/9904eca5d25108ef714d279e4314e0797266536e))
+
 ## [9.17.0](https://github.com/pact-foundation/pact-js/compare/v9.16.5...v9.17.0) (2021-11-19)
 
 
