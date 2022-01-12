@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [9.17.2](https://github.com/pact-foundation/pact-js/compare/v9.17.1...v9.17.2) (2022-01-12)
+
+
+### Fixes and Improvements
+
+* All options are now passed down to pact-core in consumer pacts, allowing usage of the undocumented `monkeypatch` option ([50f00b4](https://github.com/pact-foundation/pact-js/commit/50f00b4af66a388c07e721f5d8fc254c8551b192))
+
 ### [9.17.1](https://github.com/pact-foundation/pact-js/compare/v9.17.0...v9.17.1) (2021-12-31)
 
 
