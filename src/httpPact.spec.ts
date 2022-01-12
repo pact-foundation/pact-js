@@ -35,6 +35,7 @@ describe("Pact", () => {
     spec: 2,
     cors: false,
     pactfileWriteMode: "overwrite",
+    monkeypatch: "/path/to/monkeypatch.rb",
   } as PactOptionsComplete
 
   before(() => {
@@ -140,6 +141,7 @@ describe("Pact", () => {
           spec: 2,
           cors: false,
           pactfileWriteMode: "overwrite",
+          monkeypatch: "/path/to/monkeypatch.rb",
         })
       })
     })

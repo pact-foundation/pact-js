@@ -8,7 +8,7 @@ import { isPortAvailable } from "./common/net"
 import logger, { traceHttpInteractions, setLogLevel } from "./common/logger"
 import { MockService } from "./dsl/mockService"
 import { LogLevel, PactOptions, PactOptionsComplete } from "./dsl/options"
-import { Server } from "@pact-foundation/pact-node/src/server"
+import { Server, ServerOptions } from "@pact-foundation/pact-node/src/server"
 import VerificationError from "./errors/verificationError"
 import ConfigurationError from "./errors/configurationError"
 
@@ -278,19 +278,9 @@ export class Pact {
 
   private createServer(config: PactOptions) {
     this.server = serviceFactory.createServer({
-      consumer: this.opts.consumer,
-      cors: this.opts.cors,
-      dir: this.opts.dir,
-      host: this.opts.host,
-      log: this.opts.log,
-      pactFileWriteMode: this.opts.pactfileWriteMode,
+      timeout: 30000,
+      ...this.opts,
       port: config.port, // allow to be undefined
-      provider: this.opts.provider,
-      spec: this.opts.spec,
-      ssl: this.opts.ssl,
-      sslcert: this.opts.sslcert,
-      sslkey: this.opts.sslkey,
-      timeout: this.opts.timeout || 30000,
-    })
+    } as ServerOptions)
   }
 }
