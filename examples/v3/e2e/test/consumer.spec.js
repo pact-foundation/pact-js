@@ -100,7 +100,7 @@ describe('Pact V3', () => {
     provider: 'Animal Profile Service V3',
     dir: path.resolve(process.cwd(), 'pacts'),
     spec: SpecificationVersion.SPECIFICATION_VERSION_V3,
-    logLevel: 'trace',
+    logLevel: LOG_LEVEL,
     cors: true,
   });
 
