@@ -246,7 +246,7 @@ export class PactV3 {
     if (req.body) {
       this.interaction.withRequestBody(
         matcherValueOrString(req.body),
-        req.contentType ||  "application/json"
+        req.contentType || 'application/json'
       );
     }
 
