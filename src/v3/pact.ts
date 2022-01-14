@@ -1,9 +1,6 @@
+/* eslint-disable import/first */
 import { join, toPairs, map, flatten, forEachObjIndexed } from 'ramda';
-import * as MatchersV3 from './matchers';
-import { version as pactPackageVersion } from '../../package.json';
 import { makeConsumerPact } from '@pact-foundation/pact-core';
-import fs = require('fs');
-import { JsonMap } from '../common/jsonTypes';
 import {
   ConsumerPact,
   ConsumerInteraction,
@@ -12,8 +9,13 @@ import {
   RequestMismatch,
   MatchingResultRequestNotFound,
   MatchingResultMissingRequest,
-} from '@pact-foundation/pact-core/src/consumer/types';
+} from '@pact-foundation/pact-core/src/consumer/index';
 import { isArray } from 'util';
+import fs = require('fs');
+import * as MatchersV3 from './matchers';
+import logger from '../common/logger';
+import { version as pactPackageVersion } from '../../package.json';
+import { JsonMap } from '../common/jsonTypes';
 
 export enum SpecificationVersion {
   SPECIFICATION_VERSION_V2 = 3,
@@ -51,19 +53,29 @@ export interface PactV3Options {
   /**
    * Specification version to use
    */
-  logLevel?: "trace" | "debug" | "info" | "warn" | "error";
+  logLevel?: 'trace' | 'debug' | 'info' | 'warn' | 'error';
 }
 
-const logInvalidOperation = (op: string) => {
-  throw new Error(
-    `unable to call operation ${op}, this is probably a bug in Pact JS`
-  );
-};
+// const logInvalidOperation = (op: string) => {
+//   throw new Error(
+//     `unable to call operation ${op}, this is probably a bug in Pact JS`
+//   );
+// };
 
 const matcherValueOrString = (obj: any): string => {
   if (typeof obj === 'string') return obj;
 
   return JSON.stringify(obj);
+};
+
+const readBinaryData = (file: string): Buffer => {
+  try {
+    const body = fs.readFileSync(file);
+
+    return body;
+  } catch (e) {
+    throw new Error(`unable to read file for binary request: ${e.message}`);
+  }
 };
 
 export interface V3ProviderState {
@@ -88,6 +100,7 @@ export interface V3Request {
   query?: TemplateQuery;
   headers?: TemplateHeaders;
   body?: MatchersV3.AnyTemplate;
+  contentType?: string;
 }
 
 export interface V3Response {
@@ -157,6 +170,15 @@ function filterMissingFeatureFlag(mismatches: MatchingResult[]) {
   return mismatches;
 }
 
+function printMismatch(m: Mismatch): string {
+  switch (m.type) {
+    case 'MethodMismatch':
+      return `Expected ${m.expected}, got: ${m.actual}`;
+    default:
+      return m.mismatch;
+  }
+}
+
 function generateMockServerError(mismatches: MatchingResult[], indent: string) {
   return [
     'Mock server failed with the following mismatches:',
@@ -187,19 +209,13 @@ function generateMockServerError(mismatches: MatchingResult[], indent: string) {
   ].join('\n');
 }
 
-function printMismatch(m: Mismatch): string {
-  switch (m.type) {
-    case 'MethodMismatch':
-      return `Expected ${m.expected}, got: ${m.actual}`;
-    default:
-      return m.mismatch;
-  }
-}
-
 export class PactV3 {
   private opts: PactV3Options;
+
   private states: V3ProviderState[] = [];
+
   private pact: ConsumerPact;
+
   private interaction: ConsumerInteraction;
 
   constructor(opts: PactV3Options) {
@@ -217,12 +233,12 @@ export class PactV3 {
     this.states.forEach((s) => {
       if (s.parameters) {
         forEachObjIndexed((v, k) => {
-          this.interaction.givenWithParam(s.description, k, v)
-        })
+          this.interaction.givenWithParam(s.description, k, v);
+        });
       } else {
-        this.interaction.given(s.description)
+        this.interaction.given(s.description);
       }
-    })
+    });
     return this;
   }
 
@@ -230,7 +246,7 @@ export class PactV3 {
     if (req.body) {
       this.interaction.withRequestBody(
         matcherValueOrString(req.body),
-        'application/json'
+        req.contentType ||  "application/json"
       );
     }
 
@@ -297,19 +313,18 @@ export class PactV3 {
 
   public async executeTest<T>(
     testFn: (mockServer: V3MockServer) => Promise<T>
-  ): Promise<T|undefined> {
+  ): Promise<T | undefined> {
     const scheme = 'http';
     const host = '127.0.0.1';
 
     const port = this.pact.createMockServer(host, this.opts.port);
     const server = { port, url: `${scheme}://${host}:${port}`, id: 'unknown' };
-    let err: Error
-    let val: T|undefined;
+    let val: T | undefined;
 
     try {
       val = await testFn(server);
     } catch (e) {
-      err = e
+      logger.error(e.message);
     }
 
     const matchingResults = this.pact.mockServerMismatches(port);
@@ -345,11 +360,9 @@ export class PactV3 {
     forEachObjIndexed((v, k) => {
       if (isArray(v)) {
         (v as any[]).forEach((vv, i) => {
-          console.log(`Query: ${k} => ${matcherValueOrString(v)}`)
           this.interaction.withQuery(k, i, matcherValueOrString(v));
         });
       } else {
-        console.log(`Query: ${k} => ${matcherValueOrString(v)}`)
         this.interaction.withQuery(k, 0, matcherValueOrString(v));
       }
     }, req.query);
@@ -371,18 +384,8 @@ export class PactV3 {
       this.opts.consumer,
       this.opts.provider,
       this.opts.spec ?? SpecificationVersion.SPECIFICATION_VERSION_V3,
-      this.opts.logLevel ?? "info"
+      this.opts.logLevel ?? 'info'
     );
     this.pact.addMetadata('pact-js', 'version', pactPackageVersion);
   }
 }
-
-const readBinaryData = (file: string): Buffer => {
-  try {
-    const body = fs.readFileSync(file);
-
-    return body;
-  } catch (e) {
-    throw new Error(`unable to read file for binary request: ${e.message}`);
-  }
-};

@@ -1,5 +1,3 @@
-import logger from '../common/logger';
-
 export * from './pact';
 
 /**

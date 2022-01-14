@@ -9,7 +9,7 @@ describe('Transaction service - create a new transaction for an account', () => 
   const provider = new PactV3({
     consumer: 'TransactionService',
     provider: 'AccountService',
-    logLevel: "trace",
+    logLevel: 'trace',
     dir: path.resolve(process.cwd(), 'pacts'),
   });
 
@@ -31,8 +31,14 @@ describe('Transaction service - create a new transaction for an account', () => 
           version: integer(0),
           name: string('Test'),
           accountRef: string('Test001'),
-          createdDate: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX", "2017-12-04T14:47:18.582Z"),
-          lastModifiedDate: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX", "2017-12-04T14:47:18.582Z"),
+          createdDate: datetime(
+            "yyyy-MM-dd'T'HH:mm:ss.SSSX",
+            '2017-12-04T14:47:18.582Z'
+          ),
+          lastModifiedDate: datetime(
+            "yyyy-MM-dd'T'HH:mm:ss.SSSX",
+            '2017-12-04T14:47:18.582Z'
+          ),
           accountNumber: {
             id: fromProviderState('${accountNumber}', 100),
           },
@@ -86,8 +92,14 @@ describe('Transaction service - create a new transaction for an account', () => 
           version: integer(0),
           name: string('Test'),
           accountRef: string('Test001'),
-          createdDate: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX", "2017-12-04T14:47:18.582Z"),
-          lastModifiedDate: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX", "2017-12-04T14:47:18.582Z"),
+          createdDate: datetime(
+            "yyyy-MM-dd'T'HH:mm:ss.SSSX",
+            '2017-12-04T14:47:18.582Z'
+          ),
+          lastModifiedDate: datetime(
+            "yyyy-MM-dd'T'HH:mm:ss.SSSX",
+            '2017-12-04T14:47:18.582Z'
+          ),
           accountNumber: {
             id: fromProviderState('${accountNumber}', 100),
           },
@@ -131,10 +143,7 @@ describe('Transaction service - create a new transaction for an account', () => 
       .willRespondWith({
         status: 200,
         headers: { 'Content-Type': 'text/plain; charset=utf-8' },
-        body: fromProviderState(
-          'data: testData, id: ${id}',
-          42
-        ),
+        body: fromProviderState('data: testData, id: ${id}', 42),
       });
 
     // TODO: this test passes but it should definitely not pass
@@ -143,7 +152,7 @@ describe('Transaction service - create a new transaction for an account', () => 
     //       object
     return provider.executeTest(async (mockserver) => {
       transactionService.setAccountServiceUrl(mockserver.url);
-      const result = await transactionService.getText(42)
+      const result = await transactionService.getText(42);
       expect(result.data).to.equal('data: testData, id: 42');
     });
   });
@@ -165,11 +174,7 @@ describe('Transaction service - create a new transaction for an account', () => 
           root.appendElement('data', '', (data) => {
             data
               .appendElement('h:data', '', string('random'))
-              .appendElement(
-                'id',
-                '',
-                fromProviderState('${id}', '42')
-              );
+              .appendElement('id', '', fromProviderState('${id}', '42'));
           });
         }),
       });
