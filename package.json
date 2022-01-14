@@ -5,7 +5,6 @@
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "scripts": {
-    "build": "npm run dist",
     "compile": "rimraf dist && tsc",
     "clean": "rimraf docs dist coverage .nyc_output logs pacts",
     "clean:native": "rimraf native/target",

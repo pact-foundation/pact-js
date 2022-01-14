@@ -8,7 +8,6 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 npm ci
 
 npm run dist
-npm run build:v3
 
 "${DIR}"/lib/prepare-release.sh
 
