@@ -11,12 +11,6 @@ npm run dist
 
 "${DIR}"/lib/prepare-release.sh
 
-# Copy Rust native lib
-echo "    Copying ./native => dist/native"
-mkdir -p dist/native && cp -r native dist/
-rm -rf dist/native/target
-
-
 cp package-lock.json dist
 # Link the build so that the examples are always testing the
 # current build, in it's properly exported format
