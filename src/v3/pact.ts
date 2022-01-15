@@ -107,6 +107,7 @@ export interface V3Response {
   status: number;
   headers?: TemplateHeaders;
   body?: MatchersV3.AnyTemplate;
+  contentType?: string;
 }
 
 export interface V3MockServer {
@@ -223,6 +224,7 @@ export class PactV3 {
     this.setup();
   }
 
+  // TODO: this currently must be called before other methods, else it won't work
   public given(providerState: string, parameters?: JsonMap): PactV3 {
     this.states.push({ description: providerState, parameters });
     return this;
@@ -233,8 +235,12 @@ export class PactV3 {
     this.states.forEach((s) => {
       if (s.parameters) {
         forEachObjIndexed((v, k) => {
-          this.interaction.givenWithParam(s.description, k, v);
-        });
+          this.interaction.givenWithParam(
+            s.description,
+            `${k}`,
+            JSON.stringify(v)
+          );
+        }, s.parameters);
       } else {
         this.interaction.given(s.description);
       }
@@ -282,7 +288,7 @@ export class PactV3 {
     if (res.body) {
       this.interaction.withResponseBody(
         matcherValueOrString(res.body),
-        'application/json'
+        res.contentType || 'application/json' // TODO: extract // force correct content-type header?
       );
     }
     this.states = [];
@@ -360,7 +366,7 @@ export class PactV3 {
     forEachObjIndexed((v, k) => {
       if (isArray(v)) {
         (v as any[]).forEach((vv, i) => {
-          this.interaction.withQuery(k, i, matcherValueOrString(v));
+          this.interaction.withQuery(k, i, matcherValueOrString(vv));
         });
       } else {
         this.interaction.withQuery(k, 0, matcherValueOrString(v));
