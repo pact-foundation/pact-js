@@ -462,7 +462,7 @@ describe('Pact V3', () => {
     });
   });
 
-  describe.only('when a call to the Animal Service is made to create a new mate using form-data body', () => {
+  describe('when a call to the Animal Service is made to create a new mate using form-data body', () => {
     before(() =>
       provider
         .given('is authenticated')
