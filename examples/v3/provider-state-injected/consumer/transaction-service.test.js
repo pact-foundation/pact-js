@@ -5,7 +5,7 @@ const { expect } = require('chai');
 const { string, integer, url2, regex, datetime, fromProviderState } =
   MatchersV3;
 
-describe.skip('Transaction service - create a new transaction for an account', () => {
+describe('Transaction service - create a new transaction for an account', () => {
   const provider = new PactV3({
     consumer: 'TransactionService',
     provider: 'AccountService',
