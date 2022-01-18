@@ -6,8 +6,8 @@ const { string, eachLike, integer, boolean, atLeastOneLike, timestamp, regex } =
   MatchersV3;
 
 const TodoApp = require('../src/todo');
-
 const expect = chai.expect;
+const isWin = process.platform === 'win32';
 
 chai.use(chaiAsPromised);
 
@@ -152,7 +152,7 @@ describe('Pact V3', () => {
           .uponReceiving('a request to store an image against the project')
           .withRequestBinaryFile(
             { method: 'POST', path: '/projects/1001/images' },
-            'image/jpeg',
+            isWin ? 'application/octet-stream' : 'image/jpeg',
             path.resolve(__dirname, 'example.jpg')
           )
           .willRespondWith({ status: 201 });
