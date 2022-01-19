@@ -698,7 +698,7 @@ describe('Matcher', () => {
         };
 
         it('returns just that object', () => {
-          expect(extractPayload(object)).to.deep.eql(object);
+          expect(extractPayload(object)).to.deep.equal(object);
         });
       });
 
