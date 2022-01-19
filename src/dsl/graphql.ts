@@ -68,7 +68,7 @@ export class GraphQLInteraction extends Interaction {
    *     }"
    *  }'
    */
-  public withQuery(query: string) {
+  public withQuery(query: string): this {
     return this.queryOrMutation(query, 'query');
   }
 
@@ -86,7 +86,7 @@ export class GraphQLInteraction extends Interaction {
    *   }
    * }
    */
-  public withMutation(mutation: string) {
+  public withMutation(mutation: string): this {
     return this.queryOrMutation(mutation, 'mutation');
   }
 
@@ -125,7 +125,7 @@ export class GraphQLInteraction extends Interaction {
     return this.state;
   }
 
-  private queryOrMutation(query: string, type: string) {
+  private queryOrMutation(query: string, type: string): this {
     if (isNil(query)) {
       throw new ConfigurationError(`You must provide a GraphQL ${type}.`);
     }
