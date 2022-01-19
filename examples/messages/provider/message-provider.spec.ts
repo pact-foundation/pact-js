@@ -29,7 +29,7 @@ describe('Message provider tests', () => {
     pactBrokerUsername: 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
     pactBrokerPassword: 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
     publishVerificationResult: true,
-    consumerVersionTags: ['prod'],
+    consumerVersionTags: ['master', 'test', 'prod'],
   });
 
   describe('send a dog event', () => {

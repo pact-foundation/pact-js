@@ -9,7 +9,7 @@
   "license": "MIT",
   "devDependencies": {
     "@pact-foundation/pact": "^9.16.0",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "chai": "^3.5.0",
     "mocha": "^8.2.1",
     "rimraf": "^2.6.2"

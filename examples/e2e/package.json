@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "Pact JS E2E Example",
   "scripts": {
-    "test": "npm run test:consumer && npm run test:publish && npm run test:provider",
+    "test": "npm run test:consumer && npm run pact:publish && npm run test:provider",
     "test:consumer": "mocha test/consumer.spec.js",
-    "test:publish": "node test/publish.js",
+    "pact:publish": "pact-broker publish ./pacts --consumer-app-version=\"$(npx @pact-foundation/absolute-version)\" --auto-detect-version-properties --broker-base-url=https://test.pact.dius.com.au",
     "test:provider": "mocha test/provider.spec.js",
     "can-i-deploy": "npm run can-i-deploy:consumer && npm run can-i-deploy:provider",
     "can-i-deploy:consumer": "pact-broker can-i-deploy --pacticipant 'Matching Service' --latest --broker-base-url https://test.pact.dius.com.au --broker-username dXfltyFMgNOFZAxr8io9wJ37iUpY42M --broker-password O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",

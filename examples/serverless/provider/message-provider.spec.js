@@ -30,7 +30,7 @@ describe('Message provider tests', () => {
     pactBrokerPassword: 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
     publishVerificationResult: true,
 
-    consumerVersionSelectors: [{ latest: true }],
+    consumerVersionTags: ['master', 'test', 'prod'],
   });
 
   describe('send an event', () => {

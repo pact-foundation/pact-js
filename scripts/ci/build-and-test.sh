@@ -10,6 +10,9 @@ git checkout native
 npm run dist
 npm run build:v3
 
+export PACT_BROKER_USERNAME="dXfltyFMgNOFZAxr8io9wJ37iUpY42M"
+export PACT_BROKER_PASSWORD="O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1"
+
 "${DIR}"/lib/prepare-release.sh
 
 # Copy Rust native lib
@@ -19,6 +22,8 @@ rm -rf dist/native/target
 
 
 cp package-lock.json dist
+echo "This will be version '$(npx @pact-foundation/absolute-version)'"
+
 # Link the build so that the examples are always testing the
 # current build, in it's properly exported format
 (cd dist && npm ci && npm link)

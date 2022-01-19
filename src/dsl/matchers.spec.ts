@@ -685,6 +685,23 @@ describe('Matcher', () => {
         });
       });
 
+      describe('when given an object with null values', () => {
+        const object = {
+          some: 'data',
+          more: null,
+          an: [null],
+          someObject: {
+            withData: true,
+            withNumber: 1,
+            andNull: null,
+          },
+        };
+
+        it('returns just that object', () => {
+          expect(extractPayload(object)).to.deep.eql(object);
+        });
+      });
+
       describe('when given an object with some matchers', () => {
         const someMatchers = {
           some: somethingLike('data'),

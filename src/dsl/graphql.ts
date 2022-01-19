@@ -68,20 +68,26 @@ export class GraphQLInteraction extends Interaction {
    *     }"
    *  }'
    */
-  public withQuery(query: string): this {
-    if (isNil(query)) {
-      throw new ConfigurationError('You must provide a GraphQL query.');
-    }
+  public withQuery(query: string) {
+    return this.queryOrMutation(query, 'query');
+  }
 
-    try {
-      gql(query);
-    } catch (e) {
-      throw new GraphQLQueryError(`GraphQL Query is invalid: ${e.message}`);
-    }
-
-    this.query = query;
-
-    return this;
+  /**
+   * The actual GraphQL mutation as a string.
+   *
+   * NOTE: spaces are not important, Pact will auto-generate a space-insensitive matcher
+   *
+   * e.g. the value for the "query" field in the GraphQL HTTP payload:
+   *
+   * mutation CreateReviewForEpisode($ep: Episode!, $review: ReviewInput!) {
+   *   createReview(episode: $ep, review: $review) {
+   *     stars
+   *     commentary
+   *   }
+   * }
+   */
+  public withMutation(mutation: string) {
+    return this.queryOrMutation(mutation, 'mutation');
   }
 
   /**
@@ -117,5 +123,21 @@ export class GraphQLInteraction extends Interaction {
     );
 
     return this.state;
+  }
+
+  private queryOrMutation(query: string, type: string) {
+    if (isNil(query)) {
+      throw new ConfigurationError(`You must provide a GraphQL ${type}.`);
+    }
+
+    try {
+      gql(query);
+    } catch (e) {
+      throw new GraphQLQueryError(`GraphQL ${type} is invalid: ${e.message}`);
+    }
+
+    this.query = query;
+
+    return this;
   }
 }
