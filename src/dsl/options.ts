@@ -46,7 +46,7 @@ export interface PactOptions {
   cors?: boolean;
 
   // How long to wait for the server to start before timing out
-  timeout?: number
+  timeout?: number;
 
   // Control how the Pact files are written
   // (defaults to 'overwrite')
