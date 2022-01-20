@@ -4,6 +4,8 @@ set -u
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+echo "Git-rev: $(git rev-parse --abbrev-ref HEAD)"
+
 npm ci
 npm run dist
 
