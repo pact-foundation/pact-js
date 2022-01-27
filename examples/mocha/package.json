@@ -11,7 +11,8 @@
     "@pact-foundation/pact": "^9.16.0",
     "axios": "^0.21.2",
     "chai": "^3.5.0",
-    "mocha": "^8.2.1",
+    "mocha": "^9.2.0",
+    "mocha-pact": "^0.10.1",
     "rimraf": "^2.6.2"
   }
 }
