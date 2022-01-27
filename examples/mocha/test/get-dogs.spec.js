@@ -12,7 +12,7 @@ pactWith(
     consumer: "MyConsumer",
     provider: "MyProvider",
   },
-  (provider) => {
+  provider => {
     let url = "http://localhost"
 
     const EXPECTED_BODY = [
@@ -25,7 +25,7 @@ pactWith(
     ]
 
     describe("get /dogs", () => {
-      before((done) => {
+      before(done => {
         const interaction = {
           state: "i have a list of dogs",
           uponReceiving: "a request for all dogs",
@@ -49,12 +49,12 @@ pactWith(
         })
       })
 
-      it("returns the correct response", (done) => {
+      it("returns the correct response", done => {
         const urlAndPort = {
           url: url,
           port: port,
         }
-        getMeDogs(urlAndPort).then((response) => {
+        getMeDogs(urlAndPort).then(response => {
           expect(response.data).to.eql(EXPECTED_BODY)
           done()
         }, done)
@@ -62,7 +62,7 @@ pactWith(
     })
 
     describe("get /dog/1", () => {
-      before((done) => {
+      before(done => {
         const interaction = {
           state: "i have a list of dogs",
           uponReceiving: "a request for a single dog",
@@ -86,12 +86,12 @@ pactWith(
         })
       })
 
-      it("returns the correct response", (done) => {
+      it("returns the correct response", done => {
         const urlAndPort = {
           url: url,
           port: port,
         }
-        getMeDog(urlAndPort).then((response) => {
+        getMeDog(urlAndPort).then(response => {
           expect(response.data).to.eql(EXPECTED_BODY)
           done()
         }, done)
