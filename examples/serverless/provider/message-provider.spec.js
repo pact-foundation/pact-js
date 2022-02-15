@@ -26,8 +26,12 @@ describe('Message provider tests', () => {
 
     // Uncomment to use the broker
     pactBrokerUrl: 'https://test.pactflow.io/',
-    pactBrokerUsername: 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
-    pactBrokerPassword: 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
+    pactBrokerUsername: process.env.PACT_BROKER_USERNAME
+      ? undefined
+      : 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
+    pactBrokerPassword: process.env.PACT_BROKER_PASSWORD
+      ? undefined
+      : 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
     publishVerificationResult: true,
 
     consumerVersionTags: ['master', 'test', 'prod'],
