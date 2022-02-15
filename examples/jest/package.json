@@ -4,8 +4,8 @@
   "description": "Jest Pact example",
   "main": "index.js",
   "scripts": {
-    "test": "jest __tests__/ --runInBand --testTimeout=300000",
-    "publish:pact": "node ./publish.js"
+    "test": "jest __tests__/ --runInBand",
+    "pact:publish": "pact-broker publish pact/pacts --consumer-app-version=\"$(npx @pact-foundation/absolute-version)\" --auto-detect-version-properties --broker-base-url=https://test.pact.dius.com.au"
   },
   "license": "MIT",
   "jest": {

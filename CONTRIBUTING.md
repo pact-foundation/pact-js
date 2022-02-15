@@ -67,7 +67,7 @@ modified or new examples, refactorings, new tests, etc. We usually use one of `c
 
 ## Code style and formatting
 
-We use [Prettier](https://prettier.io/) for formatting, and for linting we use [TSLint](https://palantir.github.io/tslint/) (for TypeScript).
+We use [Prettier](https://prettier.io/) for formatting, and for linting we use [ESLint](https://eslint.org/) (for TypeScript).
 
 The recommended approach is to configure Prettier to format on save in your editor 👌. If not, don't worry, our lint step will catch it.
 

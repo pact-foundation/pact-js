@@ -59,7 +59,7 @@
   "bugs": {
     "url": "https://github.com/pact-foundation/pact-js/issues"
   },
-  "homepage": "http://docs.pact.io/documentation/javascript.html",
+  "homepage": "https://docs.pact.io/implementation_guides/javascript/",
   "standard-version": {
     "types": [
       {
@@ -114,7 +114,7 @@
     "lodash.isundefined": "3.0.1",
     "lodash.omit": "^4.5.0",
     "lodash.omitby": "4.6.0",
-    "@mapbox/node-pre-gyp": "1.0.5",
+    "pino-pretty": "^6.0.0",
     "pkginfo": "^0.4.1",
     "popsicle": "^9.2.0",
     "ramda": "^0.26.1",

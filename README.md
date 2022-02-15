@@ -53,7 +53,9 @@ Read [Getting started with Pact] for more information for beginners.
       - [Modify Requests Prior to Verification (Request Filters)](#modify-requests-prior-to-verification-request-filters)
       - [Lifecycle of a provider verification](#lifecycle-of-a-provider-verification)
     - [Publishing Pacts to a Broker](#publishing-pacts-to-a-broker)
-      - [Pact publishing options](#pact-publishing-options)
+      - [Publish in npm scripts](#publish-in-npm-scripts)
+      - [Publish in a custom script](#publish-in-a-custom-script)
+        - [Pact publishing options](#pact-publishing-options)
       - [Publishing Verification Results to a Pact Broker](#publishing-verification-results-to-a-pact-broker)
   - [Asynchronous API Testing](#asynchronous-api-testing)
     - [Consumer](#consumer)
@@ -80,7 +82,9 @@ Read [Getting started with Pact] for more information for beginners.
       - [Request Filters](#request-filters)
       - [Provider state callbacks](#provider-state-callbacks)
     - [Debugging issues with Pact-JS V3](#debugging-issues-with-pact-js-v3)
+    - [Debugging](#debugging)
   - [Troubleshooting / FAQs](#troubleshooting--faqs)
+    - [Corporate Proxies / Firewalls](#corporate-proxies--firewalls)
     - [Alpine + Docker](#alpine--docker)
     - [Parallel tests](#parallel-tests)
     - [Splitting tests across multiple files](#splitting-tests-across-multiple-files)
@@ -90,7 +94,6 @@ Read [Getting started with Pact] for more information for beginners.
     - [Timeout](#timeout)
     - [Usage with Jest](#usage-with-jest)
     - [Usage with Angular](#usage-with-angular)
-    - [Debugging](#debugging)
   - [Contributing](#contributing)
   - [Contact](#contact)
 
@@ -101,6 +104,10 @@ Read [Getting started with Pact] for more information for beginners.
 ```
 npm i -S @pact-foundation/pact@latest
 ```
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 Make sure the `ignore-scripts` option is disabled, pact uses npm scripts to download further dependencies.
 
 ### Do Not Track
@@ -182,6 +189,7 @@ The `Pact` class provides the following high-level APIs, they are listed in the 
 | `spec`              | no        | number  | Pact specification version (defaults to 2)                                                               |
 | `cors`              | no        | boolean | Allow CORS OPTION requests to be accepted, defaults to false                                             |
 | `pactfileWriteMode` | no        | string  | Control how the Pact files are written. Choices: 'overwrite' 'update' or 'none'. Defaults to 'overwrite' |
+| `timeout`           | no        | number  | The time to wait for the mock server to start up in milliseconds. Defaults to 30 seconds (30000)         |
 
 </details>
 
@@ -315,13 +323,13 @@ new Verifier(opts).verifyProvider().then(function () {
 <details><summary>Verification Options</summary>
 
 | Parameter                   | Required? | Type                           | Description                                                                                                                                                                                        |
-| --------------------------- | --------- | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| --------------------------- | --------- | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- | --------------------------------------------------- |
 | `providerBaseUrl`           | true      | string                         | Running API provider host endpoint.                                                                                                                                                                |
 | `pactBrokerUrl`             | false     | string                         | Base URL of the Pact Broker from which to retrieve the pacts. Required if `pactUrls` not given.                                                                                                    |
 | `provider`                  | false     | string                         | Name of the provider if fetching from a Broker                                                                                                                                                     |
 | `consumerVersionSelectors`  | false     | ConsumerVersionSelector\|array | Using [Selectors](https://docs.pact.io/pact_broker/advanced_topics/consumer_version_selectors/) is a way we specify which pacticipants and versions we want to use when configuring verifications. |
-| `consumerVersionTags`        | false     | array                  | Retrieve the latest pacts with given tag(s)                                                                                                                                                        |
-| `providerVersionTags`        | false     | array                  | Tag(s) to apply to the provider application                                                                                                                                                        |
+| `consumerVersionTags`       | false     | string\|array                  | Retrieve the latest pacts with given tag(s)                                                                                                                                                        |
+| `providerVersionTags`       | false     | string\|array                  | Tag(s) to apply to the provider application                                                                                                                                                        |
 | `includeWipPactsSince`      | false     | string                         | Includes pact marked as WIP since this date. String in the format %Y-%m-%d or %Y-%m-%dT%H:%M:%S.000%:z                                                                                             |
 | `pactUrls`                  | false     | array                          | Array of local pact file paths or HTTP-based URLs. Required if _not_ using a Pact Broker.                                                                                                          |
 | `providerStatesSetupUrl`    | false     | string                         | Deprecated (use URL to send PUT requests to setup a given provider state                                                                                                                           |
@@ -346,7 +354,7 @@ To dynamically retrieve pacts from a Pact Broker for a provider, provide the bro
 const opts = {
   pactBroker: "http://my-broker",
   provider: "Animal Profile Service",
-  consumerVersionTag: ["master", "prod"],
+  consumerVersionTags: ["master", "test", "prod"],
 }
 ```
 
@@ -364,7 +372,7 @@ To publish the verification results back to the Pact Broker, you need to enable 
 const opts = {
   publishVerificationResult: true, //generally you'd do something like `process.env.CI === 'true'`
   providerVersion: "version", //recommended to be the git sha
-  providerVersionTag: "tag", //optional, recommended to be the git branch
+  providerVersionTags: ["tag"], //optional, recommended to be the git branch
 }
 ```
 
@@ -531,6 +539,28 @@ The Broker:
 
 [Host your own](https://github.com/pact-foundation/pact_broker), or signup for a free hosted [Pact Broker](https://pactflow.io).
 
+#### Publish in npm scripts
+
+The easiest way to publish pacts to the broker is via an npm script in your package.json:
+
+```
+
+   "pact:publish": "pact-broker publish <YOUR_PACT_FILES_OR_DIR> --consumer-app-version=\"$(npx @pact-foundation/absolute-version)\" --auto-detect-version-properties --broker-base-url=https://your-broker-url.example.com"
+```
+
+For a full list of the options, see the [CLI usage instructions](https://github.com/pact-foundation/pact-ruby-standalone/releases).
+All CLI binaries are available in npm scripts when using pact-js.
+
+If you want to pass your username and password to the broker without including
+them in scripts, you can provide it via the environment variables
+`PACT_BROKER_USERNAME` and `PACT_BROKER_PASSWORD`. If your broker supports an
+access token instead of a password, use the environment variable
+`PACT_BROKER_TOKEN`.
+
+#### Publish in a custom script
+
+If you require finer control over your pact publication, you can programatically publish in a custom script:
+
 ```js
 const { Publisher } = require("@pact-foundation/pact")
 const opts = {
@@ -579,7 +609,7 @@ To publish the verification results back to the Pact Broker, you need to enable 
 const opts = {
   publishVerificationResult: true, //recommended to only publish from CI by setting the value to `process.env.CI === 'true'`
   providerVersion: "version", //recommended to be the git sha eg. process.env.MY_CI_COMMIT
-  providerVersionTag: "tag", //optional, recommended to be the git branch eg. process.env.MY_CI_BRANCH
+  providerVersionTags: ["tag"], //optional, recommended to be the git branch eg. process.env.MY_CI_BRANCH
 }
 ```
 
@@ -606,13 +636,14 @@ From a Pact testing point of view, Pact takes the place of the intermediary (MQ/
 The following test creates a contract for a Dog API handler:
 
 ```js
+const path = require("path")
 const {
   MessageConsumerPact,
   synchronousBodyHandler,
 } = require("@pact-foundation/pact")
 
 // 1 Dog API Handler
-const dogApiHandler = function(dog) {
+const dogApiHandler = function (dog) {
   if (!dog.id && !dog.name && !dog.type) {
     throw new Error("missing fields")
   }
@@ -672,6 +703,7 @@ A Provider (Producer in messaging parlance) is the system that will be putting a
 As per the Consumer case, Pact takes the position of the intermediary (MQ/broker) and checks to see whether or not the Provider sends a message that matches the Consumer's expectations.
 
 ```js
+const path = require("path")
 const { MessageProviderPact } = require("@pact-foundation/pact")
 
 // 1 Messaging integration client
@@ -1107,7 +1139,7 @@ There is an `XmlBuilder` class that provides a DSL to help construct XML bodies 
 for example:
 
 ```javascript
-body: new XmlBuilder("1.0", "UTF-8", "ns1:projects").build(el => {
+body: new XmlBuilder("1.0", "UTF-8", "ns1:projects").build((el) => {
   el.setAttributes({
     id: "1234",
     "xmlns:ns1": "http://some.namespace/and/more/stuff",
@@ -1120,8 +1152,8 @@ body: new XmlBuilder("1.0", "UTF-8", "ns1:projects").build(el => {
       name: string("Project 1"),
       due: timestamp("yyyy-MM-dd'T'HH:mm:ss.SZ", "2016-02-11T09:46:56.023Z"),
     },
-    project => {
-      project.appendElement("ns1:tasks", {}, task => {
+    (project) => {
+      project.appendElement("ns1:tasks", {}, (task) => {
         task.eachLike(
           "ns1:task",
           {
@@ -1192,9 +1224,43 @@ stateHandlers: {
 
 You can change the log levels using the `LOG_LEVEL` environment variable.
 
+### Debugging
+
+If your standard tricks don't get you anywhere, setting the logLevel to `debug` and increasing the timeout doesn't help and you don't know where else to look, it could be that the binaries we use to do much of the Pact magic aren't starting as expected.
+
+Try starting the mock service manually and seeing if it comes up. When submitting a bug report, it would be worth running these commands before hand as it will greatly help us:
+
+```
+./node_modules/.bin/pact-mock-service
+```
+
+...and also the verifier (it will whinge about missing params, but that means it works):
+
+```
+./node_modules/.bin/pact-provider-verifier
+```
+
 ## Troubleshooting / FAQs
 
 If you are having issues, a good place to start is setting `logLevel: 'debug'` when configuring the `new Pact({...})` object. This will give you detailed in/out requests as far as Pact sees them during verification.
+
+### Corporate Proxies / Firewalls
+
+If you're on a corporate machine, it's common for all network calls to route through a proxy - even requests that go to your own machine!
+
+The symptom presents as follows:
+
+1. The mock server starts up correctly, as shown by a debug level log message such as this:
+
+   ```
+   [2021-11-22 11:16:01.214 +0000] DEBUG (3863 on Matts-iMac): pact-core@11.0.1: INFO  WEBrick::HTTPServer#start: pid=3864 port=50337
+   ```
+
+2. You receive a conflicting message such as "The pact mock service doesn't appear to be running" and the tests never run or any before all blocks fail to complete.
+
+The problem is that the Pact framework attempts to ensure the mock service can be communicated with before the tests run. It does so via an HTTP call, which will be sent via any intermediate proxies if configured. The proxy is unlikely to know how send the request back to your machine, which results in a timeout or error.
+
+This may be resolved by ensuring the `http_proxy` and `no_proxy` directives are correctly set (usually, by excluding the address of the mock server such as `localhost` or `127.0.0.1`).
 
 ### Alpine + Docker
 
@@ -1365,22 +1431,6 @@ You'll need to add the additional header `Access-Control-Expose-Headers`, this w
 ```
 
 See [this issue](https://github.com/angular/angular/issues/13554) for background.
-
-### Debugging
-
-If your standard tricks don't get you anywhere, setting the logLevel to `debug` and increasing the timeout doesn't help and you don't know where else to look, it could be that the binaries we use to do much of the Pact magic aren't starting as expected.
-
-Try starting the mock service manually and seeing if it comes up. When submitting a bug report, it would be worth running these commands before hand as it will greatly help us:
-
-```
-./node_modules/.bin/pact-mock-service
-```
-
-...and also the verifier (it will whinge about missing params, but that means it works):
-
-```
-./node_modules/.bin/pact-provider-verifier
-```
 
 ## Contributing
 

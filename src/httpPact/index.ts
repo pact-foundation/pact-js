@@ -3,7 +3,7 @@ import * as path from 'path';
 import clc from 'cli-color';
 import process from 'process';
 import { isEmpty } from 'lodash';
-import { Server } from '@pact-foundation/pact-core/src/server';
+import { Server, ServerOptions } from '@pact-foundation/pact-core/src/server';
 
 import { Interaction, InteractionObject } from '../dsl/interaction';
 import { isPortAvailable } from '../common/net';
@@ -13,6 +13,16 @@ import { LogLevel, PactOptions, PactOptionsComplete } from '../dsl/options';
 import VerificationError from '../errors/verificationError';
 import ConfigurationError from '../errors/configurationError';
 import { traceHttpInteractions } from './tracing';
+
+const logErrorNoMockServer = () => {
+  logger.error(
+    "The pact mock service doesn't appear to be running\n" +
+      '  - Please check the logs above to ensure that there are no pact service startup failures\n' +
+      '  - Please check that pact lifecycle methods are called in the correct order (setup() needs to be called before this method)\n' +
+      '  - Please check that your test code waits for the promises returned from lifecycle methods to complete before calling the next one\n' +
+      "  - To learn more about what is happening during your pact run, try setting logLevel: 'DEBUG'"
+  );
+};
 
 /**
  * Creates a new {@link PactProvider}.
@@ -98,6 +108,14 @@ export class Pact {
   public addInteraction(
     interactionObj: InteractionObject | Interaction
   ): Promise<string> {
+    if (!this.mockService) {
+      logErrorNoMockServer();
+      return Promise.reject(
+        new Error(
+          "The pact mock service wasn't running when addInteraction was called"
+        )
+      );
+    }
     if (interactionObj instanceof Interaction) {
       return this.mockService.addInteraction(interactionObj);
     }
@@ -121,6 +139,12 @@ export class Pact {
    * @returns {Promise}
    */
   public verify(): Promise<string> {
+    if (!this.mockService) {
+      logErrorNoMockServer();
+      return Promise.reject(
+        new Error("The pact mock service wasn't running when verify was called")
+      );
+    }
     return this.mockService
       .verify()
       .then(() => this.mockService.removeInteractions())
@@ -157,6 +181,15 @@ export class Pact {
     }
     this.finalized = true;
 
+    if (!this.mockService) {
+      logErrorNoMockServer();
+      return Promise.reject(
+        new Error(
+          "The pact mock service wasn't running when finalize was called"
+        )
+      );
+    }
+
     return this.mockService
       .writePact()
       .then(
@@ -189,6 +222,14 @@ export class Pact {
    * @returns {Promise}
    */
   public writePact(): Promise<string> {
+    if (!this.mockService) {
+      logErrorNoMockServer();
+      return Promise.reject(
+        new Error(
+          "The pact mock service wasn't running when writePact was called"
+        )
+      );
+    }
     return this.mockService.writePact();
   }
 
@@ -199,6 +240,14 @@ export class Pact {
    * @returns {Promise}
    */
   public removeInteractions(): Promise<string> {
+    if (!this.mockService) {
+      logErrorNoMockServer();
+      return Promise.reject(
+        new Error(
+          "The pact mock service wasn't running when removeInteractions was called"
+        )
+      );
+    }
     return this.mockService.removeInteractions();
   }
 
@@ -237,18 +286,9 @@ export class Pact {
 
   private createServer(config: PactOptions) {
     this.server = serviceFactory.createServer({
-      consumer: this.opts.consumer,
-      cors: this.opts.cors,
-      dir: this.opts.dir,
-      host: this.opts.host,
-      log: this.opts.log,
-      pactFileWriteMode: this.opts.pactfileWriteMode,
+      timeout: 30000,
+      ...this.opts,
       port: config.port, // allow to be undefined
-      provider: this.opts.provider,
-      spec: this.opts.spec,
-      ssl: this.opts.ssl,
-      sslcert: this.opts.sslcert,
-      sslkey: this.opts.sslkey,
-    });
+    } as ServerOptions);
   }
 }

@@ -6,10 +6,10 @@
   "scripts": {
     "build": "tsc",
     "clean": "rimraf pacts",
-    "test": "npm run test:consumer && npm run test:publish && npm run test:provider",
+    "test": "npm run test:consumer && npm run pact:publish && npm run test:provider",
     "test:consumer": "nyc --check-coverage --reporter=html --reporter=text-summary mocha consumer/*.spec.ts",
     "test:provider": "nyc --check-coverage --reporter=html --reporter=text-summary mocha -t 20000 provider/*.spec.ts",
-    "test:publish": "node publish.js"
+    "pact:publish": "pact-broker publish ./pacts --consumer-app-version=\"$(npx @pact-foundation/absolute-version)\" --auto-detect-version-properties --broker-base-url=https://test.pact.dius.com.au"
   },
   "author": "",
   "license": "MIT",
@@ -22,7 +22,7 @@
     "@types/node": "^8.0.24",
     "@types/sinon": "^7.0.6",
     "@types/sinon-chai": "^2.7.29",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "lodash": "^4.17.21",

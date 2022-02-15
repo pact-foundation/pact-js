@@ -58,10 +58,10 @@ describe('Pact Verification', () => {
       pactBrokerUrl: 'https://test.pact.dius.com.au/',
 
       // Fetch from broker with given tags
-      consumerVersionTags: ['master'],
+      consumerVersionTags: ['master', 'test', 'prod'],
 
-      // Tag provider with given tags
-      providerVersionTags: ['prod'],
+      // Tag provider version with given tags
+      providerVersionTags: ['master'], // in real code, this would be dynamically set by process.env.GIT_BRANCH
 
       // Find _all_ pacts (not just latest) with tag prod
       //   consumerVersionSelectors: [{
