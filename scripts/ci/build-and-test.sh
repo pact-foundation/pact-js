@@ -7,7 +7,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 npm ci
 
-npm run dist
+# npm run dist
 
 export PACT_BROKER_USERNAME="dXfltyFMgNOFZAxr8io9wJ37iUpY42M"
 export PACT_BROKER_PASSWORD="O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1"
@@ -34,7 +34,8 @@ for i in examples/*; do
          echo "${contents}" > package.json
     # npm ci does not work because we have just changed the package.json file
     npm install
-    npm test
+    find . -name pact-broker
+    # npm test
     popd
   fi
 done
