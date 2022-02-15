@@ -62,7 +62,7 @@ export interface PactV3Options {
 //   );
 // };
 
-const matcherValueOrString = (obj: any): string => {
+const matcherValueOrString = (obj: unknown): string => {
   if (typeof obj === 'string') return obj;
 
   return JSON.stringify(obj);
@@ -365,7 +365,7 @@ export class PactV3 {
 
     forEachObjIndexed((v, k) => {
       if (isArray(v)) {
-        (v as any[]).forEach((vv, i) => {
+        (v as unknown[]).forEach((vv, i) => {
           this.interaction.withQuery(k, i, matcherValueOrString(vv));
         });
       } else {
