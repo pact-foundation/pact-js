@@ -23,7 +23,7 @@ const branch =
 
 new Publisher({
   pactFilesOrDirs: [resolve(process.cwd(), 'pact/pacts')],
-  pactBroker: 'https://test.pact.dius.com.au',
+  pactBroker: 'https://test.pactflow.io',
   pactBrokerUsername: 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
   pactBrokerPassword: 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
   tags: [(branch as string) || 'master'],
@@ -36,7 +36,7 @@ new Publisher({
         `Pact contract for consumer version ${consumerVersion} published!`
       );
       console.log('');
-      console.log('Head over to https://test.pact.dius.com.au/ and login with');
+      console.log('Head over to https://test.pactflow.io/ and login with');
       console.log('=> Username: dXfltyFMgNOFZAxr8io9wJ37iUpY42M');
       console.log('=> Password: O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1');
       console.log('to see your published contracts.');

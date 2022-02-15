@@ -18,7 +18,7 @@ describe('Pact Verification', () => {
       // Local pacts
       // pactUrls: [path.resolve(process.cwd(), "./pacts/graphqlconsumer-graphqlprovider.json")],
       pactBrokerPassword: 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
-      pactBrokerUrl: 'https://test.pact.dius.com.au/',
+      pactBrokerUrl: 'https://test.pactflow.io/',
       pactBrokerUsername: 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
       provider: 'GraphQLProvider',
       providerBaseUrl: 'http://localhost:4000/graphql',
