@@ -20,6 +20,7 @@
   "devDependencies": {
     "@pact-foundation/absolute-version": "0.0.4",
     "@pact-foundation/pact": "^9.16.0",
+    "@pact-foundation/pact-node": "^10.17.1",
     "aws-sdk": "^2.814.0",
     "chai": "^3.5.0",
     "lodash": "^4.17.21",
