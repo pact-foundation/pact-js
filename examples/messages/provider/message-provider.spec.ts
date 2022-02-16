@@ -33,7 +33,7 @@ describe('Message provider tests', () => {
       ? undefined
       : 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
     publishVerificationResult: true,
-    consumerVersionTags: ['master', 'test', 'prod'],
+    consumerVersionTags: ['test'],
   });
 
   describe('send a dog event', () => {

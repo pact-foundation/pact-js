@@ -9,13 +9,13 @@
     "test": "npm run test:consumer && npm run test:publish && npm run test:provider",
     "test:consumer": "nyc --check-coverage --reporter=html --reporter=text-summary mocha consumer/*.spec.ts",
     "test:provider": "nyc --check-coverage --reporter=html --reporter=text-summary mocha -t 20000 provider/*.spec.ts",
-    "test:publish": "./node_modules/.bin/pact-broker publish ./pacts --consumer-app-version=\"$(npx @pact-foundation/absolute-version)\" --auto-detect-version-properties --broker-base-url=https://test.pactflow.io --broker-username dXfltyFMgNOFZAxr8io9wJ37iUpY42M --broker-password O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1"
+    "test:publish": "./node_modules/.bin/pact-broker publish ./pacts --consumer-app-version=\"$(npx @pact-foundation/absolute-version)\" --auto-detect-version-properties --tag test --broker-base-url=https://test.pactflow.io --broker-username dXfltyFMgNOFZAxr8io9wJ37iUpY42M --broker-password O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1"
   },
   "author": "",
   "license": "MIT",
   "devDependencies": {
     "@pact-foundation/absolute-version": "0.0.4",
-    "@pact-foundation/pact": "^9.16.0",
+    "@pact-foundation/pact": "10.0.0-beta.54",
     "@pact-foundation/pact-node": "^10.17.1",
     "@types/chai": "^4.0.3",
     "@types/chai-as-promised": "0.0.31",
