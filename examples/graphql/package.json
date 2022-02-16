@@ -6,9 +6,9 @@
   "scripts": {
     "build": "tsc",
     "clean": "rimraf pacts",
-    "test": "npm run clean && npm run test:consumer && npm run pact:publish && npm run test:provider",
+    "test": "npm run clean && npm run test:consumer && npm run test:publish && npm run test:provider",
     "test:consumer": "nyc --reporter=text-summary mocha src/consumer.spec.ts",
-    "pact:publish": "pact-broker publish ./pacts --consumer-app-version=\"$(npx @pact-foundation/absolute-version)\" --auto-detect-version-properties --broker-base-url=https://test.pact.dius.com.au",
+    "test:publish": "pact-broker publish ./pacts --consumer-app-version=\"$(npx @pact-foundation/absolute-version)\" --auto-detect-version-properties --broker-base-url=https://test.pactflow.io --broker-username dXfltyFMgNOFZAxr8io9wJ37iUpY42M --broker-password O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
     "test:provider": "nyc --reporter=text-summary mocha -t 30000 src/provider.spec.ts"
   },
   "keywords": [
@@ -21,6 +21,7 @@
   "devDependencies": {
     "@pact-foundation/absolute-version": "0.0.4",
     "@pact-foundation/pact": "^9.16.0",
+    "@pact-foundation/pact-node": "^10.17.1",
     "@types/chai": "^4.2.0",
     "@types/chai-as-promised": "0.0.31",
     "@types/express-graphql": "0.8.0",

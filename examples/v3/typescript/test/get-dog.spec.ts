@@ -30,6 +30,7 @@ describe('The Dog API', () => {
         .given('I have a list of dogs')
         .uponReceiving('a request for all dogs with the builder pattern')
         .withRequest({
+          method: 'GET',
           path: '/dogs',
           query: { from: 'today' },
           headers: { Accept: 'application/json' },

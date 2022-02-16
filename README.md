@@ -545,7 +545,7 @@ The easiest way to publish pacts to the broker is via an npm script in your pack
 
 ```
 
-   "pact:publish": "pact-broker publish <YOUR_PACT_FILES_OR_DIR> --consumer-app-version=\"$(npx @pact-foundation/absolute-version)\" --auto-detect-version-properties --broker-base-url=https://your-broker-url.example.com"
+   "test:publish": "./node_modules/.bin/pact-broker publish <YOUR_PACT_FILES_OR_DIR> --consumer-app-version=\"$(npx @pact-foundation/absolute-version)\" --auto-detect-version-properties --broker-base-url=https://your-broker-url.example.com"
 ```
 
 For a full list of the options, see the [CLI usage instructions](https://github.com/pact-foundation/pact-ruby-standalone/releases).
@@ -582,7 +582,7 @@ new Publisher(opts)
 | -------------------- | :------: | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `providerBaseUrl`    | `false`  | string           | Running API provider host endpoint.                                                                                                                         |
 | `pactFilesOrDirs`    |  `true`  | array of strings | Array of local Pact files or directories containing pact files. Path must be absolute. Required.                                                            |
-| `pactBroker`         |  `true`  | string           | The base URL of the Pact Broker. eg. https://test.pact.dius.com.au. Required.                                                                               |
+| `pactBroker`         |  `true`  | string           | The base URL of the Pact Broker. eg. https://test.pactflow.io. Required.                                                                               |
 | `pactBrokerToken`    | `false`  | string           | Bearer token for Pact Broker authentication. Optional. If using Pactflow, you likely need this option                                                       |
 | `pactBrokerUsername` | `false`  | string           | Username for Pact Broker basic authentication. Optional. If using Pactflow, you most likely need to use `pactBrokerToken`                                   |
 | `pactBrokerPassword` | `false`  | string           | Password for Pact Broker basic authentication. Optional. If using Pactflow, you most likely need to use `pactBrokerToken`                                   |

@@ -2,7 +2,12 @@ const path = require('path');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const expect = chai.expect;
-const { PactV3, MatchersV3, XmlBuilder } = require('../../../../dist/v3');
+const {
+  PactV3,
+  MatchersV3,
+  XmlBuilder,
+  SpecificationVersion,
+} = require('../../../../dist/v3');
 const LOG_LEVEL = process.env.LOG_LEVEL || 'WARN';
 
 chai.use(chaiAsPromised);
@@ -52,7 +57,10 @@ describe('Pact V3', () => {
   // API we don't care about
   const animalBodyExpectation = {
     id: integer(1),
-    available_from: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
+    available_from: datetime(
+      "yyyy-MM-dd'T'HH:mm:ss.SSSX",
+      '2016-02-11T09:46:56.023Z'
+    ),
     first_name: string('Billy'),
     last_name: string('Goat'),
     animal: string('goat'),
@@ -91,6 +99,8 @@ describe('Pact V3', () => {
     consumer: 'Matching Service V3',
     provider: 'Animal Profile Service V3',
     dir: path.resolve(process.cwd(), 'pacts'),
+    spec: SpecificationVersion.SPECIFICATION_VERSION_V3,
+    logLevel: LOG_LEVEL,
     cors: true,
   });
 
@@ -106,6 +116,7 @@ describe('Pact V3', () => {
           .given('is not authenticated')
           .uponReceiving('a request for all animals')
           .withRequest({
+            method: 'GET',
             path: '/animals/available',
           })
           .willRespondWith({
@@ -129,6 +140,7 @@ describe('Pact V3', () => {
             .given('Has some animals')
             .uponReceiving('a request for all animals')
             .withRequest({
+              method: 'GET',
               path: '/animals/available',
               headers: { Authorization: 'Bearer token' },
             })
@@ -160,6 +172,7 @@ describe('Pact V3', () => {
             .given('Has some animals')
             .uponReceiving('a request for all animals filtered by query')
             .withRequest({
+              method: 'GET',
               path: '/animals/available',
               headers: { Authorization: 'Bearer token' },
               query: {
@@ -174,7 +187,10 @@ describe('Pact V3', () => {
               body: [
                 {
                   id: integer(1),
-                  available_from: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
+                  available_from: datetime(
+                    "yyyy-MM-dd'T'HH:mm:ss.SSSX",
+                    '2016-02-11T09:46:56.023Z'
+                  ),
                   first_name: string('Billy'),
                   last_name: string('Goat'),
                   animal: string('goat'),
@@ -210,6 +226,7 @@ describe('Pact V3', () => {
               'a request for all animals filtered by a query containing chinese characters'
             )
             .withRequest({
+              method: 'GET',
               path: '/animals/available',
               headers: { Authorization: 'Bearer token' },
               query: {
@@ -224,7 +241,10 @@ describe('Pact V3', () => {
               body: [
                 {
                   id: integer(1),
-                  available_from: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
+                  available_from: datetime(
+                    "yyyy-MM-dd'T'HH:mm:ss.SSSX",
+                    '2016-02-11T09:46:56.023Z'
+                  ),
                   first_name: string('比利'),
                   last_name: string('Goat'),
                   animal: string('goat'),
@@ -260,6 +280,7 @@ describe('Pact V3', () => {
               'a request for all animals filtered by a query containing devanagari characters'
             )
             .withRequest({
+              method: 'GET',
               path: '/animals/available',
               headers: { Authorization: 'Bearer token' },
               query: {
@@ -274,7 +295,10 @@ describe('Pact V3', () => {
               body: [
                 {
                   id: integer(1),
-                  available_from: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
+                  available_from: datetime(
+                    "yyyy-MM-dd'T'HH:mm:ss.SSSX",
+                    '2016-02-11T09:46:56.023Z'
+                  ),
                   first_name: string('बिल्ली'),
                   last_name: string('Goat'),
                   animal: string('goat'),
@@ -319,6 +343,7 @@ describe('Pact V3', () => {
           })
           .uponReceiving('a request for an animal with an ID')
           .withRequest({
+            method: 'GET',
             path: regex('/animals/[0-9]+', '/animals/100'),
             headers: { Authorization: 'Bearer token' },
           })
@@ -376,6 +401,7 @@ describe('Pact V3', () => {
           })
           .uponReceiving('a request for an animal as text with an ID')
           .withRequest({
+            method: 'GET',
             path: regex('/animals/[0-9]+', '/animals/100'),
             headers: {
               Authorization: 'Bearer token',
@@ -448,6 +474,7 @@ describe('Pact V3', () => {
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
           },
+          contentType: 'application/x-www-form-urlencoded',
         })
         .willRespondWith({
           status: 200,
@@ -478,6 +505,7 @@ describe('Pact V3', () => {
         .given('Has some animals')
         .uponReceiving('a request to get animals as XML')
         .withRequest({
+          method: 'GET',
           path: '/animals/available/xml',
           headers: { Authorization: 'Bearer token' },
         })
@@ -489,7 +517,10 @@ describe('Pact V3', () => {
           body: new XmlBuilder('1.0', 'UTF-8', 'animals').build((el) => {
             el.eachLike('lion', {
               id: integer(1),
-              available_from: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
+              available_from: datetime(
+                "yyyy-MM-dd'T'HH:mm:ss.SSSX",
+                '2016-02-11T09:46:56.023Z'
+              ),
               first_name: string('Slinky'),
               last_name: string('Malinky'),
               age: integer(27),
@@ -497,7 +528,10 @@ describe('Pact V3', () => {
             });
             el.eachLike('goat', {
               id: integer(3),
-              available_from: datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
+              available_from: datetime(
+                "yyyy-MM-dd'T'HH:mm:ss.SSSX",
+                '2016-02-11T09:46:56.023Z'
+              ),
               first_name: string('Head'),
               last_name: string('Butts'),
               age: integer(27),

@@ -110,7 +110,7 @@ curl -H "Authorization: Bearer 1234" -X GET http://localhost:8080/suggestions/1
 
 ## Viewing contracts with the Pact Broker
 
-A test [Pact Broker](https://github.com/bethesque/pact_broker) is running at https://test.pact.dius.com.au:
+A test [Pact Broker](https://github.com/bethesque/pact_broker) is running at https://test.pactflow.io:
 
 - Username: `dXfltyFMgNOFZAxr8io9wJ37iUpY42M`
 - Password: `O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1`
@@ -118,7 +118,7 @@ A test [Pact Broker](https://github.com/bethesque/pact_broker) is running at htt
 Or use the API:
 
 ```
-curl -v -u 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M:O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1' https://test.pact.dius.com.au
+curl -v -u 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M:O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1' https://test.pactflow.io
 ```
 
 ## Running with Vagrant

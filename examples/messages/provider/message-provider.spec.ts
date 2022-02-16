@@ -25,11 +25,15 @@ describe('Message provider tests', () => {
     // For local validation
     // pactUrls: [path.resolve(process.cwd(), "pacts", "myjsmessageconsumer-myjsmessageprovider.json")],
     // Broker validation
-    pactBrokerUrl: 'https://test.pact.dius.com.au/',
-    pactBrokerUsername: 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
-    pactBrokerPassword: 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
+    pactBrokerUrl: 'https://test.pactflow.io/',
+    pactBrokerUsername: process.env.PACT_BROKER_USERNAME
+      ? undefined
+      : 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
+    pactBrokerPassword: process.env.PACT_BROKER_PASSWORD
+      ? undefined
+      : 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
     publishVerificationResult: true,
-    consumerVersionTags: ['master', 'test', 'prod'],
+    consumerVersionTags: ['test'],
   });
 
   describe('send a dog event', () => {

@@ -44,10 +44,30 @@ describe('xml element', () => {
       const xml = new XmlElement('my name')
         .appendText(MatchersV3.string('string matcher'))
         .appendText(MatchersV3.regex(/^.*$/, 'regex matcher'))
-        .appendText(MatchersV3.date('yyyy-MM-dd HH:mm:ss.SSSX'))
-        .appendText(MatchersV3.datetime('yyyy-MM-dd HH:mm:ss.SSSX'))
-        .appendText(MatchersV3.timestamp('yyyy-MM-dd HH:mm:ss.SSSX'))
-        .appendText(MatchersV3.time('yyyy-MM-dd HH:mm:ss.SSSX'))
+        .appendText(
+          MatchersV3.date(
+            'yyyy-MM-dd HH:mm:ss.SSSX',
+            '2016-02-11T09:46:56.023Z'
+          )
+        )
+        .appendText(
+          MatchersV3.datetime(
+            'yyyy-MM-dd HH:mm:ss.SSSX',
+            '2016-02-11T09:46:56.023Z'
+          )
+        )
+        .appendText(
+          MatchersV3.timestamp(
+            'yyyy-MM-dd HH:mm:ss.SSSX',
+            '2016-02-11T09:46:56.023Z'
+          )
+        )
+        .appendText(
+          MatchersV3.time(
+            'yyyy-MM-dd HH:mm:ss.SSSX',
+            '2016-02-11T09:46:56.023Z'
+          )
+        )
         .appendText(MatchersV3.uuid('adc214d3-1c9f-460d-b6c8-8f2bc8911860'));
       expect(xml, 'XML element').to.have.property('name');
       expect(xml.name, 'name of XML element').to.equal('my name');

@@ -4,12 +4,12 @@
   "description": "Pact JS E2E Example",
   "scripts": {
     "test": "npm run test:consumer && npm run test:publish && npm run test:provider",
-    "test:consumer": "./node_modules/.bin/mocha test/consumer.spec.js",
-    "test:publish": "node test/publish.js",
-    "test:provider": "./node_modules/.bin/mocha test/provider.spec.js",
+    "test:consumer": "mocha test/consumer.spec.js",
+    "test:publish": "pact-broker publish ./pacts --consumer-app-version=\"$(npx @pact-foundation/absolute-version)\" --auto-detect-version-properties --broker-base-url=https://test.pactflow.io --broker-username dXfltyFMgNOFZAxr8io9wJ37iUpY42M --broker-password O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
+    "test:provider": "mocha test/provider.spec.js",
     "can-i-deploy": "npm run can-i-deploy:consumer && npm run can-i-deploy:provider",
-    "can-i-deploy:consumer": "pact-broker can-i-deploy --pacticipant 'Matching Service' --latest --broker-base-url https://test.pact.dius.com.au --broker-username dXfltyFMgNOFZAxr8io9wJ37iUpY42M --broker-password O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
-    "can-i-deploy:provider": "pact-broker can-i-deploy --pacticipant 'Animal Profile Service' --latest --broker-base-url https://test.pact.dius.com.au --broker-username dXfltyFMgNOFZAxr8io9wJ37iUpY42M --broker-password O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
+    "can-i-deploy:consumer": "pact-broker can-i-deploy --pacticipant 'Matching Service' --latest --broker-base-url https://test.pactflow.io --broker-username dXfltyFMgNOFZAxr8io9wJ37iUpY42M --broker-password O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
+    "can-i-deploy:provider": "pact-broker can-i-deploy --pacticipant 'Animal Profile Service' --latest --broker-base-url https://test.pactflow.io --broker-username dXfltyFMgNOFZAxr8io9wJ37iUpY42M --broker-password O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
     "api": "concurrently 'npm run provider' 'npm run consumer'",
     "consumer": "node ./consumerService.js",
     "provider": "node ./providerService.js"
@@ -18,7 +18,8 @@
   "license": "MIT",
   "devDependencies": {
     "@pact-foundation/absolute-version": "0.0.4",
-    "@pact-foundation/pact": "10.0.0-beta.44",
+    "@pact-foundation/pact": "10.0.0-beta.54",
+    "@pact-foundation/pact-node": "^10.17.1",
     "body-parser": "^1.18.3",
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",

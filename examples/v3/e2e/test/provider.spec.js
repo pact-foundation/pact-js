@@ -9,7 +9,7 @@ server.listen(8081, () => {
   console.log('Animal Profile Service listening on http://localhost:8081');
 });
 
-const pactBroker = 'https://test.pact.dius.com.au';
+const pactBroker = 'https://test.pactflow.io';
 
 // Verify that the provider meets all consumer expectations
 describe('Pact Verification', () => {
@@ -81,7 +81,7 @@ describe('Pact Verification', () => {
       enablePending: true,
 
       // Specific Remote pacts (doesn't need to be a broker)
-      // pactUrls: ['https://test.pact.dius.com.au/pacts/provider/Animal%20Profile%20Service/consumer/Matching%20Service/latest'],
+      // pactUrls: ['https://test.pactflow.io/pacts/provider/Animal%20Profile%20Service/consumer/Matching%20Service/latest'],
       // Local pacts
       // pactUrls: [
       //   path.resolve(
@@ -90,8 +90,12 @@ describe('Pact Verification', () => {
       //   ),
       // ],
 
-      pactBrokerUsername: 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
-      pactBrokerPassword: 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
+      pactBrokerUsername: process.env.PACT_BROKER_USERNAME
+        ? undefined
+        : 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
+      pactBrokerPassword: process.env.PACT_BROKER_PASSWORD
+        ? undefined
+        : 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
       publishVerificationResult: true,
       providerVersion: '1.0.0',
     })

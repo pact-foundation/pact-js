@@ -6,27 +6,21 @@ set -x
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 npm ci
-git checkout native
+
 npm run dist
-npm run build:v3
+cp package.json ./dist
 
 export PACT_BROKER_USERNAME="dXfltyFMgNOFZAxr8io9wJ37iUpY42M"
 export PACT_BROKER_PASSWORD="O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1"
 
 "${DIR}"/lib/prepare-release.sh
 
-# Copy Rust native lib
-echo "    Copying ./native => dist/native"
-mkdir -p dist/native && cp -r native dist/
-rm -rf dist/native/target
-
-
 cp package-lock.json dist
 echo "This will be version '$(npx @pact-foundation/absolute-version)'"
 
 # Link the build so that the examples are always testing the
 # current build, in it's properly exported format
-(cd dist && npm ci && npm link)
+(cd dist && npm ci)
 
 echo "Running e2e examples build for node version $(node --version)"
 for i in examples/*; do
@@ -35,7 +29,14 @@ for i in examples/*; do
   if [[ "$i" =~ "karma" ]]; then
     (cd "$i" && npm ci && npm test)
   else
-    (cd "$i" &&  npm ci && npm link @pact-foundation/pact --legacy-peer-deps && npm test)
+    pushd "$i"
+    # replace pact dependency with locally build version
+    contents="$(jq '.devDependencies."@pact-foundation/pact" = "file:../../dist"' package.json)" && \
+         echo "${contents}" > package.json
+    # npm ci does not work because we have just changed the package.json file
+    npm install
+    npm test
+    popd
   fi
 done
 
@@ -59,10 +60,11 @@ for i in examples/v3/*; do
   echo "------------> continuing to test V3 example project: $i"
   node --version
   pushd "$i"
-  npm ci
-  rm -rf "node_modules/@pact-foundation/pact"
-  echo "linking pact"
-  npm link @pact-foundation/pact
+  # replace pact dependency with locally build version
+  contents="$(jq '.devDependencies."@pact-foundation/pact" = "file:../../../dist"' package.json)" && \
+     echo "${contents}" > package.json
+  # npm ci does not work because we have just changed the package.json file
+  npm install
   npm test
   popd
 done

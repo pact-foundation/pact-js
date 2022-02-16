@@ -1,7 +1,5 @@
 npm ci
-git checkout native
 npm run dist
-git checkout native
 npm run build:v3
 Copy-Item "package.json" -Destination "dist"
 Copy-Item "package-lock.json" -Destination "dist"

@@ -9,12 +9,16 @@ const {
 
 describe('Account Service', () => {
   beforeAll((done) => accountService.listen(8081, done));
-  afterAll((done) => accountService.close(done));
+  afterAll((done) => {
+    console.log('closing server!');
+    accountService.close(done);
+  });
 
   it('validates the expectations of Transaction Service', () => {
     let opts = {
       provider: 'Account Service',
       providerBaseUrl: 'http://localhost:8081',
+      logLevel: 'trace',
       stateHandlers: {
         'Account Test001 exists': {
           setup: (params) => {
