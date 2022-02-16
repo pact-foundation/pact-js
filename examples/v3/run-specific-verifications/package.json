@@ -4,7 +4,7 @@
   "description": "Pact JS E2E Example",
   "scripts": {
     "test": "npm run test:provider",
-    "test:provider": "./node_modules/.bin/mocha test/provider.spec.js"
+    "test:provider": "mocha test/provider.spec.js"
   },
   "author": "artur@jankaritech.com",
   "license": "MIT",
