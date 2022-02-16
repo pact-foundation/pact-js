@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.56](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.55...v10.0.0-beta.56) (2022-02-16)
+
+
+### Fixes and Improvements
+
+* bump version of core, remove rust from builds ([157d14b](https://github.com/pact-foundation/pact-js/commit/157d14b859fe630db4a5e65890e2c68c5c12aab6))
+
 ## [10.0.0-beta.55](https://github.com/pact-foundation/pact-js/compare/v9.17.2...v10.0.0-beta.55) (2022-02-16)
 
 
