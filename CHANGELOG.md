@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.58](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.57...v10.0.0-beta.58) (2022-02-23)
+
+
+### Fixes and Improvements
+
+* pin to latest beta version of core in examples ([d92c793](https://github.com/pact-foundation/pact-js/commit/d92c793fca7bf354ca8e275bf3b936111bd4eaad))
+
 ## [10.0.0-beta.57](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.56...v10.0.0-beta.57) (2022-02-23)
 
 
