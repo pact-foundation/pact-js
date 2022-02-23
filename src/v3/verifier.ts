@@ -1,4 +1,7 @@
-import { ConsumerVersionSelector , VerifierOptions as PactCoreVerifierOptions } from '@pact-foundation/pact-core';
+import {
+  ConsumerVersionSelector,
+  VerifierOptions as PactCoreVerifierOptions,
+} from '@pact-foundation/pact-core';
 
 import logger from '../common/logger';
 import { ProxyOptions } from '../dsl/verifier/proxy/types';
