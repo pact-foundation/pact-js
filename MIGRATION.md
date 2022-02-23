@@ -1,5 +1,12 @@
 # Pact-js migration guide
 
+# beta.56
+
+Migrates to a new handle based verifier. This adds several layers of improvement, including better error handling/response output (which will be added in later versions).
+
+* Drop support for migrating `disableSSLVerification` (correct field is `disableSslVerification`)
+* Handle based verifier doesn't support environment variables (i.e. `PACT_BROKER_*`)
+
 This guide is for migrating to a new version of pact-js.
 # beta.52
 
