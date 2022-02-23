@@ -19,10 +19,10 @@ describe('Pact Verification', () => {
       // pactUrls: [path.resolve(process.cwd(), "./pacts/graphqlconsumer-graphqlprovider.json")],
       pactBrokerUrl: 'https://test.pactflow.io/',
       pactBrokerUsername: process.env.PACT_BROKER_USERNAME
-        ? undefined
+        ? process.env.PACT_BROKER_USERNAME
         : 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
       pactBrokerPassword: process.env.PACT_BROKER_PASSWORD
-        ? undefined
+        ? process.env.PACT_BROKER_PASSWORD
         : 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
       provider: 'GraphQLProvider',
       providerBaseUrl: 'http://localhost:4000/graphql',

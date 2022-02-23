@@ -56,10 +56,10 @@ export class PactProviderConfigOptionsService
       providerVersionTags: ['master'], // in real code, this would be dynamically set by process.env.GIT_BRANCH
       enablePending: true,
       pactBrokerUsername: process.env.PACT_BROKER_USERNAME
-        ? undefined
+        ? process.env.PACT_BROKER_USERNAME
         : 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
       pactBrokerPassword: process.env.PACT_BROKER_PASSWORD
-        ? undefined
+        ? process.env.PACT_BROKER_PASSWORD
         : 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
       publishVerificationResult: true,
       // Your version numbers need to be unique for every different version of your provider

@@ -27,10 +27,10 @@ describe('Message provider tests', () => {
     // Broker validation
     pactBrokerUrl: 'https://test.pactflow.io/',
     pactBrokerUsername: process.env.PACT_BROKER_USERNAME
-      ? undefined
+      ? process.env.PACT_BROKER_USERNAME
       : 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
     pactBrokerPassword: process.env.PACT_BROKER_PASSWORD
-      ? undefined
+      ? process.env.PACT_BROKER_PASSWORD
       : 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
     publishVerificationResult: true,
     consumerVersionTags: ['test'],
