@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.57](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.56...v10.0.0-beta.57) (2022-02-23)
+
+
+### Fixes and Improvements
+
+* core now supports env vars if option not explicitly set ([bf69903](https://github.com/pact-foundation/pact-js/commit/bf699033e176ce5f67917cf12317a95e09e9b41c))
+* formatting ([9c5bdf1](https://github.com/pact-foundation/pact-js/commit/9c5bdf184194dab60b0f82a415cc01c04666bfd1))
+* new verifier doesn't support env vars ([dfc01b6](https://github.com/pact-foundation/pact-js/commit/dfc01b65ff8571e6598e5b24651aa42d9d29d2fd))
+* node gyp not working on windows ([a6b1d88](https://github.com/pact-foundation/pact-js/commit/a6b1d8874be41967bdb2150bdb6e28034881dc00))
+* remove deprecated v3 beta property ([75fc76c](https://github.com/pact-foundation/pact-js/commit/75fc76c3d48ccaa9be61934dbedd122219f21ef4))
+* update to latest beta core ([fff279f](https://github.com/pact-foundation/pact-js/commit/fff279f347ba3a0152108520316364d7517b2726))
+* update to latest beta core ([7a82ad9](https://github.com/pact-foundation/pact-js/commit/7a82ad90675ccd338f12aea69606e90fecf43ca4))
+* update to latest beta core ([cbb4b07](https://github.com/pact-foundation/pact-js/commit/cbb4b0736e8fedd8dfed5d68ce30b59106b6e187))
+
 ## [10.0.0-beta.56](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.55...v10.0.0-beta.56) (2022-02-16)
 
 
