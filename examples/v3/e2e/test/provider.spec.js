@@ -90,12 +90,10 @@ describe('Pact Verification', () => {
       //   ),
       // ],
 
-      pactBrokerUsername: process.env.PACT_BROKER_USERNAME
-        ? process.env.PACT_BROKER_USERNAME
-        : 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
-      pactBrokerPassword: process.env.PACT_BROKER_PASSWORD
-        ? process.env.PACT_BROKER_PASSWORD
-        : 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
+      pactBrokerUsername:
+        process.env.PACT_BROKER_USERNAME || 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
+      pactBrokerPassword:
+        process.env.PACT_BROKER_PASSWORD || 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
       publishVerificationResult: true,
       providerVersion: '1.0.0',
     })

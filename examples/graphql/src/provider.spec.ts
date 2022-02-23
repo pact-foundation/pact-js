@@ -18,12 +18,10 @@ describe('Pact Verification', () => {
       // Local pacts
       // pactUrls: [path.resolve(process.cwd(), "./pacts/graphqlconsumer-graphqlprovider.json")],
       pactBrokerUrl: 'https://test.pactflow.io/',
-      pactBrokerUsername: process.env.PACT_BROKER_USERNAME
-        ? process.env.PACT_BROKER_USERNAME
-        : 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
-      pactBrokerPassword: process.env.PACT_BROKER_PASSWORD
-        ? process.env.PACT_BROKER_PASSWORD
-        : 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
+      pactBrokerUsername:
+        process.env.PACT_BROKER_USERNAME || 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
+      pactBrokerPassword:
+        process.env.PACT_BROKER_PASSWORD || 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
       provider: 'GraphQLProvider',
       providerBaseUrl: 'http://localhost:4000/graphql',
       // Your version numbers need to be unique for every different version of your provider
