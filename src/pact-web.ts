@@ -74,6 +74,10 @@ export class PactWeb {
 
     this.opts = { ...defaults, ...config } as PactWebOptionsComplete
 
+    if (this.opts.spec !== 2) {
+      throw new Error("Pact-web only supports pact spec version 2")
+    }
+
     console.info(
       `Setting up Pact using mock service on port: "${this.opts.port}"`
     )
