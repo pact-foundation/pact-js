@@ -42,6 +42,7 @@ Read [Getting started with Pact] for more information for beginners.
   - [HTTP API Testing](#http-api-testing)
     - [Consumer Side Testing](#consumer-side-testing)
       - [API](#api)
+      - [Constructor](#constructor)
       - [Example](#example)
     - [Provider API Testing](#provider-api-testing)
       - [Verification Options](#verification-options)
@@ -156,8 +157,6 @@ The `Pact` class provides the following high-level APIs, they are listed in the 
 
 #### API
 
-<details><summary>Consumer API</summary>
-
 | API                 | Options                       | Returns   | Description                                                                                                                                                                                                                                                  |
 | ------------------- | ----------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `new Pact(options)` | See constructor options below | `Object`  | Creates a Mock Server test double of your Provider API. If you need multiple Providers for a scenario, you can create as many as these as you need.                                                                                                          |
@@ -166,9 +165,7 @@ The `Pact` class provides the following high-level APIs, they are listed in the 
 | `verify()`          | n/a                           | `Promise` | Verifies that all interactions specified. This should be called once per test, to ensure your expectations were correct                                                                                                                                      |
 | `finalize()`        | n/a                           | `Promise` | Records the interactions registered to the Mock Server into the pact file and shuts it down. You would normally call this only once in an `afterAll(...)` type clause.                                                                                       |
 
-</details>
-
-<details><summary>Constructor</summary>
+#### Constructor
 
 | Parameter           | Required? | Type    | Description                                                                                              |
 | ------------------- | --------- | ------- | -------------------------------------------------------------------------------------------------------- |
@@ -186,8 +183,6 @@ The `Pact` class provides the following high-level APIs, they are listed in the 
 | `cors`              | no        | boolean | Allow CORS OPTION requests to be accepted, defaults to false                                             |
 | `pactfileWriteMode` | no        | string  | Control how the Pact files are written. Choices: 'overwrite' 'update' or 'none'. Defaults to 'overwrite' |
 | `timeout`           | no        | number  | The time to wait for the mock server to start up in milliseconds. Defaults to 30 seconds (30000)         |
-
-</details>
 
 #### Example
 
@@ -289,15 +284,11 @@ describe("Pact", () => {
 
 ### Provider API Testing
 
-<details><summary>Provider API</summary>
-
 Once you have created Pacts for your Consumer, you need to validate those Pacts against your Provider. The Verifier object provides the following API for you to do so:
 
 | API                |  Options  | Returns   | Description           |
 | ------------------ | :-------: | --------- | --------------------- |
 | `verifyProvider()` | See below | `Promise` | Start the Mock Server |
-
-</details>
 
 1.  Start your local Provider service.
 1.  Optionally, instrument your API with ability to configure [provider states](https://github.com/pact-foundation/pact-provider-verifier/)
@@ -316,10 +307,8 @@ new Verifier(opts).verifyProvider().then(function () {
 
 #### Verification Options
 
-<details><summary>Verification Options</summary>
-
 | Parameter                   | Required? | Type                           | Description                                                                                                                                                                                        |
-| --------------------------- | --------- | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- | --------------------------------------------------- |
+| --------------------------- | --------- | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | 
 | `providerBaseUrl`           | true      | string                         | Running API provider host endpoint.                                                                                                                                                                |
 | `pactBrokerUrl`             | false     | string                         | Base URL of the Pact Broker from which to retrieve the pacts. Required if `pactUrls` not given.                                                                                                    |
 | `provider`                  | false     | string                         | Name of the provider if fetching from a Broker                                                                                                                                                     |
@@ -343,8 +332,6 @@ new Verifier(opts).verifyProvider().then(function () {
 | `timeout`                   | false     | number                         | The duration in ms we should wait to confirm verification process was successful. Defaults to 30000.                                                                                               |
 | `format`                    | false     | string                         | What format the verification results are printed in. Options are `json`, `xml`, `progress` and `RspecJunitFormatter` (which is a synonym for `xml`)                                                |
 | `verbose`                   | false     | boolean                        | Enables verbose output for underlying pact binary.                                                                                                                                                 |
-
-</details>
 
 To dynamically retrieve pacts from a Pact Broker for a provider, provide the broker URL, the name of the provider, and the consumer version tags that you want to verify:
 
@@ -581,8 +568,6 @@ new Publisher(opts)
 
 #### Pact publishing options
 
-<details><summary>Publishing Options</summary>
-
 | Parameter            | Required | Type             | Description                                                                                                                                                 |
 | -------------------- | :------: | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `providerBaseUrl`    | `false`  | string           | Running API provider host endpoint.                                                                                                                         |
@@ -593,8 +578,6 @@ new Publisher(opts)
 | `pactBrokerPassword` | `false`  | string           | Password for Pact Broker basic authentication. Optional. If using Pactflow, you most likely need to use `pactBrokerToken`                                   |
 | `consumerVersion`    |  `true`  | string           | The consumer application version; e.g. '1.0.0-cac389f'. ([See more info on versioning](https://docs.pact.io/getting_started/versioning_in_the_pact_broker)) |
 | `tags`               | `false`  | array of strings | Tag your pacts, often used with your branching, release or environment strategy e.g. ['prod', 'test']                                                       |
-
-</details>
 
 If your broker has a self signed certificate, set the environment variable `SSL_CERT_FILE` (or `SSL_CERT_DIR`) pointing to a copy of your certificate.
 
@@ -775,8 +758,6 @@ _NOTE: Make sure to start the mock service via the `Pact` declaration with the o
 
 Often times, you find yourself having to re-write regular expressions for common formats. We've created a number of them for you to save you the time:
 
-<details><summary>Matchers API</summary>
-
 | method                      | description                                                                                                                 |
 | --------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | `boolean`                   | Match a boolean value (using equality)                                                                                      |
@@ -793,8 +774,6 @@ Often times, you find yourself having to re-write regular expressions for common
 | `ipv6Address`               | Will match string containing IP6 formatted address                                                                          |
 | `uuid`                      | Will match strings containing UUIDs                                                                                         |
 | `email`                     | Will match strings containing Email address                                                                                 |
-
-</details>
 
 ### Match based on type
 

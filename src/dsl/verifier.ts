@@ -211,7 +211,7 @@ export class Verifier {
 
   private createRequestTracer(): express.RequestHandler {
     return (req, _, next) => {
-      logger.trace("incoming request", removeEmptyRequestProperties(req))
+      logger.debug("incoming request", removeEmptyRequestProperties(req))
       next()
     }
   }
@@ -231,7 +231,7 @@ export class Verifier {
           chunks.push(Buffer.from(chunk))
         }
         const body = Buffer.concat(chunks).toString("utf8")
-        logger.trace(
+        logger.debug(
           "outgoing response",
           removeEmptyResponseProperties(body, res)
         )

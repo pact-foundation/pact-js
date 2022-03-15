@@ -15,7 +15,7 @@
     "@pact-foundation/pact-node": "^10.13.1",
     "@pact-foundation/pact-web": "^9.16.0",
     "chai": "^4.2.0",
-    "karma": "6.3.4",
+    "karma": "6.3.14",
     "karma-chai": "~0.1.0",
     "karma-chrome-launcher": "^3.1.0",
     "karma-jasmine": "^1.1.0",
