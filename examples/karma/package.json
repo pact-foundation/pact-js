@@ -12,8 +12,8 @@
   "license": "MIT",
   "devDependencies": {
     "@pact-foundation/karma-pact": "^3.1.0",
-    "@pact-foundation/pact-node": "^10.13.1",
-    "@pact-foundation/pact-web": "^9.16.0",
+    "@pact-foundation/pact-node": "^10.17.2",
+    "@pact-foundation/pact-web": "^9.17.2",
     "chai": "^4.2.0",
     "karma": "6.3.14",
     "karma-chai": "~0.1.0",
