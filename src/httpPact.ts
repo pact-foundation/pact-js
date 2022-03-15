@@ -65,6 +65,12 @@ export class Pact {
       throw new ConfigurationError("You must specify a Provider for this pact.")
     }
 
+    if (this.opts.spec !== 2) {
+      throw new ConfigurationError(
+        "Pact-js currently only supports pact spec version 2. If you need a higher version of the pact specification, you can try the beta. See instructions here: https://github.com/pact-foundation/pact-js#pact-js-v3"
+      )
+    }
+
     setLogLevel(this.opts.logLevel as LogLevel)
     serviceFactory.logLevel(this.opts.logLevel)
 
