@@ -1,5 +1,5 @@
 /* eslint-disable import/first */
-import { join, toPairs, map, flatten, forEachObjIndexed } from 'ramda';
+import { join, toPairs, map, flatten, forEachObjIndexed, equals } from 'ramda';
 import { makeConsumerPact } from '@pact-foundation/pact-core';
 import {
   ConsumerPact,
@@ -21,6 +21,20 @@ export enum SpecificationVersion {
   SPECIFICATION_VERSION_V2 = 3,
   SPECIFICATION_VERSION_V3 = 4,
 }
+
+const contentTypeFromHeaders = (
+  headers: TemplateHeaders | undefined,
+  defaultContentType: string
+) => {
+  let contentType: string | MatchersV3.Matcher<string> = defaultContentType;
+  forEachObjIndexed((v, k) => {
+    if (`${k}`.toLowerCase() === 'content-type') {
+      contentType = v;
+    }
+  }, headers || {});
+
+  return contentType;
+};
 
 /**
  * Options for the mock server
@@ -226,12 +240,33 @@ export class PactV3 {
 
   // TODO: this currently must be called before other methods, else it won't work
   public given(providerState: string, parameters?: JsonMap): PactV3 {
+    if (parameters) {
+      const json = JSON.stringify(parameters);
+
+      // undefined arguments not supported (invalid JSON)
+      if (json === undefined) {
+        throw new Error(
+          `Invalid provider state parameter received. Parameters must not be undefined. Received: ${parameters}`
+        );
+      }
+
+      // Check nested objects
+      const jsonParsed = JSON.parse(json);
+
+      if (!equals(parameters, jsonParsed)) {
+        throw new Error(
+          `Invalid provider state parameter received. Parameters must not contain undefined values. Received: ${parameters}`
+        );
+      }
+    }
+
+
     this.states.push({ description: providerState, parameters });
     return this;
   }
 
-  public uponReceiving(desc: string): PactV3 {
-    this.interaction = this.pact.newInteraction(desc);
+  public uponReceiving(description: string): PactV3 {
+    this.interaction = this.pact.newInteraction(description);
     this.states.forEach((s) => {
       if (s.parameters) {
         forEachObjIndexed((v, k) => {
@@ -252,7 +287,8 @@ export class PactV3 {
     if (req.body) {
       this.interaction.withRequestBody(
         matcherValueOrString(req.body),
-        req.contentType || 'application/json'
+        req.contentType ||
+          contentTypeFromHeaders(req.headers, 'application/json')
       );
     }
 
@@ -288,7 +324,8 @@ export class PactV3 {
     if (res.body) {
       this.interaction.withResponseBody(
         matcherValueOrString(res.body),
-        res.contentType || 'application/json' // TODO: extract // force correct content-type header?
+        res.contentType ||
+          contentTypeFromHeaders(res.headers, 'application/json') // TODO: extract // force correct content-type header?
       );
     }
     this.states = [];
