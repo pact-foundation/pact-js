@@ -97,7 +97,7 @@
     ]
   },
   "dependencies": {
-    "@pact-foundation/pact-core": "13.4.1-beta.18",
+    "@pact-foundation/pact-core": "^13.6.0",
     "@types/bluebird": "^3.5.20",
     "@types/express": "^4.17.11",
     "bluebird": "~3.5.1",
