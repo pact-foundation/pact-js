@@ -260,7 +260,6 @@ export class PactV3 {
       }
     }
 
-
     this.states.push({ description: providerState, parameters });
     return this;
   }
