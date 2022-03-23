@@ -387,7 +387,7 @@ export class PactV3 {
 
   private cleanup(success: boolean, server: V3MockServer) {
     if (success) {
-      this.pact.writePactFile(server.port, this.opts.dir);
+      this.pact.writePactFile(this.opts.dir);
     }
     this.pact.cleanupMockServer(server.port);
     this.setup();
