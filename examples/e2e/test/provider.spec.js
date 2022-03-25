@@ -16,7 +16,7 @@ describe('Pact Verification', () => {
   it('validates the expectations of Matching Service', () => {
     let token = 'INVALID TOKEN';
 
-    const opts = {
+    return new Verifier({
       provider: 'e2e Provider Example',
       logLevel: 'DEBUG',
       providerBaseUrl: 'http://localhost:8081',
@@ -58,17 +58,18 @@ describe('Pact Verification', () => {
       pactBrokerUrl: 'https://test.pactflow.io/',
 
       // Fetch from broker with given tags
-      consumerVersionTags: ['master', 'test', 'prod'],
+      // consumerVersionTags: ['master', 'test', 'prod', 'feat/v3.0.0'],
 
       // Tag provider version with given tags
       providerVersionTags: ['master'], // in real code, this would be dynamically set by process.env.GIT_BRANCH
+      providerBranch: 'feat/v3.0.0', // should get from code
 
       // Find _all_ pacts (not just latest) with tag prod
-      //   consumerVersionSelectors: [{
-      //     tag: "prod",
-      //     all: true
-      //   }
-      // ],
+      consumerVersionSelectors: [
+        {
+          matchingBranch: true,
+        },
+      ],
 
       // Enables "pending pacts" feature
       enablePending: true,
@@ -97,11 +98,11 @@ describe('Pact Verification', () => {
       // see https://docs.pact.io/getting_started/versioning_in_the_pact_broker/ for details.
       // If you use git tags, then you can use @pact-foundation/absolute-version as we do here.
       providerVersion: versionFromGitTag(),
-    };
-
-    return new Verifier(opts).verifyProvider().then((output) => {
-      console.log('Pact Verification Complete!');
-      console.log(output);
-    });
+    })
+      .verifyProvider()
+      .then((output) => {
+        console.log('Pact Verification Complete!');
+        console.log(output);
+      });
   });
 });
