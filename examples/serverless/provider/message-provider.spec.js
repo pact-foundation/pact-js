@@ -32,7 +32,14 @@ describe('Message provider tests', () => {
       process.env.PACT_BROKER_PASSWORD || 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
     publishVerificationResult: true,
 
-    consumerVersionTags: ['master', 'test', 'prod'],
+    providerBranch: process.env.GIT_BRANCH || 'feat/v3.0.0',
+
+    // Find _all_ pacts that match the current provider branch
+    consumerVersionSelectors: [
+      {
+        matchingBranch: true,
+      },
+    ],
   });
 
   describe('send an event', () => {

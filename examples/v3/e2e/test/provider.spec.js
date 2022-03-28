@@ -70,12 +70,12 @@ describe('Pact Verification', () => {
 
       // Fetch from broker with given tags
       providerVersionTags: ['master'],
-      // consumerVersionTags: ['prod'], // simple syntax
-      // Advanced selectors
+      providerBranch: process.env.GIT_BRANCH || 'feat/v3.0.0',
+
+      // Find _all_ pacts that match the current provider branch
       consumerVersionSelectors: [
         {
-          tag: 'prod',
-          latest: true,
+          matchingBranch: true,
         },
       ],
       enablePending: true,

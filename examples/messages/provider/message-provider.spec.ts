@@ -30,7 +30,14 @@ describe('Message provider tests', () => {
       process.env.PACT_BROKER_USERNAME || 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
     pactBrokerPassword:
       process.env.PACT_BROKER_PASSWORD || 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
-    consumerVersionTags: ['test'],
+    providerBranch: process.env.GIT_BRANCH || 'feat/v3.0.0',
+
+    // Find _all_ pacts that match the current provider branch
+    consumerVersionSelectors: [
+      {
+        matchingBranch: true,
+      },
+    ],
   });
 
   describe('send a dog event', () => {

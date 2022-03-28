@@ -29,7 +29,14 @@ describe('Pact Verification', () => {
       // If you use git tags, then you can use @pact-foundation/absolute-version as we do here.
       providerVersion: versionFromGitTag(),
       publishVerificationResult: true,
-      consumerVersionTags: ['master', 'test', 'prod'],
+      providerBranch: process.env.GIT_BRANCH || 'feat/v3.0.0',
+
+      // Find _all_ pacts that match the current provider branch
+      consumerVersionSelectors: [
+        {
+          matchingBranch: true,
+        },
+      ],
     };
 
     return new Verifier(opts).verifyProvider().then((output) => {
