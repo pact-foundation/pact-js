@@ -56,7 +56,7 @@ Read [Getting started with Pact] for more information for beginners.
     - [Publishing Pacts to a Broker](#publishing-pacts-to-a-broker)
       - [Publish in npm scripts](#publish-in-npm-scripts)
       - [Publish in a custom script](#publish-in-a-custom-script)
-        - [Pact publishing options](#pact-publishing-options)
+      - [Pact publishing options](#pact-publishing-options)
       - [Publishing Verification Results to a Pact Broker](#publishing-verification-results-to-a-pact-broker)
   - [Asynchronous API Testing](#asynchronous-api-testing)
     - [Consumer](#consumer)
@@ -427,7 +427,7 @@ Pending pacts is a feature that allows consumers to publish new contracts or cha
 
 This enables safe introduction of new contracts into the system, without breaking Provider builds, whilst still providing feedback to Consumers as per before.
 
-See the [docs](https://docs.pact.io/pending) and this [article](http://blog.pact.io/2020/02/24/how-we-have-fixed-the-biggest-problem-with-the-pact-workflow/) for more background.
+See the [docs](https://docs.pact.io/pending) and this [article](https://docs.pact.io/blog/2020/02/24/how-weve-fixed-the-biggest-problem-with-the-pact-workflow) for more background.
 
 #### WIP Pacts
 
@@ -435,7 +435,7 @@ _NOTE_: This feature is available on [Pactflow] by default, and requires [config
 
 WIP Pacts builds upon pending pacts, enabling provider tests to pull in _any_ contracts applicable to the provider regardless of the `tag` it was given. This is useful, because often times consumers won't follow the exact same tagging convention and so their workflow would be interrupted. This feature enables any pacts determined to be "work in progress" to be verified by the Provider, without causing a build failure. You can enable this behaviour by specifying a valid timestamp for `includeWipPactsSince`. This sets the start window for which new WIP pacts will be pulled down for verification, regardless of the tag.
 
-See the [docs](https://docs.pact.io/wip) and this [article](http://blog.pact.io/2020/02/24/introducing-wip-pacts/) for more background.
+See the [docs](https://docs.pact.io/wip) and this [article](https://docs.pact.io/blog/2020/02/24/introducing-wip-pacts) for more background.
 
 #### Verifying multiple contracts with the same tag (e.g. for Mobile use cases)
 
