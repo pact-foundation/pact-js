@@ -24,7 +24,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: GIT_BRANCH=${GIT_REF:11} scripts/ci/build-and-test.sh
+      - run: scripts/ci/build-and-test.sh
         env:
           NODE_VERSION: ${{ matrix.node-version }}
 
@@ -45,7 +45,7 @@ jobs:
           npm install --global node-gyp@latest
           npm prefix -g | % {npm config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"}
         shell: pwsh
-      - run: bash GIT_BRANCH=${GIT_REF:11} scripts/ci/build-and-test.sh
+      - run: bash scripts/ci/build-and-test.sh
         shell: bash
         env:
           NODE_VERSION: ${{ matrix.node-version }}

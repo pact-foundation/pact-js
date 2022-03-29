@@ -3,17 +3,21 @@ set -e
 set -u
 set -x
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)" # Figure out where the script is running
+. "$SCRIPT_DIR"/lib/robust-bash.sh
+
+require_env_var GIT_REF
 
 npm ci
 
 npm run dist
 cp package.json ./dist
 
+export GIT_BRANCH=${GIT_REF:11}
 export PACT_BROKER_USERNAME="dXfltyFMgNOFZAxr8io9wJ37iUpY42M"
 export PACT_BROKER_PASSWORD="O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1"
 
-"${DIR}"/lib/prepare-release.sh
+"${SCRIPT_DIR}"/lib/prepare-release.sh
 
 cp package-lock.json dist
 echo "This will be version '$(npx @pact-foundation/absolute-version)'"
