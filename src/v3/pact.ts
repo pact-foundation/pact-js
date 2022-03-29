@@ -22,6 +22,12 @@ export enum SpecificationVersion {
   SPECIFICATION_VERSION_V3 = 4,
 }
 
+const matcherValueOrString = (obj: unknown): string => {
+  if (typeof obj === 'string') return obj;
+
+  return JSON.stringify(obj);
+};
+
 const contentTypeFromHeaders = (
   headers: TemplateHeaders | undefined,
   defaultContentType: string
@@ -29,7 +35,7 @@ const contentTypeFromHeaders = (
   let contentType: string | MatchersV3.Matcher<string> = defaultContentType;
   forEachObjIndexed((v, k) => {
     if (`${k}`.toLowerCase() === 'content-type') {
-      contentType = v;
+      contentType = matcherValueOrString(v);
     }
   }, headers || {});
 
@@ -69,18 +75,6 @@ export interface PactV3Options {
    */
   logLevel?: 'trace' | 'debug' | 'info' | 'warn' | 'error';
 }
-
-// const logInvalidOperation = (op: string) => {
-//   throw new Error(
-//     `unable to call operation ${op}, this is probably a bug in Pact JS`
-//   );
-// };
-
-const matcherValueOrString = (obj: unknown): string => {
-  if (typeof obj === 'string') return obj;
-
-  return JSON.stringify(obj);
-};
 
 const readBinaryData = (file: string): Buffer => {
   try {
