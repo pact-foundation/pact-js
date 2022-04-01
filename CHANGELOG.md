@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.59](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.58...v10.0.0-beta.59) (2022-04-01)
+
+
+### Fixes and Improvements
+
+* content type detection now considers matchers ([069da08](https://github.com/pact-foundation/pact-js/commit/069da08b22c748cc0dd929ea28e2cfac564b9a8f))
+* e2e tests were verifying the wrong pacts ([1999f2d](https://github.com/pact-foundation/pact-js/commit/1999f2d0f243861c802b886bfb50b8e94f6d7915))
+* infer content type from headers, prevent non JSON-able state parameters ([2a6acf3](https://github.com/pact-foundation/pact-js/commit/2a6acf3674707982cfe41318ebe87201064241ad))
+* update to latest core ([51c4c52](https://github.com/pact-foundation/pact-js/commit/51c4c52c95e55c0eca812386a0c3390bf40d3dc2))
+
 ## [10.0.0-beta.58](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.57...v10.0.0-beta.58) (2022-02-23)
 
 
