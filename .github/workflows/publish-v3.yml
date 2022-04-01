@@ -5,6 +5,10 @@ on:
     types:
       - release-beta-triggered
 
+env:
+  GIT_COMMIT: ${{ github.sha }}
+  GIT_REF: ${{ github.ref }}
+
 jobs:
   release:
     runs-on: ubuntu-latest
