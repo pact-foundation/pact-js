@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [9.17.3](https://github.com/pact-foundation/pact-js/compare/v9.17.2...v9.17.3) (2022-03-16)
+
+
+### Fixes and Improvements
+
+* remove rust from v3 release build ([2a5f65b](https://github.com/pact-foundation/pact-js/commit/2a5f65bc7e8a48c7ee786905f78207cba7837110))
+* The table on README.md is corrupted and unreadable ([#832](https://github.com/pact-foundation/pact-js/issues/832)) ([b73fa05](https://github.com/pact-foundation/pact-js/commit/b73fa05a7f92ed81d225f6c68349d322d388656d))
+* throw an error when pact spec version is not set to 2 ([4186c22](https://github.com/pact-foundation/pact-js/commit/4186c22030cc3a7f2abb99c096d480c66f17f2a4))
+* upgrade to latest pact-node ([0d9b127](https://github.com/pact-foundation/pact-js/commit/0d9b1270d4dc03e761941ae060b2a75db0bab24d))
+* verifier req/res logging on debug ([#835](https://github.com/pact-foundation/pact-js/issues/835)) ([3edc5a0](https://github.com/pact-foundation/pact-js/commit/3edc5a035170fb28f74be6b908091e37093cad98))
+
 ### [9.17.2](https://github.com/pact-foundation/pact-js/compare/v9.17.1...v9.17.2) (2022-01-12)
 
 
