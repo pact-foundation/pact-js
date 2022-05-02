@@ -91,7 +91,7 @@ describe('Pact Verification', () => {
         process.env.PACT_BROKER_PASSWORD || 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
 
       // if you're using Pactflow, you must authenticate using the bearer token option
-      // You can obtain the token from https://<your broker>.pact.dius.com.au/settings/api-tokens
+      // You can obtain the token from https://<your broker>.pactflow.io/settings/api-tokens
       // pactBrokerToken: "<insert your token here"
       publishVerificationResult: true,
       // Your version numbers need to be unique for every different version of your provider
