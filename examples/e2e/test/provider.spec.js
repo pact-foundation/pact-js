@@ -55,7 +55,7 @@ describe("Pact Verification", () => {
       },
 
       // Fetch pacts from broker
-      pactBrokerUrl: "https://test.pact.dius.com.au/",
+      pactBrokerUrl: "https://test.pactflow.io/",
 
       // Fetch from broker with given tags
       consumerVersionTags: ["master", "test", "prod"],
@@ -74,7 +74,7 @@ describe("Pact Verification", () => {
       enablePending: true,
 
       // Specific Remote pacts (doesn't need to be a broker)
-      // pactUrls: ['https://test.pact.dius.com.au/pacts/provider/Animal%20Profile%20Service/consumer/Matching%20Service/latest'],
+      // pactUrls: ['https://test.pactflow.io/pacts/provider/Animal%20Profile%20Service/consumer/Matching%20Service/latest'],
       // Local pacts
       // pactUrls: [
       //   path.resolve(
@@ -88,7 +88,7 @@ describe("Pact Verification", () => {
       pactBrokerPassword: "O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
 
       // if you're using Pactflow, you must authenticate using the bearer token option
-      // You can obtain the token from https://<your broker>.pact.dius.com.au/settings/api-tokens
+      // You can obtain the token from https://<your broker>.pactflow.io/settings/api-tokens
       // pactBrokerToken: "<insert your token here"
       publishVerificationResult: true,
       // Your version numbers need to be unique for every different version of your provider

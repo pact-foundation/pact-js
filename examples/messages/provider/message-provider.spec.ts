@@ -25,7 +25,7 @@ describe("Message provider tests", () => {
     // For local validation
     // pactUrls: [path.resolve(process.cwd(), "pacts", "myjsmessageconsumer-myjsmessageprovider.json")],
     // Broker validation
-    pactBrokerUrl: "https://test.pact.dius.com.au/",
+    pactBrokerUrl: "https://test.pactflow.io/",
     pactBrokerUsername: "dXfltyFMgNOFZAxr8io9wJ37iUpY42M",
     pactBrokerPassword: "O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
     publishVerificationResult: true,
