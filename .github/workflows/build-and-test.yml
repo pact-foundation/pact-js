@@ -23,6 +23,7 @@ jobs:
       - run: scripts/ci/build-and-test.sh
         env:
           NODE_VERSION: ${{ matrix.node-version }}
+          NODE_OPTIONS: --openssl-legacy-provider # until webpack is upgraded to fix node 16
 
   build-and-test-windows:
     runs-on: windows-latest
@@ -42,3 +43,4 @@ jobs:
         shell: bash
         env:
           NODE_VERSION: ${{ matrix.node-version }}
+          NODE_OPTIONS: --openssl-legacy-provider # until webpack is upgraded to fix node 16
