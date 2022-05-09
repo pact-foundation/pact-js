@@ -8,9 +8,14 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.experimental }}
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x]
+        node-version: [14.x, 16.x]
+        experimental: [false]
+        include:
+          - version: 18.x
+            experimental: true
 
     steps:
       - uses: actions/checkout@v2
@@ -26,9 +31,14 @@ jobs:
 
   build-and-test-windows:
     runs-on: windows-latest
+    continue-on-error: ${{ matrix.experimental }}
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x]
+        node-version: [14.x, 16.x]
+        experimental: [false]
+        include:
+          - version: 18.x
+            experimental: true
 
     steps:
       - uses: actions/checkout@v2
