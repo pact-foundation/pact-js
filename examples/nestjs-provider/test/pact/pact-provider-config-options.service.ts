@@ -51,8 +51,12 @@ export class PactProviderConfigOptionsService
 
       // Fetch pacts from broker
       pactBrokerUrl: "https://test.pactflow.io/",
-      consumerVersionTags: ["master", "test", "prod"],
-      providerVersionTags: ["master"], // in real code, this would be dynamically set by process.env.GIT_BRANCH
+      consumerVersionSelectors: [
+        {
+          matchingBranch: true,
+        },
+      ],
+      providerVersionBranch: "master",
       enablePending: true,
       pactBrokerUsername: "dXfltyFMgNOFZAxr8io9wJ37iUpY42M",
       pactBrokerPassword: "O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
