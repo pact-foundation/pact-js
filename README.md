@@ -103,13 +103,13 @@ Read [Getting started with Pact] for more information for beginners.
 
 NPM
 ```sh
-npm install --D @pact-foundation/pact@latest
+npm install -D @pact-foundation/pact@latest
 ```
 
 Yarn
 
 ```sh
-yarn add --D @pact-foundation/pact@latest
+yarn add -D @pact-foundation/pact@latest
 ```
 
 - Ensure you set `-D, --save-dev` so the Package will appear in your devDependencies
