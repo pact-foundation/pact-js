@@ -103,16 +103,16 @@ Read [Getting started with Pact] for more information for beginners.
 
 NPM
 ```sh
-npm install -D @pact-foundation/pact@latest
+npm install --save-dev @pact-foundation/pact@latest
 ```
 
 Yarn
 
 ```sh
-yarn add -D @pact-foundation/pact@latest
+yarn add --save-dev @pact-foundation/pact@latest
 ```
 
-- Ensure you set `-D, --save-dev` so the Package will appear in your devDependencies
+- Ensure you set `--save-dev` or the short-hand `-D` so the Package will appear in your devDependencies [npm docs](https://docs.npmjs.com/cli/v8/commands/npm-install)
 - Make sure the `ignore-scripts` option is disabled, pact uses npm scripts to download further dependencies.
 
 ### Do Not Track
@@ -966,7 +966,7 @@ Yarn
 yarn add --save-dev @pact-foundation/pact-web @pact-foundation/pact-node
 ```
 
-- Ensure you set `-D, --save-dev` so the Package will appear in your devDependencies
+- Ensure you set `--save-dev` or the short-hand `-D` so the Package will appear in your devDependencies [npm docs](https://docs.npmjs.com/cli/v8/commands/npm-install)
 - Make sure the `ignore-scripts` option is disabled, pact uses npm scripts to download further dependencies.
 - If you're not using Karma, you can start and stop the mock server using [Pact Node](https://github.com/pact-foundation/pact-node) or something like [Grunt Pact](https://github.com/pact-foundation/grunt-pact).
 
@@ -1052,7 +1052,7 @@ Yarn
 yarn add --save-dev @pact-foundation/pact@beta
 ```
 
-- Ensure you set `-D, --save-dev` so the Package will appear in your devDependencies
+- Ensure you set `--save-dev` or the short-hand `-D` so the Package will appear in your devDependencies [npm docs](https://docs.npmjs.com/cli/v8/commands/npm-install)
 - Make sure the `ignore-scripts` option is disabled, pact uses npm scripts to download further dependencies.
 - For examples on how to use it, see [examples/v3/e2e](https://github.com/pact-foundation/pact-js/tree/feat/v3.0.0/examples/v3/e2e) and [examples/v3/todo-consumer](https://github.com/pact-foundation/pact-js/tree/feat/v3.0.0/examples/v3/todo-consumer) in the `v3.0.0` branch.
 
