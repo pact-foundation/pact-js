@@ -101,11 +101,19 @@ Read [Getting started with Pact] for more information for beginners.
 
 ## Installation
 
-```
-npm i -S @pact-foundation/pact@latest
+NPM
+```sh
+npm install --D @pact-foundation/pact@latest
 ```
 
-Make sure the `ignore-scripts` option is disabled, pact uses npm scripts to download further dependencies.
+Yarn
+
+```sh
+yarn add --D @pact-foundation/pact@latest
+```
+
+- Ensure you set `-D, --save-dev` so the Package will appear in your devDependencies
+- Make sure the `ignore-scripts` option is disabled, pact uses npm scripts to download further dependencies.
 
 ### Do Not Track
 
@@ -947,9 +955,20 @@ package, so you will need to coordinate this yourself prior to and after executi
 
 To get started, install `pact-web` and [Pact Node](https://github.com/pact-foundation/pact-node):
 
-    npm install --save-dev @pact-foundation/pact-web @pact-foundation/pact-node
+NPM
+```sh
+npm install --save-dev @pact-foundation/pact-web @pact-foundation/pact-node
+```
 
-If you're not using Karma, you can start and stop the mock server using [Pact Node](https://github.com/pact-foundation/pact-node) or something like [Grunt Pact](https://github.com/pact-foundation/grunt-pact).
+Yarn
+
+```sh
+yarn add --save-dev @pact-foundation/pact-web @pact-foundation/pact-node
+```
+
+- Ensure you set `-D, --save-dev` so the Package will appear in your devDependencies
+- Make sure the `ignore-scripts` option is disabled, pact uses npm scripts to download further dependencies.
+- If you're not using Karma, you can start and stop the mock server using [Pact Node](https://github.com/pact-foundation/pact-node) or something like [Grunt Pact](https://github.com/pact-foundation/grunt-pact).
 
 ### Using Pact with Karma
 
@@ -1022,11 +1041,20 @@ been released. Current support is for Node 10, 12 and 14. Thanks to the folks at
 
 To install it:
 
-```console
-npm i @pact-foundation/pact@beta
+NPM
+```sh
+npm install --save-dev @pact-foundation/pact@beta
 ```
 
-For examples on how to use it, see [examples/v3/e2e](https://github.com/pact-foundation/pact-js/tree/feat/v3.0.0/examples/v3/e2e) and [examples/v3/todo-consumer](https://github.com/pact-foundation/pact-js/tree/feat/v3.0.0/examples/v3/todo-consumer) in the `v3.0.0` branch.
+Yarn
+
+```sh
+yarn add --save-dev @pact-foundation/pact@beta
+```
+
+- Ensure you set `-D, --save-dev` so the Package will appear in your devDependencies
+- Make sure the `ignore-scripts` option is disabled, pact uses npm scripts to download further dependencies.
+- For examples on how to use it, see [examples/v3/e2e](https://github.com/pact-foundation/pact-js/tree/feat/v3.0.0/examples/v3/e2e) and [examples/v3/todo-consumer](https://github.com/pact-foundation/pact-js/tree/feat/v3.0.0/examples/v3/todo-consumer) in the `v3.0.0` branch.
 
 **NOTE: The API of this implementation is likely to change. See this [discussion](https://github.com/pact-foundation/pact-js/discussions/681) for more**
 
