@@ -84,6 +84,7 @@ Read [Getting started with Pact] for more information for beginners.
     - [Debugging issues with Pact-JS V3](#debugging-issues-with-pact-js-v3)
     - [Debugging](#debugging)
   - [Troubleshooting / FAQs](#troubleshooting--faqs)
+    - [Actual interactions do not match expected interactions for mock MockService.](#actual-interactions-do-not-match-expected-interactions-for-mock-mockservice)
     - [Corporate Proxies / Firewalls](#corporate-proxies--firewalls)
     - [Alpine + Docker](#alpine--docker)
     - [Parallel tests](#parallel-tests)
@@ -1238,6 +1239,33 @@ Try starting the mock service manually and seeing if it comes up. When submittin
 ## Troubleshooting / FAQs
 
 If you are having issues, a good place to start is setting `logLevel: 'debug'` when configuring the `new Pact({...})` object. This will give you detailed in/out requests as far as Pact sees them during verification.
+
+### Actual interactions do not match expected interactions for mock MockService.
+
+If you see an error that looks like this:
+
+```
+  console.error
+    Pact verification failed!
+
+      at node_modules/@pact-foundation/src/httpPact.ts:152:17
+
+  console.error
+    Actual interactions do not match expected interactions for mock MockService.
+
+    Missing requests:
+        GET http://127.0.0.1:3001/some/path
+```
+
+It means your API client code being tested, is not sending the request to the mock service configured by Pact. Pact does not automatically mock your API calls - you need to ensure your API client is correctly configured to poitn at the Pact mock service.
+
+Given you have constructed a Pact object with name `provider` and you are using a `DogApiClient` class to send requests to your `Dog Service`, you can dynamically configure your API client as follows:
+
+```
+provider.setup().then(opts => {
+  dogService = new DogApiClient({ `http://${opts.host}`, port: opts.port })
+})
+```
 
 ### Corporate Proxies / Firewalls
 
