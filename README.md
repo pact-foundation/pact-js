@@ -110,10 +110,10 @@ npm install --save-dev @pact-foundation/pact@latest
 Yarn
 
 ```sh
-yarn add --save-dev @pact-foundation/pact@latest
+yarn add --dev @pact-foundation/pact@latest
 ```
 
-- Ensure you set `--save-dev` or the short-hand `-D` so the Package will appear in your devDependencies [npm docs](https://docs.npmjs.com/cli/v8/commands/npm-install)
+- Ensure you install the package as `devDependencies` by using [`--save-dev`][npm-devdep]/[`--dev`][yarn-devdep] ;
 - Make sure the `ignore-scripts` option is disabled, pact uses npm scripts to download further dependencies.
 
 ### Do Not Track
@@ -964,10 +964,10 @@ npm install --save-dev @pact-foundation/pact-web @pact-foundation/pact-node
 Yarn
 
 ```sh
-yarn add --save-dev @pact-foundation/pact-web @pact-foundation/pact-node
+yarn add --dev @pact-foundation/pact-web @pact-foundation/pact-node
 ```
 
-- Ensure you set `--save-dev` or the short-hand `-D` so the Package will appear in your devDependencies [npm docs](https://docs.npmjs.com/cli/v8/commands/npm-install)
+- Ensure you install the package as `devDependencies` by using [`--save-dev`][npm-devdep]/[`--dev`][yarn-devdep] ;
 - Make sure the `ignore-scripts` option is disabled, pact uses npm scripts to download further dependencies.
 - If you're not using Karma, you can start and stop the mock server using [Pact Node](https://github.com/pact-foundation/pact-node) or something like [Grunt Pact](https://github.com/pact-foundation/grunt-pact).
 
@@ -1050,10 +1050,10 @@ npm install --save-dev @pact-foundation/pact@beta
 Yarn
 
 ```sh
-yarn add --save-dev @pact-foundation/pact@beta
+yarn add --dev @pact-foundation/pact@beta
 ```
 
-- Ensure you set `--save-dev` or the short-hand `-D` so the Package will appear in your devDependencies [npm docs](https://docs.npmjs.com/cli/v8/commands/npm-install)
+- Ensure you install the package as `devDependencies` by using [`--save-dev`][npm-devdep]/[`--dev`][yarn-devdep] ;
 - Make sure the `ignore-scripts` option is disabled, pact uses npm scripts to download further dependencies.
 - For examples on how to use it, see [examples/v3/e2e](https://github.com/pact-foundation/pact-js/tree/feat/v3.0.0/examples/v3/e2e) and [examples/v3/todo-consumer](https://github.com/pact-foundation/pact-js/tree/feat/v3.0.0/examples/v3/todo-consumer) in the `v3.0.0` branch.
 
@@ -1474,3 +1474,5 @@ or chat to us at
 [spec]: https://github.com/pact-foundation/pact-specification
 [changelog]: https://github.com/pact-foundation/pact-js/blob/master/CHANGELOG.md
 [pactflow]: https://pactflow.io
+[npm-devdep]: https://docs.npmjs.com/cli/v8/commands/npm-install
+[yarn-devdep]: https://classic.yarnpkg.com/en/docs/cli/add#toc-yarn-add-dev-d
