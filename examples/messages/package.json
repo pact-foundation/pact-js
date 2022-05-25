@@ -9,12 +9,12 @@
     "test": "npm run test:consumer && npm run pact:publish && npm run test:provider",
     "test:consumer": "nyc --check-coverage --reporter=html --reporter=text-summary mocha consumer/*.spec.ts",
     "test:provider": "nyc --check-coverage --reporter=html --reporter=text-summary mocha -t 20000 provider/*.spec.ts",
-    "pact:publish": "pact-broker publish ./pacts --consumer-app-version=\"$(npx @pact-foundation/absolute-version)\" --auto-detect-version-properties --broker-base-url=https://test.pactflow.io"
+    "pact:publish": "pact-broker publish ./pacts --consumer-app-version=\"$(npx absolute-version)\" --auto-detect-version-properties --broker-base-url=https://test.pactflow.io"
   },
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@pact-foundation/absolute-version": "0.0.4",
+    "absolute-version": "^1.0.0",
     "@pact-foundation/pact": "^9.17.2",
     "@types/chai": "^4.0.3",
     "@types/chai-as-promised": "0.0.31",
