@@ -12,7 +12,7 @@ export PACT_BROKER_PASSWORD="O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1"
 
 "${DIR}"/lib/prepare-release.sh
 
-echo "This will be version '$(npx @pact-foundation/absolute-version)'"
+echo "This will be version '$(npx absolute-version)'"
 
 # Link the build so that the examples are always testing the
 # current build, in it's properly exported format

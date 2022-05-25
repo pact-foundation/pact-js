@@ -5,7 +5,7 @@
   "scripts": {
     "test": "npm run test:consumer && npm run pact:publish && npm run test:provider",
     "test:consumer": "mocha test/consumer.spec.js",
-    "pact:publish": "pact-broker publish ./pacts --consumer-app-version=\"$(npx @pact-foundation/absolute-version)\" --auto-detect-version-properties --broker-base-url=https://test.pactflow.io",
+    "pact:publish": "pact-broker publish ./pacts --consumer-app-version=\"$(npx absolute-version)\" --auto-detect-version-properties --broker-base-url=https://test.pactflow.io",
     "test:provider": "mocha test/provider.spec.js",
     "can-i-deploy": "npm run can-i-deploy:consumer && npm run can-i-deploy:provider",
     "can-i-deploy:consumer": "pact-broker can-i-deploy --pacticipant 'Matching Service' --latest --broker-base-url https://test.pactflow.io --broker-username dXfltyFMgNOFZAxr8io9wJ37iUpY42M --broker-password O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
@@ -17,7 +17,7 @@
   "author": "matt.fellows@onegeek.com.au",
   "license": "MIT",
   "devDependencies": {
-    "@pact-foundation/absolute-version": "0.0.4",
+    "absolute-version": "^1.0.0",
     "@pact-foundation/pact": "^9.17.2",
     "body-parser": "^1.18.3",
     "chai": "^3.5.0",

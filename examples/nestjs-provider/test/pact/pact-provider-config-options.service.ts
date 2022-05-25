@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common"
 import { PactProviderOptionsFactory, PactProviderOptions } from "nestjs-pact"
-import { versionFromGitTag } from "@pact-foundation/absolute-version"
+import { versionFromGitTag } from "absolute-version"
 import { AppRepository } from "../../src/app.repository"
 
 @Injectable()
@@ -63,7 +63,7 @@ export class PactProviderConfigOptionsService
       publishVerificationResult: true,
       // Your version numbers need to be unique for every different version of your provider
       // see https://docs.pact.io/getting_started/versioning_in_the_pact_broker/ for details.
-      // If you use git tags, then you can use @pact-foundation/absolute-version as we do here.
+      // If you use git tags, then you can use absolute-version as we do here.
       providerVersion: versionFromGitTag(),
     }
   }

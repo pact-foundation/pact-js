@@ -546,7 +546,7 @@ The easiest way to publish pacts to the broker is via an npm script in your pack
 
 ```
 
-   "pact:publish": "pact-broker publish <YOUR_PACT_FILES_OR_DIR> --consumer-app-version=\"$(npx @pact-foundation/absolute-version)\" --auto-detect-version-properties --broker-base-url=https://your-broker-url.example.com"
+   "pact:publish": "pact-broker publish <YOUR_PACT_FILES_OR_DIR> --consumer-app-version=\"$(npx absolute-version)\" --auto-detect-version-properties --broker-base-url=https://your-broker-url.example.com"
 ```
 
 For a full list of the options, see the [CLI usage instructions](https://github.com/pact-foundation/pact-ruby-standalone/releases).

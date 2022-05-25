@@ -5,14 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "jest __tests__/ --runInBand",
-    "pact:publish": "pact-broker publish pact/pacts --consumer-app-version=\"$(npx @pact-foundation/absolute-version)\" --auto-detect-version-properties --broker-base-url=https://test.pactflow.io"
+    "pact:publish": "pact-broker publish pact/pacts --consumer-app-version=\"$(npx absolute-version)\" --auto-detect-version-properties --broker-base-url=https://test.pactflow.io"
   },
   "license": "MIT",
   "jest": {
     "testEnvironment": "node"
   },
   "devDependencies": {
-    "@pact-foundation/absolute-version": "0.0.4",
+    "absolute-version": "^1.0.0",
     "@pact-foundation/pact": "^9.17.2",
     "axios": "^0.21.1",
     "jest": "^26.6.3",
