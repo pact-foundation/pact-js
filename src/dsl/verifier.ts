@@ -14,8 +14,8 @@ import { LogLevel } from "./options"
 import ConfigurationError from "../errors/configurationError"
 import { localAddresses } from "../common/net"
 import * as url from "url"
-const HttpProxy = require("http-proxy")
-const bodyParser = require("body-parser")
+import * as HttpProxy from "http-proxy"
+import * as bodyParser from "body-parser"
 
 export interface ProviderState {
   states?: [string]
@@ -128,8 +128,17 @@ export class Verifier {
     const app = express()
     const proxy = new HttpProxy()
 
-    app.use(this.stateSetupPath, bodyParser.json())
-    app.use(this.stateSetupPath, bodyParser.urlencoded({ extended: true }))
+    app.use(
+      bodyParser.json({
+        type: [
+          "application/json",
+          "application/json; charset=utf-8",
+          "application/json; charset=utf8",
+        ],
+      })
+    )
+    app.use(bodyParser.urlencoded({ extended: true }))
+    app.use("/*", bodyParser.raw({ type: "*/*" }))
     this.registerBeforeHook(app)
     this.registerAfterHook(app)
 
@@ -150,7 +159,7 @@ export class Verifier {
 
     // Proxy server will respond to Verifier process
     app.all("/*", (req, res) => {
-      logger.debug("Proxing", req.path)
+      logger.debug("Proxing", req.method, req.path)
       proxy.web(req, res, {
         changeOrigin: this.config.changeOrigin === true,
         secure: this.config.validateSSL === true,
@@ -158,7 +167,30 @@ export class Verifier {
       })
     })
 
+    proxy.on("proxyReq", (proxyReq: http.ClientRequest, req: any) => {
+      this.parseBody(proxyReq, req)
+    })
+
     return app
+  }
+
+  private parseBody(proxyReq: http.ClientRequest, req: any): void {
+    if (!req.body || !Object.keys(req.body).length) {
+      return
+    }
+
+    let bodyData
+
+    if (Buffer.isBuffer(req.body)) {
+      bodyData = req.body
+    } else if (typeof req.body === "object") {
+      bodyData = JSON.stringify(req.body)
+    }
+
+    if (bodyData) {
+      proxyReq.setHeader("Content-Length", Buffer.byteLength(bodyData))
+      proxyReq.write(bodyData)
+    }
   }
 
   private createProxyStateHandler() {
