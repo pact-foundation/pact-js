@@ -8,6 +8,7 @@ import logger from '../../../common/logger';
 import { createProxyStateHandler } from './stateHandler/stateHandler';
 import { registerAfterHook, registerBeforeHook } from './hooks';
 import { createRequestTracer, createResponseTracer } from './tracer';
+import { parseBody } from './parseBody';
 
 // Listens for the server start event
 export const waitForServerReady = (server: http.Server): Promise<http.Server> =>
@@ -57,6 +58,8 @@ export const createProxy = (
       target: config.providerBaseUrl,
     });
   });
+
+  proxy.on('proxyReq', (proxyReq, req) => parseBody(proxyReq, req));
 
   return http.createServer(app).listen();
 };
