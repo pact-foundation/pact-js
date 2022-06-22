@@ -1,11 +1,14 @@
 import * as http from 'http';
 
 interface ReqBodyExtended extends http.IncomingMessage {
-  body?: Buffer | Record<string, unknown> 
+  body?: Buffer | Record<string, unknown>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const parseBody = (proxyReq: http.ClientRequest, req: ReqBodyExtended): void => {
+export const parseBody = (
+  proxyReq: http.ClientRequest,
+  req: ReqBodyExtended
+): void => {
   if (!req.body || !Object.keys(req.body).length) {
     return;
   }
