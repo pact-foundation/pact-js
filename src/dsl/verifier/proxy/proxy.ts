@@ -28,8 +28,19 @@ export const createProxy = (
   const proxy = new HttpProxy();
   logger.trace(`Setting up state proxy with path: ${stateSetupPath}`);
 
-  app.use(stateSetupPath, bodyParser.json());
-  app.use(stateSetupPath, bodyParser.urlencoded({ extended: true }));
+  // NOTE: if you change any of these global middleware that consumes the body
+  //       review the "proxyReq" event reader below
+  app.use(
+    bodyParser.json({
+      type: [
+        'application/json',
+        'application/json; charset=utf-8',
+        'application/json; charset=utf8',
+      ],
+    })
+  );
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use('/*', bodyParser.raw({ type: '*/*' }));
   registerBeforeHook(app, config, stateSetupPath);
   registerAfterHook(app, config, stateSetupPath);
 
@@ -50,7 +61,7 @@ export const createProxy = (
 
   // Proxy server will respond to Verifier process
   app.all('/*', (req, res) => {
-    logger.debug(`Proxying ${req.path}`);
+    logger.debug(`Proxying ${req.method}: ${req.path}`);
 
     proxy.web(req, res, {
       changeOrigin: config.changeOrigin === true,
