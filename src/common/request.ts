@@ -64,7 +64,7 @@ export class Request {
       if (res.status >= 200 && res.status < 400) {
         return res.data;
       }
-      return Promise.reject(res.data);
+      return await Promise.reject(res.data);
     } catch (e) {
       logger.error(`error making http request: ${e.message}`);
       return Promise.reject(pathOr(e.message, ['response', 'data'], e));

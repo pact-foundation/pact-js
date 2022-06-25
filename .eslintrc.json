@@ -25,7 +25,8 @@
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/explicit-module-boundary-types": "error",
     "import/prefer-default-export": "off",
-    "no-underscore-dangle": ["error", { "allow": ["__pactMessageMetadata"] }]
+    "no-underscore-dangle": ["error", { "allow": ["__pactMessageMetadata"] }],
+    "class-methods-use-this": "off"
   },
   "overrides": [
     {
