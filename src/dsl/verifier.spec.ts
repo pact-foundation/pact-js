@@ -7,6 +7,7 @@ import serviceFactory from "@pact-foundation/pact-node"
 import logger from "../common/logger"
 import * as http from "http"
 import * as express from "express"
+import * as HttpProxy from "http-proxy"
 
 chai.use(chaiAsPromised)
 
@@ -109,6 +110,44 @@ describe("Verifier", () => {
         })
 
         expect(spy.callCount).to.eql(1)
+      })
+    })
+  })
+
+  describe("#parseBody", () => {
+    let proxyReq: any
+
+    beforeEach(() => {
+      v = new Verifier(opts)
+      proxyReq = sinon.createStubInstance(http.ClientRequest)
+    })
+
+    describe("when request body exists", () => {
+      it("it writes the request if the body is a buffer", async () => {
+        const req: any = { body: "" }
+        req.body = Buffer.from("foo")
+        await v["parseBody"](proxyReq, req)
+
+        expect(proxyReq.setHeader).to.have.been.called
+        expect(proxyReq.write).to.have.been.called
+      })
+
+      it("it writes the request if the body is an object", async () => {
+        const req = { body: { foo: "bar" } }
+        await v["parseBody"](proxyReq, req)
+
+        expect(proxyReq.setHeader).to.have.been.called
+        expect(proxyReq.write).to.have.been.called
+      })
+    })
+
+    describe("when request body does not exist", () => {
+      it("it does not invoke the request rewrite", async () => {
+        const req: any = "foo"
+        await v["parseBody"](proxyReq, req)
+
+        expect(proxyReq.setHeader).to.have.not.been.called
+        expect(proxyReq.write).to.have.not.been.called
       })
     })
   })
