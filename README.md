@@ -55,7 +55,7 @@ Read [Getting started with Pact] for more information for beginners.
     - [Publishing Pacts to a Broker](#publishing-pacts-to-a-broker)
       - [Publish in npm scripts](#publish-in-npm-scripts)
       - [Publish in a custom script](#publish-in-a-custom-script)
-        - [Pact publishing options](#pact-publishing-options)
+      - [Pact publishing options](#pact-publishing-options)
       - [Publishing Verification Results to a Pact Broker](#publishing-verification-results-to-a-pact-broker)
   - [Asynchronous API Testing](#asynchronous-api-testing)
     - [Consumer](#consumer)
@@ -72,14 +72,13 @@ Read [Getting started with Pact] for more information for beginners.
   - [Examples](#examples)
     - [HTTP APIs](#http-apis)
     - [Asynchronous APIs](#asynchronous-apis)
+  - [Using Pact in non-Node environments such as Karma](#using-pact-in-non-node-environments-such-as-karma)
   - [Pact JS V3](#pact-js-v3)
     - [Using the V3 matching rules](#using-the-v3-matching-rules)
       - [Array contains matcher](#array-contains-matcher)
       - [Provider State Injected Values](#provider-state-injected-values)
     - [Using Pact with XML](#using-pact-with-xml)
     - [Verifying providers with VerifierV3](#verifying-providers-with-verifierv3)
-      - [Verification Options with VerifierV3](#verification-options-with-verifierv3)
-      - [Request Filters](#request-filters)
       - [Provider state callbacks](#provider-state-callbacks)
     - [Debugging issues with Pact-JS V3](#debugging-issues-with-pact-js-v3)
     - [Debugging](#debugging)
@@ -104,10 +103,7 @@ Read [Getting started with Pact] for more information for beginners.
 ```
 npm i -S @pact-foundation/pact@latest
 ```
-<<<<<<< HEAD
-=======
 
->>>>>>> master
 Make sure the `ignore-scripts` option is disabled, pact uses npm scripts to download further dependencies.
 
 ### Do Not Track
@@ -204,7 +200,7 @@ The first step is to create a test for your API Consumer. The example below uses
 1.  Validate the expected interactions were made between your consumer and the Mock Service
 1.  Generate the pact(s)
 
-Check out the `examples` folder for examples with Karma Jasmine, Mocha and Jest. The example below is taken from the [integration spec](https://github.com/pact-foundation/pact-js/blob/master/src/pact.integration.spec.ts).
+Check out the `examples` folder for examples with Mocha and Jest. The example below is taken from the [integration spec](https://github.com/pact-foundation/pact-js/blob/master/src/pact.integration.spec.ts).
 
 ```javascript
 const path = require("path")
@@ -984,14 +980,21 @@ The workshop takes you through all of the key concepts using a React consumer an
 - [Pact with TypeScript + Mocha](https://github.com/pact-foundation/pact-js/tree/master/examples/typescript)
 - [Pact with Mocha](https://github.com/pact-foundation/pact-js/tree/master/examples/mocha)
 - [Pact with GraphQL](https://github.com/pact-foundation/pact-js/tree/master/examples/graphql)
-- [Pact with Karma + Jasmine](https://github.com/pact-foundation/pact-js/tree/master/examples/karma/jasmine)
-- [Pact with Karma + Mocha](https://github.com/pact-foundation/pact-js/tree/master/examples/karma/mocha)
 - [Pact with React + Jest](https://github.com/pact-foundation/pact-workshop-js)
 
 ### Asynchronous APIs
 
 - [Asynchronous messages](https://github.com/pact-foundation/pact-js/tree/master/examples/messages)
 - [Serverless](https://github.com/pact-foundation/pact-js/tree/master/examples/serverless)
+
+## Using Pact in non-Node environments such as Karma
+
+Pact requires a Node runtime to be able to start and stop Mock servers, write logs and other things.
+
+However, when used within browser or non-Node based environments - such as with Karma or ng-test - this is not possible.
+
+You will need a Node based test framework such as Jest or Mocha.
+
 ## Pact JS V3
 
 An initial beta version of Pact-JS with support for V3 specification features and XML matching has

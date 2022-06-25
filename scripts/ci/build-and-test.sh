@@ -30,18 +30,14 @@ echo "Running e2e examples build for node version $(node --version)"
 for i in examples/*; do
   [ -e "$i" ] || continue # prevent failure if there are no examples
   echo "--> running tests for: $i"
-  if [[ "$i" =~ "karma" ]]; then
-    (cd "$i" && npm ci && npm test)
-  else
-    pushd "$i"
-    # replace pact dependency with locally build version
-    contents="$(jq '.devDependencies."@pact-foundation/pact" = "file:../../dist"' package.json)" && \
-         echo "${contents}" > package.json
-    # npm ci does not work because we have just changed the package.json file
-    npm install
-    npm test
-    popd
-  fi
+  pushd "$i"
+  # replace pact dependency with locally build version
+  contents="$(jq '.devDependencies."@pact-foundation/pact" = "file:../../dist"' package.json)" && \
+        echo "${contents}" > package.json
+  # npm ci does not work because we have just changed the package.json file
+  npm install
+  npm test
+  popd
 done
 
 echo "--> Running coverage checks"
