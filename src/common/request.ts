@@ -1,8 +1,7 @@
-import axios from 'axios'
-import https from 'https'
-import { pathOr } from 'ramda'
+import axios from 'axios';
+import https from 'https';
+import { pathOr } from 'ramda';
 import logger from './logger';
-
 
 export enum HTTPMethods {
   GET = 'GET',
@@ -40,8 +39,11 @@ export type HTTPMethod =
   | 'REPORT';
 
 export class Request {
-
-  public async send(method: HTTPMethod, url: string, body?: string): Promise<string> {
+  public async send(
+    method: HTTPMethod,
+    url: string,
+    body?: string
+  ): Promise<string> {
     try {
       const res = await axios(url, {
         data: body,
@@ -51,20 +53,20 @@ export class Request {
         },
         httpsAgent: new https.Agent({
           keepAlive: true,
-          rejectUnauthorized: false
+          rejectUnauthorized: false,
         }),
         method,
         timeout: 10000,
         url,
         maxBodyLength: Infinity,
-      })
+      });
 
       if (res.status >= 200 && res.status < 400) {
         return res.data;
       }
       return Promise.reject(res.data);
     } catch (e) {
-      logger.error(`error making http request: ${e.message}`)
+      logger.error(`error making http request: ${e.message}`);
       return Promise.reject(pathOr(e.message, ['response', 'data'], e));
     }
   }
