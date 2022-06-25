@@ -72,9 +72,7 @@ Read [Getting started with Pact] for more information for beginners.
   - [Examples](#examples)
     - [HTTP APIs](#http-apis)
     - [Asynchronous APIs](#asynchronous-apis)
-  - [Using Pact in non-Node environments](#using-pact-in-non-node-environments)
-    - [Using Pact with Karma](#using-pact-with-karma)
-    - [Using Pact with RequireJS](#using-pact-with-requirejs)
+  - [Using Pact in non-Node environments such as Karma](#using-pact-in-non-node-environments-such-as-karma)
   - [Pact JS V3](#pact-js-v3)
     - [Using the V3 matching rules](#using-the-v3-matching-rules)
     - [Using Pact with XML](#using-pact-with-xml)
@@ -204,7 +202,7 @@ The first step is to create a test for your API Consumer. The example below uses
 1.  Validate the expected interactions were made between your consumer and the Mock Service
 1.  Generate the pact(s)
 
-Check out the `examples` folder for examples with Karma Jasmine, Mocha and Jest. The example below is taken from the [integration spec](https://github.com/pact-foundation/pact-js/blob/master/src/pact.integration.spec.ts).
+Check out the `examples` folder for examples with Mocha and Jest. The example below is taken from the [integration spec](https://github.com/pact-foundation/pact-js/blob/master/src/pact.integration.spec.ts).
 
 ```javascript
 const path = require("path")
@@ -935,8 +933,6 @@ The workshop takes you through all of the key concepts using a React consumer an
 - [Pact with TypeScript + Mocha](https://github.com/pact-foundation/pact-js/tree/master/examples/typescript)
 - [Pact with Mocha](https://github.com/pact-foundation/pact-js/tree/master/examples/mocha)
 - [Pact with GraphQL](https://github.com/pact-foundation/pact-js/tree/master/examples/graphql)
-- [Pact with Karma + Jasmine](https://github.com/pact-foundation/pact-js/tree/master/examples/karma/jasmine)
-- [Pact with Karma + Mocha](https://github.com/pact-foundation/pact-js/tree/master/examples/karma/mocha)
 - [Pact with React + Jest](https://github.com/pact-foundation/pact-workshop-js)
 
 ### Asynchronous APIs
@@ -944,100 +940,17 @@ The workshop takes you through all of the key concepts using a React consumer an
 - [Asynchronous messages](https://github.com/pact-foundation/pact-js/tree/master/examples/messages)
 - [Serverless](https://github.com/pact-foundation/pact-js/tree/master/examples/serverless)
 
-## Using Pact in non-Node environments
+## Using Pact in non-Node environments such as Karma
 
 Pact requires a Node runtime to be able to start and stop Mock servers, write logs and other things.
 
 However, when used within browser or non-Node based environments - such as with Karma or ng-test - this is not possible.
 
-To address this challenge, we have released a separate 'web' based module for this purpose - `pact-web`.
-Whilst it still provides a testing DSL, it cannot start and stop mock servers as per the `pact`
-package, so you will need to coordinate this yourself prior to and after executing any tests.
-
-To get started, install `pact-web` and [Pact Node](https://github.com/pact-foundation/pact-node):
-
-NPM
-```sh
-npm install --save-dev @pact-foundation/pact-web @pact-foundation/pact-node
-```
-
-Yarn
-
-```sh
-yarn add --dev @pact-foundation/pact-web @pact-foundation/pact-node
-```
-
-- Ensure you install the package as `devDependencies` by using [`--save-dev`][npm-devdep]/[`--dev`][yarn-devdep] ;
-- Make sure the `ignore-scripts` option is disabled, pact uses npm scripts to download further dependencies.
-- If you're not using Karma, you can start and stop the mock server using [Pact Node](https://github.com/pact-foundation/pact-node) or something like [Grunt Pact](https://github.com/pact-foundation/grunt-pact).
-
-### Using Pact with Karma
-
-We have create a [plugin](https://github.com/pact-foundation/karma-pact) for Karma,
-which will automatically start and stop any Mock Server for your Pact tests.
-
-Modify your `karma.conf.js` file as per below to get started:
-
-```js
-    // Load pact framework - this will start/stop mock server automatically
-    frameworks: ['pact'],
-
-    // Load the pact and default karma plugins
-    plugins: [
-      'karma-*',
-      '@pact-foundation/karma-pact'
-    ],
-
-    // load pact web module
-    files: [
-      'node_modules/@pact-foundation/pact-web/pact-web.js',
-      ...
-    ],
-
-    // Configure the mock service
-    pact: [{
-      port: 1234,
-      consumer: 'KarmaMochaConsumer',
-      provider: 'KarmaMochaProvider',
-      logLevel: 'DEBUG',
-      log: path.resolve(process.cwd(), 'logs', 'pact.log'),
-      dir: path.resolve(process.cwd(), 'pacts')
-    }],
-```
-
-Check out the [Examples](#examples) for how to use the Karma interface.
-
-### Using Pact with RequireJS
-
-The module name should be "Pact" - not "pact-js". An example config with a karma test might look
-like the following:
-
-In `client-spec.js` change the `define` to:
-
-```js
-define(['client', 'Pact'], function (example, Pact) {
-```
-
-In `test-main.js`:
-
-```js
-require.config({
-  baseUrl: "/base",
-  paths: {
-    Pact: "node_modules/pact-web/pact-web",
-    client: "js/client",
-  },
-  deps: allTestFiles,
-  callback: window.__karma__.start,
-})
-```
-
-See this [Stack Overflow](https://stackoverflow.com/a/44170373/1008568) question for background, and
-this [gist](https://gist.github.com/mefellows/15c9fcb052c2aa9d8951f91d48d6da54) with a working example.
+You will need a Node based test framework such as Jest or Mocha.
 
 ## Pact JS V3
 
-An initial alpha version of Pact-JS with support for V3 specification features and XML matching has
+An initial beta version of Pact-JS with support for V3 specification features and XML matching has
 been released. Current support is for Node 10, 12 and 14. Thanks to the folks at [Align Tech](https://www.aligntech.com/) for sponsoring this work.
 
 To install it:

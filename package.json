@@ -7,7 +7,7 @@
   "scripts": {
     "clean": "rimraf docs dist dist-web coverage .nyc_output logs pacts",
     "coverage": "nyc report --reporter=lcov",
-    "dist": "tsc && webpack --config ./config/webpack.web.config.js && copyfiles package.json ./dist",
+    "dist": "tsc && copyfiles package.json ./dist",
     "lint": "tslint -c tslint.json '{src,test,examples}/**/*.ts' -e '**/node_modules/**/*.ts'",
     "lint:fix": "npm run lint -- --fix",
     "format:base": "prettier \"{src,test,examples}/**/*.{ts,js}\"",
@@ -16,8 +16,7 @@
     "postdist": "npm test",
     "predist": "npm run clean && npm run format:check && npm run lint",
     "release": "standard-version",
-    "test": "nyc --check-coverage --reporter=html --reporter=text-summary mocha",
-    "webpack": "webpack --config ./config/webpack.web.config.js"
+    "test": "nyc --check-coverage --reporter=html --reporter=text-summary mocha"
   },
   "repository": {
     "type": "git",
@@ -171,8 +170,6 @@
     "ts-node": "^3.3.0",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
-    "typescript": "^3.3.3",
-    "webpack": "^4.45.0",
-    "webpack-cli": "^4.3.1"
+    "typescript": "^3.3.3"
   }
 }
