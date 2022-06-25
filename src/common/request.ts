@@ -1,5 +1,8 @@
-import * as Popsicle from 'popsicle/dist/common';
-import { Response } from 'popsicle/dist/response';
+import axios from 'axios'
+import https from 'https'
+import { pathOr } from 'ramda'
+import logger from './logger';
+
 
 export enum HTTPMethods {
   GET = 'GET',
@@ -37,30 +40,32 @@ export type HTTPMethod =
   | 'REPORT';
 
 export class Request {
-  private readonly transport = Popsicle.createTransport({
-    maxBufferSize: Infinity, // Allow data of any size
-    rejectUnauthorized: false, // Need to tell node to ignore bad ssl cert
-    type: 'text',
-  });
 
-  public send(method: HTTPMethod, url: string, body?: string): Promise<string> {
-    const opts = {
-      body,
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Pact-Mock-Service': 'true',
-      },
-      method,
-      timeout: 10000,
-      transport: this.transport,
-      url,
-    };
+  public async send(method: HTTPMethod, url: string, body?: string): Promise<string> {
+    try {
+      const res = await axios(url, {
+        data: body,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Pact-Mock-Service': 'true',
+        },
+        httpsAgent: new https.Agent({
+          keepAlive: true,
+          rejectUnauthorized: false
+        }),
+        method,
+        timeout: 10000,
+        url,
+        maxBodyLength: Infinity,
+      })
 
-    return Popsicle.request(opts).then((res: Response) => {
       if (res.status >= 200 && res.status < 400) {
-        return res.body;
+        return res.data;
       }
-      return Promise.reject(res.body);
-    });
+      return Promise.reject(res.data);
+    } catch (e) {
+      logger.error(`error making http request: ${e.message}`)
+      return Promise.reject(pathOr(e.message, ['response', 'data'], e));
+    }
   }
 }

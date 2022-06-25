@@ -100,6 +100,7 @@
     "@pact-foundation/pact-core": "^13.6.0",
     "@types/bluebird": "^3.5.20",
     "@types/express": "^4.17.11",
+    "axios": "^0.27.2",
     "bluebird": "~3.5.1",
     "body-parser": "^1.18.2",
     "cli-color": "^1.1.0",
@@ -116,7 +117,6 @@
     "lodash.omitby": "4.6.0",
     "pino-pretty": "^6.0.0",
     "pkginfo": "^0.4.1",
-    "popsicle": "^9.2.0",
     "ramda": "^0.26.1",
     "randexp": "^0.5.3"
   },
