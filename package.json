@@ -116,7 +116,7 @@
     "pino": "^6.5.1",
     "pino-pretty": "^4.1.0",
     "pkginfo": "^0.4.1",
-    "ramda": "^0.26.1",
+    "ramda": "^0.27.2",
     "randexp": "^0.5.3"
   },
   "devDependencies": {
