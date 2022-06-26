@@ -13,7 +13,7 @@ pactWith(
     provider: "MyProvider",
   },
   provider => {
-    let url = "http://localhost"
+    let url = "http://127.0.0.1"
 
     const EXPECTED_BODY = [
       {

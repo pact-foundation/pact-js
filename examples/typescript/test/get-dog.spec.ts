@@ -13,7 +13,7 @@ chai.use(sinonChai)
 chai.use(chaiAsPromised)
 
 describe("The Dog API", () => {
-  const url = "http://localhost"
+  const url = "http://127.0.0.1"
   let dogService: DogService
 
   const provider = new Pact({
