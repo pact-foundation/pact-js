@@ -87,7 +87,7 @@ describe('Pact', () => {
   before(() =>
     provider.setup().then((opts) => {
       // Get a dynamic port from the runtime
-      process.env.API_HOST = `http://localhost:${opts.port}`;
+      process.env.API_HOST = `http://127.0.0.1:${opts.port}`;
     })
   );
 
