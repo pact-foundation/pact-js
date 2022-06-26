@@ -5,8 +5,8 @@ chai.use(chaiAsPromised);
 const { server } = require('../provider.js');
 const path = require('path');
 
-server.listen(8081, () => {
-  console.log('Service listening on http://localhost:8081');
+server.listen(8081, '127.0.0.1', () => {
+  console.log('Service listening on http://127.0.0.1:8081');
 });
 
 // Verify that the provider meets all consumer expectations
@@ -15,7 +15,7 @@ describe('Pact Verification', () => {
     process.env.PACT_DESCRIPTION = 'a request to be used';
     return new VerifierV3({
       provider: 'filter-provider',
-      providerBaseUrl: 'http://localhost:8081',
+      providerBaseUrl: 'http://127.0.0.1:8081',
       pactUrls: [
         path.resolve(process.cwd(), './filter-by-PACT_DESCRIPTION.json'),
       ],
@@ -30,7 +30,7 @@ describe('Pact Verification', () => {
     process.env.PACT_PROVIDER_STATE = 'a state to be used';
     return new VerifierV3({
       provider: 'filter-provider',
-      providerBaseUrl: 'http://localhost:8081',
+      providerBaseUrl: 'http://127.0.0.1:8081',
       pactUrls: [
         path.resolve(process.cwd(), './filter-by-PACT_PROVIDER_STATE.json'),
       ],
@@ -45,7 +45,7 @@ describe('Pact Verification', () => {
     process.env.PACT_PROVIDER_NO_STATE = 'TRUE';
     return new VerifierV3({
       provider: 'filter-provider',
-      providerBaseUrl: 'http://localhost:8081',
+      providerBaseUrl: 'http://127.0.0.1:8081',
       pactUrls: [
         path.resolve(process.cwd(), './filter-by-PACT_PROVIDER_NO_STATE.json'),
       ],
