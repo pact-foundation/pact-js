@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.60](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.59...v10.0.0-beta.60) (2022-06-26)
+
+
+### Features
+
+* modify request body inside of verifier v3 ([#875](https://github.com/pact-foundation/pact-js/issues/875)) ([0fd1a34](https://github.com/pact-foundation/pact-js/commit/0fd1a349dbcc596543d7872c89e6171b9b1cabde))
+* remove pact-web and karma ([2c57330](https://github.com/pact-foundation/pact-js/commit/2c57330f5779cd345ff6213fcd468dd34126823e))
+* support customising the proxy host ([d281d4f](https://github.com/pact-foundation/pact-js/commit/d281d4f7d94b45a98c27ed5fd5f06a5c7649b710))
+
 ## [10.0.0-beta.59](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.58...v10.0.0-beta.59) (2022-04-01)
 
 
