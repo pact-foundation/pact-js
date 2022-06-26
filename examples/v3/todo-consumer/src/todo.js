@@ -4,7 +4,7 @@ const eyes = require('eyes');
 const R = require('ramda');
 const fs = require('fs');
 
-let serverUrl = 'http://localhost:2203';
+let serverUrl = 'http://127.0.0.1:2203';
 
 module.exports = {
   getProjects: async (format = 'json') => {

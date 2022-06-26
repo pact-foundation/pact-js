@@ -6,7 +6,7 @@ const { Pact } = require('@pact-foundation/pact');
 const { getMeDogs, getMeDog } = require('../index');
 
 describe('The Dog API', () => {
-  let url = 'http://localhost';
+  let url = 'http://127.0.0.1';
   const port = 8992;
 
   const provider = new Pact({
