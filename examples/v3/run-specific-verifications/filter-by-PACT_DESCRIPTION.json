@@ -8,11 +8,6 @@
       "providerStates": [
       ],
       "request": {
-        "body": {
-        },
-        "headers": {
-          "Content-Type": "application/json"
-        },
         "method": "GET",
         "path": "/pass"
       },
@@ -31,11 +26,6 @@
       "providerStates": [
       ],
       "request": {
-        "body": {
-        },
-        "headers": {
-          "Content-Type": "application/json"
-        },
         "method": "GET",
         "path": "/fail"
       },
@@ -54,11 +44,6 @@
       "providerStates": [
       ],
       "request": {
-        "body": {
-        },
-        "headers": {
-          "Content-Type": "application/json"
-        },
         "method": "GET",
         "path": "/pass"
       },
