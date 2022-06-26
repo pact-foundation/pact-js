@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [9.18.0](https://github.com/pact-foundation/pact-js/compare/v9.17.3...v9.18.0) (2022-06-26)
+
+
+### Features
+
+* drop support for pact web incl. karma examples ([d45f898](https://github.com/pact-foundation/pact-js/commit/d45f898b29a62aa77cecff499a46ce365fd2c79a))
+* modify request body inside of verifer ([#873](https://github.com/pact-foundation/pact-js/issues/873)) ([be8ed15](https://github.com/pact-foundation/pact-js/commit/be8ed151c607b69bcf07670df211156887adb29e))
+
+
+### Fixes and Improvements
+
+* nestjs example should use branches in workflow ([a7adf07](https://github.com/pact-foundation/pact-js/commit/a7adf07d5563cf7ad92d2054b6913c890ef21220))
+* webpack on node 16 ([903cf44](https://github.com/pact-foundation/pact-js/commit/903cf44dd15f19f6132b6d7bf5f89f0cccc70d41))
+
 ### [9.17.3](https://github.com/pact-foundation/pact-js/compare/v9.17.2...v9.17.3) (2022-03-16)
 
 
