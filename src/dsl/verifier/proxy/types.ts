@@ -51,4 +51,5 @@ export interface ProxyOptions {
   validateSSL?: boolean;
   changeOrigin?: boolean;
   providerBaseUrl: string;
+  proxyHost?: string;
 }

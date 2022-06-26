@@ -43,6 +43,10 @@ export class Verifier {
       this.config.validateSSL = true;
     }
 
+    if (this.config.proxyHost) {
+      this.address = `http://${this.config.proxyHost}`;
+    }
+
     if (this.config.changeOrigin === undefined) {
       this.config.changeOrigin = false;
 
