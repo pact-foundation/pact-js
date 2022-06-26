@@ -6,7 +6,7 @@ const pact = require("@pact-foundation/pact")
 const Pact = pact.Pact
 const getMeDog = require("../index").getMeDog
 
-const url = "http://localhost"
+const url = "http://127.0.0.1"
 const port = 8990
 
 const provider = new Pact({
