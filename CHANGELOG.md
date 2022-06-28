@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [9.18.1](https://github.com/pact-foundation/pact-js/compare/v9.18.0...v9.18.1) (2022-06-28)
+
+
+### Fixes and Improvements
+
+* package.json & package-lock.json to reduce vulnerabilities ([#879](https://github.com/pact-foundation/pact-js/issues/879)) ([5005463](https://github.com/pact-foundation/pact-js/commit/50054638342171d8f9972350b2bf601e99b404b3))
+
 ## [9.18.0](https://github.com/pact-foundation/pact-js/compare/v9.17.3...v9.18.0) (2022-06-26)
 
 
