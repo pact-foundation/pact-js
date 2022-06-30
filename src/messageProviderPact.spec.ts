@@ -48,6 +48,8 @@ describe('MesageProvider', () => {
       provider: 'myprovider',
       stateHandlers: {
         'some state': () => Promise.resolve('yay'),
+        'some state with params': (name, params) =>
+          Promise.resolve(`name: ${name}, params: ${JSON.stringify(params)}`),
       },
     });
   });
@@ -122,10 +124,22 @@ describe('MesageProvider', () => {
   describe('#setupStates', () => {
     describe('when given a handler that exists', () => {
       it('returns values of all resolved handlers', () => {
-        const findStateHandler = (provider as any).setupStates.bind(provider);
+        const setupStates = (provider as any).setupStates.bind(provider);
+        return expect(setupStates(successfulMessage)).to.eventually.deep.equal([
+          'yay',
+        ]);
+      });
+      it('passes params to the handler', () => {
+        const setupStates = (provider as any).setupStates.bind(provider);
         return expect(
-          findStateHandler(successfulMessage)
-        ).to.eventually.deep.equal(['yay']);
+          setupStates({
+            providerStates: [
+              { name: 'some state with params', params: { foo: 'bar' } },
+            ],
+          })
+        ).to.eventually.deep.equal([
+          'name: some state with params, params: {"foo":"bar"}',
+        ]);
       });
     });
     describe('when given a state that does not have a handler', () => {
