@@ -12,19 +12,29 @@ export interface Metadata {
 }
 
 /**
+ * Defines a state a provider must be in.
+ */
+export interface ProviderState {
+  name: string;
+  params?: {
+    [name: string]: string;
+  };
+}
+
+/**
  * A Message is an asynchronous Interaction, sent via a Provider
  *
  * @module Message
  */
 export interface Message {
-  providerStates?: [{ name: string }];
+  providerStates?: ProviderState[];
   description?: string;
   metadata?: Metadata;
   contents: AnyTemplate;
 }
 
 export interface ConcreteMessage {
-  providerStates?: [{ name: string }];
+  providerStates?: ProviderState[];
   description?: string;
   metadata?: Metadata;
   contents: AnyJson;
@@ -36,7 +46,7 @@ export interface ConcreteMessage {
  * @module Message
  */
 export interface MessageDescriptor {
-  providerStates?: [{ name: string }];
+  providerStates?: ProviderState[];
   description: string;
   metadata?: Metadata;
 }
@@ -76,5 +86,8 @@ export interface MessageProviders {
 }
 
 export interface StateHandlers {
-  [name: string]: (state: string) => Promise<unknown>;
+  [name: string]: (
+    state: string,
+    params?: { [name: string]: string }
+  ) => Promise<unknown>;
 }
