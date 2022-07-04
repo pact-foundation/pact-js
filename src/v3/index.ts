@@ -8,13 +8,6 @@ export * from './pact';
 export * as MatchersV3 from './matchers';
 
 /**
- * Exposes {@link VerifierV3}
- * @memberof Pact
- * @static
- */
-export * from './verifier';
-
-/**
  * Exposes {@link xml}
  * @memberof Pact
  * @static

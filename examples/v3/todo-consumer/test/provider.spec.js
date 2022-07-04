@@ -1,9 +1,5 @@
-const {
-  PactV3,
-  MatchersV3,
-  XmlBuilder,
-  VerifierV3,
-} = require('@pact-foundation/pact/v3');
+const { PactV3, MatchersV3, XmlBuilder } = require('@pact-foundation/pact/v3');
+const { Verifier } = require('@pact-foundation/pact');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
@@ -26,7 +22,7 @@ describe('Pact XML Verification', () => {
       },
     };
 
-    return new VerifierV3(opts).verifyProvider().then((output) => {
+    return new Verifier(opts).verifyProvider().then((output) => {
       console.log('Pact Verification Complete!');
       console.log(output);
     });

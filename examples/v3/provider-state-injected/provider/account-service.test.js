@@ -1,5 +1,5 @@
 const path = require('path');
-const { VerifierV3 } = require('@pact-foundation/pact/v3');
+const { Verifier } = require('@pact-foundation/pact');
 const { accountService } = require('./account-service');
 const {
   Account,
@@ -54,6 +54,6 @@ describe('Account Service', () => {
       ],
     };
 
-    return new VerifierV3(opts).verifyProvider();
+    return new Verifier(opts).verifyProvider();
   });
 });

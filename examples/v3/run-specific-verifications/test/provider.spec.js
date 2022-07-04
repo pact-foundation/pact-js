@@ -1,4 +1,4 @@
-const { VerifierV3 } = require('@pact-foundation/pact/v3');
+const { Verifier } = require('@pact-foundation/pact');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
@@ -13,7 +13,7 @@ server.listen(8081, '127.0.0.1', () => {
 describe('Pact Verification', () => {
   it('filter by PACT_DESCRIPTION', () => {
     process.env.PACT_DESCRIPTION = 'a request to be used';
-    return new VerifierV3({
+    return new Verifier({
       provider: 'filter-provider',
       providerBaseUrl: 'http://127.0.0.1:8081',
       pactUrls: [
@@ -28,7 +28,7 @@ describe('Pact Verification', () => {
   });
   it('filter by PACT_PROVIDER_STATE', () => {
     process.env.PACT_PROVIDER_STATE = 'a state to be used';
-    return new VerifierV3({
+    return new Verifier({
       provider: 'filter-provider',
       providerBaseUrl: 'http://127.0.0.1:8081',
       pactUrls: [
@@ -43,7 +43,7 @@ describe('Pact Verification', () => {
   });
   it('filter by PACT_PROVIDER_NO_STATE', () => {
     process.env.PACT_PROVIDER_NO_STATE = 'TRUE';
-    return new VerifierV3({
+    return new Verifier({
       provider: 'filter-provider',
       providerBaseUrl: 'http://127.0.0.1:8081',
       pactUrls: [

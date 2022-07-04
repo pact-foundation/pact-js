@@ -1,4 +1,4 @@
-const { VerifierV3 } = require('@pact-foundation/pact/v3');
+const { Verifier } = require('@pact-foundation/pact');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
@@ -16,7 +16,7 @@ describe('Pact Verification', () => {
   it('validates the expectations of Matching Service', () => {
     let token = 'INVALID TOKEN';
 
-    return new VerifierV3({
+    return new Verifier({
       logLevel: 'info',
       provider: 'Animal Profile Service V3',
       providerBaseUrl: 'http://localhost:8081',
