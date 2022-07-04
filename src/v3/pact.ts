@@ -102,6 +102,13 @@ type TemplateQuery = Record<
   | Array<string | MatchersV3.Matcher<string>>
 >;
 
+export interface V3Interaction {
+  states?: V3ProviderState[];
+  uponReceiving: string;
+  withRequest: V3Request;
+  willRespondWith: V3Response;
+}
+
 export interface V3Request {
   method: string;
   path: string | MatchersV3.Matcher<string>;
@@ -230,6 +237,24 @@ export class PactV3 {
   constructor(opts: PactV3Options) {
     this.opts = opts;
     this.setup();
+  }
+
+  // JSON object interface for V3, to aid with migration from the previous major version
+  public addInteraction(interaction: V3Interaction): PactV3 {
+    if (interaction.uponReceiving === '') {
+      throw new Error(
+        "must provide a valid interaction description via 'uponReceiving'"
+      );
+    }
+    this.uponReceiving(interaction.uponReceiving);
+
+    (interaction.states || []).forEach((s) => {
+      this.given(s.description, s.parameters);
+    });
+    this.withRequest(interaction.withRequest);
+    this.willRespondWith(interaction.willRespondWith);
+
+    return this;
   }
 
   // TODO: this currently must be called before other methods, else it won't work
