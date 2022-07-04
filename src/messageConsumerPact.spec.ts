@@ -7,7 +7,7 @@ import {
   synchronousBodyHandler,
   asynchronousBodyHandler,
 } from './messageConsumerPact';
-import { ConcreteMessage, Message } from './dsl/message';
+import { ConcreteMessage } from './dsl/message';
 
 chai.use(sinonChai);
 chai.use(chaiAsPromised);

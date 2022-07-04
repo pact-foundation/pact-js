@@ -2,7 +2,7 @@
  * @module Message
  */
 
-import { isEmpty, cloneDeep } from 'lodash';
+import { isEmpty } from 'lodash';
 import serviceFactory, {
   ConsumerMessage,
   makeConsumerAsyncMessagePact,
@@ -41,6 +41,7 @@ const numberToSpec = (spec?: number): SpecificationVersion => {
   }
 };
 
+// eslint-disable-next-line no-shadow
 enum ContentType {
   JSON,
   BINARY,
@@ -223,12 +224,9 @@ export class MessageConsumerPact {
 
     const reified: ConcreteMessage = JSON.parse(raw);
 
-    reified.contents =
-      this.state.contentType === ContentType.STRING
-        ? reified.contents
-        : this.state.contentType === ContentType.BINARY
-        ? Buffer.from(reified.contents as string, 'base64')
-        : reified.contents;
+    if (this.state.contentType === ContentType.BINARY) {
+      reified.contents = Buffer.from(reified.contents as string, 'base64');
+    }
 
     logger.debug(
       `rehydrated message body into correct type: ${reified.contents}`

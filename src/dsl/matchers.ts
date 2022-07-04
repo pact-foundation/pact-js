@@ -29,6 +29,38 @@ export const IPV6_FORMAT =
 export const HEX_FORMAT = '^[0-9a-fA-F]+$';
 /* tslint:enable */
 
+export interface Matcher<T> {
+  value?: T;
+  'pact:matcher:type': string;
+  getValue(): T;
+}
+
+export interface ArrayMatcher<T> {
+  value: [T];
+  'pact:matcher:type': string;
+  getValue(): T[];
+  min?: number;
+  max?: number;
+}
+
+export function isMatcher(x: AnyTemplate): x is Matcher<AnyTemplate> {
+  return x != null && (x as Matcher<AnyTemplate>).getValue !== undefined;
+}
+
+export type AnyTemplate =
+  | AnyJson
+  | Matcher<AnyTemplate>
+  | ArrayMatcher<AnyTemplate>
+  | TemplateMap
+  | ArrayTemplate;
+
+export type InterfaceToTemplate<O> = { [K in keyof O]: AnyTemplate };
+
+interface TemplateMap {
+  [key: string]: AnyTemplate;
+}
+type ArrayTemplate = Array<AnyTemplate>;
+
 /**
  * Validates the given example against the regex.
  *
@@ -271,37 +303,7 @@ export function string(value = 'iloveorange'): Matcher<string> {
 export { somethingLike as like };
 export { term as regex };
 
-export interface Matcher<T> {
-  value?: T;
-  'pact:matcher:type': string;
-  getValue(): T;
-}
 
-export interface ArrayMatcher<T> {
-  value: [T];
-  'pact:matcher:type': string;
-  getValue(): T[];
-  min?: number;
-  max?: number;
-}
-
-export function isMatcher(x: AnyTemplate): x is Matcher<AnyTemplate> {
-  return x != null && (x as Matcher<AnyTemplate>).getValue !== undefined;
-}
-
-export type AnyTemplate =
-  | AnyJson
-  | Matcher<AnyTemplate>
-  | ArrayMatcher<AnyTemplate>
-  | TemplateMap
-  | ArrayTemplate;
-
-export type InterfaceToTemplate<O> = { [K in keyof O]: AnyTemplate };
-
-interface TemplateMap {
-  [key: string]: AnyTemplate;
-}
-type ArrayTemplate = Array<AnyTemplate>;
 
 // Recurse the object removing any underlying matching guff, returning
 // the raw example content

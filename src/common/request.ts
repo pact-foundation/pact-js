@@ -3,6 +3,7 @@ import https from 'https';
 import { pathOr } from 'ramda';
 import logger from './logger';
 
+// eslint-disable-next-line no-shadow
 export enum HTTPMethods {
   GET = 'GET',
   POST = 'POST',

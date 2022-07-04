@@ -5,6 +5,7 @@
 import publisher, { PublisherOptions } from '@pact-foundation/pact-core';
 
 export class Publisher {
+  // eslint-disable-next-line no-empty-function
   constructor(private opts: PublisherOptions) {}
 
   public publishPacts(): Promise<string[]> {

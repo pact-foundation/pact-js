@@ -75,7 +75,7 @@ describe('Verifier', () => {
 
     context('when logLevel is not provided', () => {
       it('does not modify the log setting', () => {
-        const { logLevel, ...rest } = opts;
+        const { ...rest } = opts;
         v = new Verifier({
           ...rest,
         });

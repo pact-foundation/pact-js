@@ -61,7 +61,7 @@ describe('Matcher', () => {
           },
         };
 
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
         const a: AnyTemplate = like(template);
       });
     });
@@ -77,13 +77,13 @@ describe('Matcher', () => {
           },
         };
 
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
         const a: AnyTemplate = like(template);
       });
     });
 
     it('compiles nested likes', () => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
       const a: AnyTemplate = like({
         someArray: ['one', 'two'],
         someNumber: like(1),

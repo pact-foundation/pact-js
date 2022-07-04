@@ -1,3 +1,4 @@
+/* eslint-disable no-promise-executor-return */
 import serviceFactory from '@pact-foundation/pact-core';
 import * as path from 'path';
 import clc from 'cli-color';

@@ -1,13 +1,17 @@
 {
+  "root": true,
   "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "import", "mocha", "chai-friendly"],
   "extends": [
+    "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "airbnb-typescript-lite",
-    "plugin:chai-friendly/recommended",
-    "prettier",
-    "prettier/@typescript-eslint"
+    "airbnb-base/legacy",
+    // "plugin:mocha/recommended",
+    "prettier"
   ],
-  "plugins": ["import", "mocha", "chai-friendly"],
+  "env": {
+    "mocha": true
+  },
   "settings": {
     "import/resolver": {
       "typescript": {
@@ -26,7 +30,8 @@
     "@typescript-eslint/explicit-module-boundary-types": "error",
     "import/prefer-default-export": "off",
     "no-underscore-dangle": ["error", { "allow": ["__pactMessageMetadata"] }],
-    "class-methods-use-this": "off"
+    "class-methods-use-this": "off",
+    "no-use-before-define": "off"
   },
   "overrides": [
     {
@@ -35,10 +40,15 @@
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-empty-function": "off",
         "@typescript-eslint/no-unused-expressions": "off",
+        "no-unused-expressions": "off",
         "no-new": "off",
         "class-methods-use-this": "off",
-        "chai-friendly/no-unused-expressions": "error"
+        "chai-friendly/no-unused-expressions": "error",
+        "mocha/no-mocha-arrows": "off"
       }
     }
-  ]
+  ],
+  "globals": {
+    "NodeJS": true
+  }
 }

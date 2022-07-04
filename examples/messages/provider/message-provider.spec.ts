@@ -30,7 +30,7 @@ describe('Message provider tests', () => {
     // pactUrls: [path.resolve(process.cwd(), "pacts", "myjsmessageconsumer-myjsmessageprovider.json")],
     // Broker validation
     pactBrokerUrl: 'https://test.pactflow.io/',
-    pactBrokerUsername:
+    pactBrokerUsername: 
       process.env.PACT_BROKER_USERNAME || 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
     pactBrokerPassword:
       process.env.PACT_BROKER_PASSWORD || 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
