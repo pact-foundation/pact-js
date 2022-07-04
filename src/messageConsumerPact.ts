@@ -3,21 +3,53 @@
  */
 
 import { isEmpty, cloneDeep } from 'lodash';
-import serviceFactory from '@pact-foundation/pact-core';
+import serviceFactory, {
+  ConsumerMessage,
+  makeConsumerAsyncMessagePact,
+  ConsumerMessagePact,
+} from '@pact-foundation/pact-core';
+import { forEachObjIndexed } from 'ramda';
 import { AnyJson } from './common/jsonTypes';
-import { extractPayload, AnyTemplate } from './dsl/matchers';
+import { AnyTemplate } from './dsl/matchers';
 import {
   Metadata,
   Message,
   MessageConsumer,
   ConcreteMessage,
+  ProviderState,
 } from './dsl/message';
 import logger, { setLogLevel } from './common/logger';
 import { MessageConsumerOptions } from './dsl/options';
 import ConfigurationError from './errors/configurationError';
+import { SpecificationVersion } from '../v3';
+import { version as pactPackageVersion } from '../package.json';
 
-const isMessage = (x: Message | unknown): x is Message =>
-  (x as Message).contents !== undefined;
+const DEFAULT_PACT_DIR = './pacts';
+
+const numberToSpec = (spec?: number): SpecificationVersion => {
+  if (!spec) {
+    return SpecificationVersion.SPECIFICATION_VERSION_V3;
+  }
+
+  switch (spec) {
+    case 3:
+      return SpecificationVersion.SPECIFICATION_VERSION_V3;
+    case 4:
+      return SpecificationVersion.SPECIFICATION_VERSION_V4;
+    default:
+      throw new Error(`invalid pact specification version supplied: ${spec}`);
+  }
+};
+
+enum ContentType {
+  JSON,
+  BINARY,
+  STRING,
+}
+
+type InternalMessageState = {
+  contentType: ContentType;
+};
 
 /**
  * A Message Consumer is analagous to a Provider in the HTTP Interaction model.
@@ -25,15 +57,22 @@ const isMessage = (x: Message | unknown): x is Message =>
  * request was provided.
  */
 export class MessageConsumerPact {
-  // Build up a valid Message object
-  private state: Partial<Message> = {};
+  private state: Partial<InternalMessageState> = {};
 
-  // eslint-disable-next-line class-methods-use-this
-  private getServiceFactory() {
-    return serviceFactory;
-  }
+  private pact: ConsumerMessagePact;
+
+  private message: ConsumerMessage;
 
   constructor(private config: MessageConsumerOptions) {
+    this.pact = makeConsumerAsyncMessagePact(
+      config.consumer,
+      config.provider,
+      numberToSpec(config.spec),
+      config.logLevel
+    );
+    this.pact.addMetadata('pact-js', 'version', pactPackageVersion);
+    this.message = this.pact.newMessage('');
+
     if (!isEmpty(config.logLevel)) {
       setLogLevel(config.logLevel);
       serviceFactory.logLevel(config.logLevel);
@@ -43,19 +82,16 @@ export class MessageConsumerPact {
   /**
    * Gives a state the provider should be in for this Message.
    *
-   * @param {string} providerState - The state of the provider.
+   * @param {string} state - The state of the provider.
    * @returns {Message} MessageConsumer
    */
-  public given(providerState: string): MessageConsumerPact {
-    if (providerState) {
-      // Currently only supports a single state
-      // but the format needs to be v3 compatible for
-      // basic interoperability
-      this.state.providerStates = [
-        {
-          name: providerState,
-        },
-      ];
+  public given(state: string | ProviderState): MessageConsumerPact {
+    if (typeof state === 'string') {
+      this.message.given(state);
+    } else {
+      forEachObjIndexed((v, k) => {
+        this.message.givenWithParam(state.name, `${k}`, JSON.stringify(v));
+      }, state.params);
     }
 
     return this;
@@ -73,15 +109,16 @@ export class MessageConsumerPact {
         'You must provide a description for the Message.'
       );
     }
-    this.state.description = description;
+    this.message.expectsToReceive(description);
 
     return this;
   }
 
   /**
-   * The content to be received by the message consumer.
+   * The JSON object to be received by the message consumer.
    *
-   * May be a JSON document or JSON primitive.
+   * May be a JSON object or JSON primitive. The contents must be able to be properly
+   * strigified and parse (i.e. via JSON.stringify and JSON.parse).
    *
    * @param {string} content - A description of the Message to be received
    * @returns {Message} MessageConsumer
@@ -92,13 +129,51 @@ export class MessageConsumerPact {
         'You must provide a valid JSON document or primitive for the Message.'
       );
     }
-    this.state.contents = content;
+    this.message.withContents(JSON.stringify(content), 'application/json');
+    this.state.contentType = ContentType.JSON;
 
     return this;
   }
 
   /**
-   * Message metadata
+   * The text content to be received by the message consumer.
+   *
+   * May be any text
+   *
+   * @param {string} content - A description of the Message to be received
+   * @returns {Message} MessageConsumer
+   */
+  public withTextContent(
+    content: string,
+    contentType: string
+  ): MessageConsumerPact {
+    this.message.withContents(content, contentType);
+    this.state.contentType = ContentType.STRING;
+
+    return this;
+  }
+
+  /**
+   * The binary content to be received by the message consumer.
+   *
+   * Content will be stored in base64 in the resulting pact file.
+   *
+   * @param {Buffer} content - A buffer containing the binary content
+   * @param {String} contenttype - The mime type of the content to expect
+   * @returns {Message} MessageConsumer
+   */
+  public withBinaryContent(
+    content: Buffer,
+    contentType: string
+  ): MessageConsumerPact {
+    this.message.withBinaryContents(content, contentType);
+    this.state.contentType = ContentType.BINARY;
+
+    return this;
+  }
+
+  /**
+   * Message metadata.
    *
    * @param {string} metadata -
    * @returns {Message} MessageConsumer
@@ -109,18 +184,15 @@ export class MessageConsumerPact {
         'You must provide valid metadata for the Message, or none at all'
       );
     }
-    this.state.metadata = metadata;
+
+    forEachObjIndexed((v, k) => {
+      this.message.withMetadata(
+        `${k}`,
+        typeof v === 'string' ? v : v.getValue()
+      );
+    }, metadata);
 
     return this;
-  }
-
-  /**
-   * Returns the Message object created.
-   *
-   * @returns {Message}
-   */
-  public json(): Message {
-    return this.state as Message;
   }
 
   /**
@@ -132,35 +204,46 @@ export class MessageConsumerPact {
   public verify(handler: MessageConsumer): Promise<unknown> {
     logger.info('Verifying message');
 
-    return this.validate()
-      .then(() => cloneDeep(this.state))
-      .then((clone: Message) =>
-        handler({ ...clone, contents: extractPayload(clone.contents) })
-      )
-      .then(() =>
-        this.getServiceFactory().createMessage({
-          consumer: this.config.consumer,
-          content: JSON.stringify(this.state),
-          dir: this.config.dir,
-          pactFileWriteMode: this.config.pactfileWriteMode,
-          provider: this.config.provider,
-          spec: 3,
-        })
-      );
+    return handler(this.reifiedContent())
+      .then(() => {
+        this.pact.writePactFile(
+          this.config.dir ?? DEFAULT_PACT_DIR,
+          this.config.pactfileWriteMode === 'overwrite'
+        );
+      })
+      .finally(() => {
+        this.message = this.pact.newMessage('');
+        this.state = {};
+      });
+  }
+
+  private reifiedContent(): ConcreteMessage {
+    const raw = this.message.reifyMessage();
+    logger.debug(`reified message raw: raw`);
+
+    const reified: ConcreteMessage = JSON.parse(raw);
+
+    reified.contents =
+      this.state.contentType === ContentType.STRING
+        ? reified.contents
+        : this.state.contentType === ContentType.BINARY
+        ? Buffer.from(reified.contents as string, 'base64')
+        : reified.contents;
+
+    logger.debug(
+      `rehydrated message body into correct type: ${reified.contents}`
+    );
+
+    return reified;
   }
 
   /**
-   * Validates the current state of the Message.
+   * Returns the Message object created.
    *
-   * @returns {Promise}
+   * @returns {Message}
    */
-  public validate(): Promise<unknown> {
-    if (isMessage(this.state)) {
-      return Promise.resolve();
-    }
-    return Promise.reject(
-      new Error('message has not yet been properly constructed')
-    );
+  public json(): Message {
+    return this.state as Message;
   }
 }
 
@@ -169,7 +252,7 @@ export class MessageConsumerPact {
 // bodyHandler takes a synchronous function and returns
 // a wrapped function that accepts a Message and returns a Promise
 export function synchronousBodyHandler<R>(
-  handler: (body: AnyJson) => R
+  handler: (body: AnyJson | Buffer) => R
 ): MessageConsumer {
   return (m: ConcreteMessage): Promise<R> => {
     const body = m.contents;
@@ -189,7 +272,7 @@ export function synchronousBodyHandler<R>(
 // a wrapped function that accepts a Message and returns a Promise
 // TODO: move this into its own package and re-export?
 export function asynchronousBodyHandler<R>(
-  handler: (body: AnyJson) => Promise<R>
+  handler: (body: AnyJson | Buffer) => Promise<R>
 ): MessageConsumer {
   return (m: ConcreteMessage) => handler(m.contents);
 }

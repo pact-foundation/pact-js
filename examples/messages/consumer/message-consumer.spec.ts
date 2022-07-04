@@ -13,17 +13,38 @@ const path = require('path');
 describe('Message consumer tests', () => {
   const messagePact = new MessageConsumerPact({
     consumer: 'MyJSMessageConsumer',
-    dir: path.resolve(process.cwd(), 'pacts'),
+    // dir: path.resolve(process.cwd(), 'pacts'),
     pactfileWriteMode: 'update',
     provider: 'MyJSMessageProvider',
-    logLevel: 'info',
+    logLevel: 'debug',
   });
 
   describe('receive dog event', () => {
     it('accepts a valid dog', () => {
       return (
         messagePact
-          .given('some state')
+          .given('a dog named drover')
+          .expectsToReceive('a request for a dog')
+          .withContent({
+            id: like(1),
+            name: like('drover'),
+            type: term({
+              generate: 'bulldog',
+              matcher: '^(bulldog|sheepdog)$',
+            }),
+          })
+          // TODO: this doesn't work at the moment, if verified by Pact JS
+          .withMetadata({
+            queue: 'animals',
+          })
+          .verify(synchronousBodyHandler(dogApiHandler))
+      );
+    });
+
+    it('accepts a valid dog scenario 2', () => {
+      return (
+        messagePact
+          .given('a dog named rover')
           .expectsToReceive('a request for a dog')
           .withContent({
             id: like(1),
@@ -34,9 +55,9 @@ describe('Message consumer tests', () => {
             }),
           })
           // TODO: this doesn't work at the moment, if verified by Pact JS
-          // .withMetadata({
-          //   'content-type': 'application/json',
-          // })
+          .withMetadata({
+            queue: 'animals',
+          })
           .verify(synchronousBodyHandler(dogApiHandler))
       );
     });

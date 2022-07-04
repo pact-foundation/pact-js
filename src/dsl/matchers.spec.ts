@@ -529,15 +529,15 @@ describe('Matcher', () => {
     describe('when used it should create a JSON object', () => {
       it('creates a valid matcher', () => {
         expect(boolean()).to.be.an('object');
-        expect(boolean().contents).to.equal(true);
+        expect(boolean().value).to.equal(true);
       });
       it('sets value=false', () => {
         expect(boolean(false)).to.be.an('object');
-        expect(boolean(false).contents).to.equal(false);
+        expect(boolean(false).value).to.equal(false);
       });
       it('sets value=true', () => {
         expect(boolean(true)).to.be.an('object');
-        expect(boolean(true).contents).to.equal(true);
+        expect(boolean(true).value).to.equal(true);
       });
     });
   });
@@ -547,7 +547,7 @@ describe('Matcher', () => {
       it('creates a valid matcher', () => {
         expect(string('test')).to.be.an('object');
         expect(string()).to.be.an('object');
-        expect(string('test').contents).to.equal('test');
+        expect(string('test').value).to.equal('test');
       });
     });
   });
@@ -557,7 +557,7 @@ describe('Matcher', () => {
       it('creates a valid matcher', () => {
         expect(decimal(10.1)).to.be.an('object');
         expect(decimal()).to.be.an('object');
-        expect(decimal(0.0).contents).to.equal(0.0);
+        expect(decimal(0.0).value).to.equal(0.0);
       });
     });
   });
@@ -567,7 +567,7 @@ describe('Matcher', () => {
       it('creates a valid matcher', () => {
         expect(integer(10)).to.be.an('object');
         expect(integer()).to.be.an('object');
-        expect(integer(0).contents).to.equal(0);
+        expect(integer(0).value).to.equal(0);
       });
     });
   });

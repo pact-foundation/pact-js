@@ -1,4 +1,5 @@
 export * from './pact';
+export * from './types';
 
 /**
  * Exposes {@link MatchersV3}

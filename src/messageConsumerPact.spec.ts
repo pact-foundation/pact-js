@@ -7,7 +7,7 @@ import {
   synchronousBodyHandler,
   asynchronousBodyHandler,
 } from './messageConsumerPact';
-import { Message } from './dsl/message';
+import { ConcreteMessage, Message } from './dsl/message';
 
 chai.use(sinonChai);
 chai.use(chaiAsPromised);
@@ -24,7 +24,7 @@ describe('MessageConsumer', () => {
     });
   });
 
-  const testMessage: Message = {
+  const testMessage: ConcreteMessage = {
     contents: {
       foo: 'bar',
     },
@@ -38,17 +38,6 @@ describe('MessageConsumer', () => {
   });
 
   describe('#dsl', () => {
-    describe('when a valid Message has been constructed', () => {
-      it('the state should be valid', () => {
-        consumer
-          .given('some state')
-          .expectsToReceive('A message about something')
-          .withContent({ foo: 'bar' })
-          .withMetadata({ baz: 'bat' });
-
-        return expect(consumer.validate()).to.eventually.be.fulfilled;
-      });
-    });
     describe('when a valid state has been given', () => {
       it('the state should be save id in v3 format', () => {
         consumer
@@ -61,16 +50,6 @@ describe('MessageConsumer', () => {
         expect(consumer.json().providerStates).to.deep.eq([
           { name: 'some state' },
         ]);
-      });
-    });
-    describe('when a valid Message has not been constructed', () => {
-      it('the state should not be valid', () => {
-        consumer
-          .given('some state')
-          .expectsToReceive('A message about something')
-          .withMetadata({ baz: 'bat' });
-
-        return expect(consumer.validate()).to.eventually.be.rejected;
       });
     });
     describe('when an empty description has been given', () => {

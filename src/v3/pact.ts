@@ -16,11 +16,16 @@ import * as MatchersV3 from './matchers';
 import logger from '../common/logger';
 import { version as pactPackageVersion } from '../../package.json';
 import { JsonMap } from '../common/jsonTypes';
-
-export enum SpecificationVersion {
-  SPECIFICATION_VERSION_V2 = 3,
-  SPECIFICATION_VERSION_V3 = 4,
-}
+import {
+  PactV3Options,
+  SpecificationVersion,
+  TemplateHeaders,
+  V3Interaction,
+  V3MockServer,
+  V3ProviderState,
+  V3Request,
+  V3Response,
+} from './types';
 
 const matcherValueOrString = (obj: unknown): string => {
   if (typeof obj === 'string') return obj;
@@ -42,40 +47,6 @@ const contentTypeFromHeaders = (
   return contentType;
 };
 
-/**
- * Options for the mock server
- */
-export interface PactV3Options {
-  /**
-   * Directory to write the pact file to
-   */
-  dir: string;
-  /**
-   * Consumer name
-   */
-  consumer: string;
-  /**
-   * Provider name
-   */
-  provider: string;
-  /**
-   * If the mock server should handle CORS pre-flight requests. Defaults to false
-   */
-  cors?: boolean;
-  /**
-   * Port to run the mock server on. Defaults to a random port
-   */
-  port?: number;
-  /**
-   * Specification version to use
-   */
-  spec?: SpecificationVersion;
-  /**
-   * Specification version to use
-   */
-  logLevel?: 'trace' | 'debug' | 'info' | 'warn' | 'error';
-}
-
 const readBinaryData = (file: string): Buffer => {
   try {
     const body = fs.readFileSync(file);
@@ -85,51 +56,6 @@ const readBinaryData = (file: string): Buffer => {
     throw new Error(`unable to read file for binary request: ${e.message}`);
   }
 };
-
-export interface V3ProviderState {
-  description: string;
-  parameters?: JsonMap;
-}
-
-type TemplateHeaders = {
-  [header: string]: string | MatchersV3.Matcher<string>;
-};
-
-type TemplateQuery = Record<
-  string,
-  | string
-  | MatchersV3.Matcher<string>
-  | Array<string | MatchersV3.Matcher<string>>
->;
-
-export interface V3Interaction {
-  states?: V3ProviderState[];
-  uponReceiving: string;
-  withRequest: V3Request;
-  willRespondWith: V3Response;
-}
-
-export interface V3Request {
-  method: string;
-  path: string | MatchersV3.Matcher<string>;
-  query?: TemplateQuery;
-  headers?: TemplateHeaders;
-  body?: MatchersV3.AnyTemplate;
-  contentType?: string;
-}
-
-export interface V3Response {
-  status: number;
-  headers?: TemplateHeaders;
-  body?: MatchersV3.AnyTemplate;
-  contentType?: string;
-}
-
-export interface V3MockServer {
-  port: number;
-  url: string;
-  id: string;
-}
 
 function displayQuery(query: Record<string, string[]>): string {
   const pairs = toPairs(query);

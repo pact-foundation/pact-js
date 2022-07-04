@@ -1,9 +1,14 @@
 # Pact-js migration guide
 
-# beta.60
+# beta.61
 
 * new `addInteraction` method on PactV3 to support previous JSON-style interactions
 * remove `VerifierV3` as many beta versions have passed with this deprecation notice and won't be in final release
+* remove `json()` method from consumer message pact
+* add new `WithBinaryContent` method for consumer messages
+* add binary content support to messages via `WithBinaryContent`
+* add text content support to messages via `WithTextContent`
+* Remove all Ruby dependencies in DSLs
 
 # beta.56
 

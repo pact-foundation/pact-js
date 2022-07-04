@@ -30,14 +30,14 @@ export interface Message {
   providerStates?: ProviderState[];
   description?: string;
   metadata?: Metadata;
-  contents: AnyTemplate;
+  contents: AnyTemplate | Buffer;
 }
 
 export interface ConcreteMessage {
   providerStates?: ProviderState[];
   description?: string;
   metadata?: Metadata;
-  contents: AnyJson;
+  contents: AnyJson | Buffer;
 }
 
 /**
@@ -58,7 +58,7 @@ export interface MessageDescriptor {
  *
  * @module Message
  */
-export type MessageConsumer = (m: Message) => Promise<unknown>;
+export type MessageConsumer = (m: ConcreteMessage) => Promise<unknown>;
 
 export type MessageFromProvider = unknown;
 export type MessageFromProviderWithMetadata = {

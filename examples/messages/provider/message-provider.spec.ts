@@ -1,13 +1,17 @@
 /*  tslint:disable: no-console*/
-import { MessageProviderPact } from '@pact-foundation/pact';
+import {
+  MessageProviderPact,
+  providerWithMetadata,
+} from '@pact-foundation/pact';
 import { versionFromGitTag } from '@pact-foundation/absolute-version';
-import path = require('path');
 const { createDog } = require('./dog-client');
 
 describe('Message provider tests', () => {
   const p = new MessageProviderPact({
     messageProviders: {
-      'a request for a dog': () => createDog(27),
+      'a request for a dog': providerWithMetadata(() => createDog(27), {
+        queue: 'animals',
+      }),
     },
     stateHandlers: {
       'some state': () => {

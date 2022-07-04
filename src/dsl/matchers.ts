@@ -65,9 +65,9 @@ export function eachLike<T>(
   const min = !isEmpty(opts) && opts ? opts.min : 1;
 
   return {
-    contents: content,
+    value: [content],
     getValue: () => Array.from(new Array(min), () => content),
-    json_class: 'Pact::ArrayLike',
+    'pact:matcher:type': 'type',
     min,
   };
 }
@@ -84,10 +84,14 @@ export function somethingLike<T>(value: T): Matcher<T> {
   }
 
   return {
-    contents: value,
+    value,
     getValue: () => value,
-    json_class: 'Pact::SomethingLike',
+    'pact:matcher:type': 'type',
   };
+}
+
+export interface RegexMatcher<T> extends Matcher<T> {
+  regex: string;
 }
 
 /**
@@ -99,7 +103,7 @@ export function somethingLike<T>(value: T): Matcher<T> {
 export function term(opts: {
   generate: string;
   matcher: string;
-}): Matcher<string> {
+}): RegexMatcher<string> {
   const { generate, matcher } = opts;
 
   if (isNil(generate) || isNil(matcher)) {
@@ -114,16 +118,10 @@ export function term(opts: {
   }
 
   return {
-    data: {
-      generate,
-      matcher: {
-        json_class: 'Regexp',
-        o: 0,
-        s: matcher,
-      },
-    },
     getValue: () => generate,
-    json_class: 'Pact::Term',
+    value: generate,
+    regex: matcher,
+    'pact:matcher:type': 'regex',
   };
 }
 
@@ -274,20 +272,17 @@ export { somethingLike as like };
 export { term as regex };
 
 export interface Matcher<T> {
-  data?: {
-    generate: string;
-    matcher: { json_class: string; o: number; s: string };
-  };
-  contents?: T;
-  json_class: string;
+  value?: T;
+  'pact:matcher:type': string;
   getValue(): T;
 }
 
 export interface ArrayMatcher<T> {
-  contents: T;
-  json_class: string;
+  value: [T];
+  'pact:matcher:type': string;
   getValue(): T[];
-  min: number;
+  min?: number;
+  max?: number;
 }
 
 export function isMatcher(x: AnyTemplate): x is Matcher<AnyTemplate> {
