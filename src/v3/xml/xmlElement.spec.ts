@@ -20,11 +20,14 @@ describe('xml element', () => {
       expect(xml.name, 'name of XML element').to.equal('my name');
 
       expect(xml, 'XML element').to.have.property('children');
+      // @ts-ignore
       expect(xml.children, 'children of XML element').to.be.lengthOf(2);
       expect(
+        // @ts-ignore
         xml.children[0],
         'type of first child of XML element'
       ).to.be.instanceOf(XmlText);
+      // @ts-ignore
       expect(xml.children[0], 'first child of XML element').to.have.property(
         'content'
       );
@@ -32,6 +35,7 @@ describe('xml element', () => {
       expect(xml.children[0].content, 'content of first child').to.equal(
         'some string'
       );
+      // @ts-ignore
       expect(xml.children[0], 'first child of XML element').to.have.property(
         'matcher'
       );
@@ -73,14 +77,18 @@ describe('xml element', () => {
       expect(xml.name, 'name of XML element').to.equal('my name');
 
       expect(xml, 'XML element').to.have.property('children');
+      // @ts-ignore
       expect(xml.children, 'children of XML element').to.be.lengthOf(7);
       for (let i = 0; i < 7; i += 1) {
+        // @ts-ignore
         expect(xml.children[i]).to.be.instanceOf(XmlText);
+        // @ts-ignore
         expect(xml.children[i]).to.have.property('content');
         // @ts-ignore
         expect(xml.children[i].content).not.to.be.empty;
         // @ts-ignore
         expect(xml.children[i].content).to.be.a('string');
+        // @ts-ignore
         expect(xml.children[i]).to.have.property('matcher');
         // @ts-ignore
         expect(xml.children[i].matcher).to.have.property('value');
@@ -107,13 +115,17 @@ describe('xml element', () => {
       expect(xml.name, 'name of XML element').to.equal('my name');
 
       expect(xml, 'XML element').to.have.property('children');
+      // @ts-ignore
       expect(xml.children, 'children of XML element').to.be.lengthOf(1);
+      // @ts-ignore
       expect(xml.children[0]).to.be.instanceOf(XmlText);
+      // @ts-ignore
       expect(xml.children[0]).to.have.property('content');
       // @ts-ignore
       expect(xml.children[0].content).to.be.empty;
       // @ts-ignore
       expect(xml.children[0].content).to.be.a('string');
+      // @ts-ignore
       expect(xml.children[0]).to.have.property('matcher');
       // @ts-ignore
       expect(xml.children[0].matcher).not.to.have.property('value');
