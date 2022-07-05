@@ -5,7 +5,7 @@
  */
 import { isNil, extend, omitBy, isUndefined } from 'lodash';
 import gql from 'graphql-tag';
-import { Interaction, InteractionState } from './interaction';
+import { Interaction, InteractionStateComplete } from './interaction';
 import { regex } from './matchers';
 import GraphQLQueryError from '../errors/graphQLQueryError';
 import ConfigurationError from '../errors/configurationError';
@@ -93,7 +93,9 @@ export class GraphQLInteraction extends Interaction {
   /**
    * Returns the interaction object created.
    */
-  public json(): InteractionState {
+  public json(): InteractionStateComplete {
+    super.json();
+
     if (isNil(this.query)) {
       throw new ConfigurationError('You must provide a GraphQL query.');
     }
@@ -122,7 +124,7 @@ export class GraphQLInteraction extends Interaction {
       this.state.request
     );
 
-    return this.state;
+    return this.state as InteractionStateComplete;
   }
 
   private queryOrMutation(query: string, type: string): this {

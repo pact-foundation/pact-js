@@ -9,6 +9,8 @@
 * add binary content support to messages via `WithBinaryContent`
 * add text content support to messages via `WithTextContent`
 * Remove all Ruby dependencies in DSLs
+* `pactfileWriteMode` still supports the same options, however the behaviour of `overwrite` is such now that it will overwrite the pact file _per test_, not pact run of Pact. This is because there is no longer a single long running mock server as per previous versions. Set to `merge` or leave blank for a sensible default. 
+* As per the change to `pactfileWriteMode` this also means pact files should be cleared out prior to each test, to avoid extraneous interactions in a pact file.
 
 # beta.56
 

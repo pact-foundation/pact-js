@@ -510,3 +510,9 @@ export function uuid(example?: string): RegexMatcher {
     value: 'e2490de5-5bd3-43d5-b7c4-526e33f71304',
   };
 }
+
+export const matcherValueOrString = (obj: unknown): string => {
+  if (typeof obj === 'string') return obj;
+
+  return JSON.stringify(obj);
+};

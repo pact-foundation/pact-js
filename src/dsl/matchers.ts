@@ -5,6 +5,7 @@
  */
 
 import { isFunction, isNil, isEmpty, isUndefined } from 'lodash';
+import { times } from 'ramda';
 import { AnyJson, JsonMap } from '../common/jsonTypes';
 import MatcherError from '../errors/matcherError';
 
@@ -35,10 +36,8 @@ export interface Matcher<T> {
   getValue(): T;
 }
 
-export interface ArrayMatcher<T> {
-  value: [T];
+export interface ArrayMatcher<T> extends Matcher<T> {
   'pact:matcher:type': string;
-  getValue(): T[];
   min?: number;
   max?: number;
 }
@@ -74,15 +73,15 @@ export function validateExample(example: string, matcher: string): boolean {
 
 /**
  * The eachLike matcher
- * @param {any} content
+ * @param {any} template
  * @param {Object} opts
  * @param {Number} opts.min
  */
 export function eachLike<T>(
-  content: T,
+  template: T,
   opts?: { min: number }
-): ArrayMatcher<T> {
-  if (isUndefined(content)) {
+): ArrayMatcher<T[]> {
+  if (isUndefined(template)) {
     throw new MatcherError(
       'Error creating a Pact eachLike. Please provide a content argument'
     );
@@ -97,8 +96,8 @@ export function eachLike<T>(
   const min = !isEmpty(opts) && opts ? opts.min : 1;
 
   return {
-    value: [content],
-    getValue: () => Array.from(new Array(min), () => content),
+    value: times(() => template, min),
+    getValue: () => times(() => template, min),
     'pact:matcher:type': 'type',
     min,
   };
@@ -326,4 +325,11 @@ export function extractPayload(value: AnyTemplate): AnyJson {
     );
   }
   return value;
+}
+
+// Gets a matcher as JSON or the string value if it's not a matcher
+export function matcherValueOrString(obj: unknown): string {
+  if (typeof obj === 'string') return obj;
+
+  return JSON.stringify(obj);
 }

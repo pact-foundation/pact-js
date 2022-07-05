@@ -49,3 +49,13 @@ export const isPortAvailable = (port: number, host: string): Promise<void> =>
         return portCheck(port, host);
       })
   );
+
+export const freePort = (): Promise<number> => {
+  return new Promise((res) => {
+    const s = net.createServer();
+    s.listen(0, () => {
+      const port = s.address().port;
+      s.close(() => res(port));
+    });
+  });
+};

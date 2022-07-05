@@ -13,17 +13,21 @@ interface QueryObject {
 }
 export type Query = string | QueryObject;
 
+export type Headers = {
+  [header: string]: string | Matcher<string>;
+};
+
 export interface RequestOptions {
   method: HTTPMethods | HTTPMethod;
   path: string | Matcher<string>;
   query?: Query;
-  headers?: { [name: string]: string | Matcher<string> };
+  headers?: Headers;
   body?: AnyTemplate;
 }
 
 export interface ResponseOptions {
   status: number;
-  headers?: { [name: string]: string | Matcher<string> };
+  headers?: Headers;
   body?: AnyTemplate;
 }
 
@@ -39,6 +43,13 @@ export interface InteractionState {
   description?: string;
   request?: RequestOptions;
   response?: ResponseOptions;
+}
+
+export interface InteractionStateComplete {
+  providerState?: string;
+  description: string;
+  request: RequestOptions;
+  response: ResponseOptions;
 }
 
 /**
@@ -156,12 +167,27 @@ export class Interaction {
    * Returns the interaction object created.
    * @returns {Object}
    */
-  public json(): InteractionState {
+  public json(): InteractionStateComplete {
     if (isNil(this.state.description)) {
       throw new ConfigurationError(
         'You must provide a description for the Interaction'
       );
     }
-    return this.state;
+    if (
+      isNil(this.state.request) ||
+      isNil(this.state?.request?.method) ||
+      isNil(this.state?.request?.path)
+    ) {
+      throw new ConfigurationError(
+        'You must provide a request with at least a method and path for the Interaction'
+      );
+    }
+    if (isNil(this.state.response) || isNil(this.state?.response?.status)) {
+      throw new ConfigurationError(
+        'You must provide a response with a status for the Interaction'
+      );
+    }
+
+    return this.state as InteractionStateComplete;
   }
 }

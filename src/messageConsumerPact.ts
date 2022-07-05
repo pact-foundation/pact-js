@@ -21,25 +21,11 @@ import {
 import logger, { setLogLevel } from './common/logger';
 import { MessageConsumerOptions } from './dsl/options';
 import ConfigurationError from './errors/configurationError';
-import { SpecificationVersion } from '../v3';
 import { version as pactPackageVersion } from '../package.json';
+import { numberToSpec } from './common/spec';
+import { SpecificationVersion } from '../v3';
 
 const DEFAULT_PACT_DIR = './pacts';
-
-const numberToSpec = (spec?: number): SpecificationVersion => {
-  if (!spec) {
-    return SpecificationVersion.SPECIFICATION_VERSION_V3;
-  }
-
-  switch (spec) {
-    case 3:
-      return SpecificationVersion.SPECIFICATION_VERSION_V3;
-    case 4:
-      return SpecificationVersion.SPECIFICATION_VERSION_V4;
-    default:
-      throw new Error(`invalid pact specification version supplied: ${spec}`);
-  }
-};
 
 // eslint-disable-next-line no-shadow
 enum ContentType {
@@ -68,7 +54,7 @@ export class MessageConsumerPact {
     this.pact = makeConsumerAsyncMessagePact(
       config.consumer,
       config.provider,
-      numberToSpec(config.spec),
+      numberToSpec(config.spec, SpecificationVersion.SPECIFICATION_VERSION_V3),
       config.logLevel
     );
     this.pact.addMetadata('pact-js', 'version', pactPackageVersion);
