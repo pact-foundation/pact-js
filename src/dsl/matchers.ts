@@ -303,8 +303,6 @@ export function string(value = 'iloveorange'): Matcher<string> {
 export { somethingLike as like };
 export { term as regex };
 
-
-
 // Recurse the object removing any underlying matching guff, returning
 // the raw example content
 export function extractPayload(value: AnyTemplate): AnyJson {
