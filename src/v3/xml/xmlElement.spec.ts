@@ -89,16 +89,11 @@ describe('xml element', () => {
         // @ts-ignore
         expect(xml.children[i].matcher.value).not.to.be.empty;
         // @ts-ignore
-        expect(xml.children[i].matcher).to.have.property(
-          'pact:matcher:type'
-        );
+        expect(xml.children[i].matcher).to.have.property('pact:matcher:type');
         // @ts-ignore
-        expect(xml.children[i].matcher['pact:matcher:type']).to.be.a(
-          'string'
-        );
+        expect(xml.children[i].matcher['pact:matcher:type']).to.be.a('string');
         // @ts-ignore
-        expect(xml.children[i].matcher['pact:matcher:type']).not.to.be
-          .empty;
+        expect(xml.children[i].matcher['pact:matcher:type']).not.to.be.empty;
       }
     });
     it('sets content to an empty string if the Matcher has no value', () => {
@@ -123,16 +118,11 @@ describe('xml element', () => {
       // @ts-ignore
       expect(xml.children[0].matcher).not.to.have.property('value');
       // @ts-ignore
-      expect(xml.children[0].matcher).to.have.property(
-        'pact:matcher:type'
-      );
+      expect(xml.children[0].matcher).to.have.property('pact:matcher:type');
       // @ts-ignore
-      expect(xml.children[0].matcher['pact:matcher:type']).to.be.a(
-        'string'
-      );
+      expect(xml.children[0].matcher['pact:matcher:type']).to.be.a('string');
       // @ts-ignore
-      expect(xml.children[0].matcher['pact:matcher:type']).not.to.be
-        .empty;
+      expect(xml.children[0].matcher['pact:matcher:type']).not.to.be.empty;
     });
   });
 });
