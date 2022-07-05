@@ -436,7 +436,7 @@ describe('Pact V3', () => {
     before(() =>
       provider
         .given('is authenticated')
-        .uponReceiving('a request to create a new mate')
+        .uponReceiving('a request to create a new mate with JSON data')
         .withRequest({
           method: 'POST',
           path: '/animals',
@@ -454,7 +454,7 @@ describe('Pact V3', () => {
         })
     );
 
-    it('creates a new mate', () => {
+    it('creates a new mate with JSON data', () => {
       return provider.executeTest((mockserver) => {
         return expect(createMateForDates(suitor, () => mockserver.url)).to
           .eventually.be.fulfilled;
@@ -466,7 +466,7 @@ describe('Pact V3', () => {
     before(() =>
       provider
         .given('is authenticated')
-        .uponReceiving('a request to create a new mate')
+        .uponReceiving('a request to create a new mate with x-www-form-urlencoded data')
         .withRequest({
           method: 'POST',
           path: '/animals',
@@ -481,11 +481,15 @@ describe('Pact V3', () => {
           headers: {
             'Content-Type': 'application/json; charset=utf-8',
           },
-          body: like(suitor),
+          body: like({
+            id: 1,
+            first_name: 'Nanny',
+            last_name: 'Doe',
+          })
         })
     );
 
-    it('creates a new mate with application/x-www-form-urlencoded', () => {
+    it('creates a new mate with application/x-www-form-urlencoded data', () => {
       return provider.executeTest((mockserver) => {
         return expect(
           createMateForDates(
@@ -541,7 +545,7 @@ describe('Pact V3', () => {
         })
     );
 
-    it('creates a new mate', () => {
+    it('gets animals in XML format', () => {
       return provider.executeTest((mockserver) => {
         return expect(getAnimalsAsXML(() => mockserver.url)).to.eventually.be
           .fulfilled;
