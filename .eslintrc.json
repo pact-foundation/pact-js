@@ -44,7 +44,8 @@
         "no-new": "off",
         "class-methods-use-this": "off",
         "chai-friendly/no-unused-expressions": "error",
-        "mocha/no-mocha-arrows": "off"
+        "mocha/no-mocha-arrows": "off",
+        "@typescript-eslint/ban-ts-comment": "off"
       }
     }
   ],
