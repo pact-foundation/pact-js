@@ -17,8 +17,16 @@ describe('GraphQLInteraction', () => {
     describe('when given a valid operation', () => {
       it('creates a GraphQL Interaction', () => {
         interaction.uponReceiving('a request');
+        interaction.withRequest({
+          path: '/graphql',
+          method: 'POST',
+        });
         interaction.withOperation('query');
         interaction.withQuery('{ hello }');
+        interaction.willRespondWith({
+          status: 200,
+          body: { data: {} },
+        });
 
         const json: any = interaction.json();
         expect(json.request.body.operationName).to.eq('query');
@@ -32,8 +40,16 @@ describe('GraphQLInteraction', () => {
     describe('when given a null operation', () => {
       it('creates a GrphQL Interaction', () => {
         interaction.uponReceiving('a request');
+        interaction.withRequest({
+          path: '/graphql',
+          method: 'POST',
+        });
         interaction.withOperation(null);
         interaction.withQuery('{ hello }');
+        interaction.willRespondWith({
+          status: 200,
+          body: { data: {} },
+        });
 
         const json: any = interaction.json();
         expect(json.request.body.operationName).to.eq(null);
@@ -45,10 +61,18 @@ describe('GraphQLInteraction', () => {
     describe('when given a set of variables', () => {
       it('adds the variables to the payload', () => {
         interaction.uponReceiving('a request');
+        interaction.withRequest({
+          path: '/graphql',
+          method: 'POST',
+        });
         interaction.withOperation('query');
         interaction.withQuery('{ hello }');
         interaction.withVariables({
           foo: 'bar',
+        });
+        interaction.willRespondWith({
+          status: 200,
+          body: { data: {} },
         });
 
         const json: any = interaction.json();
@@ -58,8 +82,16 @@ describe('GraphQLInteraction', () => {
     describe('when no variables are provided', () => {
       it('does not add the variables property to the payload', () => {
         interaction.uponReceiving('a request');
+        interaction.withRequest({
+          path: '/graphql',
+          method: 'POST',
+        });
         interaction.withOperation('query');
         interaction.withQuery('{ hello }');
+        interaction.willRespondWith({
+          status: 200,
+          body: { data: {} },
+        });
 
         const json: any = interaction.json();
         expect(json.request.body).to.not.have.property('variables');
@@ -68,9 +100,17 @@ describe('GraphQLInteraction', () => {
     describe('when an empty variables object is presented', () => {
       it('adds the variables property to the payload', () => {
         interaction.uponReceiving('a request');
+        interaction.withRequest({
+          path: '/graphql',
+          method: 'POST',
+        });
         interaction.withOperation('query');
         interaction.withQuery('{ hello }');
         interaction.withVariables({});
+        interaction.willRespondWith({
+          status: 200,
+          body: { data: {} },
+        });
 
         const json: any = interaction.json();
         expect(json.request.body).to.have.property('variables');
@@ -81,10 +121,18 @@ describe('GraphQLInteraction', () => {
   describe('#withQuery', () => {
     beforeEach(() => {
       interaction.uponReceiving('a request');
+      interaction.withRequest({
+        path: '/graphql',
+        method: 'POST',
+      });
       interaction.withOperation('query');
       interaction.withQuery('{ hello }');
       interaction.withVariables({
         foo: 'bar',
+      });
+      interaction.willRespondWith({
+        status: 200,
+        body: { data: {} },
       });
     });
 
@@ -105,10 +153,22 @@ describe('GraphQLInteraction', () => {
     describe('when given a valid query', () => {
       describe('without variables', () => {
         it('adds regular expressions for the whitespace in the query', () => {
+          interaction.uponReceiving('a request');
+          interaction.withRequest({
+            path: '/graphql',
+            method: 'POST',
+          });
+          interaction.withOperation('query');
+          interaction.withQuery('{ hello }');
+          interaction.willRespondWith({
+            status: 200,
+            body: { data: {} },
+          });
+
           const json: any = interaction.json();
 
           expect(isMatcher(json.request.body.query)).to.eq(true);
-          const r = new RegExp(json.request.body.query.data.matcher.s, 'g');
+          const r = new RegExp(json.request.body.query.regex, 'g');
           const lotsOfWhitespace = `{             hello
 
         }`;
@@ -129,7 +189,7 @@ describe('GraphQLInteraction', () => {
           const json: any = interaction.json();
 
           expect(isMatcher(json.request.body.query)).to.eq(true);
-          const r = new RegExp(json.request.body.query.data.matcher.s, 'g');
+          const r = new RegExp(json.request.body.query.regex, 'g');
           // eslint-disable-next-line no-useless-escape
           const lotsOfWhitespace = `{             Hello(id: \$id) { name    } }`;
           expect(r.test(lotsOfWhitespace)).to.eq(true);
@@ -156,7 +216,15 @@ describe('GraphQLInteraction', () => {
     describe('when no operation is provided', () => {
       it('does not be present in unmarshaled body', () => {
         interaction.uponReceiving('a request');
+        interaction.withRequest({
+          path: '/graphql',
+          method: 'POST',
+        });
         interaction.withQuery('{ hello }');
+        interaction.willRespondWith({
+          status: 200,
+          body: { data: {} },
+        });
 
         const json: any = interaction.json();
         expect(json.request.body).to.not.have.property('operationName');
@@ -167,8 +235,16 @@ describe('GraphQLInteraction', () => {
   context('when given a valid query', () => {
     it('marshals the query to JSON', () => {
       interaction.uponReceiving('a request');
+      interaction.withRequest({
+        path: '/graphql',
+        method: 'POST',
+      });
       interaction.withOperation('query');
       interaction.withQuery('{ hello }');
+      interaction.willRespondWith({
+        status: 200,
+        body: { data: {} },
+      });
 
       const json: any = interaction.json();
       expect(isMatcher(json.request.body.query)).to.eq(true);

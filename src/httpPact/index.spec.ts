@@ -1,362 +1,119 @@
-// import chai from 'chai';
-// import chaiAsPromised from 'chai-as-promised';
-// import sinon from 'sinon';
-// import sinonChai from 'sinon-chai';
-// import serviceFactory from '@pact-foundation/pact-core';
-// import { ImportMock } from 'ts-mock-imports';
-// import { HTTPMethods } from '../common/request';
-// import { Interaction, InteractionObject } from '../dsl/interaction';
-// import { MockService } from '../dsl/mockService';
-// import { PactOptions, PactOptionsComplete } from '../dsl/options';
-// import { Pact } from '.';
+// @ts-nocheck
+import chai from 'chai';
+import chaiAsPromised from 'chai-as-promised';
+import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
+import serviceFactory from '@pact-foundation/pact-core';
+import { ImportMock } from 'ts-mock-imports';
+import { PactOptions, PactOptionsComplete } from '../dsl/options';
+import { Pact } from '.';
 
-// // Mock out the PactNode interfaces
-// class PactServer {
-//   public start(): void {}
+chai.use(sinonChai);
+chai.use(chaiAsPromised);
 
-//   public delete(): void {}
-// }
+const { expect } = chai;
 
-// chai.use(sinonChai);
-// chai.use(chaiAsPromised);
+describe('Pact', () => {
+  let pact: Pact;
+  const fullOpts = {
+    consumer: 'A',
+    provider: 'B',
+    port: 1234,
+    host: '127.0.0.1',
+    ssl: false,
+    logLevel: 'info',
+    spec: 2,
+    cors: false,
+    pactfileWriteMode: 'overwrite',
+  } as PactOptionsComplete;
 
-// const { expect } = chai;
+  before(() => {
+    // Stub out pact-core
+    const manager = ImportMock.mockClass(serviceFactory, 'createServer') as any;
+    manager.mock('createServer', () => {});
+  });
 
-// describe('Pact', () => {
-//   let pact: Pact;
-//   const fullOpts = {
-//     consumer: 'A',
-//     provider: 'B',
-//     port: 1234,
-//     host: '127.0.0.1',
-//     ssl: false,
-//     logLevel: 'info',
-//     spec: 2,
-//     cors: false,
-//     pactfileWriteMode: 'overwrite',
-//   } as PactOptionsComplete;
+  beforeEach(() => {
+    pact = Object.create(Pact.prototype) as any as Pact;
+    pact.opts = fullOpts;
+  });
 
-//   before(() => {
-//     // Stub out pact-core
-//     const manager = ImportMock.mockClass(serviceFactory, 'createServer') as any;
-//     manager.mock('createServer', () => {});
-//   });
+  afterEach(() => {
+    sinon.restore();
+  });
 
-//   beforeEach(() => {
-//     pact = Object.create(Pact.prototype) as any as Pact;
-//     pact.opts = fullOpts;
-//   });
+  describe('#constructor', () => {
+    it('throws Error when consumer not provided', () => {
+      expect(() => {
+        new Pact({ consumer: '', provider: 'provider' });
+      }).to.throw(Error, 'You must specify a Consumer for this pact.');
+    });
 
-//   afterEach(() => {
-//     sinon.restore();
-//     // return serviceFactory.removeAllServers()
-//   });
+    it('throws Error when provider not provided', () => {
+      expect(() => {
+        new Pact({ consumer: 'someconsumer', provider: '' });
+      }).to.throw(Error, 'You must specify a Provider for this pact.');
+    });
+  });
 
-//   describe('#constructor', () => {
-//     it('throws Error when consumer not provided', () => {
-//       expect(() => {
-//         new Pact({ consumer: '', provider: 'provider' });
-//       }).to.throw(Error, 'You must specify a Consumer for this pact.');
-//     });
+  describe('#createOptionsWithDefault', () => {
+    const constructorOpts: PactOptions = {
+      consumer: 'A',
+      provider: 'B',
+    };
 
-//     it('throws Error when provider not provided', () => {
-//       expect(() => {
-//         new Pact({ consumer: 'someconsumer', provider: '' });
-//       }).to.throw(Error, 'You must specify a Provider for this pact.');
-//     });
-//   });
+    it('merges options with sensible defaults', () => {
+      const opts = Pact.createOptionsWithDefaults(constructorOpts);
+      expect(opts.consumer).to.eq('A');
+      expect(opts.provider).to.eq('B');
+      expect(opts.cors).to.eq(false);
+      expect(opts.host).to.eq('127.0.0.1');
+      expect(opts.logLevel).to.eq('info');
+      expect(opts.spec).to.eq(2);
+      expect(opts.dir).not.to.be.empty;
+      expect(opts.log).not.to.be.empty;
+      expect(opts.pactfileWriteMode).to.eq('merge');
+      expect(opts.ssl).to.eq(false);
+      expect(opts.sslcert).to.eq(undefined);
+      expect(opts.sslkey).to.eq(undefined);
+    });
+  });
 
-//   describe('#createOptionsWithDefault', () => {
-//     const constructorOpts: PactOptions = {
-//       consumer: 'A',
-//       provider: 'B',
-//     };
+  describe('#setup', () => {
+    const serverMock = {
+      start: () => Promise.resolve(),
+      options: { port: 1234 },
+      logLevel: () => {},
+    };
 
-//     it('merges options with sensible defaults', () => {
-//       const opts = Pact.createOptionsWithDefaults(constructorOpts);
-//       expect(opts.consumer).to.eq('A');
-//       expect(opts.provider).to.eq('B');
-//       expect(opts.cors).to.eq(false);
-//       expect(opts.host).to.eq('127.0.0.1');
-//       expect(opts.logLevel).to.eq('info');
-//       expect(opts.spec).to.eq(2);
-//       expect(opts.dir).not.to.be.empty;
-//       expect(opts.log).not.to.be.empty;
-//       expect(opts.pactfileWriteMode).to.eq('overwrite');
-//       expect(opts.ssl).to.eq(false);
-//       expect(opts.sslcert).to.eq(undefined);
-//       expect(opts.sslkey).to.eq(undefined);
-//     });
-//   });
+    describe('when server is properly configured', () => {
+      it('starts the mock server in the background', () => {
+        const p: any = new Pact(fullOpts);
 
-//   describe('#setup', () => {
-//     const serverMock = {
-//       start: () => Promise.resolve(),
-//       options: { port: 1234 },
-//       logLevel: () => {},
-//     };
+        p.server = serverMock;
 
-//     describe('when server is not properly configured', () => {
-//       describe('and pact-core is unable to start the server', () => {
-//         it('returns a rejected promise', async () => {
-//           const p: any = new Pact(fullOpts);
+        return expect(p.setup()).to.eventually.be.fulfilled;
+      });
+    });
 
-//           p.server = {
-//             start: () => Promise.reject(new Error('pact-core error')),
-//             options: { port: 1234 },
-//           };
+    describe('when server is properly configured', () => {
+      it('returns the current configuration', () => {
+        const p: any = new Pact(fullOpts);
 
-//           return expect(p.setup()).to.eventually.be.rejectedWith(
-//             'pact-core error'
-//           );
-//         });
-//       });
-//     });
+        p.server = serverMock;
 
-//     describe('when server is properly configured', () => {
-//       it('starts the mock server in the background', () => {
-//         const p: any = new Pact(fullOpts);
-
-//         p.server = serverMock;
-
-//         return expect(p.setup()).to.eventually.be.fulfilled;
-//       });
-//     });
-
-//     describe('when server is properly configured', () => {
-//       it('returns the current configuration', () => {
-//         const p: any = new Pact(fullOpts);
-
-//         p.server = serverMock;
-
-//         return expect(p.setup()).to.eventually.include({
-//           consumer: 'A',
-//           provider: 'B',
-//           port: 1234,
-//           host: '127.0.0.1',
-//           ssl: false,
-//           logLevel: 'info',
-//           spec: 2,
-//           cors: false,
-//           pactfileWriteMode: 'overwrite',
-//         });
-//       });
-//     });
-//   });
-
-//   describe('#addInteraction', () => {
-//     const interaction: InteractionObject = {
-//       state: 'i have a list of projects',
-//       uponReceiving: 'a request for projects',
-//       withRequest: {
-//         method: HTTPMethods.GET,
-//         path: '/projects',
-//         headers: { Accept: 'application/json' },
-//       },
-//       willRespondWith: {
-//         status: 200,
-//         headers: { 'Content-Type': 'application/json' },
-//         body: {},
-//       },
-//     };
-
-//     describe('when given a provider state', () => {
-//       it('creates interaction with state', () => {
-//         pact.mockService = {
-//           addInteraction: (
-//             int: InteractionObject
-//           ): Promise<string | undefined> => Promise.resolve(int.state),
-//         } as any;
-
-//         return expect(
-//           pact.addInteraction(interaction)
-//         ).to.eventually.have.property('providerState');
-//       });
-//     });
-
-//     describe('when not given a provider state', () => {
-//       it('creates interaction with no state', () => {
-//         pact.mockService = {
-//           addInteraction: (
-//             int: InteractionObject
-//           ): Promise<string | undefined> => Promise.resolve(int.state),
-//         } as any;
-//         interaction.state = undefined;
-
-//         return expect(
-//           pact.addInteraction(interaction)
-//         ).to.eventually.not.have.property('providerState');
-//       });
-
-//       describe('when given an Interaction as a builder', () => {
-//         it('creates interaction', () => {
-//           const interaction2 = new Interaction()
-//             .given('i have a list of projects')
-//             .uponReceiving('a request for projects')
-//             .withRequest({
-//               method: HTTPMethods.GET,
-//               path: '/projects',
-//               headers: { Accept: 'application/json' },
-//             })
-//             .willRespondWith({
-//               status: 200,
-//               headers: { 'Content-Type': 'application/json' },
-//               body: {},
-//             });
-
-//           pact.mockService = {
-//             addInteraction: (int: Interaction): Promise<Interaction> =>
-//               Promise.resolve(int),
-//           } as any;
-
-//           return expect(
-//             pact.addInteraction(interaction2)
-//           ).to.eventually.have.property('given');
-//         });
-//       });
-//     });
-//   });
-
-//   describe('#verify', () => {
-//     describe('when pact verification is successful', () => {
-//       it('returns a successful promise and remove interactions', () => {
-//         pact.mockService = {
-//           verify: () => Promise.resolve('verified!'),
-//           removeInteractions: () => Promise.resolve('removeInteractions'),
-//         } as any;
-
-//         const verifyPromise = pact.verify();
-
-//         return Promise.all([
-//           expect(verifyPromise).to.eventually.eq('removeInteractions'),
-//           expect(verifyPromise).to.eventually.be.fulfilled,
-//         ]);
-//       });
-//     });
-
-//     describe('when pact verification is unsuccessful', () => {
-//       it('throws an error', () => {
-//         const removeInteractionsStub = sinon
-//           .stub(MockService.prototype, 'removeInteractions')
-//           .resolves('removeInteractions');
-
-//         pact.mockService = {
-//           verify: () => Promise.reject(new Error('not verified!')),
-//           removeInteractions: removeInteractionsStub,
-//         } as any;
-
-//         const verifyPromise = pact.verify();
-
-//         return Promise.all([
-//           expect(verifyPromise).to.eventually.be.rejectedWith(Error),
-//           verifyPromise.catch(() => {
-//             expect(removeInteractionsStub).to.callCount(1);
-//           }),
-//         ]);
-//       });
-//     });
-
-//     describe('when pact verification is successful', () => {
-//       describe('and an error is thrown in the cleanup', () => {
-//         it('throws an error', () => {
-//           pact.mockService = {
-//             verify: () => Promise.resolve('verified!'),
-//             removeInteractions: () => {
-//               throw new Error('error removing interactions');
-//             },
-//           } as any;
-
-//           return expect(pact.verify()).to.eventually.be.rejectedWith(Error);
-//         });
-//       });
-//     });
-//   });
-
-//   describe('#finalize', () => {
-//     describe('when writing Pact is successful', () => {
-//       it('returns a successful promise and shuts down down the mock server', () => {
-//         pact.mockService = {
-//           writePact: () => Promise.resolve('pact file written!'),
-//           removeInteractions: sinon.stub(),
-//         } as any;
-
-//         pact.server = {
-//           delete: () => Promise.resolve(),
-//         } as any;
-
-//         return expect(pact.finalize()).to.eventually.be.fulfilled;
-//       });
-//     });
-
-//     describe('when writing Pact is unsuccessful', () => {
-//       it('throws an error and shuts down the server', () => {
-//         pact.mockService = {
-//           writePact: () => Promise.reject(new Error('pact not file written!')),
-//           removeInteractions: sinon.stub(),
-//         } as any;
-
-//         const deleteStub = sinon
-//           .stub(PactServer.prototype, 'delete')
-//           .resolves();
-
-//         pact.server = { delete: deleteStub } as any;
-
-//         return expect(pact.finalize()).to.eventually.be.rejected.then(() =>
-//           expect(deleteStub).to.callCount(1)
-//         );
-//       });
-//     });
-
-//     describe('when writing pact is successful and shutting down the mock server is unsuccessful', () => {
-//       it('throws an error', () => {
-//         pact.mockService = {
-//           writePact: sinon.stub(),
-//           removeInteractions: sinon.stub(),
-//         } as any;
-
-//         pact.server = {
-//           delete: () => Promise.reject(),
-//         } as any;
-
-//         return expect(pact.finalize).to.throw(Error);
-//       });
-//     });
-//   });
-
-//   describe('#writePact', () => {
-//     describe('when writing Pact is successful', () => {
-//       it('returns a successful promise', () => {
-//         pact.mockService = {
-//           writePact: () => Promise.resolve('pact file written!'),
-//           removeInteractions: sinon.stub(),
-//         } as any;
-
-//         const writePactPromise = pact.writePact();
-
-//         return Promise.all([
-//           expect(writePactPromise).to.eventually.eq('pact file written!'),
-//           expect(writePactPromise).to.eventually.be.fulfilled,
-//         ]);
-//       });
-//     });
-//   });
-
-//   describe('#removeInteractions', () => {
-//     describe('when removing interactions is successful', () => {
-//       it('returns a successful promise', () => {
-//         pact.mockService = {
-//           removeInteractions: () => Promise.resolve('interactions removed!'),
-//         } as any;
-
-//         const removeInteractionsPromise = pact.removeInteractions();
-
-//         return Promise.all([
-//           expect(removeInteractionsPromise).to.eventually.eq(
-//             'interactions removed!'
-//           ),
-//           expect(removeInteractionsPromise).to.eventually.be.fulfilled,
-//         ]);
-//       });
-//     });
-//   });
-// });
+        return expect(p.setup()).to.eventually.include({
+          consumer: 'A',
+          provider: 'B',
+          port: 1234,
+          host: '127.0.0.1',
+          ssl: false,
+          logLevel: 'info',
+          spec: 2,
+          cors: false,
+          pactfileWriteMode: 'overwrite',
+        });
+      });
+    });
+  });
+});

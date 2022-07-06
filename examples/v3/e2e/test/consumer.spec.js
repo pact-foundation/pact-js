@@ -466,7 +466,9 @@ describe('Pact V3', () => {
     before(() =>
       provider
         .given('is authenticated')
-        .uponReceiving('a request to create a new mate with x-www-form-urlencoded data')
+        .uponReceiving(
+          'a request to create a new mate with x-www-form-urlencoded data'
+        )
         .withRequest({
           method: 'POST',
           path: '/animals',
@@ -485,7 +487,7 @@ describe('Pact V3', () => {
             id: 1,
             first_name: 'Nanny',
             last_name: 'Doe',
-          })
+          }),
         })
     );
 

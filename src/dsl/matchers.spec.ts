@@ -126,15 +126,9 @@ describe('Matcher', () => {
     describe('when given a valid regular expression and example', () => {
       it('returns a serialized Ruby object', () => {
         const expected = {
-          data: {
-            generate: 'myawesomeword',
-            matcher: {
-              json_class: 'Regexp',
-              o: 0,
-              s: '\\w+',
-            },
-          },
-          json_class: 'Pact::Term',
+          value: 'myawesomeword',
+          regex: '\\w+',
+          'pact:matcher:type': 'regex',
         };
 
         const match = term({
@@ -161,7 +155,7 @@ describe('Matcher', () => {
         it('throws an Error', () => {
           expect(createTheTerm({})).to.throw(Error);
           expect(createTheTerm('')).to.throw(Error);
-          expect(createTheTerm({ generate: 'foo' })).to.throw(Error);
+          expect(createTheTerm({ value: 'foo' })).to.throw(Error);
           expect(createTheTerm({ matcher: '\\w+' })).to.throw(Error);
         });
       });
@@ -183,8 +177,8 @@ describe('Matcher', () => {
     describe('when provided a value', () => {
       it('returns a serialized Ruby object', () => {
         const expected = {
-          contents: 'myspecialvalue',
-          json_class: 'Pact::SomethingLike',
+          value: 'myspecialvalue',
+          'pact:matcher:type': 'type',
         };
 
         const match = somethingLike('myspecialvalue');
@@ -216,8 +210,8 @@ describe('Matcher', () => {
     describe('when content is null', () => {
       it('provides null as contents', () => {
         const expected = {
-          contents: null,
-          json_class: 'Pact::ArrayLike',
+          value: [null],
+          'pact:matcher:type': 'type',
           min: 1,
         };
 
@@ -229,8 +223,8 @@ describe('Matcher', () => {
     describe('when an object is provided', () => {
       it('provides the object as contents', () => {
         const expected = {
-          contents: { a: 1 },
-          json_class: 'Pact::ArrayLike',
+          value: [{ a: 1 }],
+          'pact:matcher:type': 'type',
           min: 1,
         };
 
@@ -250,8 +244,8 @@ describe('Matcher', () => {
     describe('when an array is provided', () => {
       it('provides the array as contents', () => {
         const expected = {
-          contents: [1, 2, 3],
-          json_class: 'Pact::ArrayLike',
+          value: [[1, 2, 3]],
+          'pact:matcher:type': 'type',
           min: 1,
         };
 
@@ -263,8 +257,8 @@ describe('Matcher', () => {
     describe('when a value is provided', () => {
       it('adds the value in contents', () => {
         const expected = {
-          contents: 'test',
-          json_class: 'Pact::ArrayLike',
+          value: ['test'],
+          'pact:matcher:type': 'type',
           min: 1,
         };
 
@@ -277,13 +271,15 @@ describe('Matcher', () => {
       describe('of type somethingLike', () => {
         it('nests somethingLike correctly', () => {
           const expected = {
-            contents: {
-              id: {
-                contents: 10,
-                json_class: 'Pact::SomethingLike',
+            value: [
+              {
+                id: {
+                  value: 10,
+                  'pact:matcher:type': 'type',
+                },
               },
-            },
-            json_class: 'Pact::ArrayLike',
+            ],
+            'pact:matcher:type': 'type',
             min: 1,
           };
 
@@ -297,20 +293,16 @@ describe('Matcher', () => {
       describe('of type term', () => {
         it('nests term correctly', () => {
           const expected = {
-            contents: {
-              colour: {
-                data: {
-                  generate: 'red',
-                  matcher: {
-                    json_class: 'Regexp',
-                    o: 0,
-                    s: 'red|green',
-                  },
+            value: [
+              {
+                colour: {
+                  value: 'red',
+                  regex: 'red|green',
+                  'pact:matcher:type': 'regex',
                 },
-                json_class: 'Pact::Term',
               },
-            },
-            json_class: 'Pact::ArrayLike',
+            ],
+            'pact:matcher:type': 'type',
             min: 1,
           };
 
@@ -324,6 +316,8 @@ describe('Matcher', () => {
             { min: 1 }
           );
 
+          //
+
           expect(JSON.stringify(match)).to.deep.include(
             JSON.stringify(expected)
           );
@@ -333,12 +327,14 @@ describe('Matcher', () => {
       describe('of type eachLike', () => {
         it('nests eachlike in contents', () => {
           const expected = {
-            contents: {
-              contents: 'blue',
-              json_class: 'Pact::ArrayLike',
-              min: 1,
-            },
-            json_class: 'Pact::ArrayLike',
+            value: [
+              {
+                value: ['blue'],
+                'pact:matcher:type': 'type',
+                min: 1,
+              },
+            ],
+            'pact:matcher:type': 'type',
             min: 1,
           };
 
@@ -352,42 +348,52 @@ describe('Matcher', () => {
       describe('complex object with multiple Pact.Matchers', () => {
         it('nests objects correctly', () => {
           const expected = {
-            contents: {
-              contents: {
-                colour: {
-                  data: {
-                    generate: 'red',
-                    matcher: {
-                      json_class: 'Regexp',
-                      o: 0,
-                      s: 'red|green|blue',
+            value: [
+              {
+                value: [
+                  {
+                    colour: {
+                      value: 'red',
+                      'pact:matcher:type': 'regex',
+                      regex: 'red|green|blue',
+                    },
+                    size: {
+                      value: 10,
+                      'pact:matcher:type': 'type',
+                    },
+                    tag: {
+                      value: [
+                        [
+                          {
+                            value: 'jumper',
+                            'pact:matcher:type': 'type',
+                          },
+                          {
+                            value: 'shirt',
+                            'pact:matcher:type': 'type',
+                          },
+                        ],
+                        [
+                          {
+                            value: 'jumper',
+                            'pact:matcher:type': 'type',
+                          },
+                          {
+                            value: 'shirt',
+                            'pact:matcher:type': 'type',
+                          },
+                        ],
+                      ],
+                      'pact:matcher:type': 'type',
+                      min: 2,
                     },
                   },
-                  json_class: 'Pact::Term',
-                },
-                size: {
-                  contents: 10,
-                  json_class: 'Pact::SomethingLike',
-                },
-                tag: {
-                  contents: [
-                    {
-                      contents: 'jumper',
-                      json_class: 'Pact::SomethingLike',
-                    },
-                    {
-                      contents: 'shirt',
-                      json_class: 'Pact::SomethingLike',
-                    },
-                  ],
-                  json_class: 'Pact::ArrayLike',
-                  min: 2,
-                },
+                ],
+                'pact:matcher:type': 'type',
+                min: 1,
               },
-              json_class: 'Pact::ArrayLike',
-              min: 1,
-            },
-            json_class: 'Pact::ArrayLike',
+            ],
+            'pact:matcher:type': 'type',
             min: 1,
           };
 
@@ -406,8 +412,8 @@ describe('Matcher', () => {
             { min: 1 }
           );
 
-          expect(JSON.stringify(match)).to.deep.include(
-            JSON.stringify(expected)
+          expect(JSON.parse(JSON.stringify(match))).to.deep.include(
+            JSON.parse(JSON.stringify(expected))
           );
         });
       });
@@ -416,8 +422,8 @@ describe('Matcher', () => {
     describe('When no options.min is not provided', () => {
       it('defaults to a min of 1', () => {
         const expected = {
-          contents: { a: 1 },
-          json_class: 'Pact::ArrayLike',
+          value: [{ a: 1 }],
+          'pact:matcher:type': 'type',
           min: 1,
         };
 
@@ -429,8 +435,8 @@ describe('Matcher', () => {
     describe('When a options.min is provided', () => {
       it('provides the object as contents', () => {
         const expected = {
-          contents: { a: 1 },
-          json_class: 'Pact::ArrayLike',
+          value: [{ a: 1 }, { a: 1 }, { a: 1 }],
+          'pact:matcher:type': 'type',
           min: 3,
         };
 
@@ -760,10 +766,10 @@ describe('Matcher', () => {
               anotherSetting: term({ generate: 'this', matcher: 'this|that' }),
             },
             arrayMatcher: {
-              lotsOfValues: eachLike('useful', { min: 3 }),
+              lotsOfValueregex: eachLike('useful', { min: 3 }),
             },
-            arrayOfMatchers: {
-              lotsOfValues: eachLike(
+            arrayOfMatcherregex: {
+              lotsOfValueregex: eachLike(
                 {
                   foo: 'bar',
                   baz: somethingLike('bat'),
@@ -784,10 +790,10 @@ describe('Matcher', () => {
               anotherSetting: 'this',
             },
             arrayMatcher: {
-              lotsOfValues: ['useful', 'useful', 'useful'],
+              lotsOfValueregex: ['useful', 'useful', 'useful'],
             },
-            arrayOfMatchers: {
-              lotsOfValues: [
+            arrayOfMatcherregex: {
+              lotsOfValueregex: [
                 {
                   baz: 'bat',
                   foo: 'bar',

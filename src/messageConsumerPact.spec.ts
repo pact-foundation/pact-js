@@ -38,20 +38,6 @@ describe('MessageConsumer', () => {
   });
 
   describe('#dsl', () => {
-    describe('when a valid state has been given', () => {
-      it('the state should be save id in v3 format', () => {
-        consumer
-          .given('some state')
-          .expectsToReceive('A message about something')
-          .withContent({ foo: 'bar' })
-          .withMetadata({ baz: 'bat' });
-
-        expect(consumer.json().providerStates).to.be.a('array');
-        expect(consumer.json().providerStates).to.deep.eq([
-          { name: 'some state' },
-        ]);
-      });
-    });
     describe('when an empty description has been given', () => {
       it('it should throw an error', () => {
         expect(() => {
@@ -98,23 +84,6 @@ describe('MessageConsumer', () => {
         return expect(stubbedConsumer.verify(() => Promise.resolve('yay!'))).to
           .eventually.be.fulfilled;
       });
-    });
-  });
-
-  describe('#json', () => {
-    it('returns a valid Message object', () => {
-      consumer.withContent({ foo: 'bar' });
-      const m = consumer.json();
-
-      expect(m.contents).to.deep.eq({ foo: 'bar' });
-    });
-  });
-
-  describe('#getServiceFactory', () => {
-    it('returns a valid pact-core object', () => {
-      const serviceFactory = (consumer as any).getServiceFactory();
-      expect(serviceFactory).to.be.a('object');
-      expect(serviceFactory).to.respondTo('createMessage');
     });
   });
 

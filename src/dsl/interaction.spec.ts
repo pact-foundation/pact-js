@@ -1,3 +1,4 @@
+// @ts-nocheck
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import { HTTPMethods } from '../common/request';
@@ -12,9 +13,9 @@ describe('Interaction', () => {
     it('creates Interaction with provider state', () => {
       const actual = new Interaction()
         .uponReceiving('r')
-        .given('provider state')
-        .json();
-      expect(actual).to.eql({
+        .given('provider state');
+
+      expect(actual.state).to.eql({
         description: 'r',
         providerState: 'provider state',
       });
@@ -22,11 +23,11 @@ describe('Interaction', () => {
 
     describe('without provider state', () => {
       it('creates Interaction when blank', () => {
-        const actual = new Interaction().uponReceiving('r').given('').json();
+        const actual = new Interaction().uponReceiving('r').given('').state;
         expect(actual).to.eql({ description: 'r' });
       });
       it('creates Interaction when nothing is passed', () => {
-        const actual = new Interaction().uponReceiving('r').json();
+        const actual = new Interaction().uponReceiving('r').state;
         expect(actual).to.eql({ description: 'r' });
       });
     });
@@ -44,7 +45,7 @@ describe('Interaction', () => {
 
     it('has a state with description', () => {
       interaction.uponReceiving('an interaction description');
-      expect(interaction.json()).to.eql({
+      expect(interaction.state).to.eql({
         description: 'an interaction description',
       });
     });
@@ -95,8 +96,7 @@ describe('Interaction', () => {
     describe('with only mandatory params', () => {
       const actual = new Interaction()
         .uponReceiving('a request')
-        .withRequest({ method: HTTPMethods.GET, path: '/search' })
-        .json();
+        .withRequest({ method: HTTPMethods.GET, path: '/search' }).state;
 
       it('has a state containing only the given keys', () => {
         expect(actual).to.have.property('request');
@@ -109,16 +109,13 @@ describe('Interaction', () => {
     });
 
     describe('with all other parameters', () => {
-      const actual = new Interaction()
-        .uponReceiving('request')
-        .withRequest({
-          body: { id: 1, name: 'Test', due: 'tomorrow' },
-          headers: { 'Content-Type': 'application/json' },
-          method: HTTPMethods.GET,
-          path: '/search',
-          query: 'q=test',
-        })
-        .json();
+      const actual = new Interaction().uponReceiving('request').withRequest({
+        body: { id: 1, name: 'Test', due: 'tomorrow' },
+        headers: { 'Content-Type': 'application/json' },
+        method: HTTPMethods.GET,
+        path: '/search',
+        query: 'q=test',
+      }).state;
 
       it('has a full state all available keys', () => {
         expect(actual).to.have.property('request');
@@ -147,7 +144,7 @@ describe('Interaction', () => {
           matcher: '^limit=[0-9]+&status=(finished)&order=(desc|asc)$',
         });
         expect(
-          new Interaction().uponReceiving('request').withRequest(request).json()
+          new Interaction().uponReceiving('request').withRequest(request).state
             .request
         ).to.have.any.keys('query');
       });
@@ -157,7 +154,7 @@ describe('Interaction', () => {
           'id[]': eachLike('1'),
         };
         expect(
-          new Interaction().uponReceiving('request').withRequest(request).json()
+          new Interaction().uponReceiving('request').withRequest(request).state
             .request
         ).to.have.any.keys('query');
       });
@@ -167,7 +164,7 @@ describe('Interaction', () => {
           id: '1',
         };
         expect(
-          new Interaction().uponReceiving('request').withRequest(request).json()
+          new Interaction().uponReceiving('request').withRequest(request).state
             .request
         ).to.have.any.keys('query');
       });
@@ -177,7 +174,7 @@ describe('Interaction', () => {
           id: ['1', '2'],
         };
         expect(
-          new Interaction().uponReceiving('request').withRequest(request).json()
+          new Interaction().uponReceiving('request').withRequest(request).state
             .request?.query
         ).to.deep.eq({ id: ['1', '2'] });
       });
@@ -185,27 +182,21 @@ describe('Interaction', () => {
 
     describe('request body', () => {
       it('is included when an empty string is specified', () => {
-        const actual = new Interaction()
-          .uponReceiving('request')
-          .withRequest({
-            body: '',
-            method: HTTPMethods.GET,
-            path: '/path',
-          })
-          .json();
+        const actual = new Interaction().uponReceiving('request').withRequest({
+          body: '',
+          method: HTTPMethods.GET,
+          path: '/path',
+        }).state;
 
         expect(actual.request).to.have.any.keys('body');
       });
 
       it('is not included when explicitly set to undefined', () => {
-        const actual = new Interaction()
-          .uponReceiving('request')
-          .withRequest({
-            body: undefined,
-            method: HTTPMethods.GET,
-            path: '/path',
-          })
-          .json();
+        const actual = new Interaction().uponReceiving('request').withRequest({
+          body: undefined,
+          method: HTTPMethods.GET,
+          path: '/path',
+        }).state;
 
         expect(actual.request).not.to.have.any.keys('body');
       });
@@ -238,7 +229,7 @@ describe('Interaction', () => {
       beforeEach(() => {
         interaction.uponReceiving('request');
         interaction.willRespondWith({ status: 200 });
-        actual = interaction.json();
+        actual = interaction.state;
       });
 
       it('has a state compacted with only present keys', () => {
@@ -261,7 +252,7 @@ describe('Interaction', () => {
           headers: { 'Content-Type': 'application/json' },
           status: 404,
         });
-        actual = interaction.json();
+        actual = interaction.state;
       });
 
       it('has a full state all available keys', () => {
@@ -277,7 +268,7 @@ describe('Interaction', () => {
           status: 204,
         });
 
-        const actual = interaction.json();
+        const actual = interaction.state;
         expect(actual.response).to.have.any.keys('body');
       });
 
@@ -287,7 +278,7 @@ describe('Interaction', () => {
           status: 204,
         });
 
-        const actual = interaction.json();
+        const actual = interaction.state;
         expect(actual.response).not.to.have.any.keys('body');
       });
     });
