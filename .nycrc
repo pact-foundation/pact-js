@@ -19,8 +19,8 @@
   ],
   "sourceMap": true,
   "instrument": true,
-  "lines": 75,
-  "statements": 75,
-  "functions": 75,
-  "branches": 75
+  "lines": 50,
+  "statements": 50,
+  "functions": 50,
+  "branches": 50
 }
