@@ -11,6 +11,9 @@
 * Remove all Ruby dependencies in DSLs
 * `pactfileWriteMode` still supports the same options, however the behaviour of `overwrite` is such now that it will overwrite the pact file _per test_, not pact run of Pact. This is because there is no longer a single long running mock server as per previous versions. Set to `merge` or leave blank for a sensible default. 
 * As per the change to `pactfileWriteMode` this also means pact files should be cleared out prior to each test, to avoid extraneous interactions in a pact file.
+* Array matcher currently doesn't work on query strings (see https://github.com/pact-foundation/pact-reference/issues/205). However, an array with matchers is supported (see jest spec)
+* the `mockService` property on the `Pact` class is no longer an actual `MockService`, but supports the `baseUrl` property.
+* Manually controlling the state of the mock server - such as removing interactions - has been removed.
 
 # beta.56
 

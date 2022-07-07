@@ -10,3 +10,18 @@
 //  - update:    Appends or updates interactions in a pact file. If an interaction
 //               exists in the file, it is updated.
 export type PactfileWriteMode = 'overwrite' | 'update' | 'merge';
+
+export interface Pacticipant {
+  name: string;
+}
+
+export interface PactDetails {
+  consumer?: Pacticipant;
+  provider?: Pacticipant;
+  pactfile_write_mode: PactfileWriteMode;
+}
+
+export interface MockService {
+  pactDetails: PactDetails;
+  baseUrl: string;
+}

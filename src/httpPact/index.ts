@@ -11,7 +11,6 @@ import * as path from 'path';
 // import clc from 'cli-color';
 import process from 'process';
 import { isEmpty } from 'lodash';
-import { Server } from '@pact-foundation/pact-core/src/server';
 
 import {
   Interaction,
@@ -33,6 +32,7 @@ import { forEachObjIndexed } from 'ramda';
 import { isArray } from 'util';
 import { generateMockServerError } from '../v3/display';
 import { numberToSpec } from '../common/spec';
+import { MockService } from 'dsl/mockService';
 
 // TODO: revisit this in the new mock server design
 // const logErrorNoMockServer = () => {
@@ -73,7 +73,7 @@ export class Pact {
     return { ...Pact.defaults, ...opts } as PactOptionsComplete;
   }
 
-  public server: Server;
+  public mockService: MockService;
 
   public opts: PactOptionsComplete;
 
@@ -122,20 +122,31 @@ export class Pact {
    *
    * @returns {Promise}
    */
-  public setup(): Promise<PactOptionsComplete> {
+  public async setup(): Promise<PactOptionsComplete> {
     if (this.opts.port > 0) {
-      return isPortAvailable(this.opts.port, this.opts.host).then(
-        () => this.opts
-      );
-    }
-
-    return freePort().then((port) => {
+      await isPortAvailable(this.opts.port, this.opts.host);
+    } else {
+      const port = await freePort();
       logger.debug(`free port discovered: ${port}`);
 
       this.opts.port = port;
+    }
 
-      return this.opts;
-    });
+    // create the mock service
+    this.mockService = {
+      baseUrl: `${this.opts.ssl ? 'https' : 'http'}://${this.opts.host}:${
+        this.opts.port
+      }`,
+      pactDetails: {
+        pactfile_write_mode: this.opts.pactfileWriteMode || 'merge',
+        consumer: {
+          name: this.opts.consumer,
+        },
+        provider: { name: this.opts.provider },
+      },
+    };
+
+    return this.opts;
   }
 
   /**
@@ -183,7 +194,7 @@ export class Pact {
     setResponseDetails(this.interaction, interaction.willRespondWith);
 
     // Actually start the server now.....
-    logger.info(`Setting up Pact with Consumer "${this.opts.consumer}" and Provider "${this.opts.provider}"
+    logger.debug(`Setting up Pact mock server with Consumer "${this.opts.consumer}" and Provider "${this.opts.provider}"
         using mock service on Port: "${this.opts.port}"`);
 
     const port = this.pact.createMockServer(
@@ -271,13 +282,6 @@ export class Pact {
       'removeInteractions() is no longer required to be called, but has been kept for compatibility with upgrade from 9.x.x. You should remove any use of this method.'
     );
     return Promise.resolve('');
-  }
-
-  private checkPort(): Promise<void> {
-    if (this.server && this.server.options.port) {
-      return isPortAvailable(this.server.options.port, this.opts.host);
-    }
-    return Promise.resolve();
   }
 
   // reset the internal state

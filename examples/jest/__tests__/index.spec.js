@@ -64,13 +64,21 @@ pactWith(
         body: CATS_DATA,
       };
 
+      const numberMatcher = Matchers.term({
+        generate: 1,
+        matcher: '[0-9]+',
+      });
+
       const catsListRequest = {
         uponReceiving: 'a request for cats with given catId',
         withRequest: {
           method: 'GET',
           path: '/cats',
           query: {
-            'catId[]': Matchers.eachLike('1'),
+            'catId[]': [numberMatcher, numberMatcher],
+            // 'catId[]': [2, 3] // Alternative
+            // TODO: fix when https://github.com/pact-foundation/pact-reference/issues/205 is merged
+            // 'catId[]': Matchers.eachLike('1'),
           },
           headers: {
             Accept: 'application/json',
