@@ -7,7 +7,7 @@ import { HTTPMethod } from "./common/request"
 import { Interaction, InteractionObject } from "./dsl/interaction"
 import { MockService } from "./dsl/mockService"
 import { PactOptions, PactOptionsComplete } from "./dsl/options"
-import serviceFactory from "@pact-foundation/pact-node"
+import serviceFactory from "@pact-foundation/pact-core"
 import { Pact } from "./httpPact"
 import { ImportMock } from "ts-mock-imports"
 

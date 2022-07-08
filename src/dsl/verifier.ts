@@ -2,10 +2,9 @@
  * Provider Verifier service
  * @module ProviderVerifier
  */
-import pact from "@pact-foundation/pact-node"
-import { qToPromise } from "../common/utils"
-import { VerifierOptions as PactNodeVerifierOptions } from "@pact-foundation/pact-node"
-import serviceFactory from "@pact-foundation/pact-node"
+import pact from "@pact-foundation/pact-core"
+import { VerifierOptions as PactNodeVerifierOptions } from "@pact-foundation/pact-core"
+import serviceFactory from "@pact-foundation/pact-core"
 import { omit, isEmpty, pickBy, identity, reduce } from "lodash"
 import * as express from "express"
 import * as http from "http"
@@ -93,7 +92,7 @@ export class Verifier {
   // Run the Verification CLI process
   private runProviderVerification() {
     return (server: http.Server) => {
-      const opts = {
+      const opts: PactNodeVerifierOptions = {
         providerStatesSetupUrl: `${this.address}:${server.address().port}${
           this.stateSetupPath
         }`,
@@ -101,7 +100,7 @@ export class Verifier {
         providerBaseUrl: `${this.address}:${server.address().port}`,
       }
 
-      return qToPromise<any>(pact.verifyPacts(opts))
+      return pact.verifyPacts(opts)
     }
   }
 

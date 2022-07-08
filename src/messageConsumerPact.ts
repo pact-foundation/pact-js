@@ -4,7 +4,6 @@
 
 import { isEmpty, cloneDeep } from "lodash"
 import { extractPayload } from "./dsl/matchers"
-import { qToPromise } from "./common/utils"
 import {
   Metadata,
   Message,
@@ -12,13 +11,11 @@ import {
   MessageConsumer,
 } from "./dsl/message"
 import logger, { setLogLevel } from "./common/logger"
-import serviceFactory from "@pact-foundation/pact-node"
+import serviceFactory from "@pact-foundation/pact-core"
 import { MessageConsumerOptions } from "./dsl/options"
 import ConfigurationError from "./errors/configurationError"
+import { Pact } from "@pact-foundation/pact-core/src/pact"
 
-interface PactNodeFactory {
-  createMessage(opts: any): any
-}
 /**
  * A Message Consumer is analagous to a Provider in the HTTP Interaction model.
  * It is the receiver of an interaction, and needs to be able to handle whatever
@@ -130,16 +127,14 @@ export class MessageConsumerPact {
     return this.validate()
       .then(() => handler(extractPayload(cloneDeep(this.state))))
       .then(() =>
-        qToPromise<string>(
-          this.getServiceFactory().createMessage({
-            consumer: this.config.consumer,
-            content: JSON.stringify(this.state),
-            dir: this.config.dir,
-            pactFileWriteMode: this.config.pactfileWriteMode,
-            provider: this.config.provider,
-            spec: 3,
-          })
-        )
+        this.getServiceFactory().createMessage({
+          consumer: this.config.consumer,
+          content: JSON.stringify(this.state),
+          dir: this.config.dir,
+          pactFileWriteMode: this.config.pactfileWriteMode,
+          provider: this.config.provider,
+          spec: 3,
+        })
       )
   }
 
@@ -155,7 +150,7 @@ export class MessageConsumerPact {
     return Promise.reject("message has not yet been properly constructed")
   }
 
-  private getServiceFactory(): PactNodeFactory {
+  private getServiceFactory(): Pact {
     return serviceFactory
   }
 }

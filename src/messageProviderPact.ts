@@ -5,13 +5,12 @@
 import { omit, isEmpty } from "lodash"
 import { MessageDescriptor } from "./dsl/message"
 import logger, { setLogLevel } from "./common/logger"
-import { VerifierOptions } from "@pact-foundation/pact-node"
+import { VerifierOptions } from "@pact-foundation/pact-core"
 import { PactMessageProviderOptions } from "./dsl/options"
-import serviceFactory from "@pact-foundation/pact-node"
+import serviceFactory from "@pact-foundation/pact-core"
 import * as express from "express"
 import * as http from "http"
 import { MessageProvider } from "./pact"
-import { qToPromise } from "./common/utils"
 
 const bodyParser = require("body-parser")
 
@@ -73,7 +72,7 @@ export class MessageProviderPact {
         ...{ providerBaseUrl: "http://localhost:" + server.address().port },
       } as VerifierOptions
 
-      return qToPromise<any>(serviceFactory.verifyPacts(opts))
+      return serviceFactory.verifyPacts(opts)
     }
   }
 

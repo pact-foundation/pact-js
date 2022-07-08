@@ -1,4 +1,4 @@
-import serviceFactory from "@pact-foundation/pact-node"
+import serviceFactory from "@pact-foundation/pact-core"
 import * as path from "path"
 import * as clc from "cli-color"
 import * as process from "process"
@@ -8,7 +8,7 @@ import { isPortAvailable } from "./common/net"
 import logger, { traceHttpInteractions, setLogLevel } from "./common/logger"
 import { MockService } from "./dsl/mockService"
 import { LogLevel, PactOptions, PactOptionsComplete } from "./dsl/options"
-import { Server, ServerOptions } from "@pact-foundation/pact-node/src/server"
+import { Server, ServerOptions } from "@pact-foundation/pact-core"
 import VerificationError from "./errors/verificationError"
 import ConfigurationError from "./errors/configurationError"
 
@@ -205,9 +205,9 @@ export class Pact {
       )
       .catch(
         (e: Error) =>
-          new Promise<void>((resolve, reject) => {
-            return this.server.delete().finally(() => reject(e))
-          })
+          new Promise<void>((resolve, reject) =>
+            this.server.delete().then(() => reject(e))
+          )
       )
   }
 

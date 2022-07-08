@@ -4,9 +4,9 @@
  */
 import { PactfileWriteMode } from "./mockService"
 import { MessageProviders, StateHandlers } from "../pact"
-import { VerifierOptions as PactNodeVerifierOptions } from "@pact-foundation/pact-node"
+import { VerifierOptions as PactNodeVerifierOptions } from "@pact-foundation/pact-core"
 
-export type LogLevel = "trace" | "debug" | "info" | "warn" | "error" | "fatal"
+export type LogLevel = "trace" | "debug" | "info" | "warn" | "error"
 
 export interface PactOptions {
   // The name of the consumer
