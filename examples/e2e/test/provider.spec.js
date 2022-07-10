@@ -18,7 +18,7 @@ describe('Pact Verification', () => {
 
     return new Verifier({
       provider: 'e2e Provider Example',
-      logLevel: 'DEBUG',
+      logLevel: 'TRACE',
       providerBaseUrl: 'http://localhost:8081',
 
       requestFilter: (req, res, next) => {
