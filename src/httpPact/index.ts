@@ -6,44 +6,38 @@ import {
   ConsumerInteraction,
   makeConsumerPact,
 } from '@pact-foundation/pact-core/src/consumer/index';
-
+import * as clc from 'cli-color';
 import * as path from 'path';
-// import clc from 'cli-color';
 import process from 'process';
 import { isEmpty } from 'lodash';
 
 import {
   Interaction,
   InteractionObject,
-  RequestOptions,
-  ResponseOptions,
-  Headers,
+  interactionToInteractionObject,
 } from '../dsl/interaction';
 import { freePort, isPortAvailable } from '../common/net';
 import logger, { setLogLevel } from '../common/logger';
 import { LogLevel, PactOptions, PactOptionsComplete } from '../dsl/options';
-// import VerificationError from '../errors/verificationError';
+import VerificationError from '../errors/verificationError';
 import ConfigurationError from '../errors/configurationError';
 import { traceHttpInteractions } from './tracing';
 import { SpecificationVersion } from '../../v3';
 import { version as pactPackageVersion } from '../../package.json';
-import { Matcher, matcherValueOrString } from '../dsl/matchers';
-import { forEachObjIndexed } from 'ramda';
-import { isArray } from 'util';
 import { generateMockServerError } from '../v3/display';
 import { numberToSpec } from '../common/spec';
 import { MockService } from 'dsl/mockService';
+import { setRequestDetails, setResponseDetails } from './ffi';
 
-// TODO: revisit this in the new mock server design
-// const logErrorNoMockServer = () => {
-//   logger.error(
-//     "The pact mock service doesn't appear to be running\n" +
-//       '  - Please check the logs above to ensure that there are no pact service startup failures\n' +
-//       '  - Please check that pact lifecycle methods are called in the correct order (setup() needs to be called before this method)\n' +
-//       '  - Please check that your test code waits for the promises returned from lifecycle methods to complete before calling the next one\n' +
-//       "  - To learn more about what is happening during your pact run, try setting logLevel: 'DEBUG'"
-//   );
-// };
+const logErrorNoMockServer = () => {
+  logger.error(
+    "The pact mock service doesn't appear to be running\n" +
+      '  - Please check the logs above to ensure that there are no pact service startup failures\n' +
+      '  - Please check that pact lifecycle methods are called in the correct order (setup() needs to be called before this method)\n' +
+      '  - Please check that your test code waits for the promises returned from lifecycle methods to complete before calling the next one\n' +
+      "  - To learn more about what is happening during your pact run, try setting logLevel: 'DEBUG'"
+  );
+};
 
 /**
  * Creates a new {@link PactProvider}.
@@ -159,6 +153,14 @@ export class Pact {
   public addInteraction(
     interactionObj: InteractionObject | Interaction
   ): Promise<string> {
+    if (!this.mockService) {
+      logErrorNoMockServer();
+      return Promise.reject(
+        new Error(
+          "The pact mock service wasn't configured when addInteraction was called"
+        )
+      );
+    }
     let interaction: InteractionObject;
 
     if (interactionObj instanceof Interaction) {
@@ -166,22 +168,7 @@ export class Pact {
       const interactionState = interactionObj.json();
 
       // Convert into the same type
-      interaction = {
-        state: interactionState.providerState,
-        uponReceiving: interactionState.description,
-        withRequest: {
-          method: interactionState.request?.method,
-          path: interactionState.request?.path,
-          query: interactionState.request?.query,
-          body: interactionState.request?.body,
-          headers: interactionState.request?.headers,
-        },
-        willRespondWith: {
-          status: interactionState.response?.status,
-          body: interactionState.response?.body,
-          headers: interactionState.response?.headers,
-        },
-      };
+      interaction = interactionToInteractionObject(interactionState);
     } else {
       interaction = interactionObj;
     }
@@ -193,18 +180,7 @@ export class Pact {
     setRequestDetails(this.interaction, interaction.withRequest);
     setResponseDetails(this.interaction, interaction.willRespondWith);
 
-    // Actually start the server now.....
-    logger.debug(`Setting up Pact mock server with Consumer "${this.opts.consumer}" and Provider "${this.opts.provider}"
-        using mock service on Port: "${this.opts.port}"`);
-
-    const port = this.pact.createMockServer(
-      this.opts.host,
-      this.opts.port,
-      this.opts.ssl
-    );
-    this.mockServerStartedPort = port;
-
-    logger.debug(`mock service started on port: ${port}`);
+    this.startMockServer();
 
     return Promise.resolve('');
   }
@@ -216,7 +192,12 @@ export class Pact {
    * @returns {Promise}
    */
   public verify(): Promise<string> {
-    // TODO: bring back nice messages for common failure cases as to why this method can't be called
+    if (!this.mockService) {
+      logErrorNoMockServer();
+      return Promise.reject(
+        new Error("The pact mock service wasn't running when verify was called")
+      );
+    }
 
     const matchingResults = this.pact.mockServerMismatches(this.opts.port);
     const success = this.pact.mockServerMatchedSuccessfully(this.opts.port);
@@ -226,8 +207,16 @@ export class Pact {
       let error = 'Test failed for the following reasons:';
       error += `\n\n  ${generateMockServerError(matchingResults, '\t')}`;
 
+      /* eslint-disable no-console */
+      console.error('');
+      console.error(clc.red('Pact verification failed!'));
+      console.error(clc.red(error));
+      /* eslint-enable */
+
       this.reset();
-      return Promise.reject(new Error(error));
+      throw new VerificationError(
+        'Pact verification failed - expected interactions did not match actual.'
+      );
     }
 
     return this.writePact()
@@ -263,6 +252,14 @@ export class Pact {
    * @returns {Promise}
    */
   public writePact(): Promise<string> {
+    if (!this.mockService) {
+      logErrorNoMockServer();
+      return Promise.reject(
+        new Error(
+          "The pact mock service wasn't running when writePact was called"
+        )
+      );
+    }
     this.pact.writePactFile(
       this.opts.dir || './pacts',
       this.opts.pactfileWriteMode !== 'overwrite'
@@ -282,6 +279,20 @@ export class Pact {
       'removeInteractions() is no longer required to be called, but has been kept for compatibility with upgrade from 9.x.x. You should remove any use of this method.'
     );
     return Promise.resolve('');
+  }
+
+  private startMockServer() {
+    logger.debug(`Setting up Pact mock server with Consumer "${this.opts.consumer}" and Provider "${this.opts.provider}"
+        using mock service on Port: "${this.opts.port}"`);
+
+    const port = this.pact.createMockServer(
+      this.opts.host,
+      this.opts.port,
+      this.opts.ssl
+    );
+    this.mockServerStartedPort = port;
+
+    logger.debug(`mock service started on port: ${port}`);
   }
 
   // reset the internal state
@@ -311,71 +322,3 @@ export class Pact {
     this.pact.addMetadata('pact-js', 'version', pactPackageVersion);
   }
 }
-
-const contentTypeFromHeaders = (
-  headers: Headers | undefined,
-  defaultContentType: string
-) => {
-  let contentType: string | Matcher<string> = defaultContentType;
-  forEachObjIndexed((v, k) => {
-    if (`${k}`.toLowerCase() === 'content-type') {
-      contentType = matcherValueOrString(v);
-    }
-  }, headers || {});
-
-  return contentType;
-};
-
-const setRequestDetails = (
-  interaction: ConsumerInteraction,
-  req: RequestOptions
-) => {
-  if (req?.method && req?.path) {
-    const method = req?.method;
-    const reqPath = matcherValueOrString(req?.path);
-    logger.debug(`adding request details: ${method} ${reqPath}`);
-    interaction.withRequest(method, reqPath);
-  }
-
-  if (req?.body) {
-    interaction.withRequestBody(
-      matcherValueOrString(req.body),
-      contentTypeFromHeaders(req.headers, 'application/json')
-    );
-  }
-
-  interaction.withRequest(req.method, matcherValueOrString(req.path));
-  forEachObjIndexed((v, k) => {
-    interaction.withRequestHeader(k, 0, matcherValueOrString(v));
-  }, req.headers);
-
-  forEachObjIndexed((v, k) => {
-    if (isArray(v)) {
-      (v as unknown[]).forEach((vv, i) => {
-        interaction.withQuery(k, i, matcherValueOrString(vv));
-      });
-    } else {
-      interaction.withQuery(k, 0, matcherValueOrString(v));
-    }
-  }, req.query);
-
-  // TODO: body
-};
-
-const setResponseDetails = (
-  interaction: ConsumerInteraction,
-  res: ResponseOptions
-) => {
-  interaction.withStatus(res.status);
-
-  if (res?.body) {
-    interaction.withResponseBody(
-      matcherValueOrString(res.body),
-      contentTypeFromHeaders(res.headers, 'application/json')
-    );
-  }
-
-  forEachObjIndexed((v, k) => {
-    interaction.withResponseHeader(k, 0, matcherValueOrString(v));
-  }, res.headers);
-};

@@ -3,10 +3,9 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
-import serviceFactory from '@pact-foundation/pact-core';
-import { ImportMock } from 'ts-mock-imports';
 import { PactOptions, PactOptionsComplete } from '../dsl/options';
 import { Pact } from '.';
+import { ConsumerInteraction, ConsumerPact } from '@pact-foundation/pact-core';
 
 chai.use(sinonChai);
 chai.use(chaiAsPromised);
@@ -14,7 +13,6 @@ chai.use(chaiAsPromised);
 const { expect } = chai;
 
 describe('Pact', () => {
-  let pact: Pact;
   const fullOpts = {
     consumer: 'A',
     provider: 'B',
@@ -24,19 +22,8 @@ describe('Pact', () => {
     logLevel: 'info',
     spec: 2,
     cors: false,
-    pactfileWriteMode: 'overwrite',
+    pactfileWriteMode: 'merge',
   } as PactOptionsComplete;
-
-  before(() => {
-    // Stub out pact-core
-    const manager = ImportMock.mockClass(serviceFactory, 'createServer') as any;
-    manager.mock('createServer', () => {});
-  });
-
-  beforeEach(() => {
-    pact = Object.create(Pact.prototype) as any as Pact;
-    pact.opts = fullOpts;
-  });
 
   afterEach(() => {
     sinon.restore();
@@ -80,27 +67,25 @@ describe('Pact', () => {
   });
 
   describe('#setup', () => {
-    const serverMock = {
-      start: () => Promise.resolve(),
-      options: { port: 1234 },
-      logLevel: () => {},
-    };
-
     describe('when server is properly configured', () => {
-      it('starts the mock server in the background', () => {
-        const p: any = new Pact(fullOpts);
+      it('updates the mock service configuration', async () => {
+        const p: Pact = new Pact(fullOpts);
 
-        p.server = serverMock;
-
-        return expect(p.setup()).to.eventually.be.fulfilled;
+        await p.setup();
+        expect(p.mockService).to.deep.equal({
+          baseUrl: 'http://127.0.0.1:1234',
+          pactDetails: {
+            pactfile_write_mode: 'merge',
+            consumer: {
+              name: 'A',
+            },
+            provider: { name: 'B' },
+          },
+        });
       });
-    });
 
-    describe('when server is properly configured', () => {
       it('returns the current configuration', () => {
         const p: any = new Pact(fullOpts);
-
-        p.server = serverMock;
 
         return expect(p.setup()).to.eventually.include({
           consumer: 'A',
@@ -111,9 +96,122 @@ describe('Pact', () => {
           logLevel: 'info',
           spec: 2,
           cors: false,
-          pactfileWriteMode: 'overwrite',
+          pactfileWriteMode: 'merge',
         });
       });
     });
+
+    describe('when a port is given', () => {
+      it('checks if the port is available', () => {
+        const p: any = new Pact(fullOpts);
+
+        return expect(p.setup())
+          .to.eventually.have.property('port')
+          .eq(fullOpts.port);
+      });
+    });
+
+    describe('when no port is given', () => {
+      it('finds a free port', () => {
+        const opts = {
+          ...fullOpts,
+          port: undefined,
+        };
+        const p: any = new Pact(opts);
+
+        return expect(p.setup()).to.eventually.have.property('port').not
+          .undefined;
+      });
+    });
+  });
+
+  describe('#addInteraction', () => {
+    // This is more of an integration test, as the function has taken on a lot more
+    // responsibility previously covered by other functions during the upgrade to
+    // the rust core, to ensure the API remains backwards compatible
+    it('sets the correct request and response details on the FFI and starts the mock server', () => {
+      const p: Pact = new Pact(fullOpts);
+      const uponReceiving = sinon.stub().returns(true);
+      const given = sinon.stub().returns(true);
+      const withRequest = sinon.stub().returns(true);
+      const withRequestBody = sinon.stub().returns(true);
+      const withRequestHeader = sinon.stub().returns(true);
+      const withQuery = sinon.stub().returns(true);
+      const withResponseBody = sinon.stub().returns(true);
+      const withResponseHeader = sinon.stub().returns(true);
+      const withStatus = sinon.stub().returns(true);
+      const createMockServer = sinon.stub().returns(1234);
+      const pactMock: ConsumerPact = {
+        createMockServer,
+      };
+      const interactionMock: ConsumerInteraction = {
+        uponReceiving,
+        given,
+        withRequest,
+        withRequestBody,
+        withRequestHeader,
+        withQuery,
+        withResponseBody,
+        withResponseHeader,
+        withStatus,
+      };
+      p.pact = pactMock;
+      p.interaction = interactionMock;
+      p.mockService = {};
+
+      p.addInteraction({
+        state: 'some state',
+        uponReceiving: 'some description',
+        withRequest: {
+          method: 'GET',
+          path: '/',
+          body: { foo: 'bar' },
+          headers: {
+            'content-type': 'application/json',
+            foo: 'bar',
+          },
+          query: {
+            query: 'string',
+            foo: 'bar',
+          },
+        },
+        willRespondWith: {
+          status: 200,
+          body: { baz: 'bat' },
+          headers: {
+            'content-type': 'application/hal+json',
+            foo: 'bar',
+          },
+        },
+      });
+
+      expect(uponReceiving.calledOnce).to.be.true;
+      expect(given.calledOnce).to.be.true;
+      expect(withRequest.calledOnce).to.be.true;
+      expect(withQuery.calledTwice).to.be.true;
+      expect(withRequestHeader.calledTwice).to.be.true;
+      expect(withRequestBody.calledOnce).to.be.true;
+      expect(withResponseBody.calledOnce).to.be.true;
+      expect(withResponseHeader.calledTwice).to.be.true;
+
+      // Pact mock server started
+      expect(createMockServer.called).to.be.true;
+    });
+  });
+
+  describe('#verify', () => {
+    it('sub test', () => {});
+  });
+
+  describe('#finalize', () => {
+    it('sub test', () => {});
+  });
+
+  describe('#removeInteractions', () => {
+    it('sub test', () => {});
+  });
+
+  describe('#reset', () => {
+    it('sub test', () => {});
   });
 });

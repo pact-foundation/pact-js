@@ -22,7 +22,7 @@ export const Matchers = MatchersStar;
 
 export { InterfaceToTemplate } from './dsl/matchers';
 
-export * from './httpPact';
+export { Pact } from './httpPact';
 
 /**
  * Exposes {@link MessageConsumerPact}
