@@ -139,9 +139,9 @@ export class PactV3 {
     req: V3Request,
     contentType: string,
     file: string,
-    part: string
+    mimePartName: string
   ): PactV3 {
-    this.interaction.withRequestMultipartBody(contentType, file, part);
+    this.interaction.withRequestMultipartBody(contentType, file, mimePartName);
     setRequestDetails(this.interaction, req);
     return this;
   }
@@ -174,9 +174,9 @@ export class PactV3 {
     res: V3Response,
     contentType: string,
     file: string,
-    part: string
+    mimePartName: string
   ): PactV3 {
-    this.interaction.withResponseMultipartBody(contentType, file, part);
+    this.interaction.withResponseMultipartBody(contentType, file, mimePartName);
     setResponseDetails(this.interaction, res);
     return this;
   }
