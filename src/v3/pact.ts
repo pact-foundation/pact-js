@@ -184,10 +184,10 @@ export class PactV3 {
   public async executeTest<T>(
     testFn: (mockServer: V3MockServer) => Promise<T>
   ): Promise<T | undefined> {
-    const scheme = 'http';
-    const host = '127.0.0.1';
+    const scheme = this.opts.tls ? 'https' : 'http';
+    const host = this.opts.host || '127.0.0.1'
 
-    const port = this.pact.createMockServer(host, this.opts.port);
+    const port = this.pact.createMockServer(host, this.opts.port, this.opts.tls);
     const server = { port, url: `${scheme}://${host}:${port}`, id: 'unknown' };
     let val: T | undefined;
 

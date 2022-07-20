@@ -40,6 +40,14 @@ export interface PactV3Options {
    * Specification version to use
    */
   logLevel?: 'trace' | 'debug' | 'info' | 'warn' | 'error';
+  /**
+   * Flag to identify if HTTP or HTTPs over TLS should be used (default false, HTTP)
+   */ 
+  tls?: boolean;
+  /**
+   * The host to run the mock service, defaults to 127.0.0.1
+   */
+  host?: string;  
 }
 
 export interface V3ProviderState {
