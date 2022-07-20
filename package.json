@@ -17,7 +17,7 @@
     "postdist": "npm test",
     "predist": "npm run clean && npm run format:check && npm run lint",
     "release": "standard-version -p beta",
-    "test": "nyc --check-coverage --reporter=html --reporter=text-summary mocha",
+    "test": "nyc --check-coverage --reporter=html --reporter=text-summary mocha"
   },
   "repository": {
     "type": "git",
