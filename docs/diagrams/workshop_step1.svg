@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="371px" height="61px" viewBox="-0.5 -0.5 371 61"
+     content="&lt;mxfile host=&quot;www.draw.io&quot; modified=&quot;2019-11-24T23:31:00.889Z&quot; agent=&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36&quot; etag=&quot;akHh8Kff_EhHRoWBRGpG&quot; version=&quot;12.2.9&quot; type=&quot;device&quot; pages=&quot;1&quot;&gt;&lt;diagram id=&quot;V_S8s5zDSyMCTtAF0WmM&quot; name=&quot;Page-1&quot;&gt;zZXBjpswEIafhmOlgLOEHBuaNodWXSkrrXqqHDyAG+OhxoQkT18DJsQlG3WlXam5BP8zZjzfbxuPxMXxi6Jl/g0ZCC+YsaNHPnlB4PtRaP5a5dQr4TLohUxxZpNGYcvPYMWZVWvOoHISNaLQvHTFBKWERDsaVQobNy1F4VYtaQYTYZtQMVWfOdN5r0bBYtQ3wLN8qOyHyz5S0CHZdlLllGFzJZG1R2KFqPun4hiDaOENXPp5n1+IXhamQOp/mfD7HDYYLn6eq+/P+3X+g20W+GHev+VARW0btovVp4EAMAPEDlHpHDOUVKxHdaWwlgzaMjMzGnO+IpZG9I34C7Q+WXdprdFIuS6EjfY120Iv9malCmuVwJ2Ghj1CVQb6Th65OGC2LmABWp3MPAWCan5w10HtHsoueSNm82BJv4K6P6Eeo6zqAtSE/si2BdXkXMO2pB2Cxpw4l2OKUg9WtVakXIgYBaruXYQ9QMTmRq+0wj1cRaJgR8Lw4sQBlIbjfS+m7OwEYve7PfBkGDfj8fGHM5FfHZ1w9k60yYT2o8KDuVbemTaFKE1u0Q6TCHbp29AOov8NdzjBvXl6epygNi1rl6fLSaKEKdS0+xmdCp5JoyWGkzGSrFqK3NzbH22g4Ix1t9MtF90bS9AdiBVN9lmn/7WCNzDJXz64Ji2mJs1veBS83iMzHD8pXezqw0zWfwA=&lt;/diagram&gt;&lt;/mxfile&gt;">
+    <defs/>
+    <g>
+        <path d="M 120 30 L 243.63 30" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="stroke"/>
+        <path d="M 248.88 30 L 241.88 33.5 L 243.63 30 L 241.88 26.5 Z" fill="#000000" stroke="#000000"
+              stroke-miterlimit="10" pointer-events="all"/>
+        <rect x="0" y="0" width="120" height="60" rx="9" ry="9" fill="#d5e8d4" stroke="#82b366" pointer-events="all"/>
+        <g transform="translate(31.5,23.5)">
+            <switch>
+                <foreignObject style="overflow:visible;" pointer-events="all" width="56" height="12"
+                               requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml"
+                         style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 56px; white-space: nowrap; overflow-wrap: normal; text-align: center;">
+                        <div xmlns="http://www.w3.org/1999/xhtml"
+                             style="display:inline-block;text-align:inherit;text-decoration:inherit;white-space:normal;">
+                            Consumer
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="28" y="12" fill="#000000" text-anchor="middle" font-size="12px" font-family="Helvetica">
+                    Consumer
+                </text>
+            </switch>
+        </g>
+        <rect x="250" y="0" width="120" height="60" rx="9" ry="9" fill="#dae8fc" stroke="#6c8ebf" pointer-events="all"/>
+        <g transform="translate(287.5,23.5)">
+            <switch>
+                <foreignObject style="overflow:visible;" pointer-events="all" width="44" height="12"
+                               requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml"
+                         style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 46px; white-space: nowrap; overflow-wrap: normal; text-align: center;">
+                        <div xmlns="http://www.w3.org/1999/xhtml"
+                             style="display:inline-block;text-align:inherit;text-decoration:inherit;white-space:normal;">
+                            Provider
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="22" y="12" fill="#000000" text-anchor="middle" font-size="12px" font-family="Helvetica">
+                    Provider
+                </text>
+            </switch>
+        </g>
+        <rect x="165" y="40" width="40" height="20" fill="#ffffff" stroke="none" pointer-events="all"/>
+        <g transform="translate(168.5,43.5)">
+            <switch>
+                <foreignObject style="overflow:visible;" pointer-events="all" width="32" height="12"
+                               requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                    <div xmlns="http://www.w3.org/1999/xhtml"
+                         style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 32px; white-space: nowrap; overflow-wrap: normal; text-align: center;">
+                        <div xmlns="http://www.w3.org/1999/xhtml"
+                             style="display:inline-block;text-align:inherit;text-decoration:inherit;white-space:normal;">
+                            HTTP
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="16" y="12" fill="#000000" text-anchor="middle" font-size="12px" font-family="Helvetica">HTTP
+                </text>
+            </switch>
+        </g>
+    </g>
+</svg>
