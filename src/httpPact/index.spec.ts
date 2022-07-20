@@ -198,20 +198,4 @@ describe('Pact', () => {
       expect(createMockServer.called).to.be.true;
     });
   });
-
-  describe('#verify', () => {
-    it('sub test', () => {});
-  });
-
-  describe('#finalize', () => {
-    it('sub test', () => {});
-  });
-
-  describe('#removeInteractions', () => {
-    it('sub test', () => {});
-  });
-
-  describe('#reset', () => {
-    it('sub test', () => {});
-  });
 });
