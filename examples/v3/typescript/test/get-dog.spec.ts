@@ -3,7 +3,7 @@ import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import path = require('path');
 import * as sinonChai from 'sinon-chai';
-import { PactV3, MatchersV3 } from '@pact-foundation/pact/v3';
+import { PactV3, MatchersV3 } from '@pact-foundation/pact';
 const { eachLike } = MatchersV3;
 
 const expect = chai.expect;
