@@ -124,7 +124,7 @@ describe("Verifier", () => {
 
     describe("when request body exists", () => {
       it("it writes the request if the body is a buffer", async () => {
-        const req: any = { body: "" }
+        const req: any = { body: "", headers: {} }
         req.body = Buffer.from("foo")
         await v["parseBody"](proxyReq, req)
 
@@ -133,7 +133,7 @@ describe("Verifier", () => {
       })
 
       it("it writes the request if the body is an object", async () => {
-        const req = { body: { foo: "bar" } }
+        const req = { body: { foo: "bar" }, headers: {} }
         await v["parseBody"](proxyReq, req)
 
         expect(proxyReq.setHeader).to.have.been.called
@@ -148,6 +148,44 @@ describe("Verifier", () => {
 
         expect(proxyReq.setHeader).to.have.not.been.called
         expect(proxyReq.write).to.have.not.been.called
+      })
+    })
+
+    describe("when request body exists", () => {
+      describe("and the detected content type is 'application/x-www-form-urlencoded'", () => {
+        it("logs a warning", async () => {
+          const spy = sinon.spy(logger, "warn")
+          delete opts.stateHandlers
+
+          const key = JSON.stringify({ json: "contents" })
+          const req: any = {
+            body: { [key]: "" },
+            headers: { "content-type": "application/x-www-form-urlencoded" },
+          }
+          await v["parseBody"](proxyReq, req)
+
+          expect(proxyReq.setHeader).to.have.been.called
+          expect(proxyReq.write).to.have.been.called
+          expect(spy.callCount).to.eql(1)
+        })
+      })
+
+      describe("and the detected content type is not 'application/x-www-form-urlencoded'", () => {
+        it("does not log a warning", async () => {
+          const spy = sinon.spy(logger, "warn")
+          delete opts.stateHandlers
+
+          const key = JSON.stringify({ json: "contents" })
+          const req: any = {
+            body: { [key]: "" },
+            headers: { "content-type": "application/json" },
+          }
+          await v["parseBody"](proxyReq, req)
+
+          expect(proxyReq.setHeader).to.have.been.called
+          expect(proxyReq.write).to.have.been.called
+          expect(spy.callCount).to.eql(0)
+        })
       })
     })
   })

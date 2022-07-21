@@ -179,6 +179,20 @@ export class Verifier {
       return
     }
 
+    // Warn if JSON body detected with default content type header
+    if (req?.headers["content-type"] === "application/x-www-form-urlencoded") {
+      try {
+        const keys = Object.keys(req.body)
+        if (keys.length > 0 && typeof JSON.parse(keys[0]) === "object") {
+          logger.warn(
+            "WARNING: the detected content type is application/x-www-form-urlencoded, however we detected a JSON body. This is likely to cause errors. To fix this, ensure you set a 'content-type' header in your consumer test to 'application/json'"
+          )
+        }
+      } catch (e) {
+        logger.trace("unable to parse body as JSON: ", e.message)
+      }
+    }
+
     let bodyData
 
     if (Buffer.isBuffer(req.body)) {
