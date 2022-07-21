@@ -30,13 +30,6 @@ The `PactV3` class provides the following high-level APIs, they are listed in th
 
 <details><summary>Consumer API</summary>
 
-| API                 | Options                       | Returns   | Description                                                                                                                                                                                                                                                  |
-| ------------------- | ----------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-
-
-| `verify()`          | n/a                           | `Promise` | Verifies that all interactions specified. This should be called once per test, to ensure your expectations were correct                                                                                                                                      |
-| `finalize()`        | n/a                           | `Promise` | Records the interactions registered to the Mock Server into the pact file and shuts it down. You would normally call this only once in an `afterAll(...)` type clause.                                                                                       |
-
 | API | Options | Description |
 |-----|---------|-------------|
 | `new PactV3(options)` | See constructor options below | Creates a Mock Server test double of your Provider API. The class is **not** thread safe, but you can run tests in parallel by creating as many instances as you need. |
