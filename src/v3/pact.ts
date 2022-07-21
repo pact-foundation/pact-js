@@ -21,7 +21,7 @@ import {
   V3Response,
 } from './types';
 import { matcherValueOrString } from './matchers';
-import { MatchersV3 } from '../../v3';
+import { MatchersV3 } from '../v3';
 import { filterMissingFeatureFlag, generateMockServerError } from './display';
 
 const readBinaryData = (file: string): Buffer => {
@@ -185,9 +185,13 @@ export class PactV3 {
     testFn: (mockServer: V3MockServer) => Promise<T>
   ): Promise<T | undefined> {
     const scheme = this.opts.tls ? 'https' : 'http';
-    const host = this.opts.host || '127.0.0.1'
+    const host = this.opts.host || '127.0.0.1';
 
-    const port = this.pact.createMockServer(host, this.opts.port, this.opts.tls);
+    const port = this.pact.createMockServer(
+      host,
+      this.opts.port,
+      this.opts.tls
+    );
     const server = { port, url: `${scheme}://${host}:${port}`, id: 'unknown' };
     let val: T | undefined;
 

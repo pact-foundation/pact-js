@@ -22,7 +22,7 @@ import { LogLevel, PactOptions, PactOptionsComplete } from '../dsl/options';
 import VerificationError from '../errors/verificationError';
 import ConfigurationError from '../errors/configurationError';
 import { traceHttpInteractions } from './tracing';
-import { SpecificationVersion } from '../../v3';
+import { SpecificationVersion } from '../v3';
 import { version as pactPackageVersion } from '../../package.json';
 import { generateMockServerError } from '../v3/display';
 import { numberToSpec } from '../common/spec';

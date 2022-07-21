@@ -1,4 +1,4 @@
-import { SpecificationVersion } from '../../v3';
+import { SpecificationVersion } from '../v3';
 
 export const numberToSpec = (
   spec?: number,
