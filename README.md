@@ -188,29 +188,36 @@ The provider interface is in the package: `github.com/pact-foundation/pact-go/v2
 
 #### Verifying a Provider
 
-A provider test takes one or more pact files (contracts) as input, and Pact verifies that your provider adheres to the contract. In the simplest case, you can verify a provider as per below.
+A provider test takes one or more pact files (contracts) as input, and Pact verifies that your provider adheres to the contract. In the simplest case, you can verify a provider as per below using a local pact file, although in practice you would usually use a Pact Broker to manage your contracts and CI/CD workflow.
 
-```golang
-func TestV3HTTPProvider(t *testing.T) {
-	// 1. Start your Provider API in the background
-	go startServer()
+```js
+const { Verifier } = require('@pact-foundation/pact');
 
-	verifier := HTTPVerifier{}
+// (1) Start provider locally. Be sure to stub out any external dependencies
+server.listen(8081, () => {
+  importData();
+  console.log('Animal Profile Service listening on http://localhost:8081');
+});
 
-	// Verify the Provider with local Pact Files
-	// The console will display if the verification was successful or not, the
-	// assertions being made and any discrepancies with the contract
-	err := verifier.VerifyProvider(t, VerifyRequest{
-		ProviderBaseURL: "http://localhost:1234",
-		PactFiles: []string{
-			filepath.ToSlash("/path/to/SomeConsumer-SomeProvider.json"),
-		},
-	})
+// (2) Verify that the provider meets all consumer expectations
+describe('Pact Verification', () => {
+  it('validates the expectations of Matching Service', () => {
+    let token = 'INVALID TOKEN';
 
-	// Ensure the verification succeeded
-	assert.NoError(t, err)
-}
+    return new Verifier({
+      providerBaseUrl: 'http://localhost:8081', // <- location of your running provider
+      pactUrls: [ path.resolve(process.cwd(), "./pacts/SomeConsumer-SomeProvider.json") ],
+    })
+      .verifyProvider()
+      .then(() => {
+        console.log('Pact Verification Complete!');
+      });
+  });
+});
+
 ```
+
+It's best to run Pact verification tests as part of your unit testing suite, so you can readily access stubbing, IaC and other helpful tools.
 
 ![----------](https://raw.githubusercontent.com/pactumjs/pactum/master/assets/rainbow.png)
 
