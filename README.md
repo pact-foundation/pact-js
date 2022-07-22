@@ -227,9 +227,8 @@ It's best to run Pact verification tests as part of your unit testing suite, so 
 
 | Version | Stable | [Spec] Compatibility | Install            |
 | ------- | ------ | -------------------- | ------------------ |
-| 2.0.x   | Beta   | 2, 3                 | See [installation] |
-| 1.0.x   | Yes    | 2, 3\*               | 1.x.x [1xx]        |
-| 0.x.x   | Yes    | Up to v2             | 0.x.x [stable]     |
+| 10.x.x  | Release Candidate   | 2, 3                 | See [installation] |
+| 9.x.x   | Yes    | 2, 3\*               | [9xx]        |
 
 _\*_ v3 support is limited to the subset of functionality required to enable language inter-operable [Message support].
 
@@ -248,24 +247,14 @@ See [CONTRIBUTING](CONTRIBUTING.md).
 <br />
 
 [spec]: https://github.com/pact-foundation/pact-specification
-[1xx]: https://github.com/pact-foundation/pact-go/
-[stable]: https://github.com/pact-foundation/pact-go/tree/release/0.x.x
-[alpha]: https://github.com/pact-foundation/pact-go/tree/release/1.1.x
-[troubleshooting]: https://github.com/pact-foundation/pact-go/wiki/Troubleshooting
-[pact wiki]: https://github.com/pact-foundation/pact-ruby/wiki
-[getting started with pact]: http://dius.com.au/2016/02/03/microservices-pact/
+[9xx]: https://github.com/pact-foundation/pact-js/
 [pact website]: http://docs.pact.io/
-[slack channel]: https://gophers.slack.com/messages/pact/
 [@pact_up]: https://twitter.com/pact_up
 [pact specification v2]: https://github.com/pact-foundation/pact-specification/tree/version-2
 [pact specification v3]: https://github.com/pact-foundation/pact-specification/tree/version-3
 [library]: https://github.com/pact-foundation/pact-reference/releases
-[cli tools]: https://github.com/pact-foundation/pact-reference/releases
 [installation]: #installation
 [message support]: https://github.com/pact-foundation/pact-specification/tree/version-3#introduces-messages-for-services-that-communicate-via-event-streams-and-message-queues
-[changelog]: https://github.com/pact-foundation/pact-go/blob/master/CHANGELOG.md
+[changelog]: https://github.com/pact-foundation/pact-js/blob/master/CHANGELOG.md
 [pact broker]: https://github.com/pact-foundation/pact_broker
-[hosted broker]: pact.dius.com.au
-[can-i-deploy tool]: https://github.com/pact-foundation/pact_broker/wiki/Provider-verification-results
 [pactflow]: https://pactflow.io
-****
