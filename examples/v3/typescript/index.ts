@@ -1,15 +1,14 @@
 import axios, { AxiosPromise } from 'axios';
 
-export class DogService {
+export class UserService {
   constructor(private url: string) {}
 
-  public getMeDogs = (from: string): AxiosPromise => {
+  public getUser = (id: number): AxiosPromise => {
     return axios.request({
       baseURL: this.url,
-      params: { from },
       headers: { Accept: 'application/json' },
       method: 'GET',
-      url: '/dogs',
+      url: `/users/${id}`,
     });
   };
 }
