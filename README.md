@@ -22,7 +22,7 @@
 
 <br />
 <p align="center">
-  <a href="https://docs.pact.io"><img src="https://user-images.githubusercontent.com/53900/121777789-32770480-cbd7-11eb-903b-e6623b0798ff.gif" alt="Pact Go Demo"/></a>
+  <a href="https://docs.pact.io"><img src="https://user-images.githubusercontent.com/53900/180370118-f11c61f3-4ae0-496f-98fa-052fdfad409e.gif" alt="Pact JS Demo"/></a>
 </p>
 <br />
 
@@ -107,7 +107,7 @@ In order to get better statistics as to who is using Pact, we have an anonymous 
 
 ### Consumer package
 
-The main consumer interface are the exports `PactV3` and `MatchersV3` of the `@pact-foundation/pact` package.
+The main consumer interface are the `PactV3` class and `MatchersV3` exports of the `@pact-foundation/pact` package.
 
 #### Writing a Consumer test
 
@@ -184,7 +184,7 @@ You can see (and run) the full version of this in `./examples/v3/typescript`, as
 
 ### Provider package
 
-The provider interface is in the package: `github.com/pact-foundation/pact-go/v2/provider`
+The main provider interface is the `Verifier` class of the `@pact-foundation/pact` package.
 
 #### Verifying a Provider
 
@@ -241,8 +241,8 @@ The [roadmap](https://docs.pact.io/roadmap/) for Pact and Pact JS is outlined on
 
 See [CONTRIBUTING](CONTRIBUTING.md).
 
-<a href="https://github.com/pact-foundation/pact-go/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=pact-foundation/pact-go" />
+<a href="https://github.com/pact-foundation/pact-js/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=pact-foundation/pact-js" />
 </a>
 <br />
 
