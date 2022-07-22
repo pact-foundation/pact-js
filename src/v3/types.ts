@@ -15,7 +15,7 @@ export interface PactV3Options {
   /**
    * Directory to write the pact file to
    */
-  dir: string;
+  dir?: string;
   /**
    * Consumer name
    */
