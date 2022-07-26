@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.61](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.60...v10.0.0-beta.61) (2022-07-26)
+
+
+### Features
+
+* migrate message pact to new js core ([156886f](https://github.com/pact-foundation/pact-js/commit/156886fde85d2a1fa217a68db69fd876d3a76001))
+* remove deprecated VerifierV3 from beta interface. BREAKING CHANGE ([25dc07e](https://github.com/pact-foundation/pact-js/commit/25dc07e3f3f710b77526d8be315ef7ee772ff747))
+* replace ruby core with rust core in stable pact http package ([7b7d415](https://github.com/pact-foundation/pact-js/commit/7b7d415f0f9910de19061e1e4bdbe8b1acc7b6ef))
+* support JSON addInteraction function for PactV3 ([903fd36](https://github.com/pact-foundation/pact-js/commit/903fd36a13805b80afa2ff4967a161a43cdfed09))
+* support user defined port/host in v3 consumer tests ([8aaafe6](https://github.com/pact-foundation/pact-js/commit/8aaafe6e919e1935d033e1b904b5131af084af1e))
+
+
+### Fixes and Improvements
+
+* Add support for state params to MessageProviderPact ([#372](https://github.com/pact-foundation/pact-js/issues/372)) ([#882](https://github.com/pact-foundation/pact-js/issues/882)) ([33c145a](https://github.com/pact-foundation/pact-js/commit/33c145a908916ac3a83f0eec30f15b782b3a2e71))
+* make 'dir' optional in PactV3 interface and default to ./pacts dir ([0b12160](https://github.com/pact-foundation/pact-js/commit/0b121601787895a3c551be6f0e17da4ea819e738))
+
 ## [10.0.0-beta.60](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.59...v10.0.0-beta.60) (2022-06-26)
 
 
