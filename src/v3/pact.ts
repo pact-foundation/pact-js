@@ -21,7 +21,7 @@ import {
   V3Response,
 } from './types';
 import { matcherValueOrString } from './matchers';
-import { MatchersV3 } from '../../v3';
+import { MatchersV3 } from '../v3';
 import { filterMissingFeatureFlag, generateMockServerError } from './display';
 
 const readBinaryData = (file: string): Buffer => {
@@ -139,9 +139,9 @@ export class PactV3 {
     req: V3Request,
     contentType: string,
     file: string,
-    part: string
+    mimePartName: string
   ): PactV3 {
-    this.interaction.withRequestMultipartBody(contentType, file, part);
+    this.interaction.withRequestMultipartBody(contentType, file, mimePartName);
     setRequestDetails(this.interaction, req);
     return this;
   }
@@ -174,9 +174,9 @@ export class PactV3 {
     res: V3Response,
     contentType: string,
     file: string,
-    part: string
+    mimePartName: string
   ): PactV3 {
-    this.interaction.withResponseMultipartBody(contentType, file, part);
+    this.interaction.withResponseMultipartBody(contentType, file, mimePartName);
     setResponseDetails(this.interaction, res);
     return this;
   }
@@ -184,10 +184,14 @@ export class PactV3 {
   public async executeTest<T>(
     testFn: (mockServer: V3MockServer) => Promise<T>
   ): Promise<T | undefined> {
-    const scheme = 'http';
-    const host = '127.0.0.1';
+    const scheme = this.opts.tls ? 'https' : 'http';
+    const host = this.opts.host || '127.0.0.1';
 
-    const port = this.pact.createMockServer(host, this.opts.port);
+    const port = this.pact.createMockServer(
+      host,
+      this.opts.port,
+      this.opts.tls
+    );
     const server = { port, url: `${scheme}://${host}:${port}`, id: 'unknown' };
     let val: T | undefined;
 
@@ -215,7 +219,7 @@ export class PactV3 {
 
   private cleanup(success: boolean, server: V3MockServer) {
     if (success) {
-      this.pact.writePactFile(this.opts.dir);
+      this.pact.writePactFile(this.opts.dir || './pacts');
     }
     this.pact.cleanupMockServer(server.port);
     this.setup();

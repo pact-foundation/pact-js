@@ -23,7 +23,7 @@ import { MessageConsumerOptions } from './dsl/options';
 import ConfigurationError from './errors/configurationError';
 import { version as pactPackageVersion } from '../package.json';
 import { numberToSpec } from './common/spec';
-import { SpecificationVersion } from '../v3';
+import { SpecificationVersion } from './v3';
 
 const DEFAULT_PACT_DIR = './pacts';
 

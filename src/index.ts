@@ -85,13 +85,6 @@ export * from './dsl/mockService';
 export * from './v3';
 
 /**
- * Exposes {@link Publisher}
- * @memberof Pact
- * @static
- */
-export * from './dsl/publisher';
-
-/**
  * Exposes {@link PactOptions}
  * @memberof Pact
  * @static

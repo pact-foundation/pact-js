@@ -1,7 +1,7 @@
 const path = require('path');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
-const { PactV3, MatchersV3, XmlBuilder } = require('@pact-foundation/pact/v3');
+const { PactV3, MatchersV3, XmlBuilder } = require('@pact-foundation/pact');
 const { string, eachLike, integer, boolean, atLeastOneLike, timestamp, regex } =
   MatchersV3;
 

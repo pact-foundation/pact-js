@@ -1,5 +1,13 @@
 # Pact-js migration guide
 
+# 9.x.x -> 10.x.x
+
+See the [9.x.x -> 10.x.x](/docs/migrations/9-10.md) migration guide.
+
+# beta.62
+
+Removed the default export for v3 in the root package in preparation for a release.
+
 # beta.61
 
 * new `addInteraction` method on PactV3 to support previous JSON-style interactions

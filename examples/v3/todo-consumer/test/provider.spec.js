@@ -1,4 +1,4 @@
-const { PactV3, MatchersV3, XmlBuilder } = require('@pact-foundation/pact/v3');
+const { PactV3, MatchersV3, XmlBuilder } = require('@pact-foundation/pact');
 const { Verifier } = require('@pact-foundation/pact');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
