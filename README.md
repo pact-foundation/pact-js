@@ -90,7 +90,7 @@ Learn the key Pact JS features in 60 minutes: https://github.com/pact-foundation
 ## Installation
 
 ```shell
-npm i -S @pact-foundation/pact@latest
+npm i -S @pact-foundation/pact@
 
 # 🚀 now write some tests!
 ```

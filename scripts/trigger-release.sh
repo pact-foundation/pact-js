@@ -20,5 +20,5 @@ if  ! echo "${output}" | grep "HTTP\/2 204" > /dev/null; then
   echo "Failed to trigger release"
   exit 1
 else
-  echo "Release workflow triggered"
+  echo "10.x.x release workflow triggered"
 fi

@@ -13,12 +13,12 @@ repository_slug=$(git remote get-url $(git remote show) | cut -d':' -f2 | sed 's
 output=$(curl -v -X POST https://api.github.com/repos/${repository_slug}/dispatches \
       -H 'Accept: application/vnd.github.everest-preview+json' \
       -H "Authorization: Bearer $GITHUB_ACCESS_TOKEN_FOR_PF_RELEASES" \
-      -d "{\"event_type\": \"release-beta-triggered\"}" 2>&1)
+      -d "{\"event_type\": \"release-9x-triggered\"}" 2>&1)
 
 if  ! echo "${output}" | grep "HTTP\/2 204" > /dev/null; then
   echo "$output" | sed  "s/${GITHUB_ACCESS_TOKEN_FOR_PF_RELEASES}/********/g"
   echo "Failed to trigger release"
   exit 1
 else
-  echo "Beta release workflow triggered"
+  echo "9.x.x Release workflow triggered"
 fi
