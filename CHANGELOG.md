@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-beta.62](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.61...v10.0.0-beta.62) (2022-07-27)
+
+
+### Fixes and Improvements
+
+* states not added when using PactV3.addInteraction ([cb4bd1a](https://github.com/pact-foundation/pact-js/commit/cb4bd1a0540261cfe4c8fb9c716a3541cdeae600))
+
 ## [10.0.0-beta.61](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.60...v10.0.0-beta.61) (2022-07-26)
 
 
