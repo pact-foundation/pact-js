@@ -55,11 +55,11 @@ export class PactV3 {
         "must provide a valid interaction description via 'uponReceiving'"
       );
     }
-    this.uponReceiving(interaction.uponReceiving);
 
     (interaction.states || []).forEach((s) => {
       this.given(s.description, s.parameters);
     });
+    this.uponReceiving(interaction.uponReceiving);
     this.withRequest(interaction.withRequest);
     this.willRespondWith(interaction.willRespondWith);
 
