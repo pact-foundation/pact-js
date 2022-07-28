@@ -1,0 +1,45 @@
+{
+  "name": "e2e",
+  "version": "1.0.0",
+  "description": "Pact JS E2E Example",
+  "scripts": {
+    "test": "npm run test:consumer && npm run test:publish && npm run test:provider",
+    "test:consumer": "mocha test/consumer.spec.js",
+    "test:publish": "pact-broker publish ./pacts --consumer-app-version=\"$(npx @pact-foundation/absolute-version)\" --auto-detect-version-properties --broker-base-url=https://test.pactflow.io --broker-username dXfltyFMgNOFZAxr8io9wJ37iUpY42M --broker-password O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
+    "test:provider": "mocha test/provider.spec.js",
+    "can-i-deploy": "npm run can-i-deploy:consumer && npm run can-i-deploy:provider",
+    "can-i-deploy:consumer": "pact-broker can-i-deploy --pacticipant 'Matching Service' --latest --broker-base-url https://test.pactflow.io --broker-username dXfltyFMgNOFZAxr8io9wJ37iUpY42M --broker-password O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
+    "can-i-deploy:provider": "pact-broker can-i-deploy --pacticipant 'Animal Profile Service' --latest --broker-base-url https://test.pactflow.io --broker-username dXfltyFMgNOFZAxr8io9wJ37iUpY42M --broker-password O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
+    "api": "concurrently 'npm run provider' 'npm run consumer'",
+    "consumer": "node ./consumerService.js",
+    "provider": "node ./providerService.js"
+  },
+  "author": "matt.fellows@onegeek.com.au",
+  "license": "MIT",
+  "devDependencies": {
+    "@pact-foundation/absolute-version": "0.0.4",
+    "@pact-foundation/pact": "10.0.0-beta.60",
+    "@pact-foundation/pact-core": "^13.6.1",
+    "body-parser": "^1.18.3",
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "cli-color": "^1.1.0",
+    "concurrently": "^3.1.0",
+    "cors": "^2.8.1",
+    "eslint": "^3.13.1",
+    "eslint-config-google": "^0.7.1",
+    "express": "^4.16.3",
+    "express-http-proxy": "^1.4.0",
+    "mocha": "^5.2.0",
+    "neon-cli": "^0.3.3",
+    "superagent": "^3.8.3",
+    "ts-node": "^8.8.2",
+    "typescript": "^3.8.3"
+  },
+  "dependencies": {
+    "xml": "^1.0.1"
+  },
+  "config": {
+    "pact_do_not_track": true
+  }
+}

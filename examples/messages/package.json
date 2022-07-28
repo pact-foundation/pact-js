@@ -6,31 +6,23 @@
   "scripts": {
     "build": "tsc",
     "clean": "rimraf pacts",
-    "test": "npm run test:consumer && npm run pact:publish && npm run test:provider",
-    "test:consumer": "nyc --check-coverage --reporter=html --reporter=text-summary mocha consumer/*.spec.ts",
-    "test:provider": "nyc --check-coverage --reporter=html --reporter=text-summary mocha -t 20000 provider/*.spec.ts",
-    "pact:publish": "pact-broker publish ./pacts --consumer-app-version=\"$(npx absolute-version)\" --auto-detect-version-properties --broker-base-url=https://test.pactflow.io"
+    "test": "npm run test:consumer && npm run test:publish && npm run test:provider",
+    "test:consumer": "mocha consumer/*.spec.ts",
+    "test:provider": "mocha -t 20000 provider/*.spec.ts",
+    "test:publish": "pact-broker publish ./pacts --consumer-app-version=\"$(npx @pact-foundation/absolute-version)\" --auto-detect-version-properties --broker-base-url=https://test.pactflow.io --broker-username dXfltyFMgNOFZAxr8io9wJ37iUpY42M --broker-password O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1"
   },
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@pact-foundation/pact": "^9.17.2",
-    "@types/chai": "^4.0.3",
-    "@types/chai-as-promised": "0.0.31",
+    "@pact-foundation/absolute-version": "0.0.4",
+    "@pact-foundation/pact": "10.0.0-beta.60",
+    "@pact-foundation/pact-core": "^13.6.2",
     "@types/mocha": "^2.2.48",
     "@types/node": "^8.0.24",
-    "@types/sinon": "^7.0.6",
-    "@types/sinon-chai": "^2.7.29",
-    "absolute-version": "^1.0.0",
     "axios": "^0.21.2",
-    "chai": "^4.2.0",
-    "chai-as-promised": "^7.1.1",
-    "lodash": "^4.17.21",
     "mocha": "^8.2.1",
-    "nyc": "^15.0.0-beta.0",
     "rimraf": "^2.6.2",
-    "sinon-chai": "^3.3.0",
-    "ts-node": "^3.3.0",
-    "typescript": "^3.3.3"
+    "ts-node": "^10.8.2",
+    "typescript": "^4.7.4"
   }
 }

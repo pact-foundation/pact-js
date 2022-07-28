@@ -1,0 +1,75 @@
+{
+  "consumer": {
+    "name": "Filter Service V3"
+  },
+  "interactions": [
+    {
+      "description": "a request to be used",
+      "providerStates": [
+      ],
+      "request": {
+        "method": "GET",
+        "path": "/pass"
+      },
+      "response": {
+        "body": {
+          "result": "OK"
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "a request to be skipped",
+      "providerStates": [
+      ],
+      "request": {
+        "method": "GET",
+        "path": "/fail"
+      },
+      "response": {
+        "body": {
+          "result": "OK"
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "a request to be used because it's description is part of what is given in `PACT_DESCRIPTION`",
+      "providerStates": [
+      ],
+      "request": {
+        "method": "GET",
+        "path": "/pass"
+      },
+      "response": {
+        "body": {
+          "result": "OK"
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "status": 200
+      }
+    }
+  ],
+  "metadata": {
+    "pactJs": {
+      "version": "10.0.0-beta.35"
+    },
+    "pactRust": {
+      "version": "0.8.14"
+    },
+    "pactSpecification": {
+      "version": "3.0.0"
+    }
+  },
+  "provider": {
+    "name": "filter-provider"
+  }
+}

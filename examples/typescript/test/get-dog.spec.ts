@@ -1,101 +1,101 @@
 /* tslint:disable:no-unused-expression object-literal-sort-keys max-classes-per-file no-empty */
-import * as chai from "chai"
-import * as chaiAsPromised from "chai-as-promised"
-import path = require("path")
-import * as sinonChai from "sinon-chai"
-import { Pact, Interaction, Matchers } from "@pact-foundation/pact"
+import * as chai from 'chai';
+import * as chaiAsPromised from 'chai-as-promised';
+import path = require('path');
+import * as sinonChai from 'sinon-chai';
+import { Pact, Interaction, Matchers } from '@pact-foundation/pact';
 
-const expect = chai.expect
-import { DogService } from "../src/index"
-const { eachLike } = Matchers
+const expect = chai.expect;
+import { DogService } from '../src/index';
+const { eachLike } = Matchers;
 
-chai.use(sinonChai)
-chai.use(chaiAsPromised)
+chai.use(sinonChai);
+chai.use(chaiAsPromised);
 
-describe("The Dog API", () => {
-  const url = "http://127.0.0.1"
-  let dogService: DogService
+describe('The Dog API', () => {
+  const url = 'http://127.0.0.1';
+  let dogService: DogService;
 
   const provider = new Pact({
     // port,
-    log: path.resolve(process.cwd(), "logs", "mockserver-integration.log"),
-    dir: path.resolve(process.cwd(), "pacts"),
+    log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
+    dir: path.resolve(process.cwd(), 'pacts'),
     spec: 2,
-    consumer: "Typescript Consumer Example",
-    provider: "Typescript Provider Example",
-  })
+    consumer: 'Typescript Consumer Example',
+    provider: 'Typescript Provider Example',
+  });
 
-  const dogExample = { dog: 1 }
-  const EXPECTED_BODY = eachLike(dogExample)
+  const dogExample = { dog: 1 };
+  const EXPECTED_BODY = eachLike(dogExample);
 
   before(() =>
-    provider.setup().then(opts => {
-      dogService = new DogService({ url, port: opts.port })
+    provider.setup().then((opts) => {
+      dogService = new DogService({ url, port: opts.port });
     })
-  )
+  );
 
-  after(() => provider.finalize())
+  after(() => provider.finalize());
 
-  afterEach(() => provider.verify())
+  afterEach(() => provider.verify());
 
-  describe("get /dogs using builder pattern", () => {
+  describe('get /dogs using builder pattern', () => {
     before(() => {
       const interaction = new Interaction()
-        .given("I have a list of dogs")
-        .uponReceiving("a request for all dogs with the builder pattern")
+        .given('I have a list of dogs')
+        .uponReceiving('a request for all dogs with the builder pattern')
         .withRequest({
-          method: "GET",
-          path: "/dogs",
+          method: 'GET',
+          path: '/dogs',
           headers: {
-            Accept: "application/json",
+            Accept: 'application/json',
           },
         })
         .willRespondWith({
           status: 200,
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: EXPECTED_BODY,
-        })
+        });
 
-      return provider.addInteraction(interaction)
-    })
+      return provider.addInteraction(interaction);
+    });
 
-    it("returns the correct response", done => {
+    it('returns the correct response', (done) => {
       dogService.getMeDogs().then((response: any) => {
-        expect(response.data[0]).to.deep.eq(dogExample)
-        done()
-      }, done)
-    })
-  })
+        expect(response.data[0]).to.deep.eq(dogExample);
+        done();
+      }, done);
+    });
+  });
 
-  describe("get /dogs using object pattern", () => {
+  describe('get /dogs using object pattern', () => {
     before(() => {
       return provider.addInteraction({
-        state: "i have a list of dogs",
-        uponReceiving: "a request for all dogs with the object pattern",
+        state: 'i have a list of dogs',
+        uponReceiving: 'a request for all dogs with the object pattern',
         withRequest: {
-          method: "GET",
-          path: "/dogs",
+          method: 'GET',
+          path: '/dogs',
           headers: {
-            Accept: "application/json",
+            Accept: 'application/json',
           },
         },
         willRespondWith: {
           status: 200,
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: EXPECTED_BODY,
         },
-      })
-    })
+      });
+    });
 
-    it("returns the correct response", done => {
+    it('returns the correct response', (done) => {
       dogService.getMeDogs().then((response: any) => {
-        expect(response.data[0]).to.deep.eq(dogExample)
-        done()
-      }, done)
-    })
-  })
-})
+        expect(response.data[0]).to.deep.eq(dogExample);
+        done();
+      }, done);
+    });
+  });
+});

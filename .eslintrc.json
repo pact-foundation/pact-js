@@ -1,0 +1,55 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "import", "mocha", "chai-friendly"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "airbnb-base/legacy",
+    // "plugin:mocha/recommended",
+    "prettier"
+  ],
+  "env": {
+    "mocha": true
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {
+        "project": "tsconfig.json"
+      }
+    }
+  },
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module",
+    "project": "tsconfig.json"
+  },
+  "rules": {
+    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/explicit-module-boundary-types": "error",
+    "import/prefer-default-export": "off",
+    "no-underscore-dangle": ["error", { "allow": ["__pactMessageMetadata"] }],
+    "class-methods-use-this": "off",
+    "no-use-before-define": "off"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.spec.ts"],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-empty-function": "off",
+        "@typescript-eslint/no-unused-expressions": "off",
+        "no-unused-expressions": "off",
+        "no-new": "off",
+        "class-methods-use-this": "off",
+        "chai-friendly/no-unused-expressions": "error",
+        "mocha/no-mocha-arrows": "off",
+        "@typescript-eslint/ban-ts-comment": "off"
+      }
+    }
+  ],
+  "globals": {
+    "NodeJS": true
+  }
+}

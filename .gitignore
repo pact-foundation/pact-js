@@ -24,7 +24,6 @@ coverage
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
 dist
-dist-web
 
 # Dependency directory
 node_modules
@@ -51,3 +50,10 @@ pacts/
 .nvmrc
 .envrc
 
+# Rust/neon output
+pact-foundation-pact-*.tgz
+/native/index.node
+/native/index.node.sha256
+/native/target/
+build/
+native/artifacts.json

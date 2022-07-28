@@ -15,6 +15,11 @@ Please provide the following information with your issue to enable us to respond
 - The steps to recreate your issue.
 - An executable code example where possible. You can fork this repository and use one of the [examples] to quickly recreate your issue.
 
+## Key Branches
+
+* `master` - this is the current main version supporting the 10.x.x release line. Most investment will be here, inclruding major new features, enhancements, bug fixes, security patches etc.
+* `9.x.x` - this is the previous major version supporting the 9.x.x release line. Critical security patches and bug fixes will be provided as a priority.
+
 ## I want to contribute code but don't know where to start
 
 If you're not sure where to start, look for the [help wanted](https://github.com/pact-foundation/pact-js/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)

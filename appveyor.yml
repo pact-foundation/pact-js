@@ -25,6 +25,7 @@ install:
   - ps: Install-Product node $env:nodejs_version $env:platform
   - node --version
   - npm --version
+  - gcc --version
   - npm install
 
 # Run custom build script instead of MSBuild

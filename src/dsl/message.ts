@@ -1,4 +1,5 @@
-import { MatcherResult } from "./matchers"
+import { AnyJson } from '../common/jsonTypes';
+import { Matcher, AnyTemplate } from './matchers';
 
 /**
  * Metadata is a map containing message context,
@@ -7,7 +8,17 @@ import { MatcherResult } from "./matchers"
  * @module Message
  */
 export interface Metadata {
-  [name: string]: string | MatcherResult
+  [name: string]: string | Matcher<string>;
+}
+
+/**
+ * Defines a state a provider must be in.
+ */
+export interface ProviderState {
+  name: string;
+  params?: {
+    [name: string]: string;
+  };
 }
 
 /**
@@ -16,10 +27,17 @@ export interface Metadata {
  * @module Message
  */
 export interface Message {
-  providerStates?: [{ name: string }]
-  description?: string
-  metadata?: Metadata
-  contents: any
+  providerStates?: ProviderState[];
+  description?: string;
+  metadata?: Metadata;
+  contents: AnyTemplate | Buffer;
+}
+
+export interface ConcreteMessage {
+  providerStates?: ProviderState[];
+  description?: string;
+  metadata?: Metadata;
+  contents: AnyJson | Buffer;
 }
 
 /**
@@ -28,9 +46,9 @@ export interface Message {
  * @module Message
  */
 export interface MessageDescriptor {
-  providerStates?: [{ name: string }]
-  description: string
-  metadata?: Metadata
+  providerStates?: ProviderState[];
+  description: string;
+  metadata?: Metadata;
 }
 
 /**
@@ -40,7 +58,13 @@ export interface MessageDescriptor {
  *
  * @module Message
  */
-export type MessageConsumer = (m: Message) => Promise<any>
+export type MessageConsumer = (m: ConcreteMessage) => Promise<unknown>;
+
+export type MessageFromProvider = unknown;
+export type MessageFromProviderWithMetadata = {
+  __pactMessageMetadata: Record<string, string>;
+  message: unknown;
+};
 
 /**
  * A Message Provider is a function that will be invoked by the framework
@@ -50,12 +74,20 @@ export type MessageConsumer = (m: Message) => Promise<any>
  *
  * @module Message
  */
-export type MessageProvider = (m: MessageDescriptor) => Promise<any>
+export type MessageProvider = (
+  m: MessageDescriptor
+) =>
+  | Promise<MessageFromProvider | MessageFromProviderWithMetadata>
+  | MessageFromProvider
+  | MessageFromProviderWithMetadata;
 
 export interface MessageProviders {
-  [name: string]: MessageProvider
+  [name: string]: MessageProvider;
 }
 
 export interface StateHandlers {
-  [name: string]: (state: string) => Promise<any>
+  [name: string]: (
+    state: string,
+    params?: { [name: string]: string }
+  ) => Promise<unknown>;
 }

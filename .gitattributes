@@ -1,3 +1,1 @@
-# Prettier requires `\n` only, so we tell git not to modify those files even on platforms where it's `\r\n`
-*.ts text eol=lf 
-*.js text eol=lf 
+* text=auto eol=lf

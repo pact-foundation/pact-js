@@ -3,41 +3,51 @@
  *
  * @module GraphQL
  */
-import { Interaction, InteractionState } from "../dsl/interaction"
-import { regex } from "./matchers"
-import { isNil, extend, omitBy, isUndefined } from "lodash"
-import gql from "graphql-tag"
-import GraphQLQueryError from "../errors/graphQLQueryError"
-import ConfigurationError from "../errors/configurationError"
+import { isNil, extend, omitBy, isUndefined } from 'lodash';
+import gql from 'graphql-tag';
+import { Interaction, InteractionStateComplete } from './interaction';
+import { regex } from './matchers';
+import GraphQLQueryError from '../errors/graphQLQueryError';
+import ConfigurationError from '../errors/configurationError';
 
 export interface GraphQLVariables {
-  [name: string]: any
+  [name: string]: unknown;
 }
+
+const escapeSpace = (s: string) => s.replace(/\s+/g, '\\s*');
+
+const escapeRegexChars = (s: string) =>
+  // eslint-disable-next-line no-useless-escape
+  s.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+
+const escapeGraphQlQuery = (s: string) => escapeSpace(escapeRegexChars(s));
 
 /**
  * GraphQL interface
  */
 export class GraphQLInteraction extends Interaction {
-  protected operation?: string | null = undefined
-  protected variables?: GraphQLVariables = undefined
-  protected query: string
+  protected operation?: string | null = undefined;
+
+  protected variables?: GraphQLVariables = undefined;
+
+  protected query: string;
 
   /**
    * The type of GraphQL operation. Generally not required.
    */
-  public withOperation(operation: string | null) {
-    this.operation = operation
+  public withOperation(operation: string | null): this {
+    this.operation = operation;
 
-    return this
+    return this;
   }
 
   /**
    * Any variables used in the Query
    */
-  public withVariables(variables: GraphQLVariables) {
-    this.variables = variables
+  public withVariables(variables: GraphQLVariables): this {
+    this.variables = variables;
 
-    return this
+    return this;
   }
 
   /**
@@ -58,8 +68,8 @@ export class GraphQLInteraction extends Interaction {
    *     }"
    *  }'
    */
-  public withQuery(query: string) {
-    return this.queryOrMutation(query, "query")
+  public withQuery(query: string): this {
+    return this.queryOrMutation(query, 'query');
   }
 
   /**
@@ -76,21 +86,23 @@ export class GraphQLInteraction extends Interaction {
    *   }
    * }
    */
-  public withMutation(mutation: string) {
-    return this.queryOrMutation(mutation, "mutation")
+  public withMutation(mutation: string): this {
+    return this.queryOrMutation(mutation, 'mutation');
   }
 
   /**
    * Returns the interaction object created.
    */
-  public json(): InteractionState {
+  public json(): InteractionStateComplete {
+    super.json();
+
     if (isNil(this.query)) {
-      throw new ConfigurationError("You must provide a GraphQL query.")
+      throw new ConfigurationError('You must provide a GraphQL query.');
     }
     if (isNil(this.state.description)) {
       throw new GraphQLQueryError(
-        "You must provide a description for the query."
-      )
+        'You must provide a description for the query.'
+      );
     }
 
     this.state.request = extend(
@@ -106,35 +118,28 @@ export class GraphQLInteraction extends Interaction {
           },
           isUndefined
         ),
-        headers: { "content-type": "application/json" },
-        method: "POST",
+        headers: { 'content-type': 'application/json' },
+        method: 'POST',
       },
       this.state.request
-    )
+    );
 
-    return this.state
+    return this.state as InteractionStateComplete;
   }
 
-  private queryOrMutation(query: string, type: string) {
+  private queryOrMutation(query: string, type: string): this {
     if (isNil(query)) {
-      throw new ConfigurationError(`You must provide a GraphQL ${type}.`)
+      throw new ConfigurationError(`You must provide a GraphQL ${type}.`);
     }
 
     try {
-      gql(query)
+      gql(query);
     } catch (e) {
-      throw new GraphQLQueryError(`GraphQL ${type} is invalid: ${e.message}`)
+      throw new GraphQLQueryError(`GraphQL ${type} is invalid: ${e.message}`);
     }
 
-    this.query = query
+    this.query = query;
 
-    return this
+    return this;
   }
 }
-
-const escapeGraphQlQuery = (s: string) => escapeSpace(escapeRegexChars(s))
-
-const escapeRegexChars = (s: string) =>
-  s.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&")
-
-const escapeSpace = (s: string) => s.replace(/\s+/g, "\\s*")

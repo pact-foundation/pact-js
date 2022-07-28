@@ -3,19 +3,19 @@ name: Build, test, test all examples
 on:
   push:
   pull_request:
-    branches: [master]
+    branches: [master, 9.x.x]
+
+env:
+  GIT_COMMIT: ${{ github.sha }}
+  GIT_REF: ${{ github.ref }}
 
 jobs:
-  build-and-test:
+  build-and-test-ubuntu:
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.experimental }}
     strategy:
       matrix:
-        node-version: [14.x, 16.x]
-        experimental: [false]
-        include:
-          - version: 18.x
-            experimental: true
+        node-version: [14.x, 16.x, 18.x]
 
     steps:
       - uses: actions/checkout@v2
@@ -34,11 +34,7 @@ jobs:
     continue-on-error: ${{ matrix.experimental }}
     strategy:
       matrix:
-        node-version: [14.x, 16.x]
-        experimental: [false]
-        include:
-          - version: 18.x
-            experimental: true
+        node-version: [14.x, 16.x, 18.x]
 
     steps:
       - uses: actions/checkout@v2
@@ -48,6 +44,11 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Fix node-gyp
+        run: |-
+          npm install --global node-gyp@latest
+          npm prefix -g | % {npm config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"}
+        shell: pwsh
       - run: bash scripts/ci/build-and-test.sh
         shell: bash
         env:

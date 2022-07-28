@@ -1,23 +1,30 @@
-name: Publish and release
+name: Publish and release v3 branch
 
 on:
   repository_dispatch:
     types:
       - release-triggered
 
+env:
+  GIT_COMMIT: ${{ github.sha }}
+  GIT_REF: ${{ github.ref }}
+
 jobs:
   release:
     runs-on: ubuntu-latest
+    outputs:
+      version: v${{ steps.publish.outputs.version }}
     steps:
       - uses: actions/checkout@v2
         with:
+          ref: master
           fetch-depth: 0
       - uses: actions/setup-node@v1
         with:
           node-version: 14
-          registry-url: "https://registry.npmjs.org"
+          registry-url: 'https://registry.npmjs.org'
       - id: publish
-        run: scripts/ci/release.sh
+        run: scripts/ci/release-beta.sh
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTOMATION_TOKEN}}
       - name: Create Release
@@ -30,4 +37,4 @@ jobs:
           release_name: Release v${{ steps.publish.outputs.version }}
           body: ${{steps.publish.outputs.notes}}
           draft: false
-          prerelease: false
+          prerelease: true

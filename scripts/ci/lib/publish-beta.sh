@@ -16,7 +16,3 @@ echo "--> Releasing artifacts"
 echo "    Publishing pact@${VERSION}..."
 npm publish dist --access public --tag beta
 echo "    done!"
-
-echo "    Publishing pact-web@${VERSION}..."
-npm publish dist-web --access public --tag beta
-echo "    done!"
