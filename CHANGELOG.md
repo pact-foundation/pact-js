@@ -2,6 +2,45 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.1.0-beta.0](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.62...v10.1.0-beta.0) (2022-07-28)
+
+
+### Fixes and Improvements
+
+* package.json & package-lock.json to reduce vulnerabilities ([108223f](https://github.com/pact-foundation/pact-js/commit/108223ff6d7df29527e86eeba1358eaf3004b111))
+
+### [9.18.1](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.60...v9.18.1) (2022-06-28)
+
+
+### Fixes and Improvements
+
+* package.json & package-lock.json to reduce vulnerabilities ([#879](https://github.com/pact-foundation/pact-js/issues/879)) ([5005463](https://github.com/pact-foundation/pact-js/commit/50054638342171d8f9972350b2bf601e99b404b3))
+
+## [9.18.0](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.59...v9.18.0) (2022-06-26)
+
+
+### Features
+
+* drop support for pact web incl. karma examples ([d45f898](https://github.com/pact-foundation/pact-js/commit/d45f898b29a62aa77cecff499a46ce365fd2c79a))
+* modify request body inside of verifer ([#873](https://github.com/pact-foundation/pact-js/issues/873)) ([be8ed15](https://github.com/pact-foundation/pact-js/commit/be8ed151c607b69bcf07670df211156887adb29e))
+
+
+### Fixes and Improvements
+
+* nestjs example should use branches in workflow ([a7adf07](https://github.com/pact-foundation/pact-js/commit/a7adf07d5563cf7ad92d2054b6913c890ef21220))
+* webpack on node 16 ([903cf44](https://github.com/pact-foundation/pact-js/commit/903cf44dd15f19f6132b6d7bf5f89f0cccc70d41))
+
+### [9.17.3](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.58...v9.17.3) (2022-03-16)
+
+
+### Fixes and Improvements
+
+* remove rust from v3 release build ([2a5f65b](https://github.com/pact-foundation/pact-js/commit/2a5f65bc7e8a48c7ee786905f78207cba7837110))
+* The table on README.md is corrupted and unreadable ([#832](https://github.com/pact-foundation/pact-js/issues/832)) ([b73fa05](https://github.com/pact-foundation/pact-js/commit/b73fa05a7f92ed81d225f6c68349d322d388656d))
+* throw an error when pact spec version is not set to 2 ([4186c22](https://github.com/pact-foundation/pact-js/commit/4186c22030cc3a7f2abb99c096d480c66f17f2a4))
+* upgrade to latest pact-node ([0d9b127](https://github.com/pact-foundation/pact-js/commit/0d9b1270d4dc03e761941ae060b2a75db0bab24d))
+* verifier req/res logging on debug ([#835](https://github.com/pact-foundation/pact-js/issues/835)) ([3edc5a0](https://github.com/pact-foundation/pact-js/commit/3edc5a035170fb28f74be6b908091e37093cad98))
+
 ## [10.0.0-beta.62](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.61...v10.0.0-beta.62) (2022-07-27)
 
 
