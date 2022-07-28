@@ -12,7 +12,6 @@ env:
 jobs:
   build-and-test-ubuntu:
     runs-on: ubuntu-latest
-    continue-on-error: ${{ matrix.experimental }}
     strategy:
       matrix:
         node-version: [14.x, 16.x, 18.x]
@@ -31,7 +30,6 @@ jobs:
 
   build-and-test-windows:
     runs-on: windows-latest
-    continue-on-error: ${{ matrix.experimental }}
     strategy:
       matrix:
         node-version: [14.x, 16.x, 18.x]
