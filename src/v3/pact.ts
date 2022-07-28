@@ -198,7 +198,9 @@ export class PactV3 {
     try {
       val = await testFn(server);
     } catch (e) {
-      logger.error(e.message);
+      this.cleanup(false, server);
+
+      throw e;
     }
 
     const matchingResults = this.pact.mockServerMismatches(port);
