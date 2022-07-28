@@ -7,7 +7,6 @@ import {
 } from '@pact-foundation/pact-core/src/consumer/index';
 import { isArray } from 'util';
 import fs = require('fs');
-import logger from '../common/logger';
 import { version as pactPackageVersion } from '../../package.json';
 import { JsonMap } from '../common/jsonTypes';
 import {
