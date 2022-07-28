@@ -18,7 +18,7 @@ jobs:
           node-version: 14
           registry-url: "https://registry.npmjs.org"
       - id: publish
-        run: scripts/ci/release.sh
+        run: scripts/ci/release-9x.sh
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTOMATION_TOKEN}}
       - name: Create Release

@@ -13,16 +13,16 @@ require_env_var NODE_AUTH_TOKEN
 git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 git config user.name "${GITHUB_ACTOR}"
 
-# It's easier to read the release notes 
+# It's easier to read the release notes
 # from the standard version tool before it runs
-RELEASE_NOTES="$(npx standard-version --dry-run | awk 'BEGIN { flag=0 } /^---$/ { if (flag == 0) { flag=1 } else { flag=2 }; next } flag == 1')"
+RELEASE_NOTES="$(npx standard-version -f --dry-run | awk 'BEGIN { flag=0 } /^---$/ { if (flag == 0) { flag=1 } else { flag=2 }; next } flag == 1')"
 # Don't release if there are no changes
-if [ "$(echo "$RELEASE_NOTES" | wc -l)" -eq 1 ] ; then
-    echo "ERROR: This release would have no release notes. Does it include changes?"
-    echo "   - You must have at least one fix / feat commit to generate release notes"
-    echo "*** STOPPING RELEASE PROCESS ***"
-    exit 1
-fi
+# if [ "$(echo "$RELEASE_NOTES" | wc -l)" -eq 1 ] ; then
+#     echo "ERROR: This release would have no release notes. Does it include changes?"
+#     echo "   - You must have at least one fix / feat commit to generate release notes"
+#     echo "*** STOPPING RELEASE PROCESS ***"
+#     exit 1
+# fi
 # This is github actions' method for emitting multi-line values
 RELEASE_NOTES="${RELEASE_NOTES//'%'/'%25'}"
 RELEASE_NOTES="${RELEASE_NOTES//$'\n'/'%0A'}"
@@ -31,6 +31,7 @@ echo "::set-output name=notes::$RELEASE_NOTES"
 
 npm ci
 "$SCRIPT_DIR"/build-and-test.sh
+
 npm run release
 
 # Emit version to next step
