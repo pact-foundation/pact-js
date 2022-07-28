@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [10.0.1](https://github.com/pact-foundation/pact-js/compare/v10.0.0...v10.0.1) (2022-07-28)
+
+
+### Fixes and Improvements
+
+* throw error if V4 test closure fails. Fixes [#904](https://github.com/pact-foundation/pact-js/issues/904) ([6b78bed](https://github.com/pact-foundation/pact-js/commit/6b78bedfd492acce99bbad41316eb071164f2a9a))
+
 ## [10.0.0](https://github.com/pact-foundation/pact-js/compare/v10.1.0-beta.0...v10.0.0) (2022-07-28)
 
 
