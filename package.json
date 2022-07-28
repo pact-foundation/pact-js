@@ -1,6 +1,6 @@
 {
   "name": "@pact-foundation/pact",
-  "version": "10.1.0-beta.0",
+  "version": "10.0.0",
   "description": "Pact for all things Javascript",
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
@@ -16,7 +16,7 @@
     "format:check": "npm run format:base -- --check",
     "postdist": "npm test",
     "predist": "npm run clean && npm run format:check && npm run lint",
-    "release": "standard-version -p beta",
+    "release": "standard-version",
     "test": "nyc --check-coverage --reporter=html --reporter=text-summary mocha"
   },
   "repository": {
