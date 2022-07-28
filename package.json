@@ -16,7 +16,7 @@
     "format:check": "npm run format:base -- --check",
     "postdist": "npm test",
     "predist": "npm run clean && npm run format:check && npm run lint",
-    "release": "standard-version -f",
+    "release": "standard-version",
     "test": "nyc --check-coverage --reporter=html --reporter=text-summary mocha"
   },
   "repository": {
