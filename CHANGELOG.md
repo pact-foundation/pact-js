@@ -11,17 +11,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [10.0.0](https://github.com/pact-foundation/pact-js/compare/v10.1.0-beta.0...v10.0.0) (2022-07-28)
 
-
-### Features
-
-* release 10.x.x ([b5dd539](https://github.com/pact-foundation/pact-js/commit/b5dd539b4b4eb9bf1a743beb0406e17dd0731dd5))
-
-## [10.1.0-beta.0](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.62...v10.1.0-beta.0) (2022-07-28)
-
-
-### Fixes and Improvements
-
-* package.json & package-lock.json to reduce vulnerabilities ([108223f](https://github.com/pact-foundation/pact-js/commit/108223ff6d7df29527e86eeba1358eaf3004b111))
+🎉 TL;DR - lots. See https://github.com/pact-foundation/pact-js/blob/master/docs/migrations/9-10.md for more!
 
 ### [9.18.1](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.60...v9.18.1) (2022-06-28)
 
