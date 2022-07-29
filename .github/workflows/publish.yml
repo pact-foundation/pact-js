@@ -37,4 +37,4 @@ jobs:
           release_name: Release v${{ steps.publish.outputs.version }}
           body: ${{steps.publish.outputs.notes}}
           draft: false
-          prerelease: true
+          prerelease: false
