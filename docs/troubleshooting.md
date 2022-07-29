@@ -146,3 +146,7 @@ Pact requires a Node runtime to be able to start and stop Mock servers, write lo
 However, when used within browser or non-Node based environments - such as with Karma or ng-test - this is not possible.
 
 You will need a Node based test framework such as Jest or Mocha.
+
+## Unable to run tests in Alpine linux
+
+Alpine linux is currently [not supported](https://github.com/pact-foundation/pact-net/issues/387).
