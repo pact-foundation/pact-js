@@ -180,7 +180,7 @@ describe('GET /dogs', () => {
 });
 ```
 
-You can see (and run) the full version of this in `./examples/v3/typescript`, as well as other exmaples in the parent folder.
+You can see (and run) the full version of this in `./examples/v3/typescript`, as well as other examples in the parent folder.
 
 ![----------](https://raw.githubusercontent.com/pactumjs/pactum/master/assets/rainbow.png)
 
