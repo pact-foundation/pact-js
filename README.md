@@ -1,4 +1,4 @@
-****<span align="center">
+<span align="center">
 
 ![logo](https://user-images.githubusercontent.com/53900/121775784-0191d200-cbcd-11eb-83dd-adc001b94519.png)
 
