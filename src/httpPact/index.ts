@@ -26,7 +26,7 @@ import { SpecificationVersion } from '../v3';
 import { version as pactPackageVersion } from '../../package.json';
 import { generateMockServerError } from '../v3/display';
 import { numberToSpec } from '../common/spec';
-import { MockService } from 'dsl/mockService';
+import { MockService } from '../dsl/mockService';
 import { setRequestDetails, setResponseDetails } from './ffi';
 
 const logErrorNoMockServer = () => {
