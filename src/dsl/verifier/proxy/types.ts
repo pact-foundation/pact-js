@@ -1,4 +1,4 @@
-import express from 'express';
+import * as express from 'express';
 import { LogLevel } from '../../options';
 import { JsonMap, AnyJson } from '../../../common/jsonTypes';
 
