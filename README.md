@@ -60,7 +60,7 @@ Watch our [series](https://www.youtube.com/playlist?list=PLwy9Bnco-IpfZ72VQ7hce8
 </tr>
 </table>
 
-![----------](https://raw.githubusercontent.com/pactumjs/pactum/master/assets/rainbow.png)
+![----------](https://user-images.githubusercontent.com/53900/182992715-aa63e421-170b-41cf-8f95-82fe4b0846c2.png)
 
 ## Documentation
 
@@ -103,7 +103,7 @@ Looking for the previous [stable 9.x.x release](https://github.com/pact-foundati
 
 In order to get better statistics as to who is using Pact, we have an anonymous tracking event that triggers when Pact installs for the first time. The only things we [track](https://docs.pact.io/metrics) are your type of OS, and the version information for the package being installed. No PII data is sent as part of this request. You can disable tracking by setting the environment variable `PACT_DO_NOT_TRACK=1`:
 
-![----------](https://raw.githubusercontent.com/pactumjs/pactum/master/assets/rainbow.png)
+![----------](https://user-images.githubusercontent.com/53900/182992715-aa63e421-170b-41cf-8f95-82fe4b0846c2.png)
 
 ## Usage
 
@@ -182,7 +182,7 @@ describe('GET /dogs', () => {
 
 You can see (and run) the full version of this in `./examples/v3/typescript`, as well as other examples in the parent folder.
 
-![----------](https://raw.githubusercontent.com/pactumjs/pactum/master/assets/rainbow.png)
+![----------](https://user-images.githubusercontent.com/53900/182992715-aa63e421-170b-41cf-8f95-82fe4b0846c2.png)
 
 ### Provider package
 
@@ -221,7 +221,7 @@ describe('Pact Verification', () => {
 
 It's best to run Pact verification tests as part of your unit testing suite, so you can readily access stubbing, IaC and other helpful tools.
 
-![----------](https://raw.githubusercontent.com/pactumjs/pactum/master/assets/rainbow.png)
+![----------](https://user-images.githubusercontent.com/53900/182992715-aa63e421-170b-41cf-8f95-82fe4b0846c2.png)
 
 ## Compatibility
 
