@@ -121,6 +121,10 @@ Jest also runs tests in parallel by default, which can be problematic with Pact 
 See [this issue](https://github.com/pact-foundation/pact-js/issues/10) for background,
 and the Jest [example](https://github.com/pact-foundation/pact-js/blob/master/examples/jest/package.json#L10-L12) for a working example.
 
+## Usage with Mocha
+
+Consider the use of the `mocha-pact` [package](https://www.npmjs.com/package/mocha-pact)
+
 ## Usage with Angular
 
 You way want to consider using this starter schematic: https://github.com/niklas-wortmann/ngx-pact
@@ -150,3 +154,43 @@ You will need a Node based test framework such as Jest or Mocha.
 ## Unable to run tests in Alpine linux
 
 Alpine linux is currently [not supported](https://github.com/pact-foundation/pact-net/issues/387).
+
+## How do I test negative scenarios, such as 400?
+
+Testing HTTP errors is straightforward with Pact, however most api clients (such as Axios) will throw if they receive a response code `>= 400`. It might not be obvious that you need to modify your test slightly to deal with this.
+
+Take this example where we would like to test a `400`:
+
+```js
+it('should return an error when an invalid ID is requested', async () => {
+    await provider.addInteraction({
+        uponReceiving: 'an invalid request',
+        withRequest: {
+            method: 'GET',
+            path: '/bad/m1xf%d5/path/'
+        },
+        willRespondWith: {
+            status: 400,
+            body: {
+                error: 'BadRequest',
+                message: 'Invalid ID format',
+                statusCode: 400
+            }
+        }
+    });
+
+    const api = new ApiClient(provider.mockService.baseUrl);
+    const response = await api().doSomething('m1xf%d5'); // <-- throws
+    expect(response).toThrow('400: Bad Request');        // <-- Too late, already thrown!
+});
+```
+
+To test this, you need to wrap the code that throws appropriately:
+
+```js
+expect(() => {                  // notice we are passing a function to expect
+  api().doSomething('m1xf%d5'); // this can now throw
+}).toThrow('400: Bad Request'); // and will be appropriate handled here
+```
+
+The Jest [docs](https://jestjs.io/docs/asynchronous) explains why, but this principle is the same regardless of your test framework (e.g. Mocha, Jest or Ava).
