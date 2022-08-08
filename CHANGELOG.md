@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [10.0.2](https://github.com/pact-foundation/pact-js/compare/v10.0.1...v10.0.2) (2022-08-08)
+
+
+### Fixes and Improvements
+
+* dsl/verifier - express import typescript error ([60fa69f](https://github.com/pact-foundation/pact-js/commit/60fa69f139e65000edcd28b1487bf372f338a59d))
+* import clc from cli-colour ([785b38c](https://github.com/pact-foundation/pact-js/commit/785b38c70cfa59e1d65c281b52285fa9eb3acf62))
+
 ### [10.0.1](https://github.com/pact-foundation/pact-js/compare/v10.0.0...v10.0.1) (2022-07-28)
 
 
