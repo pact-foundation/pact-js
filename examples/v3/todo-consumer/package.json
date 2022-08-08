@@ -28,7 +28,7 @@
     "xml2json": "^0.11.2"
   },
   "devDependencies": {
-    "@pact-foundation/pact": "10.0.0-beta.60",
+    "@pact-foundation/pact": "10.0.2",
     "ts-node": "^3.3.0",
     "neon-cli": "^0.3.3"
   },
