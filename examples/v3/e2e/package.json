@@ -18,7 +18,7 @@
   "license": "MIT",
   "devDependencies": {
     "@pact-foundation/absolute-version": "0.0.4",
-    "@pact-foundation/pact": "10.0.0-beta.60",
+    "@pact-foundation/pact": "10.0.2",
     "@pact-foundation/pact-core": "^13.6.1",
     "body-parser": "^1.18.3",
     "chai": "^3.5.0",
