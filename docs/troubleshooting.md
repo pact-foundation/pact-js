@@ -155,7 +155,7 @@ You will need a Node based test framework such as Jest or Mocha.
 
 Alpine linux is currently [not supported](https://github.com/pact-foundation/pact-net/issues/387).
 
-## How do I test negative scenarios, such as 400?
+## How do I test negative scenarios, such as an HTTP `400`, `401` or `500`?
 
 Testing HTTP errors is straightforward with Pact, however most api clients (such as Axios) will throw if they receive a response code `>= 400`. It might not be obvious that you need to modify your test slightly to deal with this.
 
