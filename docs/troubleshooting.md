@@ -190,21 +190,21 @@ To test this, you need to either wrap the code that throws appropriately or pass
 Here is an example of wrapping the api call in an anonymous function:
 
 ```js
-expect(() => {                         // notice we are passing a function to expect
-  return api.doSomething('m1xf%d5'); // this can now throw
-}).toThrow('400: Bad Request');        // and will be appropriate handled here
+await expect(async () => {                 // notice we are passing a function to expect
+  return await api.doSomething('m1xf%d5'); // this can now throw
+}).rejects.toThrow('400: Bad Request');    // and will be appropriate handled here
 ```
 
 This can often be inlined as follows:
 
 ```js
-expect(() => api.doSomething('m1xf%d5')).toThrow('400: Bad Request');
+await expect(async () => await api.doSomething('m1xf%d5')).rejects.toThrow('400: Bad Request');
 ```
 
 If you are using Jest you can simply pass the Promise to `expect`:
 
 ```js
-await expect(api.doSomething('m1xf%d5')).rejects.toMatch('400: Bad Request');
+await expect(api.doSomething('m1xf%d5')).rejects.toThrow('400: Bad Request');
 ```
 
 The Jest [docs](https://jestjs.io/docs/asynchronous) explains why, but this principle is the same regardless of your test framework (e.g. Mocha, Jest or Ava).
