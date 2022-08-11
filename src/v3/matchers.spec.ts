@@ -510,4 +510,142 @@ describe('V3 Matchers', () => {
       });
     });
   });
+
+  describe('#reify', () => {
+    describe('when given an object with no matchers', () => {
+      const object = {
+        some: 'data',
+        more: 'strings',
+        an: ['array'],
+        someObject: {
+          withData: true,
+          withNumber: 1,
+        },
+      };
+
+      it('returns just that object', () => {
+        expect(MatchersV3.reify(object)).to.deep.equal(object);
+      });
+    });
+
+    describe('when given an object with null values', () => {
+      const object = {
+        some: 'data',
+        more: null,
+        an: [null],
+        someObject: {
+          withData: true,
+          withNumber: 1,
+          andNull: null,
+        },
+      };
+
+      it('returns just that object', () => {
+        expect(MatchersV3.reify(object)).to.deep.equal(object);
+      });
+    });
+
+    describe('when given an object with some matchers', () => {
+      const someMatchers = {
+        some: MatchersV3.like('data'),
+        more: 'strings',
+        an: ['array'],
+        another: MatchersV3.eachLike('this'),
+        someObject: {
+          withData: MatchersV3.like(true),
+          withTerm: MatchersV3.regex('this|that', 'this'),
+          withNumber: 1,
+          withAnotherNumber: MatchersV3.like(2),
+        },
+      };
+
+      const expected = {
+        some: 'data',
+        more: 'strings',
+        an: ['array'],
+        another: ['this'],
+        someObject: {
+          withData: true,
+          withTerm: 'this',
+          withNumber: 1,
+          withAnotherNumber: 2,
+        },
+      };
+
+      it('returns without matching guff', () => {
+        expect(MatchersV3.reify(someMatchers)).to.deep.equal(expected);
+      });
+    });
+
+    describe('when given a simple matcher', () => {
+      it('removes all matching guff', () => {
+        const expected = 'myawesomeword';
+
+        const matcher = MatchersV3.regex('\\w+', 'myawesomeword');
+
+        expect(MatchersV3.isMatcher(matcher)).to.eq(true);
+        expect(MatchersV3.reify(matcher)).to.eql(expected);
+      });
+    });
+    describe('when given a complex nested object with matchers', () => {
+      it('removes all matching guff', () => {
+        const o = MatchersV3.like({
+          stringMatcher: {
+            awesomeSetting: MatchersV3.like('a string'),
+          },
+          anotherStringMatcher: {
+            nestedSetting: {
+              anotherStringMatcherSubSetting: MatchersV3.like(true),
+            },
+            anotherSetting: MatchersV3.regex('this|that', 'this'),
+          },
+          arrayMatcher: {
+            lotsOfValueregex: MatchersV3.atLeastOneLike('useful', 3),
+          },
+          arrayOfMatcherregex: {
+            lotsOfValueregex: MatchersV3.atLeastOneLike(
+              {
+                foo: 'bar',
+                baz: MatchersV3.like('bat'),
+              },
+              3
+            ),
+          },
+        });
+
+        const expected = {
+          stringMatcher: {
+            awesomeSetting: 'a string',
+          },
+          anotherStringMatcher: {
+            nestedSetting: {
+              anotherStringMatcherSubSetting: true,
+            },
+            anotherSetting: 'this',
+          },
+          arrayMatcher: {
+            lotsOfValueregex: ['useful', 'useful', 'useful'],
+          },
+          arrayOfMatcherregex: {
+            lotsOfValueregex: [
+              {
+                baz: 'bat',
+                foo: 'bar',
+              },
+              {
+                baz: 'bat',
+                foo: 'bar',
+              },
+              {
+                baz: 'bat',
+                foo: 'bar',
+              },
+            ],
+          },
+        };
+
+        expect(MatchersV3.reify(o)).to.deep.equal(expected);
+      });
+    });
+  });
 });
