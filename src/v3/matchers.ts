@@ -1,6 +1,6 @@
 import { isNil, pickBy, times } from 'ramda';
 import RandExp from 'randexp';
-import { AnyJson } from '../common/jsonTypes';
+import { AnyJson, JsonMap } from '../common/jsonTypes';
 
 /**
  * Pact Matcher
@@ -9,6 +9,10 @@ export interface Matcher<T> {
   'pact:matcher:type': string;
   'pact:generator:type'?: string;
   value?: T;
+}
+
+export function isMatcher(x: AnyTemplate): x is Matcher<AnyTemplate> {
+  return x != null && (x as Matcher<AnyTemplate>).value !== undefined;
 }
 
 export type AnyTemplate =
@@ -516,3 +520,30 @@ export const matcherValueOrString = (obj: unknown): string => {
 
   return JSON.stringify(obj);
 };
+
+/**
+ * Recurse the object removing any underlying matching guff, returning the raw
+ * example content.
+ */
+export function reify(input: AnyTemplate): AnyJson {
+  if (isMatcher(input)) {
+    return reify(input.value as AnyTemplate);
+  }
+
+  if (Object.prototype.toString.call(input) === '[object Array]') {
+    return (input as Array<AnyTemplate>).map(reify);
+  }
+
+  if (input !== null && typeof input === 'object') {
+    return Object.keys(input).reduce(
+      (acc: JsonMap, propName: string) => ({
+        ...acc,
+        [propName]: reify((input as Record<string, AnyTemplate>)[propName]),
+      }),
+      {}
+    );
+  }
+  return input;
+}
+
+export { reify as extractPayload };
