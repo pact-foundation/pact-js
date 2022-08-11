@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.1.0](https://github.com/pact-foundation/pact-js/compare/v10.0.2...v10.1.0) (2022-08-11)
+
+
+### Features
+
+* port extractPayload function from 9.x ([1afef87](https://github.com/pact-foundation/pact-js/commit/1afef87a849e6c8059aa68a612993896b5e45e54))
+
 ### [10.0.2](https://github.com/pact-foundation/pact-js/compare/v10.0.1...v10.0.2) (2022-08-08)
 
 
