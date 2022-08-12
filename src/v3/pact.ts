@@ -194,19 +194,19 @@ export class PactV3 {
     const server = { port, url: `${scheme}://${host}:${port}`, id: 'unknown' };
     let val: T | undefined;
 
-    const matchingResults = this.pact.mockServerMismatches(port);
-
     try {
       val = await testFn(server);
     } catch (e) {
+      const matchingResults = this.pact.mockServerMismatches(port);
       let error = 'Test failed for the following reasons:';
       error += `\n\n  ${generateMockServerError(matchingResults, '\t')}`;
 
       this.cleanup(false, server);
 
-      throw new Error((error += `\n Original exception \n:${e}`));
+      throw new Error((error += `\n\n Original exception: \n${e}`));
     }
 
+    const matchingResults = this.pact.mockServerMismatches(port);
     const success = this.pact.mockServerMatchedSuccessfully(port);
 
     // Feature flag: allow missing requests on the mock service
