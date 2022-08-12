@@ -2,8 +2,8 @@
   "name": "@pact-foundation/pact",
   "version": "10.1.0",
   "description": "Pact for all things Javascript",
-  "main": "./src/index.js",
-  "types": "./src/index.d.ts",
+  "main": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
   "scripts": {
     "compile": "rimraf dist && tsc",
     "clean": "rimraf docs dist coverage .nyc_output logs pacts",
