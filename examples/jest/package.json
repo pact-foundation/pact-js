@@ -13,10 +13,10 @@
   },
   "devDependencies": {
     "@pact-foundation/absolute-version": "0.0.4",
-    "@pact-foundation/pact": "10.0.0-beta.60",
+    "@pact-foundation/pact": "10.0.2",
     "@pact-foundation/pact-core": "^13.6.1",
     "axios": "^0.21.1",
     "jest": "^27.1.0",
-    "jest-pact": "^0.9.1"
+    "jest-pact": "^0.10.1"
   }
 }

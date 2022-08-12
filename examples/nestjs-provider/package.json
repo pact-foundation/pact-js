@@ -30,7 +30,7 @@
     "@nestjs/schematics": "^7.1.3",
     "@nestjs/testing": "^7.5.1",
     "@pact-foundation/absolute-version": "0.0.4",
-    "@pact-foundation/pact": "10.0.0-beta.60",
+    "@pact-foundation/pact": "10.0.2",
     "@types/express": "^4.17.8",
     "@types/jest": "^26.0.15",
     "@types/node": "^14.14.6",

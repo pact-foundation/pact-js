@@ -28,7 +28,7 @@ Please confirm the following:
 
 - [ ] I have upgraded to the latest
 - [ ] I have the read the FAQs in the Readme
-- [ ] I have triple checked, that there are **no unhandled promises** in my code and have [read](https://github.com/pact-foundation/pact-js/#test-fails-when-it-should-pass) the section on intermittent test failures
+- [ ] I have triple checked, that there are **no unhandled promises** in my code and have [read](https://github.com/pact-foundation/pact-js/blob/master/docs/troubleshooting.md#test-fails-when-it-should-pass) the section on intermittent test failures
 - [ ] I have set my log level to debug and attached a log file showing the complete request/response cycle
 - [ ] For bonus points and virtual high fives, I have created a reproduceable git repository (see below) to illustrate the problem
 

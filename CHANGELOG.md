@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.1.0](https://github.com/pact-foundation/pact-js/compare/v10.0.2...v10.1.0) (2022-08-11)
+
+
+### Features
+
+* port extractPayload function from 9.x ([1afef87](https://github.com/pact-foundation/pact-js/commit/1afef87a849e6c8059aa68a612993896b5e45e54))
+
+### [10.0.2](https://github.com/pact-foundation/pact-js/compare/v10.0.1...v10.0.2) (2022-08-08)
+
+
+### Fixes and Improvements
+
+* dsl/verifier - express import typescript error ([60fa69f](https://github.com/pact-foundation/pact-js/commit/60fa69f139e65000edcd28b1487bf372f338a59d))
+* import clc from cli-colour ([785b38c](https://github.com/pact-foundation/pact-js/commit/785b38c70cfa59e1d65c281b52285fa9eb3acf62))
+
 ### [10.0.1](https://github.com/pact-foundation/pact-js/compare/v10.0.0...v10.0.1) (2022-07-28)
 
 
@@ -847,7 +862,7 @@ different state phases.
 
 ### Fixes and Improvements
 
-* Add InterfaceToTemplate<> generic type to address compile errors if users are using interfaces with matchers ([982c4d2](https://github.com/pact-foundation/pact-js/commit/982c4d2ccd47254e4a8466a38e07b35a7d066a5c))
+* Add InterfaceToTemplate&lt;&gt; generic type to address compile errors if users are using interfaces with matchers ([982c4d2](https://github.com/pact-foundation/pact-js/commit/982c4d2ccd47254e4a8466a38e07b35a7d066a5c))
 * **verifier:** added StateHandler type and improved JSDocs ([4cad265](https://github.com/pact-foundation/pact-js/commit/4cad265e48a05539b7e99770852f7eaeba0bbd67))
 
 ## [10.0.0-beta.37](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.36...v10.0.0-beta.37) (2021-06-06)

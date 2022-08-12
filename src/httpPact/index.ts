@@ -6,7 +6,7 @@ import {
   ConsumerInteraction,
   makeConsumerPact,
 } from '@pact-foundation/pact-core/src/consumer/index';
-import * as clc from 'cli-color';
+import clc from 'cli-color';
 import * as path from 'path';
 import process from 'process';
 import { isEmpty } from 'lodash';
