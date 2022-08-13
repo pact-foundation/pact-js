@@ -94,7 +94,7 @@
     ]
   },
   "dependencies": {
-    "@pact-foundation/pact-core": "^13.7.5",
+    "@pact-foundation/pact-core": "^13.7.6",
     "@types/bluebird": "^3.5.20",
     "@types/express": "^4.17.11",
     "axios": "^0.27.2",
