@@ -22,6 +22,7 @@ import {
 import { matcherValueOrString } from './matchers';
 import { MatchersV3 } from '../v3';
 import { filterMissingFeatureFlag, generateMockServerError } from './display';
+import logger from '../common/logger';
 
 const readBinaryData = (file: string): Buffer => {
   try {
@@ -193,25 +194,37 @@ export class PactV3 {
     );
     const server = { port, url: `${scheme}://${host}:${port}`, id: 'unknown' };
     let val: T | undefined;
+    let error: Error | undefined;
 
     try {
       val = await testFn(server);
     } catch (e) {
       this.cleanup(false, server);
 
-      throw e;
+      error = e;
     }
 
     const matchingResults = this.pact.mockServerMismatches(port);
+    const errors = filterMissingFeatureFlag(matchingResults);
     const success = this.pact.mockServerMatchedSuccessfully(port);
 
-    // Feature flag: allow missing requests on the mock service
-    if (!success && filterMissingFeatureFlag(matchingResults).length > 0) {
-      let error = 'Test failed for the following reasons:';
-      error += `\n\n  ${generateMockServerError(matchingResults, '\t')}`;
+    if (!success && errors.length > 0) {
+      let errorMessage = 'Test failed for the following reasons:';
+      errorMessage += `\n\n  ${generateMockServerError(matchingResults, '\t')}`;
 
       this.cleanup(false, server);
-      return Promise.reject(new Error(error));
+
+      // If the tests throws an error, we need to rethrow the error, but print out
+      // any additional mock server errors to help the user understand what happened
+      // (The proximate cause here is often the HTTP 500 from the mock server,
+      // where the HTTP client then throws)
+      if (error) {
+        logger.error(errorMessage);
+        throw error;
+      }
+
+      // Test didn't throw, so we need to ensure the test fails
+      return Promise.reject(new Error(errorMessage));
     }
 
     this.cleanup(true, server);
