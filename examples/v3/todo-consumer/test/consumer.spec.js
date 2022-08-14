@@ -147,8 +147,8 @@ describe('Pact V3', () => {
       });
     });
 
-    // See https://github.com/pact-foundation/pact-reference/issues/171 for why we have an OS switch here
-    describe('with image uploads', () => {
+    // See https://github.com/pact-foundation/pact-reference/issues/171 for why it's skipped
+    describe.skip('with image uploads', () => {
       before(() => {
         provider
           .given('i have a project', { id: '1001', name: 'Home Chores' })
