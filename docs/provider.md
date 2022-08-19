@@ -53,9 +53,9 @@ new Verifier(opts).verifyProvider().then(function () {
 
 <details><summary>Verification Options</summary>
 
-| Parameter                   | Required? | Type                           | Description                                                                                                                                                                                        |
-| --------------------------- | --------- | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- | --------------------------------------------------- |
-| `providerBaseUrl`           | true      | string                         | Running API provider host endpoint.                                                                                                                                                                |
+| Parameter | Required? | Type | Description|
+| --------- | --------- | ---- | ---------- |
+| `providerBaseUrl`           | true      | string                         | Running API provider host endpoint.|
 | `pactBrokerUrl`             | false     | string                         | Base URL of the Pact Broker from which to retrieve the pacts. Required if `pactUrls` not given.                                                                                                    |
 | `provider`                  | false     | string                         | Name of the provider if fetching from a Broker                                                                                                                                                     |
 | `consumerVersionSelectors`  | false     | ConsumerVersionSelector\|array | Using [Selectors](https://docs.pact.io/pact_broker/advanced_topics/consumer_version_selectors/) is a way we specify which pacticipants and versions we want to use when configuring verifications. |
