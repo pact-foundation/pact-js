@@ -8,8 +8,6 @@ const { string, eachLike, integer, boolean, atLeastOneLike, timestamp, regex } =
 const TodoApp = require('../src/todo');
 const expect = chai.expect;
 const isWin = process.platform === 'win32';
-const isOSX = process.platform === 'darwin';
-const isCI = process.env.CI === 'true';
 
 chai.use(chaiAsPromised);
 
@@ -148,16 +146,14 @@ describe('Pact V3', () => {
     });
 
     // See https://github.com/pact-foundation/pact-reference/issues/171 for why it's skipped
-    describe.skip('with image uploads', () => {
+    describe('with image uploads', () => {
       before(() => {
         provider
           .given('i have a project', { id: '1001', name: 'Home Chores' })
           .uponReceiving('a request to store an image against the project')
           .withRequestBinaryFile(
             { method: 'POST', path: '/projects/1001/images' },
-            isWin || (isOSX && isCI)
-              ? 'application/octet-stream'
-              : 'image/jpeg',
+            isWin ? 'application/octet-stream' : 'image/jpeg',
             path.resolve(__dirname, 'example.jpg')
           )
           .willRespondWith({ status: 201 });
