@@ -6,6 +6,8 @@ const fs = require('fs');
 
 let serverUrl = 'http://127.0.0.1:2203';
 
+const isWin = process.platform === 'win32';
+
 module.exports = {
   getProjects: async (format = 'json') => {
     return axios
@@ -37,7 +39,7 @@ module.exports = {
     const data = fs.readFileSync(image);
     return axios.post(serverUrl + '/projects/' + id + '/images', data, {
       headers: {
-        'Content-Type': 'application/octet-stream',
+        'Content-Type': isWin ? 'application/octet-stream' : 'image/jpeg',
       },
     });
   },

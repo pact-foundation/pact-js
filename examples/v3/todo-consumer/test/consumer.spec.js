@@ -153,9 +153,7 @@ describe('Pact V3', () => {
           .uponReceiving('a request to store an image against the project')
           .withRequestBinaryFile(
             { method: 'POST', path: '/projects/1001/images' },
-            isWin
-              ? 'application/octet-stream'
-              : 'image/jpeg',
+            isWin ? 'application/octet-stream' : 'image/jpeg',
             path.resolve(__dirname, 'example.jpg')
           )
           .willRespondWith({ status: 201 });
