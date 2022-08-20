@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [10.1.2](https://github.com/pact-foundation/pact-js/compare/v10.1.1...v10.1.2) (2022-08-20)
+
+
+### Fixes and Improvements
+
+* binary matching via latest pact-core ([887b312](https://github.com/pact-foundation/pact-js/commit/887b3125acceffd3bafe9db141b9661709a3244a))
+* binary matching via latest pact-core ([c201eca](https://github.com/pact-foundation/pact-js/commit/c201eca72ef140af3d5800ec811a19ff4e320077))
+
 ### [10.1.1](https://github.com/pact-foundation/pact-js/compare/v10.1.0...v10.1.1) (2022-08-14)
 
 
