@@ -8,11 +8,11 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@pact-foundation/pact": "10.0.2",
-    "axios": "^0.21.2",
-    "chai": "^3.5.0",
-    "mocha": "^9.2.0",
+    "@pact-foundation/pact": "10.1.2",
+    "axios": "^0.27.2",
+    "chai": "^4.3.6",
+    "mocha": "^9.2.2",
     "mocha-pact": "^0.10.1",
-    "rimraf": "^2.6.2"
+    "rimraf": "^3.0.2"
   }
 }
