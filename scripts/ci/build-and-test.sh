@@ -8,12 +8,12 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)" # Figure out where the 
 
 require_env_var GIT_REF
 
-npm ci
+# npm ci
 
-npm run dist
-cp package.json ./dist
+# npm run dist
+# cp package.json ./dist
 
-export GIT_BRANCH=${GIT_REF:11}
+export GIT_BRANCH=${GIT_REF#refs/heads/}
 echo $GIT_BRANCH
 # export PACT_BROKER_USERNAME="dXfltyFMgNOFZAxr8io9wJ37iUpY42M"
 # export PACT_BROKER_PASSWORD="O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1"
