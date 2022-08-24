@@ -43,11 +43,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Fix node-gyp
-        run: |-
-          npm install --global node-gyp@latest
-          npm prefix -g | % {npm config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"}
-        shell: pwsh
+      # - name: Fix node-gyp
+      #   run: |-
+      #     npm install --global node-gyp@latest
+      #     npm prefix -g | % {npm config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"}
+      #   shell: pwsh
       # - name: Step that prints name of pull request's base branch
       #   if: github.event_name == 'pull_request'
       #   run: |
@@ -59,4 +59,4 @@ jobs:
         shell: bash
         env:
           NODE_VERSION: ${{ matrix.node-version }}
-          BASE_BRANCH: ${{ github.base_ref }}
+          HEAD_BRANCH: ${{ github.head_ref }}

@@ -13,7 +13,7 @@ require_env_var GIT_REF
 # npm run dist
 # cp package.json ./dist
 
-export GIT_BRANCH=${BASE_BRANCH:-${GIT_REF#refs/heads/}}
+export GIT_BRANCH=${HEAD_REF:-${GIT_REF#refs/heads/}}
 echo $GIT_BRANCH
 # export PACT_BROKER_USERNAME="dXfltyFMgNOFZAxr8io9wJ37iUpY42M"
 # export PACT_BROKER_PASSWORD="O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1"
