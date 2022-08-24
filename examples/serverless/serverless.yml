@@ -3,7 +3,7 @@ service: pact-events
 
 provider:
   name: aws
-  runtime: nodejs6.10
+  runtime: nodejs12.x
   iamRoleStatements:
     - Effect: "Allow"
       Resource: "*"
