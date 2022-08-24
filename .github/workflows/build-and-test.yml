@@ -10,29 +10,30 @@ env:
   GIT_REF: ${{ github.ref }}
 
 jobs:
-  build-and-test-ubuntu:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [14.x, 16.x, 18.x]
+  # build-and-test-ubuntu:
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       node-version: [14.x, 16.x, 18.x]
 
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-      - run: scripts/ci/build-and-test.sh
-        env:
-          NODE_VERSION: ${{ matrix.node-version }}
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #       with:
+  #         fetch-depth: 0
+  #     - name: Use Node.js ${{ matrix.node-version }}
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: ${{ matrix.node-version }}
+  #     - run: scripts/ci/build-and-test.sh
+  #       env:
+  #         NODE_VERSION: ${{ matrix.node-version }}
 
   build-and-test-windows:
     runs-on: windows-latest
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x]
+        node-version: [14.x]
+        # node-version: [14.x, 16.x, 18.x]
 
     steps:
       - uses: actions/checkout@v2
@@ -50,10 +51,10 @@ jobs:
       - name: Step that prints name of pull request's base branch
         if: github.event_name == 'pull_request'
         run: |
-          echo "Pull request's base branch is: ${GIT_REF}"
-          echo GIT_REF="$GIT_REF" >> $GITHUB_ENV
+          echo "Pull request's base branch is: ${BASE_BRANCH}"
+          echo BASE_BRANCH="$BASE_BRANCH" >> $GITHUB_ENV
         env:
-          GIT_REF: ${{ github.base_ref }}
+          BASE_BRANCH: ${{ github.base_ref }}
       - run: bash scripts/ci/build-and-test.sh
         shell: bash
         env:
