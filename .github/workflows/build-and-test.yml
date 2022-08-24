@@ -48,14 +48,15 @@ jobs:
           npm install --global node-gyp@latest
           npm prefix -g | % {npm config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"}
         shell: pwsh
-      - name: Step that prints name of pull request's base branch
-        if: github.event_name == 'pull_request'
-        run: |
-          echo "Pull request's base branch is: ${BASE_BRANCH}"
-          echo BASE_BRANCH="$BASE_BRANCH" >> $GITHUB_ENV
-        env:
-          BASE_BRANCH: ${{ github.base_ref }}
+      # - name: Step that prints name of pull request's base branch
+      #   if: github.event_name == 'pull_request'
+      #   run: |
+      #     echo "Pull request's base branch is: ${BASE_BRANCH}"
+      #     echo BASE_BRANCH="$BASE_BRANCH" >> $GITHUB_ENV
+      #   env:
+      #     BASE_BRANCH: ${{ github.base_ref }}
       - run: bash scripts/ci/build-and-test.sh
         shell: bash
         env:
           NODE_VERSION: ${{ matrix.node-version }}
+          BASE_BRANCH: ${{ github.base_ref }}
