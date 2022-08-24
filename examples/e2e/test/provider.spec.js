@@ -1,5 +1,5 @@
 const { Verifier } = require('@pact-foundation/pact');
-const { versionFromGitTag } = require('@pact-foundation/absolute-version');
+const { versionFromGitTag } = require('absolute-version');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
@@ -62,7 +62,7 @@ describe('Pact Verification', () => {
 
       // Tag provider version with given tags
       providerVersionTags: ['master'], // in real code, this would be dynamically set by process.env.GIT_BRANCH
-      providerBranch: process.env.GIT_BRANCH || 'feat/v3.0.0',
+      providerVersionBranch: process.env.GIT_BRANCH || 'master',
 
       // Find _all_ pacts that match the current provider branch
       consumerVersionSelectors: [

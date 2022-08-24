@@ -3,7 +3,7 @@ import {
   MessageProviderPact,
   providerWithMetadata,
 } from '@pact-foundation/pact';
-import { versionFromGitTag } from '@pact-foundation/absolute-version';
+import { versionFromGitTag } from 'absolute-version';
 const { createDog } = require('./dog-client');
 
 describe('Message provider tests', () => {
@@ -34,7 +34,7 @@ describe('Message provider tests', () => {
       process.env.PACT_BROKER_USERNAME || 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
     pactBrokerPassword:
       process.env.PACT_BROKER_PASSWORD || 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
-    providerBranch: process.env.GIT_BRANCH || 'feat/v3.0.0',
+    providerVersionBranch: process.env.GIT_BRANCH || 'master',
 
     // Find _all_ pacts that match the current provider branch
     consumerVersionSelectors: [

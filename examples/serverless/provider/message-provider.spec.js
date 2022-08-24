@@ -2,7 +2,7 @@ const {
   MessageProviderPact,
   providerWithMetadata,
 } = require('@pact-foundation/pact');
-const { versionFromGitTag } = require('@pact-foundation/absolute-version');
+const { versionFromGitTag } = require('absolute-version');
 const path = require('path');
 const { createEvent } = require('./index');
 
@@ -32,7 +32,7 @@ describe('Message provider tests', () => {
       process.env.PACT_BROKER_PASSWORD || 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
     publishVerificationResult: true,
 
-    providerBranch: process.env.GIT_BRANCH || 'feat/v3.0.0',
+    providerVersionBranch: process.env.GIT_BRANCH || 'master',
 
     // Find _all_ pacts that match the current provider branch
     consumerVersionSelectors: [
