@@ -244,12 +244,17 @@ describe('Pact', () => {
     before(() =>
       provider.addInteraction({
         uponReceiving: 'a request to create a new mate',
+        state: "is authenticated",
         withRequest: {
           method: 'POST',
           path: '/animals',
           body: like(suitor),
           headers: {
             'Content-Type': 'application/json; charset=utf-8',
+            Authorization: term({
+              matcher: 'Bearer\\s[a-z0-9]+',
+              generate: 'Bearer token',
+            }),
           },
         },
         willRespondWith: {

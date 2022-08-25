@@ -52,6 +52,10 @@ describe('Pact Verification', () => {
           token = '';
           return Promise.resolve(`Invalid bearer token generated`);
         },
+        'is authenticated': () => {
+          token = '1234';
+          return Promise.resolve({ description: `Bearer token generated` });
+        },
       },
 
       // Fetch pacts from broker
