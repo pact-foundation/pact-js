@@ -105,7 +105,7 @@ curl -H "Authorization: Bearer 1234" -X POST -H "Content-Type: application/json"
 #### GET /suggestions/:id
 
 ```
-curl -H "Authorization: Bearer 1234" -X GET http://localhost:8080/suggestions/1
+curl -X GET http://localhost:8080/suggestions/1
 ```
 
 ## Viewing contracts with the Pact Broker

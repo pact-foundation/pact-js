@@ -4,7 +4,7 @@ const server = express();
 
 const getApiEndpoint = () => process.env.API_HOST || 'http://localhost:8081';
 const authHeader = {
-  Authorization: 'Bearer token',
+  Authorization: 'Bearer 1234',
 };
 
 // Fetch animals who are currently 'available' from the
@@ -73,20 +73,27 @@ server.get('/suggestions/:animalId', (req, res) => {
     res.writeHead(400);
     res.end();
   }
-
-  request(`${getApiEndpoint()}/animals/${req.params.animalId}`, (err, r) => {
-    if (!err && r.statusCode === 200) {
-      suggestion(r.body).then((suggestions) => {
-        res.json(suggestions);
-      });
-    } else if (r && r.statusCode === 404) {
-      res.writeHead(404);
-      res.end();
-    } else {
+  request
+    .get(`${getApiEndpoint()}/animals/${req.params.animalId}`)
+    .set(authHeader)
+    .then((r) => {
+      if (r.statusCode === 200) {
+        suggestion(r.body).then((suggestions) => {
+          res.json(suggestions);
+        });
+      } else if (r && r.statusCode === 404) {
+        res.writeHead(404);
+        res.end();
+      } else {
+        res.writeHead(500);
+        res.end();
+      }
+    })
+    .catch((err) => {
+      console.log(err.message);
       res.writeHead(500);
       res.end();
-    }
-  });
+    });
 });
 
 module.exports = {
