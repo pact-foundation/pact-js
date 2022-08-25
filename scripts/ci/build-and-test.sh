@@ -13,14 +13,15 @@ npm ci
 npm run dist
 cp package.json ./dist
 
-export GIT_BRANCH=${GIT_REF:11}
+export GIT_BRANCH=${GITHUB_HEAD_REF:-${GIT_REF#refs/heads/}}
+echo $GIT_BRANCH
 export PACT_BROKER_USERNAME="dXfltyFMgNOFZAxr8io9wJ37iUpY42M"
 export PACT_BROKER_PASSWORD="O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1"
 
 "${SCRIPT_DIR}"/lib/prepare-release.sh
 
 cp package-lock.json dist
-echo "This will be version '$(npx @pact-foundation/absolute-version)'"
+echo "This will be version '$(npx absolute-version)'"
 
 # Link the build so that the examples are always testing the
 # current build, in it's properly exported format

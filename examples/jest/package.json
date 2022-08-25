@@ -5,18 +5,18 @@
   "main": "index.js",
   "scripts": {
     "test": "jest __tests__/ --runInBand",
-    "test:publish": "pact-broker publish pact/pacts --consumer-app-version=\"$(npx @pact-foundation/absolute-version)\" --auto-detect-version-properties --broker-base-url=https://test.pactflow.io --broker-username dXfltyFMgNOFZAxr8io9wJ37iUpY42M --broker-password O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1"
+    "test:publish": "pact-broker publish pact/pacts --consumer-app-version=\"$(npx absolute-version)\" --auto-detect-version-properties --broker-base-url=https://test.pactflow.io --broker-username dXfltyFMgNOFZAxr8io9wJ37iUpY42M --broker-password O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1"
   },
   "license": "MIT",
   "jest": {
     "testEnvironment": "node"
   },
   "devDependencies": {
-    "@pact-foundation/absolute-version": "0.0.4",
-    "@pact-foundation/pact": "10.0.2",
-    "@pact-foundation/pact-core": "^13.6.1",
-    "axios": "^0.21.1",
-    "jest": "^27.1.0",
+    "absolute-version": "1.0.1",
+    "@pact-foundation/pact": "10.1.2",
+    "@pact-foundation/pact-core": "^13.7.8",
+    "axios": "^0.27.2",
+    "jest": "^28.1.3",
     "jest-pact": "^0.10.1"
   }
 }

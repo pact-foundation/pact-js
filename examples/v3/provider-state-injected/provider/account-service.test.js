@@ -8,10 +8,11 @@ const {
 } = require('./account-repository');
 
 describe('Account Service', () => {
-  beforeAll((done) => accountService.listen(8081, done));
+  let server;
+  beforeAll((done) => (server = accountService.listen(8081, done)));
   afterAll((done) => {
     console.log('closing server!');
-    accountService.close(done);
+    server.close(done);
   });
 
   it('validates the expectations of Transaction Service', () => {

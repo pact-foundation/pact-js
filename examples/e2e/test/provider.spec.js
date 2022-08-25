@@ -1,12 +1,12 @@
 const { Verifier } = require('@pact-foundation/pact');
-const { versionFromGitTag } = require('@pact-foundation/absolute-version');
+const { versionFromGitTag } = require('absolute-version');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const { server, importData, animalRepository } = require('../provider.js');
 const path = require('path');
 
-server.listen(8081, () => {
+const app = server.listen(8081, () => {
   importData();
   console.log('Animal Profile Service listening on http://localhost:8081');
 });
@@ -62,7 +62,7 @@ describe('Pact Verification', () => {
 
       // Tag provider version with given tags
       providerVersionTags: ['master'], // in real code, this would be dynamically set by process.env.GIT_BRANCH
-      providerBranch: process.env.GIT_BRANCH || 'feat/v3.0.0',
+      providerVersionBranch: process.env.GIT_BRANCH || 'master',
 
       // Find _all_ pacts that match the current provider branch
       consumerVersionSelectors: [
@@ -103,6 +103,7 @@ describe('Pact Verification', () => {
       .then((output) => {
         console.log('Pact Verification Complete!');
         console.log(output);
+        app.close();
       });
   });
 });

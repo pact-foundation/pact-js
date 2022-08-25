@@ -5,7 +5,7 @@
   "scripts": {
     "test": "npm run test:consumer && npm run test:publish && npm run test:provider",
     "test:consumer": "mocha test/consumer.spec.js",
-    "test:publish": "pact-broker publish ./pacts --consumer-app-version=\"$(npx @pact-foundation/absolute-version)\" --auto-detect-version-properties --broker-base-url=https://test.pactflow.io --broker-username dXfltyFMgNOFZAxr8io9wJ37iUpY42M --broker-password O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
+    "test:publish": "pact-broker publish ./pacts --consumer-app-version=\"$(npx absolute-version)\" --auto-detect-version-properties --broker-base-url=https://test.pactflow.io --broker-username dXfltyFMgNOFZAxr8io9wJ37iUpY42M --broker-password O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
     "test:provider": "mocha test/provider.spec.js",
     "can-i-deploy": "npm run can-i-deploy:consumer && npm run can-i-deploy:provider",
     "can-i-deploy:consumer": "pact-broker can-i-deploy --pacticipant 'Matching Service' --latest --broker-base-url https://test.pactflow.io --broker-username dXfltyFMgNOFZAxr8io9wJ37iUpY42M --broker-password O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
@@ -17,18 +17,18 @@
   "author": "matt.fellows@onegeek.com.au",
   "license": "MIT",
   "devDependencies": {
-    "@pact-foundation/absolute-version": "0.0.4",
-    "@pact-foundation/pact": "10.0.2",
-    "@pact-foundation/pact-core": "^13.6.0",
-    "body-parser": "^1.18.3",
-    "chai": "^3.5.0",
-    "chai-as-promised": "^6.0.0",
-    "cli-color": "^1.1.0",
-    "concurrently": "^3.1.0",
-    "cors": "^2.8.1",
-    "express": "^4.16.3",
-    "express-http-proxy": "^1.4.0",
-    "mocha": "^8.2.1",
-    "superagent": "^3.8.3"
+    "absolute-version": "1.0.1",
+    "@pact-foundation/pact": "10.1.2",
+    "@pact-foundation/pact-core": "^13.7.8",
+    "body-parser": "^1.20.0",
+    "chai": "^4.3.6",
+    "chai-as-promised": "^7.1.1",
+    "cli-color": "^2.0.3",
+    "concurrently": "^7.3.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
+    "express-http-proxy": "^1.6.3",
+    "mocha": "^10.0.0",
+    "superagent": "^8.0.0"
   }
 }

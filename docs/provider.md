@@ -276,7 +276,7 @@ The easiest way to publish pacts to the broker is via an npm script in your pack
 
 ```
 
-   "test:publish": "./node_modules/.bin/pact-broker publish <YOUR_PACT_FILES_OR_DIR> --consumer-app-version=\"$(npx @pact-foundation/absolute-version)\" --auto-detect-version-properties --broker-base-url=https://your-broker-url.example.com"
+   "test:publish": "./node_modules/.bin/pact-broker publish <YOUR_PACT_FILES_OR_DIR> --consumer-app-version=\"$(npx absolute-version)\" --auto-detect-version-properties --broker-base-url=https://your-broker-url.example.com"
 ```
 
 For a full list of the options, see the [CLI usage instructions](https://github.com/pact-foundation/pact-ruby-standalone/releases).
@@ -304,6 +304,7 @@ To publish the verification results back to the Pact Broker, you need to enable 
 const opts = {
   publishVerificationResult: true, //recommended to only publish from CI by setting the value to `process.env.CI === 'true'`
   providerVersion: "version", //recommended to be the git sha eg. process.env.MY_CI_COMMIT
+  providerVersionBranch: "master", //recommended to be the git branch eg. process.env.MY_GIT_SHA
   providerVersionTags: ["tag"], //optional, recommended to be the git branch eg. process.env.MY_CI_BRANCH
 }
 ```

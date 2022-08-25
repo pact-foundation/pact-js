@@ -1,5 +1,5 @@
 import { Verifier } from '@pact-foundation/pact';
-import { versionFromGitTag } from '@pact-foundation/absolute-version';
+import { versionFromGitTag } from 'absolute-version';
 import app from './provider';
 
 let server: any;
@@ -29,7 +29,7 @@ describe('Pact Verification', () => {
       // If you use git tags, then you can use absolute-version as we do here.
       providerVersion: versionFromGitTag(),
       publishVerificationResult: true,
-      providerBranch: process.env.GIT_BRANCH || 'feat/v3.0.0',
+      providerVersionBranch: process.env.GIT_BRANCH || 'master',
 
       // Find _all_ pacts that match the current provider branch
       consumerVersionSelectors: [
