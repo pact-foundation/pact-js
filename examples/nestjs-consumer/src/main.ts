@@ -6,7 +6,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   await app.listen(8080);
 
-  Logger.log('Animal Matching Service listening on http://localhots:8080');
+  Logger.log('Animal Matching Service listening on http://localhost:8080');
 }
 
 bootstrap();
