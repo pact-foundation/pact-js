@@ -244,7 +244,7 @@ describe('Pact', () => {
     before(() =>
       provider.addInteraction({
         uponReceiving: 'a request to create a new mate',
-        state: "is authenticated",
+        state: 'is authenticated',
         withRequest: {
           method: 'POST',
           path: '/animals',
