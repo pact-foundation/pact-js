@@ -76,6 +76,8 @@ describe('Pact V3', () => {
       previously_married: boolean(false),
     },
     interests: eachLike('walks in the garden/meadow'),
+    // This does not when verifying on the provider
+    // reproducing issue https://github.com/pact-foundation/pact-js/issues/662
     identifiers: eachKeyLike('004', {
       id: regex('[0-9]+', '004'),
       description: like('thing'),
@@ -188,30 +190,28 @@ describe('Pact V3', () => {
               headers: {
                 'Content-Type': 'application/json; charset=utf-8',
               },
-              body: [
-                {
-                  id: integer(1),
-                  available_from: datetime(
-                    "yyyy-MM-dd'T'HH:mm:ss.SSSX",
-                    '2016-02-11T09:46:56.023Z'
-                  ),
-                  first_name: string('Billy'),
-                  last_name: string('Goat'),
-                  animal: string('goat'),
-                  age: integer(21),
-                  gender: regex('F|M', 'M'),
-                  location: {
-                    description: string('Melbourne Zoo'),
-                    country: string('Australia'),
-                    post_code: integer(3000),
-                  },
-                  eligibility: {
-                    available: boolean(true),
-                    previously_married: boolean(false),
-                  },
-                  interests: eachLike('walks in the garden/meadow'),
+              body: eachLike({
+                id: integer(1),
+                available_from: datetime(
+                  "yyyy-MM-dd'T'HH:mm:ss.SSSX",
+                  '2016-02-11T09:46:56.023Z'
+                ),
+                first_name: string('Billy'),
+                last_name: string('Goat'),
+                animal: string('goat'),
+                age: integer(21),
+                gender: regex('F|M', 'M'),
+                location: {
+                  description: string('Melbourne Zoo'),
+                  country: string('Australia'),
+                  post_code: integer(3000),
                 },
-              ],
+                eligibility: {
+                  available: boolean(true),
+                  previously_married: boolean(false),
+                },
+                interests: eachLike('walks in the garden/meadow'),
+              }),
             });
           return provider.executeTest((mockserver) => {
             return availableAnimals(() => mockserver.url, {
@@ -244,30 +244,28 @@ describe('Pact V3', () => {
               headers: {
                 'Content-Type': 'application/json; charset=utf-8',
               },
-              body: [
-                {
-                  id: integer(1),
-                  available_from: datetime(
-                    "yyyy-MM-dd'T'HH:mm:ss.SSSX",
-                    '2016-02-11T09:46:56.023Z'
-                  ),
-                  first_name: string('比利'),
-                  last_name: string('Goat'),
-                  animal: string('goat'),
-                  age: integer(21),
-                  gender: regex('F|M', 'M'),
-                  location: {
-                    description: string('Melbourne Zoo'),
-                    country: string('Australia'),
-                    post_code: integer(3000),
-                  },
-                  eligibility: {
-                    available: boolean(true),
-                    previously_married: boolean(false),
-                  },
-                  interests: eachLike('walks in the garden/meadow'),
+              body: eachLike({
+                id: integer(1),
+                available_from: datetime(
+                  "yyyy-MM-dd'T'HH:mm:ss.SSSX",
+                  '2016-02-11T09:46:56.023Z'
+                ),
+                first_name: string('比利'),
+                last_name: string('Goat'),
+                animal: string('goat'),
+                age: integer(21),
+                gender: regex('F|M', 'M'),
+                location: {
+                  description: string('Melbourne Zoo'),
+                  country: string('Australia'),
+                  post_code: integer(3000),
                 },
-              ],
+                eligibility: {
+                  available: boolean(true),
+                  previously_married: boolean(false),
+                },
+                interests: eachLike('walks in the garden/meadow'),
+              }),
             });
           return provider.executeTest((mockserver) => {
             return availableAnimals(() => mockserver.url, {
@@ -300,30 +298,28 @@ describe('Pact V3', () => {
               headers: {
                 'Content-Type': 'application/json; charset=utf-8',
               },
-              body: [
-                {
-                  id: integer(1),
-                  available_from: datetime(
-                    "yyyy-MM-dd'T'HH:mm:ss.SSSX",
-                    '2016-02-11T09:46:56.023Z'
-                  ),
-                  first_name: string('बिल्ली'),
-                  last_name: string('Goat'),
-                  animal: string('goat'),
-                  age: integer(21),
-                  gender: regex('F|M', 'M'),
-                  location: {
-                    description: string('Melbourne Zoo'),
-                    country: string('Australia'),
-                    post_code: integer(3000),
-                  },
-                  eligibility: {
-                    available: boolean(true),
-                    previously_married: boolean(false),
-                  },
-                  interests: eachLike('walks in the garden/meadow'),
+              body: eachLike({
+                id: integer(1),
+                available_from: datetime(
+                  "yyyy-MM-dd'T'HH:mm:ss.SSSX",
+                  '2016-02-11T09:46:56.023Z'
+                ),
+                first_name: string('बिल्ली'),
+                last_name: string('Goat'),
+                animal: string('goat'),
+                age: integer(21),
+                gender: regex('F|M', 'M'),
+                location: {
+                  description: string('Melbourne Zoo'),
+                  country: string('Australia'),
+                  post_code: integer(3000),
                 },
-              ],
+                eligibility: {
+                  available: boolean(true),
+                  previously_married: boolean(false),
+                },
+                interests: eachLike('walks in the garden/meadow'),
+              }),
             });
           return provider.executeTest((mockserver) => {
             return availableAnimals(() => mockserver.url, {

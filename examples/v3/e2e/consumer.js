@@ -77,6 +77,7 @@ const createMateForDates = (
 ) => {
   return request
     .post(`${api()}/animals`)
+    .set(authHeader)
     .send(mate)
     .set('Content-Type', contentType + '; charset=utf-8');
 };
