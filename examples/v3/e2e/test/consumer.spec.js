@@ -142,7 +142,9 @@ describe('Pact V3', () => {
             .withRequest({
               method: 'GET',
               path: '/animals/available',
-              headers: { Authorization: regex('Bearer 1234', 'Bearer token') },
+              headers: {
+                Authorization: regex('Bearer\\s[a-z0-9]+', 'Bearer token'),
+              },
             })
             .willRespondWith({
               status: 200,
@@ -174,7 +176,9 @@ describe('Pact V3', () => {
             .withRequest({
               method: 'GET',
               path: '/animals/available',
-              headers: { Authorization: regex('Bearer 1234', 'Bearer token') },
+              headers: {
+                Authorization: regex('Bearer\\s[a-z0-9]+', 'Bearer token'),
+              },
               query: {
                 first_name: 'Billy',
               },
@@ -228,7 +232,9 @@ describe('Pact V3', () => {
             .withRequest({
               method: 'GET',
               path: '/animals/available',
-              headers: { Authorization: regex('Bearer 1234', 'Bearer token') },
+              headers: {
+                Authorization: regex('Bearer\\s[a-z0-9]+', 'Bearer token'),
+              },
               query: {
                 first_name: '比利',
               },
@@ -282,7 +288,9 @@ describe('Pact V3', () => {
             .withRequest({
               method: 'GET',
               path: '/animals/available',
-              headers: { Authorization: regex('Bearer 1234', 'Bearer token') },
+              headers: {
+                Authorization: regex('Bearer\\s[a-z0-9]+', 'Bearer token'),
+              },
               query: {
                 first_name: 'बिल्ली',
               },
@@ -345,7 +353,9 @@ describe('Pact V3', () => {
           .withRequest({
             method: 'GET',
             path: regex('/animals/[0-9]+', '/animals/100'),
-            headers: { Authorization: regex('Bearer 1234', 'Bearer token') },
+            headers: {
+              Authorization: regex('Bearer\\s[a-z0-9]+', 'Bearer token'),
+            },
           })
           .willRespondWith({
             status: 200,
@@ -374,7 +384,9 @@ describe('Pact V3', () => {
           .withRequest({
             method: 'GET',
             path: regex('/animals/[0-9]+', '/animals/100'),
-            headers: { Authorization: regex('Bearer 1234', 'Bearer token') },
+            headers: {
+              Authorization: regex('Bearer\\s[a-z0-9]+', 'Bearer token'),
+            },
           })
           .willRespondWith({
             status: 404,
@@ -405,7 +417,7 @@ describe('Pact V3', () => {
             path: regex('/animals/[0-9]+', '/animals/100'),
 
             headers: {
-              Authorization: regex('Bearer 1234', 'Bearer token'),
+              Authorization: regex('Bearer\\s[a-z0-9]+', 'Bearer token'),
               Accept: 'text/plain',
             },
           })
@@ -514,7 +526,9 @@ describe('Pact V3', () => {
         .withRequest({
           method: 'GET',
           path: '/animals/available/xml',
-          headers: { Authorization: regex('Bearer 1234', 'Bearer token') },
+          headers: {
+            Authorization: regex('Bearer\\s[a-z0-9]+', 'Bearer token'),
+          },
         })
         .willRespondWith({
           status: 200,
