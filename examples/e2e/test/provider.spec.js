@@ -5,6 +5,7 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const { server, importData, animalRepository } = require('../provider.js');
 const path = require('path');
+const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 const app = server.listen(8081, () => {
   importData();
@@ -18,7 +19,7 @@ describe('Pact Verification', () => {
 
     return new Verifier({
       provider: 'e2e Provider Example',
-      logLevel: 'TRACE',
+      logLevel: LOG_LEVEL,
       providerBaseUrl: 'http://localhost:8081',
 
       requestFilter: (req, res, next) => {

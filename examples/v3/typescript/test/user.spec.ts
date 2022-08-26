@@ -2,9 +2,10 @@ import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import * as path from 'path';
 import * as sinonChai from 'sinon-chai';
-import { PactV3, MatchersV3 } from '@pact-foundation/pact';
+import { PactV3, MatchersV3, LogLevel } from '@pact-foundation/pact';
 import { UserService } from '../index';
 const { like } = MatchersV3;
+const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 const expect = chai.expect;
 
@@ -15,7 +16,11 @@ describe('The Users API', () => {
   let userService: UserService;
 
   // Setup the 'pact' between two applications
-  const provider = new PactV3({ consumer: 'User Web', provider: 'User API' });
+  const provider = new PactV3({
+    consumer: 'User Web',
+    provider: 'User API',
+    logLevel: LOG_LEVEL as LogLevel,
+  });
   const userExample = { id: 1, name: 'Homer Simpson' };
   const EXPECTED_BODY = like(userExample);
 

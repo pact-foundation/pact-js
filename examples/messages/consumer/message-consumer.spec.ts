@@ -4,11 +4,13 @@ import {
   Matchers,
   MessageConsumerPact,
   synchronousBodyHandler,
+  LogLevel,
 } from '@pact-foundation/pact';
 const { like, term } = Matchers;
 import { dogApiHandler } from './dog-handler';
 
 const path = require('path');
+const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 describe('Message consumer tests', () => {
   const messagePact = new MessageConsumerPact({
@@ -16,6 +18,7 @@ describe('Message consumer tests', () => {
     dir: path.resolve(process.cwd(), 'pacts'),
     pactfileWriteMode: 'update',
     provider: 'MyJSMessageProvider',
+    logLevel: LOG_LEVEL as LogLevel,
   });
 
   describe('receive dog event', () => {

@@ -1,10 +1,12 @@
 /*  tslint:disable: no-console*/
 import {
+  LogLevel,
   MessageProviderPact,
   providerWithMetadata,
 } from '@pact-foundation/pact';
 import { versionFromGitTag } from 'absolute-version';
 const { createDog } = require('./dog-client');
+const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 describe('Message provider tests', () => {
   const p = new MessageProviderPact({
@@ -20,7 +22,7 @@ describe('Message provider tests', () => {
         return Promise.resolve(`state set to create a dog`);
       },
     },
-    logLevel: 'info',
+    logLevel: LOG_LEVEL as LogLevel,
     provider: 'MyJSMessageProvider',
     // Your version numbers need to be unique for every different version of your provider
     // see https://docs.pact.io/getting_started/versioning_in_the_pact_broker/ for details.

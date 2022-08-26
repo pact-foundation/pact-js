@@ -4,6 +4,7 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const { server } = require('../provider.js');
 const path = require('path');
+const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 server.listen(8081, '127.0.0.1', () => {
   console.log('Service listening on http://127.0.0.1:8081');
@@ -19,6 +20,7 @@ describe('Pact Verification', () => {
       pactUrls: [
         path.resolve(process.cwd(), './filter-by-PACT_DESCRIPTION.json'),
       ],
+      logLevel: LOG_LEVEL,
     })
       .verifyProvider()
       .then((output) => {

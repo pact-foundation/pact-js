@@ -3,7 +3,7 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const expect = chai.expect;
 const { Pact, Matchers } = require('@pact-foundation/pact');
-const LOG_LEVEL = process.env.LOG_LEVEL || 'WARN';
+const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 chai.use(chaiAsPromised);
 

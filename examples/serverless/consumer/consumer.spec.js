@@ -7,12 +7,14 @@ const {
 } = require('@pact-foundation/pact');
 const { like, term } = Matchers;
 const path = require('path');
+const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 describe('Serverless consumer tests', () => {
   const messagePact = new MessageConsumerPact({
     consumer: 'SNSPactEventConsumer',
     dir: path.resolve(process.cwd(), 'pacts'),
     provider: 'SNSPactEventProvider',
+    logLevel: LOG_LEVEL,
   });
 
   describe('receive a pact event', () => {

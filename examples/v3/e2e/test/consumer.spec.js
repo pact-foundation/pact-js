@@ -8,7 +8,7 @@ const {
   XmlBuilder,
   SpecificationVersion,
 } = require('@pact-foundation/pact');
-const LOG_LEVEL = process.env.LOG_LEVEL || 'WARN';
+const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 chai.use(chaiAsPromised);
 

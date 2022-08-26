@@ -3,9 +3,15 @@ import * as chai from 'chai';
 import * as path from 'path';
 import * as chaiAsPromised from 'chai-as-promised';
 import { query } from './consumer';
-import { Pact, GraphQLInteraction, Matchers } from '@pact-foundation/pact';
+import {
+  Pact,
+  GraphQLInteraction,
+  Matchers,
+  LogLevel,
+} from '@pact-foundation/pact';
 const { like } = Matchers;
 // import gql from "graphql-tag";
+const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 const expect = chai.expect;
 
@@ -18,6 +24,7 @@ describe('GraphQL example', () => {
     dir: path.resolve(process.cwd(), 'pacts'),
     consumer: 'GraphQLConsumer',
     provider: 'GraphQLProvider',
+    logLevel: LOG_LEVEL as LogLevel,
   });
 
   before(() => provider.setup());

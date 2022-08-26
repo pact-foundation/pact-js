@@ -4,6 +4,7 @@ const chaiAsPromised = require('chai-as-promised');
 const { PactV3, MatchersV3, XmlBuilder } = require('@pact-foundation/pact');
 const { string, eachLike, integer, boolean, atLeastOneLike, timestamp, regex } =
   MatchersV3;
+const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 const TodoApp = require('../src/todo');
 const expect = chai.expect;
@@ -15,7 +16,7 @@ describe('Pact V3', () => {
   const provider = new PactV3({
     consumer: 'TodoApp',
     provider: 'TodoServiceV3',
-    logLevel: 'trace',
+    logLevel: LOG_LEVEL,
     dir: path.resolve(process.cwd(), 'pacts'),
   });
 
@@ -146,7 +147,7 @@ describe('Pact V3', () => {
     });
 
     // See https://github.com/pact-foundation/pact-reference/issues/171 for why it's skipped
-    describe('with image uploads', () => {
+    describe.skip('with image uploads', () => {
       before(() => {
         provider
           .given('i have a project', { id: '1001', name: 'Home Chores' })

@@ -3,7 +3,7 @@ import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 import path = require('path');
 import * as sinonChai from 'sinon-chai';
-import { Pact, Interaction, Matchers } from '@pact-foundation/pact';
+import { Pact, Interaction, Matchers, LogLevel } from '@pact-foundation/pact';
 
 const expect = chai.expect;
 import { DogService } from '../src/index';
@@ -11,6 +11,7 @@ const { eachLike } = Matchers;
 
 chai.use(sinonChai);
 chai.use(chaiAsPromised);
+const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 describe('The Dog API', () => {
   const url = 'http://127.0.0.1';
@@ -23,6 +24,7 @@ describe('The Dog API', () => {
     spec: 2,
     consumer: 'Typescript Consumer Example',
     provider: 'Typescript Provider Example',
+    logLevel: LOG_LEVEL as LogLevel,
   });
 
   const dogExample = { dog: 1 };
