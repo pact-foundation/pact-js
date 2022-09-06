@@ -199,8 +199,6 @@ export class PactV3 {
     try {
       val = await testFn(server);
     } catch (e) {
-      this.cleanup(false, server);
-
       error = e;
     }
 
@@ -208,6 +206,7 @@ export class PactV3 {
     const errors = filterMissingFeatureFlag(matchingResults);
     const success = this.pact.mockServerMatchedSuccessfully(port);
 
+    // Scenario: Pact validation failed
     if (!success && errors.length > 0) {
       let errorMessage = 'Test failed for the following reasons:';
       errorMessage += `\n\n  ${generateMockServerError(matchingResults, '\t')}`;
@@ -227,6 +226,13 @@ export class PactV3 {
       return Promise.reject(new Error(errorMessage));
     }
 
+    // Scenario: test threw an error, but Pact validation was OK (error in client or test)
+    if (error) {
+      this.cleanup(false, server);
+      throw error;
+    }
+
+    // Scenario: Pact validation passed, test didn't throw - return the callback value
     this.cleanup(true, server);
     return val;
   }
