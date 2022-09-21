@@ -253,7 +253,7 @@ export function number(num?: number): Matcher<number> {
  * Value must be a string
  * @param str Example value
  */
-export function string(str: string): Matcher<string> {
+export function string(str: string = 'some string'): Matcher<string> {
   return {
     'pact:matcher:type': 'type',
     value: str,
