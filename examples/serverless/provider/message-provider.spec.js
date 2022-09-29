@@ -5,6 +5,7 @@ const {
 const { versionFromGitTag } = require('absolute-version');
 const path = require('path');
 const { createEvent } = require('./index');
+const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 describe('Message provider tests', () => {
   const p = new MessageProviderPact({
@@ -13,7 +14,7 @@ describe('Message provider tests', () => {
         'content-type': 'application/json',
       }),
     },
-    logLevel: 'WARN',
+    logLevel: LOG_LEVEL,
     provider: 'SNSPactEventProvider',
 
     // Your version numbers need to be unique for every different version of your provider

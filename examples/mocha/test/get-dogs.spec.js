@@ -4,6 +4,7 @@ const expect = require('chai').expect;
 const path = require('path');
 const { Pact } = require('@pact-foundation/pact');
 const { getMeDogs, getMeDog } = require('../index');
+const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 describe('The Dog API', () => {
   let url = 'http://127.0.0.1';
@@ -17,6 +18,7 @@ describe('The Dog API', () => {
     consumer: 'MyConsumer',
     provider: 'MyProvider',
     pactfileWriteMode: 'merge',
+    logLevel: LOG_LEVEL,
   });
 
   const EXPECTED_BODY = [

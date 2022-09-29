@@ -182,6 +182,22 @@ describe('GET /dogs', () => {
 
 You can see (and run) the full version of this in `./examples/v3/typescript`, as well as other examples in the parent folder.
 
+To run the examples
+
+1. Clone the repo `git@github.com:pact-foundation/pact-js.git`
+
+Run a single example
+
+1. Change into the required example folder `cd examples/e2e/v3/typescript`
+2. Install all the examples dependencies `npm install`
+3. Run all the example - `npm run test`
+
+Run all examples
+
+1. Change into the examples folder `cd examples`
+2. Install all the examples dependencies `./installAll.sh`
+3. Run all the examples `./runAll.sh`
+
 ![----------](https://user-images.githubusercontent.com/53900/182992715-aa63e421-170b-41cf-8f95-82fe4b0846c2.png)
 
 ### Provider package

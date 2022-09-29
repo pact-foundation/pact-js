@@ -1,6 +1,7 @@
-import { Verifier } from '@pact-foundation/pact';
+import { Verifier, LogLevel } from '@pact-foundation/pact';
 import { versionFromGitTag } from 'absolute-version';
 import app from './provider';
+const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 let server: any;
 
@@ -37,6 +38,7 @@ describe('Pact Verification', () => {
           matchingBranch: true,
         },
       ],
+      logLevel: LOG_LEVEL as LogLevel,
     };
 
     return new Verifier(opts).verifyProvider().then((output) => {

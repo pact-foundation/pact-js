@@ -64,6 +64,7 @@ const createMateForDates = (mate) => {
   return request
     .post(`${getApiEndpoint()}/animals`)
     .send(mate)
+    .set(authHeader)
     .set('Content-Type', 'application/json; charset=utf-8');
 };
 

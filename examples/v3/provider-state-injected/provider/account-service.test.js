@@ -6,6 +6,7 @@ const {
   AccountNumber,
   accountRepository,
 } = require('./account-repository');
+const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 describe('Account Service', () => {
   let server;
@@ -19,7 +20,7 @@ describe('Account Service', () => {
     let opts = {
       provider: 'Account Service',
       providerBaseUrl: 'http://localhost:8081',
-      logLevel: 'trace',
+      logLevel: LOG_LEVEL,
       stateHandlers: {
         'Account Test001 exists': {
           setup: (params) => {

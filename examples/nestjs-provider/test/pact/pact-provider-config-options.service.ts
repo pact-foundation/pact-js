@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PactProviderOptionsFactory, PactProviderOptions } from 'nestjs-pact';
 import { versionFromGitTag } from 'absolute-version';
 import { AppRepository } from '../../src/app.repository';
-
+const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 @Injectable()
 export class PactProviderConfigOptionsService
   implements PactProviderOptionsFactory
@@ -14,7 +14,7 @@ export class PactProviderConfigOptionsService
 
     return {
       provider: 'NestJS Provider Example',
-      logLevel: 'debug',
+      logLevel: LOG_LEVEL,
 
       requestFilter: (req, res, next) => {
         req.headers.MY_SPECIAL_HEADER = 'my special value';

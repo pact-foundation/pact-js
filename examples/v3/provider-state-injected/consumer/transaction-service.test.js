@@ -4,12 +4,13 @@ const { PactV3, MatchersV3, XmlBuilder } = require('@pact-foundation/pact');
 const { expect } = require('chai');
 const { string, integer, url2, regex, datetime, fromProviderState } =
   MatchersV3;
+const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 describe('Transaction service - create a new transaction for an account', () => {
   const provider = new PactV3({
     consumer: 'TransactionService',
     provider: 'AccountService',
-    logLevel: 'trace',
+    logLevel: LOG_LEVEL,
     dir: path.resolve(process.cwd(), 'pacts'),
   });
 

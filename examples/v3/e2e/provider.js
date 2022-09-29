@@ -89,10 +89,46 @@ server.get('/animals/:id', (req, res) => {
 
 // Register a new Animal for the service
 server.post('/animals', (req, res) => {
-  const animal = req.body;
+  let animal = req.body;
+  console.log(req.body);
+  console.log(req.body.first_name);
+  console.log(req.headers);
 
   // Really basic validation
   if (!animal || !animal.first_name) {
+    try {
+      // Workaround/Recreation for https://github.com/pact-foundation/pact-js/issues/884
+      // Issue with x-www-form-urlencoded data
+      //
+      // This code block is only entered during the Pact test, with a request made
+      // from the following withRequest
+      //
+      //
+      // .withRequest({
+      //   method: 'POST',
+      //   path: '/animals',
+      //   body: 'first_name=Nanny&last_name=Doe',
+      //   headers: {
+      //     'Content-Type': 'application/x-www-form-urlencoded',
+      //   },
+      //   contentType: 'application/x-www-form-urlencoded',
+      // })
+      //
+      // You can make the following request to confirm when running the api with npm run api
+      // curl -X POST http://localhost:8081/animals -H "Authorization: Bearer 1234" -d "first_name=foo"
+      //
+      // Pact Verifier is sending the following data.
+      //
+      // { '{"first_name":"Nanny","last_name":"Doe"}': '' }
+      animal = JSON.parse(Object.keys(req.body)[0]);
+      console.log('entered during Pact verification only');
+
+      animal.id = animalRepository.fetchAll().length;
+      animalRepository.insert(animal);
+      return res.json(animal);
+    } catch (e) {
+      //
+    }
     res.writeHead(400);
     res.end();
 

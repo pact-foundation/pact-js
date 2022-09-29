@@ -4,9 +4,14 @@ const { pactWith } = require('jest-pact');
 const { Matchers } = require('@pact-foundation/pact');
 
 const { getMeDogs, getMeCats } = require('../index');
+const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 pactWith(
-  { consumer: 'Jest-Consumer-Example', provider: 'Jest-Provider-Example' },
+  {
+    consumer: 'Jest-Consumer-Example',
+    provider: 'Jest-Provider-Example',
+    logLevel: LOG_LEVEL,
+  },
   (provider) => {
     describe('Dogs API', () => {
       const DOGS_DATA = [

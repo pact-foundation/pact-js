@@ -5,6 +5,7 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const { server } = require('../provider.js');
 const path = require('path');
+const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 server.listen(8081, () => {
   console.log('SOAP API listening on http://localhost:8081');
@@ -20,6 +21,7 @@ describe('Pact XML Verification', () => {
         'i have a list of projects': (params) => {},
         'i have a project': (params) => {},
       },
+      logLevel: LOG_LEVEL,
     };
 
     return new Verifier(opts).verifyProvider().then((output) => {

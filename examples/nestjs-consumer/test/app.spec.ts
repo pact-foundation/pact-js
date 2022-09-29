@@ -2,12 +2,22 @@ import { Test } from '@nestjs/testing';
 import { pactWith } from 'jest-pact';
 import { HttpStatus } from '@nestjs/common';
 import { AppModule } from '../src/app.module';
-import { Matchers, Pact, InterfaceToTemplate } from '@pact-foundation/pact';
+import {
+  Matchers,
+  Pact,
+  InterfaceToTemplate,
+  LogLevel,
+} from '@pact-foundation/pact';
 import { AppService } from '../src/app.service';
 import { Animal } from '../src/animal.interface';
+const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 pactWith(
-  { consumer: 'NestJS Consumer Example', provider: 'NestJS Provider Example' },
+  {
+    consumer: 'NestJS Consumer Example',
+    provider: 'NestJS Provider Example',
+    logLevel: LOG_LEVEL as LogLevel,
+  },
   (provider: Pact) => {
     let animalsService: AppService;
 
