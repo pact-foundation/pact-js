@@ -29,6 +29,7 @@ echo "This will be version '$(npx absolute-version)'"
 
 echo "Running e2e examples build for node version $(node --version)"
 for i in examples/*; do
+  [ -d "$i" ] || continue # prevent failure if not a directory
   [ -e "$i" ] || continue # prevent failure if there are no examples
   echo "--> running tests for: $i"
   pushd "$i"
