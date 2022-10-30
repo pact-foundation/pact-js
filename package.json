@@ -114,7 +114,7 @@
     "lodash.omitby": "4.6.0",
     "pino-pretty": "^6.0.0",
     "pkginfo": "^0.4.1",
-    "ramda": "^0.27.2",
+    "ramda": "^0.28.0",
     "randexp": "^0.5.3"
   },
   "devDependencies": {
