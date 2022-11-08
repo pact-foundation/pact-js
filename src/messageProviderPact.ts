@@ -178,7 +178,9 @@ export class MessageProviderPact {
 
   // Lookup the handler based on the description, or get the default handler
   private findHandler(message: MessageDescriptor): Promise<MessageProvider> {
-    const handler = this.config.messageProviders[message.description || ''];
+    const handler = this.config.messageProviders
+      ? this.config.messageProviders[message.description || '']
+      : undefined;
 
     if (!handler) {
       logger.error(`no handler found for message ${message.description}`);

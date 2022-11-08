@@ -9,6 +9,7 @@ import { createProxyStateHandler } from './stateHandler/stateHandler';
 import { registerAfterHook, registerBeforeHook } from './hooks';
 import { createRequestTracer, createResponseTracer } from './tracer';
 import { parseBody } from './parseBody';
+import { createProxyMessageHandler } from './messages';
 
 // Listens for the server start event
 export const waitForServerReady = (server: http.Server): Promise<http.Server> =>
@@ -22,7 +23,8 @@ export const waitForServerReady = (server: http.Server): Promise<http.Server> =>
 // Get the Proxy we'll pass to the CLI for verification
 export const createProxy = (
   config: ProxyOptions,
-  stateSetupPath: string
+  stateSetupPath: string,
+  messageTransportPath: string
 ): http.Server => {
   const app = express();
   const proxy = new HttpProxy();
@@ -59,6 +61,10 @@ export const createProxy = (
   // Setup provider state handler
   app.post(stateSetupPath, createProxyStateHandler(config));
 
+  // Register message handler and transport
+  // TODO: ensure proxy does not interfere with this
+  app.post(messageTransportPath, createProxyMessageHandler(config));
+
   // Proxy server will respond to Verifier process
   app.all('/*', (req, res) => {
     logger.debug(`Proxying ${req.method}: ${req.path}`);
@@ -66,11 +72,21 @@ export const createProxy = (
     proxy.web(req, res, {
       changeOrigin: config.changeOrigin === true,
       secure: config.validateSSL === true,
-      target: config.providerBaseUrl,
+      target: config.providerBaseUrl || defaultBaseURL(),
     });
   });
 
   proxy.on('proxyReq', (proxyReq, req) => parseBody(proxyReq, req));
 
-  return http.createServer(app).listen();
+  // TODO: node is now using ipv6 as a default. This should be customised
+  return http
+    .createServer(app)
+    .listen(undefined, config.proxyHost || '127.0.0.1');
+};
+
+// A base URL is always needed for the proxy, even
+// if there are no targets to proxy (e.g. in the case
+// of message pact
+const defaultBaseURL = () => {
+  return 'http://127.0.0.1/';
 };

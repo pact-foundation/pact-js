@@ -1,6 +1,7 @@
 import * as express from 'express';
 import { LogLevel } from '../../options';
 import { JsonMap, AnyJson } from '../../../common/jsonTypes';
+import { MessageProviders } from 'dsl/message';
 
 export type Hook = () => Promise<unknown>;
 
@@ -46,10 +47,11 @@ export interface ProxyOptions {
   logLevel?: LogLevel;
   requestFilter?: express.RequestHandler;
   stateHandlers?: StateHandlers;
+  messageProviders?: MessageProviders;
   beforeEach?: Hook;
   afterEach?: Hook;
   validateSSL?: boolean;
   changeOrigin?: boolean;
-  providerBaseUrl: string;
+  providerBaseUrl?: string;
   proxyHost?: string;
 }

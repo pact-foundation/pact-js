@@ -4,7 +4,7 @@
 
 import { isEmpty } from 'lodash';
 import serviceFactory, {
-  ConsumerMessage,
+  AsynchronousMessage,
   makeConsumerAsyncMessagePact,
   ConsumerMessagePact,
 } from '@pact-foundation/pact-core';
@@ -48,7 +48,7 @@ export class MessageConsumerPact {
 
   private pact: ConsumerMessagePact;
 
-  private message: ConsumerMessage;
+  private message: AsynchronousMessage;
 
   constructor(private config: MessageConsumerOptions) {
     this.pact = makeConsumerAsyncMessagePact(

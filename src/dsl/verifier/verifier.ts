@@ -3,6 +3,7 @@
  * @module ProviderVerifier
  */
 import serviceFactory from '@pact-foundation/pact-core';
+import { VerifierOptions as PactCoreVerifierOptions } from '@pact-foundation/pact-core';
 import { omit, isEmpty } from 'lodash';
 import * as http from 'http';
 import * as url from 'url';
@@ -15,9 +16,11 @@ import { createProxy, waitForServerReady } from './proxy';
 import { VerifierOptions } from './types';
 
 export class Verifier {
-  private address = 'http://localhost';
+  private address = 'http://127.0.0.1';
 
   private stateSetupPath = '/_pactSetup';
+
+  private messageTransportPath = '/_messages';
 
   private config: VerifierOptions;
 
@@ -57,6 +60,16 @@ export class Verifier {
         );
       }
     }
+
+    if (
+      !this.config.providerBaseUrl &&
+      !this.config.messageProviders &&
+      !this?.config?.transports
+    ) {
+      throw new ConfigurationError(
+        "'providerBaseUrl' is mandatory if no 'messageProviders' or 'transports' given"
+      );
+    }
   }
 
   /**
@@ -74,7 +87,11 @@ export class Verifier {
     }
 
     // Start the verification CLI proxy server
-    const server = createProxy(this.config, this.stateSetupPath);
+    const server = createProxy(
+      this.config,
+      this.stateSetupPath,
+      this.messageTransportPath
+    );
     logger.trace(`proxy created, waiting for startup`);
 
     // Run the verification once the proxy server is available
@@ -99,12 +116,19 @@ export class Verifier {
   // Run the Verification CLI process
   private runProviderVerification() {
     return (server: http.Server) => {
-      const opts = {
+      const opts: PactCoreVerifierOptions = {
         providerStatesSetupUrl: `${this.address}:${server.address().port}${
           this.stateSetupPath
         }`,
         ...omit(this.config, 'handlers'),
         providerBaseUrl: `${this.address}:${server.address().port}`,
+        transports: this.config.transports?.concat([
+          {
+            port: server.address().port,
+            path: this.messageTransportPath,
+            protocol: 'message',
+          },
+        ]),
       };
       logger.trace(`Verifying pacts with: ${JSON.stringify(opts)}`);
       return serviceFactory.verifyPacts(opts);
@@ -112,6 +136,10 @@ export class Verifier {
   }
 
   private isLocalVerification() {
+    if (!this.config.providerBaseUrl) {
+      return true;
+    }
+
     const u = new url.URL(this.config.providerBaseUrl);
     return (
       localAddresses.includes(u.host) || localAddresses.includes(u.hostname)

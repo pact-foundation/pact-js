@@ -31,7 +31,11 @@
     "import/prefer-default-export": "off",
     "no-underscore-dangle": ["error", { "allow": ["__pactMessageMetadata"] }],
     "class-methods-use-this": "off",
-    "no-use-before-define": "off"
+    "no-use-before-define": "off",
+    "no-empty-function": [
+      "error",
+      { "allow": ["constructors"] }
+    ]
   },
   "overrides": [
     {

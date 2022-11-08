@@ -73,9 +73,10 @@ export interface V3Interaction {
   willRespondWith: V3Response;
 }
 
+export type Path = string | MatchersV3.Matcher<string>;
 export interface V3Request {
   method: string;
-  path: string | MatchersV3.Matcher<string>;
+  path: Path;
   query?: TemplateQuery;
   headers?: TemplateHeaders;
   body?: MatchersV3.AnyTemplate;

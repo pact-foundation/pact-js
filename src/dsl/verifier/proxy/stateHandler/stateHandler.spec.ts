@@ -18,6 +18,7 @@ describe('#createProxyStateHandler', () => {
     status: (status: number) => {
       res = status;
       return {
+        // eslint-disable-next-line no-empty-function
         send: () => {},
       };
     },

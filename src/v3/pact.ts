@@ -5,14 +5,12 @@ import {
   ConsumerPact,
   ConsumerInteraction,
 } from '@pact-foundation/pact-core/src/consumer/index';
-import { isArray } from 'util';
 import fs = require('fs');
 import { version as pactPackageVersion } from '../../package.json';
 import { JsonMap } from '../common/jsonTypes';
 import {
   PactV3Options,
   SpecificationVersion,
-  TemplateHeaders,
   V3Interaction,
   V3MockServer,
   V3ProviderState,
@@ -20,9 +18,13 @@ import {
   V3Response,
 } from './types';
 import { matcherValueOrString } from './matchers';
-import { MatchersV3 } from '../v3';
 import { filterMissingFeatureFlag, generateMockServerError } from './display';
 import logger from '../common/logger';
+import {
+  contentTypeFromHeaders,
+  setRequestDetails,
+  setResponseDetails,
+} from './ffi';
 
 const readBinaryData = (file: string): Buffer => {
   try {
@@ -152,7 +154,7 @@ export class PactV3 {
       this.interaction.withResponseBody(
         matcherValueOrString(res.body),
         res.contentType ||
-          contentTypeFromHeaders(res.headers, 'application/json') // TODO: extract // force correct content-type header?
+          contentTypeFromHeaders(res.headers, 'application/json')
       );
     }
     this.states = [];
@@ -258,48 +260,3 @@ export class PactV3 {
     this.pact.addMetadata('pact-js', 'version', pactPackageVersion);
   }
 }
-
-const setRequestDetails = (
-  interaction: ConsumerInteraction,
-  req: V3Request
-) => {
-  interaction.withRequest(req.method, matcherValueOrString(req.path));
-  forEachObjIndexed((v, k) => {
-    interaction.withRequestHeader(k, 0, matcherValueOrString(v));
-  }, req.headers);
-
-  forEachObjIndexed((v, k) => {
-    if (isArray(v)) {
-      (v as unknown[]).forEach((vv, i) => {
-        interaction.withQuery(k, i, matcherValueOrString(vv));
-      });
-    } else {
-      interaction.withQuery(k, 0, matcherValueOrString(v));
-    }
-  }, req.query);
-};
-
-const setResponseDetails = (
-  interaction: ConsumerInteraction,
-  res: V3Response
-) => {
-  interaction.withStatus(res.status);
-
-  forEachObjIndexed((v, k) => {
-    interaction.withResponseHeader(k, 0, matcherValueOrString(v));
-  }, res.headers);
-};
-
-const contentTypeFromHeaders = (
-  headers: TemplateHeaders | undefined,
-  defaultContentType: string
-) => {
-  let contentType: string | MatchersV3.Matcher<string> = defaultContentType;
-  forEachObjIndexed((v, k) => {
-    if (`${k}`.toLowerCase() === 'content-type') {
-      contentType = matcherValueOrString(v);
-    }
-  }, headers || {});
-
-  return contentType;
-};
