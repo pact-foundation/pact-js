@@ -12,7 +12,11 @@ export interface Matcher<T> {
 }
 
 export function isMatcher(x: AnyTemplate): x is Matcher<AnyTemplate> {
-  return x != null && (x as Matcher<AnyTemplate>).value !== undefined;
+  return (
+    x != null &&
+    (x as Matcher<AnyTemplate>)['pact:matcher:type'] !== undefined &&
+    (x as Matcher<AnyTemplate>).value !== undefined
+  );
 }
 
 export type AnyTemplate =
