@@ -514,7 +514,7 @@ describe('V3 Matchers', () => {
   describe('#reify', () => {
     describe('when given an object with no matchers', () => {
       const object = {
-        some: 'data',
+        value: 'data', // field name of value should not be only determination of isMatcher()
         more: 'strings',
         an: ['array'],
         someObject: {
@@ -645,6 +645,21 @@ describe('V3 Matchers', () => {
         };
 
         expect(MatchersV3.reify(o)).to.deep.equal(expected);
+      });
+    });
+
+    describe('when given a matcher and field named "value"', () => {
+      it('should not be isMatcher"', () => {
+        const resultMatcher = MatchersV3.like({
+          a: 'b',
+          c: MatchersV3.atLeastOneLike({ value: '1', a: 'b', aa: 'bb' }),
+        });
+
+        const result = MatchersV3.reify(resultMatcher);
+        expect(result).to.deep.equal({
+          a: 'b',
+          c: [{ value: '1', a: 'b', aa: 'bb' }],
+        });
       });
     });
   });
