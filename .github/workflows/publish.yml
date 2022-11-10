@@ -8,6 +8,8 @@ on:
 env:
   GIT_COMMIT: ${{ github.sha }}
   GIT_REF: ${{ github.ref }}
+  ENABLE_FEATURE_V4: true
+  LOG_LEVEL: info
 
 jobs:
   release:
