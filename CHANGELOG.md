@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.2.0](https://github.com/pact-foundation/pact-js/compare/v10.1.4...v10.2.0) (2022-11-10)
+
+
+### Features
+
+* support V4 Pact interface (beta) ([7f87896](https://github.com/pact-foundation/pact-js/commit/7f87896b58f291aa84b1dff3445e43c166f4ee1c))
+
+
+### Fixes and Improvements
+
+* Fix an issue where extractPayload would not work correctly with objects with a value key ([469e6d3](https://github.com/pact-foundation/pact-js/commit/469e6d35c162e16f63ac206de1c2bbb833720673))
+
 ### [10.1.4](https://github.com/pact-foundation/pact-js/compare/v10.1.3...v10.1.4) (2022-09-21)
 
 
