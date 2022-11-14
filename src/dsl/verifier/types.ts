@@ -1,5 +1,5 @@
 import { VerifierOptions as PactCoreVerifierOptions } from '@pact-foundation/pact-core';
-import { MessageProviderOptions } from 'dsl/options';
+import { MessageProviderOptions } from '../options';
 
 import { ProxyOptions } from './proxy/types';
 
