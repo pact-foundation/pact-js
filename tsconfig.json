@@ -2,7 +2,6 @@
   "compileOnSave": false,
   "compilerOptions": {
     "outDir": "./dist",
-    "baseUrl": "src",
     "sourceMap": true,
     "noLib": false,
     "noImplicitReturns": true,

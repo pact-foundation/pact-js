@@ -9,7 +9,7 @@ import {
 import { Matcher, matcherValueOrString } from '../dsl/matchers';
 import { forEachObjIndexed } from 'ramda';
 import { isArray } from 'util';
-import { AnyTemplate } from 'v3/matchers';
+import { AnyTemplate } from '../v3/matchers';
 
 // eslint-disable-next-line
 enum INTERACTION_PART {
