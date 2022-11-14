@@ -1,6 +1,6 @@
-import { Metadata } from 'dsl/message';
-import { AnyTemplate } from 'v3/matchers';
 import { AnyJson, JsonMap } from '../../common/jsonTypes';
+import { Metadata } from '../../dsl/message';
+import { AnyTemplate } from '../../v3/matchers';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface MessageContents {

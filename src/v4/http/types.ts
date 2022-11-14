@@ -8,7 +8,7 @@ import {
   V3ProviderState,
   V3Request,
   V3Response,
-} from 'v3';
+} from '../../v3';
 import { AnyTemplate } from '../../v3/matchers';
 
 // TODO: do we alias all types to V4 or is this yicky??
