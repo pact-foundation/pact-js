@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [10.2.1](https://github.com/pact-foundation/pact-js/compare/v10.2.0...v10.2.1) (2022-11-14)
+
+
+### Fixes and Improvements
+
+* remove absolute import paths in types. Fixes [#974](https://github.com/pact-foundation/pact-js/issues/974) ([a20ad80](https://github.com/pact-foundation/pact-js/commit/a20ad8038dc560168da20d4a22cd65381d93af26))
+
 ## [10.2.0](https://github.com/pact-foundation/pact-js/compare/v10.1.4...v10.2.0) (2022-11-10)
 
 
