@@ -14,6 +14,7 @@ import ConfigurationError from '../../errors/configurationError';
 import { localAddresses } from '../../common/net';
 import { createProxy, waitForServerReady } from './proxy';
 import { VerifierOptions } from './types';
+import { AddressInfo } from 'net';
 
 export class Verifier {
   private address = 'http://127.0.0.1';
@@ -97,7 +98,9 @@ export class Verifier {
     // Run the verification once the proxy server is available
     return waitForServerReady(server)
       .then((passOn) => {
-        logger.trace(`Proxy is ready at ${server.address().address}`);
+        logger.trace(
+          `Proxy is ready at ${(server.address() as AddressInfo).address}`
+        );
         return passOn;
       })
       .then(this.runProviderVerification())
@@ -116,15 +119,14 @@ export class Verifier {
   // Run the Verification CLI process
   private runProviderVerification() {
     return (server: http.Server) => {
+      const port = (server.address() as AddressInfo).port;
       const opts: PactCoreVerifierOptions = {
-        providerStatesSetupUrl: `${this.address}:${server.address().port}${
-          this.stateSetupPath
-        }`,
+        providerStatesSetupUrl: `${this.address}:${port}${this.stateSetupPath}`,
         ...omit(this.config, 'handlers'),
-        providerBaseUrl: `${this.address}:${server.address().port}`,
+        providerBaseUrl: `${this.address}:${port}`,
         transports: this.config.transports?.concat([
           {
-            port: server.address().port,
+            port: port,
             path: this.messageTransportPath,
             protocol: 'message',
           },

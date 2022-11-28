@@ -4,6 +4,9 @@ import logger from '../common/logger';
 
 export const traceHttpInteractions = (): void => {
   const originalRequest = http.request;
+  // TODO: Need to look into the types here. They seemed to have changed
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   http.request = (
     options: RequestOptions,
     cb: (res: IncomingMessage) => void

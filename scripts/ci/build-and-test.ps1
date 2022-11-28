@@ -27,7 +27,7 @@ Get-ChildItem ".\examples" -Directory | ForEach-Object {
   }
 }
 
-Write-Output "Done with E2E tests"
+Write-Output "Done with V2 tests"
 
 Get-ChildItem ".\examples\v3" -Directory | ForEach-Object {
   Write-Output "Running V3 examples in $($_.Name)"
@@ -44,4 +44,21 @@ Get-ChildItem ".\examples\v3" -Directory | ForEach-Object {
   popd
 }
 
-Write-Output "Done with V3 E2E tests"
+Write-Output "Done with V3 tests"
+
+Get-ChildItem ".\examples\v4" -Directory | ForEach-Object {
+  Write-Output "Running V4 examples in $($_.Name)"
+  pushd $_.FullName
+  npm i
+  Remove-Item -LiteralPath "node_modules\@pact-foundation\pact" -Force -Recurse
+
+  npm link @pact-foundation/pact
+  npm t
+  if ($LastExitCode -ne 0) {
+    Write-Output "Non-zero exit code!"
+    $host.SetShouldExit($LastExitCode)
+  }
+  popd
+}
+
+Write-Output "Done with V4 tests"

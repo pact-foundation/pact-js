@@ -21,6 +21,7 @@ export PACT_BROKER_PASSWORD="O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1"
 "${SCRIPT_DIR}"/lib/prepare-release.sh
 
 cp package-lock.json dist
+cp -r scripts dist
 echo "This will be version '$(npx absolute-version)'"
 
 # Link the build so that the examples are always testing the
@@ -55,11 +56,11 @@ echo "Running V3 e2e examples build"
 
 # trap "docker kill $BROKER_ID" EXIT
 
-for i in examples/v3/*; do
+for i in examples/v*/*; do
   [ -d "$i" ] || continue # prevent failure if not a directory
   [ -e "$i" ] || continue # prevent failure if there are no examples
   echo "------------------------------------------------"
-  echo "------------> continuing to test V3 example project: $i"
+  echo "------------> continuing to test V3/v$ example project: $i"
   node --version
   pushd "$i"
   # replace pact dependency with locally build version

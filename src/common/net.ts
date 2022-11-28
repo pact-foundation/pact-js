@@ -54,8 +54,13 @@ export const freePort = (): Promise<number> => {
   return new Promise((res) => {
     const s = net.createServer();
     s.listen(0, () => {
-      const port = s.address().port;
-      s.close(() => res(port));
+      const addr = s.address();
+      if (addr !== null && typeof addr !== 'string') {
+        const port = addr.port;
+        s.close(() => res(port));
+      } else {
+        throw Error('unable to find a free port');
+      }
     });
   });
 };

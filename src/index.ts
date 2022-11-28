@@ -84,6 +84,8 @@ export * from './dsl/mockService';
 
 export * from './v3';
 
+export * from './v4';
+
 /**
  * Exposes {@link PactOptions}
  * @memberof Pact

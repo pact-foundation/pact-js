@@ -17,6 +17,7 @@ import {
 } from './dsl/message';
 import logger, { setLogLevel } from './common/logger';
 import { PactMessageProviderOptions } from './dsl/options';
+import { AddressInfo } from 'net';
 
 // Listens for the server start event
 // Converts event Emitter to a Promise
@@ -100,7 +101,11 @@ export class MessageProviderPact {
     return (server: http.Server) => {
       const opts = {
         ...omit(this.config, 'handlers'),
-        ...{ providerBaseUrl: `http://localhost:${server.address().port}` },
+        ...{
+          providerBaseUrl: `http://localhost:${
+            (server.address() as AddressInfo).port
+          }`,
+        },
       } as VerifierOptions;
 
       return serviceFactory.verifyPacts(opts);

@@ -17,7 +17,8 @@
     "postdist": "npm test",
     "predist": "npm run clean && npm run format:check && npm run lint",
     "release": "standard-version",
-    "test": "nyc --check-coverage --reporter=html --reporter=text-summary mocha -t 120000"
+    "test": "nyc --check-coverage --reporter=html --reporter=text-summary mocha -t 120000",
+    "pretest": "bash scripts/install-plugins.sh"
   },
   "repository": {
     "type": "git",
@@ -132,7 +133,7 @@
     "@types/mocha": "^8.0.4",
     "@types/mockery": "^1.4.29",
     "@types/nock": "^9.1.2",
-    "@types/node": "^8.0.24",
+    "@types/node": "^18.11.9",
     "@types/ramda": "^0.26.43",
     "@types/sinon": "^7.0.6",
     "@types/sinon-chai": "^2.7.29",
