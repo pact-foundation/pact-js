@@ -23,6 +23,10 @@ export const startTCPServer = (host: string, port: number) => {
   return new Promise((resolve) => {
     server.listen(port, host);
 
+    server.on('error', (err) => {
+      console.log(`received TCP error: ${err}. Error will be ignored`);
+    });
+
     server.on('listening', () => {
       resolve(null);
     });
@@ -38,6 +42,10 @@ export const startHTTPServer = (
   server.post('/matt', (_, res) => {
     res.setHeader('content-type', 'application/matt');
     res.send(generateMattMessage('world'));
+  });
+
+  server.on('error', (err) => {
+    console.log(`received HTTP error: ${err}. Error will be ignored`);
   });
 
   let s: http.Server;
