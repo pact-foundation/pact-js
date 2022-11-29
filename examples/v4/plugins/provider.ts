@@ -8,6 +8,9 @@ export const startTCPServer = (host: string, port: number) => {
   const server = net.createServer();
 
   server.on('connection', (sock) => {
+    sock.on('error', (err) => {
+      console.log(`received TCP socket error: ${err}. Error will be ignored`);
+    });
     sock.on('data', (data) => {
       const msg = parseMattMessage(data.toString());
 
@@ -17,6 +20,7 @@ export const startTCPServer = (host: string, port: number) => {
         sock.write(generateMattMessage('message not understood'));
       }
       sock.write('\n');
+      sock.end();
     });
   });
 
@@ -24,7 +28,7 @@ export const startTCPServer = (host: string, port: number) => {
     server.listen(port, host);
 
     server.on('error', (err) => {
-      console.log(`received TCP error: ${err}. Error will be ignored`);
+      console.log(`received TCP server error: ${err}. Error will be ignored`);
     });
 
     server.on('listening', () => {
