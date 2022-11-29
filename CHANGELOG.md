@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.3.0](https://github.com/pact-foundation/pact-js/compare/v10.2.2...v10.3.0) (2022-11-29)
+
+
+### Features
+
+* expose V4 public interface ([047b61d](https://github.com/pact-foundation/pact-js/commit/047b61d79227ce19629140b90fa2e02edc201f66))
+
+
+### Fixes and Improvements
+
+* add --detectOpenHandles to provider state tests ([9f14582](https://github.com/pact-foundation/pact-js/commit/9f145825829950da23af36f54e5a353d53fd3762))
+* update to latest pact-core 13.12.2 ([e54aa7a](https://github.com/pact-foundation/pact-js/commit/e54aa7ae421e1651c982cada82a7602f7920317a))
+
 ### [10.2.2](https://github.com/pact-foundation/pact-js/compare/v10.2.1...v10.2.2) (2022-11-14)
 
 
