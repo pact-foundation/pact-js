@@ -6,16 +6,16 @@ import { version as pactPackageVersion } from '../../package.json';
 import { V4UnconfiguredSynchronousMessage } from './message/types';
 import { UnconfiguredSynchronousMessage } from './message';
 
-if (!process.env.ENABLE_FEATURE_V4) {
-  throw Error(
-    "The v4 package is currently in beta and requires the 'ENABLE_FEATURE_V4' environment variable to be set"
-  );
-}
-
 export class PactV4 implements V4ConsumerPact {
   private pact: ConsumerPact;
 
   constructor(private opts: PactV4Options) {
+    if (!process.env.ENABLE_FEATURE_V4) {
+      throw Error(
+        "The v4 package is currently in beta and requires the 'ENABLE_FEATURE_V4' environment variable to be set"
+      );
+    }
+
     this.pact = makeConsumerPact(
       opts.consumer,
       opts.provider,
