@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [10.3.1](https://github.com/pact-foundation/pact-js/compare/v10.3.0...v10.3.1) (2022-11-30)
+
+
+### Fixes and Improvements
+
+* PactV4 feature flag check was causing import errors for all imports ([8897da7](https://github.com/pact-foundation/pact-js/commit/8897da76bdf145f0d3ffb53f7fca14cde2f659a9))
+
 ## [10.3.0](https://github.com/pact-foundation/pact-js/compare/v10.2.2...v10.3.0) (2022-11-29)
 
 
