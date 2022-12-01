@@ -55,8 +55,11 @@ export interface V3ProviderState {
   parameters?: JsonMap;
 }
 
-export type TemplateHeaders = {
-  [header: string]: string | MatchersV3.Matcher<string>;
+export declare type TemplateHeaders = {
+  [header: string]:
+    | string
+    | MatchersV3.Matcher<string>
+    | (MatchersV3.Matcher<string> | string)[];
 };
 
 export type TemplateQuery = Record<

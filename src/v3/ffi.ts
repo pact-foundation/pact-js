@@ -1,10 +1,11 @@
 /* eslint-disable import/first */
 import { forEachObjIndexed } from 'ramda';
 import { ConsumerInteraction } from '@pact-foundation/pact-core/src/consumer/index';
-import { isArray } from 'util';
 import { TemplateHeaders, V3Request, V3Response } from './types';
 import { matcherValueOrString } from './matchers';
 import { MatchersV3 } from '../v3';
+
+type TemplateHeaderArrayValue = string[] | MatchersV3.Matcher<string>[];
 
 export const setRequestDetails = (
   interaction: ConsumerInteraction,
@@ -12,11 +13,17 @@ export const setRequestDetails = (
 ): void => {
   interaction.withRequest(req.method, matcherValueOrString(req.path));
   forEachObjIndexed((v, k) => {
-    interaction.withRequestHeader(k, 0, matcherValueOrString(v));
+    if (Array.isArray(v)) {
+      (v as TemplateHeaderArrayValue).forEach((header, index) => {
+        interaction.withRequestHeader(k, index, matcherValueOrString(header));
+      });
+    } else {
+      interaction.withRequestHeader(k, 0, matcherValueOrString(v));
+    }
   }, req.headers);
 
   forEachObjIndexed((v, k) => {
-    if (isArray(v)) {
+    if (Array.isArray(v)) {
       (v as unknown[]).forEach((vv, i) => {
         interaction.withQuery(k, i, matcherValueOrString(vv));
       });
@@ -37,6 +44,7 @@ export const setResponseDetails = (
   }, res.headers);
 };
 
+// TODO: this might need to consider an array of values
 export const contentTypeFromHeaders = (
   headers: TemplateHeaders | undefined,
   defaultContentType: string
