@@ -9,28 +9,23 @@ describe('Plugins', () => {
 
   describe('Verification', () => {
     describe('with MATT protocol', () => {
-      let HTTP_PORT: number;
-      let TCP_PORT: number;
+      let httpPort: number;
+      let tcpPort: number;
 
       beforeEach(async () => {
-        HTTP_PORT = ((await startHTTPServer(HOST)).address() as AddressInfo)
+        httpPort = ((await startHTTPServer(HOST)).address() as AddressInfo)
           .port;
-        TCP_PORT = await startTCPServer(HOST);
+        tcpPort = await startTCPServer(HOST);
 
-        console.log(
-          'servers started on ports => TCP: ',
-          TCP_PORT,
-          ' HTTP:',
-          HTTP_PORT
-        );
+        console.log('Started on ports TCP: ', tcpPort, ' HTTP:', httpPort);
       });
 
       it('validates TCP and HTTP matt messages', async () => {
         const v = new Verifier({
-          providerBaseUrl: `http://${HOST}:${HTTP_PORT}`,
+          providerBaseUrl: `http://${HOST}:${httpPort}`,
           transports: [
             {
-              port: TCP_PORT,
+              port: tcpPort,
               protocol: 'matt',
               scheme: 'tcp',
             },
