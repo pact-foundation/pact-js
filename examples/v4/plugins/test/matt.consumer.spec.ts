@@ -30,7 +30,7 @@ describe('Plugins - Matt Protocol', () => {
         .uponReceiving('an HTTP request to /matt')
         .usingPlugin({
           plugin: 'matt',
-          version: '0.0.2',
+          version: '0.0.5',
         })
         .withRequest('POST', '/matt', (builder) => {
           builder.pluginContents('application/matt', mattRequest);
@@ -73,12 +73,12 @@ describe('Plugins - Matt Protocol', () => {
           .addSynchronousInteraction('a MATT message')
           .usingPlugin({
             plugin: 'matt',
-            version: '0.0.2',
+            version: '0.0.5',
           })
           .withPluginContents(mattMessage, 'application/matt')
           .startTransport('matt', HOST)
           .executeTest(async (tc) => {
-            const message = await sendMattMessageTCP('hello', HOST, tc.port);
+            const message = await sendMattMessageTCP('hellotcp', HOST, tc.port);
             expect(message).to.eq('tcpworld');
           });
       });
