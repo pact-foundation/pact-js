@@ -268,7 +268,9 @@ describe('GraphQLInteraction', () => {
         });
 
         const json: any = interaction.json();
-        expect(json.request.headers).to.deep.eq({ 'Content-Type': 'application/json' });
+        expect(json.request.headers).to.deep.eq({
+          'Content-Type': 'application/json',
+        });
       });
     });
   });
