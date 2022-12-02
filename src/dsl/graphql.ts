@@ -118,7 +118,7 @@ export class GraphQLInteraction extends Interaction {
           },
           isUndefined
         ),
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'content-type': 'application/json' },
         method: 'POST',
       },
       this.state.request

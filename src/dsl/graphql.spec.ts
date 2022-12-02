@@ -251,25 +251,4 @@ describe('GraphQLInteraction', () => {
       expect(json.request.body.query.getValue()).to.eq('{ hello }');
     });
   });
-
-  context('headers are not duplicated', () => {
-    describe('headers are properly cased', () => {
-      it('content-type header is properly cased', () => {
-        interaction.uponReceiving('a request');
-        interaction.withRequest({
-          path: '/graphql',
-          method: 'POST',
-        });
-        interaction.withOperation('query');
-        interaction.withQuery('{ hello }');
-        interaction.willRespondWith({
-          status: 200,
-          body: { data: {} },
-        });
-
-        const json: any = interaction.json();
-        expect(json.request.headers).to.deep.eq({ 'Content-Type': 'application/json' });
-      });
-    });
-  });
 });
