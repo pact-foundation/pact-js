@@ -3,7 +3,7 @@ import { ConsumerInteraction, ConsumerPact } from '@pact-foundation/pact-core';
 import { JsonMap } from '../../common/jsonTypes';
 import { forEachObjIndexed } from 'ramda';
 import { Path, TemplateHeaders, TemplateQuery, V3MockServer } from '../../v3';
-import { AnyTemplate, matcherValueOrString } from '../../v3/matchers';
+import { AnyTemplate, Matcher, matcherValueOrString } from '../../v3/matchers';
 import {
   PactV4Options,
   PluginConfig,
@@ -33,6 +33,8 @@ import {
   generateMockServerError,
 } from '../../v3/display';
 import logger from '../../common/logger';
+
+type TemplateHeaderArrayValue = string[] | Matcher<string>[];
 
 export class UnconfiguredInteraction implements V4UnconfiguredInteraction {
   // tslint:disable:no-empty-function
@@ -138,7 +140,19 @@ export class RequestBuilder implements V4RequestBuilder {
 
   headers(headers: TemplateHeaders) {
     forEachObjIndexed((v, k) => {
-      this.interaction.withRequestHeader(`${k}`, 0, matcherValueOrString(v));
+      if (Array.isArray(v)) {
+        (v as TemplateHeaderArrayValue).forEach(
+          (header: string | Matcher<string>, index: number) => {
+            this.interaction.withRequestHeader(
+              `${k}`,
+              index,
+              matcherValueOrString(header)
+            );
+          }
+        );
+      } else {
+        this.interaction.withRequestHeader(`${k}`, 0, matcherValueOrString(v));
+      }
     }, headers);
 
     return this;
