@@ -1,5 +1,6 @@
 /* tslint:disable:no-unused-expression no-empty */
 import { Verifier } from '@pact-foundation/pact';
+import { AddressInfo } from 'net';
 import path = require('path');
 import { startHTTPServer, startTCPServer } from '../provider';
 
@@ -8,12 +9,20 @@ describe('Plugins', () => {
 
   describe('Verification', () => {
     describe('with MATT protocol', () => {
-      const HTTP_PORT = 8888;
-      const TCP_PORT = 8887;
+      let HTTP_PORT: number;
+      let TCP_PORT: number;
 
       beforeEach(async () => {
-        await startHTTPServer(HOST, HTTP_PORT);
-        await startTCPServer(HOST, TCP_PORT);
+        HTTP_PORT = ((await startHTTPServer(HOST)).address() as AddressInfo)
+          .port;
+        TCP_PORT = await startTCPServer(HOST);
+
+        console.log(
+          'servers started on ports => TCP: ',
+          TCP_PORT,
+          ' HTTP:',
+          HTTP_PORT
+        );
       });
 
       it('validates TCP and HTTP matt messages', async () => {

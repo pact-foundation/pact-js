@@ -4,7 +4,10 @@ import express = require('express');
 import * as http from 'http';
 import { generateMattMessage, parseMattMessage } from './protocol';
 
-export const startTCPServer = (host: string, port: number) => {
+export const startTCPServer = (
+  host: string,
+  port?: number
+): Promise<number> => {
   const server = net.createServer();
 
   server.on('connection', (sock) => {
@@ -25,21 +28,23 @@ export const startTCPServer = (host: string, port: number) => {
   });
 
   return new Promise((resolve) => {
-    server.listen(port, host);
+    server.listen(port, host, () => {
+      console.log('listening on part');
+    });
 
     server.on('error', (err) => {
       console.log(`received TCP server error: ${err}. Error will be ignored`);
     });
 
     server.on('listening', () => {
-      resolve(null);
+      resolve((server.address() as net.AddressInfo).port);
     });
   });
 };
 
 export const startHTTPServer = (
   host: string,
-  port: number
+  port?: number
 ): Promise<http.Server> => {
   const server: express.Express = express();
 
@@ -54,7 +59,7 @@ export const startHTTPServer = (
 
   let s: http.Server;
   return new Promise<void>((resolve) => {
-    s = server.listen(port, host, () => {
+    s = server.listen(port ? port : 0, host, () => {
       resolve();
     });
   }).then(() => s);
