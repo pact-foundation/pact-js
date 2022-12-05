@@ -54,6 +54,7 @@ export * from './dsl/message';
  * @static
  */
 export * from './dsl/verifier/verifier';
+export { VerifierOptions } from './dsl/verifier/types';
 
 /**
  * Exposes {@link GraphQL}
