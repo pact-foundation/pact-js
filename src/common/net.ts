@@ -31,9 +31,7 @@ export const isPortAvailable = (port: number, host: string): Promise<void> =>
   ).then((settledPortChecks) => {
     // if every port check failed, then fail the `isPortAvailable` check
     if (settledPortChecks.every((result) => result.status === 'rejected')) {
-      return Promise.reject(
-        new Error(`Cannot open port ${port} on ipv4 or ipv6 interfaces`)
-      );
+      throw new Error(`Cannot open port ${port} on ipv4 or ipv6 interfaces`);
     }
 
     // the local addresses passed - now check the host that the user has specified
