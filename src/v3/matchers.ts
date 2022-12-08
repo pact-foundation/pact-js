@@ -57,11 +57,19 @@ export const eachKeyLike = <T extends AnyTemplate>(
 /**
  * Array where each element must match the given template
  * @param template Template to base the comparison on
+ * @param min Minimum number of elements required in the array
  */
-export const eachLike = <T extends AnyTemplate>(template: T): Matcher<T[]> => ({
-  'pact:matcher:type': 'type',
-  value: [template],
-});
+export const eachLike = <T extends AnyTemplate>(
+  template: T,
+  min = 1
+): MinLikeMatcher<T[]> => {
+  const elements = min;
+  return {
+    min,
+    'pact:matcher:type': 'type',
+    value: times(() => template, elements),
+  };
+};
 
 /**
  * Like Matcher with a minimum number of required values
