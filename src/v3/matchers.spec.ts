@@ -35,17 +35,46 @@ describe('V3 Matchers', () => {
   });
 
   describe('#eachLike', () => {
-    it('returns a JSON representation of an eachLike matcher', () => {
-      const result = MatchersV3.eachLike({
-        a: 'b',
+    describe('with no min', () => {
+      it('returns a JSON representation of an eachLike matcher', () => {
+        const result = MatchersV3.eachLike({
+          a: 'b',
+        });
+        expect(result).to.deep.equal({
+          min: 1,
+          'pact:matcher:type': 'type',
+          value: [
+            {
+              a: 'b',
+            },
+          ],
+        });
       });
-      expect(result).to.deep.equal({
-        'pact:matcher:type': 'type',
-        value: [
+    });
+
+    describe('with min', () => {
+      it('returns a JSON representation of an eachLike matcher', () => {
+        const result = MatchersV3.eachLike(
           {
             a: 'b',
           },
-        ],
+          3
+        );
+        expect(result).to.deep.equal({
+          min: 3,
+          'pact:matcher:type': 'type',
+          value: [
+            {
+              a: 'b',
+            },
+            {
+              a: 'b',
+            },
+            {
+              a: 'b',
+            },
+          ],
+        });
       });
     });
   });
