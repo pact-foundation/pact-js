@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.4.0](https://github.com/pact-foundation/pact-js/compare/v10.3.1...v10.4.0) (2022-12-09)
+
+
+### Features
+
+* add support for rendering plugin content mismatches ([2185693](https://github.com/pact-foundation/pact-js/commit/2185693dc1557b723c4f4dfd03d5de2c20f49466))
+* upgrade to latest pact-core ([0b56823](https://github.com/pact-foundation/pact-js/commit/0b56823ac20928d3721ffcd43da0126958bef4af))
+
+
+### Fixes and Improvements
+
+* Export `VerifierOptions` as a root export ([bbcccc8](https://github.com/pact-foundation/pact-js/commit/bbcccc838465a521e83d3cba0bb4dea6652e4c19))
+* missing min in v3 eachLike pact-foundation/pact-js[#958](https://github.com/pact-foundation/pact-js/issues/958) ([18dbfd4](https://github.com/pact-foundation/pact-js/commit/18dbfd4555e70fc0623c7d80985ee112cd150a1b))
+* Remove unnecessary dependency @types/bluebird (also removed bluebird internally) ([56efeb3](https://github.com/pact-foundation/pact-js/commit/56efeb38b6ae5dc21020b9792a9d22373aa99b68))
+* support multiple header values with matchers ([ccd95bb](https://github.com/pact-foundation/pact-js/commit/ccd95bb66f541efc339eedb0baf630a9f82f1f35)), closes [#964](https://github.com/pact-foundation/pact-js/issues/964)
+
 ### [10.3.1](https://github.com/pact-foundation/pact-js/compare/v10.3.0...v10.3.1) (2022-11-30)
 
 
