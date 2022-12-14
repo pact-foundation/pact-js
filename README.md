@@ -64,7 +64,7 @@ Watch our [series](https://www.youtube.com/playlist?list=PLwy9Bnco-IpfZ72VQ7hce8
 
 ## Documentation
 
-This readme offers an basic introduction to the library. The full documentation for Pact JS and the rest of the framework is available at https://docs.pact.io/.
+This readme offers a basic introduction to the library. The full documentation for Pact JS and the rest of the framework is available at https://docs.pact.io/.
 
 - [Installation](#installation)
 - [Consumer Testing](/docs/consumer.md)
