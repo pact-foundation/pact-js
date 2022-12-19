@@ -127,7 +127,9 @@ describe("Message provider tests", () => {
   // 2 Pact setup
   const p = new MessageProviderPact({
     messageProviders: {
-      "a request for a dog": () => dogApiClient.createDog(),
+      'a request for a dog': providerWithMetadata(() => createDog(27), {
+        queue: 'animals',
+      }),
     },
     provider: "MyJSMessageProvider",
     providerVersion: "1.0.0",
@@ -151,7 +153,7 @@ describe("Message provider tests", () => {
 
 **Explanation**:
 
-1.  Our API client contains a single function `createDog` which is responsible for generating the message that will be sent to the consumer via some message queue
+1.  Our API producer contains a single function `createDog` which is responsible for generating the message that will be sent to the consumer via some message queue
 1.  We configure Pact to stand-in for the queue. The most important bit here is the `messageProviders` block
-    - Similar to the Consumer tests, we map the various interactions that are going to be verified as denoted by their `description` field. In this case, `a request for a dog`, maps to the `createDog` handler. Notice how this matches the original Consumer test.
+    - Similar to the Consumer tests, we map the various interactions that are going to be verified as denoted by their `description` field. In this case, `a request for a dog`, maps to the `createDog` handler. Notice how this matches the original Consumer test. We are using the `providerWithMetadata` function because we are also going to validate message metadata (in this case, the queue the message will be sent on)
 1.  We can now run the verification process. Pact will read all of the interactions specified by its consumer, and invoke each function that is responsible for generating that message.
