@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/dot-notation */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-nocheck
 import * as chai from 'chai';
 import { describe } from 'mocha';
 import { XmlText } from './xmlText';
@@ -28,14 +25,15 @@ describe('xml element', () => {
       expect(xml.children[0], 'first child of XML element').to.have.property(
         'content'
       );
-      expect(xml.children[0].content, 'content of first child').to.equal(
-        'some string'
-      );
+      expect(
+        (xml.children[0] as XmlText).content,
+        'content of first child'
+      ).to.equal('some string');
       expect(xml.children[0], 'first child of XML element').to.have.property(
         'matcher'
       );
-      expect(xml.children[0].matcher, 'matcher of the first child').to.be
-        .undefined;
+      expect((xml.children[0] as XmlText).matcher, 'matcher of the first child')
+        .to.be.undefined;
     });
 
     it('can be called with a Matcher', () => {
@@ -73,17 +71,18 @@ describe('xml element', () => {
       expect(xml, 'XML element').to.have.property('children');
       expect(xml.children, 'children of XML element').to.be.lengthOf(7);
       for (let i = 0; i < 7; i += 1) {
-        expect(xml.children[i]).to.be.instanceOf(XmlText);
-        expect(xml.children[i]).to.have.property('content');
-        expect(xml.children[i].content).not.to.be.empty;
-        expect(xml.children[i].content).to.be.a('string');
-        expect(xml.children[i]).to.have.property('matcher');
-        expect(xml.children[i].matcher).to.have.property('value');
-        expect(xml.children[i].matcher.value).to.be.a('string');
-        expect(xml.children[i].matcher.value).not.to.be.empty;
-        expect(xml.children[i].matcher).to.have.property('pact:matcher:type');
-        expect(xml.children[i].matcher['pact:matcher:type']).to.be.a('string');
-        expect(xml.children[i].matcher['pact:matcher:type']).not.to.be.empty;
+        const child: XmlText = xml.children[i] as XmlText;
+        expect(child).to.be.instanceOf(XmlText);
+        expect(child).to.have.property('content');
+        expect(child.content).not.to.be.empty;
+        expect(child.content).to.be.a('string');
+        expect(child).to.have.property('matcher');
+        expect(child.matcher).to.have.property('value');
+        expect(child.matcher?.value).to.be.a('string');
+        expect(child.matcher?.value).not.to.be.empty;
+        expect(child.matcher).to.have.property('pact:matcher:type');
+        expect(child.matcher?.['pact:matcher:type']).to.be.a('string');
+        expect(child.matcher?.['pact:matcher:type']).not.to.be.empty;
       }
     });
     it('sets content to an empty string if the Matcher has no value', () => {
@@ -98,15 +97,16 @@ describe('xml element', () => {
 
       expect(xml, 'XML element').to.have.property('children');
       expect(xml.children, 'children of XML element').to.be.lengthOf(1);
-      expect(xml.children[0]).to.be.instanceOf(XmlText);
-      expect(xml.children[0]).to.have.property('content');
-      expect(xml.children[0].content).to.be.empty;
-      expect(xml.children[0].content).to.be.a('string');
-      expect(xml.children[0]).to.have.property('matcher');
-      expect(xml.children[0].matcher).not.to.have.property('value');
-      expect(xml.children[0].matcher).to.have.property('pact:matcher:type');
-      expect(xml.children[0].matcher['pact:matcher:type']).to.be.a('string');
-      expect(xml.children[0].matcher['pact:matcher:type']).not.to.be.empty;
+      const child: XmlText = xml.children[0] as XmlText;
+      expect(child).to.be.instanceOf(XmlText);
+      expect(child).to.have.property('content');
+      expect(child.content).to.be.empty;
+      expect(child.content).to.be.a('string');
+      expect(child).to.have.property('matcher');
+      expect(child.matcher).not.to.have.property('value');
+      expect(child.matcher).to.have.property('pact:matcher:type');
+      expect(child.matcher?.['pact:matcher:type']).to.be.a('string');
+      expect(child.matcher?.['pact:matcher:type']).not.to.be.empty;
     });
   });
 });
