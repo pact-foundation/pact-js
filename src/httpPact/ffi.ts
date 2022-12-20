@@ -11,7 +11,6 @@ import { forEachObjIndexed } from 'ramda';
 import { isArray } from 'util';
 import { AnyTemplate } from '../v3/matchers';
 
-// eslint-disable-next-line
 enum INTERACTION_PART {
   REQUEST = 1,
   RESPONSE = 2,
