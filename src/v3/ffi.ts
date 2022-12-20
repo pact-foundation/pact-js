@@ -1,4 +1,3 @@
-/* eslint-disable import/first */
 import { forEachObjIndexed } from 'ramda';
 import { ConsumerInteraction } from '@pact-foundation/pact-core/src/consumer/index';
 import { TemplateHeaders, V3Request, V3Response } from './types';

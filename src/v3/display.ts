@@ -1,4 +1,3 @@
-/* eslint-disable import/first */
 import { join, toPairs, map, flatten } from 'ramda';
 import {
   Mismatch,
