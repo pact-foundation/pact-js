@@ -45,9 +45,6 @@ export const createResponseTracer =
       return oldWrite.apply(res, [chunk]);
     };
 
-    // I think the type definitions in @types/node is wrong/broken.
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     res.end = (chunk: Parameters<typeof res.write>[0]) => {
       if (chunk) {
         chunks.push(Buffer.from(chunk));
@@ -58,7 +55,7 @@ export const createResponseTracer =
           removeEmptyResponseProperties(body, res)
         )}`
       );
-      oldEnd.apply(res, [chunk]);
+      return oldEnd.apply(res, [chunk]);
     };
     if (typeof next === 'function') {
       next();
