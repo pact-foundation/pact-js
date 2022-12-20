@@ -71,7 +71,7 @@ const throwIfQueryObjectInvalid = (query: QueryObject) => {
 };
 
 export class Interaction {
-  protected state: InteractionState = {};
+  public state: InteractionState = {};
 
   /**
    * Gives a state the provider should be in for this interaction.
