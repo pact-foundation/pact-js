@@ -1,7 +1,6 @@
 import * as MatchersV3 from './matchers';
 import { JsonMap } from '../common/jsonTypes';
 
-// eslint-disable-next-line no-shadow
 export enum SpecificationVersion {
   SPECIFICATION_VERSION_V2 = 3,
   SPECIFICATION_VERSION_V3 = 4,
