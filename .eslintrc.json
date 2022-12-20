@@ -42,6 +42,7 @@
       "rules": {
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-empty-function": "off",
+        "no-empty-function": "off",
         "@typescript-eslint/no-unused-expressions": "off",
         "no-unused-expressions": "off",
         "no-new": "off",

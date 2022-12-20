@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 import { expect } from 'chai';
 import {
@@ -198,7 +197,6 @@ describe('Matcher', () => {
       describe('when an invalid value is provided', () => {
         it('throws an Error', () => {
           expect(createTheValue(undefined)).to.throw(Error);
-          // eslint-disable-next-line no-empty-function
           expect(createTheValue(() => {})).to.throw(Error);
         });
       });
