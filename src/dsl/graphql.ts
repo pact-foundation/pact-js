@@ -17,8 +17,7 @@ export interface GraphQLVariables {
 const escapeSpace = (s: string) => s.replace(/\s+/g, '\\s*');
 
 const escapeRegexChars = (s: string) =>
-  // eslint-disable-next-line no-useless-escape
-  s.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+  s.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&');
 
 const escapeGraphQlQuery = (s: string) => escapeSpace(escapeRegexChars(s));
 
