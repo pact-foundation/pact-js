@@ -7,7 +7,6 @@
     "plugin:@typescript-eslint/recommended",
     "airbnb-base",
     "airbnb-typescript/base",
-    // "plugin:mocha/recommended",
     "prettier"
   ],
   "env": {
@@ -41,6 +40,7 @@
   "overrides": [
     {
       "files": ["**/*.spec.ts"],
+      "extends": ["plugin:mocha/recommended"],
       "rules": {
         "@typescript-eslint/ban-ts-comment": "off",
         "@typescript-eslint/no-explicit-any": "off",
@@ -53,6 +53,7 @@
         "class-methods-use-this": "off",
         "chai-friendly/no-unused-expressions": "error",
         "mocha/no-mocha-arrows": "off",
+        "mocha/no-setup-in-describe": "off",
         "no-new": "off"
       }
     }

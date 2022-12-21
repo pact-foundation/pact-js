@@ -69,7 +69,7 @@ describe('Interaction', () => {
       );
     });
 
-    it('throws error when method is not provided', () => {
+    it('throws error when method is not provided but path is provided', () => {
       expect(interaction.withRequest.bind(interaction, { path: '/' })).to.throw(
         Error,
         'You must provide an HTTP method.'
