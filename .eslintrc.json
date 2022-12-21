@@ -5,7 +5,8 @@
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "airbnb-base/legacy",
+    "airbnb-base",
+    "airbnb-typescript/base",
     // "plugin:mocha/recommended",
     "prettier"
   ],
@@ -29,12 +30,13 @@
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/no-shadow": "error",
     "@typescript-eslint/explicit-module-boundary-types": "error",
+    "@typescript-eslint/no-empty-function": [
+      "error",
+      { "allow": ["constructors"] }
+    ],
     "import/prefer-default-export": "off",
     "no-underscore-dangle": ["error", { "allow": ["__pactMessageMetadata"] }],
-    "no-shadow": "off",
-    "class-methods-use-this": "off",
-    "no-use-before-define": "off",
-    "no-empty-function": ["error", { "allow": ["constructors"] }]
+    "class-methods-use-this": "off"
   },
   "overrides": [
     {
@@ -42,19 +44,16 @@
       "rules": {
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-empty-function": "off",
-        "no-empty-function": "off",
         "@typescript-eslint/no-unused-expressions": "off",
         "@typescript-eslint/no-unused-vars": [
           "error",
           { "varsIgnorePattern": "unused" }
         ],
-        "no-unused-vars": "off",
-        "no-unused-expressions": "off",
+        "@typescript-eslint/ban-ts-comment": "off",
         "no-new": "off",
         "class-methods-use-this": "off",
         "chai-friendly/no-unused-expressions": "error",
-        "mocha/no-mocha-arrows": "off",
-        "@typescript-eslint/ban-ts-comment": "off"
+        "mocha/no-mocha-arrows": "off"
       }
     }
   ],

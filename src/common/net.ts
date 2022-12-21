@@ -38,17 +38,16 @@ export const isPortAvailable = (port: number, host: string): Promise<void> =>
     return portCheck(port, host);
   });
 
-export const freePort = (): Promise<number> => {
-  return new Promise((res) => {
+export const freePort = (): Promise<number> =>
+  new Promise((res) => {
     const s = net.createServer();
     s.listen(0, () => {
       const addr = s.address();
       if (addr !== null && typeof addr !== 'string') {
-        const port = addr.port;
+        const {port} = addr;
         s.close(() => res(port));
       } else {
         throw Error('unable to find a free port');
       }
     });
   });
-};

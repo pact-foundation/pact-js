@@ -11,6 +11,11 @@ import { createRequestTracer, createResponseTracer } from './tracer';
 import { parseBody } from './parseBody';
 import { createProxyMessageHandler } from './messages';
 
+// A base URL is always needed for the proxy, even
+// if there are no targets to proxy (e.g. in the case
+// of message pact
+const defaultBaseURL = () => 'http://127.0.0.1/';
+
 // Listens for the server start event
 export const waitForServerReady = (server: http.Server): Promise<http.Server> =>
   new Promise((resolve, reject) => {
@@ -82,11 +87,4 @@ export const createProxy = (
   return http
     .createServer(app)
     .listen(undefined, config.proxyHost || '127.0.0.1');
-};
-
-// A base URL is always needed for the proxy, even
-// if there are no targets to proxy (e.g. in the case
-// of message pact
-const defaultBaseURL = () => {
-  return 'http://127.0.0.1/';
 };

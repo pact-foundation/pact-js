@@ -9,6 +9,37 @@ import {
   PluginContentMismatch,
 } from '@pact-foundation/pact-core/src/consumer/index';
 
+// TODO: update Matching in the rust core to have a `type` property
+//       to avoid having to do this check!
+
+const isMismatchingResultPlugin = (
+  obj: MatchingResult
+): obj is MatchingResultPlugin => {
+  if (
+    (obj as MatchingResultPlugin).error !== undefined &&
+    (obj as MatchingResultPlugin).mismatches
+  )
+    return true;
+  return false;
+};
+
+const isPluginContentMismatch = (
+  obj: Mismatch
+): obj is PluginContentMismatch => {
+  const cast = obj as PluginContentMismatch;
+
+  if (
+    cast.diff !== undefined ||
+    (cast.expected !== undefined &&
+      cast.actual !== undefined &&
+      cast.mismatch !== undefined &&
+      cast.path !== undefined)
+  )
+    return true;
+
+  return false;
+};
+
 export function displayQuery(query: Record<string, string[]>): string {
   const pairs = toPairs(query);
   const mapped = flatten(
@@ -133,34 +164,3 @@ export function generateMockServerError(
     }),
   ].join('\n');
 }
-
-// TODO: update Matching in the rust core to have a `type` property
-//       to avoid having to do this check!
-
-const isMismatchingResultPlugin = (
-  obj: MatchingResult
-): obj is MatchingResultPlugin => {
-  if (
-    (obj as MatchingResultPlugin).error !== undefined &&
-    (obj as MatchingResultPlugin).mismatches
-  )
-    return true;
-  return false;
-};
-
-const isPluginContentMismatch = (
-  obj: Mismatch
-): obj is PluginContentMismatch => {
-  const cast = obj as PluginContentMismatch;
-
-  if (
-    cast.diff !== undefined ||
-    (cast.expected !== undefined &&
-      cast.actual !== undefined &&
-      cast.mismatch !== undefined &&
-      cast.path !== undefined)
-  )
-    return true;
-
-  return false;
-};

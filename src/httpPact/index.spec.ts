@@ -2,9 +2,9 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
+import { ConsumerInteraction, ConsumerPact } from '@pact-foundation/pact-core';
 import { PactOptions, PactOptionsComplete } from '../dsl/options';
 import { Pact } from '.';
-import { ConsumerInteraction, ConsumerPact } from '@pact-foundation/pact-core';
 import { MockService } from '../dsl/mockService';
 
 chai.use(sinonChai);

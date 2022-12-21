@@ -194,8 +194,7 @@ export class Interaction {
 
 export const interactionToInteractionObject = (
   interaction: InteractionStateComplete
-): InteractionObject => {
-  return {
+): InteractionObject => ({
     state: interaction.providerState,
     uponReceiving: interaction.description,
     withRequest: {
@@ -210,5 +209,4 @@ export const interactionToInteractionObject = (
       body: interaction.response?.body,
       headers: interaction.response?.headers,
     },
-  };
-};
+  });

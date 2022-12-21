@@ -2,19 +2,20 @@
  * Provider Verifier service
  * @module ProviderVerifier
  */
-import serviceFactory from '@pact-foundation/pact-core';
-import { VerifierOptions as PactCoreVerifierOptions } from '@pact-foundation/pact-core';
+import serviceFactory, {
+  VerifierOptions as PactCoreVerifierOptions,
+} from '@pact-foundation/pact-core';
 import { omit, isEmpty } from 'lodash';
 import * as http from 'http';
 import * as url from 'url';
 
+import { AddressInfo } from 'net';
 import logger, { setLogLevel } from '../../common/logger';
 
 import ConfigurationError from '../../errors/configurationError';
 import { localAddresses } from '../../common/net';
 import { createProxy, waitForServerReady } from './proxy';
 import { VerifierOptions } from './types';
-import { AddressInfo } from 'net';
 
 export class Verifier {
   private address = 'http://127.0.0.1';
@@ -119,14 +120,14 @@ export class Verifier {
   // Run the Verification CLI process
   private runProviderVerification() {
     return (server: http.Server) => {
-      const port = (server.address() as AddressInfo).port;
+      const { port } = server.address() as AddressInfo;
       const opts: PactCoreVerifierOptions = {
         providerStatesSetupUrl: `${this.address}:${port}${this.stateSetupPath}`,
         ...omit(this.config, 'handlers'),
         providerBaseUrl: `${this.address}:${port}`,
         transports: this.config.transports?.concat([
           {
-            port: port,
+            port,
             path: this.messageTransportPath,
             protocol: 'message',
           },
