@@ -195,18 +195,18 @@ export class Interaction {
 export const interactionToInteractionObject = (
   interaction: InteractionStateComplete
 ): InteractionObject => ({
-    state: interaction.providerState,
-    uponReceiving: interaction.description,
-    withRequest: {
-      method: interaction.request?.method,
-      path: interaction.request?.path,
-      query: interaction.request?.query,
-      body: interaction.request?.body,
-      headers: interaction.request?.headers,
-    },
-    willRespondWith: {
-      status: interaction.response?.status,
-      body: interaction.response?.body,
-      headers: interaction.response?.headers,
-    },
-  });
+  state: interaction.providerState,
+  uponReceiving: interaction.description,
+  withRequest: {
+    method: interaction.request?.method,
+    path: interaction.request?.path,
+    query: interaction.request?.query,
+    body: interaction.request?.body,
+    headers: interaction.request?.headers,
+  },
+  willRespondWith: {
+    status: interaction.response?.status,
+    body: interaction.response?.body,
+    headers: interaction.response?.headers,
+  },
+});

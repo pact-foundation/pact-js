@@ -44,7 +44,7 @@ export const freePort = (): Promise<number> =>
     s.listen(0, () => {
       const addr = s.address();
       if (addr !== null && typeof addr !== 'string') {
-        const {port} = addr;
+        const { port } = addr;
         s.close(() => res(port));
       } else {
         throw Error('unable to find a free port');
