@@ -49,5 +49,5 @@ fi
 
 if [ ! -d ~/.pact/plugins/matt-0.0.3 ]; then
     echo "--- 🐿  Installing MATT plugin"
-  ~/.pact/bin/pact-plugin-cli -y -d install https://github.com/mefellows/pact-matt-plugin/releases/tag/v0.0.5
+  ~/.pact/bin/pact-plugin-cli install https://github.com/mefellows/pact-matt-plugin/releases/tag/v0.0.5
 fi
