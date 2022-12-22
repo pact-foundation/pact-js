@@ -30,7 +30,7 @@ describe('Plugins - Matt Protocol', () => {
         .uponReceiving('an HTTP request to /matt')
         .usingPlugin({
           plugin: 'matt',
-          version: '0.0.5',
+          version: '0.0.7',
         })
         .withRequest('POST', '/matt', (builder) => {
           builder.pluginContents('application/matt', mattRequest);
@@ -73,7 +73,7 @@ describe('Plugins - Matt Protocol', () => {
           .addSynchronousInteraction('a MATT message')
           .usingPlugin({
             plugin: 'matt',
-            version: '0.0.5',
+            version: '0.0.7',
           })
           .withPluginContents(mattMessage, 'application/matt')
           .startTransport('matt', HOST)
