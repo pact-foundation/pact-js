@@ -13,7 +13,7 @@ const modifyElementWithCallback = (el: XmlElement, cb?: XmlCallback) => {
 export class XmlElement extends XmlNode {
   private attributes: XmlAttributes;
 
-  private children: XmlNode[] = [];
+  children: XmlNode[] = [];
 
   constructor(public name: string) {
     super();

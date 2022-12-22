@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 import { expect } from 'chai';
 import {
   boolean,
@@ -62,7 +60,7 @@ describe('Matcher', () => {
           },
         };
 
-        const a: AnyTemplate = like(template);
+        const unused: AnyTemplate = like(template);
       });
     });
     describe('with types', () => {
@@ -77,12 +75,12 @@ describe('Matcher', () => {
           },
         };
 
-        const a: AnyTemplate = like(template);
+        const unused: AnyTemplate = like(template);
       });
     });
 
     it('compiles nested likes', () => {
-      const a: AnyTemplate = like({
+      const unused: AnyTemplate = like({
         someArray: ['one', 'two'],
         someNumber: like(1),
         someString: "it's a string",
@@ -198,7 +196,6 @@ describe('Matcher', () => {
       describe('when an invalid value is provided', () => {
         it('throws an Error', () => {
           expect(createTheValue(undefined)).to.throw(Error);
-          // eslint-disable-next-line no-empty-function
           expect(createTheValue(() => {})).to.throw(Error);
         });
       });

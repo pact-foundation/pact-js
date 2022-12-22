@@ -27,7 +27,6 @@ import { SpecificationVersion } from './v3';
 
 const DEFAULT_PACT_DIR = './pacts';
 
-// eslint-disable-next-line no-shadow
 enum ContentType {
   JSON,
   BINARY,

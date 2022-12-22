@@ -1,4 +1,3 @@
-/* tslint:disable:no-unused-expression no-empty */
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinonChai from 'sinon-chai';
@@ -159,7 +158,6 @@ describe('MesageProvider', () => {
   describe('#waitForServerReady', () => {
     describe('when the http server starts up', () => {
       it('returns a resolved promise', () => {
-        // eslint-disable-next-line @typescript-eslint/no-empty-function, no-empty-function
         const server = http.createServer(() => {}).listen();
 
         return expect(waitForServerReady(server)).to.eventually.be.fulfilled;

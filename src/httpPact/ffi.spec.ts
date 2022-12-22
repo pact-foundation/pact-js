@@ -1,4 +1,4 @@
-// @ts-nocheck
+import { ConsumerInteraction } from '@pact-foundation/pact-core';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
@@ -39,7 +39,7 @@ describe('Pact FFI', () => {
 
         const interaction = {
           withQuery: queryMock,
-        };
+        } as unknown as ConsumerInteraction; // TODO replace with proper mock
         const query = {
           foo: ['bar', 'baz'],
         };
@@ -55,7 +55,7 @@ describe('Pact FFI', () => {
 
         const interaction = {
           withQuery: queryMock,
-        };
+        } as unknown as ConsumerInteraction; // TODO replace with proper mock
         const query = {
           foo: 'bar',
         };
@@ -70,7 +70,7 @@ describe('Pact FFI', () => {
 
         const interaction = {
           withQuery: queryMock,
-        };
+        } as unknown as ConsumerInteraction; // TODO replace with proper mock
         const query = {
           foo: 'bar',
           baz: ['bat', 'foo'],

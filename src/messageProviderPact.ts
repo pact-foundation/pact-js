@@ -10,6 +10,7 @@ import * as http from 'http';
 import bodyParser from 'body-parser';
 import { encode as encodeBase64 } from 'js-base64';
 
+import { AddressInfo } from 'net';
 import {
   MessageDescriptor,
   MessageFromProviderWithMetadata,
@@ -17,7 +18,6 @@ import {
 } from './dsl/message';
 import logger, { setLogLevel } from './common/logger';
 import { PactMessageProviderOptions } from './dsl/options';
-import { AddressInfo } from 'net';
 
 // Listens for the server start event
 // Converts event Emitter to a Promise

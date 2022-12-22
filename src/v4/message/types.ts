@@ -2,10 +2,7 @@ import { AnyJson, JsonMap } from '../../common/jsonTypes';
 import { Metadata } from '../../dsl/message';
 import { AnyTemplate } from '../../v3/matchers';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface MessageContents {
-  // contents: Buffer // TODO
-}
+export type MessageContents = unknown; // TODO { contents: Buffer }
 
 // TODO: this is currently an empty object,
 //       it will eventually be populated with a Buffer

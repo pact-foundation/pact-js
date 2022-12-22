@@ -1,4 +1,3 @@
-/* eslint-disable import/first */
 import { forEachObjIndexed, equals } from 'ramda';
 import { makeConsumerPact } from '@pact-foundation/pact-core';
 import {

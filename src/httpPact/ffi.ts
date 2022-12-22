@@ -1,5 +1,7 @@
 import { ConsumerInteraction } from '@pact-foundation/pact-core/src/consumer/index';
 
+import { forEachObjIndexed } from 'ramda';
+import { isArray } from 'util';
 import {
   RequestOptions,
   ResponseOptions,
@@ -7,12 +9,9 @@ import {
   Query,
 } from '../dsl/interaction';
 import { Matcher, matcherValueOrString } from '../dsl/matchers';
-import { forEachObjIndexed } from 'ramda';
-import { isArray } from 'util';
 import { AnyTemplate } from '../v3/matchers';
 
-// eslint-disable-next-line
-enum INTERACTION_PART {
+enum InteractionPart {
   REQUEST = 1,
   RESPONSE = 2,
 }
@@ -32,26 +31,6 @@ export const contentTypeFromHeaders = (
   }, headers || {});
 
   return contentType;
-};
-
-export const setRequestDetails = (
-  interaction: ConsumerInteraction,
-  req: RequestOptions
-): void => {
-  setRequestMethodAndPath(interaction, req);
-  setBody(INTERACTION_PART.REQUEST, interaction, req.headers, req.body);
-  setHeaders(INTERACTION_PART.REQUEST, interaction, req.headers);
-  setQuery(interaction, req.query);
-};
-
-export const setResponseDetails = (
-  interaction: ConsumerInteraction,
-  res: ResponseOptions
-): void => {
-  interaction.withStatus(res.status);
-
-  setBody(INTERACTION_PART.RESPONSE, interaction, res.headers, res.body);
-  setHeaders(INTERACTION_PART.RESPONSE, interaction, res.headers);
 };
 
 export const setRequestMethodAndPath = (
@@ -81,7 +60,7 @@ export const setQuery = (
 };
 
 export const setBody = (
-  part: INTERACTION_PART,
+  part: InteractionPart,
   interaction: ConsumerInteraction,
   headers?: Headers,
   body?: AnyTemplate
@@ -91,10 +70,10 @@ export const setBody = (
     const contentType = contentTypeFromHeaders(headers, CONTENT_TYPE_JSON);
 
     switch (part) {
-      case INTERACTION_PART.REQUEST:
+      case InteractionPart.REQUEST:
         interaction.withRequestBody(matcher, contentType);
         break;
-      case INTERACTION_PART.RESPONSE:
+      case InteractionPart.RESPONSE:
         interaction.withResponseBody(matcher, contentType);
         break;
       default:
@@ -104,17 +83,17 @@ export const setBody = (
 };
 
 export const setHeaders = (
-  part: INTERACTION_PART,
+  part: InteractionPart,
   interaction: ConsumerInteraction,
   headers?: Headers
 ): void => {
   forEachObjIndexed((v, k) => {
     switch (part) {
-      case INTERACTION_PART.REQUEST:
+      case InteractionPart.REQUEST:
         interaction.withRequestHeader(`${k}`, 0, matcherValueOrString(v));
 
         break;
-      case INTERACTION_PART.RESPONSE:
+      case InteractionPart.RESPONSE:
         interaction.withResponseHeader(`${k}`, 0, matcherValueOrString(v));
 
         break;
@@ -123,4 +102,24 @@ export const setHeaders = (
         break;
     }
   }, headers);
+};
+
+export const setRequestDetails = (
+  interaction: ConsumerInteraction,
+  req: RequestOptions
+): void => {
+  setRequestMethodAndPath(interaction, req);
+  setBody(InteractionPart.REQUEST, interaction, req.headers, req.body);
+  setHeaders(InteractionPart.REQUEST, interaction, req.headers);
+  setQuery(interaction, req.query);
+};
+
+export const setResponseDetails = (
+  interaction: ConsumerInteraction,
+  res: ResponseOptions
+): void => {
+  interaction.withStatus(res.status);
+
+  setBody(InteractionPart.RESPONSE, interaction, res.headers, res.body);
+  setHeaders(InteractionPart.RESPONSE, interaction, res.headers);
 };

@@ -4,13 +4,20 @@ import logger from '../common/logger';
 
 export const traceHttpInteractions = (): void => {
   const originalRequest = http.request;
-  // TODO: Need to look into the types here. They seemed to have changed
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
   http.request = (
-    options: RequestOptions,
-    cb: (res: IncomingMessage) => void
+    options: RequestOptions | string | URL,
+    cb: RequestOptions | ((res: IncomingMessage) => void) | undefined
   ): ClientRequest => {
+    if (typeof options === 'string' || options instanceof URL) {
+      throw new Error(
+        'invoking traced requests with a string or a URL first argument is not supported'
+      );
+    }
+    if (typeof cb !== 'function') {
+      throw new Error(
+        'invoking traced requests with a non-function second argument is not supported'
+      );
+    }
     const requestBodyChunks: Buffer[] = [];
     const responseBodyChunks: Buffer[] = [];
     const hijackedCallback = (res: IncomingMessage) => {

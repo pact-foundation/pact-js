@@ -71,7 +71,7 @@ const throwIfQueryObjectInvalid = (query: QueryObject) => {
 };
 
 export class Interaction {
-  protected state: InteractionState = {};
+  public state: InteractionState = {};
 
   /**
    * Gives a state the provider should be in for this interaction.
@@ -194,21 +194,19 @@ export class Interaction {
 
 export const interactionToInteractionObject = (
   interaction: InteractionStateComplete
-): InteractionObject => {
-  return {
-    state: interaction.providerState,
-    uponReceiving: interaction.description,
-    withRequest: {
-      method: interaction.request?.method,
-      path: interaction.request?.path,
-      query: interaction.request?.query,
-      body: interaction.request?.body,
-      headers: interaction.request?.headers,
-    },
-    willRespondWith: {
-      status: interaction.response?.status,
-      body: interaction.response?.body,
-      headers: interaction.response?.headers,
-    },
-  };
-};
+): InteractionObject => ({
+  state: interaction.providerState,
+  uponReceiving: interaction.description,
+  withRequest: {
+    method: interaction.request?.method,
+    path: interaction.request?.path,
+    query: interaction.request?.query,
+    body: interaction.request?.body,
+    headers: interaction.request?.headers,
+  },
+  willRespondWith: {
+    status: interaction.response?.status,
+    body: interaction.response?.body,
+    headers: interaction.response?.headers,
+  },
+});
