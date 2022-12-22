@@ -9,9 +9,6 @@
     "airbnb-typescript/base",
     "prettier"
   ],
-  "env": {
-    "mocha": true
-  },
   "settings": {
     "import/resolver": {
       "typescript": {
@@ -41,6 +38,9 @@
     {
       "files": ["**/*.spec.ts"],
       "extends": ["plugin:mocha/recommended"],
+      "env": {
+        "mocha": true
+      },
       "rules": {
         "@typescript-eslint/ban-ts-comment": "off",
         "@typescript-eslint/no-explicit-any": "off",
