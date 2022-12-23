@@ -1,4 +1,4 @@
-import { ConsumerInteraction } from '@pact-foundation/pact-core/src/consumer/index';
+import { ConsumerInteraction } from '@pact-foundation/pact-core/';
 
 import { forEachObjIndexed } from 'ramda';
 import { isArray } from 'util';

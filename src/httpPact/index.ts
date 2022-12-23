@@ -1,10 +1,9 @@
-import serviceFactory from '@pact-foundation/pact-core';
-
-import {
+import serviceFactory, {
   ConsumerPact,
   ConsumerInteraction,
   makeConsumerPact,
-} from '@pact-foundation/pact-core/src/consumer/index';
+} from '@pact-foundation/pact-core';
+
 import clc from 'cli-color';
 import * as path from 'path';
 import process from 'process';

@@ -1,5 +1,5 @@
 import { forEachObjIndexed } from 'ramda';
-import { ConsumerInteraction } from '@pact-foundation/pact-core/src/consumer/index';
+import { ConsumerInteraction } from '@pact-foundation/pact-core';
 import { TemplateHeaders, V3Request, V3Response } from './types';
 import * as MatchersV3 from './matchers';
 
