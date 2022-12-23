@@ -5,6 +5,7 @@
 # or
 #   $ wget -q https://raw.githubusercontent.com/pact-foundation/pact-plugins/master/install-cli.sh -O- | bash
 #
+set -e # Needed for Windows bash, which doesn't read the shebang
 
 function detect_osarch() {
     case $(uname -sm) in
