@@ -82,26 +82,43 @@ export const setBody = (
   }
 };
 
+type TemplateHeaderArrayValue = (string | Matcher<string>)[];
+
 export const setHeaders = (
   part: InteractionPart,
   interaction: ConsumerInteraction,
   headers?: Headers
 ): void => {
-  forEachObjIndexed((v, k) => {
+  Object.entries(headers || {}).forEach(([k, v]) => {
+    let values: TemplateHeaderArrayValue = [];
+
+    if (Array.isArray(v)) {
+      values = v;
+    } else if (typeof v === 'string') {
+      // Allow comma separated items, such as: "application/problem+json, application/json, */*"
+      values = v.split(',').map((h) => h.trim());
+    } else {
+      values = [v];
+    }
+
     switch (part) {
       case InteractionPart.REQUEST:
-        interaction.withRequestHeader(`${k}`, 0, matcherValueOrString(v));
+        values.forEach((h, i) => {
+          interaction.withRequestHeader(k, i, matcherValueOrString(h));
+        });
 
         break;
       case InteractionPart.RESPONSE:
-        interaction.withResponseHeader(`${k}`, 0, matcherValueOrString(v));
+        values.forEach((h, i) => {
+          interaction.withResponseHeader(k, i, matcherValueOrString(h));
+        });
 
         break;
 
       default:
         break;
     }
-  }, headers);
+  });
 };
 
 export const setRequestDetails = (

@@ -45,7 +45,17 @@ export const setResponseDetails = (
   interaction.withStatus(res.status);
 
   forEachObjIndexed((v, k) => {
-    interaction.withResponseHeader(k, 0, MatchersV3.matcherValueOrString(v));
+    if (Array.isArray(v)) {
+      (v as TemplateHeaderArrayValue).forEach((header, index) => {
+        interaction.withResponseHeader(
+          k,
+          index,
+          MatchersV3.matcherValueOrString(header)
+        );
+      });
+    } else {
+      interaction.withResponseHeader(k, 0, MatchersV3.matcherValueOrString(v));
+    }
   }, res.headers);
 };
 

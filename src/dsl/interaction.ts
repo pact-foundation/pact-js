@@ -14,7 +14,7 @@ interface QueryObject {
 export type Query = string | QueryObject;
 
 export type Headers = {
-  [header: string]: string | Matcher<string>;
+  [header: string]: string | Matcher<string> | (Matcher<string> | string)[];
 };
 
 export interface RequestOptions {
