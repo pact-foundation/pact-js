@@ -142,10 +142,7 @@ describe('Pact', () => {
               method: 'GET',
               path: '/animals/available',
               headers: {
-                Authorization: term({
-                  matcher: 'Bearer [A-Za-z0-9]+',
-                  generate: 'Bearer token',
-                }),
+                Authorization: like('Bearer token'),
               },
             },
             willRespondWith: {
@@ -184,10 +181,7 @@ describe('Pact', () => {
             method: 'GET',
             path: term({ generate: '/animals/1', matcher: '/animals/[0-9]+' }),
             headers: {
-              Authorization: term({
-                matcher: 'Bearer [A-Za-z0-9]+',
-                generate: 'Bearer token',
-              }),
+              Authorization: like('Bearer token'),
             },
           },
           willRespondWith: {
@@ -218,10 +212,7 @@ describe('Pact', () => {
             method: 'GET',
             path: '/animals/100',
             headers: {
-              Authorization: term({
-                matcher: 'Bearer [A-Za-z0-9]+',
-                generate: 'Bearer token',
-              }),
+              Authorization: like('Bearer token'),
             },
           },
           willRespondWith: {
@@ -251,10 +242,7 @@ describe('Pact', () => {
           body: like(suitor),
           headers: {
             'Content-Type': 'application/json; charset=utf-8',
-            Authorization: term({
-              matcher: 'Bearer [A-Za-z0-9]+',
-              generate: 'Bearer token',
-            }),
+            Authorization: like('Bearer token'),
           },
         },
         willRespondWith: {
