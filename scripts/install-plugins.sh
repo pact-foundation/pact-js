@@ -34,7 +34,7 @@ function detect_osarch() {
 }
 
 
-echo "---  🐿 Downloading release metadata from pact-foundation/pact-plugins"
+echo "--- 🐿 Downloading release metadata from pact-foundation/pact-plugins"
 RELEASE_API_RESPONSE=$(curl -sS https://api.github.com/repos/pact-foundation/pact-plugins/releases)
 TAG=$(echo "$RELEASE_API_RESPONSE" | jq '.[0]?.tag_name')
 if [ -z "${TAG:-}" ]; then
@@ -43,7 +43,7 @@ if [ -z "${TAG:-}" ]; then
     echo ""
     echo "$RELEASE_API_RESPONSE"
 
-    echo "   ❌ Release API response was not in expected format"
+    echo "    ❌ Release API response was not in expected format"
     exit 2
 fi
 
