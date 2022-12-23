@@ -44,6 +44,7 @@ if [ -z "${TAG:-}" ]; then
     echo "$RELEASE_API_RESPONSE"
 
     echo "   ❌ Release API response was not in expected format"
+    exit 2
 fi
 
 
