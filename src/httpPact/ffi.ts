@@ -10,6 +10,7 @@ import {
 } from '../dsl/interaction';
 import { Matcher, matcherValueOrString } from '../dsl/matchers';
 import { AnyTemplate } from '../v3/matchers';
+import logger from '../common/logger';
 
 enum InteractionPart {
   REQUEST = 1,
@@ -104,12 +105,22 @@ export const setHeaders = (
     switch (part) {
       case InteractionPart.REQUEST:
         values.forEach((h, i) => {
+          logger.debug(
+            `setting header request value for ${h} at index ${i} to ${JSON.stringify(
+              matcherValueOrString(h)
+            )}`
+          );
           interaction.withRequestHeader(k, i, matcherValueOrString(h));
         });
 
         break;
       case InteractionPart.RESPONSE:
         values.forEach((h, i) => {
+          logger.debug(
+            `setting header response value for ${h} at index ${i} to ${JSON.stringify(
+              matcherValueOrString(h)
+            )}`
+          );
           interaction.withResponseHeader(k, i, matcherValueOrString(h));
         });
 

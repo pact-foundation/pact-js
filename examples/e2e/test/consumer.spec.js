@@ -143,7 +143,7 @@ describe('Pact', () => {
               path: '/animals/available',
               headers: {
                 Authorization: term({
-                  matcher: 'Bearer\\s[a-z0-9]+',
+                  matcher: 'Bearer [A-Za-z0-9]+',
                   generate: 'Bearer token',
                 }),
               },
@@ -185,7 +185,7 @@ describe('Pact', () => {
             path: term({ generate: '/animals/1', matcher: '/animals/[0-9]+' }),
             headers: {
               Authorization: term({
-                matcher: 'Bearer\\s[a-z0-9]+',
+                matcher: 'Bearer [A-Za-z0-9]+',
                 generate: 'Bearer token',
               }),
             },
@@ -219,7 +219,7 @@ describe('Pact', () => {
             path: '/animals/100',
             headers: {
               Authorization: term({
-                matcher: 'Bearer\\s[a-z0-9]+',
+                matcher: 'Bearer [A-Za-z0-9]+',
                 generate: 'Bearer token',
               }),
             },
@@ -252,7 +252,7 @@ describe('Pact', () => {
           headers: {
             'Content-Type': 'application/json; charset=utf-8',
             Authorization: term({
-              matcher: 'Bearer\\s[a-z0-9]+',
+              matcher: 'Bearer [A-Za-z0-9]+',
               generate: 'Bearer token',
             }),
           },
