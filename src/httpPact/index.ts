@@ -19,7 +19,6 @@ import logger, { setLogLevel } from '../common/logger';
 import { LogLevel, PactOptions, PactOptionsComplete } from '../dsl/options';
 import VerificationError from '../errors/verificationError';
 import ConfigurationError from '../errors/configurationError';
-import { traceHttpInteractions } from './tracing';
 import { SpecificationVersion } from '../v3';
 import { version as pactPackageVersion } from '../../package.json';
 import { generateMockServerError } from '../v3/display';
@@ -101,9 +100,10 @@ export class Pact {
     setLogLevel(this.opts.logLevel as LogLevel);
     serviceFactory.logLevel(this.opts.logLevel);
 
-    if (this.opts.logLevel === 'trace') {
-      traceHttpInteractions();
-    }
+    // TODO: this now hangs the process
+    // if (this.opts.logLevel === 'trace') {
+    //   traceHttpInteractions();
+    // }
 
     this.reset();
   }
