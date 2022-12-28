@@ -1,7 +1,6 @@
 import { ConsumerInteraction } from '@pact-foundation/pact-core';
 
 import { forEachObjIndexed } from 'ramda';
-import { isArray } from 'util';
 import {
   RequestOptions,
   ResponseOptions,
@@ -49,7 +48,7 @@ export const setQuery = (
   query?: Query
 ): void => {
   forEachObjIndexed((v, k) => {
-    if (isArray(v)) {
+    if (Array.isArray(v)) {
       (v as unknown[]).forEach((vv, i) => {
         interaction.withQuery(k, i, matcherValueOrString(vv));
       });
