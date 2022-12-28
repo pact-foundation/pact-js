@@ -1,9 +1,9 @@
 import { forEachObjIndexed, equals } from 'ramda';
-import { makeConsumerPact } from '@pact-foundation/pact-core';
 import {
+  makeConsumerPact,
   ConsumerPact,
   ConsumerInteraction,
-} from '@pact-foundation/pact-core/src/consumer/index';
+} from '@pact-foundation/pact-core';
 import fs = require('fs');
 import { version as pactPackageVersion } from '../../package.json';
 import { JsonMap } from '../common/jsonTypes';
