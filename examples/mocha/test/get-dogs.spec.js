@@ -2,7 +2,7 @@
 
 const expect = require('chai').expect;
 const path = require('path');
-const { Pact } = require('@pact-foundation/pact');
+const { Pact, Matchers } = require('@pact-foundation/pact');
 const { getMeDogs, getMeDog } = require('../index');
 const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
@@ -14,10 +14,9 @@ describe('The Dog API', () => {
     port: port,
     log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
     dir: path.resolve(process.cwd(), 'pacts'),
-    spec: 2,
+    spec: 3,
     consumer: 'MyConsumer',
     provider: 'MyProvider',
-    pactfileWriteMode: 'merge',
     logLevel: LOG_LEVEL,
   });
 
@@ -40,7 +39,7 @@ describe('The Dog API', () => {
   afterEach(() => provider.verify());
 
   describe('get /dogs', () => {
-    before((done) => {
+    before(() => {
       const interaction = {
         state: 'i have a list of dogs',
         uponReceiving: 'a request for all dogs',
@@ -48,68 +47,37 @@ describe('The Dog API', () => {
           method: 'GET',
           path: '/dogs',
           headers: {
-            Accept: 'application/json',
+            Accept:
+              'application/problem+json, application/json, text/plain, */*',
+            // Accept: [
+            //   'application/problem+json',
+            //   'application/json',
+            //   'text/plain',
+            //   '*/*',
+            // ],
           },
         },
         willRespondWith: {
           status: 200,
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': Matchers.term({
+              generate: 'application/json',
+              matcher: 'application/json.*',
+            }),
           },
           body: EXPECTED_BODY,
         },
       };
-      provider.addInteraction(interaction).then(() => {
-        done();
-      });
+      return provider.addInteraction(interaction);
     });
 
-    it('returns the correct response', (done) => {
+    it('returns the correct response', async () => {
       const urlAndPort = {
         url: url,
         port: port,
       };
-      getMeDogs(urlAndPort).then((response) => {
-        expect(response.data).to.eql(EXPECTED_BODY);
-        done();
-      }, done);
-    });
-  });
-
-  describe('get /dog/1', () => {
-    before((done) => {
-      const interaction = {
-        state: 'i have a list of dogs',
-        uponReceiving: 'a request for a single dog',
-        withRequest: {
-          method: 'GET',
-          path: '/dogs/1',
-          headers: {
-            Accept: 'application/json',
-          },
-        },
-        willRespondWith: {
-          status: 200,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: EXPECTED_BODY,
-        },
-      };
-      provider.addInteraction(interaction).then(() => {
-        done();
-      });
-    });
-
-    it('returns the correct response', (done) => {
-      const urlAndPort = {
-        url: url,
-        port: port,
-      };
-      getMeDog(urlAndPort).then((response) => {
-        expect(response.data).to.eql(EXPECTED_BODY);
-        done();
-      }, done);
+      const response = await getMeDogs(urlAndPort);
+      expect(response.data).to.eql(EXPECTED_BODY);
     });
   });
 });

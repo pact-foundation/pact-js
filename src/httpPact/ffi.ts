@@ -9,6 +9,7 @@ import {
 } from '../dsl/interaction';
 import { Matcher, matcherValueOrString } from '../dsl/matchers';
 import { AnyTemplate } from '../v3/matchers';
+import logger from '../common/logger';
 
 enum InteractionPart {
   REQUEST = 1,
@@ -81,26 +82,53 @@ export const setBody = (
   }
 };
 
+type TemplateHeaderArrayValue = (string | Matcher<string>)[];
+
 export const setHeaders = (
   part: InteractionPart,
   interaction: ConsumerInteraction,
   headers?: Headers
 ): void => {
-  forEachObjIndexed((v, k) => {
+  Object.entries(headers || {}).forEach(([k, v]) => {
+    let values: TemplateHeaderArrayValue = [];
+
+    if (Array.isArray(v)) {
+      values = v;
+    } else if (typeof v === 'string') {
+      // Allow comma separated items, such as: "application/problem+json, application/json, */*"
+      values = v.split(',').map((h) => h.trim());
+    } else {
+      values = [v];
+    }
+
     switch (part) {
       case InteractionPart.REQUEST:
-        interaction.withRequestHeader(`${k}`, 0, matcherValueOrString(v));
+        values.forEach((h, i) => {
+          logger.debug(
+            `setting header request value for ${h} at index ${i} to ${JSON.stringify(
+              matcherValueOrString(h)
+            )}`
+          );
+          interaction.withRequestHeader(k, i, matcherValueOrString(h));
+        });
 
         break;
       case InteractionPart.RESPONSE:
-        interaction.withResponseHeader(`${k}`, 0, matcherValueOrString(v));
+        values.forEach((h, i) => {
+          logger.debug(
+            `setting header response value for ${h} at index ${i} to ${JSON.stringify(
+              matcherValueOrString(h)
+            )}`
+          );
+          interaction.withResponseHeader(k, i, matcherValueOrString(h));
+        });
 
         break;
 
       default:
         break;
     }
-  }, headers);
+  });
 };
 
 export const setRequestDetails = (
