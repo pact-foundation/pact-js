@@ -10,7 +10,14 @@ exports.getMeDogs = (endpoint) => {
     method: 'GET',
     baseURL: `${url}:${port}`,
     url: '/dogs',
-    headers: { Accept: 'application/json' },
+    headers: {
+      Accept: [
+        'application/problem+json',
+        'application/json',
+        'text/plain',
+        '*/*',
+      ],
+    },
   });
 };
 
