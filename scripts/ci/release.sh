@@ -14,8 +14,8 @@ git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 git config user.name "${GITHUB_ACTOR}"
 
 # It's easier to read the release notes
-# from the standard version tool before it runs
-RELEASE_NOTES="$(npx standard-version --dry-run | awk 'BEGIN { flag=0 } /^---$/ { if (flag == 0) { flag=1 } else { flag=2 }; next } flag == 1')"
+# from the commit-and-tag-version tool before it runs
+RELEASE_NOTES="$(npx commit-and-tag-version --dry-run | awk 'BEGIN { flag=0 } /^---$/ { if (flag == 0) { flag=1 } else { flag=2 }; next } flag == 1')"
 # Don't release if there are no changes
 if [ "$(echo "$RELEASE_NOTES" | wc -l)" -eq 1 ] ; then
     echo "ERROR: This release would have no release notes. Does it include changes?"
