@@ -5,6 +5,7 @@
 # or
 #   $ wget -q https://raw.githubusercontent.com/pact-foundation/pact-plugins/master/install-cli.sh -O- | bash
 #
+set -e # Needed for Windows bash, which doesn't read the shebang
 
 function detect_osarch() {
     case $(uname -sm) in
@@ -32,7 +33,21 @@ function detect_osarch() {
     esac
 }
 
-TAG=$(curl -s https://api.github.com/repos/pact-foundation/pact-plugins/releases | jq '.[0].tag_name')
+
+echo "--- 🐿 Downloading release metadata from pact-foundation/pact-plugins"
+RELEASE_API_RESPONSE=$(curl -sS https://api.github.com/repos/pact-foundation/pact-plugins/releases)
+TAG=$(echo "$RELEASE_API_RESPONSE" | jq '.[0]?.tag_name')
+if [ -z "${TAG:-}" ]; then
+    echo "--- ❌ FAILED TO GET TAG ❌"
+    echo "    Release API responded with"
+    echo ""
+    echo "$RELEASE_API_RESPONSE"
+
+    echo "    ❌ Release API response was not in expected format"
+    exit 2
+fi
+
+
 VERSION=$(echo "$TAG" | tr -d '[:alpha:]-"')
 detect_osarch
 
