@@ -4,12 +4,13 @@ on:
   push:
   pull_request:
     branches: [master, 9.x.x]
+  workflow_dispatch:
 
 env:
   GIT_COMMIT: ${{ github.sha }}
   GIT_REF: ${{ github.ref }}
   ENABLE_FEATURE_V4: true
-  LOG_LEVEL: trace
+  LOG_LEVEL: info
 
 jobs:
   build-and-test-ubuntu:

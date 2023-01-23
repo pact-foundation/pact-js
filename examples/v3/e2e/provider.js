@@ -20,7 +20,7 @@ server.use((req, res, next) => {
 server.use((req, res, next) => {
   const token = req.headers['authorization'] || '';
 
-  if (token !== 'Bearer 1234') {
+  if (token !== 'Bearer token') {
     res.sendStatus(401).send();
   } else {
     next();

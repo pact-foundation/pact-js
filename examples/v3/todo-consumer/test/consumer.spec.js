@@ -81,15 +81,19 @@ describe('Pact V3', () => {
             method: 'GET',
             path: '/projects',
             query: { from: 'today' },
-            headers: { Accept: regex('application/.*xml', 'application/xml') },
+            // TODO: update once https://github.com/pact-foundation/pact-reference/issues/238 has been fixed
+            // headers: { Accept: regex('application/.*xml', 'application/xml') },
+            headers: { Accept: 'application/xml' },
           })
           .willRespondWith({
             status: 200,
             headers: {
-              'Content-Type': regex(
-                'application/.*xml(;.*)?',
-                'application/xml'
-              ),
+              // TODO: update once https://github.com/pact-foundation/pact-reference/issues/238 has been fixed
+              // 'Content-Type': regex(
+              //   'application/.*xml(;.*)?',
+              //   'application/xml'
+              // ),
+              'Content-Type': 'application/todo+xml; charset=utf-8',
             },
             body: new XmlBuilder('1.0', 'UTF-8', 'ns1:projects').build((el) => {
               el.setAttributes({

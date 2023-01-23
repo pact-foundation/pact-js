@@ -36,7 +36,7 @@ describe('Pact Verification', () => {
         'Has no animals': () => {
           animalRepository.clear();
           return Promise.resolve({
-            description: `Animals removed to the db`,
+            description: `Animals removed from the db`,
           });
         },
         'Has some animals': () => {
@@ -61,7 +61,7 @@ describe('Pact Verification', () => {
           });
         },
         'is authenticated': () => {
-          token = '1234';
+          token = 'token';
           return Promise.resolve({ description: `Bearer token generated` });
         },
       },

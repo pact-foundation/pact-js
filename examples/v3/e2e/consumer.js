@@ -4,7 +4,7 @@ const server = express();
 
 const getApiEndpoint = () => process.env.API_HOST || 'http://localhost:8081';
 const authHeader = {
-  Authorization: 'Bearer 1234',
+  Authorization: 'Bearer token',
 };
 
 // Fetch animals who are currently 'available' from the
