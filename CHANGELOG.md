@@ -1,6 +1,15 @@
 # Changelog
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
+
+### [10.4.1](https://github.com/pact-foundation/pact-js/compare/v10.4.0...v10.4.1) (2023-01-23)
+
+
+### Fixes and Improvements
+
+* accept multiple values for headers in V2 interface. Fixes [#1031](https://github.com/pact-foundation/pact-js/issues/1031) ([229aadd](https://github.com/pact-foundation/pact-js/commit/229aadd2e54a0750db1fe95ed6d17d39919f1c26))
+* disabled HTTP tracer as it causes the node process to hang ([7de96ca](https://github.com/pact-foundation/pact-js/commit/7de96ca1bb76933a5e2e650a609e2da2a79876d8))
+* update to latest pact-core 13.13.2 ([671891b](https://github.com/pact-foundation/pact-js/commit/671891bb5faa432d280cac5bff968511bec4b26a))
 
 ## [10.4.0](https://github.com/pact-foundation/pact-js/compare/v10.3.1...v10.4.0) (2022-12-09)
 
