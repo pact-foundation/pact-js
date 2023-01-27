@@ -37,7 +37,7 @@
 - 🔌 Supports HTTP/REST and event-driven systems
 - 🛠️ Configurable mock server
 - 😌 Powerful matching rules prevents brittle tests
-- 🤝 Integrates with Pact Broker / Pactflow for powerful CI/CD workflows
+- 🤝 Integrates with Pact Broker / PactFlow for powerful CI/CD workflows
 - 🔡 Supports 12+ languages
 
 **Why use Pact?**
