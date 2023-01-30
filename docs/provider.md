@@ -53,30 +53,30 @@ new Verifier(opts).verifyProvider().then(function () {
 
 <details><summary>Verification Options</summary>
 
-| Parameter | Required? | Type | Description|
-| --------- | --------- | ---- | ---------- |
-| `providerBaseUrl`           | true      | string                         | Running API provider host endpoint.|
-| `pactBrokerUrl`             | false     | string                         | Base URL of the Pact Broker from which to retrieve the pacts. Required if `pactUrls` not given.                                                                                                    |
-| `provider`                  | false     | string                         | Name of the provider if fetching from a Broker                                                                                                                                                     |
-| `consumerVersionSelectors`  | false     | ConsumerVersionSelector\|array | Using [Selectors](https://docs.pact.io/pact_broker/advanced_topics/consumer_version_selectors/) is a way we specify which pacticipants and versions we want to use when configuring verifications. |
-| `consumerVersionTags`       | false     | string\|array                  | Retrieve the latest pacts with given tag(s)                                                                                                                                                        |
-| `providerVersionTags`       | false     | string\|array                  | Tag(s) to apply to the provider application   |
-| `providerVersionBranch`     | false     | string                 | Branch to apply to provider application version (recommended to set) |
-| `includeWipPactsSince`      | false     | string                         | Includes pact marked as WIP since this date. String in the format %Y-%m-%d or %Y-%m-%dT%H:%M:%S.000%:z                                                                                             |
-| `pactUrls`                  | false     | array                          | Array of local pact file paths or HTTP-based URLs. Required if _not_ using a Pact Broker.                                                                                                          |
-| `providerStatesSetupUrl`    | false     | string                         | Deprecated (use URL to send PUT requests to setup a given provider state                                                                                                                           |
-| `stateHandlers`             | false     | object                         | Map of "state" to a function that sets up a given provider state. See docs below for more information                                                                                              |
-| `requestFilter`             | false     | function ([Express middleware](https://expressjs.com/en/guide/using-middleware.html))                       | Function that may be used to alter the incoming request or outgoing response from the verification process. See below for use.                                                                     |
-| `beforeEach`                | false     | function                       | Function to execute prior to each interaction being validated                                                                                                                                      |
-| `afterEach`                 | false     | function                       | Function to execute after each interaction has been validated                                                                                                                                      |
-| `pactBrokerUsername`        | false     | string                         | Username for Pact Broker basic authentication                                                                                                                                                      |
-| `pactBrokerPassword`        | false     | string                         | Password for Pact Broker basic authentication                                                                                                                                                      |
-| `pactBrokerToken`           | false     | string                         | Bearer token for Pact Broker authentication                                                                                                                                                        |
-| `publishVerificationResult` | false     | boolean                        | Publish verification result to Broker (_NOTE_: you should only enable this during CI builds)                                                                                                       |
-| `providerVersion`           | false     | string                         | Provider version, required to publish verification result to Broker. Optional otherwise.                                                                                                           |
-| `enablePending`             | false     | boolean                        | Enable the [pending pacts](https://docs.pact.io/pending) feature.                                                                                                                                  |
-| `timeout`                   | false     | number                         | The duration in ms we should wait to confirm verification process was successful. Defaults to 30000.                                                                                               |
-| `logLevel`                  | false     | string                         | not used, log level is set by [environment variable](#debugging-issues-with-pact-js-v3)                                                                                                            |
+| Parameter                   | Required? | Type                                                                                  | Description                                                                                                                                                                                        |
+| --------------------------- | --------- | ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `providerBaseUrl`           | true      | string                                                                                | Running API provider host endpoint.                                                                                                                                                                |
+| `pactBrokerUrl`             | false     | string                                                                                | Base URL of the Pact Broker from which to retrieve the pacts. Required if `pactUrls` not given.                                                                                                    |
+| `provider`                  | false     | string                                                                                | Name of the provider if fetching from a Broker                                                                                                                                                     |
+| `consumerVersionSelectors`  | false     | ConsumerVersionSelector\|array                                                        | Using [Selectors](https://docs.pact.io/pact_broker/advanced_topics/consumer_version_selectors/) is a way we specify which pacticipants and versions we want to use when configuring verifications. |
+| `consumerVersionTags`       | false     | string\|array                                                                         | Retrieve the latest pacts with given tag(s)                                                                                                                                                        |
+| `providerVersionTags`       | false     | string\|array                                                                         | Tag(s) to apply to the provider application                                                                                                                                                        |
+| `providerVersionBranch`     | false     | string                                                                                | Branch to apply to provider application version (recommended to set)                                                                                                                               |
+| `includeWipPactsSince`      | false     | string                                                                                | Includes pact marked as WIP since this date. String in the format %Y-%m-%d or %Y-%m-%dT%H:%M:%S.000%:z                                                                                             |
+| `pactUrls`                  | false     | array                                                                                 | Array of local pact file paths or HTTP-based URLs. Required if _not_ using a Pact Broker.                                                                                                          |
+| `providerStatesSetupUrl`    | false     | string                                                                                | Deprecated (use URL to send PUT requests to setup a given provider state                                                                                                                           |
+| `stateHandlers`             | false     | object                                                                                | Map of "state" to a function that sets up a given provider state. See docs below for more information                                                                                              |
+| `requestFilter`             | false     | function ([Express middleware](https://expressjs.com/en/guide/using-middleware.html)) | Function that may be used to alter the incoming request or outgoing response from the verification process. See below for use.                                                                     |
+| `beforeEach`                | false     | function                                                                              | Function to execute prior to each interaction being validated                                                                                                                                      |
+| `afterEach`                 | false     | function                                                                              | Function to execute after each interaction has been validated                                                                                                                                      |
+| `pactBrokerUsername`        | false     | string                                                                                | Username for Pact Broker basic authentication                                                                                                                                                      |
+| `pactBrokerPassword`        | false     | string                                                                                | Password for Pact Broker basic authentication                                                                                                                                                      |
+| `pactBrokerToken`           | false     | string                                                                                | Bearer token for Pact Broker authentication                                                                                                                                                        |
+| `publishVerificationResult` | false     | boolean                                                                               | Publish verification result to Broker (_NOTE_: you should only enable this during CI builds)                                                                                                       |
+| `providerVersion`           | false     | string                                                                                | Provider version, required to publish verification result to Broker. Optional otherwise.                                                                                                           |
+| `enablePending`             | false     | boolean                                                                               | Enable the [pending pacts](https://docs.pact.io/pending) feature.                                                                                                                                  |
+| `timeout`                   | false     | number                                                                                | The duration in ms we should wait to confirm verification process was successful. Defaults to 30000.                                                                                               |
+| `logLevel`                  | false     | string                                                                                | not used, log level is set by [environment variable](#debugging-issues-with-pact-js-v3)                                                                                                            |
 
 </details>
 
@@ -144,6 +144,26 @@ return new Verifier(opts).verifyProvider().then(...)
 As you can see, for each state ("Has no animals", ...), we configure the local datastore differently. If this option is not configured, the `Verifier` will ignore the provider states defined in the pact and log a warning.
 
 Read more about [Provider States](https://docs.pact.io/getting_started/provider_states).
+
+#### Provider State Setup and Teardown
+
+Provider States can optionally take a setup and teardown function. These are useful in situations where you'd like to cleanup data specific to the provider state.
+
+
+```js
+  'Whatever your state name is': {
+    setup: (parameters) => {
+      // do your setup here
+      // return a promise if you need to
+    },
+    teardown: (parameters) => {
+      // do your teardown here
+      // return a promise if you need to
+    },
+  },
+```
+
+You can think of regular provider states as only being the "setup" phase.
 
 #### Before and After Hooks
 
