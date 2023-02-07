@@ -22,7 +22,11 @@ This may be resolved by ensuring the `http_proxy`, `https_proxy` and `no_proxy` 
 
 ## Alpine + Docker
 
-Alpine is not currently supported, you should run your Pact tests in a full linux distribution such as Ubunt or Debian.
+Alpine is not currently supported, you should run your Pact tests in a full linux distribution such as Ubuntu or Debian.
+As a workaround to prevent Docker build failure you may install the following packages:
+```sh
+RUN apk add --no-cache libc6-compat python3 make g++
+```
 
 ## Test fails when it should pass
 
