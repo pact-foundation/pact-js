@@ -1,9 +1,9 @@
 import { forEachObjIndexed } from 'ramda';
 import { ConsumerInteraction } from '@pact-foundation/pact-core';
-import { TemplateHeaders, V3Request, V3Response } from './types';
+import { Matcher, TemplateHeaders, V3Request, V3Response } from './types';
 import * as MatchersV3 from './matchers';
 
-type TemplateHeaderArrayValue = string[] | MatchersV3.Matcher<string>[];
+type TemplateHeaderArrayValue = string[] | Matcher<string>[];
 
 export const setRequestDetails = (
   interaction: ConsumerInteraction,
@@ -64,7 +64,7 @@ export const contentTypeFromHeaders = (
   headers: TemplateHeaders | undefined,
   defaultContentType: string
 ): string => {
-  let contentType: string | MatchersV3.Matcher<string> = defaultContentType;
+  let contentType: string | Matcher<string> = defaultContentType;
   forEachObjIndexed((v, k) => {
     if (`${k}`.toLowerCase() === 'content-type') {
       contentType = MatchersV3.matcherValueOrString(v);

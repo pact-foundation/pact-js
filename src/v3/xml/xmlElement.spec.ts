@@ -3,7 +3,7 @@ import { describe } from 'mocha';
 import { XmlText } from './xmlText';
 import { XmlElement } from './xmlElement';
 import * as MatchersV3 from '../matchers';
-import { Matcher } from '../matchers';
+import { Matcher } from '../types';
 
 const { expect } = chai;
 

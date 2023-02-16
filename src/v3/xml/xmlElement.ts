@@ -1,4 +1,5 @@
-import { Matcher } from '../matchers';
+import { isMatcher } from '../matchers';
+import { Matcher } from '../types';
 import { XmlNode } from './xmlNode';
 import { XmlText } from './xmlText';
 
@@ -59,8 +60,13 @@ export class XmlElement extends XmlNode {
     if (typeof content === 'object' && content['pact:matcher:type']) {
       this.children.push(
         new XmlText(
-          (content as Matcher<string>).value || '',
-          content as Matcher<string>
+          isMatcher(content) &&
+          'value' in content &&
+          content.value !== undefined &&
+          typeof content.value === 'string'
+            ? content.value
+            : '',
+          content
         )
       );
     } else {
