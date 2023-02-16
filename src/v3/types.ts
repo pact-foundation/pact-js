@@ -17,6 +17,12 @@ export type AnyTemplate =
   | TemplateArray
   | Matcher<unknown>;
 
+// TODO: In the next major release, these types should be renamed so they
+// don't clash with the V2 ones. Typescript merges interfaces with the same
+// name, so the calculated type for any Matcher that exists in both V2 and
+// V3 will be wrong. This isn't a major problem as is only likely to affect
+// maintainers, and contributors but it definitely should be corrected.
+
 /**
  * Pact Matcher
  */
