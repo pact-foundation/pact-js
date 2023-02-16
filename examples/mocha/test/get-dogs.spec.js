@@ -14,7 +14,7 @@ describe('The Dog API', () => {
     port: port,
     log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
     dir: path.resolve(process.cwd(), 'pacts'),
-    spec: 3,
+    spec: 2,
     consumer: 'MyConsumer',
     provider: 'MyProvider',
     logLevel: LOG_LEVEL,
