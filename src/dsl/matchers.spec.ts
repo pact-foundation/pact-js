@@ -49,6 +49,28 @@ type ExampleType = {
 describe('Matcher', () => {
   describe('can compile the types', () => {
     describe('with interfaces', () => {
+      it('compiles with nested examples from issue 1054', () => {
+        interface Foo {
+          a: string;
+        }
+
+        const f: Foo = { a: 'working example' };
+
+        like(f);
+        like({ ...f });
+        like(Object.freeze(f));
+
+        interface Room {
+          id: string;
+          foo: Foo;
+        }
+
+        const r: Room = { id: 'some guid', foo: { a: 'example' } };
+
+        like(r);
+        like({ ...r });
+        like(Object.freeze(f));
+      });
       it('compiles when InterfaceToTemplate is used', () => {
         const template: InterfaceToTemplate<ExampleInterface> = {
           someArray: ['one', 'two'],

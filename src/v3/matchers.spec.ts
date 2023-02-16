@@ -4,6 +4,30 @@ import * as MatchersV3 from './matchers';
 const { expect } = chai;
 
 describe('V3 Matchers', () => {
+  it('compiles with nested examples from issue 1054', () => {
+    interface Foo {
+      a: string;
+    }
+
+    const f: Foo = { a: 'working example' };
+
+    MatchersV3.like(f);
+    MatchersV3.like({ ...f });
+    MatchersV3.like(Object.freeze(f));
+
+    interface Room {
+      id: string;
+      foo: Foo;
+    }
+
+    const r: Room = { id: 'some guid', foo: { a: 'example' } };
+
+    MatchersV3.like(r);
+    MatchersV3.like({ ...r });
+    MatchersV3.like(Object.freeze(f));
+    MatchersV3.reify(r);
+  });
+
   describe('#like', () => {
     it('returns a JSON representation of a like matcher', () => {
       const result = MatchersV3.like({

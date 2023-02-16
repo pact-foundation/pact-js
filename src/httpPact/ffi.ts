@@ -8,7 +8,7 @@ import {
   Query,
 } from '../dsl/interaction';
 import { Matcher, matcherValueOrString } from '../dsl/matchers';
-import { AnyTemplate } from '../v3/matchers';
+import { AnyTemplate } from '../v3/types';
 import logger from '../common/logger';
 
 enum InteractionPart {

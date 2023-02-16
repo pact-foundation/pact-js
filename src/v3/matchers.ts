@@ -1,39 +1,32 @@
 import { isNil, pickBy, times } from 'ramda';
 import RandExp from 'randexp';
+
+import {
+  AnyTemplate,
+  ArrayContainsMatcher,
+  DateTimeMatcher,
+  Matcher,
+  MaxLikeMatcher,
+  MinLikeMatcher,
+  ProviderStateInjectedValue,
+  V3RegexMatcher,
+} from './types';
+
 import { AnyJson, JsonMap } from '../common/jsonTypes';
 
-/**
- * Pact Matcher
- */
-export interface Matcher<T> {
-  'pact:matcher:type': string;
-  'pact:generator:type'?: string;
-  value?: T;
-}
-
-export function isMatcher(x: AnyTemplate): x is Matcher<AnyTemplate> {
+export function isMatcher(x: unknown): x is Matcher<unknown> {
   return (
     x != null &&
-    (x as Matcher<AnyTemplate>)['pact:matcher:type'] !== undefined &&
-    (x as Matcher<AnyTemplate>).value !== undefined
+    (x as Matcher<unknown>)['pact:matcher:type'] !== undefined &&
+    (x as Matcher<unknown>).value !== undefined
   );
 }
-
-export type AnyTemplate =
-  | AnyJson
-  | TemplateMap
-  | TemplateArray
-  | Matcher<unknown>;
-interface TemplateMap {
-  [key: string]: AnyJson | AnyTemplate;
-}
-type TemplateArray = Array<AnyTemplate>;
 
 /**
  * Value must match the given template
  * @param template Template to base the comparison on
  */
-export const like = <T extends AnyTemplate>(template: T): Matcher<T> => ({
+export const like = <T>(template: T): Matcher<T> => ({
   'pact:matcher:type': 'type',
   value: template,
 });
@@ -44,10 +37,10 @@ export const like = <T extends AnyTemplate>(template: T): Matcher<T> => ({
  * @param keyTemplate Example key to use
  * @param template Example value template to base the comparison on
  */
-export const eachKeyLike = <T extends AnyTemplate>(
+export const eachKeyLike = <T>(
   keyTemplate: string,
   template: T
-): Matcher<AnyTemplate> => ({
+): Matcher<T> => ({
   'pact:matcher:type': 'values',
   value: {
     [keyTemplate]: template,
@@ -59,10 +52,7 @@ export const eachKeyLike = <T extends AnyTemplate>(
  * @param template Template to base the comparison on
  * @param min Minimum number of elements required in the array
  */
-export const eachLike = <T extends AnyTemplate>(
-  template: T,
-  min = 1
-): MinLikeMatcher<T[]> => {
+export const eachLike = <T>(template: T, min = 1): MinLikeMatcher<T[]> => {
   const elements = min;
   return {
     min,
@@ -72,18 +62,11 @@ export const eachLike = <T extends AnyTemplate>(
 };
 
 /**
- * Like Matcher with a minimum number of required values
- */
-export interface MinLikeMatcher<T> extends Matcher<T> {
-  min: number;
-}
-
-/**
  * An array that has to have at least one element and each element must match the given template
  * @param template Template to base the comparison on
  * @param count Number of examples to generate, defaults to one
  */
-export const atLeastOneLike = <T extends AnyTemplate>(
+export const atLeastOneLike = <T>(
   template: T,
   count = 1
 ): MinLikeMatcher<T[]> => ({
@@ -98,7 +81,7 @@ export const atLeastOneLike = <T extends AnyTemplate>(
  * @param min Minimum number of elements required in the array
  * @param count Number of examples to generate, defaults to min
  */
-export const atLeastLike = <T extends AnyTemplate>(
+export const atLeastLike = <T>(
   template: T,
   min: number,
   count?: number
@@ -119,19 +102,12 @@ export const atLeastLike = <T extends AnyTemplate>(
 };
 
 /**
- * Like Matcher with a maximum number of required values
- */
-export interface MaxLikeMatcher<T> extends Matcher<T> {
-  max: number;
-}
-
-/**
  * An array that has to have at most the required number of elements and each element must match the given template
  * @param template Template to base the comparison on
  * @param max Maximum number of elements required in the array
  * @param count Number of examples to generate, defaults to one
  */
-export const atMostLike = <T extends AnyTemplate>(
+export const atMostLike = <T>(
   template: T,
   max: number,
   count?: number
@@ -158,7 +134,7 @@ export const atMostLike = <T extends AnyTemplate>(
  * @param max Maximum number of elements required in the array
  * @param count Number of examples to generate, defaults to one
  */
-export const constrainedArrayLike = <T extends AnyTemplate>(
+export const constrainedArrayLike = <T>(
   template: T,
   min: number,
   max: number,
@@ -272,17 +248,12 @@ export function string(str = 'some string'): Matcher<string> {
   };
 }
 
-export interface RegexMatcher extends Matcher<string> {
-  regex: string;
-  example?: string;
-}
-
 /**
  * Value that must match the given regular expression
  * @param pattern Regular Expression to match
  * @param str Example value
  */
-export function regex(pattern: RegExp | string, str: string): RegexMatcher {
+export function regex(pattern: RegExp | string, str: string): V3RegexMatcher {
   if (pattern instanceof RegExp) {
     return {
       'pact:matcher:type': 'regex',
@@ -301,14 +272,10 @@ export function regex(pattern: RegExp | string, str: string): RegexMatcher {
  * Value that must be equal to the example. This is mainly used to reset the matching rules which cascade.
  * @param value Example value
  */
-export const equal = <T extends AnyTemplate>(value: T): Matcher<T> => ({
+export const equal = <T>(value: T): Matcher<T> => ({
   'pact:matcher:type': 'equality',
   value,
 });
-
-export interface DateTimeMatcher extends Matcher<string> {
-  format: string;
-}
 
 /**
  * String value that must match the provided datetime format string.
@@ -406,8 +373,8 @@ function stringFromRegex(r: RegExp): string {
  */
 export function url2(
   basePath: string | null,
-  pathFragments: Array<string | RegexMatcher | RegExp>
-): RegexMatcher {
+  pathFragments: Array<string | V3RegexMatcher | RegExp>
+): V3RegexMatcher {
   const regexpr = [
     '.*(',
     ...pathFragments.map((p) => {
@@ -457,13 +424,9 @@ export function url2(
  * @param pathFragments list of path fragments, can be regular expressions
  */
 export function url(
-  pathFragments: Array<string | RegexMatcher | RegExp>
-): RegexMatcher {
+  pathFragments: Array<string | V3RegexMatcher | RegExp>
+): V3RegexMatcher {
   return url2(null, pathFragments);
-}
-
-export interface ArrayContainsMatcher extends Matcher<AnyTemplate[]> {
-  variants: Array<AnyTemplate>;
 }
 
 /**
@@ -479,16 +442,12 @@ export function arrayContaining(
   };
 }
 
-export interface ProviderStateInjectedValue<T> extends Matcher<T> {
-  expression: string;
-}
-
 /**
  * Marks an item to be injected from the provider state
  * @param expression Expression to lookup in the provider state context
  * @param exampleValue Example value to use in the consumer test
  */
-export function fromProviderState<V extends AnyJson>(
+export function fromProviderState<V>(
   expression: string,
   exampleValue: V
 ): ProviderStateInjectedValue<V> {
@@ -503,7 +462,7 @@ export function fromProviderState<V extends AnyJson>(
 /**
  * Match a universally unique identifier (UUID). Random values will be used for examples if no example is given.
  */
-export function uuid(example?: string): RegexMatcher {
+export function uuid(example?: string): V3RegexMatcher {
   const regexStr =
     '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}';
   if (example) {
@@ -537,7 +496,7 @@ export const matcherValueOrString = (obj: unknown): string => {
  * Recurse the object removing any underlying matching guff, returning the raw
  * example content.
  */
-export function reify(input: AnyTemplate): AnyJson {
+export function reify(input: unknown): AnyJson {
   if (isMatcher(input)) {
     return reify(input.value as AnyTemplate);
   }
@@ -546,7 +505,10 @@ export function reify(input: AnyTemplate): AnyJson {
     return (input as Array<AnyTemplate>).map(reify);
   }
 
-  if (input !== null && typeof input === 'object') {
+  if (typeof input === 'object') {
+    if (input === null) {
+      return input;
+    }
     return Object.keys(input).reduce(
       (acc: JsonMap, propName: string) => ({
         ...acc,
@@ -555,7 +517,17 @@ export function reify(input: AnyTemplate): AnyJson {
       {}
     );
   }
-  return input;
+
+  if (
+    typeof input === 'number' ||
+    typeof input === 'string' ||
+    typeof input === 'boolean'
+  ) {
+    return input;
+  }
+  throw new Error(
+    `Unable to strip matcher from a '${typeof input}', as it is not valid in a Pact description`
+  );
 }
 
 export { reify as extractPayload };
