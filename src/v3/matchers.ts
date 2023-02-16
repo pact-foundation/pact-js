@@ -2,7 +2,6 @@ import { isNil, pickBy, times } from 'ramda';
 import RandExp from 'randexp';
 
 import {
-  AnyTemplate,
   ArrayContainsMatcher,
   DateTimeMatcher,
   Matcher,
@@ -13,6 +12,8 @@ import {
 } from './types';
 
 import { AnyJson, JsonMap } from '../common/jsonTypes';
+
+export * from './types';
 
 export function isMatcher(x: unknown): x is Matcher<unknown> {
   return (
@@ -433,9 +434,7 @@ export function url(
  * Matches the items in an array against a number of variants. Matching is successful if each variant
  * occurs once in the array. Variants may be objects containing matching rules.
  */
-export function arrayContaining(
-  ...variants: AnyTemplate[]
-): ArrayContainsMatcher {
+export function arrayContaining(...variants: unknown[]): ArrayContainsMatcher {
   return {
     'pact:matcher:type': 'arrayContains',
     variants,
@@ -498,11 +497,11 @@ export const matcherValueOrString = (obj: unknown): string => {
  */
 export function reify(input: unknown): AnyJson {
   if (isMatcher(input)) {
-    return reify(input.value as AnyTemplate);
+    return reify(input.value);
   }
 
-  if (Object.prototype.toString.call(input) === '[object Array]') {
-    return (input as Array<AnyTemplate>).map(reify);
+  if (Array.isArray(input)) {
+    return input.map(reify);
   }
 
   if (typeof input === 'object') {
@@ -510,9 +509,9 @@ export function reify(input: unknown): AnyJson {
       return input;
     }
     return Object.keys(input).reduce(
-      (acc: JsonMap, propName: string) => ({
+      (acc: JsonMap, propName: keyof typeof input) => ({
         ...acc,
-        [propName]: reify((input as Record<string, AnyTemplate>)[propName]),
+        [propName]: reify(input[propName]),
       }),
       {}
     );

@@ -11,6 +11,11 @@ interface TemplateMap {
 }
 type TemplateArray = Array<AnyTemplate>;
 
+/**
+ * The `AnyTemplate` type is no longer used anywhere in Pact.
+ *
+ * @deprecated This type never really worked, so it has been removed from the Pact API surface. It is still exported to avoid breaking changes with anyone who is importing it. See {@link https://github.com/pact-foundation/pact-js/issues/1054} for details
+ */
 export type AnyTemplate =
   | AnyJson
   | TemplateMap
@@ -55,8 +60,8 @@ export interface DateTimeMatcher extends Matcher<string> {
   format: string;
 }
 
-export interface ArrayContainsMatcher extends Matcher<AnyTemplate[]> {
-  variants: Array<AnyTemplate>;
+export interface ArrayContainsMatcher extends Matcher<unknown[]> {
+  variants: Array<unknown>;
 }
 
 export interface ProviderStateInjectedValue<T> extends Matcher<T> {
@@ -133,14 +138,14 @@ export interface V3Request {
   path: Path;
   query?: TemplateQuery;
   headers?: TemplateHeaders;
-  body?: AnyTemplate;
+  body?: unknown;
   contentType?: string;
 }
 
 export interface V3Response {
   status: number;
   headers?: TemplateHeaders;
-  body?: AnyTemplate;
+  body?: unknown;
   contentType?: string;
 }
 
