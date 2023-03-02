@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [11.0.0](https://github.com/pact-foundation/pact-js/compare/v10.4.1...v11.0.0) (2023-03-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* Rename the message-pact state handler type to `MessageStateHandlers` from `StateHandlers` avoiding the conflicting type problem introduced in #882. Fixes #1057
+
+### Fixes and Improvements
+
+* Remove all references to `AnyTemplate` and deprecate the type. See [#1054](https://github.com/pact-foundation/pact-js/issues/1054) for details ([c7edb7e](https://github.com/pact-foundation/pact-js/commit/c7edb7ed4909884c232f6a419cdaf9e52394ad0c))
+* Rename the message-pact state handler type to `MessageStateHandlers` from `StateHandlers` avoiding the conflicting type problem introduced in [#882](https://github.com/pact-foundation/pact-js/issues/882). Fixes [#1057](https://github.com/pact-foundation/pact-js/issues/1057) ([9be81ce](https://github.com/pact-foundation/pact-js/commit/9be81ce301a324a7b13d0374851e9903556b4cd6))
+* Widen types for V3 matchers, avoiding AnyTemplate errors. This has the side effect that functions, Dates and other inappropriate types can now be passed to matchers, and the benefit that people using interfaces don't get spurious errors. Fixes [#1054](https://github.com/pact-foundation/pact-js/issues/1054) ([0803cdf](https://github.com/pact-foundation/pact-js/commit/0803cdf8cc882176651e9570223f3c184ada29d2))
+
 ### [10.4.1](https://github.com/pact-foundation/pact-js/compare/v10.4.0...v10.4.1) (2023-01-23)
 
 
