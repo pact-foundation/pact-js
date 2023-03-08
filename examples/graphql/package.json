@@ -21,7 +21,7 @@
   "devDependencies": {
     "absolute-version": "1.0.1",
     "@pact-foundation/pact": "10.1.2",
-    "@pact-foundation/pact-core": "^13.7.8",
+    "@pact-foundation/pact-core": "^13.13.5",
     "@types/chai": "^4.3.3",
     "@types/chai-as-promised": "7.1.5",
     "@types/express-graphql": "0.8.0",
