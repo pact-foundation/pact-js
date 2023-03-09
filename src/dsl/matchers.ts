@@ -167,7 +167,7 @@ export function email(address?: string): Matcher<string> {
 
 /**
  * UUID v4 matcher.
- * @param {string} uuuid - a UUID to use as an example.
+ * @param {string} id - a UUID to use as an example.
  */
 export function uuid(id?: string): Matcher<string> {
   return term({
