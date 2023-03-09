@@ -1,5 +1,9 @@
 # Pact-js migration guide
 
+# 10.x.x -> 11.x.x
+
+There is just one single [breaking change](https://github.com/pact-foundation/pact-js/blob/master/CHANGELOG.md#-breaking-changes) in this release. A conflicting type `StateHandlers` has been renamed to  `MessageStateHandlers` for use in message pact tests.
+
 # 9.x.x -> 10.x.x
 
 See the [9.x.x -> 10.x.x](/docs/migrations/9-10.md) migration guide.

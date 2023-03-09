@@ -17,8 +17,9 @@ Please provide the following information with your issue to enable us to respond
 
 ## Key Branches
 
-* `master` - this is the current main version supporting the 10.x.x release line. Most investment will be here, inclruding major new features, enhancements, bug fixes, security patches etc.
+* `master` - this is the current main version supporting the 11.x.x release line. Most investment will be here, including major new features, enhancements, bug fixes, security patches etc.
 * `9.x.x` - this is the previous major version supporting the 9.x.x release line. Critical security patches and bug fixes will be provided as a priority.
+* There is no tracking or release branch for 10.x.x at this stage. Most users can be encouraged to jump straight to 11.x.x noting the single breaking change (see the migration guide)
 
 ## I want to contribute code but don't know where to start
 

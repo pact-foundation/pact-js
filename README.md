@@ -248,8 +248,9 @@ It's best to run Pact verification tests as part of your unit testing suite, so 
 
 | Version | Stable | [Spec] Compatibility | Install            |
 | ------- | ------ | -------------------- | ------------------ |
-| 10.x.x  | Release Candidate   | 2, 3                 | See [installation] |
-| 9.x.x   | Yes    | 2, 3\*               | [9xx]        |
+| 11.x.x  | Yes    | 2, 3, 4              | See [installation] |
+| 10.x.x  | Yes    | 2, 3, 4              | See [installation] |
+| 9.x.x   | Yes    | 2, 3\*               | [9xx]              |
 
 _\*_ v3 support is limited to the subset of functionality required to enable language inter-operable [Message support].
 
@@ -268,7 +269,8 @@ See [CONTRIBUTING](CONTRIBUTING.md).
 <br />
 
 [spec]: https://github.com/pact-foundation/pact-specification
-[9xx]: https://github.com/pact-foundation/pact-js/
+[10xx]: https://github.com/pact-foundation/pact-js/tree/10.x.x
+[9xx]: https://github.com/pact-foundation/pact-js/tree/9.x.x
 [pact website]: http://docs.pact.io/
 [@pact_up]: https://twitter.com/pact_up
 [pact specification v2]: https://github.com/pact-foundation/pact-specification/tree/version-2
