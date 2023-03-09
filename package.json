@@ -1,6 +1,6 @@
 {
   "name": "@pact-foundation/pact",
-  "version": "11.0.0",
+  "version": "11.0.1",
   "description": "Pact for all things Javascript",
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
