@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [11.0.2](https://github.com/pact-foundation/pact-js/compare/v11.0.1...v11.0.2) (2023-03-09)
+
+
+### Fixes and Improvements
+
+* v4 response builder for non-plugin interface ([4da4cb3](https://github.com/pact-foundation/pact-js/commit/4da4cb3e917c541a5633246d6c1f4c4a22d4e5fd)), closes [#1073](https://github.com/pact-foundation/pact-js/issues/1073)
+
 ### [11.0.1](https://github.com/pact-foundation/pact-js/compare/v11.0.0...v11.0.1) (2023-03-09)
 
 
