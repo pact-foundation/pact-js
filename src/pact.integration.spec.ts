@@ -1,316 +1,160 @@
-// /* tslint:disable:no-unused-expression object-literal-sort-keys no-empty no-console */
-// import * as Promise from "bluebird"
-// import * as chai from "chai"
-// import * as chaiAsPromised from "chai-as-promised"
-// import * as path from "path"
-// import * as superagent from "superagent"
-// import { HTTPMethod } from "./common/request"
-// import { Matchers, Pact } from "./pact"
+/* tslint:disable:no-unused-expression no-empty */
+import chai from 'chai';
+import chaiAsPromised from 'chai-as-promised';
+import sinonChai from 'sinon-chai';
+import axios from 'axios';
+import net = require('net');
+import { PactV4 } from './v4';
 
-// chai.use(chaiAsPromised)
-// const expect = chai.expect
-// const { eachLike, like, term } = Matchers
+const { expect } = chai;
 
-// describe("Integration", () => {
-//   const protocols = ["http", "https"]
+chai.use(sinonChai);
+chai.use(chaiAsPromised);
 
-//   protocols.forEach(protocol => {
-//     describe(`Pact on ${protocol} protocol`, () => {
-//       const MOCK_PORT = Math.floor(Math.random() * 999) + 9000
-//       const PROVIDER_URL = `${protocol}://localhost:${MOCK_PORT}`
-//       // TODO: this is eagerly run (even if test skipped)
-//       const provider = new Pact({
-//         consumer: "Matching Service",
-//         provider: "Animal Profile Service",
-//         port: MOCK_PORT,
-//         log: path.resolve(process.cwd(), "logs", "mockserver-integration.log"),
-//         dir: path.resolve(process.cwd(), "pacts"),
-//         logLevel: "warn",
-//         ssl: protocol === "https",
-//         spec: 2,
-//       })
+describe('V4 Pact', () => {
+  let pact: PactV4;
 
-//       const EXPECTED_BODY = [
-//         {
-//           id: 1,
-//           name: "Project 1",
-//           due: "2016-02-11T09:46:56.023Z",
-//           tasks: [
-//             {
-//               id: 1,
-//               name: "Do the laundry",
-//               done: true,
-//             },
-//             {
-//               id: 2,
-//               name: "Do the dishes",
-//               done: false,
-//             },
-//             {
-//               id: 3,
-//               name: "Do the backyard",
-//               done: false,
-//             },
-//             {
-//               id: 4,
-//               name: "Do nothing",
-//               done: false,
-//             },
-//           ],
-//         },
-//       ]
+  beforeEach(() => {
+    pact = new PactV4({
+      consumer: 'v4consumer',
+      provider: 'v4provider',
+    });
+  });
 
-//       before(() => provider.setup())
+  describe('HTTP req/res contract', () => {
+    it('generates a pact', () =>
+      pact
+        .addInteraction()
+        .given('some state')
+        .given('a second state')
+        .uponReceiving('a standard HTTP req/res')
+        .withRequest('POST', '/', (builder) => {
+          builder
+            .jsonBody({
+              foo: 'bar',
+            })
+            .headers({
+              'x-foo': 'x-bar',
+            });
+        })
+        .willRespondWith(200, (builder) => {
+          builder
+            .jsonBody({
+              foo: 'bar',
+            })
+            .headers({
+              'x-foo': 'x-bar',
+            });
+        })
+        .executeTest(async (server) =>
+          axios.post(
+            server.url,
+            {
+              foo: 'bar',
+            },
+            {
+              headers: {
+                'x-foo': 'x-bar',
+              },
+            }
+          )
+        ));
+  });
 
-//       // once all tests are run, write pact and remove interactions
-//       after(() => provider.finalize())
+  describe('Plugin test', () => {
+    describe('Using the MATT plugin', () => {
+      const parseMattMessage = (raw: string): string =>
+        raw.replace(/(MATT)+/g, '').trim();
 
-//       context("with a single request", () => {
-//         // add interactions, as many as needed
-//         before(() =>
-//           provider.addInteraction({
-//             state: "i have a list of projects",
-//             uponReceiving: "a request for projects",
-//             withRequest: {
-//               method: HTTPMethod.GET,
-//               path: "/projects",
-//               headers: {
-//                 Accept: "application/json",
-//               },
-//             },
-//             willRespondWith: {
-//               status: 200,
-//               headers: {
-//                 "Content-Type": "application/json",
-//               },
-//               body: EXPECTED_BODY,
-//             },
-//           })
-//         )
+      const generateMattMessage = (raw: string): string => `MATT${raw}MATT`;
 
-//         // execute your assertions
-//         it("returns the correct body", () =>
-//           superagent
-//             .get(`${PROVIDER_URL}/projects`)
-//             .set({
-//               Accept: "application/json",
-//             })
-//             .then((res: any) => {
-//               expect(res.text).to.eql(JSON.stringify(EXPECTED_BODY))
-//             }))
+      describe('HTTP interface', () => {
+        it('generates a pact', async () => {
+          const mattRequest = `{"request": {"body": "hello"}}`;
+          const mattResponse = `{"response":{"body":"world"}}`;
 
-//         // verify with Pact, and reset expectations
-//         it("successfully verifies", () => provider.verify())
-//       })
+          await pact
+            .addInteraction()
+            .given('the Matt protocol exists')
+            .uponReceiving('an HTTP request to /matt')
+            .usingPlugin({
+              plugin: 'matt',
+              version: '0.0.7',
+            })
+            .withRequest('POST', '/matt', (builder) => {
+              builder.pluginContents('application/matt', mattRequest);
+            })
+            .willRespondWith(200, (builder) => {
+              builder.pluginContents('application/matt', mattResponse);
+            })
+            .executeTest((mockserver) =>
+              axios
+                .request({
+                  baseURL: mockserver.url,
+                  headers: {
+                    'content-type': 'application/matt',
+                    Accept: 'application/matt',
+                  },
+                  data: generateMattMessage('hello'),
+                  method: 'POST',
+                  url: '/matt',
+                })
+                .then((res) => {
+                  expect(parseMattMessage(res.data)).to.eq('world');
+                })
+            );
+        });
+      });
 
-//       context("with a single request with query string parameters", () => {
-//         // add interactions, as many as needed
-//         before(() => {
-//           return provider.addInteraction({
-//             state: "i have a list of projects",
-//             uponReceiving: "a request for projects with a filter",
-//             withRequest: {
-//               method: HTTPMethod.GET,
-//               path: "/projects",
-//               query: {
-//                 from: "today",
-//               },
-//               headers: {
-//                 Accept: "application/json",
-//               },
-//             },
-//             willRespondWith: {
-//               status: 200,
-//               headers: {
-//                 "Content-Type": "application/json",
-//               },
-//               body: EXPECTED_BODY,
-//             },
-//           })
-//         })
+      describe('Synchronous Message (TCP) ', () => {
+        describe('with MATT protocol', () => {
+          const HOST = '127.0.0.1';
 
-//         // execute your assertions
-//         it("returns the correct body", () =>
-//           superagent
-//             .get(`${PROVIDER_URL}/projects?from=today`)
-//             .set({
-//               Accept: "application/json",
-//             })
-//             .then((res: any) => {
-//               expect(res.text).to.eql(JSON.stringify(EXPECTED_BODY))
-//             }))
+          const sendMattMessageTCP = (
+            message: string,
+            host: string,
+            port: number
+          ): Promise<string> => {
+            const socket = net.connect({
+              port,
+              host,
+            });
 
-//         // verify with Pact, and reset expectations
-//         it("successfully verifies", () => provider.verify())
-//       })
+            const res = socket.write(`${generateMattMessage(message)}\n`);
 
-//       context("with a single request and eachLike, like, term", () => {
-//         // add interactions, as many as needed
-//         before(() => {
-//           return provider.addInteraction({
-//             state: "i have a list of projects but I dont know how many",
-//             uponReceiving: "a request for such projects",
-//             withRequest: {
-//               method: HTTPMethod.GET,
-//               path: "/projects",
-//               headers: {
-//                 Accept: "application/json",
-//               },
-//             },
-//             willRespondWith: {
-//               status: 200,
-//               headers: {
-//                 "Content-Type": term({
-//                   generate: "application/json",
-//                   matcher: "application/json",
-//                 }),
-//               },
-//               body: [
-//                 {
-//                   id: 1,
-//                   name: "Project 1",
-//                   due: "2016-02-11T09:46:56.023Z",
-//                   tasks: eachLike(
-//                     {
-//                       id: like(1),
-//                       name: like("Do the laundry"),
-//                       done: like(true),
-//                     },
-//                     {
-//                       min: 4,
-//                     }
-//                   ),
-//                 },
-//               ],
-//             },
-//           })
-//         })
+            if (!res) {
+              throw Error('unable to connect to host');
+            }
 
-//         // execute your assertions
-//         it("returns the correct body", () => {
-//           const verificationPromise = superagent
-//             .get(`${PROVIDER_URL}/projects`)
-//             .set({ Accept: "application/json" })
-//             .then((res: any) => JSON.parse(res.text)[0])
+            return new Promise((resolve) => {
+              socket.on('data', (data) => {
+                resolve(parseMattMessage(data.toString()));
+              });
+            });
+          };
 
-//           return expect(verificationPromise).to.eventually.have.property(
-//             "tasks"
-//           )
-//         })
+          it('generates a pact', () => {
+            const mattMessage = `{"request": {"body": "hellotcp"}, "response":{"body":"tcpworld"}}`;
 
-//         // verify with Pact, and reset expectations
-//         it("successfully verifies", () => provider.verify())
-//       })
-
-//       context("with two requests", () => {
-//         before(() => {
-//           const interaction1 = provider.addInteraction({
-//             state: "i have a list of projects",
-//             uponReceiving: "a request for projects",
-//             withRequest: {
-//               method: HTTPMethod.GET,
-//               path: "/projects",
-//               headers: {
-//                 Accept: "application/json",
-//               },
-//             },
-//             willRespondWith: {
-//               status: 200,
-//               headers: {
-//                 "Content-Type": "application/json",
-//               },
-//               body: EXPECTED_BODY,
-//             },
-//           })
-
-//           const interaction2 = provider.addInteraction({
-//             state: "i have a list of projects",
-//             uponReceiving: "a request for a project that does not exist",
-//             withRequest: {
-//               method: HTTPMethod.GET,
-//               path: "/projects/2",
-//               headers: {
-//                 Accept: "application/json",
-//               },
-//             },
-//             willRespondWith: {
-//               status: 404,
-//               headers: {
-//                 "Content-Type": "application/json",
-//               },
-//             },
-//           })
-
-//           return Promise.all([interaction1, interaction2])
-//         })
-
-//         it("allows two requests", () => {
-//           const verificationPromise = superagent
-//             .get(`${PROVIDER_URL}/projects`)
-//             .set({
-//               Accept: "application/json",
-//             })
-//             .then((res: any) => res.text)
-
-//           const verificationPromise404 = superagent
-//             .get(`${PROVIDER_URL}/projects/2`)
-//             .set({
-//               Accept: "application/json",
-//             })
-//           return Promise.all([
-//             expect(verificationPromise).to.eventually.equal(
-//               JSON.stringify(EXPECTED_BODY)
-//             ),
-//             expect(verificationPromise404).to.eventually.be.rejected,
-//           ])
-//         })
-
-//         // verify with Pact, and reset expectations
-//         it("successfully verifies", () => provider.verify())
-//       })
-
-//       context("with an unexpected interaction", () => {
-//         // add interactions, as many as needed
-//         before(() =>
-//           provider
-//             .addInteraction({
-//               state: "i have a list of projects",
-//               uponReceiving: "a request for projects",
-//               withRequest: {
-//                 method: HTTPMethod.GET,
-//                 path: "/projects",
-//                 headers: {
-//                   Accept: "application/json",
-//                 },
-//               },
-//               willRespondWith: {
-//                 status: 200,
-//                 headers: {
-//                   "Content-Type": "application/json",
-//                 },
-//                 body: EXPECTED_BODY,
-//               },
-//             })
-//             .then(
-//               () => console.log("Adding interaction worked"),
-//               () => console.warn("Adding interaction failed.")
-//             )
-//         )
-
-//         it("fails verification", () => {
-//           const verificationPromise = superagent
-//             .get(`${PROVIDER_URL}/projects`)
-//             .set({ Accept: "application/json" })
-//             .then(() =>
-//               superagent.delete(`${PROVIDER_URL}/projects/2`).catch(() => {})
-//             )
-//             .then(() => provider.verify())
-
-//           return expect(verificationPromise).to.be.rejectedWith(
-//             "Pact verification failed - expected interactions did not match actual."
-//           )
-//         })
-//       })
-//     })
-//   })
-// })
+            return pact
+              .addSynchronousInteraction('a MATT message')
+              .usingPlugin({
+                plugin: 'matt',
+                version: '0.0.7',
+              })
+              .withPluginContents(mattMessage, 'application/matt')
+              .startTransport('matt', HOST)
+              .executeTest(async (tc) => {
+                const message = await sendMattMessageTCP(
+                  'hellotcp',
+                  HOST,
+                  tc.port
+                );
+                expect(message).to.eq('tcpworld');
+              });
+          });
+        });
+      });
+    });
+  });
+});

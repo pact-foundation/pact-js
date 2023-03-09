@@ -3,7 +3,7 @@ import { ConsumerInteraction, ConsumerPact } from '@pact-foundation/pact-core';
 import { JsonMap } from '../../common/jsonTypes';
 import { forEachObjIndexed } from 'ramda';
 import { Path, TemplateHeaders, TemplateQuery, V3MockServer } from '../../v3';
-import { AnyTemplate, Matcher, matcherValueOrString } from '../../v3/matchers';
+import { Matcher, matcherValueOrString } from '../../v3/matchers';
 import {
   PactV4Options,
   PluginConfig,
@@ -66,7 +66,8 @@ export class UnconfiguredInteraction implements V4UnconfiguredInteraction {
     return new InteractionWithCompleteRequest(
       this.pact,
       this.interaction,
-      this.opts
+      this.opts,
+      request
     );
   }
 
@@ -93,11 +94,11 @@ export class UnconfiguredInteraction implements V4UnconfiguredInteraction {
 export class InteractionWithCompleteRequest
   implements V4InteractionWithCompleteRequest
 {
-  // tslint:disable:no-empty-function
   constructor(
     private pact: ConsumerPact,
     private interaction: ConsumerInteraction,
-    private opts: PactV4Options
+    private opts: PactV4Options,
+    private request: V4Request
   ) {
     throw Error('V4InteractionWithCompleteRequest is unimplemented');
   }
@@ -116,6 +117,12 @@ export class InteractionwithRequest implements V4InteractionwithRequest {
   ) {}
 
   willRespondWith(status: number, builder?: V4ResponseBuilderFunc) {
+    this.interaction.withStatus(status);
+
+    if (typeof builder === 'function') {
+      builder(new ResponseBuilder(this.interaction));
+    }
+
     return new InteractionWithResponse(this.pact, this.interaction, this.opts);
   }
 }
@@ -158,7 +165,7 @@ export class RequestBuilder implements V4RequestBuilder {
     return this;
   }
 
-  jsonBody(body: AnyTemplate) {
+  jsonBody(body: unknown) {
     this.interaction.withRequestBody(
       matcherValueOrString(body),
       'application/json'
@@ -189,7 +196,6 @@ export class RequestBuilder implements V4RequestBuilder {
 export class ResponseBuilder implements V4ResponseBuilder {
   protected interaction: ConsumerInteraction;
 
-  // tslint:disable:no-empty-function
   constructor(interaction: ConsumerInteraction) {
     this.interaction = interaction;
   }
@@ -202,7 +208,7 @@ export class ResponseBuilder implements V4ResponseBuilder {
     return this;
   }
 
-  jsonBody(body: AnyTemplate) {
+  jsonBody(body: unknown) {
     this.interaction.withResponseBody(
       matcherValueOrString(body),
       'application/json'
@@ -290,6 +296,8 @@ export class InteractionWithPluginRequest
     status: number,
     builder?: V4PluginResponseBuilderFunc
   ): V4InteractionWithPluginResponse {
+    this.interaction.withStatus(status);
+
     if (typeof builder === 'function') {
       builder(new ResponseWithPluginBuilder(this.interaction));
     }

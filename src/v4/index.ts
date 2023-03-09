@@ -5,6 +5,7 @@ import { V4ConsumerPact } from './types';
 import { version as pactPackageVersion } from '../../package.json';
 import { V4UnconfiguredSynchronousMessage } from './message/types';
 import { UnconfiguredSynchronousMessage } from './message';
+import { SpecificationVersion } from '../v3';
 
 export class PactV4 implements V4ConsumerPact {
   private pact: ConsumerPact;
@@ -19,7 +20,7 @@ export class PactV4 implements V4ConsumerPact {
     this.pact = makeConsumerPact(
       opts.consumer,
       opts.provider,
-      opts.spec,
+      opts.spec ?? SpecificationVersion.SPECIFICATION_VERSION_V4,
       opts.logLevel
     );
 

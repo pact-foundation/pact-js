@@ -9,7 +9,6 @@ import {
   V3Request,
   V3Response,
 } from '../../v3';
-import { AnyTemplate } from '../../v3/matchers';
 
 // TODO: do we alias all types to V4 or is this yicky??
 //       These types are all interface types, so any extensions/modifications
@@ -84,7 +83,7 @@ export type V4RequestBuilderFunc = (builder: V4RequestBuilder) => void;
 export interface V4RequestBuilder {
   query(query: TemplateQuery): V4RequestBuilder;
   headers(headers: TemplateHeaders): V4RequestBuilder;
-  jsonBody(body: AnyTemplate): V4RequestBuilder;
+  jsonBody(body: unknown): V4RequestBuilder;
   binaryFile(contentType: string, file: string): V4RequestBuilder;
   multipartBody(
     contentType: string,
@@ -96,7 +95,7 @@ export interface V4RequestBuilder {
 
 export interface V4ResponseBuilder {
   headers(headers: TemplateHeaders): V4ResponseBuilder;
-  jsonBody(body: AnyTemplate): V4ResponseBuilder;
+  jsonBody(body: unknown): V4ResponseBuilder;
   binaryFile(contentType: string, file: string): V4ResponseBuilder;
   multipartBody(
     contentType: string,
@@ -146,7 +145,7 @@ export interface V4InteractionWithPluginRequest {
 export interface V4RequestWithPluginBuilder {
   query(query: TemplateQuery): V4RequestWithPluginBuilder;
   headers(headers: TemplateHeaders): V4RequestWithPluginBuilder;
-  jsonBody(body: AnyTemplate): V4RequestWithPluginBuilder;
+  jsonBody(body: unknown): V4RequestWithPluginBuilder;
   binaryFile(contentType: string, file: string): V4RequestWithPluginBuilder;
   multipartBody(
     contentType: string,
@@ -162,7 +161,7 @@ export interface V4RequestWithPluginBuilder {
 
 export interface V4ResponseWithPluginBuilder {
   headers(headers: TemplateHeaders): V4ResponseBuilder;
-  jsonBody(body: AnyTemplate): V4ResponseBuilder;
+  jsonBody(body: unknown): V4ResponseBuilder;
   binaryFile(contentType: string, file: string): V4ResponseBuilder;
   multipartBody(
     contentType: string,
