@@ -1,6 +1,7 @@
 name: Publish and release v3 branch
 
 on:
+  workflow_dispatch:
   repository_dispatch:
     types:
       - release-triggered
