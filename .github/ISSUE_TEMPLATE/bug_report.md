@@ -2,7 +2,7 @@
 name: Bug report
 about: Report a bug with pact-js
 title: ''
-labels: bug
+labels: bug, triage
 assignees: ''
 
 ---
