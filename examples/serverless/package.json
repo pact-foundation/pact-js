@@ -21,7 +21,7 @@
     "absolute-version": "1.0.1",
     "@pact-foundation/pact": "10.1.2",
     "@pact-foundation/pact-core": "^13.13.5",
-    "aws-sdk": "^2.1201.0",
+    "aws-sdk": "^2.1354.0",
     "chai": "^4.3.6",
     "lodash": "^4.17.21",
     "mocha": "^10.0.0",
