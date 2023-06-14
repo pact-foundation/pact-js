@@ -44,31 +44,31 @@ Often times, you find yourself having to re-write regular expressions for common
 ### Match based on type
 
 ```javascript
-const { like, string } = Matchers
+const { like, string } = Matchers;
 
 provider.addInteraction({
-  state: "Has some animals",
-  uponReceiving: "a request for an animal",
+  state: 'Has some animals',
+  uponReceiving: 'a request for an animal',
   withRequest: {
-    method: "GET",
-    path: "/animals/1",
+    method: 'GET',
+    path: '/animals/1',
   },
   willRespondWith: {
     status: 200,
     headers: {
-      "Content-Type": "application/json; charset=utf-8",
+      'Content-Type': 'application/json; charset=utf-8',
     },
     body: {
       id: 1,
-      name: string("Billy"),
+      name: string('Billy'),
       address: like({
-        street: "123 Smith St",
-        suburb: "Smithsville",
+        street: '123 Smith St',
+        suburb: 'Smithsville',
         postcode: 7777,
       }),
     },
   },
-})
+});
 ```
 
 Note that you can wrap a `like` around a single value or an object. When wrapped around an object, all values and child object values will be matched according to types, unless overridden by something more specific like a `term`.
@@ -80,7 +80,7 @@ Note that you can wrap a `like` around a single value or an object. When wrapped
 Matching provides the ability to specify flexible length arrays. For example:
 
 ```javascript
-pact.eachLike(obj, { min: 3 })
+pact.eachLike(obj, { min: 3 });
 ```
 
 Where `obj` can be any javascript object, value or Pact.Match. It takes optional argument (`{ min: 3 }`) where min is greater than 0 and defaults to 1 if not provided.
@@ -88,51 +88,51 @@ Where `obj` can be any javascript object, value or Pact.Match. It takes optional
 Below is an example that uses all of the Pact Matchers.
 
 ```javascript
-const { somethingLike: like, term, eachLike } = pact
+const { somethingLike: like, term, eachLike } = pact;
 
 const animalBodyExpectation = {
   id: 1,
-  first_name: "Billy",
-  last_name: "Goat",
-  animal: "goat",
+  first_name: 'Billy',
+  last_name: 'Goat',
+  animal: 'goat',
   age: 21,
   gender: term({
-    matcher: "F|M",
-    generate: "M",
+    matcher: 'F|M',
+    generate: 'M',
   }),
   location: {
-    description: "Melbourne Zoo",
-    country: "Australia",
+    description: 'Melbourne Zoo',
+    country: 'Australia',
     post_code: 3000,
   },
   eligibility: {
     available: true,
     previously_married: false,
   },
-  children: eachLike({ name: "Sally", age: 2 }),
-}
+  children: eachLike({ name: 'Sally', age: 2 }),
+};
 
 // Define animal list payload, reusing existing object matcher
 // Note that using eachLike ensure that all values are matched by type
 const animalListExpectation = eachLike(animalBodyExpectation, {
   min: MIN_ANIMALS,
-})
+});
 
 provider.addInteraction({
-  state: "Has some animals",
-  uponReceiving: "a request for all animals",
+  state: 'Has some animals',
+  uponReceiving: 'a request for all animals',
   withRequest: {
-    method: "GET",
-    path: "/animals/available",
+    method: 'GET',
+    path: '/animals/available',
   },
   willRespondWith: {
     status: 200,
     headers: {
-      "Content-Type": "application/json; charset=utf-8",
+      'Content-Type': 'application/json; charset=utf-8',
     },
     body: animalListExpectation,
   },
-})
+});
 ```
 
 ### Match by regular expression
@@ -142,30 +142,30 @@ If none of the above matchers or formats work, you can write your own regex matc
 The underlying mock service is written in Ruby, so the regular expression must be in a Ruby format, not a Javascript format.
 
 ```javascript
-const { term } = pact
+const { term } = pact;
 
 provider.addInteraction({
-  state: "Has some animals",
-  uponReceiving: "a request for an animal",
+  state: 'Has some animals',
+  uponReceiving: 'a request for an animal',
   withRequest: {
-    method: "GET",
-    path: "/animals/1",
+    method: 'GET',
+    path: '/animals/1',
   },
   willRespondWith: {
     status: 200,
     headers: {
-      "Content-Type": "application/json; charset=utf-8",
+      'Content-Type': 'application/json; charset=utf-8',
     },
     body: {
       id: 100,
-      name: "billy",
+      name: 'billy',
       gender: term({
-        matcher: "F|M",
-        generate: "F",
+        matcher: 'F|M',
+        generate: 'F',
       }),
     },
   },
-})
+});
 ```
 
 ## V3 Matching rules
@@ -175,7 +175,7 @@ V3 only matching rules are found in the export `MatchersV3` of the `@pact-founda
 For example:
 
 ```javascript
-const { PactV3, MatchersV3 } = require("@pact-foundation/pact")
+const { PactV3, MatchersV3 } = require('@pact-foundation/pact');
 const {
   eachLike,
   atLeastLike,
@@ -185,27 +185,27 @@ const {
   string,
   regex,
   like,
-} = MatchersV3
+} = MatchersV3;
 
 const animalBodyExpectation = {
   id: integer(1),
   available_from: timestamp("yyyy-MM-dd'T'HH:mm:ss.SSSX"),
-  first_name: string("Billy"),
-  last_name: string("Goat"),
-  animal: string("goat"),
+  first_name: string('Billy'),
+  last_name: string('Goat'),
+  animal: string('goat'),
   age: integer(21),
-  gender: regex("F|M", "M"),
+  gender: regex('F|M', 'M'),
   location: {
-    description: string("Melbourne Zoo"),
-    country: string("Australia"),
+    description: string('Melbourne Zoo'),
+    country: string('Australia'),
     post_code: integer(3000),
   },
   eligibility: {
     available: boolean(true),
     previously_married: boolean(false),
   },
-  interests: eachLike("walks in the garden/meadow"),
-}
+  interests: eachLike('walks in the garden/meadow'),
+};
 ```
 
 | Matcher                | Parameters                                         | Description                                                                                                                                                                                                                                                                                                                             |
@@ -228,9 +228,9 @@ const animalBodyExpectation = {
 | `date`                 | format: string, example?: string                   | String value that must match the provided date format string. See [Java SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) for details on the format string. If the example value is omitted, a value will be generated using a Date generator and the current system date.                   |
 | `includes`             | value: string                                      | Value that must include the example value as a substring.                                                                                                                                                                                                                                                                               |
 | `nullValue`            |                                                    | Value that must be null. This will only match the JSON Null value. For other content types, it will match if the attribute is missing.                                                                                                                                                                                                  |
-|`arrayContaining`| variants... | Matches the items in an array against a number of variants. Matching is successful if each variant occurs once in the array. Variants may be objects containing matching rules. |
-| `eachKeyLike` | key: string, template: any | Object where the keys itself is ignored, but the values must match a particular shape. Variants may be objects containing matching rules |
-|`fromProviderState`| expression: string, exampleValue: string | Sets a type matcher and a provider state generator. See the section below. |
+| `arrayContaining`      | variants...                                        | Matches the items in an array against a number of variants. Matching is successful if each variant occurs once in the array. Variants may be objects containing matching rules.                                                                                                                                                         |
+| `eachKeyLike`          | key: string, template: any                         | Object where the keys itself is ignored, but the values must match a particular shape. Variants may be objects containing matching rules                                                                                                                                                                                                |
+| `fromProviderState`    | expression: string, exampleValue: string           | Sets a type matcher and a provider state generator. See the section below.                                                                                                                                                                                                                                                              |
 
 #### Array contains matcher
 
@@ -239,10 +239,10 @@ by matching each item against each of the variants, and the matching succeeds if
 items in the list is not important.
 
 The variants can have a totally different structure, and can have their own matching rules to apply. For an example of how
-these can be used to match a hypermedia format like Siren, see [Example Pact + Siren project](https://github.com/pactflow/example-siren).
+these can be used to match a hypermedia format like Siren, see [Example Pact + Siren project](https://github.com/pactflow/example-siren), hosted by our friends at [PactFlow](https://pactflow.io/).
 
-| function | description |
-|----------|-------------|
+| function          | description                                                                                                                                                                     |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `arrayContaining` | Matches the items in an array against a number of variants. Matching is successful if each variant occurs once in the array. Variants may be objects containing matching rules. |
 
 ```js
@@ -290,12 +290,10 @@ stateHandlers: {
 },
 ```
 
-
 ## A note about typescript
 
 Because of the way interfaces work in typescript, if you are
 passing a typed object to a matcher, and that type is an interface (say `Foo`):
-
 
 ```javascript
 interface Foo {
