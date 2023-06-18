@@ -61,7 +61,7 @@ To use any of the commands below, ensure you have valid [AWS credentials](https:
 
 ### Pact Broker integration
 
-Using the test broker at https://test.pactflow.io (user/pass: `dXfltyFMgNOFZAxr8io9wJ37iUpY42M` / `O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1`), we make use of the [`can-i-deploy` tool](https://github.com/pact-foundation/pact_broker/wiki/Provider-verification-results#querying) (available from the [Pact CLI suite](https://github.com/pact-foundation/pact-ruby-standalone/releases) but also bundled as part of `pact`), that ensures it is safe to deploy the consumer or provider before a releasing a change.
+[PactFlow](https://pactflow.io) have kindly provided a test broker for the Pact Foundation to use. Using the test broker, https://test.pactflow.io (user/pass: `dXfltyFMgNOFZAxr8io9wJ37iUpY42M` / `O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1`), we make use of the [`can-i-deploy` tool](https://github.com/pact-foundation/pact_broker/wiki/Provider-verification-results#querying) (available from the [Pact CLI suite](https://github.com/pact-foundation/pact-ruby-standalone/releases) but also bundled as part of `pact`), that ensures it is safe to deploy the consumer or provider before a releasing a change.
 
 Whenever we create, change or verify a contract with Pact, the results are shared with the broker, which is then able to determine compatibility between components at any point in time.
 

@@ -84,10 +84,10 @@ To dynamically retrieve pacts from a Pact Broker for a provider, provide the bro
 
 ```js
 const opts = {
-  pactBroker: "http://my-broker",
-  provider: "Animal Profile Service",
-  consumerVersionTags: ["master", "test", "prod"],
-}
+  pactBroker: 'http://my-broker',
+  provider: 'Animal Profile Service',
+  consumerVersionTags: ['master', 'test', 'prod'],
+};
 ```
 
 To verify a pact at a specific URL (eg. when running a pact verification triggered by a 'contract content changed' webhook, or when verifying a pact from your local machine, or a network location that's not the Pact Broker, set just the `pactUrls`, eg:
@@ -95,7 +95,7 @@ To verify a pact at a specific URL (eg. when running a pact verification trigger
 ```js
 const opts = {
   pactUrls: [process.env.PACT_URL],
-}
+};
 ```
 
 To publish the verification results back to the Pact Broker, you need to enable the 'publish' flag, set the provider version and optional provider version tags:
@@ -103,9 +103,9 @@ To publish the verification results back to the Pact Broker, you need to enable 
 ```js
 const opts = {
   publishVerificationResult: true, //generally you'd do something like `process.env.CI === 'true'`
-  providerVersion: "version", //recommended to be the git sha
-  providerVersionTags: ["tag"], //optional, recommended to be the git branch
-}
+  providerVersion: 'version', //recommended to be the git sha
+  providerVersionTags: ['tag'], //optional, recommended to be the git branch
+};
 ```
 
 If your broker has a self signed certificate, set the environment variable `SSL_CERT_FILE` (or `SSL_CERT_DIR`) pointing to a copy of your certificate.
@@ -148,7 +148,6 @@ Read more about [Provider States](https://docs.pact.io/getting_started/provider_
 #### Provider State Setup and Teardown
 
 Provider States can optionally take a setup and teardown function. These are useful in situations where you'd like to cleanup data specific to the provider state.
-
 
 ```js
   'Whatever your state name is': {
@@ -213,14 +212,14 @@ Mobile is an exception to this rule - it is common to have multiple versions of 
 ```js
 consumerVersionSelectors: [
   {
-    tag: "prod",
+    tag: 'prod',
     all: true,
   },
   {
-    tag: "master",
+    tag: 'master',
     latest: true,
   },
-]
+];
 ```
 
 _NOTE: Using the `all` flag requires you to ensure you delete any tags associated with application versions that are no longer in production (e.g. if decommissioned from the app store)_
@@ -277,7 +276,7 @@ If any of the middleware or hooks fail, the tests will also fail.
 
 ### Publishing Pacts to a Broker
 
-Sharing is caring - to simplify sharing Pacts between Consumers and Providers, we have created the [Pact Broker](https://pactflow.io).
+Sharing is caring - to simplify sharing Pacts between Consumers and Providers, we have created the [Pact Broker](https://docs.pact.io/pact_broker).
 
 The Broker:
 
@@ -289,7 +288,7 @@ The Broker:
 - integrates with other systems, such as Slack or your CI server, via webhooks
 - ...and much much [more](https://docs.pact.io/getting_started/sharing_pacts).
 
-[Host your own](https://github.com/pact-foundation/pact_broker), or signup for a free hosted [Pact Broker](https://pactflow.io).
+[Host your own using the open source docker image](https://docs.pact.io/pact_broker/docker_images), or sign-up for a [free hosted Pact Broker](https://pactflow.io) with our friends at PactFlow.
 
 #### Publish in npm scripts
 
@@ -311,7 +310,7 @@ access token instead of a password, use the environment variable
 
 #### Publishing Verification Results to a Pact Broker
 
-If you're using a Pact Broker (e.g. a hosted one at https://pactflow.io), you can
+If you're using a [Pact Broker](https://docs.pact.io/pact_broker), (e.g. a hosted one with our friends at [PactFlow](https://pactflow.io)), you can
 publish your verification results so that consumers can query if they are safe
 to release.
 
@@ -324,8 +323,8 @@ To publish the verification results back to the Pact Broker, you need to enable 
 ```js
 const opts = {
   publishVerificationResult: true, //recommended to only publish from CI by setting the value to `process.env.CI === 'true'`
-  providerVersion: "version", //recommended to be the git sha eg. process.env.MY_CI_COMMIT
-  providerVersionBranch: "master", //recommended to be the git branch eg. process.env.MY_GIT_SHA
-  providerVersionTags: ["tag"], //optional, recommended to be the git branch eg. process.env.MY_CI_BRANCH
-}
+  providerVersion: 'version', //recommended to be the git sha eg. process.env.MY_CI_COMMIT
+  providerVersionBranch: 'master', //recommended to be the git branch eg. process.env.MY_GIT_SHA
+  providerVersionTags: ['tag'], //optional, recommended to be the git branch eg. process.env.MY_CI_BRANCH
+};
 ```

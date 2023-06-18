@@ -89,13 +89,13 @@ describe('Pact Verification', () => {
       //   ),
       // ],
 
-      // If you're NOT using PactFlow, use the username/password option as per below
+      // If you're using the open source Pact Broker, use the username/password option as per below
       pactBrokerUsername:
         process.env.PACT_BROKER_USERNAME || 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
       pactBrokerPassword:
         process.env.PACT_BROKER_PASSWORD || 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
 
-      // if you're using PactFlow, you must authenticate using the bearer token option
+      // if you're using a PactFlow broker, you must authenticate using the bearer token option
       // You can obtain the token from https://<your broker>.pactflow.io/settings/api-tokens
       // pactBrokerToken: "<insert your token here"
       publishVerificationResult: true,
