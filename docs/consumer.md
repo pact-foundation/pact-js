@@ -74,6 +74,8 @@ The first step is to create a test for your API Consumer. The example below uses
 1.  Validate the expected interactions were made between your consumer and the Mock Service
 1.  Generate the pact(s)
 
+_NOTE: you must also ensure you clear out your pact directory prior to running tests to ensure outdated interactions do not hang around_
+
 Check out the [examples](https://github.com/pact-foundation/pact-js/tree/master/examples/) for more of these.
 
 ```js

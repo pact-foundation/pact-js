@@ -284,3 +284,7 @@ npm ERR! gyp ERR! configure error
 npm ERR! gyp ERR! stack Error: Could not find any Visual Studio installation to use
 ...
 ```
+
+## Why are there duplicate / extraneous interactions in my pact file?
+
+You must clear out the pacts directory prior to running your tests. Pact tests may be run in parallel, which makes it difficult for Pact to know when the file is safe to clear. This is usually not a problem unless you upload from your development environment, as in CI / automation contexts, it's less likely that you have previous test runs lying around.

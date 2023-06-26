@@ -8,11 +8,13 @@ There is just one single [breaking change](https://github.com/pact-foundation/pa
 
 See the [9.x.x -> 10.x.x](/docs/migrations/9-10.md) migration guide.
 
-# beta.62
+For changes on the intermediate beta versions, see below:
+
+## 10.0.0-beta.62
 
 Removed the default export for v3 in the root package in preparation for a release.
 
-# beta.61
+## 10.0.0-beta.61
 
 * new `addInteraction` method on PactV3 to support previous JSON-style interactions
 * remove `VerifierV3` as many beta versions have passed with this deprecation notice and won't be in final release
@@ -27,7 +29,7 @@ Removed the default export for v3 in the root package in preparation for a relea
 * the `mockService` property on the `Pact` class is no longer an actual `MockService`, but supports the `baseUrl` property.
 * Manually controlling the state of the mock server - such as removing interactions - has been removed.
 
-# beta.56
+## 10.0.0-beta.56
 
 Migrates to a new handle based verifier. This adds several layers of improvement, including better error handling/response output (which will be added in later versions).
 
@@ -35,7 +37,7 @@ Migrates to a new handle based verifier. This adds several layers of improvement
 * Handle based verifier doesn't support environment variables (i.e. `PACT_BROKER_*`)
 
 This guide is for migrating to a new version of pact-js.
-# beta.52
+## 10.0.0-beta.52
 
 The following matchers now must have an explicit example provided:
 
@@ -43,13 +45,13 @@ The following matchers now must have an explicit example provided:
 * `timestamp`
 * `time`
 
-# beta.47
+## 10.0.0-beta.47
 
 Change uses of `RFC3339_TIMESTAMP_FORMAT` or `Matchers.rfc1123Timestamp()` to
 `RFC1123_TIMESTAMP_FORMAT` and `rfc1123Timestamp` respectively (this matcher
 has always been RFC1123, not RFC3339).
 
-# beta.44 to beta.45
+## 10.0.0-beta.44 to beta.45
 
 You no longer need to use `VerifierV3`. You may now do:
 
