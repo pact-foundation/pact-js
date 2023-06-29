@@ -84,7 +84,7 @@ The following test creates a contract for a Dog API handler:
 1. Creates the MessageConsumer class
 1. Setup the expectations for the consumer - here we expect a `dog` object with three fields
 1. Pact will send the message to your message handler. If the handler returns a successful promise, the message is saved, otherwise the test fails. There are a few key things to consider:
-   - The actual request body that Pact will send, will be contained within a [Message](/Users/mfellows/development/public/pact-js/src/dsl/message.ts) object along with other context, so the body must be retrieved via `content` attribute.
+   - The actual request body that Pact will send, will be contained within a [Message](../../src/dsl/message.ts) object along with other context, so the body must be retrieved via `content` attribute.
    - All handlers to be tested must be of the shape `(m: Message) => Promise<any>` - that is, they must accept a `Message` and return a `Promise`. This is how we get around all of the various protocols, and will often require a lightweight adapter function to convert it.
    - In this case, we wrap the actual dogApiHandler with a convenience function `synchronousBodyHandler` provided by Pact, which Promisifies the handler and extracts the contents.
 
