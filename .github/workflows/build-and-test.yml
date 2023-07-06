@@ -19,7 +19,7 @@ jobs:
       fail-fast: false
       matrix:
         node-version: [16.x, 18.x, 20.x]
-        os: [macos-latest]
+        os: [macos-latest, ubuntu-latest, windows-latest]
 
     steps:
       - uses: actions/checkout@v3
@@ -37,6 +37,8 @@ jobs:
         shell: bash
         env:
           SETUP_DIST_ONLY: true
+
+      ## require jest-pact and mocha-pact to update peer deps
       # - name: example_mocha
       #   run: cd examples/mocha && npm install --ignore-scripts && npm test
       # - name: example_jest
@@ -44,18 +46,16 @@ jobs:
 
 
       #  passing
-      # - name: example_e2e
-      #   run: cd examples/e2e && npm install --ignore-scripts && npm test
-      # - name: example_graphql
-      #   run: cd examples/graphql && npm install --ignore-scripts && npm test
-      # - name: example_messages
-      #   run: cd examples/messages && npm install --ignore-scripts && npm test
-      # - name: example_serverless
-      #   run: cd examples/serverless && npm install --ignore-scripts && npm test
-      # - name: example_typescript
-      #   run: cd examples/typescript && npm install --ignore-scripts && npm test
-
-  
+      - name: example_e2e
+        run: cd examples/e2e && npm install --ignore-scripts && npm test
+      - name: example_graphql
+        run: cd examples/graphql && npm install --ignore-scripts && npm test
+      - name: example_messages
+        run: cd examples/messages && npm install --ignore-scripts && npm test
+      - name: example_serverless
+        run: cd examples/serverless && npm install --ignore-scripts && npm test
+      - name: example_typescript
+        run: cd examples/typescript && npm install --ignore-scripts && npm test
       - name: example_v3_e2e
         run: cd examples/v3/e2e && npm install --ignore-scripts && npm test
       - name: example_v3_provider-state-injected
