@@ -1,0 +1,64 @@
+env:
+  ENABLE_FEATURE_V4: "true"
+  SKIP_EXAMPLES: "true"
+  LOG_LEVEL: info
+
+BUILD_TEST_TASK_TEMPLATE: &BUILD_TEST_TASK_TEMPLATE
+  arch_check_script:
+    - uname -am
+  build_script:
+    - node --version
+    - npx --yes absolute-version
+    - chmod +x scripts/ci/lib/prepare-release.sh
+    - chmod +x scripts/ci/build-and-test.sh && scripts/ci/build-and-test.sh
+  example_e2e_script:
+    - cd examples/e2e && npm install --ignore-scripts && npm test
+  example_graphql_script:
+    - cd examples/graphql && npm install --ignore-scripts && npm test
+  example_messages_script:
+    # - cd examples/jest && npm install --ignore-scripts && npm test
+    - cd examples/messages && npm install --ignore-scripts && npm test
+  example_serverless_script:
+    # - cd examples/mocha && npm install --ignore-scripts && npm test
+    - cd examples/serverless && npm install --ignore-scripts && npm test
+  example_typescript_script:
+    - cd examples/typescript && npm install --ignore-scripts && npm test
+  example_v3_e2e_script:
+    - cd examples/v3/e2e && npm install --ignore-scripts && npm test
+  example_v3_provider-state-injected_script:
+    - cd examples/v3/provider-state-injected && npm install --ignore-scripts && npm test
+  example_v3_run-specific-verifications_script:
+    - cd examples/v3/run-specific-verifications && npm install --ignore-scripts && npm test
+  example_v3_todo-consumer_script:
+    - cd examples/v3/todo-consumer && npm install --ignore-scripts && npm test
+  example_v3_typescript_script:
+    - cd examples/v3/typescript && npm install --ignore-scripts && npm test
+  example_v4_pluginsscript:
+    - cd examples/v4/plugins && npm install --ignore-scripts && npm test
+
+linux_arm_task: 
+  arm_container:
+    matrix:
+      - image: node:slim
+      - image: node:20-slim
+      - image: node:18-slim
+      - image: node:16-slim
+    cpu: 4
+    memory: 12G
+  setup_script: # Ideally we can remove libyaml-dev once resolved in traveling-ruby
+    - apt update --yes && apt install --yes jq git curl libyaml-dev
+  << : *BUILD_TEST_TASK_TEMPLATE
+
+macosx_arm_task: 
+  env:
+    matrix:
+      NODE_VERSION: 20
+      NODE_VERSION: 18
+      NODE_VERSION: 16
+  macos_instance:
+    image: ghcr.io/cirruslabs/macos-ventura-base:latest
+    setup_node__script: |
+        brew install nvm
+        source $(brew --prefix nvm)/nvm.sh
+        nvm install ${NODE_VERSION} && nvm use ${NODE_VERSION}
+  << : *BUILD_TEST_TASK_TEMPLATE

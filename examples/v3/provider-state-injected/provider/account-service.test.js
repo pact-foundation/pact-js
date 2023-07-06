@@ -10,7 +10,7 @@ const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 describe('Account Service', () => {
   let server;
-  beforeAll((done) => (server = accountService.listen(8081, done)));
+  beforeAll(() => (server = accountService.listen(8081)));
   afterAll((done) => {
     console.log('closing server!');
     server.close(done);

@@ -13,11 +13,12 @@ env:
   LOG_LEVEL: info
 
 jobs:
-  build-and-test-ubuntu:
-    runs-on: ubuntu-latest
+  build-and-test:
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x]
+        node-version: [16.x, 18.x, 20.x]
+        os: [macos-latest, windows-latest, ubuntu-latest]
 
     steps:
       - uses: actions/checkout@v3
@@ -27,50 +28,61 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - run: scripts/ci/build-and-test.sh
-        env:
-          NODE_VERSION: ${{ matrix.node-version }}
-
-  build-and-test-windows:
-    runs-on: windows-latest
-    strategy:
-      matrix:
-        node-version: [14.x, 16.x, 18.x]
-
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: Fix node-gyp
-        run: |-
-          npm install --global node-gyp@latest
-          npm prefix -g | % {npm config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"}
-        shell: pwsh
       - run: bash scripts/ci/build-and-test.sh
         shell: bash
         env:
-          NODE_VERSION: ${{ matrix.node-version }}
+          SKIP_EXAMPLES: true
+      - name: Upload dist folder
+        if: runner.os == 'Linux'
+        uses: actions/upload-artifact@v3
+        with:
+          path: dist
 
-  # Failures not reproducible locally on an M1 Mac
-  # build-and-test-macos:
-  #   runs-on: macos-latest
-  #   strategy:
-  #     matrix:
-  #       node-version: [14.x, 16.x, 18.x]
-  #     fail-fast: false
+  examples:
+    needs: [build-and-test]
+    strategy:
+      matrix:
+        node-version: [16,18,20]
+        os: [macos-latest, ubuntu-latest, windows-latest]
+        example:
+          [
+            e2e,
+            graphql,
+            jest, # requires jest-pact updating
+            messages,
+            mocha, # requires mocha-pact updating
+            serverless,
+            typescript,
+            v3/e2e,
+            v3/provider-state-injected,
+            v3/run-specific-verifications,
+            v3/todo-consumer,
+            v3/typescript,
+            v4/plugins,
+          ]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
 
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #       with:
-  #         fetch-depth: 0
-  #     - name: Use Node.js ${{ matrix.node-version }}
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: ${{ matrix.node-version }}
-  #     - run: scripts/ci/build-and-test.sh
-  #       env:
-  #         NODE_VERSION: ${{ matrix.node-version }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Download dist folder
+        uses: actions/download-artifact@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: scripts/ci/test-examples
+        shell: bash
+        env:
+          SETUP_DIST_ONLY: true
+        if: matrix.example != 'jest' || matrix.example != 'mocha'
+      - run: bash scripts/install-plugins.sh
+        if: matrix.example == 'v4/plugins'
+      - name: run example ${{ matrix.example }}
+        run: |
+          npm install --ignore-scripts      
+          npm test       
+        shell: bash
+        working-directory: examples/${{ matrix.example }}
