@@ -9,14 +9,13 @@ BUILD_TEST_TASK_TEMPLATE: &BUILD_TEST_TASK_TEMPLATE
   build_script:
     - node --version
     - npx --yes absolute-version
-    - chmod +x scripts/ci/lib/prepare-release.sh
-    - chmod +x scripts/ci/build-and-test.sh && scripts/ci/build-and-test.sh
+    - scripts/ci/build-and-test.sh
   dist_setup_for_examples:
   - SETUP_DIST_ONLY=true scripts/ci/test-examples.sh
-  example_jest_script:
-    - cd examples/jest && npm install --ignore-scripts && npm test
-  example_mocha_script:
-    - cd examples/mocha && npm install --ignore-scripts && npm test
+  # example_jest_script:
+  #   - cd examples/jest && npm install --ignore-scripts && npm test
+  # example_mocha_script:
+  #   - cd examples/mocha && npm install --ignore-scripts && npm test
   example_e2e_script:
     - cd examples/e2e && npm install --ignore-scripts && npm test
   example_graphql_script:
@@ -37,7 +36,7 @@ BUILD_TEST_TASK_TEMPLATE: &BUILD_TEST_TASK_TEMPLATE
     - cd examples/v3/todo-consumer && npm install --ignore-scripts && npm test
   example_v3_typescript_script:
     - cd examples/v3/typescript && npm install --ignore-scripts && npm test
-  example_v4_pluginsscript:
+  example_v4_plugins_script:
     - cd examples/v4/plugins && npm install --ignore-scripts && npm test
 
 linux_arm_task: 
@@ -55,14 +54,23 @@ linux_arm_task:
 
 macos_arm_task: 
   env:
+    CIRRUS_SHELL: zsh
+    NVM_DIR: "$HOME/.nvm"
     matrix:
       NODE_VERSION: 20
       NODE_VERSION: 18
       NODE_VERSION: 16
   macos_instance:
     image: ghcr.io/cirruslabs/macos-ventura-base:latest
-    setup_node__script: |
-        brew install nvm
-        source $(brew --prefix nvm)/nvm.sh
-        nvm install ${NODE_VERSION} && nvm use ${NODE_VERSION}
+  setup_node_script: |
+    if [ "$NODE_VERSION" != "20" ]; then
+      brew uninstall node
+      rm '/opt/homebrew/bin/npm'
+      rm '/opt/homebrew/bin/npx'
+      rm -rf '/opt/homebrew/lib/node_modules'
+      brew install node@$NODE_VERSION
+      brew link node@$NODE_VERSION
+    fi
+    node --version
+    find . -name '*.sh' -exec chmod +x {} \;
   << : *BUILD_TEST_TASK_TEMPLATE

@@ -8,8 +8,10 @@ const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 const TodoApp = require('../src/todo');
 const expect = chai.expect;
-const isWin = process.platform === 'win32';
-
+const HasBinaryPayloadIssue =
+  process.platform === 'win32' ||
+  (process.platform === 'darwin' && process.arch === 'arm64') ||
+  (process.platform === 'linux' && process.arch === 'arm64');
 chai.use(chaiAsPromised);
 
 describe('Pact V3', () => {
@@ -56,7 +58,7 @@ describe('Pact V3', () => {
         });
 
         it('generates a list of TODOs for the main screen', () => {
-          let result = provider.executeTest((mockserver) => {
+          return provider.executeTest((mockserver) => {
             console.log('In Test Function', mockserver);
             return TodoApp.setUrl(mockserver.url)
               .getProjects()
@@ -66,8 +68,6 @@ describe('Pact V3', () => {
                 expect(projects[0].tasks).to.be.an('array').with.length(4);
               });
           });
-          console.log('result from runTest', result);
-          return result;
         });
       });
     });
@@ -133,32 +133,30 @@ describe('Pact V3', () => {
       });
 
       it('generates a list of TODOs for the main screen', () => {
-        let result = provider.executeTest((mockserver) => {
+        return provider.executeTest((mockserver) => {
           console.log('In Test Function', mockserver);
           return TodoApp.setUrl(mockserver.url)
             .getProjects('xml')
             .then((projects) => {
               expect(projects['ns1:project']).to.be.an('array').with.length(2);
-              expect(projects['ns1:project'][0].id).to.be.equal('1');
+              expect(projects['ns1:project'][0]['@_id']).to.be.equal('1');
               expect(projects['ns1:project'][0]['ns1:tasks']['ns1:task'])
                 .to.be.an('array')
                 .with.length(5);
             });
         });
-        console.log('result from runTest', result);
-        return result;
       });
     });
 
     // See https://github.com/pact-foundation/pact-reference/issues/171 for why it's skipped
-    describe.skip('with image uploads', () => {
+    describe('with image uploads', () => {
       before(() => {
         provider
           .given('i have a project', { id: '1001', name: 'Home Chores' })
           .uponReceiving('a request to store an image against the project')
           .withRequestBinaryFile(
             { method: 'POST', path: '/projects/1001/images' },
-            isWin ? 'application/octet-stream' : 'image/jpeg',
+            HasBinaryPayloadIssue ? 'application/octet-stream' : 'image/jpeg',
             path.resolve(__dirname, 'example.jpg')
           )
           .willRespondWith({ status: 201 });
