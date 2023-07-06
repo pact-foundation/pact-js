@@ -11,15 +11,19 @@ BUILD_TEST_TASK_TEMPLATE: &BUILD_TEST_TASK_TEMPLATE
     - npx --yes absolute-version
     - chmod +x scripts/ci/lib/prepare-release.sh
     - chmod +x scripts/ci/build-and-test.sh && scripts/ci/build-and-test.sh
+  dist_setup_for_examples:
+  - SETUP_DIST_ONLY=true scripts/ci/test-examples.sh
+  example_jest_script:
+    - cd examples/jest && npm install --ignore-scripts && npm test
+  example_mocha_script:
+    - cd examples/mocha && npm install --ignore-scripts && npm test
   example_e2e_script:
     - cd examples/e2e && npm install --ignore-scripts && npm test
   example_graphql_script:
     - cd examples/graphql && npm install --ignore-scripts && npm test
   example_messages_script:
-    # - cd examples/jest && npm install --ignore-scripts && npm test
     - cd examples/messages && npm install --ignore-scripts && npm test
   example_serverless_script:
-    # - cd examples/mocha && npm install --ignore-scripts && npm test
     - cd examples/serverless && npm install --ignore-scripts && npm test
   example_typescript_script:
     - cd examples/typescript && npm install --ignore-scripts && npm test
@@ -39,17 +43,17 @@ BUILD_TEST_TASK_TEMPLATE: &BUILD_TEST_TASK_TEMPLATE
 linux_arm_task: 
   arm_container:
     matrix:
-      - image: node:slim
-      - image: node:20-slim
+      # - image: node:slim
+      - image: node:20.2-slim # https://github.com/nodejs/docker-node/issues/1912
       - image: node:18-slim
       - image: node:16-slim
     cpu: 4
     memory: 12G
-  setup_script: # Ideally we can remove libyaml-dev once resolved in traveling-ruby
-    - apt update --yes && apt install --yes jq git curl libyaml-dev
+  setup_script:
+    - apt update --yes && apt install --yes jq git curl
   << : *BUILD_TEST_TASK_TEMPLATE
 
-macosx_arm_task: 
+macos_arm_task: 
   env:
     matrix:
       NODE_VERSION: 20
