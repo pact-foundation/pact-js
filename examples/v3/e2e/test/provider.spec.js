@@ -4,7 +4,7 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const { server, importData, animalRepository } = require('../provider.js');
 const path = require('path');
-const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
+const LOG_LEVEL = process.env.LOG_LEVEL || 'INFO';
 
 const app = server.listen(8081, () => {
   console.log('Animal Profile Service listening on http://localhost:8081');
