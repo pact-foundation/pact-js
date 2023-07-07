@@ -13,6 +13,13 @@ BUILD_TEST_TASK_TEMPLATE: &BUILD_TEST_TASK_TEMPLATE
   # so that pact-broker publish --auto-detect-version-properties
   # works correctly
   pr_script: |
+    echo CIRRUS_PR=$CIRRUS_PR
+    echo CIRRUS_BASE_SHA=$CIRRUS_BASE_SHA
+    echo CIRRUS_BASE_BRANCH=$CIRRUS_BASE_BRANCH
+    echo CIRRUS_CHANGE_IN_REPO=$CIRRUS_CHANGE_IN_REPO
+    echo CIRRUS_BRANCH=$CIRRUS_BRANCH
+    echo GIT_SHA=$GIT_SHA
+    echo GIT_BRANCH=$GIT_BRANCH
     if [ $CIRRUS_PR ]; then
       GIT_SHA=$CIRRUS_BASE_SHA >> $CIRRUS_ENV
       GIT_BRANCH=$CIRRUS_BASE_BRANCH >> $CIRRUS_ENV
@@ -20,6 +27,14 @@ BUILD_TEST_TASK_TEMPLATE: &BUILD_TEST_TASK_TEMPLATE
       GIT_SHA=$CIRRUS_CHANGE_IN_REPO >> $CIRRUS_ENV
       GIT_BRANCH=$CIRRUS_BRANCH >> $CIRRUS_ENV   
     fi
+  pr_check_script: |
+    echo CIRRUS_PR=$CIRRUS_PR
+    echo CIRRUS_BASE_SHA=$CIRRUS_BASE_SHA
+    echo CIRRUS_BASE_BRANCH=$CIRRUS_BASE_BRANCH
+    echo CIRRUS_CHANGE_IN_REPO=$CIRRUS_CHANGE_IN_REPO
+    echo CIRRUS_BRANCH=$CIRRUS_BRANCH
+    echo GIT_SHA=$GIT_SHA
+    echo GIT_BRANCH=$GIT_BRANCH
   build_script:
     - node --version
     - npx --yes absolute-version
