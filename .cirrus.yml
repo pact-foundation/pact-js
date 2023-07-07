@@ -2,10 +2,24 @@ env:
   ENABLE_FEATURE_V4: "true"
   SKIP_EXAMPLES: "true"
   LOG_LEVEL: info
+  GIT_COMMIT: ${{ github.sha }}
+  GIT_REF: ${{ github.ref }}
 
 BUILD_TEST_TASK_TEMPLATE: &BUILD_TEST_TASK_TEMPLATE
   arch_check_script:
     - uname -am
+  # https://github.com/pact-foundation/pact_broker-client/blob/7edfd58c92fc234aa6aab647ef3b816a3553a412/lib/pact_broker/client/git.rb#L28-L30
+  # Update required for pact-broker-client to read CIRRUS env vars
+  # so that pact-broker publish --auto-detect-version-properties
+  # works correctly
+  pr_script: |
+    if [ $CIRRUS_PR ]; then
+      GIT_SHA=$CIRRUS_BASE_SHA >> $CIRRUS_ENV
+      GIT_BRANCH=$CIRRUS_BASE_BRANCH >> $CIRRUS_ENV
+    else
+      GIT_SHA=$CIRRUS_CHANGE_IN_REPO >> $CIRRUS_ENV
+      GIT_BRANCH=$CIRRUS_BRANCH >> $CIRRUS_ENV   
+    fi
   build_script:
     - node --version
     - npx --yes absolute-version
