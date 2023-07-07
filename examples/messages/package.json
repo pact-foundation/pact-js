@@ -15,8 +15,8 @@
   "license": "MIT",
   "devDependencies": {
     "absolute-version": "1.0.1",
-    "@pact-foundation/pact": "file:../../dist",
-    "@pact-foundation/pact-core": "^13.15.0",
+    "@pact-foundation/pact": "11.0.2",
+    "@pact-foundation/pact-core": "^14.0.0",
     "@types/mocha": "^9.1.1",
     "@types/node": "^18.7.11",
     "axios": "^0.27.2",
