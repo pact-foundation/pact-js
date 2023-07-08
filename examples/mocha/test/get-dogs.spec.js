@@ -47,6 +47,8 @@ describe('The Dog API', () => {
           method: 'GET',
           path: '/dogs',
           headers: {
+            'X-Custom-Header':
+              '{"id":"asd-asdasd-sd","additionalInfo":"some additional string"}',
             // Accept: 'application/problem+json, application/json, text/plain, */*', // <- fails, must use array syntax ❌
             Accept: [
               'application/problem+json',
