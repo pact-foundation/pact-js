@@ -47,23 +47,19 @@ describe('The Dog API', () => {
           method: 'GET',
           path: '/dogs',
           headers: {
-            Accept:
-              'application/problem+json, application/json, text/plain, */*',
-            // Accept: [
-            //   'application/problem+json',
-            //   'application/json',
-            //   'text/plain',
-            //   '*/*',
-            // ],
+            // Accept: 'application/problem+json, application/json, text/plain, */*', // <- fails, must use array syntax ❌
+            Accept: [
+              'application/problem+json',
+              'application/json',
+              'text/plain',
+              '*/*',
+            ],
           },
         },
         willRespondWith: {
           status: 200,
           headers: {
-            'Content-Type': Matchers.term({
-              generate: 'application/json',
-              matcher: 'application/json.*',
-            }),
+            'Content-Type': 'application/json',
           },
           body: EXPECTED_BODY,
         },

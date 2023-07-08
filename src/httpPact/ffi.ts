@@ -93,9 +93,6 @@ export const setHeaders = (
 
     if (Array.isArray(v)) {
       values = v;
-    } else if (typeof v === 'string') {
-      // Allow comma separated items, such as: "application/problem+json, application/json, */*"
-      values = v.split(',').map((h) => h.trim());
     } else {
       values = [v];
     }
@@ -104,7 +101,7 @@ export const setHeaders = (
       case InteractionPart.REQUEST:
         values.forEach((h, i) => {
           logger.debug(
-            `setting header request value for ${h} at index ${i} to ${JSON.stringify(
+            `setting header request value for ${k} at index ${i} to ${JSON.stringify(
               matcherValueOrString(h)
             )}`
           );
