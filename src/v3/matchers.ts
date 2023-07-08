@@ -8,6 +8,7 @@ import {
   MaxLikeMatcher,
   MinLikeMatcher,
   ProviderStateInjectedValue,
+  RulesMatcher,
   V3RegexMatcher,
 } from './types';
 
@@ -35,6 +36,7 @@ export const like = <T>(template: T): Matcher<T> => ({
 /**
  * Object where the key itself is ignored, but the value template must match.
  *
+ * @deprecated use eachKeyMatches or eachValueMatches
  * @param keyTemplate Example key to use
  * @param template Example value template to base the comparison on
  */
@@ -46,6 +48,44 @@ export const eachKeyLike = <T>(
   value: {
     [keyTemplate]: template,
   },
+});
+
+/**
+ * Object where the _keys_ must match the supplied matchers.
+ * The values for each key are ignored. That is, there can be 0 or more keys
+ * with any valid JSON identifier, so long as the names of the keys match the constraints.
+ *
+ * @param example Example object with key/values e.g. `{ foo: 'bar', baz: 'qux'}`
+ * @param matchers Matchers to apply to each key
+ */
+export const eachKeyMatches = (
+  example: Record<string, unknown>,
+  matchers: Matcher<string> | Matcher<string>[] = like('key')
+): RulesMatcher<unknown> => ({
+  'pact:matcher:type': 'eachKey',
+  rules: Array.isArray(matchers) ? matchers : [matchers],
+  value: example,
+});
+
+/**
+ * Object where the _values_ must match the supplied matchers.
+ * The names of the keys are ignored. That is, there can be 0 or more keys
+ * with any valid JSON identifier, so long as the values match the constraints.
+ *
+ * @param example Example object with key/values e.g. `{ foo: 'bar', baz: 'qux'}`
+ * @param matchers Matchers to apply to each value
+ */
+export const eachValueMatches = <T>(
+  example: Record<string, T>,
+  matchers: Matcher<T> | Matcher<T>[]
+): RulesMatcher<T> => ({
+  'pact:matcher:type': 'eachValue',
+  rules: Array.isArray(matchers) ? matchers : [matchers],
+  value: example,
+  // Unsure if the full object is provided, or just a template k/v pair
+  // value: {
+  //   [keyTemplate]: template,
+  // },
 });
 
 /**
