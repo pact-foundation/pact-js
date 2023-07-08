@@ -68,6 +68,10 @@ export interface ProviderStateInjectedValue<T> extends Matcher<T> {
   expression: string;
 }
 
+export interface StatusCodeMatcher<T> extends Matcher<T> {
+  status: string | number[];
+}
+
 export interface RulesMatcher<T> extends Matcher<T> {
   rules: Matcher<T>[];
 }
@@ -147,7 +151,7 @@ export interface V3Request {
 }
 
 export interface V3Response {
-  status: number;
+  status: number | Matcher<number>;
   headers?: TemplateHeaders;
   body?: unknown;
   contentType?: string;
@@ -157,4 +161,31 @@ export interface V3MockServer {
   port: number;
   url: string;
   id: string;
+}
+
+export enum HTTPResponseStatusClass {
+  // Informational responses (100–199)
+  Information = 'information',
+  // Successful responses (200–299)
+  Success = 'success',
+  // Redirects (300–399)
+  Redirect = 'redirect',
+  // Client errors (400–499)
+  ClientError = 'clientError',
+  // Server errors (500–599)
+  ServerError = 'serverError',
+  // Informational responses (100–199)
+  '1XX' = 'information',
+  // Successful responses (200–299)
+  '2XX' = 'success',
+  // Redirects (300–399)
+  '3XX' = 'redirect',
+  // Client errors (400–499)
+  '4XX' = 'clientError',
+  // Server errors (500–599)
+  '5XX' = 'serverError',
+  // Non-error response(< 400)
+  NonError = 'nonError',
+  // Any error response (>= 400)
+  Error = 'error',
 }

@@ -34,7 +34,7 @@ export const like = <T>(template: T): Matcher<T> => ({
 });
 
 /**
- * Object where the key itself is ignored, but the value template must match.
+ * Object where the values are ignored, but the key template must match.
  *
  * @deprecated use eachKeyMatches or eachValueMatches
  * @param keyTemplate Example key to use
@@ -82,11 +82,24 @@ export const eachValueMatches = <T>(
   'pact:matcher:type': 'eachValue',
   rules: Array.isArray(matchers) ? matchers : [matchers],
   value: example,
-  // Unsure if the full object is provided, or just a template k/v pair
-  // value: {
-  //   [keyTemplate]: template,
-  // },
 });
+
+// Waiting on https://github.com/pact-foundation/pact-reference/issues/296
+
+// /**
+//  * Matches HTTP status codes by their range description, or by a list of specific codes.
+//  *
+//  * @param example Example status code to use
+//  * @param range Allowed status codes
+//  */
+// export const matchStatus = (
+//   example: number,
+//   range: HTTPResponseStatusClass | number[]
+// ): StatusCodeMatcher<number> => ({
+//   value: example,
+//   'pact:matcher:type': 'statusCode',
+//   status: range,
+// });
 
 /**
  * Array where each element must match the given template

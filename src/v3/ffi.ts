@@ -42,7 +42,7 @@ export const setResponseDetails = (
   interaction: ConsumerInteraction,
   res: V3Response
 ): void => {
-  interaction.withStatus(res.status);
+  interaction.withStatus(MatchersV3.reify(res.status) as number);
 
   forEachObjIndexed((v, k) => {
     if (Array.isArray(v)) {
