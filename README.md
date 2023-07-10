@@ -99,8 +99,11 @@ Looking for the previous [stable 9.x.x release](https://github.com/pact-foundati
 
 ### Requirements
 
-1. Make sure the `ignore-scripts` option is disabled, pact uses npm scripts to compile native dependencies and won't function without it.
-2. Pact uses native extensions and installs them via the [`node-gyp`](https://github.com/nodejs/node-gyp) package. This requires a [build chain](https://github.com/nodejs/node-gyp#installation) for a successful installation. See also issue [#899](https://github.com/pact-foundation/pact-js/issues/899). 
+Node 16+ as of pact-js v12
+
+1. If using pact-js v11 or lower,
+   1. make sure the `ignore-scripts` option is disabled, pact uses npm scripts to compile native dependencies and won't function without it.
+   2. Pact uses native extensions and installs them via the [`node-gyp`](https://github.com/nodejs/node-gyp) package. This requires a [build chain](https://github.com/nodejs/node-gyp#installation) for a successful installation. See also issue [#899](https://github.com/pact-foundation/pact-js/issues/899). This is now prebuilt in pact-js v12+
 
 ### Do Not Track
 
