@@ -295,6 +295,17 @@ Users can now use `--ignore-scripts`
     - follow the instructions provided
       - You can override the path to the pact native build with `PACT_PREBUILD_LOCATION`
 
+
+## ENOENT: no such file or directory, open 'node:path'
+
+Pact-js-core uses `node:path`, this is supported by node 16+
+
+Some test frameworks may rely on older bindings, and you may see this error.
+
+Affected frameworks
+
+- Jest 26 and below. Upgrade to v27
+  
 ## Why are there duplicate / extraneous interactions in my pact file?
 
 You must clear out the pacts directory prior to running your tests. Pact tests may be run in parallel, which makes it difficult for Pact to know when the file is safe to clear. This is usually not a problem unless you upload from your development environment, as in CI / automation contexts, it's less likely that you have previous test runs lying around.
