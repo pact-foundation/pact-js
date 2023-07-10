@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [12.0.0](https://github.com/pact-foundation/pact-js/compare/v11.0.2...v12.0.0) (2023-07-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* set node engines min version to 16
+
+### Fixes and Improvements
+
+* set node engines min version to 16 ([85df5b7](https://github.com/pact-foundation/pact-js/commit/85df5b7c4696a51671d1c8a678ece0fe531c88e2))
+* update to latest pact-core 13.14.0 ([a3085d6](https://github.com/pact-foundation/pact-js/commit/a3085d6901a94ae4a9d9dab5451dab000b9b8456))
+
 ### [11.0.2](https://github.com/pact-foundation/pact-js/compare/v11.0.1...v11.0.2) (2023-03-09)
 
 
