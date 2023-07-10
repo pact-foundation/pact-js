@@ -1,5 +1,13 @@
 # Pact-js migration guide
 
+# 11.x.x -> 12.x.x
+
+- Node versions less than 16 are no longer supported
+- Pact FFI library is now prebuilt and included in the distributable dropping the requirement for a node-gyp build chain. Users can now use `--ignore-scripts`
+  - If errors are seen finding the native library, please
+    - run with `LOG_LEVEL=debug`
+    - follow the instructions provided
+
 # 10.x.x -> 11.x.x
 
 There is just one single [breaking change](https://github.com/pact-foundation/pact-js/blob/master/CHANGELOG.md#-breaking-changes) in this release. A conflicting type `StateHandlers` has been renamed to  `MessageStateHandlers` for use in message pact tests.

@@ -209,7 +209,9 @@ The Jest [docs](https://jestjs.io/docs/asynchronous) explains why, but this prin
 
 ## Installation failing (Missing Python, C++ or build tools)
 
-Pact has the following requirements for a successful install:
+TL;DR - Upgrade to pact-js v12
+
+Pact-JS v10-v11 have the following requirements for a successful install:
 
 1. Make sure the `ignore-scripts` option is disabled, pact uses npm scripts to compile native dependencies and won't function without it.
 2. Pact uses native extensions and installs them via the [`node-gyp`](https://github.com/nodejs/node-gyp) package. This requires a [build chain](https://github.com/nodejs/node-gyp#installation) for a successful installation. See also issue [#899](https://github.com/pact-foundation/pact-js/issues/899).
@@ -284,6 +286,14 @@ npm ERR! gyp ERR! configure error
 npm ERR! gyp ERR! stack Error: Could not find any Visual Studio installation to use
 ...
 ```
+
+## Failed to find native build
+
+Users can now use `--ignore-scripts`
+  - If errors are seen finding the native library, please
+    - run with `LOG_LEVEL=debug`
+    - follow the instructions provided
+      - You can override the path to the pact native build with `PACT_PREBUILD_LOCATION`
 
 ## Why are there duplicate / extraneous interactions in my pact file?
 
