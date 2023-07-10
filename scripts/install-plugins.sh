@@ -13,6 +13,10 @@ function detect_osarch() {
             os='linux'
             arch='x86_64'
             ;;
+        'Linux aarch64')
+            os='linux'
+            arch='aarch64'
+            ;;
         'Darwin x86' | 'Darwin x86_64')
             os='osx'
             arch='x86_64'

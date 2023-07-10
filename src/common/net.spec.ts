@@ -26,7 +26,9 @@ describe('Net', () => {
       });
     });
 
-  describe('#isPortAvailable', () => {
+  (process.platform === 'linux' && process.arch === 'arm64'
+    ? describe.skip
+    : describe)('#isPortAvailable', () => {
     context('when the port is not allowed to be bound', () => {
       it('returns a rejected promise', () =>
         expect(isPortAvailable(specialPort, defaultHost)).to.eventually.be

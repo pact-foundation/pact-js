@@ -1,12 +1,16 @@
 const axios = require('axios');
-const parser = require('xml2json');
+const { XMLParser } = require('fast-xml-parser');
 const eyes = require('eyes');
 const R = require('ramda');
 const fs = require('fs');
-
+const parser = new XMLParser({
+  ignoreAttributes: false,
+});
 let serverUrl = 'http://127.0.0.1:2203';
-
-const isWin = process.platform === 'win32';
+const HasBinaryPayloadIssue =
+  process.platform === 'win32' ||
+  (process.platform === 'darwin' && process.arch === 'arm64') ||
+  (process.platform === 'linux' && process.arch === 'arm64');
 
 module.exports = {
   getProjects: async (format = 'json') => {
@@ -20,8 +24,9 @@ module.exports = {
         console.log('todo response:');
         eyes.inspect(response.data);
         if (format.endsWith('xml')) {
-          const result = JSON.parse(parser.toJson(response.data));
+          const result = parser.parse(response.data);
           console.dir(result, { depth: 10 });
+          console.log(R.path(['ns1:projects'], result));
           return R.path(['ns1:projects'], result);
         }
         return response.data;
@@ -39,7 +44,9 @@ module.exports = {
     const data = fs.readFileSync(image);
     return axios.post(serverUrl + '/projects/' + id + '/images', data, {
       headers: {
-        'Content-Type': isWin ? 'application/octet-stream' : 'image/jpeg',
+        'Content-Type': HasBinaryPayloadIssue
+          ? 'application/octet-stream'
+          : 'image/jpeg',
       },
     });
   },

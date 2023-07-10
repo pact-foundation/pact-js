@@ -12,8 +12,8 @@
   "author": "matt.fellows@onegeek.com.au",
   "license": "MIT",
   "devDependencies": {
-    "@pact-foundation/pact": "file:../../../dist",
-    "@pact-foundation/pact-core": "^13.13.5",
+    "@pact-foundation/pact": "11.0.2",
+    "@pact-foundation/pact-core": "^14.0.1",
     "@types/chai": "^4.3.3",
     "@types/chai-as-promised": "7.1.5",
     "@types/mocha": "^9.1.1",

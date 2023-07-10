@@ -4,9 +4,9 @@
   "description": "Pact JS E2E Example",
   "scripts": {
     "test": "npm run test:consumer && npm run test:publish && npm run test:provider",
-    "test:consumer": "mocha test/consumer.spec.js",
+    "test:consumer": "mocha --config=test/.mocharc.json test/consumer.spec.js",
     "test:publish": "pact-broker publish ./pacts --consumer-app-version=\"$(npx absolute-version)\" --auto-detect-version-properties --broker-base-url=https://test.pactflow.io --broker-username dXfltyFMgNOFZAxr8io9wJ37iUpY42M --broker-password O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
-    "test:provider": "mocha test/provider.spec.js",
+    "test:provider": "mocha --config=test/.mocharc.json test/provider.spec.js",
     "can-i-deploy": "npm run can-i-deploy:consumer && npm run can-i-deploy:provider",
     "can-i-deploy:consumer": "pact-broker can-i-deploy --pacticipant 'Matching Service' --latest --broker-base-url https://test.pactflow.io --broker-username dXfltyFMgNOFZAxr8io9wJ37iUpY42M --broker-password O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
     "can-i-deploy:provider": "pact-broker can-i-deploy --pacticipant 'Animal Profile Service' --latest --broker-base-url https://test.pactflow.io --broker-username dXfltyFMgNOFZAxr8io9wJ37iUpY42M --broker-password O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
@@ -18,8 +18,8 @@
   "license": "MIT",
   "devDependencies": {
     "absolute-version": "1.0.1",
-    "@pact-foundation/pact": "10.1.2",
-    "@pact-foundation/pact-core": "^13.13.5",
+    "@pact-foundation/pact": "11.0.2",
+    "@pact-foundation/pact-core": "^14.0.1",
     "body-parser": "^1.20.0",
     "chai": "^3.5.0",
     "chai-as-promised": "^7.1.1",
