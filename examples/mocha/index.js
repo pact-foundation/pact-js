@@ -13,12 +13,13 @@ exports.getMeDogs = (endpoint) => {
     headers: {
       'X-Custom-Header':
         '{"id":"asd-asdasd-sd","additionalInfo":"some additional string"}',
-      Accept: [
-        'application/problem+json',
-        'application/json',
-        'text/plain',
-        '*/*',
-      ],
+      Accept: ['application/problem+json, application/json, text/plain, */*'],
+      // Accept: [ // <- either mode is supported
+      //   'application/problem+json',
+      //   'application/json',
+      //   'text/plain',
+      //   '*/*',
+      // ],
     },
   });
 };
