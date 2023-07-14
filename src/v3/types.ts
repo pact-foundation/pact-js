@@ -68,6 +68,10 @@ export interface ProviderStateInjectedValue<T> extends Matcher<T> {
   expression: string;
 }
 
+export interface RulesMatcher<T> extends Matcher<T> {
+  rules: Matcher<T>[];
+}
+
 /**
  * Options for the mock server
  */
