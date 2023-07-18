@@ -7,11 +7,12 @@ All notable changes to this project will be documented in this file. See [commit
 
 ### Features
 
-* add eachKeyMatches + eachValueMatches Matchers ([0b2098b](https://github.com/pact-foundation/pact-js/commit/0b2098b035a01e8c61c8165804a7eb3b0fb67c0d))
+* add eachKeyMatches + eachValueMatches matchers ([0b2098b](https://github.com/pact-foundation/pact-js/commit/0b2098b035a01e8c61c8165804a7eb3b0fb67c0d))
 
 
 ### Fixes and Improvements
 
+* Deprecate the `eachKeyLike` matcher ([0b2098b](https://github.com/pact-foundation/pact-js/commit/0b2098b035a01e8c61c8165804a7eb3b0fb67c0d))
 * do not split headers by comma ([fccaa07](https://github.com/pact-foundation/pact-js/commit/fccaa0780562002e78b175a5406479171d689f34)), closes [#1031](https://github.com/pact-foundation/pact-js/issues/1031) [#1058](https://github.com/pact-foundation/pact-js/issues/1058)
 * update dependencies to remove vulnerabilities ([4b00b63](https://github.com/pact-foundation/pact-js/commit/4b00b63fd17248d85017d16dc76d1866556a8117))
 
