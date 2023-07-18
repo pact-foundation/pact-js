@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [12.1.0](https://github.com/pact-foundation/pact-js/compare/v12.0.0...v12.1.0) (2023-07-18)
+
+
+### Features
+
+* add eachKeyMatches + eachValueMatches Matchers ([0b2098b](https://github.com/pact-foundation/pact-js/commit/0b2098b035a01e8c61c8165804a7eb3b0fb67c0d))
+
+
+### Fixes and Improvements
+
+* do not split headers by comma ([fccaa07](https://github.com/pact-foundation/pact-js/commit/fccaa0780562002e78b175a5406479171d689f34)), closes [#1031](https://github.com/pact-foundation/pact-js/issues/1031) [#1058](https://github.com/pact-foundation/pact-js/issues/1058)
+* update dependencies to remove vulnerabilities ([4b00b63](https://github.com/pact-foundation/pact-js/commit/4b00b63fd17248d85017d16dc76d1866556a8117))
+
 ## [12.0.0](https://github.com/pact-foundation/pact-js/compare/v11.0.2...v12.0.0) (2023-07-10)
 
 
