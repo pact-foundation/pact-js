@@ -1,4 +1,4 @@
-name: Publish and release v3 branch
+name: Publish and release (latest)
 
 on:
   workflow_dispatch:

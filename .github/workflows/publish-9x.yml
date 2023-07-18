@@ -1,4 +1,4 @@
-name: Publish and release
+name: Publish and release (9.x.x)
 
 on:
   repository_dispatch:
