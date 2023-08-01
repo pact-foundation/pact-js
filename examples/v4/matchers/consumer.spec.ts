@@ -16,14 +16,14 @@ const { expect } = chai;
 process.env.ENABLE_FEATURE_V4 = 'true';
 
 describe('V4 Matchers', () => {
+  const pact = new PactV4({
+    consumer: 'myconsumer',
+    provider: 'myprovider',
+    spec: SpecificationVersion.SPECIFICATION_VERSION_V4,
+    logLevel: (process.env.LOG_LEVEL as LogLevel) || 'trace',
+  });
   describe('eachKeyMatches', () => {
     it('returns the shape of object given to the matcher', async () => {
-      const pact = new PactV4({
-        consumer: 'myconsumer',
-        provider: 'myprovider',
-        spec: SpecificationVersion.SPECIFICATION_VERSION_V4,
-        logLevel: (process.env.LOG_LEVEL as LogLevel) || 'error',
-      });
       await pact
         .addInteraction()
         .uponReceiving('a request only checks the keys and ignores the values')
@@ -56,12 +56,6 @@ describe('V4 Matchers', () => {
 
   describe('eachValueMatches', () => {
     it('returns the shape of object given to the matcher', async () => {
-      const pact = new PactV4({
-        consumer: 'myconsumer',
-        provider: 'myprovider',
-        spec: SpecificationVersion.SPECIFICATION_VERSION_V4,
-        logLevel: (process.env.LOG_LEVEL as LogLevel) || 'error',
-      });
       await pact
         .addInteraction()
         .uponReceiving(

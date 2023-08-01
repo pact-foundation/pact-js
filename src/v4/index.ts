@@ -17,21 +17,30 @@ export class PactV4 implements V4ConsumerPact {
       );
     }
 
-    this.pact = makeConsumerPact(
-      opts.consumer,
-      opts.provider,
-      opts.spec ?? SpecificationVersion.SPECIFICATION_VERSION_V4,
-      opts.logLevel
-    );
-
+    this.setup();
     this.pact.addMetadata('pact-js', 'version', pactPackageVersion);
+  }
+
+  setup(): void {
+    this.pact = makeConsumerPact(
+      this.opts.consumer,
+      this.opts.provider,
+      this.opts.spec ?? SpecificationVersion.SPECIFICATION_VERSION_V3,
+      this.opts.logLevel ?? 'info'
+    );
   }
 
   addInteraction(): V4UnconfiguredInteraction {
     return new UnconfiguredInteraction(
       this.pact,
       this.pact.newInteraction(''),
-      this.opts
+      this.opts,
+      () => {
+        // This function needs to be called if the PactV4 object is to be re-used (commonly expected by users)
+        // Because of the type-state model used here, it's a bit awkward as we need to thread this through
+        // to children, ultimately to be called on the "executeTest" stage.
+        this.setup();
+      }
     );
   }
 
@@ -41,7 +50,13 @@ export class PactV4 implements V4ConsumerPact {
     return new UnconfiguredSynchronousMessage(
       this.pact,
       this.pact.newSynchronousMessage(description),
-      this.opts
+      this.opts,
+      () => {
+        // This function needs to be called if the PactV4 object is to be re-used (commonly expected by users)
+        // Because of the type-state model used here, it's a bit awkward as we need to thread this through
+        // to children, ultimately to be called on the "executeTest" stage.
+        this.setup();
+      }
     );
   }
 }

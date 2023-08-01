@@ -41,7 +41,8 @@ export class UnconfiguredInteraction implements V4UnconfiguredInteraction {
   constructor(
     protected pact: ConsumerPact,
     protected interaction: ConsumerInteraction,
-    protected opts: PactV4Options
+    protected opts: PactV4Options,
+    protected cleanupFn: () => void
   ) {}
 
   uponReceiving(description: string): V4UnconfiguredInteraction {
@@ -67,7 +68,7 @@ export class UnconfiguredInteraction implements V4UnconfiguredInteraction {
       this.pact,
       this.interaction,
       this.opts,
-      request
+      this.cleanupFn
     );
   }
 
@@ -81,13 +82,23 @@ export class UnconfiguredInteraction implements V4UnconfiguredInteraction {
     if (builder) {
       builder(new RequestBuilder(this.interaction));
     }
-    return new InteractionwithRequest(this.pact, this.interaction, this.opts);
+    return new InteractionwithRequest(
+      this.pact,
+      this.interaction,
+      this.opts,
+      this.cleanupFn
+    );
   }
 
   usingPlugin(config: PluginConfig): V4InteractionWithPlugin {
     this.pact.addPlugin(config.plugin, config.version);
 
-    return new InteractionWithPlugin(this.pact, this.interaction, this.opts);
+    return new InteractionWithPlugin(
+      this.pact,
+      this.interaction,
+      this.opts,
+      this.cleanupFn
+    );
   }
 }
 
@@ -98,13 +109,13 @@ export class InteractionWithCompleteRequest
     private pact: ConsumerPact,
     private interaction: ConsumerInteraction,
     private opts: PactV4Options,
-    private request: V4Request
+    protected cleanupFn: () => void
   ) {
     throw Error('V4InteractionWithCompleteRequest is unimplemented');
   }
 
   withCompleteResponse(response: V4Response): V4InteractionWithResponse {
-    return new InteractionWithResponse(this.pact, this.interaction, this.opts);
+    return new InteractionWithResponse(this.pact, this.opts, this.cleanupFn);
   }
 }
 
@@ -113,7 +124,8 @@ export class InteractionwithRequest implements V4InteractionwithRequest {
   constructor(
     private pact: ConsumerPact,
     private interaction: ConsumerInteraction,
-    private opts: PactV4Options
+    private opts: PactV4Options,
+    protected cleanupFn: () => void
   ) {}
 
   willRespondWith(status: number, builder?: V4ResponseBuilderFunc) {
@@ -123,7 +135,7 @@ export class InteractionwithRequest implements V4InteractionwithRequest {
       builder(new ResponseBuilder(this.interaction));
     }
 
-    return new InteractionWithResponse(this.pact, this.interaction, this.opts);
+    return new InteractionWithResponse(this.pact, this.opts, this.cleanupFn);
   }
 }
 
@@ -240,12 +252,12 @@ export class InteractionWithResponse implements V4InteractionWithResponse {
   // tslint:disable:no-empty-function
   constructor(
     private pact: ConsumerPact,
-    private interaction: ConsumerInteraction,
-    private opts: PactV4Options
+    private opts: PactV4Options,
+    protected cleanupFn: () => void
   ) {}
 
   async executeTest<T>(testFn: TestFunction<T>) {
-    return executeTest(this.pact, this.opts, testFn);
+    return executeTest(this.pact, this.opts, testFn, this.cleanupFn);
   }
 }
 
@@ -254,7 +266,8 @@ export class InteractionWithPlugin implements V4InteractionWithPlugin {
   constructor(
     private pact: ConsumerPact,
     private interaction: ConsumerInteraction,
-    private opts: PactV4Options
+    private opts: PactV4Options,
+    protected cleanupFn: () => void
   ) {}
 
   // Multiple plugins are allowed
@@ -277,7 +290,8 @@ export class InteractionWithPlugin implements V4InteractionWithPlugin {
     return new InteractionWithPluginRequest(
       this.pact,
       this.interaction,
-      this.opts
+      this.opts,
+      this.cleanupFn
     );
   }
 }
@@ -289,7 +303,8 @@ export class InteractionWithPluginRequest
   constructor(
     private pact: ConsumerPact,
     private interaction: ConsumerInteraction,
-    private opts: PactV4Options
+    private opts: PactV4Options,
+    protected cleanupFn: () => void
   ) {}
 
   willRespondWith(
@@ -304,8 +319,8 @@ export class InteractionWithPluginRequest
 
     return new InteractionWithPluginResponse(
       this.pact,
-      this.interaction,
-      this.opts
+      this.opts,
+      this.cleanupFn
     );
   }
 }
@@ -346,12 +361,12 @@ export class InteractionWithPluginResponse
   // tslint:disable:no-empty-function
   constructor(
     private pact: ConsumerPact,
-    private interaction: ConsumerInteraction,
-    private opts: PactV4Options
+    private opts: PactV4Options,
+    protected cleanupFn: () => void
   ) {}
 
   async executeTest<T>(testFn: (mockServer: V4MockServer) => Promise<T>) {
-    return executeTest(this.pact, this.opts, testFn);
+    return executeTest(this.pact, this.opts, testFn, this.cleanupFn);
   }
 }
 const readBinaryData = (file: string): Buffer => {
@@ -368,19 +383,22 @@ const cleanup = (
   success: boolean,
   pact: ConsumerPact,
   opts: PactV4Options,
-  server: V3MockServer
+  server: V3MockServer,
+  cleanupFn: () => void
 ) => {
   if (success) {
     pact.writePactFile(opts.dir || './pacts');
   }
   pact.cleanupMockServer(server.port);
   pact.cleanupPlugins();
+  cleanupFn();
 };
 
 const executeTest = async <T>(
   pact: ConsumerPact,
   opts: PactV4Options,
-  testFn: TestFunction<T>
+  testFn: TestFunction<T>,
+  cleanupFn: () => void
 ) => {
   const scheme = opts.tls ? 'https' : 'http';
   const host = opts.host || '127.0.0.1';
@@ -405,7 +423,7 @@ const executeTest = async <T>(
     let errorMessage = 'Test failed for the following reasons:';
     errorMessage += `\n\n  ${generateMockServerError(matchingResults, '\t')}`;
 
-    cleanup(false, pact, opts, server);
+    cleanup(false, pact, opts, server, cleanupFn);
 
     // If the tests throws an error, we need to rethrow the error, but print out
     // any additional mock server errors to help the user understand what happened
@@ -422,12 +440,12 @@ const executeTest = async <T>(
 
   // Scenario: test threw an error, but Pact validation was OK (error in client or test)
   if (error) {
-    cleanup(false, pact, opts, server);
+    cleanup(false, pact, opts, server, cleanupFn);
     throw error;
   }
 
   // Scenario: Pact validation passed, test didn't throw - return the callback value
-  cleanup(true, pact, opts, server);
+  cleanup(true, pact, opts, server, cleanupFn);
 
   return val;
 };

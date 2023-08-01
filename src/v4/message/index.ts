@@ -38,7 +38,8 @@ export class UnconfiguredSynchronousMessage
   constructor(
     protected pact: ConsumerPact,
     protected interaction: PactCoreSynchronousMessage,
-    protected opts: PactV4Options
+    protected opts: PactV4Options,
+    protected cleanupFn: () => void
   ) {}
 
   given(state: string, parameters?: JsonMap): V4UnconfiguredSynchronousMessage {
@@ -59,7 +60,8 @@ export class UnconfiguredSynchronousMessage
     return new SynchronousMessageWithPlugin(
       this.pact,
       this.interaction,
-      this.opts
+      this.opts,
+      this.cleanupFn
     );
   }
 
@@ -69,7 +71,8 @@ export class UnconfiguredSynchronousMessage
     return new SynchronousMessageWithRequest(
       this.pact,
       this.interaction,
-      this.opts
+      this.opts,
+      this.cleanupFn
     );
   }
 }
@@ -80,7 +83,8 @@ export class SynchronousMessageWithPlugin
   constructor(
     protected pact: ConsumerPact,
     protected interaction: PactCoreSynchronousMessage,
-    protected opts: PactV4Options
+    protected opts: PactV4Options,
+    protected cleanupFn: () => void
   ) {}
 
   usingPlugin(config: PluginConfig): V4SynchronousMessageWithPlugin {
@@ -101,7 +105,8 @@ export class SynchronousMessageWithPlugin
     return new SynchronousMessageWithPluginContents(
       this.pact,
       this.interaction,
-      this.opts
+      this.opts,
+      this.cleanupFn
     );
   }
 }
@@ -147,7 +152,8 @@ export class SynchronousMessageWithRequest
   constructor(
     protected pact: ConsumerPact,
     protected interaction: PactCoreSynchronousMessage,
-    protected opts: PactV4Options
+    protected opts: PactV4Options,
+    protected cleanupFn: () => void
   ) {}
 
   withResponse(
@@ -164,7 +170,8 @@ export class SynchronousMessageWithRequest
     return new SynchronousMessageWithResponse(
       this.pact,
       this.interaction,
-      this.opts
+      this.opts,
+      this.cleanupFn
     );
   }
 }
@@ -227,13 +234,19 @@ export class SynchronousMessageWithPluginContents
   constructor(
     protected pact: ConsumerPact,
     protected interaction: PactCoreSynchronousMessage,
-    protected opts: PactV4Options
+    protected opts: PactV4Options,
+    protected cleanupFn: () => void
   ) {}
 
   executeTest<T>(
     integrationTest: (m: SynchronousMessage) => Promise<T>
   ): Promise<T | undefined> {
-    return executeNonTransportTest(this.pact, this.opts, integrationTest);
+    return executeNonTransportTest(
+      this.pact,
+      this.opts,
+      integrationTest,
+      this.cleanupFn
+    );
   }
 
   startTransport(
@@ -252,7 +265,8 @@ export class SynchronousMessageWithPluginContents
       this.interaction,
       this.opts,
       port,
-      address
+      address,
+      this.cleanupFn
     );
   }
 }
@@ -265,7 +279,8 @@ export class SynchronousMessageWithTransport
     protected interaction: PactCoreSynchronousMessage,
     protected opts: PactV4Options,
     protected port: number,
-    protected address: string
+    protected address: string,
+    protected cleanupFn: () => void
   ) {}
 
   // TODO: this is basically the same as the HTTP variant, except only with a different test function wrapper
@@ -294,7 +309,7 @@ export class SynchronousMessageWithTransport
       let errorMessage = 'Test failed for the following reasons:';
       errorMessage += `\n\n  ${generateMockServerError(matchingResults, '\t')}`;
 
-      cleanup(false, this.pact, this.opts, this.port, true);
+      cleanup(false, this.pact, this.opts, this.cleanupFn, this.port, true);
 
       // If the tests throws an error, we need to rethrow the error, but print out
       // any additional mock server errors to help the user understand what happened
@@ -311,12 +326,12 @@ export class SynchronousMessageWithTransport
 
     // Scenario: test threw an error, but Pact validation was OK (error in client or test)
     if (error) {
-      cleanup(false, this.pact, this.opts, this.port, true);
+      cleanup(false, this.pact, this.opts, this.cleanupFn, this.port, true);
       throw error;
     }
 
     // Scenario: Pact validation passed, test didn't throw - return the callback value
-    cleanup(true, this.pact, this.opts, this.port, true);
+    cleanup(true, this.pact, this.opts, this.cleanupFn, this.port, true);
 
     return val;
   }
@@ -328,13 +343,22 @@ export class SynchronousMessageWithResponse
   constructor(
     protected pact: ConsumerPact,
     protected interaction: PactCoreSynchronousMessage,
-    protected opts: PactV4Options
+    protected opts: PactV4Options,
+    protected cleanupFn: () => void
   ) {}
 
   executeTest<T>(
     integrationTest: (m: SynchronousMessage) => Promise<T>
   ): Promise<T | undefined> {
-    return executeNonTransportTest(this.pact, this.opts, integrationTest);
+    const res = executeNonTransportTest(
+      this.pact,
+      this.opts,
+      integrationTest,
+      this.cleanupFn
+    );
+    this.cleanupFn();
+
+    return res;
   }
 }
 
@@ -342,6 +366,7 @@ const cleanup = (
   success: boolean,
   pact: ConsumerPact,
   opts: PactV4Options,
+  cleanupFn: () => void,
   port?: number,
   transport = false
 ) => {
@@ -356,12 +381,14 @@ const cleanup = (
     pact.cleanupMockServer(port);
   }
   pact.cleanupPlugins();
+  cleanupFn();
 };
 
 const executeNonTransportTest = async <T>(
   pact: ConsumerPact,
   opts: PactV4Options,
-  integrationTest: (m: SynchronousMessage) => Promise<T>
+  integrationTest: (m: SynchronousMessage) => Promise<T>,
+  cleanupFn: () => void
 ): Promise<T | undefined> => {
   let val: T | undefined;
   let error: Error | undefined;
@@ -374,13 +401,13 @@ const executeNonTransportTest = async <T>(
 
   // Scenario: test threw an error, but Pact validation was OK (error in client or test)
   if (error) {
-    cleanup(false, pact, opts);
+    cleanup(false, pact, opts, cleanupFn);
 
     throw error;
   }
 
   // Scenario: Pact validation passed, test didn't throw - return the callback value
-  cleanup(true, pact, opts);
+  cleanup(true, pact, opts, cleanupFn);
 
   return val;
 };
