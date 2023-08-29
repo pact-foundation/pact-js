@@ -194,7 +194,7 @@ export class MessageConsumerPact {
       .then(() => {
         this.pact.writePactFile(
           this.config.dir ?? DEFAULT_PACT_DIR,
-          this.config.pactfileWriteMode === 'overwrite'
+          this.config.pactfileWriteMode !== 'overwrite'
         );
       })
       .finally(() => {
