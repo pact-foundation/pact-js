@@ -160,7 +160,7 @@ export function generateMockServerError(
           `${indent}    `
         )}`;
       }
-      return '';
+      return `Unknown mismatch: ${mismatch}`;
     }),
   ].join('\n');
 }
