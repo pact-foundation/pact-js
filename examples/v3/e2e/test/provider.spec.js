@@ -78,6 +78,12 @@ describe('Pact Verification', () => {
         {
           matchingBranch: true,
         },
+        {
+          mainBranch: true,
+        },
+        {
+          deployedOrReleased: true,
+        },
       ],
       enablePending: true,
 

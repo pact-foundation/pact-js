@@ -40,6 +40,12 @@ describe('Message provider tests', () => {
       {
         matchingBranch: true,
       },
+      {
+        mainBranch: true,
+      },
+      {
+        deployedOrReleased: true,
+      },
     ],
   });
 

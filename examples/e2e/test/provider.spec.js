@@ -74,6 +74,12 @@ describe('Pact Verification', () => {
         {
           matchingBranch: true,
         },
+        {
+          mainBranch: true,
+        },
+        {
+          deployedOrReleased: true,
+        },
       ],
 
       // Enables "pending pacts" feature

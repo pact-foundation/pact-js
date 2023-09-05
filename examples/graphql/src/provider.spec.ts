@@ -37,6 +37,12 @@ describe('Pact Verification', () => {
         {
           matchingBranch: true,
         },
+        {
+          mainBranch: true,
+        },
+        {
+          deployedOrReleased: true,
+        },
       ],
       logLevel: LOG_LEVEL as LogLevel,
     };
