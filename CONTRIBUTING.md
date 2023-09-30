@@ -1,6 +1,6 @@
 # Contributing
 
-We love contributors! Pact-js is maintained and contrbuted to by developers just like you.
+We love contributors! Pact-js is maintained and contributed to by developers just like you.
 
 We have a development channel in the pact-foundation [slack] (`#pact-js-development`).
 
@@ -17,9 +17,9 @@ Please provide the following information with your issue to enable us to respond
 
 ## Key Branches
 
-* `master` - this is the current main version supporting the 11.x.x release line. Most investment will be here, including major new features, enhancements, bug fixes, security patches etc.
+* `master` - this is the current main version supporting the 11.x.x release line. Most investment will be here, including major new features, enhancements, bug fixes, security patches, etc.
 * `9.x.x` - this is the previous major version supporting the 9.x.x release line. Critical security patches and bug fixes will be provided as a priority.
-* There is no tracking or release branch for 10.x.x at this stage. Most users can be encouraged to jump straight to 11.x.x noting the single breaking change (see the migration guide)
+* There is no tracking or release branch for 10.x.x at this stage. Most users can be encouraged to jump straight to 11.x.x noting the single breaking change (see the migration guide).
 
 ## I want to contribute code but don't know where to start
 
@@ -79,10 +79,10 @@ The recommended approach is to configure Prettier to format on save in your edit
 
 ## Pull requests
 
-- Please write tests for any changes
-- Please follow existing code style and conventions
-- Please separate unrelated changes into multiple pull requests
-- For bigger changes, make sure you start a discussion first by creating an issue and explaining the intended change
+- Please write tests for any changes.
+- Please follow existing code style and conventions.
+- Please separate unrelated changes into multiple pull requests.
+- For bigger changes, make sure you start a discussion first by creating an issue and explaining the intended change.
 
 [stackoverflow]: https://stackoverflow.com/questions/tagged/pact
 [examples]: https://github.com/pact-foundation/pact-js/tree/master/examples
