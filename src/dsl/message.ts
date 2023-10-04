@@ -85,9 +85,9 @@ export interface MessageProviders {
   [name: string]: MessageProvider;
 }
 
-export interface MessageStateHandlers {
+export interface MessageStateHandlers<T> {
   [name: string]: (
     state: string,
     params?: { [name: string]: string }
-  ) => Promise<unknown>;
+  ) => Promise<T>;
 }
