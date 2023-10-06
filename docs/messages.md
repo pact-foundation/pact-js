@@ -22,13 +22,13 @@ The process looks like this on the provider (producer) side:
 
 ![diagram](https://github.com/pact-foundation/pact-js/blob/master/docs/diagrams/message-provider.png)
 
-1. The consumer writes a unit test of its behaviour using a Mock provided by Pact
-1. Pact writes the interactions into a contract file (as a JSON document)
-1. The consumer publishes the contract to a broker (or shares the file in some other way)
-1. Pact retrieves the contracts and replays the requests against a locally running provider
+1. The consumer writes a unit test of its behaviour using a Mock provided by Pact.
+1. Pact writes the interactions into a contract file (as a JSON document).
+1. The consumer publishes the contract to a broker (or shares the file in some other way).
+1. Pact retrieves the contracts and replays the requests against a locally running provider.
 1. The provider should stub out its dependencies during a Pact test, to ensure tests are fast and more deterministic.
 
-In this document, we will cover steps 1-3.
+In this document, we will cover steps 1 and 2.
 
 ### Consumer
 
@@ -93,8 +93,8 @@ describe("receive dog event", () => {
 1.  The Dog API - a contrived API handler example. Expects a dog object and throws an `Error` if it can't handle it.
     - In most applications, some form of transactionality exists and communication with a MQ/broker happens.
     - It's important we separate out the protocol bits from the message handling bits, so that we can test that in isolation.
-1.  Creates the MessageConsumer class
-1.  Setup the expectations for the consumer - here we expect a `dog` object with three fields
+1.  Creates the MessageConsumer class.
+1.  Setup the expectations for the consumer - here we expect a `dog` object with three fields.
 1.  Pact will send the message to your message handler. If the handler returns a successful promise, the message is saved, otherwise the test fails. There are a few key things to consider:
     - The actual request body that Pact will send, will be contained within a [Message](https://github.com/pact-foundation/pact-js/tree/master/src/dsl/message.ts) object along with other context, so the body must be retrieved via `content` attribute.
     - All handlers to be tested must be of the shape `(m: Message) => Promise<any>` - that is, they must accept a `Message` and return a `Promise`. This is how we get around all of the various protocols, and will often require a lightweight adapter function to convert it.
@@ -153,7 +153,7 @@ describe("Message provider tests", () => {
 
 **Explanation**:
 
-1.  Our API producer contains a single function `createDog` which is responsible for generating the message that will be sent to the consumer via some message queue
-1.  We configure Pact to stand-in for the queue. The most important bit here is the `messageProviders` block
-    - Similar to the Consumer tests, we map the various interactions that are going to be verified as denoted by their `description` field. In this case, `a request for a dog`, maps to the `createDog` handler. Notice how this matches the original Consumer test. We are using the `providerWithMetadata` function because we are also going to validate message metadata (in this case, the queue the message will be sent on)
+1.  Our API producer contains a single function `createDog` which is responsible for generating the message that will be sent to the consumer via some message queue.
+1.  We configure Pact to stand-in for the queue. The most important bit here is the `messageProviders` block.
+    - Similar to the Consumer tests, we map the various interactions that are going to be verified as denoted by their `description` field. In this case, `a request for a dog`, maps to the `createDog` handler. Notice how this matches the original Consumer test. We are using the `providerWithMetadata` function because we are also going to validate message metadata (in this case, the queue the message will be sent on).
 1.  We can now run the verification process. Pact will read all of the interactions specified by its consumer, and invoke each function that is responsible for generating that message.
