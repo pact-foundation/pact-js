@@ -7,28 +7,15 @@ exports.getMeDogs = (endpoint) => {
   const port = endpoint.port;
 
   return axios.request({
-    method: 'GET',
+    method: 'POST',
     baseURL: `${url}:${port}`,
     url: '/dogs',
     headers: {
-      Accept: [
-        'application/problem+json',
-        'application/json',
-        'text/plain',
-        '*/*',
-      ],
+      Accept: 'application/x.avidxchange.accounting+json;version=1.0.0',
+      'Content-Type': 'application/x.avidxchange.accounting+json;version=1.0.0',
     },
-  });
-};
-
-exports.getMeDog = (endpoint) => {
-  const url = endpoint.url;
-  const port = endpoint.port;
-
-  return axios.request({
-    method: 'GET',
-    baseURL: `${url}:${port}`,
-    url: '/dogs/1',
-    headers: { Accept: 'application/json' },
+    data: {
+      foo: 'bar',
+    },
   });
 };
