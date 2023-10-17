@@ -12,7 +12,8 @@
     "declaration": true,
     "experimentalDecorators": true,
     "target": "es5",
-    "lib": ["es2016", "dom", "esnext.asynciterable"]
+    "lib": ["es2016", "dom", "esnext.asynciterable"],
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["src"],
   "exclude": ["node_modules"]
