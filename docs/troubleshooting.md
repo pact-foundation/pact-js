@@ -127,7 +127,8 @@ and the Jest [example](https://github.com/pact-foundation/pact-js/blob/master/ex
 
 ## Usage with Mocha
 
-Consider the use of the `mocha-pact` [package](https://www.npmjs.com/package/mocha-pact)
+See [`./examples/mocha`](https://github.com/pact-foundation/pact-js/blob/master/examples/mocha/)
+<!-- Consider the use of the `mocha-pact` [package](https://www.npmjs.com/package/mocha-pact) -->
 
 ## Usage with Angular
 
