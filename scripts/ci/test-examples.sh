@@ -12,8 +12,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)" # Figure out where the 
 
 echo "Running e2e examples build for node version $(node --version)"
 for i in examples/*; do
-  [ -d "$i" ] || continue # prevent failure if not a directory
-  [ -e "$i" ] || continue # prevent failure if there are no examples
+  [ -d "$i" ] || break # prevent failure if not a directory
+  [ -e "$i" ] || break # prevent failure if there are no examples
   echo "--> running tests for: $i"
   pushd "$i"
   # replace pact dependency with locally build version
@@ -42,8 +42,8 @@ echo "Running Vx examples build"
 # trap "docker kill $BROKER_ID" EXIT
 
 for i in examples/v*/*; do
-  [ -d "$i" ] || continue # prevent failure if not a directory
-  [ -e "$i" ] || continue # prevent failure if there are no examples
+  [ -d "$i" ] || break # prevent failure if not a directory
+  [ -e "$i" ] || break # prevent failure if there are no examples
   echo "------------------------------------------------"
   echo "------------> continuing to test V3/v$ example project: $i"
   node --version
