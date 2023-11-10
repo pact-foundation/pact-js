@@ -1,5 +1,5 @@
 import * as express from 'express';
-import * as graphqlHTTP from 'express-graphql';
+import { createHandler } from 'graphql-http/lib/use/express';
 import { buildSchema } from 'graphql';
 
 const schema = buildSchema(`
@@ -17,8 +17,7 @@ export default app;
 
 app.use(
   '/graphql',
-  graphqlHTTP({
-    graphiql: true,
+  createHandler({
     rootValue: root,
     schema,
   })

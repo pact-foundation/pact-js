@@ -10,7 +10,6 @@ import {
   LogLevel,
 } from '@pact-foundation/pact';
 const { like } = Matchers;
-// import gql from "graphql-tag";
 const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 const expect = chai.expect;
