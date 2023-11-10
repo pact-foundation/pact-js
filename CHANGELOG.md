@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [12.1.1](https://github.com/pact-foundation/pact-js/compare/v12.1.0...v12.1.1) (2023-11-10)
+
+
+### Fixes and Improvements
+
+* allow re-use of PactV4 object ([38a68fb](https://github.com/pact-foundation/pact-js/commit/38a68fb4569a20f54160333498b8b0bc20ec7838))
+* MessageConsumerPact merge pact file correctly ([6b5de27](https://github.com/pact-foundation/pact-js/commit/6b5de27c196af45704d9ca9f4837396363a56a15))
+* package.json & package-lock.json to reduce vulnerabilities ([288bdfd](https://github.com/pact-foundation/pact-js/commit/288bdfd37e497f89589795dde7b7afba97ce0f50))
+* return raw consumer mock server mismatch if structure unknown ([17be53c](https://github.com/pact-foundation/pact-js/commit/17be53c3808c8ea489b5b9d85f9287144f4a1a31))
+
 ## [12.1.0](https://github.com/pact-foundation/pact-js/compare/v12.0.0...v12.1.0) (2023-07-18)
 
 
