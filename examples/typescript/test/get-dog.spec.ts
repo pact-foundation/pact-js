@@ -63,11 +63,9 @@ describe('The Dog API', () => {
       return provider.addInteraction(interaction);
     });
 
-    it('returns the correct response', (done) => {
-      dogService.getMeDogs().then((response: any) => {
-        expect(response.data[0]).to.deep.eq(dogExample);
-        done();
-      }, done);
+    it('returns the correct response', async () => {
+      const res = await dogService.getMeDogs();
+      expect(res.data[0]).to.deep.eq(dogExample);
     });
   });
 
@@ -93,11 +91,9 @@ describe('The Dog API', () => {
       });
     });
 
-    it('returns the correct response', (done) => {
-      dogService.getMeDogs().then((response: any) => {
-        expect(response.data[0]).to.deep.eq(dogExample);
-        done();
-      }, done);
+    it('returns the correct response', async () => {
+      const res = await dogService.getMeDogs();
+      expect(res.data[0]).to.deep.eq(dogExample);
     });
   });
 });

@@ -44,7 +44,6 @@ jobs:
       # - name: example_jest
       #   run: cd examples/jest && npm install --ignore-scripts && npm test
 
-
       #  passing
       - name: example_e2e
         run: cd examples/e2e && npm install --ignore-scripts && npm test
@@ -67,7 +66,7 @@ jobs:
       - name: example_v3_typescript
         run: cd examples/v3/typescript && npm install --ignore-scripts && npm test
       - name: example_v4_plugins
-        run: cd examples/v4/plugins && npm install --ignore-scripts && npm test          
+        run: cd examples/v4/plugins && npm install --ignore-scripts && npm test
       # - name: Upload dist folder
       #   if: runner.os == 'Linux'
       #   uses: actions/upload-artifact@v3
@@ -118,7 +117,7 @@ jobs:
   #       if: matrix.example == 'v4/plugins'
   #     - name: run example ${{ matrix.example }}
   #       run: |
-  #         npm install --ignore-scripts      
-  #         npm test       
+  #         npm install --ignore-scripts
+  #         npm test
   #       shell: bash
   #       working-directory: examples/${{ matrix.example }}
