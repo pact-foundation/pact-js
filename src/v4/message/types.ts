@@ -1,6 +1,5 @@
 import { AnyJson, JsonMap } from '../../common/jsonTypes';
 import { Metadata } from '../../dsl/message';
-import { AnyTemplate } from '../../v3/matchers';
 
 export type MessageContents = unknown; // TODO { contents: Buffer }
 
@@ -61,7 +60,7 @@ export interface V4SynchronousMessageWithRequestBuilder {
     contentType: string,
     body: Buffer
   ): V4SynchronousMessageWithRequestBuilder;
-  withJSONContent(content: AnyTemplate): V4SynchronousMessageWithRequestBuilder;
+  withJSONContent(content: unknown): V4SynchronousMessageWithRequestBuilder;
 }
 
 export interface V4SynchronousMessageWithRequest {
@@ -76,9 +75,7 @@ export interface V4SynchronousMessageWithResponseBuilder {
     contentType: string,
     body: Buffer
   ): V4SynchronousMessageWithResponseBuilder;
-  withJSONContent(
-    content: AnyTemplate
-  ): V4SynchronousMessageWithResponseBuilder;
+  withJSONContent(content: unknown): V4SynchronousMessageWithResponseBuilder;
 }
 
 export interface V4SynchronousMessageWithPluginContents {

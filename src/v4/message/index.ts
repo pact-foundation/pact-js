@@ -1,6 +1,5 @@
 /* eslint-disable */
 import { Metadata } from '../../dsl/message';
-import { AnyTemplate } from '../../v3/matchers';
 import { AnyJson, JsonMap } from '../../common/jsonTypes';
 import {
   PluginConfig,
@@ -129,9 +128,7 @@ export class SynchronousMessageWithRequestBuilder
     return this;
   }
 
-  withJSONContent(
-    content: AnyTemplate
-  ): V4SynchronousMessageWithRequestBuilder {
+  withJSONContent(content: unknown): V4SynchronousMessageWithRequestBuilder {
     if (isEmpty(content)) {
       throw new ConfigurationError(
         'You must provide a valid JSON document or primitive for the Message.'
@@ -211,9 +208,7 @@ export class SynchronousMessageWithResponseBuilder
     return this;
   }
 
-  withJSONContent(
-    content: AnyTemplate
-  ): V4SynchronousMessageWithResponseBuilder {
+  withJSONContent(content: unknown): V4SynchronousMessageWithResponseBuilder {
     if (isEmpty(content)) {
       throw new ConfigurationError(
         'You must provide a valid JSON document or primitive for the Message.'
