@@ -25,7 +25,7 @@ export class PactV4 implements V4ConsumerPact {
     this.pact = makeConsumerPact(
       this.opts.consumer,
       this.opts.provider,
-      this.opts.spec ?? SpecificationVersion.SPECIFICATION_VERSION_V3,
+      this.opts.spec ?? SpecificationVersion.SPECIFICATION_VERSION_V4,
       this.opts.logLevel ?? 'info'
     );
   }
