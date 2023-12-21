@@ -1,5 +1,5 @@
 import { AnyJson } from '../common/jsonTypes';
-import { Matcher, AnyTemplate } from './matchers';
+import { Matcher } from './matchers';
 
 /**
  * Metadata is a map containing message context,
@@ -30,7 +30,7 @@ export interface Message {
   providerStates?: ProviderState[];
   description?: string;
   metadata?: Metadata;
-  contents: AnyTemplate | Buffer;
+  contents: unknown | Buffer;
 }
 
 export interface ConcreteMessage {

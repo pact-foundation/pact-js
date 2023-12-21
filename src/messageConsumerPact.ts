@@ -10,7 +10,6 @@ import serviceFactory, {
 } from '@pact-foundation/pact-core';
 import { forEachObjIndexed } from 'ramda';
 import { AnyJson } from './common/jsonTypes';
-import { AnyTemplate } from './dsl/matchers';
 import {
   Metadata,
   Message,
@@ -109,7 +108,7 @@ export class MessageConsumerPact {
    * @param {string} content - A description of the Message to be received
    * @returns {Message} MessageConsumer
    */
-  public withContent(content: AnyTemplate): MessageConsumerPact {
+  public withContent(content: unknown): MessageConsumerPact {
     if (isEmpty(content)) {
       throw new ConfigurationError(
         'You must provide a valid JSON document or primitive for the Message.'
