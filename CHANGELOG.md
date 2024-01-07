@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [12.1.2](https://github.com/pact-foundation/pact-js/compare/v12.1.1...v12.1.2) (2024-01-07)
+
+
+### Fixes and Improvements
+
+* PactV4 should default to V4 spec ([46acc70](https://github.com/pact-foundation/pact-js/commit/46acc70e21a9efa46917af0d2975c9b245773cda))
+* **types:** remove AnyTemplate references from DSL ([4aa5c9b](https://github.com/pact-foundation/pact-js/commit/4aa5c9bf186e3608f01e7875993a7479d30dbd15)), closes [#1133](https://github.com/pact-foundation/pact-js/issues/1133)
+
 ### [12.1.1](https://github.com/pact-foundation/pact-js/compare/v12.1.0...v12.1.1) (2023-11-10)
 
 
