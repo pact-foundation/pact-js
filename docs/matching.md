@@ -267,7 +267,7 @@ these can be used to match a hypermedia format like Siren, see [Example Pact + S
 
 The `fromProviderState` matching function allows values to be generated based on values returned from the provider state callbacks. This should be used for the cases were database entries have auto-generated values and these values need to be used in the URLs or query parameters.
 
-For an example, see [examples/v3/provider-state-injected](https://github.com/pact-foundation/pact-js/tree/feat/v3.0.0/examples/v3/provider-state-injected).
+For an example, see [examples/v3/provider-state-injected](https://github.com/pact-foundation/pact-js/tree/master/examples/v3/provider-state-injected).
 
 For this to work, in the consumer test we use the `fromProviderState` matching function which takes an expression and an example value. The example value will be used in the consumer test.
 
