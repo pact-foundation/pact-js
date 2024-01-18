@@ -16,7 +16,7 @@ for i in *; do
   fi
 done
 
-cd v3
+pushd v3
 for i in *; do
   if [[ -d $i ]]; then
     echo -------------------------------------------------
@@ -27,3 +27,17 @@ for i in *; do
     popd
   fi
 done
+popd
+pushd v4
+for i in *; do
+export ENABLE_FEATURE_V4=true
+  if [[ -d $i ]]; then
+    echo -------------------------------------------------
+    echo ---- $i
+    echo -------------------------------------------------
+    pushd "$i"
+    npm t
+    popd
+  fi
+done
+popd
