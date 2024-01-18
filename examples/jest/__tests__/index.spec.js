@@ -58,7 +58,6 @@ pactWith(
         });
       });
     });
-
   }
 );
 pactWith(
