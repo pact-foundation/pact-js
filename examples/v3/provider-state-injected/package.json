@@ -11,12 +11,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@pact-foundation/pact": "11.0.2",
+    "@pact-foundation/pact": "file:../../../dist/",
     "chai": "^4.3.6",
     "jest": "^29.6.0"
   },
   "dependencies": {
-    "axios": "^0.21.0",
+    "axios": "^1.6.5",
     "cors": "^2.8.5",
     "express": "^4.17.3"
   }
