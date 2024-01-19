@@ -53,9 +53,7 @@ export class UnconfiguredInteraction implements V4UnconfiguredInteraction {
 
   given(state: string, parameters?: JsonMap): V4UnconfiguredInteraction {
     if (parameters) {
-      forEachObjIndexed((v, k) => {
-        this.interaction.givenWithParam(state, `${k}`, JSON.stringify(v));
-      }, parameters);
+      this.interaction.givenWithParams(state, JSON.stringify(parameters));
     } else {
       this.interaction.given(state);
     }

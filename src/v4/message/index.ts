@@ -43,9 +43,7 @@ export class UnconfiguredSynchronousMessage
 
   given(state: string, parameters?: JsonMap): V4UnconfiguredSynchronousMessage {
     if (parameters) {
-      forEachObjIndexed((v, k) => {
-        this.interaction.givenWithParam(state, `${k}`, JSON.stringify(v));
-      }, parameters);
+      this.interaction.givenWithParams(state, JSON.stringify(parameters));
     } else {
       this.interaction.given(state);
     }
