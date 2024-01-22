@@ -9,11 +9,12 @@ for i in *; do
     echo -------------------------------------------------
     pushd "$i"
     npm i
+    npm audit fix || true
     popd
   fi
 done
 
-cd v3
+pushd v3
 for i in *; do
   if [[ -d $i ]]; then
     echo -------------------------------------------------
@@ -21,6 +22,21 @@ for i in *; do
     echo -------------------------------------------------
     pushd "$i"
     npm i
+    npm audit fix || true
     popd
   fi
 done
+popd
+pushd v4
+for i in *; do
+  if [[ -d $i ]]; then
+    echo -------------------------------------------------
+    echo ---- $i
+    echo -------------------------------------------------
+    pushd "$i"
+    npm i
+    npm audit fix || true
+    popd
+  fi
+done
+popd
