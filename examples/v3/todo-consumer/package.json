@@ -28,7 +28,7 @@
     "fast-xml-parser": "^4.2.5"
   },
   "devDependencies": {
-    "@pact-foundation/pact": "11.0.2",
+    "@pact-foundation/pact": "file:../../../dist",
     "ts-node": "^10.9.1",
     "neon-cli": "^0.10.1"
   },

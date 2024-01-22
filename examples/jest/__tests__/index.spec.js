@@ -4,13 +4,14 @@ const { pactWith } = require('jest-pact');
 const { Matchers } = require('@pact-foundation/pact');
 
 const { getMeDogs, getMeCats } = require('../index');
-const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
+const LOG_LEVEL = process.env.LOG_LEVEL || 'INFO';
 
 pactWith(
   {
     consumer: 'Jest-Consumer-Example',
     provider: 'Jest-Provider-Example',
     logLevel: LOG_LEVEL,
+    pactfileWriteMode: 'merge',
   },
   (provider) => {
     describe('Dogs API', () => {
@@ -57,7 +58,16 @@ pactWith(
         });
       });
     });
-
+  }
+);
+pactWith(
+  {
+    consumer: 'Jest-Consumer-Example',
+    provider: 'Jest-Provider-Example',
+    logLevel: LOG_LEVEL,
+    pactfileWriteMode: 'merge',
+  },
+  (provider) => {
     describe('Cats API', () => {
       const CATS_DATA = [{ cat: 2 }, { cat: 3 }];
 
