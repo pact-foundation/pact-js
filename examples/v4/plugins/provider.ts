@@ -17,8 +17,13 @@ export const startTCPServer = (
     sock.on('data', (data) => {
       const msg = parseMattMessage(data.toString());
 
-      if (msg === 'hellotcp') {
-        sock.write(generateMattMessage('tcpworld'));
+      // if (msg === 'hellotcp') {
+      //   sock.write(generateMattMessage('tcpworld'));
+      // Workaround for https://github.com/pact-foundation/pact-reference/issues/366
+      const v12_decoded_msg = parseMattMessage(atob(msg));
+      console.log('v12_decoded_msg', v12_decoded_msg);
+      if (v12_decoded_msg === 'hellotcp') {
+        sock.write(btoa(generateMattMessage('tcpworld')));
       } else {
         sock.write(generateMattMessage('message not understood'));
       }
