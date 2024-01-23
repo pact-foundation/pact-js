@@ -1,4 +1,4 @@
-import { forEachObjIndexed, equals } from 'ramda';
+import { equals } from 'ramda';
 import {
   makeConsumerPact,
   ConsumerPact,
@@ -97,13 +97,10 @@ export class PactV3 {
     this.interaction = this.pact.newInteraction(description);
     this.states.forEach((s) => {
       if (s.parameters) {
-        forEachObjIndexed((v, k) => {
-          this.interaction.givenWithParam(
-            s.description,
-            `${k}`,
-            JSON.stringify(v)
-          );
-        }, s.parameters);
+        this.interaction.givenWithParams(
+          s.description,
+          JSON.stringify(s.parameters)
+        );
       } else {
         this.interaction.given(s.description);
       }

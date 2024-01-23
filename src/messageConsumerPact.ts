@@ -74,9 +74,7 @@ export class MessageConsumerPact {
     if (typeof state === 'string') {
       this.message.given(state);
     } else {
-      forEachObjIndexed((v, k) => {
-        this.message.givenWithParam(state.name, `${k}`, JSON.stringify(v));
-      }, state.params);
+      this.message.givenWithParams(state.name, JSON.stringify(state.params));
     }
 
     return this;
