@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [12.1.3](https://github.com/pact-foundation/pact-js/compare/v12.1.2...v12.1.3) (2024-01-23)
+
+
+### Fixes and Improvements
+
+* **ci:** update matt plugin provider test ([db37296](https://github.com/pact-foundation/pact-js/commit/db3729626b92d4d8342e2c403024cae7f9a39350))
+* support multiple states with same name ([36dfb4f](https://github.com/pact-foundation/pact-js/commit/36dfb4f70b383d1bd59476ea37f219f2c3679e04)), closes [#848](https://github.com/pact-foundation/pact-js/issues/848)
+
 ### [12.1.2](https://github.com/pact-foundation/pact-js/compare/v12.1.1...v12.1.2) (2024-01-07)
 
 
