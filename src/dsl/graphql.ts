@@ -3,7 +3,8 @@
  *
  * @module GraphQL
  */
-import { isNil, extend, omitBy, isUndefined } from 'lodash';
+import { isNil, extend, isUndefined } from 'lodash';
+import { reject } from 'ramda';
 import gql from 'graphql-tag';
 import { Interaction, InteractionStateComplete } from './interaction';
 import { regex } from './matchers';
@@ -106,17 +107,14 @@ export class GraphQLInteraction extends Interaction {
 
     this.state.request = extend(
       {
-        body: omitBy(
-          {
-            operationName: this.operation,
-            query: regex({
-              generate: this.query,
-              matcher: escapeGraphQlQuery(this.query),
-            }),
-            variables: this.variables,
-          },
-          isUndefined
-        ),
+        body: reject(isUndefined, {
+          operationName: this.operation,
+          query: regex({
+            generate: this.query,
+            matcher: escapeGraphQlQuery(this.query),
+          }),
+          variables: this.variables,
+        }),
         headers: { 'Content-Type': 'application/json' },
         method: 'POST',
       },
