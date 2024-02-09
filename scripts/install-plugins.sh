@@ -52,7 +52,7 @@ if [ ! -f ~/.pact/bin/pact-plugin-cli ]; then
     chmod +x ~/.pact/bin/pact-plugin-cli
 fi
 
-if [ ! -d ~/.pact/plugins/matt-0.1.0 ]; then
+if [ ! -d ~/.pact/plugins/matt-0.1.1 ]; then
     echo "--- 🐿  Installing MATT plugin"
-  ~/.pact/bin/pact-plugin-cli install https://github.com/you54f/pact-matt-plugin/releases/tag/v0.1.0
+  ~/.pact/bin/pact-plugin-cli install https://github.com/mefellows/pact-matt-plugin/releases/tag/v0.1.1
 fi

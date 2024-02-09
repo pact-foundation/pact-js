@@ -32,7 +32,7 @@ const { expect } = chai;
           .uponReceiving('an HTTP request to /matt')
           .usingPlugin({
             plugin: 'matt',
-            version: '0.1.0',
+            version: '0.1.1',
           })
           .withRequest('POST', '/matt', (builder) => {
             builder.pluginContents('application/matt', mattRequest);
@@ -75,7 +75,7 @@ const { expect } = chai;
             .addSynchronousInteraction('a MATT message')
             .usingPlugin({
               plugin: 'matt',
-              version: '0.1.0',
+              version: '0.1.1',
             })
             .withPluginContents(mattMessage, 'application/matt')
             .startTransport('matt', HOST)
