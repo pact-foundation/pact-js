@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [12.2.0](https://github.com/pact-foundation/pact-js/compare/v12.1.3...v12.2.0) (2024-02-09)
+
+
+### Features
+
+* remove feature flag for v4 ([3d8eccc](https://github.com/pact-foundation/pact-js/commit/3d8ecccca04d08972e6ad3f562c90e3f4ab6c130))
+
+
+### Fixes and Improvements
+
+* retire lodash omitby to fix vulnerability ([fedcc2e](https://github.com/pact-foundation/pact-js/commit/fedcc2e23c679300126b858ac4c9cb29353d1f47))
+* revert test workaround / update to matt plugin 0.1.0 ([f306c2b](https://github.com/pact-foundation/pact-js/commit/f306c2bf432ecbd658cd1b91d3122b499bbd0c1f))
+
 ### [12.1.3](https://github.com/pact-foundation/pact-js/compare/v12.1.2...v12.1.3) (2024-01-23)
 
 
