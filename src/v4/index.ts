@@ -11,12 +11,6 @@ export class PactV4 implements V4ConsumerPact {
   private pact: ConsumerPact;
 
   constructor(private opts: PactV4Options) {
-    if (!process.env.ENABLE_FEATURE_V4) {
-      throw Error(
-        "The v4 package is currently in beta and requires the 'ENABLE_FEATURE_V4' environment variable to be set"
-      );
-    }
-
     this.setup();
     this.pact.addMetadata('pact-js', 'version', pactPackageVersion);
   }
