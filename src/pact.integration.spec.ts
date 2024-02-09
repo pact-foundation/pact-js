@@ -83,7 +83,7 @@ describe('V4 Pact', () => {
             .uponReceiving('an HTTP request to /matt')
             .usingPlugin({
               plugin: 'matt',
-              version: '0.0.9',
+              version: '0.1.0',
             })
             .withRequest('POST', '/matt', (builder) => {
               builder.pluginContents('application/matt', mattRequest);
@@ -144,7 +144,7 @@ describe('V4 Pact', () => {
               .addSynchronousInteraction('a MATT message')
               .usingPlugin({
                 plugin: 'matt',
-                version: '0.0.9',
+                version: '0.1.0',
               })
               .withPluginContents(mattMessage, 'application/matt')
               .startTransport('matt', HOST)
