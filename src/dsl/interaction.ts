@@ -3,7 +3,8 @@
  * @module Interaction
  */
 
-import { isNil, keys, omitBy } from 'lodash';
+import { isNil, keys } from 'lodash';
+import { reject } from 'ramda';
 import { HTTPMethods, HTTPMethod } from '../common/request';
 import { Matcher, isMatcher, AnyTemplate } from './matchers';
 import ConfigurationError from '../errors/configurationError';
@@ -131,7 +132,7 @@ export class Interaction {
       throwIfQueryObjectInvalid(requestOpts.query);
     }
 
-    this.state.request = omitBy(requestOpts, isNil) as RequestOptions;
+    this.state.request = reject(isNil, requestOpts) as RequestOptions;
 
     return this;
   }
@@ -152,14 +153,11 @@ export class Interaction {
       throw new ConfigurationError('You must provide a status code.');
     }
 
-    this.state.response = omitBy(
-      {
-        body: responseOpts.body,
-        headers: responseOpts.headers || undefined,
-        status: responseOpts.status,
-      },
-      isNil
-    ) as ResponseOptions;
+    this.state.response = reject(isNil, {
+      body: responseOpts.body,
+      headers: responseOpts.headers || undefined,
+      status: responseOpts.status,
+    }) as ResponseOptions;
     return this;
   }
 
