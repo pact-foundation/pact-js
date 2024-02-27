@@ -169,10 +169,7 @@ export class MessageConsumerPact {
     }
 
     forEachObjIndexed((v, k) => {
-      this.message.withMetadata(
-        `${k}`,
-        typeof v === 'string' ? v : v.getValue()
-      );
+      this.message.withMetadata(`${k}`, JSON.stringify(v));
     }, metadata);
 
     return this;

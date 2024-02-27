@@ -35,7 +35,7 @@ describe('Message consumer tests', () => {
           }),
         })
         .withMetadata({
-          queue: 'animals',
+          queue: like('animals'),
         })
         .verify(synchronousBodyHandler(dogApiHandler));
     });
@@ -53,7 +53,7 @@ describe('Message consumer tests', () => {
           }),
         })
         .withMetadata({
-          queue: 'animals',
+          queue: like('animals'),
         })
         .verify(synchronousBodyHandler(dogApiHandler));
     });

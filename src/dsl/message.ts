@@ -1,5 +1,6 @@
 import { AnyJson } from '../common/jsonTypes';
 import { Matcher } from './matchers';
+import { Matcher as MatcherV3 } from '../v3/matchers';
 
 /**
  * Metadata is a map containing message context,
@@ -8,7 +9,7 @@ import { Matcher } from './matchers';
  * @module Message
  */
 export interface Metadata {
-  [name: string]: string | Matcher<string>;
+  [name: string]: string | Matcher<string> | MatcherV3<string>;
 }
 
 /**
