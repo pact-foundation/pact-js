@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [12.3.0](https://github.com/pact-foundation/pact-js/compare/v12.2.0...v12.3.0) (2024-02-28)
+
+
+### Features
+
+* allow v3 matchers in message metadata ([58b1251](https://github.com/pact-foundation/pact-js/commit/58b125133b80327597702ebf7246bc47ad9c8da8))
+
 ## [12.2.0](https://github.com/pact-foundation/pact-js/compare/v12.1.3...v12.2.0) (2024-02-09)
 
 
