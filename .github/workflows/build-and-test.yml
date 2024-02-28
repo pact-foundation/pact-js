@@ -9,6 +9,7 @@ on:
 env:
   GIT_COMMIT: ${{ github.sha }}
   GIT_REF: ${{ github.ref }}
+  GIT_BRANCH: ${{ github.head_ref || github.ref_name }}
   LOG_LEVEL: info
 
 jobs:
