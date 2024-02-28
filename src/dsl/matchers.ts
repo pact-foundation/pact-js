@@ -40,7 +40,7 @@ export interface ArrayMatcher<T> extends Matcher<T> {
   max?: number;
 }
 
-export function isMatcher(x: AnyTemplate): x is Matcher<AnyTemplate> {
+export function isMatcher(x: unknown): x is Matcher<AnyTemplate> {
   return x != null && (x as Matcher<AnyTemplate>).getValue !== undefined;
 }
 

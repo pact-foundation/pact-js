@@ -28,6 +28,7 @@ import {
   generateMockServerError,
 } from '../../v3/display';
 import logger from '../../common/logger';
+import { isMatcher as isV3Matcher } from '../../v3/matchers';
 
 const defaultPactDir = './pacts';
 
@@ -188,10 +189,7 @@ export class SynchronousMessageWithResponseBuilder
     }
 
     forEachObjIndexed((v, k) => {
-      this.interaction.withMetadata(
-        `${k}`,
-        typeof v === 'string' ? v : v.getValue()
-      );
+      this.interaction.withMetadata(`${k}`, JSON.stringify(v));
     }, metadata);
 
     return this;
