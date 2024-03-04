@@ -100,7 +100,7 @@ export interface MessageConsumerOptions {
   // Log level
   logLevel?: LogLevel;
 
-  // Specification Version (should be 3 for messages)
+  // Specification Version (should be 3 or greater for messages)
   spec?: number;
 
   // Control how the Pact files are written
