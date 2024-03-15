@@ -8,13 +8,8 @@ import logger from '../../../common/logger';
 import { createProxyStateHandler } from './stateHandler/stateHandler';
 import { registerAfterHook, registerBeforeHook } from './hooks';
 import { createRequestTracer, createResponseTracer } from './tracer';
-import { parseBody } from './parseBody';
 import { createProxyMessageHandler } from './messages';
-
-// A base URL is always needed for the proxy, even
-// if there are no targets to proxy (e.g. in the case
-// of message pact
-const defaultBaseURL = () => 'http://127.0.0.1/';
+import { toServerOptions } from './proxyRequest';
 
 // Listens for the server start event
 export const waitForServerReady = (server: http.Server): Promise<http.Server> =>
@@ -74,14 +69,8 @@ export const createProxy = (
   app.all('/*', (req, res) => {
     logger.debug(`Proxying ${req.method}: ${req.path}`);
 
-    proxy.web(req, res, {
-      changeOrigin: config.changeOrigin === true,
-      secure: config.validateSSL === true,
-      target: config.providerBaseUrl || defaultBaseURL(),
-    });
+    proxy.web(req, res, toServerOptions(config, req));
   });
-
-  proxy.on('proxyReq', (proxyReq, req) => parseBody(proxyReq, req));
 
   // TODO: node is now using ipv6 as a default. This should be customised
   return http
