@@ -27,7 +27,10 @@ describe('V4 Matchers', () => {
       await pact
         .addInteraction()
         .uponReceiving('a request only checks the keys and ignores the values')
-        .withRequest('GET', '/eachKeyMatches')
+        .withRequest('GET', '/eachKeyMatches', (builder) => {
+          builder.query({ from: 'today' });
+          builder.headers({ Accept: 'application/json' });
+        })
         .willRespondWith(200, (builder) => {
           builder.jsonBody(
             MatchersV3.eachKeyMatches(

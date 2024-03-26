@@ -9,14 +9,6 @@ All notable changes to this project will be documented in this file. See [commit
 
 * **corporate proxy:** support in verifier ([f3ec1be](https://github.com/pact-foundation/pact-js/commit/f3ec1be2029c365e1888798f8a78935a0ed3f74c))
 
-## [12.4.0](https://github.com/pact-foundation/pact-js/compare/v12.3.1...v12.4.0) (2024-03-25)
-
-
-### Features
-
-* **corporate proxy:** support in verifier ([f3ec1be](https://github.com/pact-foundation/pact-js/commit/f3ec1be2029c365e1888798f8a78935a0ed3f74c))
-
-
 ### [12.3.1](https://github.com/pact-foundation/pact-js/compare/v12.3.0...v12.3.1) (2024-03-25)
 
 

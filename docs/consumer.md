@@ -21,45 +21,59 @@ In this document, we will cover steps 1-3.
 To use the library on your tests, add the pact dependency:
 
 ```javascript
-const { PactV3 } = require("@pact-foundation/pact")
+const { PactV4 } = require("@pact-foundation/pact")
 ```
 
-The `PactV3` class provides the following high-level APIs, they are listed in the order in which they typically get called in the lifecycle of testing a consumer:
+`PactV4` is the latest version of this library, supporting up to and including version 4 of the [Pact Specification](https://github.com/pact-foundation/pact-specification/). It also allows interactions of multiple types (HTTP, async, synchronous). For previous versions, see below.
+
+<details><summary>Previous versions</summary>
+
+
+```javascript
+const { Pact } = require("@pact-foundation/pact")   // Supports up to and including Pact Specification version 2
+const { PactV3 } = require("@pact-foundation/pact") // Supportsu up to and including Pact Specification version 3
+```
+
+You should use the `PactV4` interface unless you can't, and set the specification version via `spec` to the desired serialisation format.
+
+</details>
+
+The `PactV4` class provides the following high-level APIs, they are listed in the order in which they typically get called in the lifecycle of testing a consumer:
 
 ### API
 
 <details><summary>Consumer API</summary>
 
-| API | Options | Description |
-|-----|---------|-------------|
-| `new PactV3(options)` | See constructor options below | Creates a Mock Server test double of your Provider API. The class is **not** thread safe, but you can run tests in parallel by creating as many instances as you need. |
-| `addInteraction(...)`  | `V3Interaction` | Register an expectation on the Mock Server passing in a full `V3Interaction` object, which must be called by your test case(s). You can add multiple interactions per server, however it is recommended to only have one. These will be validated and written to a pact if successful. Alternatively, you may setup the interactions calling the builder methods below|
-| `given(...)` | `ProviderStateV3` | The provider state for the interaction |
-| `uponReceiving(...)` | string | The scenario name. The combination of `given` and `uponReceiving` must be unique in the pact file |
-| `withRequest(...)` | `V3Request` | The HTTP request info |
-| `withRequestBinaryFile(...)` | - | Similar to `withRequest` however you can also specify a path to a file to upload and its content type |
-| `withRequestMultipartFileUpload(...)` | - | Similar to `withRequest` however you can also specify a path to a file to upload, its content type and the mime part name|
-| `willRespondWith(...)` | `V3Response` | The HTTP response details |
-| `withResponseBinaryFile(...)` | - | Similar to `withResponse` however you can also specify a path to a file to receive and its content type |
-| `withResponseMultipartFileUpload(...)` | - | Similar to `withResponse` however you can also specify a path to a file to receive, its content type and the mime part name | |
-| `executeTest(...)` | - | Executes a user defined function, passing in details of the dynamic mock service for use in the test. If successful, the pact file is updated	 |
+The Pact SDK uses a fluent builder to create interactions. 
+
+| API                              | Options                            | Description                                                                                                                                                            |
+| -------------------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `new PactV4(options)`            | See constructor options below      | Creates a Mock Server test double of your Provider API. The class is **not** thread safe, but you can run tests in parallel by creating as many instances as you need. |
+| `addInteraction(...)`            | `V4UnconfiguredInteraction`        | Start a builder for an HTTP interaction                                                                                                                                |
+| `addSynchronousInteraction(...)` | `V4UnconfiguredSynchronousMessage` | Start a builder for an asynchronous message                                                                                                                            |
+
+#### Common methods to builders
+
+
+| `given(...)`                           | Object             | Set one or more provider states for the interaction                                                                                                                                                                                                                                                                                                                                 |
+| `uponReceiving(...)`                   | string                        | The scenario name. The combination of `given` and `uponReceiving` must be unique in the pact file                                                                                                                                                                                                                                                                      |
+| `executeTest(...)`                     | -                             | Executes a user defined function, passing in details of the dynamic mock service for use in the test. If successful, the pact file is updated. The function signature changes depending on the setup and context of the interaction.                                                                                                                                                                                                                          |
+
 </details>
 
 <details><summary>Constructor</summary>
 
-| Parameter           | Required? | Type    | Description                                                                                              |
-| ------------------- | --------- | ------- | -------------------------------------------------------------------------------------------------------- |
-| `consumer`          | yes       | string  | The name of the consumer                                                                                 |
-| `provider`          | yes       | string  | The name of the provider                                                                                 |
-| `port`              | no        | number  | The port to run the mock service on, defaults to a random machine assigned available port                                                    |
-| `host`              | no        | string  | The host to run the mock service, defaults to 127.0.0.1                                                  |
-| `tls`               | no        | boolean | flag to identify which protocol to be used (default false, HTTP)                                       |
-| `dir`               | no        | string  | Directory to output pact files                                                                           |
-| `log`               | no        | string  | File to log to                                                                                           |
-| `logLevel`          | no        | string  | Log level: one of 'trace', 'debug', 'info', 'error', 'fatal' or 'warn'                                   |
-| `spec`              | no        | number  | Pact specification version (defaults to 2)                                                               |
-| `cors`              | no        | boolean | Allow CORS OPTION requests to be accepted, defaults to false                                             |
-| `timeout`           | no        | number  | The time to wait for the mock server tq5o start up in milliseconds. Defaults to 30 seconds (30000)         |
+| Parameter  | Required? | Type    | Description                                                                               |
+| ---------- | --------- | ------- | ----------------------------------------------------------------------------------------- |
+| `consumer` | yes       | string  | The name of the consumer                                                                  |
+| `provider` | yes       | string  | The name of the provider                                                                  |
+| `port`     | no        | number  | The port to run the mock service on, defaults to a random machine assigned available port |
+| `host`     | no        | string  | The host to run the mock service, defaults to 127.0.0.1                                   |
+| `tls`      | no        | boolean | flag to identify which protocol to be used (default false, HTTP)                          |
+| `dir`      | no        | string  | Directory to output pact files                                                            |
+| `log`      | no        | string  | File to log to                                                                            |
+| `logLevel` | no        | string  | Log level: one of 'trace', 'debug', 'info', 'error', 'fatal' or 'warn'                    |
+| `spec`     | no        | number  | Pact specification version (defaults to 2)                                                |
 
 </details>
 
@@ -79,13 +93,14 @@ _NOTE: you must also ensure you clear out your pact directory prior to running t
 Check out the [examples](https://github.com/pact-foundation/pact-js/tree/master/examples/) for more of these.
 
 ```js
-import { PactV3, MatchersV3 } from '@pact-foundation/pact';
+import { PactV4, MatchersV3 } from '@pact-foundation/pact';
 
 // Create a 'pact' between the two applications in the integration we are testing
-const provider = new PactV3({
+const provider = new PactV4({
   dir: path.resolve(process.cwd(), 'pacts'),
   consumer: 'MyConsumer',
   provider: 'MyProvider',
+  spec: SpecificationVersion.SPECIFICATION_VERSION_V4, // Modify this as needed for your use case
 });
 
 // API Client that will fetch dogs from the Dog API
@@ -109,18 +124,16 @@ describe('GET /dogs', () => {
     //
     // We use Pact to mock out the backend API
     provider
+      .addInteraction()
       .given('I have a list of dogs')
       .uponReceiving('a request for all dogs with the builder pattern')
-      .withRequest({
-        method: 'GET',
-        path: '/dogs',
-        query: { from: 'today' },
-        headers: { Accept: 'application/json' },
+      .withRequest('GET', '/dogs' (builder) => {
+          builder.query({ from: 'today' })
+          builder.headers({ Accept: 'application/json' })        
       })
-      .willRespondWith({
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-        body: EXPECTED_BODY,
+      .willRespondWith(200, (builder) => {
+        builder.headers({ 'Content-Type': 'application/json' })
+        builder.jsonBody(EXPECTED_BODY)
       });
 
     return provider.executeTest((mockserver) => {

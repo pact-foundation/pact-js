@@ -71,6 +71,7 @@ This readme offers a basic introduction to the library. The full documentation f
   - [Matching](/docs/matching.md)
 - [Provider Testing](/docs/provider.md)
 - [Event Driven Systems](/docs/messages.md)
+- [Plugins](/docs/plugins.md)
 - [GraphQL](/docs/graphql.md)
 - [XML](/docs/xml.md)
 - [Examples](https://github.com/pact-foundation/pact-js/tree/master/examples/)

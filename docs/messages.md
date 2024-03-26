@@ -1,16 +1,15 @@
 # Event driven-systems
 
-## Introduction to asynchronous API Testing
+## Introduction to Message Based API Testing
 
 Modern distributed architectures are increasingly integrated in a decoupled, asynchronous fashion. Message queues such as ActiveMQ, RabbitMQ, SQS, Kafka and Kinesis are common, often integrated via small and frequent numbers of microservices (e.g. lambda).
 
-Furthermore, the web has things like WebSockets which involve bidirectional messaging.
+Furthermore, the web has things like WebSockets and gRPC which involve bidirectional messaging (synchronous).
 
 Pact has support for these use cases, by abstracting away the protocol and focussing on the messages passing between them.
 
 [Read the docs](https://docs.pact.io/getting_started/how_pact_works#non-http-testing-message-pact) for more on how Pact deals with this.
 
-## Contract Testing Process (Async)
 
 Pact is a consumer-driven contract testing tool, which is a fancy way of saying that the API `Consumer` writes a test to set out its assumptions and needs of its API `Provider`(s). By unit testing our API client with Pact, it will produce a `contract` that we can share to our `Provider` to confirm these assumptions and prevent breaking changes.
 
@@ -30,10 +29,11 @@ The process looks like this on the provider (producer) side:
 
 In this document, we will cover steps 1 and 2.
 
+## Contract Testing Process (Asynchronous)
+
 ### Consumer
 
-A Consumer is the system that will be reading a message from a queue or some other intermediary - like a DynamoDB table or S3 bucket -
-and be able to handle it.
+A Consumer is the system that will be reading a message from a queue or some other intermediary - like a DynamoDB table or S3 bucket - and be able to handle it.
 
 From a Pact testing point of view, Pact takes the place of the intermediary (MQ/broker etc.) and confirms whether or not the consumer is able to handle a request.
 
@@ -157,3 +157,6 @@ describe("Message provider tests", () => {
 1.  We configure Pact to stand-in for the queue. The most important bit here is the `messageProviders` block.
     - Similar to the Consumer tests, we map the various interactions that are going to be verified as denoted by their `description` field. In this case, `a request for a dog`, maps to the `createDog` handler. Notice how this matches the original Consumer test. We are using the `providerWithMetadata` function because we are also going to validate message metadata (in this case, the queue the message will be sent on).
 1.  We can now run the verification process. Pact will read all of the interactions specified by its consumer, and invoke each function that is responsible for generating that message.
+
+## Contract Testing Process (Synchronous)
+
