@@ -29,7 +29,7 @@
     "statements": 80
   },
   "devDependencies": {
-    "@pact-foundation/pact": "file:../../dist/",
+    "@pact-foundation/pact": "file:../../dist",
     "@types/chai": "^4.3.3",
     "@types/chai-as-promised": "7.1.5",
     "@types/mocha": "^9.1.1",
