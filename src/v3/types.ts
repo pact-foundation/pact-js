@@ -125,7 +125,9 @@ export declare type TemplateHeaders = {
 
 export type TemplateQuery = Record<
   string,
-  string | Matcher<string> | Array<string | Matcher<string>>
+  | string
+  | Matcher<string | number | boolean>
+  | Array<string | Matcher<string | number | boolean>>
 >;
 
 export interface V3Interaction {
