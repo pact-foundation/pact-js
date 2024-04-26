@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [12.5.0](https://github.com/pact-foundation/pact-js/compare/v12.4.0...v12.5.0) (2024-04-26)
+
+
+### Features
+
+* support matching numbers, bool in query strings ([d2237bd](https://github.com/pact-foundation/pact-js/commit/d2237bd633ee17be8c3e80931fed429af9bf8256))
+
+
+### Fixes and Improvements
+
+* broken `eachLike` V3 documentation. ([68e5013](https://github.com/pact-foundation/pact-js/commit/68e50136abaf1f1522c7be19bc005d6655eb7d43))
+* package.json & package-lock.json to reduce vulnerabilities ([7c2e119](https://github.com/pact-foundation/pact-js/commit/7c2e11991b7c73d71736b785b17b4e04a2655503))
+* update to latest pact-core 14.3.4 ([1b56a73](https://github.com/pact-foundation/pact-js/commit/1b56a7317c657ad2f89ed037532b84a58681e0e6))
+* updated deprecated `eachLike` V3 description. ([1e7b7ae](https://github.com/pact-foundation/pact-js/commit/1e7b7ae366e8e4dcccb2fcd048526021bba7a853))
+
 ## [12.4.0](https://github.com/pact-foundation/pact-js/compare/v12.3.1...v12.4.0) (2024-03-25)
 
 
