@@ -47,7 +47,10 @@ describe('V4 Matchers', () => {
             .request({
               baseURL: mockserver.url,
               method: 'GET',
-              url: '/eachKeyMatches',
+              url: '/eachKeyMatches?from=today',
+              headers: {
+                Accept: 'application/json',
+              },
             })
             .then((res) => {
               expect(res.data.key1).to.equal("a string we don't care about");
