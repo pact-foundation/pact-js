@@ -1,4 +1,4 @@
-import { Verifier } from '@pact-foundation/pact';
+import { LogLevel, Verifier } from '@pact-foundation/pact';
 import { after } from 'mocha';
 
 const express = require('express');
@@ -40,7 +40,7 @@ describe('V4 Matchers', () => {
     const pact = new Verifier({
       pactUrls: ['./pacts/myconsumer-myprovider.json'],
       providerBaseUrl: 'http://localhost:8080',
-      logLevel: 'trace',
+      logLevel: (process.env.LOG_LEVEL as LogLevel) || 'trace',
     });
     it('verifies the pact', () => pact.verifyProvider());
   });
