@@ -67,6 +67,8 @@ jobs:
         run: cd examples/v3/typescript && npm install --ignore-scripts && npm test
       - name: example_v4_plugins
         run: cd examples/v4/plugins && npm install --ignore-scripts && npm test
+      - name: example_v4_matchers
+        run: cd examples/v4/matchers && npm install --ignore-scripts && npm test
       # - name: Upload dist folder
       #   if: runner.os == 'Linux'
       #   uses: actions/upload-artifact@v3
