@@ -112,7 +112,7 @@
     "lodash.isundefined": "3.0.1",
     "lodash.omit": "^4.5.0",
     "pkginfo": "^0.4.1",
-    "ramda": "^0.28.0",
+    "ramda": "^0.30.0",
     "randexp": "^0.5.3"
   },
   "devDependencies": {
