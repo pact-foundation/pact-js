@@ -265,7 +265,7 @@ export const decimal = (num?: number): Matcher<number> => {
  * @param num Example value. If omitted a random integer value will be generated.
  */
 export function number(num?: number): Matcher<number> {
-  if (num && typeof num === 'number') {
+  if (typeof num === 'number') {
     return {
       'pact:matcher:type': 'number',
       value: num,
