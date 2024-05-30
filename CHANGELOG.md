@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [12.5.1](https://github.com/pact-foundation/pact-js/compare/v12.5.0...v12.5.1) (2024-05-30)
+
+
+### Fixes and Improvements
+
+* prevent non-number use in number matcher ([0db6f7f](https://github.com/pact-foundation/pact-js/commit/0db6f7ff20d6a753ecc504fccff435d2030de54c))
+
 ## [12.5.0](https://github.com/pact-foundation/pact-js/compare/v12.4.0...v12.5.0) (2024-04-26)
 
 
