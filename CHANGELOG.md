@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [13.0.0](https://github.com/pact-foundation/pact-js/compare/v12.5.2...v13.0.0) (2024-06-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* update to @pact-foundation/pact-core to 15.x
+
+### Fixes and Improvements
+
+* update to @pact-foundation/pact-core to 15.x ([42f52bb](https://github.com/pact-foundation/pact-js/commit/42f52bb9dbe5c65094e0ce8979605a8457f18ba5))
+
 ### [12.5.2](https://github.com/pact-foundation/pact-js/compare/v12.5.1...v12.5.2) (2024-05-30)
 
 
