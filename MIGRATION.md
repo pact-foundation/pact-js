@@ -1,5 +1,27 @@
 # Pact-js migration guide
 
+# 12.x.x -> 13.x.x
+
+## Breaking Changes
+
+  All CLI/API functionality provided by the Pact CLI tools (ruby based) now migrated to
+    
+  * Repo
+    
+      * https://github.com/pact-foundation/pact-js-cli/
+    
+  * NPM Package
+    
+      * https://www.npmjs.com/package/@pact-foundation/pact-cli
+    
+  * imports
+    
+      * `@pact-foundation/pact-core` imports will now become `@pact-foundation/pact-cli` for programatic usage of the CLI tools
+
+  * npx usage
+    
+    * `npx --package=@pact-foundation/pact-cli@15.0.0 -c pact-broker`
+
 # 11.x.x -> 12.x.x
 
 - Node versions less than 16 are no longer supported

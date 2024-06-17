@@ -153,3 +153,40 @@ describe('GET /dogs', () => {
 ```
 
 Read on about [matching](/docs/matching.md)
+
+## Publishing Pacts to a Broker
+
+Sharing is caring - to simplify sharing Pacts between Consumers and Providers, we have created the [Pact Broker](https://docs.pact.io/pact_broker).
+
+The Broker:
+
+- versions your contracts
+- tells you which versions of your applications can be deployed safely together
+- allows you to deploy your services independently
+- provides API documentation of your applications that is guaranteed to be up-to date
+- visualises the relationships between your services
+- integrates with other systems, such as Slack or your CI server, via webhooks
+- ...and much much [more](https://docs.pact.io/getting_started/sharing_pacts).
+
+[Host your own using the open source docker image](https://docs.pact.io/pact_broker/docker_images), or sign-up for a [free hosted Pact Broker](https://pactflow.io) with our friends at PactFlow.
+
+### Publish in npm scripts
+
+The easiest way to publish pacts to the broker is via an npm script in your package.json:
+
+```
+
+   "test:publish": "./node_modules/.bin/pact-broker publish <YOUR_PACT_FILES_OR_DIR> --consumer-app-version=\"$(npx absolute-version)\" --auto-detect-version-properties --broker-base-url=https://your-broker-url.example.com"
+```
+
+You'll need to install [`@pact-foundation/pact-cli`](https://github.com/pact-foundation/pact-js-cli) package to use the `pact-broker` command. This is a standalone package that can be installed via npm.
+
+For a full list of the options, see the [CLI usage instructions](https://github.com/pact-foundation/pact-ruby-standalone/releases).
+
+All CLI binaries are available in npm scripts when using pact-js-cli `@pact-foundation/pact-cli`.
+
+If you want to pass your username and password to the broker without including
+them in scripts, you can provide it via the environment variables
+`PACT_BROKER_USERNAME` and `PACT_BROKER_PASSWORD`. If your broker supports an
+access token instead of a password, use the environment variable
+`PACT_BROKER_TOKEN`.
