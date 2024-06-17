@@ -19,6 +19,7 @@
   "devDependencies": {
     "absolute-version": "1.0.1",
     "@pact-foundation/pact": "file:../../../dist",
+    "@pact-foundation/pact-cli": "^15.0.1",
     "body-parser": "^1.20.0",
     "chai": "^3.5.0",
     "chai-as-promised": "^7.1.1",

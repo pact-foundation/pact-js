@@ -2,7 +2,6 @@
     "bail": true,
     "require": [
         "ts-node/register",
-        "./test/helper.ts",
         "source-map-support/register"
     ],
     "fullTrace": true,
