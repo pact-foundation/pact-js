@@ -25,7 +25,6 @@ jobs:
         os: [macos-14, macos-12, ubuntu-latest, windows-latest]
         docker: [false]
         alpine: [false]
-        arch: [amd64]
         include:
           - os: ubuntu-latest
             docker: true
