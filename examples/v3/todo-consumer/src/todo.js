@@ -7,10 +7,6 @@ const parser = new XMLParser({
   ignoreAttributes: false,
 });
 let serverUrl = 'http://127.0.0.1:2203';
-const HasBinaryPayloadIssue =
-  process.platform === 'win32' ||
-  (process.platform === 'darwin' && process.arch === 'arm64') ||
-  (process.platform === 'linux' && process.arch === 'arm64');
 
 module.exports = {
   getProjects: async (format = 'json') => {
@@ -44,9 +40,7 @@ module.exports = {
     const data = fs.readFileSync(image);
     return axios.post(serverUrl + '/projects/' + id + '/images', data, {
       headers: {
-        'Content-Type': HasBinaryPayloadIssue
-          ? 'application/octet-stream'
-          : 'image/jpeg',
+        'Content-Type': 'image/jpeg',
       },
     });
   },

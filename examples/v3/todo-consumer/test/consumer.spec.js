@@ -8,10 +8,6 @@ const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 const TodoApp = require('../src/todo');
 const expect = chai.expect;
-const HasBinaryPayloadIssue =
-  process.platform === 'win32' ||
-  (process.platform === 'darwin' && process.arch === 'arm64') ||
-  (process.platform === 'linux' && process.arch === 'arm64');
 chai.use(chaiAsPromised);
 
 describe('Pact V3', () => {
@@ -148,7 +144,6 @@ describe('Pact V3', () => {
       });
     });
 
-    // See https://github.com/pact-foundation/pact-reference/issues/171 for why it's skipped
     describe('with image uploads', () => {
       before(() => {
         provider
@@ -156,7 +151,7 @@ describe('Pact V3', () => {
           .uponReceiving('a request to store an image against the project')
           .withRequestBinaryFile(
             { method: 'POST', path: '/projects/1001/images' },
-            HasBinaryPayloadIssue ? 'application/octet-stream' : 'image/jpeg',
+            'image/jpeg',
             path.resolve(__dirname, 'example.jpg')
           )
           .willRespondWith({ status: 201 });
