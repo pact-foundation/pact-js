@@ -11,7 +11,7 @@ chai.use(chaiAsPromised);
 describe('Net', () => {
   const port = 4567;
   const defaultHost = '0.0.0.0';
-  const specialPort = process.platform.match('win') ? -1 : 80;
+  const specialPort = -1;
 
   // Utility function to create a server on a given port and return a Promise
   const createServer = (p: number, host = defaultHost) =>
@@ -26,9 +26,7 @@ describe('Net', () => {
       });
     });
 
-  (process.platform === 'linux' && process.arch === 'arm64'
-    ? describe.skip
-    : describe)('#isPortAvailable', () => {
+  describe('#isPortAvailable', () => {
     context('when the port is not allowed to be bound', () => {
       it('returns a rejected promise', () =>
         expect(isPortAvailable(specialPort, defaultHost)).to.eventually.be
