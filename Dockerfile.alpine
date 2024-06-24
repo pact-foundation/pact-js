@@ -1,0 +1,9 @@
+ARG NODE_VERSION=current
+FROM node:${NODE_VERSION}-alpine
+
+RUN apk add bash curl git file libc6-compat gcompat jq
+# libc6-compat gcompat required for @pact-foundation/pact-cli ruby runtime
+# all other dependencies just used for @pact-foundation/pact testing
+# so you don't need to use those in your own projects
+
+ENTRYPOINT [ "bash", "-c", "scripts/ci/build-and-test.sh" ]

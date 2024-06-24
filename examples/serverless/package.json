@@ -6,6 +6,7 @@
   "scripts": {
     "clean": "rimraf pacts",
     "test": "npm run test:consumer && npm run test:publish && npm run test:provider",
+    "test:no:publish": "npm run test:consumer && npm run test:provider",
     "test:consumer": "mocha consumer/*.spec.js",
     "test:provider": "mocha -t 30000 provider/*.spec.js",
     "test:publish": "pact-broker publish ./pacts --consumer-app-version=\"$(npx absolute-version)\" --auto-detect-version-properties --broker-base-url=https://test.pactflow.io --broker-username dXfltyFMgNOFZAxr8io9wJ37iUpY42M --broker-password O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
@@ -20,7 +21,7 @@
   "devDependencies": {
     "absolute-version": "1.0.1",
     "@pact-foundation/pact": "file:../../dist",
-    "@pact-foundation/pact-cli": "^15.0.1",
+    "@pact-foundation/pact-cli": "^15.0.2",
     "aws-sdk": "^2.1354.0",
     "chai": "^4.3.6",
     "lodash": "^4.17.21",
