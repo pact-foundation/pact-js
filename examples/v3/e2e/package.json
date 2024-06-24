@@ -4,6 +4,7 @@
   "description": "Pact JS E2E Example",
   "scripts": {
     "test": "npm run test:consumer && npm run test:publish && npm run test:provider",
+    "test:no:publish": "npm run test:consumer && npm run test:provider",
     "test:consumer": "mocha --config=test/.mocharc.json test/consumer.spec.js",
     "test:publish": "pact-broker publish ./pacts --consumer-app-version=\"$(npx absolute-version)\" --auto-detect-version-properties --broker-base-url=https://test.pactflow.io --broker-username dXfltyFMgNOFZAxr8io9wJ37iUpY42M --broker-password O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
     "test:provider": "mocha --config=test/.mocharc.json test/provider.spec.js",
@@ -19,7 +20,7 @@
   "devDependencies": {
     "absolute-version": "1.0.1",
     "@pact-foundation/pact": "file:../../../dist",
-    "@pact-foundation/pact-cli": "^15.0.1",
+    "@pact-foundation/pact-cli": "^15.0.2",
     "body-parser": "^1.20.0",
     "chai": "^3.5.0",
     "chai-as-promised": "^7.1.1",
