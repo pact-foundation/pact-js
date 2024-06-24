@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [13.1.0](https://github.com/pact-foundation/pact-js/compare/v13.0.0...v13.1.0) (2024-06-24)
+
+
+### Features
+
+* support alpine via pact-js-core 15.1.0 ([1d35c82](https://github.com/pact-foundation/pact-js/commit/1d35c826b225d99943b733aa7939361b8d8dfd78))
+
 ## [13.0.0](https://github.com/pact-foundation/pact-js/compare/v12.5.2...v13.0.0) (2024-06-17)
 
 
