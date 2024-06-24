@@ -8,7 +8,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)" # Figure out where the 
 
 # Link the build so that the examples are always testing the
 # current build, in it's properly exported format
-(cd dist && npm ci --ignore-scripts)
+(cd dist && npm ci)
 
 echo "Running e2e examples build for node version $(node --version)"
 for i in examples/*; do
@@ -23,8 +23,12 @@ for i in examples/*; do
     if [ x"${SETUP_DIST_ONLY:-}" == "x" ]; then 
       echo "running all examples as SETUP_DIST_ONLY not set"
     # npm ci does not work because we have just changed the package.json file
-      npm install --ignore-scripts
-      npm test
+      npm install
+      if [[ -f /.dockerenv && "$(uname -sm)" == 'Linux aarch64' && "$GITHUB_ACTIONS" == 'true' ]]; then
+        npm run test:no:publish || npm test
+      else
+        npm test
+      fi
     else
       echo "skipping testing of examples as SETUP_DIST_ONLY set"
     fi
@@ -55,8 +59,12 @@ for i in examples/v*/*; do
   if [ x"${SETUP_DIST_ONLY:-}" == "x" ]; then 
     echo "running all examples as SETUP_DIST_ONLY not set"
   # npm ci does not work because we have just changed the package.json file
-    npm install --ignore-scripts
-    npm test
+    npm install
+    if [[ -f /.dockerenv && "$(uname -sm)" == 'Linux aarch64' && "$GITHUB_ACTIONS" == 'true' ]]; then
+      npm run test:no:publish || npm test
+    else
+      npm test
+    fi
   else
     echo "skipping testing of examples as SETUP_DIST_ONLY set"
   fi
