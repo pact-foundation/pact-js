@@ -496,7 +496,7 @@ export function fromProviderState<V>(
   exampleValue: V
 ): ProviderStateInjectedValue<V> {
   return {
-    'pact:matcher:type': 'type',
+    'pact:matcher:type': '', // TODO: split generators out from matchers in next major release
     'pact:generator:type': 'ProviderState',
     expression,
     value: exampleValue,
