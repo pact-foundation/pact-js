@@ -152,7 +152,7 @@ const dogExample = { dog: 1 };
 const EXPECTED_BODY = MatchersV3.eachLike(dogExample);
 
 describe('GET /dogs', () => {
-  it('returns an HTTP 200 and a list of docs', () => {
+  it('returns an HTTP 200 and a list of dogs', () => {
     // Arrange: Setup our expected interactions
     //
     // We use Pact to mock out the backend API
