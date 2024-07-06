@@ -3,12 +3,7 @@ import * as chai from 'chai';
 import * as path from 'path';
 import * as chaiAsPromised from 'chai-as-promised';
 import { query } from './consumer';
-import {
-  Pact,
-  GraphQLInteraction,
-  Matchers,
-  LogLevel,
-} from '@pact-foundation/pact';
+import { Matchers, LogLevel, GraphQLPactV3 } from '@pact-foundation/pact';
 const { like } = Matchers;
 const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
@@ -17,21 +12,18 @@ const expect = chai.expect;
 chai.use(chaiAsPromised);
 
 describe('GraphQL example', () => {
-  const provider = new Pact({
+  const provider = new GraphQLPactV3({
     port: 4000,
-    log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
     dir: path.resolve(process.cwd(), 'pacts'),
     consumer: 'GraphQLConsumer',
     provider: 'GraphQLProvider',
     logLevel: LOG_LEVEL as LogLevel,
   });
 
-  before(() => provider.setup());
-  after(() => provider.finalize());
-
-  describe('query hello on /graphql', () => {
+  describe('When the "hello" query on /graphql is made', () => {
     before(() => {
-      const graphqlQuery = new GraphQLInteraction()
+      provider
+        .given('the world exists')
         .uponReceiving('a hello request')
         .withQuery(
           `
@@ -59,16 +51,14 @@ describe('GraphQL example', () => {
             },
           },
         });
-      return provider.addInteraction(graphqlQuery);
     });
 
-    it('returns the correct response', () => {
-      return expect(query()).to.eventually.deep.equal({
-        hello: 'Hello world!',
+    it('returns the correct response', async () => {
+      await provider.executeTest(async () => {
+        return expect(query()).to.eventually.deep.equal({
+          hello: 'Hello world!',
+        });
       });
     });
-
-    // verify with Pact, and reset expectations
-    afterEach(() => provider.verify());
   });
 });
