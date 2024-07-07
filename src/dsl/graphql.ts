@@ -5,22 +5,16 @@
  */
 import { isNil, extend, isUndefined } from 'lodash';
 import { reject } from 'ramda';
-import gql from 'graphql-tag';
 import { Interaction, InteractionStateComplete } from './interaction';
 import { regex } from './matchers';
 import GraphQLQueryError from '../errors/graphQLQueryError';
 import ConfigurationError from '../errors/configurationError';
-
-export interface GraphQLVariables {
-  [name: string]: unknown;
-}
-
-const escapeSpace = (s: string) => s.replace(/\s+/g, '\\s*');
-
-const escapeRegexChars = (s: string) =>
-  s.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&');
-
-const escapeGraphQlQuery = (s: string) => escapeSpace(escapeRegexChars(s));
+import {
+  escapeGraphQlQuery,
+  GraphQLVariables,
+  validateQuery,
+} from '../common/graphQL/graphQL';
+import { OperationType } from '../common/graphQL/types';
 
 /**
  * GraphQL interface
@@ -130,7 +124,10 @@ export class GraphQLInteraction extends Interaction {
     }
 
     try {
-      gql(query);
+      validateQuery(
+        query,
+        type === 'query' ? OperationType.Query : OperationType.Mutation
+      );
     } catch (e) {
       throw new GraphQLQueryError(`GraphQL ${type} is invalid: ${e.message}`);
     }

@@ -3,28 +3,37 @@ import * as chai from 'chai';
 import * as path from 'path';
 import * as chaiAsPromised from 'chai-as-promised';
 import { query } from './consumer';
-import { Matchers, LogLevel, GraphQLPactV3 } from '@pact-foundation/pact';
+import { Matchers, LogLevel, PactV4 } from '@pact-foundation/pact';
+import { V4InteractionWithResponse } from '@pact-foundation/pact/src/v4/http/types';
 const { like } = Matchers;
-const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
+const LOG_LEVEL = process.env.LOG_LEVEL || 'INFO';
 
 const expect = chai.expect;
 
 chai.use(chaiAsPromised);
 
 describe('GraphQL example', () => {
-  const provider = new GraphQLPactV3({
+  const provider = new PactV4({
     port: 4000,
     dir: path.resolve(process.cwd(), 'pacts'),
-    consumer: 'GraphQLConsumer',
-    provider: 'GraphQLProvider',
+    consumer: 'GraphQLConsumerV4',
+    provider: 'GraphQLProviderV4',
     logLevel: LOG_LEVEL as LogLevel,
   });
 
   describe('When the "hello" query on /graphql is made', () => {
+    let prepared: V4InteractionWithResponse;
+
     before(() => {
-      provider
+      prepared = provider
+        .addGraphQLInteraction()
         .given('the world exists')
         .uponReceiving('a hello request')
+        .withOperation('HelloQuery')
+        .withVariables({
+          foo: 'bar',
+        })
+        .withRequest('POST', '/graphql')
         .withQuery(
           `
           query HelloQuery {
@@ -32,29 +41,20 @@ describe('GraphQL example', () => {
           }
         `
         )
-        .withOperation('HelloQuery')
-        .withRequest({
-          path: '/graphql',
-          method: 'POST',
-        })
-        .withVariables({
-          foo: 'bar',
-        })
-        .willRespondWith({
-          status: 200,
-          headers: {
+        .willRespondWith(200, (builder) => {
+          builder.headers({
             'Content-Type': 'application/json; charset=utf-8',
-          },
-          body: {
+          });
+          builder.jsonBody({
             data: {
               hello: like('Hello world!'),
             },
-          },
+          });
         });
     });
 
     it('returns the correct response', async () => {
-      await provider.executeTest(async () => {
+      await prepared.executeTest(async () => {
         return expect(query()).to.eventually.deep.equal({
           hello: 'Hello world!',
         });
