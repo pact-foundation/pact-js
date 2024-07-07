@@ -1,5 +1,6 @@
 import { JsonMap } from '../../common/jsonTypes';
 import {
+  Matcher,
   Path,
   SpecificationVersion,
   TemplateHeaders,
@@ -53,6 +54,8 @@ export interface PactV4Options {
   host?: string;
 }
 
+export type TemplateHeaderArrayValue = string[] | Matcher<string>[];
+
 export interface V4UnconfiguredInteraction {
   given(state: string, parameters?: JsonMap): V4UnconfiguredInteraction;
   uponReceiving(description: string): V4UnconfiguredInteraction;
@@ -61,7 +64,7 @@ export interface V4UnconfiguredInteraction {
     method: string,
     path: Path,
     builder?: V4RequestBuilderFunc
-  ): V4InteractionwithRequest;
+  ): V4InteractionWithRequest;
   usingPlugin(config: PluginConfig): V4InteractionWithPlugin;
 }
 
@@ -69,7 +72,7 @@ export interface V4InteractionWithCompleteRequest {
   withCompleteResponse(response: V4Response): V4InteractionWithResponse;
 }
 
-export interface V4InteractionwithRequest {
+export interface V4InteractionWithRequest {
   willRespondWith(
     status: number,
     builder?: V4ResponseBuilderFunc
