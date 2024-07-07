@@ -1,0 +1,8 @@
+{
+  "bail": true,
+  "reporter": "spec",
+  "colors": true,
+  "timeout": 60000,
+  "exit": true,
+  "require": ["ts-node/register", "source-map-support/register"]
+}
