@@ -1,55 +1,19 @@
-import { gql } from 'graphql-tag';
-import { ASTNode, print } from 'graphql';
+import { ASTNode } from 'graphql';
 import { isUndefined } from 'lodash';
 import { reject } from 'ramda';
 
-import { ConfigurationError } from './configurationError';
-import { GraphQLQueryError } from './graphQLQueryError';
+import { ConfigurationError } from '../../common/graphQL/configurationError';
 import { PactV3 } from '../pact';
-import { GraphQLVariables } from '../../dsl/graphql';
 import { V3Request, V3Response } from '../types';
-import { OperationType } from './types';
+import { OperationType } from '../../common/graphQL/types';
 import { JsonMap } from '../../common/jsonTypes';
 
 import { regex } from '../matchers';
-
-const escapeSpace = (s: string) => s.replace(/\s+/g, '\\s*');
-
-const escapeRegexChars = (s: string) =>
-  s.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&');
-
-const escapeGraphQlQuery = (s: string) => escapeSpace(escapeRegexChars(s));
-
-/**
- * Accepts a raw or pre-parsed query, validating in the former case, and
- * returns a normalized raw query.
- * @param query {string|ASTNode} the query to validate
- * @param type the operation type
- */
-function validateQuery(query: string | ASTNode, type: OperationType): string {
-  if (!query) {
-    throw new ConfigurationError(`You must provide a GraphQL ${type}.`);
-  }
-
-  if (typeof query !== 'string') {
-    if (query?.kind === 'Document') {
-      // Already parsed, store in string form
-      return print(query);
-    }
-    throw new ConfigurationError(
-      'You must provide a either a string or parsed GraphQL.'
-    );
-  } else {
-    // String, so validate it
-    try {
-      gql(query);
-    } catch (e) {
-      throw new GraphQLQueryError(`GraphQL ${type} is invalid: ${e.message}`);
-    }
-
-    return query;
-  }
-}
+import {
+  escapeGraphQlQuery,
+  GraphQLVariables,
+  validateQuery,
+} from '../../common/graphQL/graphQL';
 
 /**
  * Expose a V3 compatible GraphQL interface
