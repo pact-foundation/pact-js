@@ -136,7 +136,7 @@ const provider = new PactV3({
   provider: 'MyProvider',
 });
 
-// API Client that will fetch dogs from the Dog API
+// API Client that will fetch dogs from the Dog API 
 // This is the target of our Pact test
 public getMeDogs = (from: string): AxiosPromise => {
   return axios.request({
