@@ -11,6 +11,13 @@ export interface SynchronousMessage {
   Response: MessageContents[];
 }
 
+// TODO: this is currently an empty object,
+//       it will eventually be populated with a Buffer
+export interface AsynchronousMessage {
+  contents: MessageContents;
+  // metadata: Metadata
+}
+
 export interface PluginConfig {
   plugin: string;
   version: string;
@@ -21,11 +28,15 @@ export interface TransportConfig {
   address: string;
 }
 
-export type V4MessagePluginRequestBuilderFunc = (
+export type V4AsynchronousMessageBuilderFunc = (
+  builder: V4AsynchronousMessageBuilder
+) => void;
+
+export type V4MessageRequestBuilderFunc = (
   builder: V4SynchronousMessageWithRequestBuilder
 ) => void;
 
-export type V4MessagePluginResponseBuilderFunc = (
+export type V4MessageResponseBuilderFunc = (
   builder: V4SynchronousMessageWithResponseBuilder
 ) => void;
 
@@ -36,9 +47,7 @@ export interface V4SynchronousPact {
 export interface V4UnconfiguredSynchronousMessage {
   given(state: string, parameters?: JsonMap): V4UnconfiguredSynchronousMessage;
   usingPlugin(config: PluginConfig): V4SynchronousMessageWithPlugin;
-  withRequest(
-    r: V4MessagePluginRequestBuilderFunc
-  ): V4SynchronousMessageWithRequest;
+  withRequest(r: V4MessageRequestBuilderFunc): V4SynchronousMessageWithRequest;
 }
 
 // TODO: allow interface to accept non-plugin contents (req/response bodies)
@@ -65,7 +74,7 @@ export interface V4SynchronousMessageWithRequestBuilder {
 
 export interface V4SynchronousMessageWithRequest {
   withResponse(
-    builder: V4MessagePluginResponseBuilderFunc
+    builder: V4MessageResponseBuilderFunc
   ): V4SynchronousMessageWithResponse;
 }
 
@@ -99,4 +108,51 @@ export interface V4SynchronousMessageWithResponse {
   executeTest<T>(
     integrationTest: (m: SynchronousMessage) => Promise<T>
   ): Promise<T | undefined>;
+}
+
+export interface V4UnconfiguredAsynchronousMessage {
+  given(state: string, parameters?: JsonMap): V4UnconfiguredAsynchronousMessage;
+  usingPlugin(config: PluginConfig): V4AsynchronousMessageWithPlugin;
+  expectsToReceive(
+    description: string,
+    contents: V4AsynchronousMessageBuilderFunc
+  ): V4AsynchronousMessageWithContent;
+}
+
+export interface V4AsynchronousMessageWithPlugin {
+  usingPlugin(config: PluginConfig): V4AsynchronousMessageWithPlugin;
+  expectsToReceive(description: string): V4AsynchronousMessageWithPlugin;
+  withPluginContents(
+    contents: string,
+    contentType: string
+  ): V4AsynchronousMessageWithPluginContents;
+}
+
+export interface V4AsynchronousMessageWithPluginContents {
+  executeTest<T>(
+    integrationTest: (m: AsynchronousMessage) => Promise<T>
+  ): Promise<T | undefined>;
+  startTransport(
+    transport: string,
+    address: string,
+    config?: AnyJson
+  ): V4AsynchronousMessageWithTransport;
+}
+
+export interface V4AsynchronousMessageWithTransport {
+  executeTest<T>(
+    integrationTest: (tc: TransportConfig, m: AsynchronousMessage) => Promise<T>
+  ): Promise<T | undefined>;
+}
+
+export interface V4AsynchronousMessageWithContent {
+  executeTest<T>(
+    integrationTest: (m: AsynchronousMessage) => Promise<T>
+  ): Promise<T | undefined>;
+}
+
+export interface V4AsynchronousMessageBuilder {
+  withMetadata(metadata: Metadata): V4AsynchronousMessageBuilder;
+  withContent(contentType: string, body: Buffer): V4AsynchronousMessageBuilder;
+  withJSONContent(content: unknown): V4AsynchronousMessageBuilder;
 }
