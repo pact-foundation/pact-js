@@ -3,21 +3,18 @@ import { Metadata } from '../../dsl/message';
 import { AnyJson, JsonMap } from '../../common/jsonTypes';
 import {
   PluginConfig,
-  SynchronousMessage,
+  AsynchronousMessage,
   TransportConfig,
-  V4MessageRequestBuilderFunc,
-  V4MessageResponseBuilderFunc,
-  V4SynchronousMessageWithPlugin,
-  V4SynchronousMessageWithPluginContents,
-  V4SynchronousMessageWithRequest,
-  V4SynchronousMessageWithRequestBuilder,
-  V4SynchronousMessageWithResponse,
-  V4SynchronousMessageWithResponseBuilder,
-  V4SynchronousMessageWithTransport,
-  V4UnconfiguredSynchronousMessage,
+  V4AsynchronousMessageWithPlugin,
+  V4AsynchronousMessageWithPluginContents,
+  V4AsynchronousMessageWithTransport,
+  V4UnconfiguredAsynchronousMessage,
+  V4AsynchronousMessageWithContent,
+  V4AsynchronousMessageBuilderFunc,
+  V4AsynchronousMessageBuilder,
 } from './types';
 import {
-  SynchronousMessage as PactCoreSynchronousMessage,
+  AsynchronousMessage as PactCoreAsynchronousMessage,
   ConsumerPact,
 } from '@pact-foundation/pact-core';
 import { PactV4Options } from '../http/types';
@@ -32,17 +29,38 @@ import { isMatcher as isV3Matcher } from '../../v3/matchers';
 
 const defaultPactDir = './pacts';
 
-export class UnconfiguredSynchronousMessage
-  implements V4UnconfiguredSynchronousMessage
+export class UnconfiguredAsynchronousMessage
+  implements V4UnconfiguredAsynchronousMessage
 {
   constructor(
     protected pact: ConsumerPact,
-    protected interaction: PactCoreSynchronousMessage,
+    protected interaction: PactCoreAsynchronousMessage,
     protected opts: PactV4Options,
     protected cleanupFn: () => void
   ) {}
 
-  given(state: string, parameters?: JsonMap): V4UnconfiguredSynchronousMessage {
+  expectsToReceive(
+    description: string,
+    builder: V4AsynchronousMessageBuilderFunc
+  ): AsynchronousMessageWithContent {
+    this.interaction.expectsToReceive(description);
+
+    builder(
+      new AsynchronousMessageBuilder(this.pact, this.interaction, this.opts)
+    );
+
+    return new AsynchronousMessageWithContent(
+      this.pact,
+      this.interaction,
+      this.opts,
+      this.cleanupFn
+    );
+  }
+
+  given(
+    state: string,
+    parameters?: JsonMap
+  ): V4UnconfiguredAsynchronousMessage {
     if (parameters) {
       this.interaction.givenWithParams(state, JSON.stringify(parameters));
     } else {
@@ -52,19 +70,10 @@ export class UnconfiguredSynchronousMessage
     return this;
   }
 
-  usingPlugin(config: PluginConfig): V4SynchronousMessageWithPlugin {
+  usingPlugin(config: PluginConfig): V4AsynchronousMessageWithPlugin {
     this.pact.addPlugin(config.plugin, config.version);
 
-    return new SynchronousMessageWithPlugin(
-      this.pact,
-      this.interaction,
-      this.opts,
-      this.cleanupFn
-    );
-  }
-
-  withRequest(r: V4MessageRequestBuilderFunc): V4SynchronousMessageWithRequest {
-    return new SynchronousMessageWithRequest(
+    return new AsynchronousMessageWithPlugin(
       this.pact,
       this.interaction,
       this.opts,
@@ -73,17 +82,23 @@ export class UnconfiguredSynchronousMessage
   }
 }
 
-export class SynchronousMessageWithPlugin
-  implements V4SynchronousMessageWithPlugin
+export class AsynchronousMessageWithPlugin
+  implements V4AsynchronousMessageWithPlugin
 {
   constructor(
     protected pact: ConsumerPact,
-    protected interaction: PactCoreSynchronousMessage,
+    protected interaction: PactCoreAsynchronousMessage,
     protected opts: PactV4Options,
     protected cleanupFn: () => void
   ) {}
 
-  usingPlugin(config: PluginConfig): V4SynchronousMessageWithPlugin {
+  expectsToReceive(description: string): V4AsynchronousMessageWithPlugin {
+    this.interaction.expectsToReceive(description);
+
+    return this;
+  }
+
+  usingPlugin(config: PluginConfig): V4AsynchronousMessageWithPlugin {
     this.pact.addPlugin(config.plugin, config.version);
 
     return this;
@@ -92,13 +107,13 @@ export class SynchronousMessageWithPlugin
   withPluginContents(
     contents: string,
     contentType: string
-  ): V4SynchronousMessageWithPluginContents {
-    this.interaction.withPluginRequestResponseInteractionContents(
+  ): V4AsynchronousMessageWithPluginContents {
+    this.interaction.withPluginRequestInteractionContents(
       contentType,
       contents
     );
 
-    return new SynchronousMessageWithPluginContents(
+    return new AsynchronousMessageWithPluginContents(
       this.pact,
       this.interaction,
       this.opts,
@@ -107,79 +122,16 @@ export class SynchronousMessageWithPlugin
   }
 }
 
-export class SynchronousMessageWithRequestBuilder
-  implements V4SynchronousMessageWithRequestBuilder
+export class AsynchronousMessageBuilder
+  implements V4AsynchronousMessageBuilder
 {
   constructor(
     protected pact: ConsumerPact,
-    protected interaction: PactCoreSynchronousMessage,
+    protected interaction: PactCoreAsynchronousMessage,
     protected opts: PactV4Options
   ) {}
 
-  withContent(
-    contentType: string,
-    body: Buffer
-  ): V4SynchronousMessageWithRequestBuilder {
-    this.interaction.withRequestBinaryContents(body, contentType);
-
-    return this;
-  }
-
-  withJSONContent(content: unknown): V4SynchronousMessageWithRequestBuilder {
-    if (isEmpty(content)) {
-      throw new ConfigurationError(
-        'You must provide a valid JSON document or primitive for the Message.'
-      );
-    }
-    this.interaction.withRequestContents(
-      JSON.stringify(content),
-      'application/json'
-    );
-
-    return this;
-  }
-}
-
-export class SynchronousMessageWithRequest
-  implements V4SynchronousMessageWithRequest
-{
-  constructor(
-    protected pact: ConsumerPact,
-    protected interaction: PactCoreSynchronousMessage,
-    protected opts: PactV4Options,
-    protected cleanupFn: () => void
-  ) {}
-
-  withResponse(
-    builder: V4MessageResponseBuilderFunc
-  ): V4SynchronousMessageWithResponse {
-    builder(
-      new SynchronousMessageWithResponseBuilder(
-        this.pact,
-        this.interaction,
-        this.opts
-      )
-    );
-
-    return new SynchronousMessageWithResponse(
-      this.pact,
-      this.interaction,
-      this.opts,
-      this.cleanupFn
-    );
-  }
-}
-
-export class SynchronousMessageWithResponseBuilder
-  implements V4SynchronousMessageWithResponseBuilder
-{
-  constructor(
-    protected pact: ConsumerPact,
-    protected interaction: PactCoreSynchronousMessage,
-    protected opts: PactV4Options
-  ) {}
-
-  withMetadata(metadata: Metadata): V4SynchronousMessageWithResponseBuilder {
+  withMetadata(metadata: Metadata): V4AsynchronousMessageBuilder {
     if (isEmpty(metadata)) {
       throw new ConfigurationError(
         'You must provide valid metadata for the Message, or none at all'
@@ -193,42 +145,58 @@ export class SynchronousMessageWithResponseBuilder
     return this;
   }
 
-  withContent(
-    contentType: string,
-    body: Buffer
-  ): V4SynchronousMessageWithResponseBuilder {
-    this.interaction.withResponseBinaryContents(body, contentType);
+  withContent(contentType: string, body: Buffer): V4AsynchronousMessageBuilder {
+    this.interaction.withBinaryContents(body, contentType);
 
     return this;
   }
 
-  withJSONContent(content: unknown): V4SynchronousMessageWithResponseBuilder {
+  withJSONContent(content: unknown): V4AsynchronousMessageBuilder {
     if (isEmpty(content)) {
       throw new ConfigurationError(
         'You must provide a valid JSON document or primitive for the Message.'
       );
     }
-    this.interaction.withResponseContents(
-      JSON.stringify(content),
-      'application/json'
-    );
+    this.interaction.withContents(JSON.stringify(content), 'application/json');
 
     return this;
   }
 }
 
-export class SynchronousMessageWithPluginContents
-  implements V4SynchronousMessageWithPluginContents
+export class AsynchronousMessageWithContent
+  implements V4AsynchronousMessageWithContent
 {
   constructor(
     protected pact: ConsumerPact,
-    protected interaction: PactCoreSynchronousMessage,
+    protected interaction: PactCoreAsynchronousMessage,
     protected opts: PactV4Options,
     protected cleanupFn: () => void
   ) {}
 
   executeTest<T>(
-    integrationTest: (m: SynchronousMessage) => Promise<T>
+    integrationTest: (m: AsynchronousMessage) => Promise<T>
+  ): Promise<T | undefined> {
+    return executeNonTransportTest(
+      this.pact,
+      this.opts,
+      integrationTest,
+      this.cleanupFn
+    );
+  }
+}
+
+export class AsynchronousMessageWithPluginContents
+  implements V4AsynchronousMessageWithPluginContents
+{
+  constructor(
+    protected pact: ConsumerPact,
+    protected interaction: PactCoreAsynchronousMessage,
+    protected opts: PactV4Options,
+    protected cleanupFn: () => void
+  ) {}
+
+  executeTest<T>(
+    integrationTest: (m: AsynchronousMessage) => Promise<T>
   ): Promise<T | undefined> {
     return executeNonTransportTest(
       this.pact,
@@ -242,14 +210,14 @@ export class SynchronousMessageWithPluginContents
     transport: string,
     address: string, // IP Address or hostname
     config?: AnyJson
-  ): V4SynchronousMessageWithTransport {
+  ): V4AsynchronousMessageWithTransport {
     const port = this.pact.pactffiCreateMockServerForTransport(
       address,
       transport,
       config ? JSON.stringify(config) : ''
     );
 
-    return new SynchronousMessageWithTransport(
+    return new AsynchronousMessageWithTransport(
       this.pact,
       this.interaction,
       this.opts,
@@ -260,12 +228,12 @@ export class SynchronousMessageWithPluginContents
   }
 }
 
-export class SynchronousMessageWithTransport
-  implements V4SynchronousMessageWithTransport
+export class AsynchronousMessageWithTransport
+  implements V4AsynchronousMessageWithTransport
 {
   constructor(
     protected pact: ConsumerPact,
-    protected interaction: PactCoreSynchronousMessage,
+    protected interaction: PactCoreAsynchronousMessage,
     protected opts: PactV4Options,
     protected port: number,
     protected address: string,
@@ -275,7 +243,7 @@ export class SynchronousMessageWithTransport
   // TODO: this is basically the same as the HTTP variant, except only with a different test function wrapper
   //       extract these into smaller, testable chunks and re-use them
   async executeTest<T>(
-    integrationTest: (tc: TransportConfig, m: SynchronousMessage) => Promise<T>
+    integrationTest: (tc: TransportConfig, m: AsynchronousMessage) => Promise<T>
   ): Promise<T | undefined> {
     let val: T | undefined;
     let error: Error | undefined;
@@ -283,7 +251,7 @@ export class SynchronousMessageWithTransport
     try {
       val = await integrationTest(
         { port: this.port, address: this.address },
-        {} as SynchronousMessage
+        {} as AsynchronousMessage
       );
     } catch (e) {
       error = e;
@@ -326,31 +294,6 @@ export class SynchronousMessageWithTransport
   }
 }
 
-export class SynchronousMessageWithResponse
-  implements V4SynchronousMessageWithResponse
-{
-  constructor(
-    protected pact: ConsumerPact,
-    protected interaction: PactCoreSynchronousMessage,
-    protected opts: PactV4Options,
-    protected cleanupFn: () => void
-  ) {}
-
-  executeTest<T>(
-    integrationTest: (m: SynchronousMessage) => Promise<T>
-  ): Promise<T | undefined> {
-    const res = executeNonTransportTest(
-      this.pact,
-      this.opts,
-      integrationTest,
-      this.cleanupFn
-    );
-    this.cleanupFn();
-
-    return res;
-  }
-}
-
 const cleanup = (
   success: boolean,
   pact: ConsumerPact,
@@ -376,7 +319,7 @@ const cleanup = (
 const executeNonTransportTest = async <T>(
   pact: ConsumerPact,
   opts: PactV4Options,
-  integrationTest: (m: SynchronousMessage) => Promise<T>,
+  integrationTest: (m: AsynchronousMessage) => Promise<T>,
   cleanupFn: () => void
 ): Promise<T | undefined> => {
   let val: T | undefined;
@@ -384,7 +327,7 @@ const executeNonTransportTest = async <T>(
 
   try {
     // TODO: plumb this data in
-    val = await integrationTest({} as SynchronousMessage);
+    val = await integrationTest({} as AsynchronousMessage);
   } catch (e) {
     error = e;
   }
