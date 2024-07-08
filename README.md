@@ -136,7 +136,7 @@ const provider = new PactV3({
   provider: 'MyProvider',
 });
 
-// API Client that will fetch dogs from the Dog API
+// API Client that will fetch dogs from the Dog API 
 // This is the target of our Pact test
 public getMeDogs = (from: string): AxiosPromise => {
   return axios.request({
@@ -152,7 +152,7 @@ const dogExample = { dog: 1 };
 const EXPECTED_BODY = MatchersV3.eachLike(dogExample);
 
 describe('GET /dogs', () => {
-  it('returns an HTTP 200 and a list of docs', () => {
+  it('returns an HTTP 200 and a list of dogs', () => {
     // Arrange: Setup our expected interactions
     //
     // We use Pact to mock out the backend API
