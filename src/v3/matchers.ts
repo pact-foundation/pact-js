@@ -405,6 +405,7 @@ export function includes(value: string): Matcher<string> {
 export function nullValue(): Matcher<null> {
   return {
     'pact:matcher:type': 'null',
+    value: null,
   };
 }
 

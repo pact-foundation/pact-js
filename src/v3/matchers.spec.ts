@@ -465,6 +465,7 @@ describe('V3 Matchers', () => {
       const result = MatchersV3.nullValue();
       expect(result).to.deep.equal({
         'pact:matcher:type': 'null',
+        value: null,
       });
     });
   });
@@ -604,6 +605,7 @@ describe('V3 Matchers', () => {
         more: 'strings',
         an: ['array'],
         another: MatchersV3.eachLike('this'),
+        null: MatchersV3.nullValue(),
         someObject: {
           withData: MatchersV3.like(true),
           withTerm: MatchersV3.regex('this|that', 'this'),
@@ -617,6 +619,7 @@ describe('V3 Matchers', () => {
         more: 'strings',
         an: ['array'],
         another: ['this'],
+        null: null,
         someObject: {
           withData: true,
           withTerm: 'this',
