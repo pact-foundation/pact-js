@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [13.1.1](https://github.com/pact-foundation/pact-js/compare/v13.1.0...v13.1.1) (2024-07-15)
+
+
+### Fixes and Improvements
+
+* nullValue matcher does not reify ([#1230](https://github.com/pact-foundation/pact-js/issues/1230)) ([bee3afb](https://github.com/pact-foundation/pact-js/commit/bee3afb5c2644218f57a65907547b12f5c6e93cb)), closes [#1229](https://github.com/pact-foundation/pact-js/issues/1229)
+
 ## [13.1.0](https://github.com/pact-foundation/pact-js/compare/v13.0.0...v13.1.0) (2024-06-24)
 
 
