@@ -4,7 +4,7 @@ import { AddressInfo } from 'net';
 import path = require('path');
 import { startHTTPServer, startTCPServer } from '../provider';
 
-(process.platform === 'win32' ? describe.skip : describe)('Plugins', () => {
+describe('Plugins', () => {
   const HOST = '127.0.0.1';
 
   describe('Verification', () => {
