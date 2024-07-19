@@ -105,6 +105,7 @@ const sendMattMessageTCP = (
   return new Promise((resolve) => {
     socket.on('data', (data) => {
       resolve(parseMattMessage(data.toString()));
+      socket.destroy();
     });
   });
 };
