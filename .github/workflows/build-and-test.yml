@@ -30,7 +30,7 @@ jobs:
             docker: true
             alpine: true
             arch: amd64
-            node-version: 22
+            node-version: 22.4.1
           - os: ubuntu-latest
             docker: true
             alpine: true
@@ -46,12 +46,12 @@ jobs:
             docker: true
             alpine: false
             arch: arm64
-            node-version: 22
+            node-version: 22.4.1
           - os: ubuntu-latest
             docker: true
             alpine: true
             arch: arm64
-            node-version: 22
+            node-version: 22.4.1
           - os: ubuntu-latest
             docker: true
             alpine: false
