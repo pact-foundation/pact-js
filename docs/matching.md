@@ -274,7 +274,7 @@ For this to work, in the consumer test we use the `fromProviderState` matching f
 For example:
 
 ```js
-  query: { accountNumber: fromProviderState("\${accountNumber}", "100") },
+  query: { accountNumber: fromProviderState("${accountNumber}", "100") },
 ```
 
 Then when the provider is verified, the provider state callback can return a map of values. These values will be used to generate the value using the expression supplied from the consumer test.
