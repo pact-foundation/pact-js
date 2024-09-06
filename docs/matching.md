@@ -73,7 +73,7 @@ provider.addInteraction({
 
 Note that you can wrap a `like` around a single value or an object. When wrapped around an object, all values and child object values will be matched according to types, unless overridden by something more specific like a `term`.
 
-[flexible-matching]: https://github.com/realestate-com-au/pact/wiki/Regular-expressions-and-type-matching-with-Pact
+[flexible-matching]: https://docs.pact.io/getting_started/matching#flexible-matching
 
 ### Match based on arrays
 
