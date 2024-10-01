@@ -1,6 +1,6 @@
 # Provider Verification
 
-Pact Go supports both HTTP and non-HTTP verification (using plugins).
+Pact JS supports both HTTP and non-HTTP verification (using plugins).
 
 ## Contract Testing Process (HTTP)
 
