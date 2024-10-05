@@ -31,19 +31,17 @@ export const registerAfterHook = (
   config: ProxyOptions,
   stateSetupPath: string
 ): void => {
+  logger.trace("registered 'afterEach' hook");
   app.use(async (req, res, next) => {
-    if (config.afterEach !== undefined) {
-      logger.trace("registered 'afterEach' hook");
-      next();
-      if (req.path !== stateSetupPath) {
-        logger.debug("executing 'afterEach' hook");
-        try {
-          await config.afterEach();
-        } catch (e) {
-          logger.error(`error executing 'afterEach' hook: ${e.message}`);
-          logger.debug(`Stack trace was: ${e.stack}`);
-          next(new Error(`error executing 'afterEach' hook: ${e.message}`));
-        }
+    if (req.path !== stateSetupPath && config.afterEach) {
+      logger.debug("executing 'afterEach' hook");
+      try {
+        await config.afterEach();
+        next();
+      } catch (e) {
+        logger.error(`error executing 'afterEach' hook: ${e.message}`);
+        logger.debug(`Stack trace was: ${e.stack}`);
+        next(new Error(`error executing 'afterEach' hook: ${e.message}`));
       }
     } else {
       next();
