@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [13.1.4](https://github.com/pact-foundation/pact-js/compare/v13.1.3...v13.1.4) (2024-10-08)
+
+
+### Fixes and Improvements
+
+* support async afterEach hook ([8c7cef6](https://github.com/pact-foundation/pact-js/commit/8c7cef6cb73633dbc68996bf4ba4b0e7613682b6)), closes [#1241](https://github.com/pact-foundation/pact-js/issues/1241)
+
 ### [13.1.3](https://github.com/pact-foundation/pact-js/compare/v13.1.2...v13.1.3) (2024-09-12)
 
 
