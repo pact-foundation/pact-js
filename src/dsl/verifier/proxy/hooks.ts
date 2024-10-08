@@ -8,21 +8,21 @@ export const registerBeforeHook = (
   config: ProxyOptions,
   stateSetupPath: string
 ): void => {
+  if (config.beforeEach) logger.trace("registered 'beforeEach' hook");
   app.use(async (req, res, next) => {
-    if (config.beforeEach !== undefined) {
-      logger.trace("registered 'beforeEach' hook");
-      if (req.path === stateSetupPath) {
-        logger.debug("executing 'beforeEach' hook");
-        try {
-          await config.beforeEach();
-        } catch (e) {
-          logger.error(`error executing 'beforeEach' hook: ${e.message}`);
-          logger.debug(`Stack trace was: ${e.stack}`);
-          next(new Error(`error executing 'beforeEach' hook: ${e.message}`));
-        }
+    if (req.path === stateSetupPath && config.beforeEach) {
+      logger.debug("executing 'beforeEach' hook");
+      try {
+        await config.beforeEach();
+        next();
+      } catch (e) {
+        logger.error(`error executing 'beforeEach' hook: ${e.message}`);
+        logger.debug(`Stack trace was: ${e.stack}`);
+        next(new Error(`error executing 'beforeEach' hook: ${e.message}`));
       }
+    } else {
+      next();
     }
-    next();
   });
 };
 
@@ -31,19 +31,17 @@ export const registerAfterHook = (
   config: ProxyOptions,
   stateSetupPath: string
 ): void => {
+  if (config.afterEach) logger.trace("registered 'afterEach' hook");
   app.use(async (req, res, next) => {
-    if (config.afterEach !== undefined) {
-      logger.trace("registered 'afterEach' hook");
-      next();
-      if (req.path !== stateSetupPath) {
-        logger.debug("executing 'afterEach' hook");
-        try {
-          await config.afterEach();
-        } catch (e) {
-          logger.error(`error executing 'afterEach' hook: ${e.message}`);
-          logger.debug(`Stack trace was: ${e.stack}`);
-          next(new Error(`error executing 'afterEach' hook: ${e.message}`));
-        }
+    if (req.path !== stateSetupPath && config.afterEach) {
+      logger.debug("executing 'afterEach' hook");
+      try {
+        await config.afterEach();
+        next();
+      } catch (e) {
+        logger.error(`error executing 'afterEach' hook: ${e.message}`);
+        logger.debug(`Stack trace was: ${e.stack}`);
+        next(new Error(`error executing 'afterEach' hook: ${e.message}`));
       }
     } else {
       next();
