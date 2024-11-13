@@ -6,7 +6,12 @@ import * as http from 'http';
 import { ProxyOptions } from './types';
 import logger from '../../../common/logger';
 import { createProxyStateHandler } from './stateHandler/stateHandler';
-import { registerAfterHook, registerBeforeHook } from './hooks';
+import {
+  registerHookStateTracking,
+  registerAfterHook,
+  registerBeforeHook,
+  HooksState,
+} from './hooks';
 import { createRequestTracer, createResponseTracer } from './tracer';
 import { createProxyMessageHandler } from './messages';
 import { toServerOptions } from './proxyRequest';
@@ -43,8 +48,20 @@ export const createProxy = (
   );
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use('/*', bodyParser.raw({ type: '*/*' }));
-  registerBeforeHook(app, config, stateSetupPath);
-  registerAfterHook(app, config, stateSetupPath);
+
+  // Hooks
+  const hooksState: HooksState = {
+    setupCounter: 0,
+  };
+  app.use(stateSetupPath, registerHookStateTracking(hooksState));
+  if (config.beforeEach) {
+    logger.trace("registered 'beforeEach' hook");
+    app.use(stateSetupPath, registerBeforeHook(config.beforeEach, hooksState));
+  }
+  if (config.afterEach) {
+    logger.trace("registered 'afterEach' hook");
+    app.use(stateSetupPath, registerAfterHook(config.afterEach, hooksState));
+  }
 
   // Trace req/res logging
   if (config.logLevel === 'debug' || config.logLevel === 'trace') {
