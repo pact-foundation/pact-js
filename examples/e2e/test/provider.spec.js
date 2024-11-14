@@ -60,7 +60,7 @@ describe('Pact Verification', () => {
       },
 
       // Fetch pacts from broker
-      pactBrokerUrl: 'https://test.pactflow.io/',
+      pactBrokerUrl: process.env.PACT_BROKER_BASE_URL,
 
       // Fetch from broker with given tags
       // consumerVersionTags: ['master', 'test', 'prod', 'feat/v3.0.0'],
@@ -96,14 +96,13 @@ describe('Pact Verification', () => {
       // ],
 
       // If you're using the open source Pact Broker, use the username/password option as per below
-      pactBrokerUsername:
-        process.env.PACT_BROKER_USERNAME || 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
-      pactBrokerPassword:
-        process.env.PACT_BROKER_PASSWORD || 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
-
+      // pactBrokerUsername: process.env.PACT_BROKER_USERNAME
+      // pactBrokerPassword: process.env.PACT_BROKER_PASSWORD
+      //
       // if you're using a PactFlow broker, you must authenticate using the bearer token option
       // You can obtain the token from https://<your broker>.pactflow.io/settings/api-tokens
-      // pactBrokerToken: "<insert your token here"
+      pactBrokerToken: process.env.PACT_BROKER_TOKEN,
+
       publishVerificationResult: true,
       // Your version numbers need to be unique for every different version of your provider
       // see https://docs.pact.io/getting_started/versioning_in_the_pact_broker/ for details.

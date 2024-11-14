@@ -11,6 +11,8 @@ env:
   GIT_REF: ${{ github.ref }}
   GIT_BRANCH: ${{ github.head_ref || github.ref_name }}
   LOG_LEVEL: info
+  PACT_BROKER_BASE_URL: ${{ secrets.PACT_BROKER_BASE_URL }}
+  PACT_BROKER_TOKEN: ${{ secrets.PACT_BROKER_TOKEN }}
 
 jobs:
   build-and-test:
