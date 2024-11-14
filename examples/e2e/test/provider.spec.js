@@ -66,7 +66,7 @@ describe('Pact Verification', () => {
       // consumerVersionTags: ['master', 'test', 'prod', 'feat/v3.0.0'],
 
       // Tag provider version with given tags
-      providerVersionTags: ['master'], // in real code, this would be dynamically set by process.env.GIT_BRANCH
+      providerVersionTags: process.env.GIT_BRANCH || ['master'], // in real code, this would be dynamically set by process.env.GIT_BRANCH
       providerVersionBranch: process.env.GIT_BRANCH || 'master',
 
       // Find _all_ pacts that match the current provider branch

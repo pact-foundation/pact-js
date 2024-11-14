@@ -10,7 +10,7 @@ const app = server.listen(8081, () => {
   console.log('Animal Profile Service listening on http://localhost:8081');
 });
 
-const pactBroker = 'https://test.pactflow.io';
+const pactBroker = 'https://testdemo.pactflow.io';
 
 // Verify that the provider meets all consumer expectations
 describe('Pact Verification', () => {
