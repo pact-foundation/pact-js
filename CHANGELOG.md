@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [13.1.5](https://github.com/pact-foundation/pact-js/compare/v13.1.4...v13.1.5) (2024-11-14)
+
+
+### Fixes and Improvements
+
+* allow hooks to run only once per interaction ([#1243](https://github.com/pact-foundation/pact-js/issues/1243)) ([b238fd0](https://github.com/pact-foundation/pact-js/commit/b238fd040031107cdd700e4ff43ab18dedf69859))
+* package.json & package-lock.json to reduce vulnerabilities ([99e101c](https://github.com/pact-foundation/pact-js/commit/99e101c3eebadab146c526770440f0d1df177195))
+* replace basic auth pact broker with bearer token ([0c1af06](https://github.com/pact-foundation/pact-js/commit/0c1af06f664f73e9014b23dc6d58e97efebdfb7d))
+
 ### [13.1.4](https://github.com/pact-foundation/pact-js/compare/v13.1.3...v13.1.4) (2024-10-08)
 
 
