@@ -24,7 +24,7 @@ jobs:
       fail-fast: false
       matrix:
         node-version: [16, 18, 20, 22]
-        os: [macos-14, macos-12, ubuntu-latest, windows-latest]
+        os: [macos-14, macos-13, ubuntu-latest, windows-latest]
         docker: [false]
         alpine: [false]
         include:

@@ -18,7 +18,13 @@ describe('Account Service', () => {
 
   it('validates the expectations of Transaction Service', () => {
     let opts = {
-      provider: 'Account Service',
+      // if the provider name is set, and we have PACT_BROKER_BASE_URL plus env var creds set
+      // it will automatically attempt to retrieve from a pact broker via the default consumer version selectors.
+      // if we are verifying a pact directory source, we do not need to add the provider name
+      // as it is inferred from the pact file.
+      // this doesn't feel like desirable behavior (we should only verify one source at a time!)
+      // see https://github.com/pact-foundation/pact-reference/issues/250
+      // provider: 'Account Service',
       providerBaseUrl: 'http://localhost:8081',
       logLevel: LOG_LEVEL,
       stateHandlers: {
