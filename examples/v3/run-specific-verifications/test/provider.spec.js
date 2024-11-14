@@ -15,7 +15,7 @@ describe('Pact Verification', () => {
   it('filter by PACT_DESCRIPTION', () => {
     process.env.PACT_DESCRIPTION = 'a request to be used';
     return new Verifier({
-      provider: 'filter-provider',
+      // provider: 'filter-provider',
       providerBaseUrl: 'http://127.0.0.1:8081',
       pactUrls: [
         path.resolve(process.cwd(), './filter-by-PACT_DESCRIPTION.json'),
@@ -31,7 +31,12 @@ describe('Pact Verification', () => {
   it('filter by PACT_PROVIDER_STATE', () => {
     process.env.PACT_PROVIDER_STATE = 'a state to be used';
     return new Verifier({
-      provider: 'filter-provider',
+      // if the provider name is set, and we have PACT_BROKER_BASE_URL plus env var creds set
+      // it will automatically attempt to retrieve from a pact broker via the default consumer version selectors.
+      // if we are verifying a pact directory source, we do not need to add the provider name
+      // as it is inferred from the pact file.
+
+      // provider: 'filter-provider',
       providerBaseUrl: 'http://127.0.0.1:8081',
       pactUrls: [
         path.resolve(process.cwd(), './filter-by-PACT_PROVIDER_STATE.json'),
@@ -46,7 +51,7 @@ describe('Pact Verification', () => {
   it('filter by PACT_PROVIDER_NO_STATE', () => {
     process.env.PACT_PROVIDER_NO_STATE = 'TRUE';
     return new Verifier({
-      provider: 'filter-provider',
+      // provider: 'filter-provider',
       providerBaseUrl: 'http://127.0.0.1:8081',
       pactUrls: [
         path.resolve(process.cwd(), './filter-by-PACT_PROVIDER_NO_STATE.json'),

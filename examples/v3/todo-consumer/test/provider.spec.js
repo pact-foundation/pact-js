@@ -14,7 +14,7 @@ server.listen(8081, () => {
 describe('Pact XML Verification', () => {
   it('validates the expectations of Matching Service', () => {
     const opts = {
-      provider: 'XML Service',
+      // provider: 'XML Service',
       providerBaseUrl: 'http://localhost:8081',
       pactUrls: ['./pacts/TodoApp-TodoServiceV3.json'],
       stateHandlers: {

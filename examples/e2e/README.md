@@ -109,13 +109,4 @@ curl -X GET http://localhost:8080/suggestions/1
 
 ## Viewing contracts with the Pact Broker
 
-A test [Pact Boker](https://github.com/pact-foundation/pact_broker) is running at https://test.pactflow.io - very kindly provided by PactFlow:
-
-- Username: `dXfltyFMgNOFZAxr8io9wJ37iUpY42M`
-- Password: `O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1`
-
-Or use the API:
-
-```
-curl -v -u 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M:O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1' https://test.pactflow.io
-```
+A test [Pact Boker](https://github.com/pact-foundation/pact_broker) is running at https://testdemo.pactflow.io/login?code=88f7810e-c7dc-493b-9c3d-7849952f1d9a
