@@ -21,10 +21,10 @@
     "pretest": "bash scripts/install-plugins.sh",
     "docker:alpine:build": "docker build --build-arg NODE_VERSION=${NODE_VERSION:-current} -f Dockerfile.alpine -t pact-js:alpine .",
     "docker:debian:build": "docker build --build-arg NODE_VERSION=${NODE_VERSION:-current} -f Dockerfile.debian -t pact-js:debian .",
-    "docker:alpine:run": "docker run -e LOG_LEVEL=${LOG_LEVEL:-info} -e GIT_REF=${GIT_REF:-test} -e GITHUB_ACTIONS=${GITHUB_ACTIONS:-false} -e SKIP_EXAMPLES=${SKIP_EXAMPLES:-''} -w /home -v $(pwd):/home --rm pact-js:alpine",
-    "docker:debian:run": "docker run -e LOG_LEVEL=${LOG_LEVEL:-info} -e GIT_REF=${GIT_REF:-test} -e GITHUB_ACTIONS=${GITHUB_ACTIONS:-false} -e SKIP_EXAMPLES=${SKIP_EXAMPLES:-''} -w /home -v $(pwd):/home --rm pact-js:debian",
-    "docker:alpine:attach": "docker run -w /home -v $(pwd):/home --entrypoint /bin/bash --rm -it pact-js:alpine",
-    "docker:debian:attach": "docker run -w /home -v $(pwd):/home --entrypoint /bin/bash --rm -it pact-js:debian"
+    "docker:alpine:run": "docker run -e LOG_LEVEL=${LOG_LEVEL:-info} -e GIT_REF=${GIT_REF:-test} -e GITHUB_ACTIONS=${GITHUB_ACTIONS:-false} -e SKIP_EXAMPLES=${SKIP_EXAMPLES:-''} -e PACT_BROKER_BASE_URL -e PACT_BROKER_TOKEN -w /home -v $(pwd):/home --rm pact-js:alpine",
+    "docker:debian:run": "docker run -e LOG_LEVEL=${LOG_LEVEL:-info} -e GIT_REF=${GIT_REF:-test} -e GITHUB_ACTIONS=${GITHUB_ACTIONS:-false} -e SKIP_EXAMPLES=${SKIP_EXAMPLES:-''} -e PACT_BROKER_BASE_URL -e PACT_BROKER_TOKEN  -w /home -v $(pwd):/home --rm pact-js:debian",
+    "docker:alpine:attach": "docker run -e PACT_BROKER_BASE_URL -e PACT_BROKER_TOKEN -w /home -v $(pwd):/home --entrypoint /bin/bash --rm -it pact-js:alpine",
+    "docker:debian:attach": "docker run -e PACT_BROKER_BASE_URL -e PACT_BROKER_TOKEN -w /home -v $(pwd):/home --entrypoint /bin/bash --rm -it pact-js:debian"
   },
   "repository": {
     "type": "git",
