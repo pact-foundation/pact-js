@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [13.2.0](https://github.com/pact-foundation/pact-js/compare/v13.1.5...v13.2.0) (2024-11-21)
+
+
+### Features
+
+* replace cli-color with chalk - sonatype-2022-2248 ([2ad5e48](https://github.com/pact-foundation/pact-js/commit/2ad5e489006fac17579e54e3071efc416ed9a1cc))
+
 ### [13.1.5](https://github.com/pact-foundation/pact-js/compare/v13.1.4...v13.1.5) (2024-11-14)
 
 
