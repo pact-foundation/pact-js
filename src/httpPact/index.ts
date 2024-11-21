@@ -4,7 +4,7 @@ import serviceFactory, {
   makeConsumerPact,
 } from '@pact-foundation/pact-core';
 
-import clc from 'cli-color';
+import chalk from 'chalk';
 import * as path from 'path';
 import process from 'process';
 import { isEmpty } from 'lodash';
@@ -207,8 +207,8 @@ export class Pact {
 
       /* eslint-disable no-console */
       console.error('');
-      console.error(clc.red('Pact verification failed!'));
-      console.error(clc.red(error));
+      console.error(chalk.red('Pact verification failed!'));
+      console.error(chalk.red(error));
       /* eslint-enable */
 
       this.reset();
