@@ -72,11 +72,11 @@ jobs:
     name: Test ${{ matrix.docker == true && matrix.alpine == true && 'linux-musl' || matrix.docker == true && matrix.alpine == false && 'linux' || matrix.os }}-${{ matrix.arch }}-node-${{ matrix.node-version }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 0
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -85,7 +85,7 @@ jobs:
 
       - name: Set up QEMU
         if: ${{ matrix.docker == true && matrix.arch == 'arm64' }}
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@49b3bc8e6bdd4a60e6116a5414239cba5943d3cf # v3
 
       - if: ${{ matrix.docker == true && matrix.alpine != true && matrix.arch == 'arm64' }}
         name: test linux ${{ matrix.arch }} glibc
