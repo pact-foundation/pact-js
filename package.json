@@ -137,7 +137,7 @@
     "@types/ramda": "0.26.44",
     "@types/sinon": "7.5.2",
     "@types/sinon-chai": "2.7.39",
-    "@types/tough-cookie": "2.3.8",
+    "@types/tough-cookie": "2.3.11",
     "@typescript-eslint/eslint-plugin": "5.48.2",
     "@typescript-eslint/parser": "5.48.2",
     "chai": "4.1.2",
