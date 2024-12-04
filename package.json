@@ -122,9 +122,9 @@
     "randexp": "^0.5.3"
   },
   "devDependencies": {
-    "@babel/cli": "7.20.7",
-    "@babel/core": "7.20.12",
-    "@babel/preset-env": "7.20.2",
+    "@babel/cli": "7.25.9",
+    "@babel/core": "7.26.0",
+    "@babel/preset-env": "7.26.0",
     "@pact-foundation/pact-js-prettier-config": "1.0.0",
     "@types/chai": "4.3.4",
     "@types/chai-as-promised": "7.1.8",
