@@ -158,7 +158,7 @@
     "neon-cli": "0.9.1",
     "nock": "9.6.1",
     "nyc": "15.1.0",
-    "prettier": "2.8.3",
+    "prettier": "2.8.8",
     "proxyquire": "2.1.3",
     "rimraf": "2.7.1",
     "sinon": "7.5.0",
