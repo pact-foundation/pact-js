@@ -122,7 +122,7 @@
     "randexp": "^0.5.3"
   },
   "devDependencies": {
-    "@babel/cli": "7.25.9",
+    "@babel/cli": "7.26.4",
     "@babel/core": "7.26.0",
     "@babel/preset-env": "7.26.0",
     "@pact-foundation/pact-js-prettier-config": "1.0.0",
