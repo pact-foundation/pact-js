@@ -133,7 +133,7 @@
     "@types/lodash.isnil": "4.0.9",
     "@types/mocha": "8.2.3",
     "@types/nock": "9.3.1",
-    "@types/node": "18.19.67",
+    "@types/node": "22.10.1",
     "@types/ramda": "0.30.2",
     "@types/sinon": "7.5.2",
     "@types/sinon-chai": "2.7.42",
