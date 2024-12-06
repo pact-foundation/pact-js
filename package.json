@@ -131,7 +131,7 @@
     "@types/http-proxy": "1.17.15",
     "@types/lodash": "4.17.13",
     "@types/lodash.isnil": "4.0.9",
-    "@types/mocha": "8.2.3",
+    "@types/mocha": "10.0.10",
     "@types/nock": "9.3.1",
     "@types/node": "18.19.67",
     "@types/ramda": "0.30.2",
