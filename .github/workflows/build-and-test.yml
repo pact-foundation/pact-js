@@ -2,8 +2,11 @@ name: Build, test, test all examples
 
 on:
   push:
+    branches:
+      - master
   pull_request:
-    branches: [master, 9.x.x]
+    branches:
+      - master
   workflow_dispatch:
 
 env:
