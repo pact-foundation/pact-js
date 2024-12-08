@@ -1,9 +1,0 @@
-
-{
-    "reporter": "spec",
-    "slow": 1500,
-    "timeout": 60000,
-    "recursive": true,
-    "exit": true,
-    "coverage": false
-}

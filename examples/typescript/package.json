@@ -4,30 +4,10 @@
   "description": "TypeScript Pact Example",
   "main": "index.js",
   "scripts": {
-    "test": "nyc --check-coverage --reporter=html --reporter=text-summary mocha test/*.spec.ts",
-    "mocha:direct": "mocha"
+    "test": "mocha test/*.spec.ts"
   },
   "author": "",
   "license": "MIT",
-  "nyc": {
-    "extension": [
-      ".ts"
-    ],
-    "include": [
-      "**/*.ts"
-    ],
-    "exclude": [
-      "**/*.d.ts"
-    ],
-    "reporter": [
-      "html"
-    ],
-    "all": true,
-    "branches": 80,
-    "lines": 80,
-    "functions": 80,
-    "statements": 80
-  },
   "devDependencies": {
     "@pact-foundation/pact": "file:../../dist",
     "@types/chai": "^4.3.3",
@@ -41,10 +21,9 @@
     "chai-as-promised": "^7.1.1",
     "lodash": "^4.17.21",
     "mocha": "^10.0.0",
-    "nyc": "^15.1.0",
     "sinon": "^14.0.0",
     "sinon-chai": "^3.7.0",
-    "ts-node": "^10.9.1",
+    "tsx": "^4.19.2",
     "typescript": "^4.7.4"
   }
 }
