@@ -8,9 +8,9 @@
     "clean": "rimraf pacts",
     "test": "npm run clean && npm run test:consumer && npm run test:publish && npm run test:provider",
     "test:no:publish": "npm run test:consumer && npm run test:provider",
-    "test:consumer": "nyc --reporter=text-summary mocha src/consumer.spec.ts",
+    "test:consumer": "mocha src/consumer.spec.ts",
     "test:publish": "pact-broker publish ./pacts --consumer-app-version=\"$(npx absolute-version)\" --auto-detect-version-properties --broker-base-url=https://testdemo.pactflow.io",
-    "test:provider": "nyc --reporter=text-summary mocha -t 30000 src/provider.spec.ts"
+    "test:provider": "mocha src/provider.spec.ts"
   },
   "keywords": [
     "graphql",
@@ -39,9 +39,8 @@
     "lodash": "^4.17.21",
     "mocha": "^10.2.0",
     "node-fetch": "^2.7.0",
-    "nyc": "^15.1.0",
     "rimraf": "^5.0.5",
-    "ts-node": "^10.9.1",
+    "tsx": "^4.19.2",
     "typescript": "^4.9.5"
   }
 }
