@@ -4,6 +4,8 @@
   "description": "Jest Pact example",
   "main": "index.js",
   "scripts": {
+    "clean": "rimraf pact",
+    "pretest": "npm run clean",
     "test": "jest __tests__/ --runInBand",
     "test:publish": "pact-broker publish pact/pacts --consumer-app-version=\"$(npx absolute-version)\" --auto-detect-version-properties --broker-base-url=https://testdemo.pactflow.io"
   },
@@ -15,9 +17,11 @@
     "@pact-foundation/pact": "file:../../dist",
     "@pact-foundation/pact-cli": "^15.0.2",
     "absolute-version": "1.0.2",
-    "axios": "^1.6.5",
     "jest": "^29.7.0",
     "jest-pact": "^0.11.1",
-    "rimraf": "5.0.5"
+    "rimraf": "^6.0.1"
+  },
+  "dependencies": {
+    "axios": "^1.6.5"
   }
 }

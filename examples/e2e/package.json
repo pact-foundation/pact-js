@@ -21,15 +21,15 @@
     "@pact-foundation/pact": "file:../../dist",
     "@pact-foundation/pact-cli": "^15.0.2",
     "absolute-version": "1.0.1",
-    "body-parser": "^1.20.0",
     "chai": "^4.3.6",
     "chai-as-promised": "^7.1.1",
-    "chalk": "4.1.2",
     "concurrently": "^7.3.0",
+    "mocha": "^10.8.2"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.0",
     "cors": "^2.8.5",
     "express": "^4.18.1",
-    "express-http-proxy": "^1.6.3",
-    "mocha": "^10.0.0",
     "superagent": "^8.0.0"
   }
 }
