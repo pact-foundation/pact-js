@@ -1,0 +1,286 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: true
+
+env:
+  GIT_COMMIT: ${{ github.sha }}
+  GIT_REF: ${{ github.ref }}
+  GIT_BRANCH: ${{ github.head_ref || github.ref_name }}
+  LOG_LEVEL: info
+  PACT_BROKER_BASE_URL: ${{ secrets.PACT_BROKER_BASE_URL }}
+  PACT_BROKER_TOKEN: ${{ secrets.PACT_BROKER_TOKEN }}
+  STABLE_NODE_VERSION: 22
+
+jobs:
+  complete:
+    name: Test completion check
+    if: always()
+
+    permissions:
+      contents: none
+
+    runs-on: ubuntu-latest
+    needs:
+      - test-x86
+      - test-alpine
+      - test-arm64
+      - lint
+      - format
+      - examples
+
+    steps:
+      - name: Failed
+        run: exit 1
+        if: >
+          contains(needs.*.result, 'failure')
+          || contains(needs.*.result, 'cancelled')
+          || contains(needs.*.result, 'skipped')
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Setup Node.JS
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4
+        with:
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+  format:
+    name: Format
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Setup Node.JS
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4
+        with:
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Format
+        run: npm run format:check
+
+  test-x86:
+    name: >-
+      Test x86_64
+      on ${{ startsWith(matrix.os, 'macos-') && 'macOS' || startsWith(matrix.os, 'windows-') && 'Windows' || 'Linux' }}
+      with Node ${{ matrix.node-version }}
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [18, 20, 22]
+        os:
+          - macos-13
+          - macos-latest
+          - ubuntu-latest
+          - windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - name: Install dependencies
+        run: |
+          npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Coverage
+        if: startsWith(matrix.os, 'ubuntu-')
+        run: npm run coverage
+
+      - name: Codecov
+        if: startsWith(matrix.os, 'ubuntu-')
+        uses: codecov/codecov-action@v5
+
+  test-alpine:
+    name: >-
+      Test Alpine
+      on ${{ startsWith(matrix.os, 'macos-') && 'macOS' || startsWith(matrix.os, 'windows-') && 'Windows' || 'Linux' }}
+      with Node ${{ matrix.node-version }}
+
+    runs-on: ubuntu-latest
+    container:
+      image: node:${{ matrix.node-version }}-alpine
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [18, 20, 22]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Install dependencies
+        run: |
+          npm ci
+
+      - name: Run tests
+        run: npm test
+
+  test-arm64:
+    name: >-
+      Test ARM64
+      on ${{ startsWith(matrix.os, 'macos-') && 'macOS' || startsWith(matrix.os, 'windows-') && 'Windows' || 'Linux' }}
+      with Node ${{ matrix.node-version }}
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [18, 20, 22]
+        os:
+          - ubuntu-latest
+          - macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Set up QEMU
+        if: startsWith(matrix.os, 'ubuntu-')
+        uses: docker/setup-qemu-action@49b3bc8e6bdd4a60e6116a5414239cba5943d3cf # v3
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        if: startsWith(matrix.os, 'macos-')
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - name: Install dependencies
+        if: startsWith(matrix.os, 'macos-')
+        run: |
+          npm ci
+
+      - name: Test
+        if: startsWith(matrix.os, 'macos-')
+        run: |
+          npm test
+
+      - name: Install dependencies and test
+        if: startsWith(matrix.os, 'ubuntu-')
+        run: |
+          docker run \
+            --rm \
+            -v $(pwd):/${{ github.workspace }} \
+            -w /${{ github.workspace }} \
+            --platform linux/arm64 \
+            node:${{ matrix.node-version }}-alpine \
+            sh -c "npm ci && npm test"
+
+  examples-prep:
+    name: Package Pact JS for examples
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Setup Node.js ${{ env.STABLE_NODE_VERSION }}
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4
+        with:
+          node-version: ${{ env.STABLE_NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run dist
+
+      - name: Upload dist folder
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+  examples:
+    name: >-
+      Test Examples
+
+    runs-on: ubuntu-latest
+    needs:
+      - examples-prep
+
+    strategy:
+      fail-fast: false
+      matrix:
+        d:
+          - e2e
+          - graphql
+          - jest
+          - messages
+          - mocha
+          - serverless
+          - typescript
+          - v3/e2e
+          - v3/provider-state-injected
+          - v3/run-specific-verifications
+          - v3/todo-consumer
+          - v3/typescript
+          - v4/matchers
+          - v4/plugins
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Setup Node.js ${{ env.STABLE_NODE_VERSION }}
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4
+        with:
+          node-version: ${{ env.STABLE_NODE_VERSION }}
+          cache: npm
+
+      - name: Download dist folder
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      - name: Install dependencies
+        working-directory: examples/${{ matrix.d }}
+        run: npm ci
+
+      - name: Run tests
+        working-directory: examples/${{ matrix.d }}
+        run: npm run test
