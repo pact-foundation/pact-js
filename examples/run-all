@@ -1,0 +1,94 @@
+#!/bin/bash
+
+set -o errexit  # Exit on error
+set -o nounset  # Treat unset variables as an error
+
+usage() {
+  echo "Usage: $0 [command]"
+  echo
+  echo "Run tests or a specific command in all examples"
+  echo
+  echo "Commands:"
+  echo "  <none>  Run all example tests (both 'npm ci' and 'npm test')"
+  echo "  <cmd>   Run a specific npm command (e.g., 'audit' for npm audit)"
+  echo
+  echo "Examples:"
+  echo "  $0"
+  echo "  $0 test"
+  echo "  $0 audit"
+  exit 0
+}
+
+run_example() {
+  local example_dir="$1"
+  shift
+  if [ $# -gt 0 ]; then
+    echo "Ignoring extra arguments: $*"
+  fi
+
+  echo "$(tput bold)$(tput setaf 7)========================================$(tput sgr0)"
+  echo "$(tput bold)$(tput setaf 7)Running example in $example_dir$(tput sgr0)"
+  echo "$(tput bold)$(tput setaf 7)========================================$(tput sgr0)"
+
+  if [ -d "$example_dir/node_modules" ]; then
+    echo "$(tput bold)$(tput setaf 7)Skipping installation of dependencies$(tput sgr0)"
+  else
+    npm --prefix "$example_dir" ci
+  fi
+
+  echo "$(tput bold)$(tput setaf 7)Running tests$(tput sgr0)"
+  npm --prefix "$example_dir" run test
+}
+
+run_cmd() {
+  local example_dir="$1"
+  shift
+  if [ $# -eq 0 ]; then
+    echo "No command provided"
+    exit 1
+  fi
+  echo "$(tput bold)$(tput setaf 7)========================================$(tput sgr0)"
+  echo "$(tput bold)$(tput setaf 7)Running '$*' in $example_dir$(tput sgr0)"
+  echo "$(tput bold)$(tput setaf 7)========================================$(tput sgr0)"
+  npm --prefix "$example_dir" "$@"
+}
+
+main() {
+  if [ "${1-}" = "--help" ] || [ "${1-}" = "-h" ]; then
+    usage
+  fi
+
+  declare -a examples=(
+    examples/e2e
+    examples/graphql
+    examples/jest
+    examples/messages
+    examples/mocha
+    examples/serverless
+    examples/typescript
+    examples/v3/e2e
+    examples/v3/provider-state-injected
+    examples/v3/run-specific-verifications
+    examples/v3/todo-consumer
+    examples/v3/typescript
+    examples/v4/matchers
+    examples/v4/plugins
+  )
+
+  if [ $# -gt 0 ]; then
+    for example in "${examples[@]}"; do
+      run_cmd "$example" "$@"
+    done
+  else
+    declare -a failed_examples=()
+    for example in "${examples[@]}"; do
+      run_example "$example" || failed_examples+=("$example")
+    done
+
+    for failed_example in "${failed_examples[@]}"; do
+      echo "$(tput bold)$(tput setaf 1)Failed to run example in $failed_example$(tput sgr0)"
+    done
+  fi
+}
+
+main "$@"
