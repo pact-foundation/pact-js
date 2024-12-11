@@ -5,7 +5,7 @@ import serviceFactory, {
 } from '@pact-foundation/pact-core';
 
 import chalk from 'chalk';
-import * as path from 'path';
+import path from 'path';
 import process from 'process';
 import { isEmpty } from 'lodash';
 
