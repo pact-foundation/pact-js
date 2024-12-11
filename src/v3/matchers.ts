@@ -448,7 +448,7 @@ export function url2(
     }),
   ].join('');
 
-  // Temporary fix for inconsistancies between matchers and generators. Matchers use "value" attribute for
+  // Temporary fix for inconsistencies between matchers and generators. Matchers use "value" attribute for
   // example values, while generators use "example"
   if (basePath == null) {
     return {

@@ -56,7 +56,7 @@ describe('ApolloGraphQLInteraction', () => {
   });
 
   describe('#withOperation', () => {
-    describe('when no operationNaame is presented', () => {
+    describe('when no operationName is presented', () => {
       it('adds a null operationName property to the payload', () => {
         interaction.uponReceiving('a request');
         interaction.withRequest({

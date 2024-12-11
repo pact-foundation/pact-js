@@ -5,21 +5,21 @@
 ## Breaking Changes
 
   All CLI/API functionality provided by the Pact CLI tools (ruby based) now migrated to
-    
+
   * Repo
-    
+
       * https://github.com/pact-foundation/pact-js-cli/
-    
+
   * NPM Package
-    
+
       * https://www.npmjs.com/package/@pact-foundation/pact-cli
-    
+
   * imports
-    
-      * `@pact-foundation/pact-core` imports will now become `@pact-foundation/pact-cli` for programatic usage of the CLI tools
+
+      * `@pact-foundation/pact-core` imports will now become `@pact-foundation/pact-cli` for programmatic usage of the CLI tools
 
   * npx usage
-    
+
     * `npx --package=@pact-foundation/pact-cli@15.0.0 -c pact-broker`
 
 # 11.x.x -> 12.x.x
@@ -53,7 +53,7 @@ Removed the default export for v3 in the root package in preparation for a relea
 * add binary content support to messages via `WithBinaryContent`
 * add text content support to messages via `WithTextContent`
 * Remove all Ruby dependencies in DSLs
-* `pactfileWriteMode` still supports the same options, however the behaviour of `overwrite` is such now that it will overwrite the pact file _per test_, not pact run of Pact. This is because there is no longer a single long running mock server as per previous versions. Set to `merge` or leave blank for a sensible default. 
+* `pactfileWriteMode` still supports the same options, however the behaviour of `overwrite` is such now that it will overwrite the pact file _per test_, not pact run of Pact. This is because there is no longer a single long running mock server as per previous versions. Set to `merge` or leave blank for a sensible default.
 * As per the change to `pactfileWriteMode` this also means pact files should be cleared out prior to each test, to avoid extraneous interactions in a pact file.
 * Array matcher currently doesn't work on query strings (see https://github.com/pact-foundation/pact-reference/issues/205). However, an array with matchers is supported (see jest spec)
 * the `mockService` property on the `Pact` class is no longer an actual `MockService`, but supports the `baseUrl` property.
