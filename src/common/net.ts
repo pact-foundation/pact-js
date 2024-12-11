@@ -4,7 +4,7 @@
  * @private
  */
 
-import * as net from 'net';
+import net from 'net';
 
 export const localAddresses = ['127.0.0.1', 'localhost', '0.0.0.0', '::1'];
 
