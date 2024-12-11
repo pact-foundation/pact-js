@@ -1,12 +1,11 @@
 {
-  "branches": 50,
   "exclude": ["**/*.d.ts", "**/*.spec.ts"],
   "extension": [".ts"],
-  "functions": 50,
-  "include": ["src/**/*.ts"],
+  "include": ["src/*.ts", "src/**/*.ts"],
   "instrument": true,
   "lines": 50,
   "reporter": ["text-summary", "html", "lcov"],
+  "require": ["tsx"],
   "sourceMap": true,
   "statements": 50
 }
