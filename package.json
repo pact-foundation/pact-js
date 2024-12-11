@@ -17,7 +17,7 @@
     "release": "commit-and-tag-version",
     "test": "mocha",
     "coverage": "nyc npm run test",
-    "pretest": "bash scripts/install-plugins.sh",
+    "pretest": "./scripts/install-plugins",
     "docker:alpine:build": "docker build --build-arg NODE_VERSION=${NODE_VERSION:-current} -f Dockerfile.alpine -t pact-js:alpine .",
     "docker:debian:build": "docker build --build-arg NODE_VERSION=${NODE_VERSION:-current} -f Dockerfile.debian -t pact-js:debian .",
     "docker:alpine:run": "docker run -e LOG_LEVEL=${LOG_LEVEL:-info} -e GIT_REF=${GIT_REF:-test} -e GITHUB_ACTIONS=${GITHUB_ACTIONS:-false} -e SKIP_EXAMPLES=${SKIP_EXAMPLES:-''} -e PACT_BROKER_BASE_URL -e PACT_BROKER_TOKEN -w /home -v $(pwd):/home --rm pact-js:alpine",
