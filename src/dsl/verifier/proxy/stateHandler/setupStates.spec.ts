@@ -78,6 +78,7 @@ describe('#setupStates', () => {
           expect(executed).to.be.true;
         });
       });
+
       describe('that do not return a value', () => {
         it('executes the handler and returns an empty Promise', async () => {
           await setupStates(state, opts);
@@ -85,6 +86,7 @@ describe('#setupStates', () => {
           expect(executed).to.be.true;
         });
       });
+
       describe('that specify a setup and teardown function', () => {
         it('executes the lifecycle specific handler and returns any provider state injected values', async () => {
           const res = await setupStates(state2, opts);

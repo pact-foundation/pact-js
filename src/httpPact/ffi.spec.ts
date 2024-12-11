@@ -49,6 +49,7 @@ describe('Pact FFI', () => {
         expect(queryMock.calledWith('foo', 1, 'baz'));
       });
     });
+
     describe('with single values', () => {
       it('calls the query ffi function for each value', () => {
         const queryMock = sinon.stub();
@@ -64,6 +65,7 @@ describe('Pact FFI', () => {
         expect(queryMock.calledWith('foo', 0, 'bar'));
       });
     });
+
     describe('with array and single values', () => {
       it('calls the query ffi function for each value', () => {
         const queryMock = sinon.stub();

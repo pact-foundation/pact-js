@@ -71,6 +71,7 @@ describe('Matcher', () => {
         like({ ...r });
         like(Object.freeze(f));
       });
+
       it('compiles when InterfaceToTemplate is used', () => {
         const template: InterfaceToTemplate<ExampleInterface> = {
           someArray: ['one', 'two'],
@@ -85,6 +86,7 @@ describe('Matcher', () => {
         const unused: AnyTemplate = like(template);
       });
     });
+
     describe('with types', () => {
       it('compiles', () => {
         const template: ExampleType = {
@@ -123,6 +125,7 @@ describe('Matcher', () => {
           );
         });
       });
+
       describe('and a failing example', () => {
         it('returns false', () => {
           expect(validateExample('not a date', ISO8601_DATE_FORMAT)).to.eql(
@@ -131,6 +134,7 @@ describe('Matcher', () => {
         });
       });
     });
+
     describe('when given an invalid regex', () => {
       it('returns an error', () => {
         expect(() => {
@@ -473,6 +477,7 @@ describe('Matcher', () => {
         expect(email()).to.be.an('object');
       });
     });
+
     describe('when given an invalid Email address', () => {
       it('returns an error', () => {
         expect(() => {
@@ -489,6 +494,7 @@ describe('Matcher', () => {
         expect(uuid()).to.be.an('object');
       });
     });
+
     describe('when given an invalid UUID', () => {
       it('returns an error', () => {
         expect(() => {
@@ -505,6 +511,7 @@ describe('Matcher', () => {
         expect(ipv4Address()).to.be.an('object');
       });
     });
+
     describe('when given an invalid ipv4Address', () => {
       it('returns an error', () => {
         expect(() => {
@@ -524,6 +531,7 @@ describe('Matcher', () => {
         expect(ipv6Address()).to.be.an('object');
       });
     });
+
     describe('when given an invalid ipv6Address', () => {
       it('returns an error', () => {
         expect(() => {
@@ -540,6 +548,7 @@ describe('Matcher', () => {
         expect(hexadecimal()).to.be.an('object');
       });
     });
+
     describe('when given an invalid hexadecimal', () => {
       it('returns an error', () => {
         expect(() => {
@@ -555,10 +564,12 @@ describe('Matcher', () => {
         expect(boolean()).to.be.an('object');
         expect(boolean().value).to.equal(true);
       });
+
       it('sets value=false', () => {
         expect(boolean(false)).to.be.an('object');
         expect(boolean(false).value).to.equal(false);
       });
+
       it('sets value=true', () => {
         expect(boolean(true)).to.be.an('object');
         expect(boolean(true).value).to.equal(true);
@@ -606,6 +617,7 @@ describe('Matcher', () => {
           expect(rfc1123Timestamp()).to.be.an('object');
         });
       });
+
       describe('when given an invalid rfc1123Timestamp', () => {
         it('returns an error', () => {
           expect(() => {
@@ -622,6 +634,7 @@ describe('Matcher', () => {
           expect(iso8601Time()).to.be.an('object');
         });
       });
+
       describe('when given an invalid iso8601Time', () => {
         it('returns an error', () => {
           expect(() => {
@@ -638,6 +651,7 @@ describe('Matcher', () => {
           expect(iso8601Date()).to.be.an('object');
         });
       });
+
       describe('when given an invalid iso8601Date', () => {
         it('returns an error', () => {
           expect(() => {
@@ -656,6 +670,7 @@ describe('Matcher', () => {
           expect(iso8601DateTime()).to.be.an('object');
         });
       });
+
       describe('when given an invalid iso8601DateTime', () => {
         it('returns an error', () => {
           expect(() => {
@@ -683,6 +698,7 @@ describe('Matcher', () => {
           expect(iso8601DateTimeWithMillis()).to.be.an('object');
         });
       });
+
       describe('when given an invalid iso8601DateTimeWithMillis', () => {
         it('returns an error', () => {
           expect(() => {
@@ -771,6 +787,7 @@ describe('Matcher', () => {
           expect(extractPayload(matcher)).to.eql(expected);
         });
       });
+
       describe('when given a complex nested object with matchers', () => {
         it('removes all matching guff', () => {
           const o = somethingLike({
