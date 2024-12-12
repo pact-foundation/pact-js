@@ -345,7 +345,7 @@ All notable changes to this project will be documented in this file. See [commit
 ### Features
 
 * drop support for pact web incl. karma examples ([d45f898](https://github.com/pact-foundation/pact-js/commit/d45f898b29a62aa77cecff499a46ce365fd2c79a))
-* modify request body inside of verifer ([#873](https://github.com/pact-foundation/pact-js/issues/873)) ([be8ed15](https://github.com/pact-foundation/pact-js/commit/be8ed151c607b69bcf07670df211156887adb29e))
+* modify request body inside of verifier ([#873](https://github.com/pact-foundation/pact-js/issues/873)) ([be8ed15](https://github.com/pact-foundation/pact-js/commit/be8ed151c607b69bcf07670df211156887adb29e))
 
 
 ### Fixes and Improvements
@@ -551,7 +551,7 @@ All notable changes to this project will be documented in this file. See [commit
 
 ### Fixes and Improvements
 
-* correct VerfierV3Options so that it doesn't clobber VeriferOptions ([5796fde](https://github.com/pact-foundation/pact-js/commit/5796fdeb96c354316fe9606f0a9a7fc0c3d43532))
+* correct VerifierV3Options so that it doesn't clobber VerifierOptions ([5796fde](https://github.com/pact-foundation/pact-js/commit/5796fdeb96c354316fe9606f0a9a7fc0c3d43532))
 * You no longer need to import the verifier from /v3, it can be imported directly from @pact-foundation/pact ([c268497](https://github.com/pact-foundation/pact-js/commit/c268497e1fd848d3423d379a2671361ea56c9b53))
 
 ## [10.0.0-beta.44](https://github.com/pact-foundation/pact-js/compare/v10.0.0-beta.43...v10.0.0-beta.44) (2021-07-22)
@@ -872,7 +872,7 @@ different state phases.
 
 ### Features
 
-* add some tests around the conusmer DSL matchers ([e6a153f](https://github.com/pact-foundation/pact-js/commit/e6a153fd62d48644b97018d69e5f23d1710e510f))
+* add some tests around the consumer DSL matchers ([e6a153f](https://github.com/pact-foundation/pact-js/commit/e6a153fd62d48644b97018d69e5f23d1710e510f))
 * handle XML matching with different types of child elements ([2143ca4](https://github.com/pact-foundation/pact-js/commit/2143ca4c968969e1c6218dd8e538097733ccfa56))
 * implemented consumer DSL URL matcher ([f27a444](https://github.com/pact-foundation/pact-js/commit/f27a44409aed3ece1adbab6af9e853b7684c101c))
 
@@ -931,7 +931,7 @@ different state phases.
 
 ### Fixes and Improvements
 
-* accidentially commited development paths in cargo manefest ([03cc16f](https://github.com/pact-foundation/pact-js/commit/03cc16f71d5f6a6cd646cdb6cf5421a134cb159e))
+* accidentally committed development paths in cargo manifest ([03cc16f](https://github.com/pact-foundation/pact-js/commit/03cc16f71d5f6a6cd646cdb6cf5421a134cb159e))
 * format the error messages in a better way ([0a15772](https://github.com/pact-foundation/pact-js/commit/0a15772a710d3d159648672470084a1c99b45cc8))
 * handle error when pact file cannot be written ([82832a8](https://github.com/pact-foundation/pact-js/commit/82832a81c115d06ef2d9c1fadd18c54f6f629e59))
 * throw an exception when a request is configured but no interaction defined ([b317da7](https://github.com/pact-foundation/pact-js/commit/b317da79f28dce45102a55bcdcbc415d3fbdb9ab))
@@ -1102,7 +1102,7 @@ different state phases.
 ### Fixes and Improvements
 
 * broken pact provider test not consistent with types ([29af342](https://github.com/pact-foundation/pact-js/commit/29af34250cdc308a5298553f5ee9bbb9daf182cb))
-* correct VerfierV3Options so that it doesn't clobber VeriferOptions ([5796fde](https://github.com/pact-foundation/pact-js/commit/5796fdeb96c354316fe9606f0a9a7fc0c3d43532))
+* correct VerifierV3Options so that it doesn't clobber VerifierOptions ([5796fde](https://github.com/pact-foundation/pact-js/commit/5796fdeb96c354316fe9606f0a9a7fc0c3d43532))
 * using relative import. fixes problems with intellisense in vscode ([35de1c5](https://github.com/pact-foundation/pact-js/commit/35de1c57d744d5bc747e6af114c8d272b2a8cec4))
 * You no longer need to import the verifier from /v3, it can be imported directly from @pact-foundation/pact ([c268497](https://github.com/pact-foundation/pact-js/commit/c268497e1fd848d3423d379a2671361ea56c9b53))
 
@@ -1422,7 +1422,7 @@ different state phases.
 
 ### Features
 
-* add some tests around the conusmer DSL matchers ([e6a153f](https://github.com/pact-foundation/pact-js/commit/e6a153fd62d48644b97018d69e5f23d1710e510f))
+* add some tests around the consumer DSL matchers ([e6a153f](https://github.com/pact-foundation/pact-js/commit/e6a153fd62d48644b97018d69e5f23d1710e510f))
 * handle XML matching with different types of child elements ([2143ca4](https://github.com/pact-foundation/pact-js/commit/2143ca4c968969e1c6218dd8e538097733ccfa56))
 * implemented consumer DSL URL matcher ([f27a444](https://github.com/pact-foundation/pact-js/commit/f27a44409aed3ece1adbab6af9e853b7684c101c))
 
@@ -1481,7 +1481,7 @@ different state phases.
 
 ### Fixes and Improvements
 
-* accidentially commited development paths in cargo manefest ([03cc16f](https://github.com/pact-foundation/pact-js/commit/03cc16f71d5f6a6cd646cdb6cf5421a134cb159e))
+* accidentally committed development paths in cargo manifest ([03cc16f](https://github.com/pact-foundation/pact-js/commit/03cc16f71d5f6a6cd646cdb6cf5421a134cb159e))
 * format the error messages in a better way ([0a15772](https://github.com/pact-foundation/pact-js/commit/0a15772a710d3d159648672470084a1c99b45cc8))
 * handle error when pact file cannot be written ([82832a8](https://github.com/pact-foundation/pact-js/commit/82832a81c115d06ef2d9c1fadd18c54f6f629e59))
 * throw an exception when a request is configured but no interaction defined ([b317da7](https://github.com/pact-foundation/pact-js/commit/b317da79f28dce45102a55bcdcbc415d3fbdb9ab))
@@ -1785,7 +1785,7 @@ different state phases.
 
 ### Features
 
-* add some tests around the conusmer DSL matchers ([e6a153f](https://github.com/pact-foundation/pact-js/commit/e6a153fd62d48644b97018d69e5f23d1710e510f))
+* add some tests around the consumer DSL matchers ([e6a153f](https://github.com/pact-foundation/pact-js/commit/e6a153fd62d48644b97018d69e5f23d1710e510f))
 * handle XML matching with different types of child elements ([2143ca4](https://github.com/pact-foundation/pact-js/commit/2143ca4c968969e1c6218dd8e538097733ccfa56))
 * implemented consumer DSL URL matcher ([f27a444](https://github.com/pact-foundation/pact-js/commit/f27a44409aed3ece1adbab6af9e853b7684c101c))
 
@@ -1844,7 +1844,7 @@ different state phases.
 
 ### Fixes and Improvements
 
-* accidentially commited development paths in cargo manefest ([03cc16f](https://github.com/pact-foundation/pact-js/commit/03cc16f71d5f6a6cd646cdb6cf5421a134cb159e))
+* accidentally committed development paths in cargo manifest ([03cc16f](https://github.com/pact-foundation/pact-js/commit/03cc16f71d5f6a6cd646cdb6cf5421a134cb159e))
 * format the error messages in a better way ([0a15772](https://github.com/pact-foundation/pact-js/commit/0a15772a710d3d159648672470084a1c99b45cc8))
 * handle error when pact file cannot be written ([82832a8](https://github.com/pact-foundation/pact-js/commit/82832a81c115d06ef2d9c1fadd18c54f6f629e59))
 * throw an exception when a request is configured but no interaction defined ([b317da7](https://github.com/pact-foundation/pact-js/commit/b317da79f28dce45102a55bcdcbc415d3fbdb9ab))
@@ -2029,7 +2029,7 @@ different state phases.
 
 ### Features
 
-* add some tests around the conusmer DSL matchers ([e6a153f](https://github.com/pact-foundation/pact-js/commit/e6a153fd62d48644b97018d69e5f23d1710e510f))
+* add some tests around the consumer DSL matchers ([e6a153f](https://github.com/pact-foundation/pact-js/commit/e6a153fd62d48644b97018d69e5f23d1710e510f))
 * handle XML matching with different types of child elements ([2143ca4](https://github.com/pact-foundation/pact-js/commit/2143ca4c968969e1c6218dd8e538097733ccfa56))
 * implemented consumer DSL URL matcher ([f27a444](https://github.com/pact-foundation/pact-js/commit/f27a44409aed3ece1adbab6af9e853b7684c101c))
 
@@ -2088,7 +2088,7 @@ different state phases.
 
 ### Bug Fixes
 
-* accidentially commited development paths in cargo manefest ([03cc16f](https://github.com/pact-foundation/pact-js/commit/03cc16f71d5f6a6cd646cdb6cf5421a134cb159e))
+* accidentally committed development paths in cargo manifest ([03cc16f](https://github.com/pact-foundation/pact-js/commit/03cc16f71d5f6a6cd646cdb6cf5421a134cb159e))
 * format the error messages in a better way ([0a15772](https://github.com/pact-foundation/pact-js/commit/0a15772a710d3d159648672470084a1c99b45cc8))
 * handle error when pact file cannot be written ([82832a8](https://github.com/pact-foundation/pact-js/commit/82832a81c115d06ef2d9c1fadd18c54f6f629e59))
 * throw an exception when a request is configured but no interaction defined ([b317da7](https://github.com/pact-foundation/pact-js/commit/b317da79f28dce45102a55bcdcbc415d3fbdb9ab))
@@ -2241,7 +2241,7 @@ different state phases.
 
 ### Features
 
-* add some tests around the conusmer DSL matchers ([e6a153f](https://github.com/pact-foundation/pact-js/commit/e6a153fd62d48644b97018d69e5f23d1710e510f))
+* add some tests around the consumer DSL matchers ([e6a153f](https://github.com/pact-foundation/pact-js/commit/e6a153fd62d48644b97018d69e5f23d1710e510f))
 * handle XML matching with different types of child elements ([2143ca4](https://github.com/pact-foundation/pact-js/commit/2143ca4c968969e1c6218dd8e538097733ccfa56))
 * implemented consumer DSL URL matcher ([f27a444](https://github.com/pact-foundation/pact-js/commit/f27a44409aed3ece1adbab6af9e853b7684c101c))
 
@@ -2300,7 +2300,7 @@ different state phases.
 
 ### Bug Fixes
 
-* accidentially commited development paths in cargo manefest ([03cc16f](https://github.com/pact-foundation/pact-js/commit/03cc16f71d5f6a6cd646cdb6cf5421a134cb159e))
+* accidentally committed development paths in cargo manifest ([03cc16f](https://github.com/pact-foundation/pact-js/commit/03cc16f71d5f6a6cd646cdb6cf5421a134cb159e))
 * format the error messages in a better way ([0a15772](https://github.com/pact-foundation/pact-js/commit/0a15772a710d3d159648672470084a1c99b45cc8))
 * handle error when pact file cannot be written ([82832a8](https://github.com/pact-foundation/pact-js/commit/82832a81c115d06ef2d9c1fadd18c54f6f629e59))
 * throw an exception when a request is configured but no interaction defined ([b317da7](https://github.com/pact-foundation/pact-js/commit/b317da79f28dce45102a55bcdcbc415d3fbdb9ab))
@@ -2430,7 +2430,7 @@ different state phases.
 
 ### Features
 
-* add some tests around the conusmer DSL matchers ([e6a153f](https://github.com/pact-foundation/pact-js/commit/e6a153fd62d48644b97018d69e5f23d1710e510f))
+* add some tests around the consumer DSL matchers ([e6a153f](https://github.com/pact-foundation/pact-js/commit/e6a153fd62d48644b97018d69e5f23d1710e510f))
 * handle XML matching with different types of child elements ([2143ca4](https://github.com/pact-foundation/pact-js/commit/2143ca4c968969e1c6218dd8e538097733ccfa56))
 * implemented consumer DSL URL matcher ([f27a444](https://github.com/pact-foundation/pact-js/commit/f27a44409aed3ece1adbab6af9e853b7684c101c))
 
@@ -2489,7 +2489,7 @@ different state phases.
 
 ### Bug Fixes
 
-* accidentially commited development paths in cargo manefest ([03cc16f](https://github.com/pact-foundation/pact-js/commit/03cc16f71d5f6a6cd646cdb6cf5421a134cb159e))
+* accidentally committed development paths in cargo manifest ([03cc16f](https://github.com/pact-foundation/pact-js/commit/03cc16f71d5f6a6cd646cdb6cf5421a134cb159e))
 * format the error messages in a better way ([0a15772](https://github.com/pact-foundation/pact-js/commit/0a15772a710d3d159648672470084a1c99b45cc8))
 * handle error when pact file cannot be written ([82832a8](https://github.com/pact-foundation/pact-js/commit/82832a81c115d06ef2d9c1fadd18c54f6f629e59))
 * throw an exception when a request is configured but no interaction defined ([b317da7](https://github.com/pact-foundation/pact-js/commit/b317da79f28dce45102a55bcdcbc415d3fbdb9ab))
@@ -2578,7 +2578,7 @@ different state phases.
 
 
 
-* add some tests around the conusmer DSL matchers ([e6a153f](https://github.com/pact-foundation/pact-js/commit/e6a153fd62d48644b97018d69e5f23d1710e510f))
+* add some tests around the consumer DSL matchers ([e6a153f](https://github.com/pact-foundation/pact-js/commit/e6a153fd62d48644b97018d69e5f23d1710e510f))
 * handle XML matching with different types of child elements ([2143ca4](https://github.com/pact-foundation/pact-js/commit/2143ca4c968969e1c6218dd8e538097733ccfa56))
 * implemented consumer DSL URL matcher ([f27a444](https://github.com/pact-foundation/pact-js/commit/f27a44409aed3ece1adbab6af9e853b7684c101c))
 
@@ -2664,7 +2664,7 @@ different state phases.
 
 ### Bug Fixes
 
-* accidentially commited development paths in cargo manefest ([03cc16f](https://github.com/pact-foundation/pact-js/commit/03cc16f71d5f6a6cd646cdb6cf5421a134cb159e))
+* accidentally committed development paths in cargo manifest ([03cc16f](https://github.com/pact-foundation/pact-js/commit/03cc16f71d5f6a6cd646cdb6cf5421a134cb159e))
 * format the error messages in a better way ([0a15772](https://github.com/pact-foundation/pact-js/commit/0a15772a710d3d159648672470084a1c99b45cc8))
 * handle error when pact file cannot be written ([82832a8](https://github.com/pact-foundation/pact-js/commit/82832a81c115d06ef2d9c1fadd18c54f6f629e59))
 * throw an exception when a request is configured but no interaction defined ([b317da7](https://github.com/pact-foundation/pact-js/commit/b317da79f28dce45102a55bcdcbc415d3fbdb9ab))
@@ -2730,7 +2730,7 @@ different state phases.
 
 ### Features
 
-* add some tests around the conusmer DSL matchers ([e6a153f](https://github.com/pact-foundation/pact-js/commit/e6a153fd62d48644b97018d69e5f23d1710e510f))
+* add some tests around the consumer DSL matchers ([e6a153f](https://github.com/pact-foundation/pact-js/commit/e6a153fd62d48644b97018d69e5f23d1710e510f))
 * handle XML matching with different types of child elements ([2143ca4](https://github.com/pact-foundation/pact-js/commit/2143ca4c968969e1c6218dd8e538097733ccfa56))
 * implemented consumer DSL URL matcher ([f27a444](https://github.com/pact-foundation/pact-js/commit/f27a44409aed3ece1adbab6af9e853b7684c101c))
 * package.json & package-lock.json to reduce vulnerabilities ([0bb8512](https://github.com/pact-foundation/pact-js/commit/0bb851255c0f08d25fd935e5bd164ce99063a9ae))
@@ -2811,7 +2811,7 @@ different state phases.
 
 ### Bug Fixes
 
-* accidentially commited development paths in cargo manefest ([03cc16f](https://github.com/pact-foundation/pact-js/commit/03cc16f71d5f6a6cd646cdb6cf5421a134cb159e))
+* accidentally committed development paths in cargo manifest ([03cc16f](https://github.com/pact-foundation/pact-js/commit/03cc16f71d5f6a6cd646cdb6cf5421a134cb159e))
 * comments and accidental package ([efe2f4e](https://github.com/pact-foundation/pact-js/commit/efe2f4eef3f05e8ea4a067403c69b75e3236aea9))
 * dir file location error ([86ab843](https://github.com/pact-foundation/pact-js/commit/86ab8433a5c4400330c71b6e9a64cfde49c75461))
 * format the error messages in a better way ([0a15772](https://github.com/pact-foundation/pact-js/commit/0a15772a710d3d159648672470084a1c99b45cc8))

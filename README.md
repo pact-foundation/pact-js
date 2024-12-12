@@ -96,7 +96,7 @@ npm i -S @pact-foundation/pact@latest
 # 🚀 now write some tests!
 ```
 
-Looking for the previous [stable 9.x.x release](https://github.com/pact-foundation/pact-js/tree/9.x.x)? 
+Looking for the previous [stable 9.x.x release](https://github.com/pact-foundation/pact-js/tree/9.x.x)?
 
 ### Requirements
 
@@ -136,7 +136,7 @@ const provider = new PactV3({
   provider: 'MyProvider',
 });
 
-// API Client that will fetch dogs from the Dog API 
+// API Client that will fetch dogs from the Dog API
 // This is the target of our Pact test
 public getMeDogs = (from: string): AxiosPromise => {
   return axios.request({
@@ -174,8 +174,8 @@ describe('GET /dogs', () => {
     return provider.executeTest((mockserver) => {
       // Act: test our API client behaves correctly
       //
-      // Note we configure the DogService API client dynamically to 
-      // point to the mock service Pact created for us, instead of 
+      // Note we configure the DogService API client dynamically to
+      // point to the mock service Pact created for us, instead of
       // the real one
       dogService = new DogService(mockserver.url);
       const response = await dogService.getMeDogs('today')

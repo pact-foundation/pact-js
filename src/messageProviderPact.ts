@@ -56,7 +56,7 @@ export const providerWithMetadata =
     );
 
 /**
- * A Message Provider is analagous to Consumer in the HTTP Interaction model.
+ * A Message Provider is analogous to Consumer in the HTTP Interaction model.
  *
  * It is the initiator of an interaction, and expects something on the other end
  * of the interaction to respond - just in this case, not immediately.

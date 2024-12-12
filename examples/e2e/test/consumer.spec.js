@@ -171,7 +171,7 @@ describe('Pact', () => {
     });
   });
 
-  describe('when a call to the Animal Service is made to retreive a single animal by ID', () => {
+  describe('when a call to the Animal Service is made to retrieve a single animal by ID', () => {
     describe('and there is an animal in the DB with ID 1', () => {
       before(() =>
         provider.addInteraction({
