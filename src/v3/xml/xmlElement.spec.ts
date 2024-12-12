@@ -85,6 +85,7 @@ describe('xml element', () => {
         expect(child.matcher?.['pact:matcher:type']).not.to.be.empty;
       }
     });
+
     it('sets content to an empty string if the Matcher has no value', () => {
       function noValueMatcher(): Matcher<string> {
         return {

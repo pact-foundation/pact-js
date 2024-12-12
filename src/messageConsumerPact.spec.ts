@@ -44,6 +44,7 @@ describe('MessageConsumer', () => {
         }).to.throw(Error);
       });
     });
+
     describe('when an empty content object has been given', () => {
       it('it should throw an error', () => {
         expect(() => {
@@ -51,6 +52,7 @@ describe('MessageConsumer', () => {
         }).to.throw(Error);
       });
     });
+
     describe('when an empty metadata object has been given', () => {
       it('it should throw an error', () => {
         expect(() => {
@@ -96,6 +98,7 @@ describe('MessageConsumer', () => {
           return expect(hFn(testMessage)).to.eventually.be.fulfilled;
         });
       });
+
       describe('when given a function that throws an Exception', () => {
         it('returns a Handler object that returns a rejected promise', () => {
           const failFn = () => Promise.reject(new Error('fail'));
