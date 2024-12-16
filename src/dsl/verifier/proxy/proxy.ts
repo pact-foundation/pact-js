@@ -1,7 +1,7 @@
 import express from 'express';
 import HttpProxy from 'http-proxy';
 import bodyParser from 'body-parser';
-import * as http from 'http';
+import http from 'http';
 
 import { ProxyOptions } from './types';
 import logger from '../../../common/logger';

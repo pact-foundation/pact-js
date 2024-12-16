@@ -1,8 +1,8 @@
-import * as chai from 'chai';
+import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinonChai from 'sinon-chai';
 import express from 'express';
-import * as http from 'http';
+import http from 'http';
 import { Message } from './dsl/message';
 import {
   MessageProviderPact,

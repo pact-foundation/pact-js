@@ -5,9 +5,9 @@
   "scripts": {
     "test": "npm run test:consumer && npm run test:publish && npm run test:provider",
     "test:no:publish": "npm run test:consumer && npm run test:provider",
-    "test:consumer": "mocha --config=test/.mocharc.json test/consumer.spec.js",
+    "test:consumer": "mocha test/consumer.spec.js",
     "test:publish": "pact-broker publish ./pacts --consumer-app-version=\"$(npx absolute-version)\" --auto-detect-version-properties --broker-base-url=https://testdemo.pactflow.io",
-    "test:provider": "mocha --config=test/.mocharc.json test/provider.spec.js",
+    "test:provider": "mocha test/provider.spec.js",
     "can-i-deploy": "npm run can-i-deploy:consumer && npm run can-i-deploy:provider",
     "can-i-deploy:consumer": "pact-broker can-i-deploy --pacticipant 'Matching Service' --latest --broker-base-url https://testdemo.pactflow.io",
     "can-i-deploy:provider": "pact-broker can-i-deploy --pacticipant 'Animal Profile Service' --latest --broker-base-url https://testdemo.pactflow.io",
@@ -18,26 +18,19 @@
   "author": "matt.fellows@onegeek.com.au",
   "license": "MIT",
   "devDependencies": {
-    "absolute-version": "1.0.1",
     "@pact-foundation/pact": "file:../../../dist",
     "@pact-foundation/pact-cli": "^15.0.2",
-    "body-parser": "^1.20.0",
+    "absolute-version": "1.0.1",
     "chai": "^3.5.0",
     "chai-as-promised": "^7.1.1",
-    "chalk": "4.1.2",
     "concurrently": "^7.3.0",
-    "cors": "^2.8.5",
-    "eslint": "^8.22.0",
-    "eslint-config-google": "^0.14.0",
-    "express": "^4.18.1",
-    "express-http-proxy": "^1.6.3",
-    "mocha": "^10.0.0",
-    "neon-cli": "^0.10.1",
-    "superagent": "^8.0.0",
-    "ts-node": "^10.9.1",
-    "typescript": "^4.7.4"
+    "mocha": "^10.0.0"
   },
   "dependencies": {
+    "body-parser": "^1.20.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
+    "superagent": "^8.0.0",
     "xml": "^1.0.1"
   },
   "config": {
