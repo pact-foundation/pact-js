@@ -32,11 +32,13 @@ describe('GraphQLInteraction', () => {
         expect(json.request.body.operationName).to.eq('query');
       });
     });
+
     describe('when given an invalid operation', () => {
       it('fails with an error', () => {
         expect(interaction.withOperation.bind('aoeu')).to.throw(Error);
       });
     });
+
     describe('when given a null operation', () => {
       it('creates a GrphQL Interaction', () => {
         interaction.uponReceiving('a request');
@@ -79,6 +81,7 @@ describe('GraphQLInteraction', () => {
         expect(json.request.body.variables).to.deep.eq({ foo: 'bar' });
       });
     });
+
     describe('when no variables are provided', () => {
       it('does not add the variables property to the payload', () => {
         interaction.uponReceiving('a request');
@@ -97,6 +100,7 @@ describe('GraphQLInteraction', () => {
         expect(json.request.body).to.not.have.property('variables');
       });
     });
+
     describe('when an empty variables object is presented', () => {
       it('adds the variables property to the payload', () => {
         interaction.uponReceiving('a request');

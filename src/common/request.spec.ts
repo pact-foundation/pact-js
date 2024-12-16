@@ -31,6 +31,7 @@ describe('Request', () => {
           expect(r).to.be.fulfilled,
         ]);
       });
+
       it('resolves when request succeeds with response body', () => {
         const body = 'body';
         nock(url).get('/').reply(200, body);
@@ -40,6 +41,7 @@ describe('Request', () => {
           expect(p).to.eventually.be.equal(body),
         ]);
       });
+
       it('rejects when request fails with error message', () => {
         const error = 'error';
         nock(url).get('/').reply(400, error);

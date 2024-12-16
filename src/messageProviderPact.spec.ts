@@ -58,6 +58,7 @@ describe('MesageProvider', () => {
       expect(provider).to.be.a('object');
       expect(provider).to.respondTo('verify');
     });
+
     it('creates a Provider with default log level if not specified', () => {
       provider = new MessageProviderPact({
         messageProviders: {},
@@ -82,6 +83,7 @@ describe('MesageProvider', () => {
         setupVerificationHandler(req, res);
       });
     });
+
     describe('when their is an invalid setup', () => {
       it('creates a valid express handler that rejects the message', (done) => {
         const setupVerificationHandler = (
@@ -112,6 +114,7 @@ describe('MesageProvider', () => {
         );
       });
     });
+
     describe('when given a handler that does not exist', () => {
       it('returns a failed promise', () => {
         const findHandler = (provider as any).findHandler.bind(provider);
@@ -128,6 +131,7 @@ describe('MesageProvider', () => {
           'yay',
         ]);
       });
+
       it('passes params to the handler', () => {
         const setupStates = (provider as any).setupStates.bind(provider);
         return expect(
@@ -141,6 +145,7 @@ describe('MesageProvider', () => {
         ]);
       });
     });
+
     describe('when given a state that does not have a handler', () => {
       it('returns an empty promise', () => {
         provider = new MessageProviderPact({
@@ -164,6 +169,7 @@ describe('MesageProvider', () => {
       });
     });
   });
+
   describe('#setupProxyServer', () => {
     describe('when the http server starts up', () => {
       it('returns a resolved promise', () => {
@@ -173,6 +179,7 @@ describe('MesageProvider', () => {
       });
     });
   });
+
   describe('#setupProxyApplication', () => {
     it('returns a valid express app', () => {
       const setupProxyApplication = (

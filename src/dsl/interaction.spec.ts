@@ -25,6 +25,7 @@ describe('Interaction', () => {
         const actual = new Interaction().uponReceiving('r').given('').state;
         expect(actual).to.eql({ description: 'r' });
       });
+
       it('creates Interaction when nothing is passed', () => {
         const actual = new Interaction().uponReceiving('r').state;
         expect(actual).to.eql({ description: 'r' });

@@ -643,6 +643,7 @@ describe('V3 Matchers', () => {
         expect(MatchersV3.reify(matcher)).to.eql(expected);
       });
     });
+
     describe('when given a complex nested object with matchers', () => {
       it('removes all matching guff', () => {
         const o = MatchersV3.like({
