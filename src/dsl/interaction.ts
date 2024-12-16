@@ -109,7 +109,7 @@ export class Interaction {
    * @param {string} requestOpts.method - The HTTP method
    * @param {string} requestOpts.path - The path of the URL
    * @param {string} requestOpts.query - Any query string in the interaction
-   * @param {Object} requestOpts.headers - A key-value pair oject of headers
+   * @param {Object} requestOpts.headers - A key-value pair object of headers
    * @param {Object} requestOpts.body - The body, in {@link String} format or {@link Object} format
    * @returns {Interaction} interaction
    */

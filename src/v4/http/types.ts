@@ -78,7 +78,7 @@ export interface V4InteractionwithRequest {
 
 export type V4RequestBuilderFunc = (builder: V4RequestBuilder) => void;
 
-// TOOD: not sure if the Builder pattern is better or worse from a readibility
+// TODO: not sure if the Builder pattern is better or worse from a readability
 //       and forcing function.
 export interface V4RequestBuilder {
   query(query: TemplateQuery): V4RequestBuilder;

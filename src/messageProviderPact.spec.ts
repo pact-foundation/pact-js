@@ -15,7 +15,7 @@ chai.use(chaiAsPromised);
 
 const { expect } = chai;
 
-describe('MesageProvider', () => {
+describe('MessageProvider', () => {
   let provider: MessageProviderPact;
   const successfulRequest = 'successfulRequest';
   const unsuccessfulRequest = 'unsuccessfulRequest';

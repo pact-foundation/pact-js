@@ -37,7 +37,7 @@ type InternalMessageState = {
 };
 
 /**
- * A Message Consumer is analagous to a Provider in the HTTP Interaction model.
+ * A Message Consumer is analogous to a Provider in the HTTP Interaction model.
  * It is the receiver of an interaction, and needs to be able to handle whatever
  * request was provided.
  */
