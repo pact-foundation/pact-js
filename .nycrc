@@ -5,7 +5,6 @@
   "instrument": true,
   "lines": 50,
   "reporter": ["text-summary", "html", "lcov"],
-  "require": ["tsx"],
   "sourceMap": true,
   "statements": 50
 }
