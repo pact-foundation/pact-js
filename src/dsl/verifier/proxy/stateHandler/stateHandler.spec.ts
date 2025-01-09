@@ -50,7 +50,7 @@ describe('#createProxyStateHandler', () => {
   context('when there is a problem with a state handler', () => {
     const badStateHandlers: StateHandlers = {
       'thing exists': {
-        setup: () => Promise.reject('bad'),
+        setup: () => Promise.reject(new Error('bad')),
       },
     };
 
