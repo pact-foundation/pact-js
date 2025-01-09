@@ -113,6 +113,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: npm
 
+      - name: Set NodeJS scripts shell
+        if: startsWith(matrix.os, 'windows')
+        run: npm config set script-shell "C:\\Program Files\\git\\bin\\bash.exe"
+
       - name: Install dependencies
         run: |
           npm ci
