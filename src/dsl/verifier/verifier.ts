@@ -6,8 +6,8 @@ import serviceFactory, {
   VerifierOptions as PactCoreVerifierOptions,
 } from '@pact-foundation/pact-core';
 import { omit, isEmpty } from 'lodash';
-import * as http from 'http';
-import * as url from 'url';
+import http from 'http';
+import url from 'url';
 
 import { AddressInfo } from 'net';
 import logger, { setLogLevel } from '../../common/logger';

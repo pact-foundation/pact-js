@@ -1,4 +1,4 @@
-import * as chai from 'chai';
+import chai from 'chai';
 import { describe } from 'mocha';
 import { XmlText } from './xmlText';
 import { XmlElement } from './xmlElement';

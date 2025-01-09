@@ -1,7 +1,6 @@
-import * as chai from 'chai';
-import * as chaiAsPromised from 'chai-as-promised';
-import * as path from 'path';
-import * as sinonChai from 'sinon-chai';
+import chai from 'chai';
+import chaiAsPromised from 'chai-as-promised';
+import sinonChai from 'sinon-chai';
 import { PactV3, MatchersV3, LogLevel } from '@pact-foundation/pact';
 import { UserService } from '../index';
 const { like } = MatchersV3;

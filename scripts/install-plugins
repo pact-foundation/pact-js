@@ -1,0 +1,106 @@
+#!/bin/sh
+#
+# Usage:
+#   $ curl -fsSL https://raw.githubusercontent.com/pact-foundation/pact-plugins/master/install-cli.sh | bash
+# or
+#   $ wget -q https://raw.githubusercontent.com/pact-foundation/pact-plugins/master/install-cli.sh -O- | bash
+
+# While most shells support `local`, it technically isn't POSIX. This will check
+# for `local` and alias it to `typeset` if it doesn't exist.
+# shellcheck disable=SC3043
+#            If a shell does not support `local`, it will be aliased to
+#            `typeset`, so this check is not needed.
+has_local() {
+  local _has_local
+}
+has_local 2>/dev/null || alias local=typeset
+
+set -o errexit # Exit on error
+set -o nounset # Treat unset variables as an error
+
+# Colours
+WHITE_BOLD='\033[1;37m'
+RESET='\033[0m'
+
+detect_osarch() {
+  case $(uname -sm) in
+  'Linux x86_64')
+    os='linux'
+    arch='x86_64'
+    ext=''
+    ;;
+  'Linux aarch64')
+    os='linux'
+    arch='aarch64'
+    ext=''
+    ;;
+  'Darwin x86' | 'Darwin x86_64')
+    os='osx'
+    arch='x86_64'
+    ext=''
+    ;;
+  'Darwin arm64')
+    os='osx'
+    arch='aarch64'
+    ext=''
+    ;;
+  CYGWIN* | MINGW32* | MSYS* | MINGW*)
+    os="windows"
+    arch='x86_64'
+    ext='.exe'
+    ;;
+  *)
+    echo "Sorry, you'll need to install the plugin CLI manually."
+    exit 1
+    ;;
+  esac
+}
+
+install_pact_plugin_cli() {
+  [ -f ~/.pact/bin/pact-plugin-cli ] && \
+    echo "${WHITE_BOLD}=> Plugin CLI already installed${RESET}" && \
+    return
+
+  local version="0.1.2"
+  detect_osarch
+  local url="https://github.com/pact-foundation/pact-plugins/releases/download/pact-plugin-cli-v${version}/pact-plugin-cli-${os}-${arch}${ext}.gz"
+
+  echo "${WHITE_BOLD}=> Installing plugins CLI version '${version}'${RESET}"
+  echo "  - OS: ${os}"
+  echo "  - Arch: ${arch}"
+  echo "  - Version: ${version}"
+  echo "  - URL: ${url}"
+  echo "  - Downloading into: ~/.pact/bin/"
+
+  mkdir -p ~/.pact/bin
+
+  if command -v curl >/dev/null 2>&1; then
+    curl -sSL "$url" | gunzip -c > ~/.pact/bin/pact-plugin-cli
+  elif command -v wget >/dev/null 2>&1; then
+    wget -qO- "$url" | gunzip -c > ~/.pact/bin/pact-plugin-cli
+  else
+    echo "Neither curl nor wget found. Please install one of these packages."
+    exit 1
+  fi
+  chmod +x ~/.pact/bin/pact-plugin-cli
+}
+
+install_matt_plugin() {
+  [ -d ~/.pact/plugins/matt-0.1.1 ] && \
+    echo "${WHITE_BOLD}=> MATT plugin already installed${RESET}" && \
+    return
+
+  local version="0.1.1"
+  local url="https://github.com/mefellows/pact-matt-plugin/releases/tag/v${version}"
+
+  echo "${WHITE_BOLD}=> Installing MATT plugin version '${version}'${RESET}"
+  ~/.pact/bin/pact-plugin-cli install "$url"
+
+}
+
+main() {
+  install_pact_plugin_cli
+  install_matt_plugin
+}
+
+main

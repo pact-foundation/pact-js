@@ -4,48 +4,29 @@
   "description": "TypeScript Pact Example (Using V3 version)",
   "main": "index.js",
   "scripts": {
-    "test": "nyc --check-coverage --reporter=html --reporter=text-summary mocha test/*.spec.ts",
+    "test": "mocha test/*.spec.ts",
     "mocha:direct": "mocha"
   },
   "author": "",
   "license": "MIT",
-  "nyc": {
-    "extension": [
-      ".ts"
-    ],
-    "include": [
-      "**/*.ts"
-    ],
-    "exclude": [
-      "**/*.d.ts"
-    ],
-    "reporter": [
-      "html"
-    ],
-    "all": true,
-    "branches": 80,
-    "lines": 80,
-    "functions": 80,
-    "statements": 80
-  },
   "devDependencies": {
     "@pact-foundation/pact": "file:../../../dist",
     "@types/chai": "^4.3.3",
     "@types/chai-as-promised": "7.1.5",
     "@types/mocha": "^9.1.1",
     "@types/node": "^18.7.11",
-    "@types/sinon": "^10.0.13",
     "@types/sinon-chai": "^3.2.8",
-    "axios": "^1.6.5",
     "chai": "^4.3.6",
     "chai-as-promised": "^7.1.1",
-    "lodash": "^4.17.21",
     "mocha": "^10.0.0",
-    "nyc": "^15.1.0",
     "sinon": "^14.0.0",
     "sinon-chai": "^3.7.0",
-    "ts-mock-imports": "^1.3.8",
-    "ts-node": "^10.9.1",
+    "tslint": "^5.20.1",
+    "tslint-config-prettier": "^1.18.0",
+    "tsx": "^4.19.2",
     "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "axios": "^1.6.5"
   }
 }

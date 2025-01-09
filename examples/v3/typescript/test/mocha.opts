@@ -1,8 +1,0 @@
---bail
---require ts-node/register
---require source-map-support/register
---full-trace
---colors
---recursive
---timeout 30000
-test/*.spec.ts

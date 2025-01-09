@@ -202,8 +202,7 @@ Run a single example
 Run all examples
 
 1. Change into the examples folder `cd examples`
-2. Install all the examples dependencies `./installAll.sh`
-3. Run all the examples `./runAll.sh`
+2. Run all examples `./run-all`
 
 ![----------](https://user-images.githubusercontent.com/53900/182992715-aa63e421-170b-41cf-8f95-82fe4b0846c2.png)
 
