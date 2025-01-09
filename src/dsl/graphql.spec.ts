@@ -1,4 +1,4 @@
-import chai from 'chai';
+import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import { GraphQLInteraction } from './graphql';
 import { isMatcher } from './matchers';

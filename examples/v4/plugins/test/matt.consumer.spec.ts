@@ -1,5 +1,5 @@
 /* tslint:disable:no-unused-expression no-empty */
-import chai from 'chai';
+import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import { SpecificationVersion, PactV4, LogLevel } from '@pact-foundation/pact';
 import net = require('net');
