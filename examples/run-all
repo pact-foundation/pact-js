@@ -3,6 +3,8 @@
 set -o errexit  # Exit on error
 set -o nounset  # Treat unset variables as an error
 
+EXAMPLES_DIR=$(cd -- "$(dirname "$0")" && pwd)
+
 usage() {
   echo "Usage: $0 [command]"
   echo
@@ -59,20 +61,20 @@ main() {
   fi
 
   declare -a examples=(
-    examples/e2e
-    examples/graphql
-    examples/jest
-    examples/messages
-    examples/mocha
-    examples/serverless
-    examples/typescript
-    examples/v3/e2e
-    examples/v3/provider-state-injected
-    examples/v3/run-specific-verifications
-    examples/v3/todo-consumer
-    examples/v3/typescript
-    examples/v4/matchers
-    examples/v4/plugins
+    "$EXAMPLES_DIR/e2e"
+    "$EXAMPLES_DIR/graphql"
+    "$EXAMPLES_DIR/jest"
+    "$EXAMPLES_DIR/messages"
+    "$EXAMPLES_DIR/mocha"
+    "$EXAMPLES_DIR/serverless"
+    "$EXAMPLES_DIR/typescript"
+    "$EXAMPLES_DIR/v3/e2e"
+    "$EXAMPLES_DIR/v3/provider-state-injected"
+    "$EXAMPLES_DIR/v3/run-specific-verifications"
+    "$EXAMPLES_DIR/v3/todo-consumer"
+    "$EXAMPLES_DIR/v3/typescript"
+    "$EXAMPLES_DIR/v4/matchers"
+    "$EXAMPLES_DIR/v4/plugins"
   )
 
   if [ $# -gt 0 ]; then
