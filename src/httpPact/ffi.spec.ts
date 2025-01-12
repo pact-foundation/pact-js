@@ -1,5 +1,5 @@
 import { ConsumerInteraction } from '@pact-foundation/pact-core';
-import chai from 'chai';
+import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';

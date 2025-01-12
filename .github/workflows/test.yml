@@ -113,6 +113,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: npm
 
+      - name: Set NodeJS scripts shell
+        if: startsWith(matrix.os, 'windows')
+        run: npm config set script-shell "C:\\Program Files\\git\\bin\\bash.exe"
+
       - name: Install dependencies
         run: |
           npm ci
@@ -270,6 +274,14 @@ jobs:
         with:
           node-version: ${{ env.STABLE_NODE_VERSION }}
           cache: npm
+
+      # Temporary fix for lodash issue. This step should be removed eventually
+      # once a better solution is found.
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install plugins
+        run: npm run install-plugins
 
       - name: Download dist folder
         uses: actions/download-artifact@v4

@@ -1,15 +1,13 @@
-import chai from 'chai';
+import proxyquire from 'proxyquire';
+import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
 import { Server } from 'http';
 import serviceFactory, { LogLevel } from '@pact-foundation/pact-core';
 
-import * as proxy from './proxy/proxy';
 import logger from '../../common/logger';
 
 import { VerifierOptions } from './types';
-
-import { Verifier } from './verifier';
 
 chai.use(chaiAsPromised);
 
@@ -20,27 +18,43 @@ describe('Verifier', () => {
     sinon.restore();
   });
 
-  const state = 'thing exists';
-  let v: Verifier;
-  let opts: VerifierOptions;
   let executed: boolean;
+  const state = 'thing exists';
   const providerBaseUrl = 'http://not.exists';
+  const opts: VerifierOptions = {
+    providerBaseUrl,
+    requestFilter: (req, res, next) => {
+      next();
+    },
+    stateHandlers: {
+      [state]: () => {
+        executed = true;
+        return Promise.resolve();
+      },
+    },
+  };
 
-  beforeEach(() => {
-    executed = false;
-    opts = {
-      providerBaseUrl,
-      requestFilter: (req, res, next) => {
-        next();
-      },
-      stateHandlers: {
-        [state]: () => {
-          executed = true;
-          return Promise.resolve();
-        },
-      },
-    };
+  // Mock the module and replace the proxy
+  const { Verifier } = proxyquire('./verifier', {
+    './proxy': {
+      createProxy: () =>
+        ({
+          close: (): Server => {
+            executed = true;
+            return {} as Server;
+          },
+          address: () => ({
+            port: 1234,
+            family: 'https',
+            address: 'mock.server.example.com',
+          }),
+        }) as Server,
+
+      waitForServerReady: () => Promise.resolve(),
+    },
   });
+
+  let v: typeof Verifier;
 
   describe('#constructor', () => {
     describe('when given configuration', () => {
@@ -96,20 +110,7 @@ describe('Verifier', () => {
   });
 
   describe('#verifyProvider', () => {
-    beforeEach(() => {
-      sinon.stub(proxy, 'createProxy').returns({
-        close: (): Server => {
-          executed = true;
-          return {} as Server;
-        },
-        address: () => ({
-          port: 1234,
-          family: 'https',
-          address: 'mock.server.example.com',
-        }),
-      } as Server);
-      sinon.stub(proxy, 'waitForServerReady' as any).returns(Promise.resolve());
-    });
+    beforeEach(() => {});
 
     describe('when no configuration has been given', () => {
       it('fails with an error', () =>

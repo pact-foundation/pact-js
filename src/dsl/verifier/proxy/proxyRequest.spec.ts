@@ -1,4 +1,4 @@
-import chai from 'chai';
+import * as chai from 'chai';
 import { Readable } from 'stream';
 import { ProxyOptions } from './types';
 import { toServerOptions as toServerOptionsAct } from './proxyRequest';

@@ -1,4 +1,4 @@
-import chai from 'chai';
+import * as chai from 'chai';
 import * as MatchersV3 from './matchers';
 
 const { expect } = chai;

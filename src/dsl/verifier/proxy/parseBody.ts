@@ -12,7 +12,7 @@ export const parseBody = (req: ReqBodyExtended): Buffer => {
   }
 
   if (Buffer.isBuffer(req.body)) {
-    bodyData = req.body;
+    bodyData = Buffer.from(req.body);
   } else if (typeof req.body === 'object') {
     bodyData = Buffer.from(JSON.stringify(req.body));
   }
