@@ -121,7 +121,7 @@
     "@pact-foundation/pact-js-prettier-config": "1.0.0",
     "@types/chai": "^5.0.1",
     "@types/chai-as-promised": "^8.0.1",
-    "@types/express": "^4.17.11",
+    "@types/express": "^5.0.0",
     "@types/http-proxy": "1.17.15",
     "@types/lodash": "4.17.13",
     "@types/mocha": "10.0.10",
