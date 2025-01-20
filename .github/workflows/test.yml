@@ -172,16 +172,12 @@ jobs:
       matrix:
         node-version: [18, 20, 22]
         os:
-          - ubuntu-latest
+          - ubuntu-24.04-arm
           - macos-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-
-      - name: Set up QEMU
-        if: startsWith(matrix.os, 'ubuntu-')
-        uses: docker/setup-qemu-action@53851d14592bedcffcf25ea515637cff71ef929a # v3
 
       - name: Setup Node.js ${{ matrix.node-version }}
         if: startsWith(matrix.os, 'macos-')
@@ -200,7 +196,11 @@ jobs:
         run: |
           npm test
 
-      - name: Install dependencies and test
+      - name: Install dependencies and test ubuntu (linux glibc)
+        if: startsWith(matrix.os, 'ubuntu-')
+        run: npm ci && npm test
+
+      - name: Install dependencies and test alpine (linux musl)
         if: startsWith(matrix.os, 'ubuntu-')
         run: |
           docker run \
