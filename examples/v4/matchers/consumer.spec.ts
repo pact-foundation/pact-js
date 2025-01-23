@@ -8,6 +8,9 @@ import {
   MatchersV3,
 } from '@pact-foundation/pact';
 import axios from 'axios';
+import path from 'path';
+import fs from 'fs';
+import FormData from 'form-data';
 
 chai.use(chaiAsPromised);
 
@@ -96,5 +99,45 @@ describe('V4 Matchers', () => {
             });
         });
     });
+  });
+});
+
+describe.only('Multipart Request', () => {
+  const form = new FormData();
+  const f: string = path.resolve(__dirname, './../../../README.md');
+  form.append('file.txt', fs.createReadStream(f));
+  const formHeaders = form.getHeaders();
+
+  const pact = new PactV4({
+    consumer: 'multipartconsumer',
+    provider: 'multipartprovider',
+    spec: SpecificationVersion.SPECIFICATION_VERSION_V4,
+    logLevel: (process.env.LOG_LEVEL as LogLevel) || 'trace',
+  });
+
+  it.only('matches the request', async () => {
+    await pact
+      .addInteraction()
+      .uponReceiving('a multipart request')
+      .withRequest('POST', '/multipart', (builder) => {
+        builder.multipartBody('text/plain', f, 'file.txt');
+      })
+      .willRespondWith(200)
+      .executeTest((mockserver) => {
+        return axios
+          .request({
+            baseURL: mockserver.url,
+            headers: {
+              Accept: 'application/json',
+              ...formHeaders,
+            },
+            data: form,
+            method: 'POST',
+            url: '/multipart',
+          })
+          .then((res) => {
+            console.log(res.status);
+          });
+      });
   });
 });
