@@ -87,9 +87,11 @@ main() {
       run_example "$example" || failed_examples+=("$example")
     done
 
-    for failed_example in "${failed_examples[@]}"; do
-      echo "$(tput bold)$(tput setaf 1)Failed to run example in $failed_example$(tput sgr0)"
-    done
+    if [ ${#failed_examples[@]} -ne 0 ]; then
+      for failed_example in "${failed_examples[@]}"; do
+        echo "$(tput bold)$(tput setaf 1)Failed to run example in $failed_example$(tput sgr0)"
+      done
+    fi
   fi
 }
 
