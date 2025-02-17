@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [14.0.0](https://github.com/pact-foundation/pact-js/compare/v13.2.0...v14.0.0) (2025-02-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* **deps:** - Contains platform/architecture specific optional dependencies in pact-core v16+. Users should not need to do anything manually as long as they are running supported platforms
+
+- `linux-x64-glibc`
+- `linux-arm64-glibc`
+- `linux-x64-musl`
+- `linux-arm64-musl`
+- `darwin-x64`
+- `darwin-arm64`
+- `windows-x64`
+
+* **deps:** update pact-core to v16 ([c5ca6ae](https://github.com/pact-foundation/pact-js/commit/c5ca6ae2df1574d7019f7a7262d2a3b964e7a228))
+
+
+### Fixes and Improvements
+
+* code coverage ([c0bb760](https://github.com/pact-foundation/pact-js/commit/c0bb7600d132d22ad1057a74c943993a5e7b23c6))
+* **deps:** update dependency lodash.isfunction to v3.0.9 ([#1268](https://github.com/pact-foundation/pact-js/issues/1268)) ([fb08af3](https://github.com/pact-foundation/pact-js/commit/fb08af37923c8c802ac5d272ee8512307d42f690))
+* examples/graphql/package.json & examples/graphql/package-lock.json to reduce vulnerabilities ([c9ed8fc](https://github.com/pact-foundation/pact-js/commit/c9ed8fcc72e307b787e736fca24dfc130deac880))
+* package.json & package-lock.json to reduce vulnerabilities ([3f535ed](https://github.com/pact-foundation/pact-js/commit/3f535ed070ea837046db7ab59d0418234f33e5d8))
+
 ## [13.2.0](https://github.com/pact-foundation/pact-js/compare/v13.1.5...v13.2.0) (2024-11-21)
 
 
