@@ -19,7 +19,7 @@
   "license": "MIT",
   "devDependencies": {
     "@pact-foundation/pact": "file:../../dist",
-    "@pact-foundation/pact-cli": "^15.0.2",
+    "@pact-foundation/pact-cli": "^16.0.4",
     "absolute-version": "1.0.1",
     "chai": "^4.3.6",
     "chai-as-promised": "^7.1.1",
