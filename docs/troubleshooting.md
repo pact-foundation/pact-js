@@ -296,6 +296,25 @@ Users can now use `--ignore-scripts`
     - follow the instructions provided
       - You can override the path to the pact native build with `PACT_PREBUILD_LOCATION`
 
+### Windows 10 & 11 users 
+
+Windows users require a minimum set of tools for building native modules, as part of pact-js's pre-requisites.
+
+If these are not present, the user will be presented with the following message when executing tests.
+
+```
+Exception during run: TypeError: Cannot read properties of undefined (reading 'pactffiInitWithLogLevel')
+```
+
+In order to install the required tools, there are a couple of ways of doing this, which may vary depending on how you choose to install NodeJS on your machine.
+
+1. With the NodeJS Windows Installer Package
+  - Ensure you select the following option 
+  - ![Image](https://github.com/user-attachments/assets/1f3bf758-30c5-44a3-a3a3-e3205ef46cd4)
+2. If using [nvm-windows](https://github.com/coreybutler/nvm-windows), [nvs](https://github.com/jasongin/nvs), or any other means.
+  - [See instructions on the node-gyp repository](https://github.com/nodejs/node-gyp?tab=readme-ov-file#on-windows)
+
+For more background detail, see the following [issue](https://github.com/pact-foundation/pact-js-core/issues/608#issuecomment-2698285436)
 
 ## ENOENT: no such file or directory, open 'node:path'
 
