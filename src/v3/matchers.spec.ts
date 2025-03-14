@@ -424,28 +424,54 @@ describe('V3 Matchers', () => {
         });
       });
     });
+
+    describe('when example is an empty string', () => {
+      it('throws an error', () => {
+        expect(() =>
+          MatchersV3.datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX", '')
+        ).to.throw('you must provide an example datetime');
+      });
+    });
   });
 
   describe('#time', () => {
-    it('returns a JSON representation of a time matcher', () => {
-      const result = MatchersV3.time('HH:mm:ss', '09:46:56');
-      expect(result).to.deep.equal({
-        'pact:generator:type': 'Time',
-        'pact:matcher:type': 'time',
-        format: 'HH:mm:ss',
-        value: '09:46:56',
+    describe('when an example is given', () => {
+      it('returns a JSON representation of a time matcher', () => {
+        const result = MatchersV3.time('HH:mm:ss', '09:46:56');
+        expect(result).to.deep.equal({
+          'pact:matcher:type': 'time',
+          format: 'HH:mm:ss',
+          value: '09:46:56',
+        });
+      });
+    });
+
+    describe('when example is an empty string', () => {
+      it('throws an error', () => {
+        expect(() => MatchersV3.time('HH:mm:ss', '')).to.throw(
+          'you must provide an example time'
+        );
       });
     });
   });
 
   describe('#date', () => {
-    it('returns a JSON representation of a date matcher', () => {
-      const result = MatchersV3.date('yyyy-MM-dd', '2016-02-11');
-      expect(result).to.deep.equal({
-        'pact:generator:type': 'Date',
-        'pact:matcher:type': 'date',
-        format: 'yyyy-MM-dd',
-        value: '2016-02-11',
+    describe('when an example is given', () => {
+      it('returns a JSON representation of a date matcher', () => {
+        const result = MatchersV3.date('yyyy-MM-dd', '2016-02-11');
+        expect(result).to.deep.equal({
+          'pact:matcher:type': 'date',
+          format: 'yyyy-MM-dd',
+          value: '2016-02-11',
+        });
+      });
+    });
+
+    describe('when example is an empty string', () => {
+      it('throws an error', () => {
+        expect(() => MatchersV3.date('yyyy-MM-dd', '')).to.throw(
+          'you must provide an example date'
+        );
       });
     });
   });
