@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [15.0.1](https://github.com/pact-foundation/pact-js/compare/v15.0.0...v15.0.1) (2025-03-24)
+
+
+### Fixes and Improvements
+
+* **deps:** add graphql back to dependency block ([#1425](https://github.com/pact-foundation/pact-js/issues/1425)) ([98fa621](https://github.com/pact-foundation/pact-js/commit/98fa6215eb1e2f2efcadaabcc28b6c8859da0067))
+
 ## [15.0.0](https://github.com/pact-foundation/pact-js/compare/v13.2.0...v15.0.0) (2025-03-24)
 
 
