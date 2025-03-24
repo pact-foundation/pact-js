@@ -18,7 +18,7 @@
     "@pact-foundation/pact-cli": "^16.0.4",
     "absolute-version": "1.0.2",
     "jest": "^29.7.0",
-    "jest-pact": "^0.11.2",
+    "jest-pact": "^0.11.3",
     "rimraf": "^6.0.1"
   },
   "dependencies": {
