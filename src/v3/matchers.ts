@@ -362,12 +362,12 @@ export function time(format: string, example: string): DateTimeMatcher {
   if (!example) {
     throw new Error(`you must provide an example time`);
   }
-  return {
-    'pact:generator:type': 'Time',
+  return pickBy((v) => !isNil(v), {
+    'pact:generator:type': example ? undefined : 'Time',
     'pact:matcher:type': 'time',
     format,
     value: example,
-  };
+  });
 }
 
 /**
@@ -379,12 +379,12 @@ export function date(format: string, example: string): DateTimeMatcher {
   if (!example) {
     throw new Error(`you must provide an example date`);
   }
-  return {
+  return pickBy((v) => !isNil(v), {
     format,
-    'pact:generator:type': 'Date',
+    'pact:generator:type': example ? undefined : 'Date',
     'pact:matcher:type': 'date',
     value: example,
-  };
+  });
 }
 
 /**
