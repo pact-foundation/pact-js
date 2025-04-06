@@ -148,7 +148,7 @@
     "eslint-plugin-import": "2.31.0",
     "eslint-plugin-mocha": "10.5.0",
     "mocha": "11.1.0",
-    "nock": "14.0.2",
+    "nock": "14.0.3",
     "nyc": "17.1.0",
     "prettier": "3.5.3",
     "proxyquire": "2.1.3",
