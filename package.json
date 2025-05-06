@@ -129,7 +129,7 @@
     "@types/lodash": "4.17.16",
     "@types/mocha": "10.0.10",
     "@types/nock": "11.1.0",
-    "@types/node": "22.15.3",
+    "@types/node": "22.15.11",
     "@types/ramda": "0.30.2",
     "@types/sinon": "17.0.4",
     "@types/sinon-chai": "2.7.42",
