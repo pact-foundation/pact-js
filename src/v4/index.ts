@@ -3,8 +3,14 @@ import { UnconfiguredInteraction } from './http';
 import { PactV4Options, V4UnconfiguredInteraction } from './http/types';
 import { V4ConsumerPact } from './types';
 import { version as pactPackageVersion } from '../../package.json';
-import { V4UnconfiguredSynchronousMessage } from './message/types';
-import { UnconfiguredSynchronousMessage } from './message';
+import {
+  V4UnconfiguredSynchronousMessage,
+  V4UnconfiguredAsynchronousMessage,
+} from './message/types';
+import {
+  UnconfiguredSynchronousMessage,
+  UnconfiguredAsynchronousMessage,
+} from './message';
 import { SpecificationVersion } from '../v3';
 
 export class PactV4 implements V4ConsumerPact {
@@ -49,6 +55,19 @@ export class PactV4 implements V4ConsumerPact {
         // This function needs to be called if the PactV4 object is to be re-used (commonly expected by users)
         // Because of the type-state model used here, it's a bit awkward as we need to thread this through
         // to children, ultimately to be called on the "executeTest" stage.
+        this.setup();
+      }
+    );
+  }
+
+  addAsynchronousInteraction(
+    description: string
+  ): V4UnconfiguredAsynchronousMessage {
+    return new UnconfiguredAsynchronousMessage(
+      this.pact,
+      this.pact.newAsynchronousMessage(description),
+      this.opts,
+      () => {
         this.setup();
       }
     );
