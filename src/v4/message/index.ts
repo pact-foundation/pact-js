@@ -15,8 +15,12 @@ import {
   V4SynchronousMessageWithResponseBuilder,
   V4SynchronousMessageWithTransport,
   V4UnconfiguredSynchronousMessage,
+  V4AsynchronousMessage,
+  V4AsynchronousMessageWithContents,
+  V4UnconfiguredAsynchronousMessage,
 } from './types';
 import {
+  AsynchronousMessage as PactCoreAsynchronousMessage,
   SynchronousMessage as PactCoreSynchronousMessage,
   ConsumerPact,
 } from '@pact-foundation/pact-core';
@@ -28,7 +32,10 @@ import {
   generateMockServerError,
 } from '../../v3/display';
 import logger from '../../common/logger';
-import { isMatcher as isV3Matcher } from '../../v3/matchers';
+import {
+  isMatcher as isV3Matcher,
+  matcherValueOrString,
+} from '../../v3/matchers';
 
 const defaultPactDir = './pacts';
 
@@ -375,6 +382,51 @@ const cleanup = (
   cleanupFn();
 };
 
+type ReifiedMessage = {
+  contents: {
+    content: unknown | null;
+    contentType: string;
+    encoded: boolean;
+  };
+  description: string;
+  pending: boolean;
+  providerStates: Array<{ name: string; params?: JsonMap }>;
+};
+
+const executeAsyncMessageTest = async <T>(
+  pact: ConsumerPact,
+  interaction: PactCoreAsynchronousMessage,
+  opts: PactV4Options,
+  integrationTest: (content: unknown, contentType: string, encoded: boolean) => Promise<T>,
+  cleanupFn: () => void
+): Promise<T | undefined> => {
+  let val: T | undefined;
+  let error: Error | undefined;
+
+  try {
+    const rawInteraction: ReifiedMessage = JSON.parse(
+      interaction.reifyMessage()
+    );
+    const { content, contentType, encoded } = rawInteraction.contents;
+    val = await integrationTest(content, contentType, encoded);
+  } catch (e) {
+    error = e;
+    console.error(`Error: ${e}`);
+  }
+
+  // Scenario: test threw an error, but Pact validation was OK (error in client or test)
+  if (error) {
+    cleanup(false, pact, opts, cleanupFn);
+
+    throw error;
+  }
+
+  // Scenario: Pact validation passed, test didn't throw - return the callback value
+  cleanup(true, pact, opts, cleanupFn);
+
+  return val;
+};
+
 const executeNonTransportTest = async <T>(
   pact: ConsumerPact,
   opts: PactV4Options,
@@ -402,3 +454,93 @@ const executeNonTransportTest = async <T>(
 
   return val;
 };
+
+// ASYNCHRONOUS
+
+export class UnconfiguredAsynchronousMessage
+  implements V4UnconfiguredAsynchronousMessage
+{
+  constructor(
+    protected pact: ConsumerPact,
+    protected interaction: PactCoreAsynchronousMessage,
+    protected opts: PactV4Options,
+    protected cleanupFn: () => void
+  ) {}
+
+  given(
+    state: string,
+    parameters?: JsonMap
+  ): V4UnconfiguredAsynchronousMessage {
+    if (parameters) {
+      this.interaction.givenWithParams(state, JSON.stringify(parameters));
+    } else {
+      this.interaction.given(state);
+    }
+
+    return this;
+  }
+
+  usingPlugin(config: PluginConfig): V4UnconfiguredAsynchronousMessage {
+    this.pact.addPlugin(config.plugin, config.version);
+
+    return this;
+  }
+
+  expectsToReceive(description: string): V4AsynchronousMessage {
+    this.interaction.expectsToReceive(description);
+
+    return new AsynchronousMessage(
+      this.pact,
+      this.interaction,
+      this.opts,
+      this.cleanupFn
+    );
+  }
+}
+
+export class AsynchronousMessage implements V4AsynchronousMessage {
+  constructor(
+    protected pact: ConsumerPact,
+    protected interaction: PactCoreAsynchronousMessage,
+    protected opts: PactV4Options,
+    protected cleanupFn: () => void
+  ) {}
+
+  withContents(contents: unknown): V4AsynchronousMessageWithContents {
+    this.interaction.withContents(
+      matcherValueOrString(contents),
+      'application/json'
+    );
+
+    return new AsynchronousMessageWithContents(
+      this.pact,
+      this.interaction,
+      this.opts,
+      this.cleanupFn
+    );
+  }
+}
+
+export class AsynchronousMessageWithContents
+  implements V4AsynchronousMessageWithContents
+{
+  constructor(
+    protected pact: ConsumerPact,
+    protected interaction: PactCoreAsynchronousMessage,
+    protected opts: PactV4Options,
+    protected cleanupFn: () => void
+  ) {}
+
+  executeTest<T>(
+    integrationTest: (m: unknown) => Promise<T>
+  ): Promise<T | undefined> {
+    return executeAsyncMessageTest(
+      this.pact,
+      this.interaction,
+      this.opts,
+      integrationTest,
+      this.cleanupFn
+    );
+  }
+}
+
