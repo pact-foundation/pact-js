@@ -100,3 +100,21 @@ export interface V4SynchronousMessageWithResponse {
     integrationTest: (m: SynchronousMessage) => Promise<T>
   ): Promise<T | undefined>;
 }
+
+// ASYNCHRONOUS
+
+export interface V4UnconfiguredAsynchronousMessage {
+  given(state: string, parameters?: JsonMap): V4UnconfiguredAsynchronousMessage;
+  usingPlugin(config: PluginConfig): V4UnconfiguredAsynchronousMessage;
+  expectsToReceive(description: string): V4AsynchronousMessage;
+}
+
+export interface V4AsynchronousMessage {
+  withContents(contents: unknown): V4AsynchronousMessageWithContents;
+}
+
+export interface V4AsynchronousMessageWithContents {
+  executeTest<T>(
+    integrationTest: (m: unknown) => Promise<T>
+  ): Promise<T | undefined>;
+}
