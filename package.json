@@ -114,7 +114,7 @@
     "https-proxy-agent": "^7.0.4",
     "js-base64": "^3.6.1",
     "lodash": "^4.17.21",
-    "ramda": "^0.30.0",
+    "ramda": "^0.31.0",
     "randexp": "^0.5.3"
   },
   "devDependencies": {
