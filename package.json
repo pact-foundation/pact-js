@@ -147,7 +147,7 @@
     "eslint-plugin-chai-friendly": "1.1.0",
     "eslint-plugin-import": "2.32.0",
     "eslint-plugin-mocha": "10.5.0",
-    "mocha": "11.7.0",
+    "mocha": "11.7.1",
     "nock": "14.0.5",
     "nyc": "17.1.0",
     "prettier": "3.6.0",
