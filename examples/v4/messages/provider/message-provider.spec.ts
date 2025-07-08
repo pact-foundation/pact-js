@@ -24,6 +24,13 @@ describe('Message provider tests', () => {
     },
     logLevel: LOG_LEVEL as LogLevel,
     provider: 'MyJSMessageProvider',
+    // pactUrls: [
+    //   path.resolve(
+    //     process.cwd(),
+    //     'pacts',
+    //     'MyJSMessageConsumerV4-MyJSMessageProviderV4.json'
+    //   ),
+    // ],
     // Your version numbers need to be unique for every different version of your provider
     // see https://docs.pact.io/getting_started/versioning_in_the_pact_broker/ for details.
     // If you use git tags, then you can use absolute-version as we do here.
@@ -37,7 +44,6 @@ describe('Message provider tests', () => {
     pactBrokerPassword:
       process.env.PACT_BROKER_PASSWORD || 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
     providerVersionBranch: process.env.GIT_BRANCH || 'master',
-
     // Find _all_ pacts that match the current provider branch
     consumerVersionSelectors: [
       {

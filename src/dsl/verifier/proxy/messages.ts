@@ -61,7 +61,53 @@ export const createProxyMessageHandler =
     config: ProxyOptions
   ): ((req: express.Request, res: express.Response) => void) =>
   (req, res) => {
+    // req.body = {
+    //   description: 'a MATT message',
+    //   providerStates: [ { name: 'a Matt message is sent' } ],
+    //   request: {
+    //     contents: {
+    //       content: 'aGVsbG90Y3A=',
+    //       contentType: 'application/matt',
+    //       encoded: 'base64'
+    //     },
+    //     matchingRules: {
+    //       body: {
+    //         '$': {
+    //           combine: 'AND',
+    //           matchers: [ { match: 'contentType', value: 'application/matt' } ]
+    //         }
+    //       }
+    //     },
+    //     metadata: { contentType: 'application/matt' }
+    //   }
+    // }
+    // {
+    //   description: 'a MATT message',
+    //   providerStates: [ { name: 'a Matt message is sent with JSON content' } ],
+    //   request: {
+    //     contents: {
+    //       content: { message: 'hellotcp' },
+    //       contentType: 'application/json',
+    //       encoded: false
+    //     },
+    //     metadata: { contentType: 'application/json' }
+    //   }
+    // }
     const message: MessageDescriptor = req.body;
+    message.metadata = req.body.request?.metadata;
+
+    // Add the request body, if one exists for synchronous messages
+    if (req.body.request?.contents) {
+      const encodedMessage = req.body.request?.contents?.encoded || false;
+      if (encodedMessage) {
+        message.content = Buffer.from(
+          req.body.request?.contents?.content as string,
+          'base64'
+        );
+      } else {
+        message.content = req.body.request?.contents?.content;
+      }
+    }
 
     // Invoke the handler, and return the JSON response body
     // wrapped in a Message
@@ -74,6 +120,22 @@ export const createProxyMessageHandler =
           );
           res.header('Pact-Message-Metadata', metadata);
           res.header('PACT_MESSAGE_METADATA', metadata);
+
+          // Ensure return content-type is set here
+          // TODO: this needs thinking through
+          if (
+            messageFromHandler.__pactMessageMetadata['content-type'] ||
+            messageFromHandler.__pactMessageMetadata['Content-Type'] ||
+            messageFromHandler.__pactMessageMetadata.contentType
+          ) {
+            res.type(
+              messageFromHandler.__pactMessageMetadata['content-type'] ||
+                messageFromHandler.__pactMessageMetadata['Content-Type'] ||
+                messageFromHandler.__pactMessageMetadata.contentType
+            );
+
+            return res.send(messageFromHandler.message);
+          }
 
           return res.json(messageFromHandler.message);
         }
