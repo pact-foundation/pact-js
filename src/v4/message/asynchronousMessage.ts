@@ -25,19 +25,49 @@ import {
   generateMockServerError,
 } from '../../v3/display';
 import logger from '../../common/logger';
-import { isMatcher as isV3Matcher } from '../../v3/matchers';
 
 const defaultPactDir = './pacts';
+
+type Message = {
+  requestIsBinary: boolean;
+  interaction: PactCoreAsynchronousMessage;
+};
+
+type InteractionType =
+  | 'Asynchronous/Messages'
+  | 'Synchronous/Messages'
+  | 'Synchronous/HTTP';
+
+type ReifiedMessage = {
+  contents: {
+    content: AnyJson | Buffer;
+    contentType: string;
+    encoded: boolean;
+  };
+  metadata: Metadata;
+  description: string;
+  pending: boolean;
+  providerStates: Array<{ name: string; params?: JsonMap }>;
+  type: InteractionType;
+  matchingRules: unknown;
+};
 
 export class UnconfiguredAsynchronousMessage
   implements V4UnconfiguredAsynchronousMessage
 {
+  protected message: Message;
+
   constructor(
     protected pact: ConsumerPact,
     protected interaction: PactCoreAsynchronousMessage,
     protected opts: PactV4Options,
     protected cleanupFn: () => void
-  ) {}
+  ) {
+    this.message = {
+      requestIsBinary: false,
+      interaction: this.interaction,
+    };
+  }
 
   expectsToReceive(
     description: string,
@@ -45,13 +75,11 @@ export class UnconfiguredAsynchronousMessage
   ): AsynchronousMessageWithContent {
     this.interaction.expectsToReceive(description);
 
-    builder(
-      new AsynchronousMessageBuilder(this.pact, this.interaction, this.opts)
-    );
+    builder(new AsynchronousMessageBuilder(this.pact, this.message, this.opts));
 
     return new AsynchronousMessageWithContent(
       this.pact,
-      this.interaction,
+      this.message,
       this.opts,
       this.cleanupFn
     );
@@ -62,9 +90,12 @@ export class UnconfiguredAsynchronousMessage
     parameters?: JsonMap
   ): V4UnconfiguredAsynchronousMessage {
     if (parameters) {
-      this.interaction.givenWithParams(state, JSON.stringify(parameters));
+      this.message.interaction.givenWithParams(
+        state,
+        JSON.stringify(parameters)
+      );
     } else {
-      this.interaction.given(state);
+      this.message.interaction.given(state);
     }
 
     return this;
@@ -75,7 +106,7 @@ export class UnconfiguredAsynchronousMessage
 
     return new AsynchronousMessageWithPlugin(
       this.pact,
-      this.interaction,
+      this.message,
       this.opts,
       this.cleanupFn
     );
@@ -87,13 +118,13 @@ export class AsynchronousMessageWithPlugin
 {
   constructor(
     protected pact: ConsumerPact,
-    protected interaction: PactCoreAsynchronousMessage,
+    protected message: Message,
     protected opts: PactV4Options,
     protected cleanupFn: () => void
   ) {}
 
   expectsToReceive(description: string): V4AsynchronousMessageWithPlugin {
-    this.interaction.expectsToReceive(description);
+    this.message.interaction.expectsToReceive(description);
 
     return this;
   }
@@ -108,14 +139,14 @@ export class AsynchronousMessageWithPlugin
     contents: string,
     contentType: string
   ): V4AsynchronousMessageWithPluginContents {
-    this.interaction.withPluginRequestInteractionContents(
+    this.message.interaction.withPluginRequestInteractionContents(
       contentType,
       contents
     );
 
     return new AsynchronousMessageWithPluginContents(
       this.pact,
-      this.interaction,
+      this.message,
       this.opts,
       this.cleanupFn
     );
@@ -127,7 +158,7 @@ export class AsynchronousMessageBuilder
 {
   constructor(
     protected pact: ConsumerPact,
-    protected interaction: PactCoreAsynchronousMessage,
+    protected message: Message,
     protected opts: PactV4Options
   ) {}
 
@@ -139,14 +170,15 @@ export class AsynchronousMessageBuilder
     }
 
     forEachObjIndexed((v, k) => {
-      this.interaction.withMetadata(`${k}`, JSON.stringify(v));
+      this.message.interaction.withMetadata(`${k}`, JSON.stringify(v));
     }, metadata);
 
     return this;
   }
 
   withContent(contentType: string, body: Buffer): V4AsynchronousMessageBuilder {
-    this.interaction.withBinaryContents(body, contentType);
+    this.message.interaction.withBinaryContents(body, contentType);
+    this.message.requestIsBinary = true;
 
     return this;
   }
@@ -157,7 +189,10 @@ export class AsynchronousMessageBuilder
         'You must provide a valid JSON document or primitive for the Message.'
       );
     }
-    this.interaction.withContents(JSON.stringify(content), 'application/json');
+    this.message.interaction.withContents(
+      JSON.stringify(content),
+      'application/json'
+    );
 
     return this;
   }
@@ -168,7 +203,7 @@ export class AsynchronousMessageWithContent
 {
   constructor(
     protected pact: ConsumerPact,
-    protected interaction: PactCoreAsynchronousMessage,
+    protected message: Message,
     protected opts: PactV4Options,
     protected cleanupFn: () => void
   ) {}
@@ -179,6 +214,7 @@ export class AsynchronousMessageWithContent
     return executeNonTransportTest(
       this.pact,
       this.opts,
+      this.message,
       integrationTest,
       this.cleanupFn
     );
@@ -190,7 +226,7 @@ export class AsynchronousMessageWithPluginContents
 {
   constructor(
     protected pact: ConsumerPact,
-    protected interaction: PactCoreAsynchronousMessage,
+    protected message: Message,
     protected opts: PactV4Options,
     protected cleanupFn: () => void
   ) {}
@@ -201,6 +237,7 @@ export class AsynchronousMessageWithPluginContents
     return executeNonTransportTest(
       this.pact,
       this.opts,
+      this.message,
       integrationTest,
       this.cleanupFn
     );
@@ -219,7 +256,7 @@ export class AsynchronousMessageWithPluginContents
 
     return new AsynchronousMessageWithTransport(
       this.pact,
-      this.interaction,
+      this.message,
       this.opts,
       port,
       address,
@@ -233,7 +270,7 @@ export class AsynchronousMessageWithTransport
 {
   constructor(
     protected pact: ConsumerPact,
-    protected interaction: PactCoreAsynchronousMessage,
+    protected message: Message,
     protected opts: PactV4Options,
     protected port: number,
     protected address: string,
@@ -249,6 +286,7 @@ export class AsynchronousMessageWithTransport
     let error: Error | undefined;
 
     try {
+      // TODO: need to pull this body from the plugin interaction
       val = await integrationTest(
         { port: this.port, address: this.address },
         {} as AsynchronousMessage
@@ -319,6 +357,7 @@ const cleanup = (
 const executeNonTransportTest = async <T>(
   pact: ConsumerPact,
   opts: PactV4Options,
+  message: Message,
   integrationTest: (m: AsynchronousMessage) => Promise<T>,
   cleanupFn: () => void
 ): Promise<T | undefined> => {
@@ -326,8 +365,20 @@ const executeNonTransportTest = async <T>(
   let error: Error | undefined;
 
   try {
-    // TODO: plumb this data in
-    val = await integrationTest({} as AsynchronousMessage);
+    const rawInteraction: ReifiedMessage = JSON.parse(
+      message.interaction.reifyMessage()
+    );
+
+    const { content, contentType, encoded } = rawInteraction.contents;
+    const m: AsynchronousMessage = {
+      contents: {
+        content: !message.requestIsBinary
+          ? content
+          : Buffer.from(content as string, 'base64'),
+      },
+      metadata: rawInteraction.metadata,
+    };
+    val = await integrationTest(m);
   } catch (e) {
     error = e;
   }
