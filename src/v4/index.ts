@@ -88,3 +88,6 @@ export class PactV4 implements V4ConsumerPact {
     );
   }
 }
+
+export * from './graphql';
+export * from './message/index';
