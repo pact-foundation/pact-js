@@ -1,7 +1,9 @@
 import { AnyJson, JsonMap } from '../../common/jsonTypes';
 import { Metadata } from '../../dsl/message';
 
-export type MessageContents = unknown; // TODO { contents: Buffer }
+export type MessageContents = {
+  content: AnyJson | Buffer;
+};
 
 // TODO: this is currently an empty object,
 //       it will eventually be populated with a Buffer
@@ -15,7 +17,7 @@ export interface SynchronousMessage {
 //       it will eventually be populated with a Buffer
 export interface AsynchronousMessage {
   contents: MessageContents;
-  // metadata: Metadata
+  metadata: Metadata;
 }
 
 export interface PluginConfig {
