@@ -2,8 +2,7 @@
 
 import {
   Matchers,
-  MessageConsumerPact,
-  synchronousBodyHandler,
+  v4SynchronousBodyHandler,
   LogLevel,
   PactV4,
 } from '@pact-foundation/pact';
@@ -25,7 +24,7 @@ describe('Message consumer tests', () => {
       return messagePact
         .addAsynchronousInteraction()
         .given('a dog named drover')
-        .expectsToReceive('a request for a dog', (builder) => {
+        .expectsToReceive('a request for a dog', (builder: any) => {
           builder
             .withJSONContent({
               id: like(1),
@@ -36,29 +35,11 @@ describe('Message consumer tests', () => {
               }),
             })
             .withMetadata({
-              queue: like('animals'),
+              queue: 'animals',
             });
         })
-        .executeTest(synchronousBodyHandler(dogApiHandler));
+        .executeTest(v4SynchronousBodyHandler(dogApiHandler));
     });
-
-    // it('accepts a valid dog scenario 2', () => {
-    //   return messagePact
-    //     .given('a dog named rover')
-    //     .expectsToReceive('a request for a dog')
-    //     .withContent({
-    //       id: like(1),
-    //       name: like('rover'),
-    //       type: term({
-    //         generate: 'bulldog',
-    //         matcher: '^(bulldog|sheepdog)$',
-    //       }),
-    //     })
-    //     .withMetadata({
-    //       queue: like('animals'),
-    //     })
-    //     .verify(synchronousBodyHandler(dogApiHandler));
-    // });
   });
 
   // This is an example of a pact breaking
