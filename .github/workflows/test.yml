@@ -264,6 +264,8 @@ jobs:
           - v3/typescript
           - v4/matchers
           - v4/plugins
+          - v4/messages
+          - v4/multipart
 
     steps:
       - name: Checkout
