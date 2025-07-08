@@ -84,6 +84,59 @@ describe('Plugins - Matt Protocol', () => {
       });
     });
   });
+
+  // TODO: need to wire in arbitrary content body back to verifier
+  describe.skip('Raw interface', () => {
+    const pact = new PactV4({
+      consumer: 'myconsumer',
+      provider: 'myprovider',
+      spec: SpecificationVersion.SPECIFICATION_VERSION_V4,
+      logLevel: (process.env.LOG_LEVEL as LogLevel) || 'error',
+    });
+
+    describe('with MATT text protocol', async () => {
+      it('generates a pact with success', () => {
+        return pact
+          .addSynchronousInteraction('a MATT message')
+          .given('a Matt message is sent')
+          .withRequest((builder) => {
+            builder.withContent('application/matt', Buffer.from('hellotcp'));
+          })
+          .withResponse((builder) => {
+            builder.withContent('application/matt', Buffer.from('tcpworld'));
+          })
+          .executeTest(async (message) => {
+            const request = message?.Request?.content?.toString() || '';
+            const response = message?.Response[0]?.content?.toString() || '';
+            expect(request).to.deep.eq('hellotcp');
+            expect(response).to.deep.eq('tcpworld');
+          });
+      });
+    });
+    describe('with MATT JSON protocol', async () => {
+      it('generates a pact with success', () => {
+        return pact
+          .addSynchronousInteraction('a MATT message')
+          .given('a Matt message with JSON content')
+          .withRequest((builder) => {
+            builder.withJSONContent({
+              message: 'hellotcp',
+            });
+          })
+          .withResponse((builder) => {
+            builder.withJSONContent({
+              message: 'tcpworld',
+            });
+          })
+          .executeTest(async (message) => {
+            const request = message?.Request?.content?.toString() || '';
+            const response = message?.Response[0]?.content?.toString() || '';
+            expect(JSON.parse(request)).to.deep.eq({ message: 'hellotcp' });
+            expect(JSON.parse(response)).to.deep.eq({ message: 'tcpworld' });
+          });
+      });
+    });
+  });
 });
 
 const sendMattMessageTCP = (
