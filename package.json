@@ -137,7 +137,7 @@
     "@typescript-eslint/parser": "5.62.0",
     "chai": "5.2.1",
     "chai-as-promised": "8.0.1",
-    "commit-and-tag-version": "12.5.1",
+    "commit-and-tag-version": "12.5.2",
     "copyfiles": "2.4.1",
     "eslint": "8.57.1",
     "eslint-config-airbnb-base": "15.0.0",
