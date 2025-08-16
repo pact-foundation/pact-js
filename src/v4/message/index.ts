@@ -4,9 +4,10 @@ import { AnyJson, JsonMap } from '../../common/jsonTypes';
 import {
   PluginConfig,
   SynchronousMessage,
+  AsynchronousMessage as ConcreteMessage,
   TransportConfig,
-  V4MessagePluginRequestBuilderFunc,
-  V4MessagePluginResponseBuilderFunc,
+  V4MessageRequestBuilderFunc,
+  V4MessageResponseBuilderFunc,
   V4SynchronousMessageWithPlugin,
   V4SynchronousMessageWithPluginContents,
   V4SynchronousMessageWithRequest,
@@ -28,7 +29,6 @@ import {
   generateMockServerError,
 } from '../../v3/display';
 import logger from '../../common/logger';
-import { isMatcher as isV3Matcher } from '../../v3/matchers';
 
 const defaultPactDir = './pacts';
 
@@ -64,8 +64,16 @@ export class UnconfiguredSynchronousMessage
   }
 
   withRequest(
-    r: V4MessagePluginRequestBuilderFunc
+    builder: V4MessageRequestBuilderFunc
   ): V4SynchronousMessageWithRequest {
+    builder(
+      new SynchronousMessageWithRequestBuilder(
+        this.pact,
+        this.interaction,
+        this.opts
+      )
+    );
+
     return new SynchronousMessageWithRequest(
       this.pact,
       this.interaction,
@@ -133,6 +141,7 @@ export class SynchronousMessageWithRequestBuilder
         'You must provide a valid JSON document or primitive for the Message.'
       );
     }
+
     this.interaction.withRequestContents(
       JSON.stringify(content),
       'application/json'
@@ -153,7 +162,7 @@ export class SynchronousMessageWithRequest
   ) {}
 
   withResponse(
-    builder: V4MessagePluginResponseBuilderFunc
+    builder: V4MessageResponseBuilderFunc
   ): V4SynchronousMessageWithResponse {
     builder(
       new SynchronousMessageWithResponseBuilder(
@@ -235,6 +244,7 @@ export class SynchronousMessageWithPluginContents
     return executeNonTransportTest(
       this.pact,
       this.opts,
+      this.interaction,
       integrationTest,
       this.cleanupFn
     );
@@ -283,10 +293,16 @@ export class SynchronousMessageWithTransport
     let error: Error | undefined;
 
     try {
-      val = await integrationTest(
-        { port: this.port, address: this.address },
-        {} as SynchronousMessage
-      );
+      const request = this.interaction.getRequestContents();
+      const response = this.interaction.getResponseContents();
+      val = await integrationTest({ port: this.port, address: this.address }, {
+        Request: {
+          content: request,
+        },
+        Response: response.map((c) => ({
+          content: c,
+        })),
+      } as SynchronousMessage);
     } catch (e) {
       error = e;
     }
@@ -344,6 +360,7 @@ export class SynchronousMessageWithResponse
     const res = executeNonTransportTest(
       this.pact,
       this.opts,
+      this.interaction,
       integrationTest,
       this.cleanupFn
     );
@@ -378,6 +395,7 @@ const cleanup = (
 const executeNonTransportTest = async <T>(
   pact: ConsumerPact,
   opts: PactV4Options,
+  interaction: PactCoreSynchronousMessage,
   integrationTest: (m: SynchronousMessage) => Promise<T>,
   cleanupFn: () => void
 ): Promise<T | undefined> => {
@@ -385,7 +403,16 @@ const executeNonTransportTest = async <T>(
   let error: Error | undefined;
 
   try {
-    val = await integrationTest({} as SynchronousMessage);
+    const request = interaction.getRequestContents();
+    const response = interaction.getResponseContents();
+    val = await integrationTest({
+      Request: {
+        content: request,
+      },
+      Response: response.map((c) => ({
+        content: c,
+      })),
+    } as SynchronousMessage);
   } catch (e) {
     error = e;
   }
@@ -402,3 +429,39 @@ const executeNonTransportTest = async <T>(
 
   return val;
 };
+
+/**
+ * A Message Consumer is a function that will receive a message
+ * from a given Message Provider. It is given the full Message
+ * context during verification.
+ *
+ * @module Message
+ */
+export type V4MessageConsumer = (m: ConcreteMessage) => Promise<unknown>;
+
+// bodyHandler takes a synchronous function and returns
+// a wrapped function that accepts a Message and returns a Promise
+export function v4SynchronousBodyHandler<R>(
+  handler: (body: AnyJson | Buffer) => R
+): V4MessageConsumer {
+  return (m: ConcreteMessage): Promise<R> => {
+    const body = m.contents.content;
+
+    return new Promise((resolve, reject) => {
+      try {
+        const res = handler(body);
+        resolve(res);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  };
+}
+
+// bodyHandler takes an asynchronous (promisified) function and returns
+// a wrapped function that accepts a Message and returns a Promise
+export function v4AsynchronousBodyHandler<R>(
+  handler: (body: AnyJson | Buffer) => Promise<R>
+): V4MessageConsumer {
+  return (m: ConcreteMessage): Promise<R> => handler(m.contents.content);
+}
