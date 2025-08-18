@@ -135,7 +135,7 @@
     "@types/sinon-chai": "2.7.42",
     "@typescript-eslint/eslint-plugin": "5.62.0",
     "@typescript-eslint/parser": "5.62.0",
-    "chai": "5.2.1",
+    "chai": "5.3.1",
     "chai-as-promised": "8.0.1",
     "commit-and-tag-version": "12.5.2",
     "copyfiles": "2.4.1",
