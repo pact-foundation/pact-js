@@ -250,18 +250,20 @@ jobs:
       fail-fast: false
       matrix:
         d:
-          - e2e
-          - graphql
-          - jest
-          - messages
-          - mocha
-          - serverless
-          - typescript
+          - v2/e2e
+          - v2/graphql
+          - v2/jest
+          - v2/messages
+          - v2/mocha
+          - v2/serverless
+          - v2/typescript
           - v3/e2e
+          - v3/graphql
           - v3/provider-state-injected
           - v3/run-specific-verifications
           - v3/todo-consumer
           - v3/typescript
+          - v4/graphql
           - v4/matchers
           - v4/plugins
           - v4/messages

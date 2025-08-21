@@ -19,7 +19,7 @@
     "deploy:provider": "npm run can-i-deploy && serverless deploy -f provider"
   },
   "devDependencies": {
-    "@pact-foundation/pact": "file:../../dist",
+    "@pact-foundation/pact": "file:../../../dist",
     "@pact-foundation/pact-cli": "^16.0.4",
     "absolute-version": "1.0.1",
     "mocha": "^10.0.0",

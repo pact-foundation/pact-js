@@ -20,7 +20,7 @@
   "author": "Matt Fellows <matt.fellows@onegeek.com.au>",
   "license": "MIT",
   "devDependencies": {
-    "@pact-foundation/pact": "file:../../dist",
+    "@pact-foundation/pact": "file:../../../dist",
     "@pact-foundation/pact-cli": "^16.0.4",
     "@types/chai": "^4.3.8",
     "@types/chai-as-promised": "7.1.6",

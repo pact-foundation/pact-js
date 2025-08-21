@@ -15,7 +15,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@pact-foundation/pact": "file:../../dist",
+    "@pact-foundation/pact": "file:../../../dist",
     "@pact-foundation/pact-cli": "^16.0.4",
     "@types/mocha": "^9.1.1",
     "@types/node": "^18.7.11",
