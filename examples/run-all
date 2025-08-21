@@ -61,19 +61,23 @@ main() {
   fi
 
   declare -a examples=(
-    "$EXAMPLES_DIR/e2e"
-    "$EXAMPLES_DIR/graphql"
-    "$EXAMPLES_DIR/jest"
-    "$EXAMPLES_DIR/messages"
-    "$EXAMPLES_DIR/mocha"
-    "$EXAMPLES_DIR/serverless"
-    "$EXAMPLES_DIR/typescript"
+    "$EXAMPLES_DIR/v2/e2e"
+    "$EXAMPLES_DIR/v2/graphql"
+    "$EXAMPLES_DIR/v2/jest"
+    "$EXAMPLES_DIR/v2/messages"
+    "$EXAMPLES_DIR/v2/mocha"
+    "$EXAMPLES_DIR/v2/serverless"
+    "$EXAMPLES_DIR/v2/typescript"
     "$EXAMPLES_DIR/v3/e2e"
+    "$EXAMPLES_DIR/v3/graphql"
     "$EXAMPLES_DIR/v3/provider-state-injected"
     "$EXAMPLES_DIR/v3/run-specific-verifications"
     "$EXAMPLES_DIR/v3/todo-consumer"
     "$EXAMPLES_DIR/v3/typescript"
+    "$EXAMPLES_DIR/v4/graphql"
     "$EXAMPLES_DIR/v4/matchers"
+    "$EXAMPLES_DIR/v4/messages"
+    "$EXAMPLES_DIR/v4/multipart"
     "$EXAMPLES_DIR/v4/plugins"
   )
 

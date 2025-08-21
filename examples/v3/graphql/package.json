@@ -1,0 +1,49 @@
+{
+  "name": "graphql-pact-example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rimraf pacts",
+    "test": "npm run clean && npm run test:consumer && npm run test:publish && npm run test:provider",
+    "test:no:publish": "npm run test:consumer && npm run test:provider",
+    "test:consumer": "mocha src/consumer.spec.ts",
+    "test:publish": "pact-broker publish ./pacts --consumer-app-version=\"$(npx absolute-version)\" --auto-detect-version-properties --broker-base-url=https://testdemo.pactflow.io",
+    "test:provider": "mocha src/provider.spec.ts"
+  },
+  "keywords": [
+    "graphql",
+    "pact",
+    "contract-testing"
+  ],
+  "author": "Matt Fellows <matt.fellows@onegeek.com.au>",
+  "license": "MIT",
+  "devDependencies": {
+    "@pact-foundation/pact": "file:../../../dist",
+    "@pact-foundation/pact-cli": "^16.0.4",
+    "@types/chai": "^4.3.8",
+    "@types/chai-as-promised": "7.1.6",
+    "@types/mocha": "^10.0.2",
+    "@types/node": "^18.7.11",
+    "absolute-version": "1.0.2",
+    "chai": "^4.3.10",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^10.2.0",
+    "node-fetch": "^2.7.0",
+    "rimraf": "^5.0.5",
+    "tslint": "^5.20.1",
+    "tslint-config-prettier": "^1.18.0",
+    "tsx": "^4.19.2",
+    "typescript": "^4.9.5"
+  },
+  "dependencies": {
+    "apollo-boost": "0.4.9",
+    "apollo-cache-inmemory": "^1.6.6",
+    "apollo-link-http": "^1.5.17",
+    "express": "^4.21.2",
+    "graphql": "^15.8.0",
+    "graphql-http": "^1.22.0",
+    "graphql-tag": "^2.12.6"
+  }
+}
