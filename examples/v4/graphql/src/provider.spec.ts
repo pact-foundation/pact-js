@@ -1,7 +1,8 @@
 import { Verifier, LogLevel } from '@pact-foundation/pact';
 
 import app from './provider';
-import path = require('path');
+import * as path from 'path';
+
 const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 let server: any;
