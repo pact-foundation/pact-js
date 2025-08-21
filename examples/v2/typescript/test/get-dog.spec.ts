@@ -1,7 +1,7 @@
 /* tslint:disable:no-unused-expression object-literal-sort-keys max-classes-per-file no-empty */
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import path = require('path');
+import * as path from 'path';
 import sinonChai from 'sinon-chai';
 import { Pact, Interaction, Matchers, LogLevel } from '@pact-foundation/pact';
 
