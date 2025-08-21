@@ -5,7 +5,7 @@ import {
   Verifier,
 } from '@pact-foundation/pact';
 import { AddressInfo } from 'net';
-import path = require('path');
+import * as path from 'path';
 import { startHTTPServer, startTCPServer } from '../provider';
 import { parseMattMessage } from '../protocol';
 
