@@ -50,6 +50,7 @@ export interface MessageDescriptor {
   providerStates?: ProviderState[];
   description: string;
   metadata?: Metadata;
+  content?: AnyJson | Buffer;
 }
 
 /**

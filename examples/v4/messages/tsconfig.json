@@ -1,0 +1,20 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "noLib": false,
+    "noImplicitReturns": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "noEmitOnError": true,
+    "emitDecoratorMetadata": true,
+    "declaration": true,
+    "experimentalDecorators": true,
+    "target": "es5",
+    "lib": ["es2016", "dom", "esnext.asynciterable"]
+  },
+  "include": ["consumer", "provider"],
+  "exclude": ["./node_modules/**"]
+}
