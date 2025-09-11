@@ -33,7 +33,7 @@ export type AnyTemplate =
  */
 export interface Matcher<T> {
   'pact:matcher:type': string;
-  'pact:generator:type'?: string;
+  'pact:generator:type'?: string; // In the future, we should split out generator from matchers (they are different things)
   value?: T | Record<string, T>;
 }
 
