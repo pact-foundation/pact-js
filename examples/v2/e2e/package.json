@@ -19,7 +19,7 @@
   "license": "MIT",
   "devDependencies": {
     "@pact-foundation/pact": "file:../../../dist",
-    "@pact-foundation/pact-cli": "^16.0.4",
+    "@pact-foundation/pact-cli": "^16.1.2",
     "absolute-version": "1.0.1",
     "chai": "^4.3.6",
     "chai-as-promised": "^7.1.1",
@@ -29,7 +29,7 @@
   "dependencies": {
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",
-    "express": "^4.18.1",
+    "express": "^5.1.0",
     "superagent": "^10.2.1"
   }
 }
