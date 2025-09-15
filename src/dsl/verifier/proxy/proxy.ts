@@ -47,7 +47,7 @@ export const createProxy = (
     })
   );
   app.use(bodyParser.urlencoded({ extended: true }));
-  app.use('/*splat', bodyParser.raw({ type: '*/*' }));
+  app.use('/{splat}', bodyParser.raw({ type: '*/*' }));
 
   // Hooks
   const hooksState: HooksState = {
