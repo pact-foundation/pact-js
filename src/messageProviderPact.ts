@@ -155,7 +155,7 @@ export class MessageProviderPact {
     });
 
     // Proxy server will respond to Verifier process
-    app.all('/*', this.setupVerificationHandler());
+    app.all('/*splat', this.setupVerificationHandler());
 
     return app;
   }
