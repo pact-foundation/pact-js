@@ -2,7 +2,7 @@
 const consumeEvent = require('./index').consumeEvent;
 const {
   MessageConsumerPact,
-  Matchers,
+  MatchersV2: Matchers,
   synchronousBodyHandler,
 } = require('@pact-foundation/pact');
 const { like, term } = Matchers;

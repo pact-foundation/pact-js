@@ -70,7 +70,48 @@ The verification side of this test is no different to a usual verification, as i
 
 ## Asynchronous Messages
 
-This feature has yet to be added
+As per the HTTP interaction, calling `usingPlugin` early in the builder allows two additional methods: `withPluginContents` to specify the plugin contents, and `startTransport` to optionally start a transport for this test, if the plugin has one (for example, a gRPC service or in this case, a TCP server).
+
+
+
+
+```js
+  describe('Async Message', () => {
+    const pact = new Pact({
+      consumer: 'myconsumer',
+      provider: 'myprovider',
+      spec: SpecificationVersion.SPECIFICATION_VERSION_V4,
+      logLevel: (process.env.LOG_LEVEL as LogLevel) || 'error',
+    });
+
+    describe('with plugin contents (application/matt)', async () => {
+      it('receives a valid asynchronous MATT message', () => {
+        const mattMessage = `{"response":{"body":"tcpworld"}}`;
+
+        return pact
+          .addAsynchronousInteraction()
+          .given('the Matt protocol is up')
+          .usingPlugin({
+            plugin: 'matt',
+            version: '0.1.1',
+          })
+          .expectsToReceive('an asynchronous MATT message')
+          .withPluginContents(mattMessage, 'application/matt')
+          .executeTest(async (message) => {
+            // simulate receiving a MATT message
+
+            const response = parseMattMessage(
+              Buffer.from(
+                String(message?.contents?.content || ''),
+                'base64'
+              ).toString()
+            );
+            expect(response).to.deep.eq('tcpworld');
+          });
+      });
+    });
+  });
+```
 
 ## Synchronous Messages
 
@@ -79,35 +120,34 @@ This feature has yet to be added
 As per the HTTP interaction, calling `usingPlugin` early in the builder allows two additional methods: `withPluginContents` to specify the plugin contents, and `startTransport` to optionally start a transport for this test, if the plugin has one (for example, a gRPC service or in this case, a TCP server).
 
 ```js
-const pact = new PactV4({
-  consumer: 'myconsumer',
-  provider: 'myprovider',
-  spec: SpecificationVersion.SPECIFICATION_VERSION_V4,
-  logLevel: (process.env.LOG_LEVEL as LogLevel) || 'error',
-});
+  describe('TCP (plugin) transport', () => {
+    const pact = new Pact({
+      consumer: 'myconsumer',
+      provider: 'myprovider',
+      spec: SpecificationVersion.SPECIFICATION_VERSION_V4,
+      logLevel: (process.env.LOG_LEVEL as LogLevel) || 'error',
+    });
 
-describe('with MATT protocol', async () => {
-  it('generates a pact with success', () => {
-    const mattMessage = `{"request": {"body": "hellotcp"}, "response":{"body":"tcpworld"}}`;
+    it('returns a valid MATT message', () => {
+      const mattMessage = `{"request": {"body": "hellotcp"}, "response":{"body":"tcpworld"}}`;
 
-    return pact
-      .addSynchronousInteraction('a MATT message')
-      .usingPlugin({
-        plugin: 'matt',
-        version: '0.1.1',
-      })
-      .withPluginContents(mattMessage, 'application/matt')
-      .startTransport('matt', HOST)
-      .executeTest(async (tc) => {
-        const message = await sendMattMessageTCP(
-          'hellotcp',
-          HOST,
-          tc.port
-        );
-        expect(message).to.eq('tcpworld');
-      });
+      return pact
+        .addSynchronousInteraction('a MATT message')
+        .usingPlugin({
+          plugin: 'matt',
+          version: '0.1.1',
+        })
+        .withPluginContents(mattMessage, 'application/matt')
+        .startTransport('matt', HOST)
+        .executeTest(async (tc) => {
+          // simulate sending and received a MATT message
+          const message = await sendMattMessageTCP('hellotcp', HOST, tc.port);
+          expect(message).to.eq('tcpworld');
+        });
+    });
   });
-```        
+```  
+
 ### Provider
 
 The verification side of this interaction needs you to specify additional transports on the verifier. In this case, where to send the TCP traffic in additional to the HTTP traffic. The rest of the verifier is the same as a normal verification: 

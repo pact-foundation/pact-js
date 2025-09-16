@@ -1,9 +1,9 @@
 const path = require('path');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
-const { PactV3, MatchersV3, XmlBuilder } = require('@pact-foundation/pact');
+const { PactV3, Matchers, XmlBuilder } = require('@pact-foundation/pact');
 const { string, eachLike, integer, boolean, atLeastOneLike, timestamp, regex } =
-  MatchersV3;
+  Matchers;
 const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 const TodoApp = require('../src/todo');

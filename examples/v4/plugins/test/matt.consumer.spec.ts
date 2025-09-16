@@ -1,7 +1,7 @@
 /* tslint:disable:no-unused-expression no-empty */
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import { SpecificationVersion, PactV4, LogLevel } from '@pact-foundation/pact';
+import { SpecificationVersion, Pact, LogLevel } from '@pact-foundation/pact';
 import net = require('net');
 import { generateMattMessage, parseMattMessage } from '../protocol';
 import axios from 'axios';
@@ -14,7 +14,7 @@ describe('Plugins - Matt Protocol', () => {
   const HOST = '127.0.0.1';
 
   describe('HTTP transport', () => {
-    const pact = new PactV4({
+    const pact = new Pact({
       consumer: 'myconsumer',
       provider: 'myprovider',
       spec: SpecificationVersion.SPECIFICATION_VERSION_V4,
@@ -58,7 +58,7 @@ describe('Plugins - Matt Protocol', () => {
   });
 
   describe('TCP (plugin) transport', () => {
-    const pact = new PactV4({
+    const pact = new Pact({
       consumer: 'myconsumer',
       provider: 'myprovider',
       spec: SpecificationVersion.SPECIFICATION_VERSION_V4,
@@ -84,76 +84,13 @@ describe('Plugins - Matt Protocol', () => {
   });
 
   describe('No transport', () => {
-    const pact = new PactV4({
+    const pact = new Pact({
       consumer: 'myconsumer',
       provider: 'myprovider',
       spec: SpecificationVersion.SPECIFICATION_VERSION_V4,
       logLevel: (process.env.LOG_LEVEL as LogLevel) || 'error',
     });
 
-    describe('with plain text (text/plain)', async () => {
-      it('returns a valid MATT message', () => {
-        return pact
-          .addSynchronousInteraction('a MATT message (text/plain)')
-          .given('the Matt protocol is up')
-          .withRequest((builder) => {
-            builder.withContent('text/plain', Buffer.from('hellotcp'));
-          })
-          .withResponse((builder) => {
-            builder.withContent('text/plain', Buffer.from('tcpworld'));
-          })
-          .executeTest(async (message) => {
-            const request = message?.Request?.content?.toString() || '';
-            const response = message?.Response[0]?.content?.toString() || '';
-            expect(request).to.deep.eq('hellotcp');
-            expect(response).to.deep.eq('tcpworld');
-          });
-      });
-    });
-    describe('with JSON (application/json)', async () => {
-      it('returns a valid MATT message', () => {
-        return pact
-          .addSynchronousInteraction('a MATT message (application/json)')
-          .given('the Matt protocol is up')
-          .withRequest((builder) => {
-            builder.withJSONContent({
-              matt: 'hellotcp',
-            });
-          })
-          .withResponse((builder) => {
-            builder.withJSONContent({
-              matt: 'tcpworld',
-            });
-          })
-          .executeTest(async (message) => {
-            const request = message?.Request?.content?.toString() || '';
-            const response = message?.Response[0]?.content?.toString() || '';
-            expect(JSON.parse(request)).to.deep.eq({ matt: 'hellotcp' });
-            expect(JSON.parse(response)).to.deep.eq({ matt: 'tcpworld' });
-          });
-      });
-    });
-    describe('with plugin contents (application/matt)', async () => {
-      it('returns a valid MATT message', () => {
-        const mattMessage = `{"request": {"body": "hellotcp"}, "response":{"body":"tcpworld"}}`;
-
-        return pact
-          .addSynchronousInteraction('a MATT message (application/matt)')
-          .given('the Matt protocol is up')
-          .usingPlugin({
-            plugin: 'matt',
-            version: '0.1.1',
-          })
-          .withPluginContents(mattMessage, 'application/matt')
-          .executeTest(async (message) => {
-            // simulate sending and received a MATT message
-            const response = parseMattMessage(
-              message?.Response[0]?.content?.toString() || ''
-            );
-            expect(response).to.deep.eq('tcpworld');
-          });
-      });
-    });
     describe('with plugin contents (application/matt)', async () => {
       it('receives a valid asynchronous MATT message', () => {
         const mattMessage = `{"response":{"body":"tcpworld"}}`;

@@ -1,12 +1,7 @@
 /* tslint:disable:no-unused-expression no-empty */
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import {
-  SpecificationVersion,
-  PactV4,
-  LogLevel,
-  MatchersV3,
-} from '@pact-foundation/pact';
+import { SpecificationVersion, Pact, LogLevel } from '@pact-foundation/pact';
 import axios from 'axios';
 import path from 'path';
 import fs from 'fs';
@@ -16,11 +11,9 @@ chai.use(chaiAsPromised);
 
 const { expect } = chai;
 
-process.env.ENABLE_FEATURE_V4 = 'true';
-
 describe('Multipart Request', () => {
   describe('POST /upload', () => {
-    const pact = new PactV4({
+    const pact = new Pact({
       consumer: 'multipartconsumer',
       provider: 'multipartprovider',
       spec: SpecificationVersion.SPECIFICATION_VERSION_V4,

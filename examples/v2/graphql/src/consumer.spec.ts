@@ -4,9 +4,9 @@ import * as path from 'path';
 import chaiAsPromised from 'chai-as-promised';
 import { query } from './consumer';
 import {
-  Pact,
+  PactV2 as Pact,
   GraphQLInteraction,
-  Matchers,
+  MatchersV2 as Matchers,
   LogLevel,
 } from '@pact-foundation/pact';
 const { like } = Matchers;

@@ -1,7 +1,7 @@
 /* tslint:disable:no-unused-expression object-literal-sort-keys max-classes-per-file no-empty */
 
 import {
-  Matchers,
+  MatchersV2 as Matchers,
   MessageConsumerPact,
   synchronousBodyHandler,
   LogLevel,

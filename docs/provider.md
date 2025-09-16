@@ -20,7 +20,7 @@ In this document, we will cover steps 4-5.
 
 ## HTTP Provider package
 
-The provider interface is in the package: `github.com/pact-foundation/pact-go/v2/provider`.
+The provider interface is: `Verifier`.
 
 ### Provider API Testing
 
