@@ -73,8 +73,6 @@ The verification side of this test is no different to a usual verification, as i
 As per the HTTP interaction, calling `usingPlugin` early in the builder allows two additional methods: `withPluginContents` to specify the plugin contents, and `startTransport` to optionally start a transport for this test, if the plugin has one (for example, a gRPC service or in this case, a TCP server).
 
 
-
-
 ```js
   describe('Async Message', () => {
     const pact = new Pact({
