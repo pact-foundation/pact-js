@@ -3,7 +3,12 @@ import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import * as path from 'path';
 import sinonChai from 'sinon-chai';
-import { Pact, Interaction, Matchers, LogLevel } from '@pact-foundation/pact';
+import {
+  PactV2 as Pact,
+  Interaction,
+  MatchersV2 as Matchers,
+  LogLevel,
+} from '@pact-foundation/pact';
 
 const expect = chai.expect;
 import { DogService } from '../src/index';

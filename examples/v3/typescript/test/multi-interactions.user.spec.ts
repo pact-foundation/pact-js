@@ -1,7 +1,12 @@
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinonChai from 'sinon-chai';
-import { PactV3, Matchers, LogLevel } from '@pact-foundation/pact';
+import {
+  PactV3,
+  Matchers,
+  LogLevel,
+  V3Interaction,
+} from '@pact-foundation/pact';
 import { UserService } from '../index';
 const { like } = Matchers;
 const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
@@ -46,6 +51,50 @@ describe('The Users API', () => {
 
         // Assert
         expect(response.data).to.deep.eq(userExample);
+      });
+    });
+  });
+  describe('get /users/:id/profile', () => {
+    it('returns the requested user profile', () => {
+      const indexInteraction: V3Interaction = {
+        uponReceiving: 'a request to get a user profile',
+        withRequest: {
+          method: 'GET',
+          path: '/users/1/profile',
+        },
+        willRespondWith: {
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+          body: like({ id: 1, name: 'Homer Simpson', age: 39 }),
+        },
+      };
+
+      // Arrange
+      provider
+        .addInteraction(indexInteraction)
+        .given('a user with ID 1 exists')
+        .uponReceiving('a request to get a user')
+        .withRequest({
+          method: 'GET',
+          path: '/users/1',
+        })
+        .willRespondWith({
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+          body: EXPECTED_BODY,
+        });
+
+      return provider.executeTest(async (mockserver) => {
+        // Act
+        userService = new UserService(mockserver.url);
+        const response = await userService.getUserProfile(1);
+
+        // Assert
+        expect(response.data).to.deep.eq({
+          id: 1,
+          name: 'Homer Simpson',
+          age: 39,
+        });
       });
     });
   });

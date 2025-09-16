@@ -6,9 +6,10 @@ GraphQL is simply an abstraction over HTTP and may be tested via Pact.
 
 | Role      | Interface            | Supported? |
 |:---------:|:--------------------:|:----------:|
-| Consumer | `Pact`                |     ✅      |
+| Consumer | `Pact` / `PactV4`     |     ✅      |
 | Consumer | `MessageConsumerPact` |     ❌      |
-| Consumer | `PactV3`              |     ❌      |
+| Consumer | `PactV3`              |     ✅      |
+| Consumer | `PactV4`              |     ✅      |
 | Provider | `Verifier`            |     ✅      |
 | Provider | `MessageProviderPact` |     ❌      |
 

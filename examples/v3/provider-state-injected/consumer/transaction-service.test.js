@@ -1,9 +1,8 @@
 const path = require('path');
 const transactionService = require('./transaction-service');
-const { PactV3, MatchersV3, XmlBuilder } = require('@pact-foundation/pact');
+const { PactV3, Matchers, XmlBuilder } = require('@pact-foundation/pact');
 const { expect } = require('chai');
-const { string, integer, url2, regex, datetime, fromProviderState } =
-  MatchersV3;
+const { string, integer, url2, regex, datetime, fromProviderState } = Matchers;
 const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 describe('Transaction service - create a new transaction for an account', () => {

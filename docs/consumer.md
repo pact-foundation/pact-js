@@ -21,24 +21,24 @@ In this document, we will cover steps 1-3.
 To use the library on your tests, add the pact dependency:
 
 ```javascript
-const { PactV4 } = require("@pact-foundation/pact")
+const { Pact } = require("@pact-foundation/pact")
 ```
 
-`PactV4` is the latest version of this library, supporting up to and including version 4 of the [Pact Specification](https://github.com/pact-foundation/pact-specification/). It also allows interactions of multiple types (HTTP, async, synchronous). For previous versions, see below.
+`PactV4` aliased as `Pact` is the latest version of this library, supporting up to and including version 4 of the [Pact Specification](https://github.com/pact-foundation/pact-specification/). It also allows interactions of multiple types (HTTP, async, synchronous). For previous versions, see below.
 
 <details><summary>Previous versions</summary>
 
 
 ```javascript
-const { Pact } = require("@pact-foundation/pact")   // Supports up to and including Pact Specification version 2
+const { PactV2 } = require("@pact-foundation/pact")   // Supports up to and including Pact Specification version 2
 const { PactV3 } = require("@pact-foundation/pact") // Supportsu up to and including Pact Specification version 3
 ```
 
-You should use the `PactV4` interface unless you can't, and set the specification version via `spec` to the desired serialisation format.
+You should use the `Pact` interface unless you can't, and set the specification version via `spec` to the desired serialisation format.
 
 </details>
 
-The `PactV4` class provides the following high-level APIs, they are listed in the order in which they typically get called in the lifecycle of testing a consumer:
+The `Pact` class provides the following high-level APIs, they are listed in the order in which they typically get called in the lifecycle of testing a consumer:
 
 ### API
 
@@ -48,7 +48,7 @@ The Pact SDK uses a fluent builder to create interactions.
 
 | API                              | Options                            | Description                                                                                                                                                            |
 | -------------------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `new PactV4(options)`            | See constructor options below      | Creates a Mock Server test double of your Provider API. The class is **not** thread safe, but you can run tests in parallel by creating as many instances as you need. |
+| `new Pact(options)`            | See constructor options below      | Creates a Mock Server test double of your Provider API. The class is **not** thread safe, but you can run tests in parallel by creating as many instances as you need. |
 | `addInteraction(...)`            | `V4UnconfiguredInteraction`        | Start a builder for an HTTP interaction                                                                                                                                |
 | `addSynchronousInteraction(...)` | `V4UnconfiguredSynchronousMessage` | Start a builder for an asynchronous message                                                                                                                            |
 
@@ -93,61 +93,63 @@ _NOTE: you must also ensure you clear out your pact directory prior to running t
 Check out the [examples](https://github.com/pact-foundation/pact-js/tree/master/examples/) for more of these.
 
 ```js
-import { PactV4, MatchersV3 } from '@pact-foundation/pact';
+/* tslint:disable:no-unused-expression object-literal-sort-keys max-classes-per-file no-empty */
+import * as chai from 'chai';
+import chaiAsPromised from 'chai-as-promised';
+import * as path from 'path';
+import sinonChai from 'sinon-chai';
+import { Pact, Matchers, SpecificationVersion } from '@pact-foundation/pact';
 
-// Create a 'pact' between the two applications in the integration we are testing
-const provider = new PactV4({
-  dir: path.resolve(process.cwd(), 'pacts'),
-  consumer: 'MyConsumer',
-  provider: 'MyProvider',
-  spec: SpecificationVersion.SPECIFICATION_VERSION_V4, // Modify this as needed for your use case
-});
+const expect = chai.expect;
+import { DogService } from '../src/index';
+const { eachLike } = Matchers;
 
-// API Client that will fetch dogs from the Dog API
-// This is the target of our Pact test
-public getMeDogs = (from: string): AxiosPromise => {
-  return axios.request({
-    baseURL: this.url,
-    params: { from },
-    headers: { Accept: 'application/json' },
-    method: 'GET',
-    url: '/dogs',
-  });
-};
-
-const dogExample = { dog: 1 };
-const EXPECTED_BODY = MatchersV3.eachLike(dogExample);
+chai.use(sinonChai);
+chai.use(chaiAsPromised);
+const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 describe('GET /dogs', () => {
-  it('returns an HTTP 200 and a list of dogs', () => {
+  let dogService: DogService;
+
+  // Create a 'pact' between the two applications in the integration we are testing
+  const provider = new Pact({
+    dir: path.resolve(process.cwd(), 'pacts'),
+    consumer: 'MyConsumer',
+    provider: 'MyProvider',
+    spec: SpecificationVersion.SPECIFICATION_VERSION_V4, // Modify this as needed for your use case
+  });
+  it('returns an HTTP 200 and a list of dogs', async () => {
+    const dogExample = { dog: 1 };
+    const EXPECTED_BODY = eachLike(dogExample);
+
     // Arrange: Setup our expected interactions
     //
     // We use Pact to mock out the backend API
-    provider
+    await provider
       .addInteraction()
       .given('I have a list of dogs')
       .uponReceiving('a request for all dogs with the builder pattern')
-      .withRequest('GET', '/dogs' (builder) => {
-          builder.query({ from: 'today' })
-          builder.headers({ Accept: 'application/json' })        
+      .withRequest('GET', '/dogs', (builder) => {
+        builder.query({ from: 'today' });
+        builder.headers({ Accept: 'application/json' });
       })
       .willRespondWith(200, (builder) => {
-        builder.headers({ 'Content-Type': 'application/json' })
-        builder.jsonBody(EXPECTED_BODY)
+        builder.headers({ 'Content-Type': 'application/json' });
+        builder.jsonBody(EXPECTED_BODY);
+      })
+      .executeTest(async (mockserver) => {
+        // Act: test our API client behaves correctly
+        //
+        // Note we configure the DogService API client dynamically to
+        // point to the mock service Pact created for us, instead of
+        // the real one
+        dogService = new DogService({ url: mockserver.url });
+        const response = await dogService.getMeDogs('today');
+
+        // Assert: check the result
+        expect(response.data[0]).to.deep.eq(dogExample);
+        return response;
       });
-
-    return provider.executeTest((mockserver) => {
-      // Act: test our API client behaves correctly
-      //
-      // Note we configure the DogService API client dynamically to 
-      // point to the mock service Pact created for us, instead of 
-      // the real one
-      dogService = new DogService(mockserver.url);
-      const response = await dogService.getMeDogs('today')
-
-      // Assert: check the result
-      expect(response.data[0]).to.deep.eq(dogExample);
-    });
   });
 });
 ```

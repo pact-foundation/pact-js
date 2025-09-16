@@ -5,10 +5,12 @@ import {
   providerWithMetadata,
 } from '@pact-foundation/pact';
 import { versionFromGitTag } from 'absolute-version';
+// 1 Messaging integration client
 const { createDog } = require('./dog-client');
 const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 describe('Message provider tests', () => {
+  // 2 Pact setup
   const p = new MessageProviderPact({
     messageProviders: {
       'a request for a dog': providerWithMetadata(() => createDog(27), {

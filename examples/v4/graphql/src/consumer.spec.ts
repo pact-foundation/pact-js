@@ -3,7 +3,7 @@ import * as chai from 'chai';
 import * as path from 'path';
 import * as chaiAsPromised from 'chai-as-promised';
 import { query } from './consumer';
-import { Matchers, LogLevel, PactV4 } from '@pact-foundation/pact';
+import { Matchers, LogLevel, Pact } from '@pact-foundation/pact';
 import { V4InteractionWithResponse } from '@pact-foundation/pact/src/v4/http/types';
 const { like } = Matchers;
 const LOG_LEVEL = process.env.LOG_LEVEL || 'INFO';
@@ -13,7 +13,7 @@ const expect = chai.expect;
 chai.use(chaiAsPromised);
 
 describe('GraphQL example', () => {
-  const provider = new PactV4({
+  const provider = new Pact({
     port: 4000,
     dir: path.resolve(process.cwd(), 'pacts'),
     consumer: 'GraphQLConsumerV4',

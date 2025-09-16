@@ -6,8 +6,9 @@ You can write both consumer and provider verification tests with XML requests or
 
 | Role      | Interface            | Supported? |
 |:---------:|:--------------------:|:----------:|
-| Consumer | `Pact`                |     ❌      |
+| Consumer | `Pact` / `PactV4`     |     ❌      |
 | Consumer | `MessageConsumerPact` |     ✅      |
+| Consumer | `PactV2`              |     ❌      |
 | Consumer | `PactV3`              |     ✅      |
 | Provider | `Verifier`            |     ✅      |
 | Provider | `MessageProviderPact` |     ✅      |

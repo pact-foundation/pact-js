@@ -1,6 +1,6 @@
 /**
  * Pact Options module.
- * @module PactOptions
+ * @module PactV2Options
  */
 import { VerifierOptions as PactCoreVerifierOptions } from '@pact-foundation/pact-core';
 import { PactfileWriteMode } from './mockService';
@@ -8,7 +8,7 @@ import { MessageProviders, MessageStateHandlers } from './message';
 
 export type LogLevel = 'trace' | 'debug' | 'info' | 'warn' | 'error';
 
-export interface PactOptions {
+export interface PactV2Options {
   // The name of the consumer
   consumer: string;
 
@@ -53,13 +53,13 @@ export interface PactOptions {
   pactfileWriteMode?: PactfileWriteMode;
 }
 
-export interface MandatoryPactOptions {
+export interface MandatoryPactV2Options {
   port: number;
   host: string;
   ssl: boolean;
 }
 
-export type PactOptionsComplete = PactOptions & MandatoryPactOptions;
+export type PactV2OptionsComplete = PactV2Options & MandatoryPactV2Options;
 
 export interface MessageProviderOptions {
   // Log level

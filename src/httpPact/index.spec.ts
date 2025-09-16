@@ -3,7 +3,7 @@ import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { ConsumerInteraction, ConsumerPact } from '@pact-foundation/pact-core';
-import { PactOptions, PactOptionsComplete } from '../dsl/options';
+import { PactV2Options, PactV2OptionsComplete } from '../dsl/options';
 import { Pact } from '.';
 import { MockService } from '../dsl/mockService';
 
@@ -23,7 +23,7 @@ describe('Pact', () => {
     spec: 2,
     cors: false,
     pactfileWriteMode: 'merge',
-  } as PactOptionsComplete;
+  } as PactV2OptionsComplete;
 
   afterEach(() => {
     sinon.restore();
@@ -44,7 +44,7 @@ describe('Pact', () => {
   });
 
   describe('#createOptionsWithDefault', () => {
-    const constructorOpts: PactOptions = {
+    const constructorOpts: PactV2Options = {
       consumer: 'A',
       provider: 'B',
     };

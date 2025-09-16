@@ -3,9 +3,9 @@ import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {
   SpecificationVersion,
-  PactV4,
+  Pact,
   LogLevel,
-  MatchersV3,
+  Matchers,
 } from '@pact-foundation/pact';
 import axios from 'axios';
 
@@ -13,10 +13,8 @@ chai.use(chaiAsPromised);
 
 const { expect } = chai;
 
-process.env.ENABLE_FEATURE_V4 = 'true';
-
 describe('V4 Matchers', () => {
-  const pact = new PactV4({
+  const pact = new Pact({
     consumer: 'myconsumer',
     provider: 'myprovider',
     spec: SpecificationVersion.SPECIFICATION_VERSION_V4,
@@ -33,12 +31,12 @@ describe('V4 Matchers', () => {
         })
         .willRespondWith(200, (builder) => {
           builder.jsonBody(
-            MatchersV3.eachKeyMatches(
+            Matchers.eachKeyMatches(
               {
                 key1: "a string we don't care about",
                 key2: 1,
               },
-              [MatchersV3.regex(/[a-z]{3,}[0-9]/, 'key1')]
+              [Matchers.regex(/[a-z]{3,}[0-9]/, 'key1')]
             )
           );
         })
@@ -70,13 +68,13 @@ describe('V4 Matchers', () => {
         .withRequest('GET', '/eachValueMatches')
         .willRespondWith(200, (builder) => {
           builder.jsonBody(
-            MatchersV3.eachValueMatches(
+            Matchers.eachValueMatches(
               {
                 key1: 'a string',
                 key2: 'this is another string',
                 key3: 'this, unbelievably, is YET ANOTHER, string',
               },
-              [MatchersV3.regex(/[a-z\s]+/, 'a string')]
+              [Matchers.regex(/[a-z\s]+/, 'a string')]
             )
           );
         })
