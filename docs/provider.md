@@ -114,28 +114,46 @@ Read more about [Verifying Pacts](https://docs.pact.io/getting_started/verifying
 
 #### API with Provider States
 
-If you have defined any `state`s in your consumer tests, the `Verifier` can put the provider into the right state prior to sending the request. For example, the provider can use the state to mock away certain database queries. To support this, set up a handler for each `state` using hooks on the `stateHandlers` property. Here is an example from our [e2e suite](https://github.com/pact-foundation/pact-js/blob/master/examples/e2e/test/provider.spec.js):
+If you have defined any `state`s in your consumer tests, the `Verifier` can put the provider into the right state prior to sending the request. For example, the provider can use the state to mock away certain database queries. To support this, set up a handler for each `state` using hooks on the `stateHandlers` property. Here is an example from our [e2e suite](https://github.com/pact-foundation/pact-js/blob/master/examples/v3/e2e/test/provider.spec.js):
+
+Provider state callbacks can also return a map of key-value values. These are used with provider-state injected values.
 
 ```js
 const opts = {
   ...
-  stateHandlers: {
-    "null": () => {
-      // This is the "default" state handler, when no state is given
-    },
-    "Has no animals": () => {
-      animalRepository.clear()
-      return Promise.resolve(`Animals removed from the db`)
-    },
-    "Has some animals": () => {
-      importData()
-      return Promise.resolve(`Animals added to the db`)
-    },
-    "Has an animal with ID 1": () => {
-      importData()
-      return Promise.resolve(`Animals added to the db`)
-    }
-  }
+      stateHandlers: {
+        'Has no animals': () => {
+          animalRepository.clear();
+          return Promise.resolve({
+            description: `Animals removed from the db`,
+          });
+        },
+        'Has some animals': () => {
+          importData();
+          return Promise.resolve({
+            description: `Animals added to the db`,
+            count: animalRepository.count(),
+          });
+        },
+        'Has an animal with ID': (parameters) => {
+          importData();
+          animalRepository.first().id = parameters.id;
+          return Promise.resolve({
+            description: `Animal with ID ${parameters.id} added to the db`,
+            id: parameters.id,
+          });
+        },
+        'is not authenticated': () => {
+          token = '';
+          return Promise.resolve({
+            description: `Invalid bearer token generated`,
+          });
+        },
+        'is authenticated': () => {
+          token = 'token';
+          return Promise.resolve({ description: `Bearer token generated` });
+        },
+      }
 }
 
 return new Verifier(opts).verifyProvider().then(...)
@@ -147,7 +165,11 @@ Read more about [Provider States](https://docs.pact.io/getting_started/provider_
 
 #### Provider State Setup and Teardown
 
-Provider States can optionally take a setup and teardown function. These are useful in situations where you'd like to cleanup data specific to the provider state.
+Provider States can optionally accepts a `setup` and `teardown` function that execute on the lifecycle of the state setup. `setup` runs prior to the test, and `teardown` runs after the actual request has been sent to the provider.
+
+These are useful in situations where you'd like to cleanup data specific to the provider state
+
+Provider state callbacks can also return a map of key-value values. These are used with provider-state injected values (see the section on that above).
 
 ```js
   'Whatever your state name is': {
@@ -161,6 +183,8 @@ Provider States can optionally take a setup and teardown function. These are use
     },
   },
 ```
+
+For a more detailed example, see the [provider state injected project](https://github.com/pact-foundation/pact-js/blob/master/examples/v3/provider-state-injected/provider/account-service.test.js) in the examples folder
 
 You can think of regular provider states as only being the "setup" phase.
 

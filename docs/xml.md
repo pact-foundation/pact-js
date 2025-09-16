@@ -1,6 +1,6 @@
 # XML
 
-You can write both consumer and provider verification tests with XML requests or responses. 
+You can write both consumer and provider verification tests with XML requests or responses.
 
 ## Support
 
@@ -53,48 +53,4 @@ body: new XmlBuilder("1.0", "UTF-8", "ns1:projects").build((el) => {
 })
 ```
 
-#### Provider state callbacks
-
-Provider state callbacks have been updated to support parameters and return values.
-
-Simple callbacks run before the verification and receive optional parameters containing any key-value  parameters defined in the pact file.
-
-The second form of callback accepts a `setup` and `teardown` function that execute on the lifecycle of the state setup. `setup` runs prior to the test, and `teardown` runs after the actual request has been sent to the provider.
-
-Provider state callbacks can also return a map of key-value values. These are used with provider-state injected values (see the section on that above).
-
-```javascript
-stateHandlers: {
-  // Simple state handler, runs before the verification
-  "Has no animals": () => {
-    return animalRepository.clear()
-  },
-  // Runs only on setup phase (no teardown)
-  "Has some animals": {
-    setup: () => {
-      return importData()
-    }
-  },
-  // Runs only on teardown phase (no setup)
-  "Has a broken dependency": {
-    setup: () => {
-      // make some dependency fail...
-      return Promise.resolve()
-    },
-    teardown: () => {
-      // fix the broken dependency!
-      return Promise.resolve()
-    }
-  },
-  // Return provider specific IDs
-  "Has an animal with ID": async (parameters) => {
-    await importData()
-    animalRepository.first().id = parameters.id
-    return {
-      description: `Animal with ID ${parameters.id} added to the db`,
-      id: parameters.id,
-    }
-  },
-```
-
-For a more detailed example, see the TODO project in the examples folder.
+For a more detailed example, see the todo-consumer project, specifically [consumer.spec.js](https://github.com/pact-foundation/pact-js/blob/master/examples/v3/todo-consumer/test/consumer.spec.js), [provider.spec.js](https://github.com/pact-foundation/pact-js/blob/master/examples/v3/e2e/todo-consumer/provider.spec.js) in the examples folder.
