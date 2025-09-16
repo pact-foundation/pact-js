@@ -79,6 +79,7 @@ main() {
     "$EXAMPLES_DIR/v4/messages"
     "$EXAMPLES_DIR/v4/multipart"
     "$EXAMPLES_DIR/v4/plugins"
+    "$EXAMPLES_DIR/v4/typescript"
   )
 
   if [ $# -gt 0 ]; then
