@@ -16,7 +16,7 @@ import {
 } from '../dsl/interaction';
 import { freePort, isPortAvailable } from '../common/net';
 import logger, { setLogLevel } from '../common/logger';
-import { LogLevel, PactOptions, PactOptionsComplete } from '../dsl/options';
+import { LogLevel, PactV2Options, PactV2OptionsComplete } from '../dsl/options';
 import VerificationError from '../errors/verificationError';
 import ConfigurationError from '../errors/configurationError';
 import { SpecificationVersion } from '../v3';
@@ -40,7 +40,7 @@ const logErrorNoMockServer = () => {
  * Creates a new {@link PactProvider}.
  * @memberof Pact
  * @name create
- * @param {PactOptions} opts
+ * @param {PactV2Options} opts
  * @return {@link PactProvider}
  */
 export class Pact {
@@ -56,17 +56,17 @@ export class Pact {
     spec: 2,
     ssl: false,
     port: 0,
-  } as PactOptions;
+  } as PactV2Options;
 
   public static createOptionsWithDefaults(
-    opts: PactOptions
-  ): PactOptionsComplete {
-    return { ...Pact.defaults, ...opts } as PactOptionsComplete;
+    opts: PactV2Options
+  ): PactV2OptionsComplete {
+    return { ...Pact.defaults, ...opts } as PactV2OptionsComplete;
   }
 
   public mockService: MockService;
 
-  public opts: PactOptionsComplete;
+  public opts: PactV2OptionsComplete;
 
   private mockServerStartedPort?: number;
 
@@ -76,7 +76,7 @@ export class Pact {
 
   private finalized: boolean;
 
-  constructor(config: PactOptions) {
+  constructor(config: PactV2Options) {
     this.opts = Pact.createOptionsWithDefaults(config);
 
     if (this.opts.pactfileWriteMode === 'overwrite') {
@@ -114,7 +114,7 @@ export class Pact {
    *
    * @returns {Promise}
    */
-  public async setup(): Promise<PactOptionsComplete> {
+  public async setup(): Promise<PactV2OptionsComplete> {
     if (this.opts.port > 0) {
       await isPortAvailable(this.opts.port, this.opts.host);
     } else {

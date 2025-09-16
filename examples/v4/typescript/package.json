@@ -1,0 +1,31 @@
+{
+  "name": "typescript-pact",
+  "version": "1.0.0",
+  "description": "TypeScript Pact Example",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test/*.spec.ts"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@pact-foundation/pact": "file:../../../dist",
+    "@types/chai": "^4.3.3",
+    "@types/chai-as-promised": "7.1.5",
+    "@types/mocha": "^9.1.1",
+    "@types/node": "^18.7.11",
+    "@types/sinon-chai": "^3.2.8",
+    "chai": "^4.3.6",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^10.0.0",
+    "sinon": "^14.0.0",
+    "sinon-chai": "^3.7.0",
+    "tslint": "^5.20.1",
+    "tslint-config-prettier": "^1.18.0",
+    "tsx": "^4.19.2",
+    "typescript": "^4.7.4"
+  },
+  "dependencies": {
+     "axios": "^1.12.2"
+  }
+}

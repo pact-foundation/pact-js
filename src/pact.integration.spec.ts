@@ -5,8 +5,6 @@ import sinonChai from 'sinon-chai';
 import axios from 'axios';
 import net = require('net');
 
-process.env.ENABLE_FEATURE_V4 = 'true';
-
 // eslint-disable-next-line import/first
 import { PactV4 } from './v4';
 
