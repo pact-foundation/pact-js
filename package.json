@@ -33,7 +33,7 @@
     "url": "git+https://github.com/pact-foundation/pact-js.git"
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=20"
   },
   "keywords": [
     "pact",
@@ -103,18 +103,18 @@
     ]
   },
   "dependencies": {
-    "@pact-foundation/pact-core": "^16.0.0",
-    "axios": "^1.8.4",
+    "@pact-foundation/pact-core": "^17.0.0",
+    "axios": "^1.12.2",
     "body-parser": "^2.0.0",
     "chalk": "4.1.2",
-    "express": "^4.21.1",
-    "graphql": "^16.10.0",
-    "graphql-tag": "^2.9.1",
+    "express": "^5.1.0",
+    "graphql": "^16.11.0",
+    "graphql-tag": "^2.12.6",
     "http-proxy": "^1.18.1",
-    "https-proxy-agent": "^7.0.4",
-    "js-base64": "^3.6.1",
+    "https-proxy-agent": "^7.0.6",
+    "js-base64": "^3.7.8",
     "lodash": "^4.17.21",
-    "ramda": "^0.31.0",
+    "ramda": "^0.31.3",
     "randexp": "^0.5.3"
   },
   "devDependencies": {
