@@ -4,7 +4,7 @@ const chaiAsPromised = require('chai-as-promised');
 const expect = chai.expect;
 const {
   PactV3,
-  MatchersV3,
+  Matchers,
   XmlBuilder,
   SpecificationVersion,
 } = require('@pact-foundation/pact');
@@ -24,7 +24,7 @@ describe('Pact V3', () => {
     regex,
     like,
     eachKeyLike,
-  } = MatchersV3;
+  } = Matchers;
 
   // Animal we want to match :)
   const suitor = {

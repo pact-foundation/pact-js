@@ -40,52 +40,85 @@ From a Pact testing point of view, Pact takes the place of the intermediary (MQ/
 The following test creates a contract for a Dog API handler:
 
 ```js
-const path = require("path")
-const {
-  MessageConsumerPact,
-  synchronousBodyHandler,
-} = require("@pact-foundation/pact")
+import {
+  Matchers,
+  v4SynchronousBodyHandler,
+  LogLevel,
+  Pact,
+} from '@pact-foundation/pact';
+const { like, regex } = Matchers;
+const path = require('path');
+const LOG_LEVEL = process.env.LOG_LEVEL || 'INFO';
 
 // 1 Dog API Handler
-const dogApiHandler = function (dog) {
-  if (!dog.id && !dog.name && !dog.type) {
-    throw new Error("missing fields")
+export type Dog = {
+  id: string;
+  type: string;
+  name: string;
+};
+
+// This is your message handler function.
+// It expects to receive a valid "dog" object
+// and returns a failed promise if not
+export function dogApiHandler(dog: Dog): void {
+  if (!dog.id || !dog.name || !dog.type) {
+    throw new Error('missing fields');
   }
 
   // do some other things to dog...
   // e.g. dogRepository.save(dog)
-  return
+  return;
 }
 
-// 2 Pact Message Consumer
-const messagePact = new MessageConsumerPact({
-  consumer: "MyJSMessageConsumer",
-  dir: path.resolve(process.cwd(), "pacts"),
-  pactfileWriteMode: "update",
-  provider: "MyJSMessageProvider",
-})
+describe('Message consumer tests', () => {
+  // 2 Pact Message Consumer
+  const messagePact = new Pact({
+    consumer: 'MyJSMessageConsumerV4',
+    provider: 'MyJSMessageProviderV4',
+    logLevel: LOG_LEVEL as LogLevel,
+  });
 
-describe("receive dog event", () => {
-  it("accepts a valid dog", () => {
-    // 3 Consumer expectations
-    return (
-      messagePact
-        .given("some state")
-        .expectsToReceive("a request for a dog")
-        .withContent({
-          id: like(1),
-          name: like("rover"),
-          type: term({ generate: "bulldog", matcher: "^(bulldog|sheepdog)$" }),
+  describe('receive dog event', () => {
+    it('accepts a valid dog', () => {
+      // 3 Consumer expectations
+      return messagePact
+        .addAsynchronousInteraction()
+        .given('a dog named drover')
+        .expectsToReceive('a request for a dog', (builder: any) => {
+          builder
+            .withJSONContent({
+              id: like(1),
+              name: like('drover'),
+              type: regex('^(bulldog|sheepdog)$','bulldog'),
+            })
+            .withMetadata({
+              queue: 'animals',
+            });
         })
-        .withMetadata({
-          "content-type": "application/json",
-        })
-
         // 4 Verify consumers' ability to handle messages
-        .verify(synchronousBodyHandler(dogApiHandler))
-    )
-  })
-})
+        .executeTest(v4SynchronousBodyHandler(dogApiHandler));
+    });
+  });
+
+  // This is an example of a pact breaking
+  // unskip to see how it works!
+  it.skip('Does not accept an invalid dog', () => {
+    return messagePact
+      .addAsynchronousInteraction()
+      .given('some state')
+      .expectsToReceive('a request for a dog', (builder: any) => {
+        builder
+          .withJSONContent({
+            name: like('fido'),
+          })
+          .withMetadata({
+            queue: 'animals',
+          });
+      })
+      .executeTest(v4SynchronousBodyHandler(dogApiHandler));
+  });
+});
+
 ```
 
 **Explanation**:

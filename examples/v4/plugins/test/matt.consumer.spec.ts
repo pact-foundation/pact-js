@@ -1,7 +1,7 @@
 /* tslint:disable:no-unused-expression no-empty */
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import { SpecificationVersion, PactV4, LogLevel } from '@pact-foundation/pact';
+import { SpecificationVersion, Pact, LogLevel } from '@pact-foundation/pact';
 import net = require('net');
 import { generateMattMessage, parseMattMessage } from '../protocol';
 import axios from 'axios';
@@ -13,20 +13,20 @@ const { expect } = chai;
 describe('Plugins - Matt Protocol', () => {
   const HOST = '127.0.0.1';
 
-  describe('HTTP interface', () => {
-    const pact = new PactV4({
+  describe('HTTP transport', () => {
+    const pact = new Pact({
       consumer: 'myconsumer',
       provider: 'myprovider',
       spec: SpecificationVersion.SPECIFICATION_VERSION_V4,
       logLevel: (process.env.LOG_LEVEL as LogLevel) || 'error',
     });
-    it('returns a valid MATT message over HTTP', async () => {
+    it('returns a valid MATT message', async () => {
       const mattRequest = `{"request": {"body": "hello"}}`;
       const mattResponse = `{"response":{"body":"world"}}`;
 
       await pact
         .addInteraction()
-        .given('the Matt protocol exists')
+        .given('the Matt protocol is up')
         .uponReceiving('an HTTP request to /matt')
         .usingPlugin({
           plugin: 'matt',
@@ -57,29 +57,64 @@ describe('Plugins - Matt Protocol', () => {
     });
   });
 
-  describe('TCP interface', () => {
-    const pact = new PactV4({
+  describe('TCP (plugin) transport', () => {
+    const pact = new Pact({
       consumer: 'myconsumer',
       provider: 'myprovider',
       spec: SpecificationVersion.SPECIFICATION_VERSION_V4,
       logLevel: (process.env.LOG_LEVEL as LogLevel) || 'error',
     });
 
-    describe('with MATT protocol', async () => {
-      it('generates a pact with success', () => {
-        const mattMessage = `{"request": {"body": "hellotcp"}, "response":{"body":"tcpworld"}}`;
+    it('returns a valid MATT message', () => {
+      const mattMessage = `{"request": {"body": "hellotcp"}, "response":{"body":"tcpworld"}}`;
+
+      return pact
+        .addSynchronousInteraction('a MATT message')
+        .usingPlugin({
+          plugin: 'matt',
+          version: '0.1.1',
+        })
+        .withPluginContents(mattMessage, 'application/matt')
+        .startTransport('matt', HOST)
+        .executeTest(async (tc) => {
+          const message = await sendMattMessageTCP('hellotcp', HOST, tc.port);
+          expect(message).to.eq('tcpworld');
+        });
+    });
+  });
+
+  describe('No transport', () => {
+    const pact = new Pact({
+      consumer: 'myconsumer',
+      provider: 'myprovider',
+      spec: SpecificationVersion.SPECIFICATION_VERSION_V4,
+      logLevel: (process.env.LOG_LEVEL as LogLevel) || 'error',
+    });
+
+    describe('with plugin contents (application/matt)', async () => {
+      it('receives a valid asynchronous MATT message', () => {
+        const mattMessage = `{"response":{"body":"tcpworld"}}`;
+        // const mattMessage = `{"request": {"body": "hellotcp"}, "response":{"body":"tcpworld"}}`;
 
         return pact
-          .addSynchronousInteraction('a MATT message')
+          .addAsynchronousInteraction()
+          .given('the Matt protocol is up')
           .usingPlugin({
             plugin: 'matt',
             version: '0.1.1',
           })
+          .expectsToReceive('an asynchronous MATT message')
           .withPluginContents(mattMessage, 'application/matt')
-          .startTransport('matt', HOST)
-          .executeTest(async (tc) => {
-            const message = await sendMattMessageTCP('hellotcp', HOST, tc.port);
-            expect(message).to.eq('tcpworld');
+          .executeTest(async (message) => {
+            // simulate sending and received a MATT message
+
+            const response = parseMattMessage(
+              Buffer.from(
+                String(message?.contents?.content || ''),
+                'base64'
+              ).toString()
+            );
+            expect(response).to.deep.eq('tcpworld');
           });
       });
     });

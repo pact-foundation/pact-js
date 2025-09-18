@@ -96,7 +96,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [18, 20, 22]
+        node-version: [20, 22, 24]
         os:
           - macos-13
           - macos-latest
@@ -146,7 +146,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        node-version: [18, 20, 22]
+        node-version: [20, 22, 24]
 
     steps:
       - name: Checkout
@@ -170,7 +170,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [18, 20, 22]
+        node-version: [20, 22, 24]
         os:
           - ubuntu-24.04-arm
           - macos-latest
@@ -250,20 +250,25 @@ jobs:
       fail-fast: false
       matrix:
         d:
-          - e2e
-          - graphql
-          - jest
-          - messages
-          - mocha
-          - serverless
-          - typescript
+          - v2/e2e
+          - v2/graphql
+          - v2/jest
+          - v2/messages
+          - v2/mocha
+          - v2/serverless
+          - v2/typescript
           - v3/e2e
+          - v3/graphql
           - v3/provider-state-injected
           - v3/run-specific-verifications
           - v3/todo-consumer
           - v3/typescript
+          - v4/graphql
           - v4/matchers
           - v4/plugins
+          - v4/messages
+          - v4/multipart
+          - v4/typescript
 
     steps:
       - name: Checkout
