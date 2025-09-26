@@ -115,7 +115,8 @@
     "js-base64": "^3.7.8",
     "lodash": "^4.17.21",
     "ramda": "^0.31.3",
-    "randexp": "^0.5.3"
+    "randexp": "^0.5.3",
+    "router": "^2.2.0"
   },
   "devDependencies": {
     "@babel/cli": "7.28.3",
