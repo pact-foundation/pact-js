@@ -157,6 +157,6 @@
     "sinon-chai": "4.0.1",
     "source-map-support": "0.5.21",
     "tsx": "4.20.6",
-    "typescript": "5.9.2"
+    "typescript": "5.9.3"
   }
 }
