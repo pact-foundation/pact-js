@@ -30,9 +30,10 @@ RELEASE_NOTES="${RELEASE_NOTES//$'\r'/'%0D'}"
 echo "::set-output name=notes::$RELEASE_NOTES"
 
 npm ci
-"$SCRIPT_DIR"/build-and-test.sh
 
+# run release first prior to test, so dist folder has the right version
 npm run release
+"$SCRIPT_DIR"/build-and-test.sh
 
 # Emit version to next step
 VERSION="$("$SCRIPT_DIR/lib/get-version.sh")"
