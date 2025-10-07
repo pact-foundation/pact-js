@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [16.0.0](https://github.com/pact-foundation/pact-js/compare/v15.0.1...v16.0.0) (2025-10-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* Rename Matchers to MatchersV2 to to avoid type overlap. remove AnyTemplate from V3 types
+* **deps:** min node >=20
+* export PactV4 / MatchersV3 as Pact / Matchers. Pact / Matchers renamaed to PactV2 / MatchersV2
+* **deps:** min node >=20, update express wildcard 5.x splat
+
+### Features
+
+* add GraphQL support to PactV4 ([4fe838c](https://github.com/pact-foundation/pact-js/commit/4fe838cd0a6ef9934d01cc4f2ad8958e1bb00fca))
+* export PactV4 / MatchersV3 as Pact / Matchers. Pact / Matchers renamaed to PactV2 / MatchersV2 ([f1ce98e](https://github.com/pact-foundation/pact-js/commit/f1ce98e68486f85d42d14cbd000b5b1730c251f0))
+* initial scaffolding for async messages ([041fa19](https://github.com/pact-foundation/pact-js/commit/041fa19e3b19f8767f2e5ec59b4b421af1885576))
+* support GraphQL for PactV3 ([6d077f4](https://github.com/pact-foundation/pact-js/commit/6d077f4b5c11489fd940f7181317229c3527d18c)), closes [#1093](https://github.com/pact-foundation/pact-js/issues/1093)
+
+
+### Fixes and Improvements
+
+* **deps:** explictly add router package, removed in express 5.x ([f99e01b](https://github.com/pact-foundation/pact-js/commit/f99e01be965f1a10508e2b453c122517154891ad))
+* **deps:** min node >=20 ([228d197](https://github.com/pact-foundation/pact-js/commit/228d197d7c4d8c943853db145eedcc84eca2b225))
+* **deps:** min node >=20, update express wildcard 5.x splat ([ef6d3d2](https://github.com/pact-foundation/pact-js/commit/ef6d3d24a92aa63782b3bb829cf3648508ab3759))
+* **deps:** update dependency axios to v1.12.0 [security] ([#1561](https://github.com/pact-foundation/pact-js/issues/1561)) ([75fad7c](https://github.com/pact-foundation/pact-js/commit/75fad7c2b1bdb7ad38da11341cf0546999d0b912))
+* **deps:** update dependency body-parser to v2 ([#1433](https://github.com/pact-foundation/pact-js/issues/1433)) ([357095a](https://github.com/pact-foundation/pact-js/commit/357095a06dab9ef3e7391bc5a4e811e649f6a577))
+* **deps:** update dependency ramda to ^0.31.0 ([#1507](https://github.com/pact-foundation/pact-js/issues/1507)) ([61c33c0](https://github.com/pact-foundation/pact-js/commit/61c33c0bd572e4413394393c2b25300c174b2a57))
+* examples/e2e/package.json & examples/e2e/package-lock.json to reduce vulnerabilities ([#1472](https://github.com/pact-foundation/pact-js/issues/1472)) ([1732a0f](https://github.com/pact-foundation/pact-js/commit/1732a0f41a570e9d1eeacff1192eb7341cb8b3b7))
+* mock backend to return the example value provided in date and time v3 matchers ([#1405](https://github.com/pact-foundation/pact-js/issues/1405)) ([5f47e5d](https://github.com/pact-foundation/pact-js/commit/5f47e5da3e6de5b1121896e909bdede6d24afb58))
+* Rename Matchers to MatchersV2 to to avoid type overlap. remove AnyTemplate from V3 types ([c2fe8f5](https://github.com/pact-foundation/pact-js/commit/c2fe8f5c7175db133f1ed19c71b43a35846f5a30))
+
 ## [15.0.1](https://github.com/pact-foundation/pact-js/compare/v15.0.0...v15.0.1) (2025-03-24)
 
 
