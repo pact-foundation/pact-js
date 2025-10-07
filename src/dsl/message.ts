@@ -1,5 +1,5 @@
 import { AnyJson } from '../common/jsonTypes';
-import { Matcher as MatcherV2 } from './matchers';
+import { MatcherV2 } from './matchers';
 import { Matcher } from '../v3/matchers';
 
 /**

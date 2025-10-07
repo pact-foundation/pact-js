@@ -1,32 +1,10 @@
-import { AnyJson, JsonMap } from '../common/jsonTypes';
+import { JsonMap } from '../common/jsonTypes';
 
 export enum SpecificationVersion {
   SPECIFICATION_VERSION_V2 = 3,
   SPECIFICATION_VERSION_V3 = 4,
   SPECIFICATION_VERSION_V4 = 5,
 }
-
-interface TemplateMap {
-  [key: string]: AnyJson | AnyTemplate;
-}
-type TemplateArray = Array<AnyTemplate>;
-
-/**
- * The `AnyTemplate` type is no longer used anywhere in Pact.
- *
- * @deprecated This type never really worked, so it has been removed from the Pact API surface. It is still exported to avoid breaking changes with anyone who is importing it. See {@link https://github.com/pact-foundation/pact-js/issues/1054} for details
- */
-export type AnyTemplate =
-  | AnyJson
-  | TemplateMap
-  | TemplateArray
-  | Matcher<unknown>;
-
-// TODO: In the next major release, these types should be renamed so they
-// don't clash with the V2 ones. Typescript merges interfaces with the same
-// name, so the calculated type for any Matcher that exists in both V2 and
-// V3 will be wrong. This isn't a major problem as is only likely to affect
-// maintainers, and contributors but it definitely should be corrected.
 
 /**
  * Pact Matcher

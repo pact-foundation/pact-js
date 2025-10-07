@@ -7,7 +7,7 @@ import {
   Headers,
   Query,
 } from '../dsl/interaction';
-import { Matcher, matcherValueOrString } from '../dsl/matchers';
+import { MatcherV2, matcherValueOrString } from '../dsl/matchers';
 import logger from '../common/logger';
 
 enum InteractionPart {
@@ -22,7 +22,7 @@ export const contentTypeFromHeaders = (
   headers: Headers | undefined,
   defaultContentType: string
 ): string => {
-  let contentType: string | Matcher<string> = defaultContentType;
+  let contentType: string | MatcherV2<string> = defaultContentType;
   forEachObjIndexed((v, k) => {
     if (`${k}`.toLowerCase() === CONTENT_TYPE_HEADER) {
       contentType = matcherValueOrString(v);
@@ -81,7 +81,7 @@ export const setBody = (
   }
 };
 
-type TemplateHeaderArrayValue = (string | Matcher<string>)[];
+type TemplateHeaderArrayValue = (string | MatcherV2<string>)[];
 
 export const setHeaders = (
   part: InteractionPart,
