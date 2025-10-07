@@ -6,21 +6,21 @@
 import { isNil, keys } from 'lodash';
 import { reject } from 'ramda';
 import { HTTPMethods, HTTPMethod } from '../common/request';
-import { Matcher, isMatcher, AnyTemplate } from './matchers';
+import { MatcherV2, isMatcher, AnyTemplate } from './matchers';
 import ConfigurationError from '../errors/configurationError';
 
 interface QueryObject {
-  [name: string]: string | Matcher<string> | string[];
+  [name: string]: string | MatcherV2<string> | string[];
 }
 export type Query = string | QueryObject;
 
 export type Headers = {
-  [header: string]: string | Matcher<string> | (Matcher<string> | string)[];
+  [header: string]: string | MatcherV2<string> | (MatcherV2<string> | string)[];
 };
 
 export interface RequestOptions {
   method: HTTPMethods | HTTPMethod;
-  path: string | Matcher<string>;
+  path: string | MatcherV2<string>;
   query?: Query;
   headers?: Headers;
   body?: AnyTemplate;

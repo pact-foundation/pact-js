@@ -28,25 +28,25 @@ export const IPV6_FORMAT =
   '^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$';
 export const HEX_FORMAT = '^[0-9a-fA-F]+$';
 
-export interface Matcher<T> {
+export interface MatcherV2<T> {
   value?: T;
   'pact:matcher:type': string;
   getValue(): T;
 }
 
-export interface ArrayMatcher<T> extends Matcher<T> {
+export interface ArrayMatcher<T> extends MatcherV2<T> {
   'pact:matcher:type': string;
   min?: number;
   max?: number;
 }
 
-export function isMatcher(x: unknown): x is Matcher<AnyTemplate> {
-  return x != null && (x as Matcher<AnyTemplate>).getValue !== undefined;
+export function isMatcher(x: unknown): x is MatcherV2<AnyTemplate> {
+  return x != null && (x as MatcherV2<AnyTemplate>).getValue !== undefined;
 }
 
 export type AnyTemplate =
   | AnyJson
-  | Matcher<AnyTemplate>
+  | MatcherV2<AnyTemplate>
   | ArrayMatcher<AnyTemplate>
   | TemplateMap
   | ArrayTemplate;
@@ -105,7 +105,7 @@ export function eachLike<T>(
  * The somethingLike matcher
  * @param {any} value - the value to be somethingLike
  */
-export function somethingLike<T>(value: T): Matcher<T> {
+export function somethingLike<T>(value: T): MatcherV2<T> {
   if (isNil(value) || isFunction(value)) {
     throw new MatcherError(
       'Error creating a Pact somethingLike Match. Value cannot be a function or undefined'
@@ -119,7 +119,7 @@ export function somethingLike<T>(value: T): Matcher<T> {
   };
 }
 
-export interface RegexMatcher<T> extends Matcher<T> {
+export interface RegexMatcher<T> extends MatcherV2<T> {
   regex: string;
 }
 
@@ -158,7 +158,7 @@ export function term(opts: {
  * Email address matcher.
  * @param {string} address - a email address to use as an example
  */
-export function email(address?: string): Matcher<string> {
+export function email(address?: string): MatcherV2<string> {
   return term({
     generate: address || 'hello@pact.io',
     matcher: EMAIL_FORMAT,
@@ -169,7 +169,7 @@ export function email(address?: string): Matcher<string> {
  * UUID v4 matcher.
  * @param {string} id - a UUID to use as an example.
  */
-export function uuid(id?: string): Matcher<string> {
+export function uuid(id?: string): MatcherV2<string> {
   return term({
     generate: id || 'ce118b6e-d8e1-11e7-9296-cec278b6b50a',
     matcher: UUID_V4_FORMAT,
@@ -180,7 +180,7 @@ export function uuid(id?: string): Matcher<string> {
  * IPv4 matcher.
  * @param {string} ip - an IPv4 address to use as an example. Defaults to `127.0.0.13`
  */
-export function ipv4Address(ip?: string): Matcher<string> {
+export function ipv4Address(ip?: string): MatcherV2<string> {
   return term({
     generate: ip || '127.0.0.13',
     matcher: IPV4_FORMAT,
@@ -191,7 +191,7 @@ export function ipv4Address(ip?: string): Matcher<string> {
  * IPv6 matcher.
  * @param {string} ip - an IPv6 address to use as an example. Defaults to '::ffff:192.0.2.128'
  */
-export function ipv6Address(ip?: string): Matcher<string> {
+export function ipv6Address(ip?: string): MatcherV2<string> {
   return term({
     generate: ip || '::ffff:192.0.2.128',
     matcher: IPV6_FORMAT,
@@ -203,7 +203,7 @@ export function ipv6Address(ip?: string): Matcher<string> {
  * @param {string} date - an ISO8601 Date and Time string
  *                        e.g. 2015-08-06T16:53:10+01:00 are valid
  */
-export function iso8601DateTime(date?: string): Matcher<string> {
+export function iso8601DateTime(date?: string): MatcherV2<string> {
   return term({
     generate: date || '2015-08-06T16:53:10+01:00',
     matcher: ISO8601_DATETIME_FORMAT,
@@ -214,7 +214,7 @@ export function iso8601DateTime(date?: string): Matcher<string> {
  * ISO8601 DateTime matcher with required millisecond precision
  * @param {string} date - an ISO8601 Date and Time string, e.g. 2015-08-06T16:53:10.123+01:00
  */
-export function iso8601DateTimeWithMillis(date?: string): Matcher<string> {
+export function iso8601DateTimeWithMillis(date?: string): MatcherV2<string> {
   return term({
     generate: date || '2015-08-06T16:53:10.123+01:00',
     matcher: ISO8601_DATETIME_WITH_MILLIS_FORMAT,
@@ -225,7 +225,7 @@ export function iso8601DateTimeWithMillis(date?: string): Matcher<string> {
  * ISO8601 Date matcher.
  * @param {string} date - a basic yyyy-MM-dd date string e.g. 2000-09-31
  */
-export function iso8601Date(date?: string): Matcher<string> {
+export function iso8601Date(date?: string): MatcherV2<string> {
   return term({
     generate: date || '2013-02-01',
     matcher: ISO8601_DATE_FORMAT,
@@ -233,10 +233,10 @@ export function iso8601Date(date?: string): Matcher<string> {
 }
 
 /**
- *  ISO8601 Time Matcher, matches a pattern of the format "'T'HH:mm:ss".
+ *  ISO8601 Time MatcherV2, matches a pattern of the format "'T'HH:mm:ss".
  * @param {string} date - a ISO8601 formatted time string e.g. T22:44:30.652Z
  */
-export function iso8601Time(time?: string): Matcher<string> {
+export function iso8601Time(time?: string): MatcherV2<string> {
   return term({
     generate: time || 'T22:44:30.652Z',
     matcher: ISO8601_TIME_FORMAT,
@@ -248,7 +248,7 @@ export function iso8601Time(time?: string): Matcher<string> {
  *
  * @param {string} date - an RFC1123 Date and Time string, e.g. Mon, 31 Oct 2016 15:21:41 -0400
  */
-export function rfc1123Timestamp(timestamp?: string): Matcher<string> {
+export function rfc1123Timestamp(timestamp?: string): MatcherV2<string> {
   return term({
     generate: timestamp || 'Mon, 31 Oct 2016 15:21:41 -0400',
     matcher: RFC1123_TIMESTAMP_FORMAT,
@@ -256,10 +256,10 @@ export function rfc1123Timestamp(timestamp?: string): Matcher<string> {
 }
 
 /**
- * Hexadecimal Matcher.
+ * Hexadecimal MatcherV2.
  * @param {string} hex - a hex value.
  */
-export function hexadecimal(hex?: string): Matcher<string> {
+export function hexadecimal(hex?: string): MatcherV2<string> {
   return term({
     generate: hex || '3F',
     matcher: HEX_FORMAT,
@@ -267,32 +267,32 @@ export function hexadecimal(hex?: string): Matcher<string> {
 }
 
 /**
- * Decimal Matcher.
+ * Decimal MatcherV2.
  * @param {float} float - a decimal value.
  */
-export function decimal(float?: number): Matcher<number> {
+export function decimal(float?: number): MatcherV2<number> {
   return somethingLike<number>(isNil(float) ? 13.01 : float);
 }
 
 /**
- * Integer Matcher.
+ * Integer MatcherV2.
  * @param {integer} int - an int value.
  */
-export function integer(int?: number): Matcher<number> {
+export function integer(int?: number): MatcherV2<number> {
   return somethingLike<number>(isNil(int) ? 13 : int);
 }
 
 /**
- * Boolean Matcher.
+ * Boolean MatcherV2.
  */
-export function boolean(value = true): Matcher<boolean> {
+export function boolean(value = true): MatcherV2<boolean> {
   return somethingLike<boolean>(value);
 }
 
 /**
- * String Matcher.
+ * String MatcherV2.
  */
-export function string(value = 'iloveorange'): Matcher<string> {
+export function string(value = 'iloveorange'): MatcherV2<string> {
   return somethingLike<string>(value);
 }
 
