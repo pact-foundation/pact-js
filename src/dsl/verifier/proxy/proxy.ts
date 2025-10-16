@@ -83,7 +83,13 @@ export const createProxy = (
   app.post(messageTransportPath, createProxyMessageHandler(config));
 
   // Proxy server will respond to Verifier process
-  app.all('/{splat}', (req, res) => {
+  app.all('/*splat'', (req, res) => {
+    logger.debug(`Proxying ${req.method}: ${req.path}`);
+
+    proxy.web(req, res, toServerOptions(config, req));
+  });
+
+  app.all('/'', (req, res) => {
     logger.debug(`Proxying ${req.method}: ${req.path}`);
 
     proxy.web(req, res, toServerOptions(config, req));
