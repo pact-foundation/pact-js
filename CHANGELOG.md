@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [16.0.1](https://github.com/pact-foundation/pact-js/compare/v16.0.0...v16.0.1) (2025-10-16)
+
+
+### Fixes and Improvements
+
+* **deps:** update dependency ramda to ^0.32.0 ([#1578](https://github.com/pact-foundation/pact-js/issues/1578)) ([efb267f](https://github.com/pact-foundation/pact-js/commit/efb267fb41ae006b192ba602a224fd6565972e60))
+* Pact-JS Verifier Proxy Cannot Handle Root Path ([#1582](https://github.com/pact-foundation/pact-js/issues/1582)) ([983f5b3](https://github.com/pact-foundation/pact-js/commit/983f5b3db96454ea0c0be72f7f2cc5bef14d4669)), closes [#1581](https://github.com/pact-foundation/pact-js/issues/1581)
+* use /{*splat} for express proxy routes to match root and wildcard subpaths ([cf95657](https://github.com/pact-foundation/pact-js/commit/cf95657294aaab9bf8500f29d5419c22c9b7fe60))
+
 ## [16.0.0](https://github.com/pact-foundation/pact-js/compare/v15.0.1...v16.0.0) (2025-10-07)
 
 
