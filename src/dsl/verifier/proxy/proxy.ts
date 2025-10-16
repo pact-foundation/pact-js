@@ -89,6 +89,12 @@ export const createProxy = (
     proxy.web(req, res, toServerOptions(config, req));
   });
 
+  app.all('/', (req, res) => {
+    logger.debug(`Proxying ${req.method}: ${req.path}`);
+
+    proxy.web(req, res, toServerOptions(config, req));
+  });
+
   // TODO: node is now using ipv6 as a default. This should be customised
   return http
     .createServer(app)
