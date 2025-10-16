@@ -159,7 +159,7 @@ export const setupMessageProxyApplication = (
   });
 
   // Proxy server will respond to Verifier process
-  app.all('/{splat}', createProxyMessageHandler(config));
+  app.all('/{*splat}', createProxyMessageHandler(config));
 
   return app;
 };

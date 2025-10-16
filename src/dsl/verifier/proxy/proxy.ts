@@ -47,7 +47,7 @@ export const createProxy = (
     })
   );
   app.use(bodyParser.urlencoded({ extended: true }));
-  app.use('/*splat', bodyParser.raw({ type: '*/*' }));
+  app.use('/{*splat}', bodyParser.raw({ type: '*/*' }));
 
   // Hooks
   const hooksState: HooksState = {
@@ -83,13 +83,7 @@ export const createProxy = (
   app.post(messageTransportPath, createProxyMessageHandler(config));
 
   // Proxy server will respond to Verifier process
-  app.all('/*splat', (req, res) => {
-    logger.debug(`Proxying ${req.method}: ${req.path}`);
-
-    proxy.web(req, res, toServerOptions(config, req));
-  });
-
-  app.all('/', (req, res) => {
+  app.all('/{*splat}', (req, res) => {
     logger.debug(`Proxying ${req.method}: ${req.path}`);
 
     proxy.web(req, res, toServerOptions(config, req));
