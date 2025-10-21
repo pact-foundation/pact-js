@@ -3,6 +3,7 @@ import chaiAsPromised from 'chai-as-promised';
 
 import express from 'express';
 
+import sinon from 'sinon';
 import { createProxyStateHandler } from './stateHandler';
 import { ProxyOptions, StateHandlers } from '../types';
 
@@ -54,7 +55,8 @@ describe('#createProxyStateHandler', () => {
       },
     };
 
-    it('returns a 500', async () => {
+    it('returns a 200 and logs an error', async () => {
+      const spy = sinon.spy(console, 'log');
       const h = createProxyStateHandler({
         stateHandlers: badStateHandlers,
       } as ProxyOptions);
@@ -65,7 +67,11 @@ describe('#createProxyStateHandler', () => {
         mockResponse as express.Response
       );
 
-      expect(res).to.eql(500);
+      expect(res).to.eql(200);
+      expect(spy.callCount).to.eql(3);
+      expect(spy.getCall(0).args[0]).to.include(
+        "Error executing state handler for state 'thing exists' on 'setup'."
+      );
     });
   });
 });
