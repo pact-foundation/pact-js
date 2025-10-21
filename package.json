@@ -123,7 +123,7 @@
     "@babel/core": "7.28.4",
     "@babel/preset-env": "7.28.3",
     "@pact-foundation/pact-js-prettier-config": "1.0.0",
-    "@types/chai": "5.2.2",
+    "@types/chai": "5.2.3",
     "@types/chai-as-promised": "8.0.2",
     "@types/express": "4.17.23",
     "@types/http-proxy": "1.17.16",
