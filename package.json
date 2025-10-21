@@ -116,7 +116,8 @@
     "lodash": "^4.17.21",
     "ramda": "^0.32.0",
     "randexp": "^0.5.3",
-    "router": "^2.2.0"
+    "router": "^2.2.0",
+    "stack-utils": "^2.0.6"
   },
   "devDependencies": {
     "@babel/cli": "7.28.3",
@@ -134,6 +135,7 @@
     "@types/ramda": "0.31.1",
     "@types/sinon": "17.0.4",
     "@types/sinon-chai": "4.0.0",
+    "@types/stack-utils": "^2.0.3",
     "@typescript-eslint/eslint-plugin": "5.62.0",
     "@typescript-eslint/parser": "5.62.0",
     "chai": "6.2.0",
