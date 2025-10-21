@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [16.0.2](https://github.com/pact-foundation/pact-js/compare/v16.0.1...v16.0.2) (2025-10-21)
+
+
+### Fixes and Improvements
+
+* gracefully handle state handler errors ([#1585](https://github.com/pact-foundation/pact-js/issues/1585)) ([a323814](https://github.com/pact-foundation/pact-js/commit/a323814eaa0f5133b1d0eb68c41e601fe6141de3)), closes [#631](https://github.com/pact-foundation/pact-js/issues/631)
+
 ## [16.0.1](https://github.com/pact-foundation/pact-js/compare/v16.0.0...v16.0.1) (2025-10-16)
 
 
