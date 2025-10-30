@@ -115,7 +115,7 @@ In order to get better statistics as to who is using Pact, we have an anonymous 
 
 ### Consumer package
 
-The main consumer interface are the `PactV3` class and `MatchersV3` exports of the `@pact-foundation/pact` package.
+The main consumer interfaces are the `PactV3` class and `MatchersV3` exports of the `@pact-foundation/pact` package.
 
 #### Writing a Consumer test
 
