@@ -133,7 +133,7 @@
     "@types/nock": "11.1.0",
     "@types/node": "24.10.1",
     "@types/ramda": "0.31.1",
-    "@types/sinon": "20.0.0",
+    "@types/sinon": "21.0.0",
     "@types/sinon-chai": "4.0.0",
     "@types/stack-utils": "2.0.3",
     "@typescript-eslint/eslint-plugin": "5.62.0",
