@@ -45,9 +45,10 @@ export class RequestWithPluginBuilder
   multipartBody(
     contentType: string,
     file: string,
-    mimePartName: string
+    mimePartName: string,
+    boundary?: string
   ): V4RequestWithPluginBuilder {
-    super.multipartBody(contentType, file, mimePartName);
+    super.multipartBody(contentType, file, mimePartName, boundary);
 
     return this;
   }
