@@ -38,9 +38,15 @@ export class ResponseBuilder implements V4ResponseBuilder {
   multipartBody(
     contentType: string,
     file: string,
-    mimePartName: string
+    mimePartName: string,
+    boundary?: string
   ): V4ResponseBuilder {
-    this.interaction.withResponseMultipartBody(contentType, file, mimePartName);
+    this.interaction.withResponseMultipartBody(
+      contentType,
+      file,
+      mimePartName,
+      boundary
+    );
 
     return this;
   }

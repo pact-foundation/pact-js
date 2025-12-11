@@ -61,9 +61,15 @@ export class RequestBuilder implements V4RequestBuilder {
   multipartBody(
     contentType: string,
     file: string,
-    mimePartName: string
+    mimePartName: string,
+    boundary?: string
   ): V4RequestBuilder {
-    this.interaction.withRequestMultipartBody(contentType, file, mimePartName);
+    this.interaction.withRequestMultipartBody(
+      contentType,
+      file,
+      mimePartName,
+      boundary
+    );
 
     return this;
   }
