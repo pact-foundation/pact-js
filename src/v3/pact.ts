@@ -133,6 +133,17 @@ export class PactV3 {
     return this;
   }
 
+  /**
+   * Sets up the expected consumer request with multipart file upload data.
+   * This is useful for testing APIs that accept multipart/form-data uploads.
+   *
+   * @param req - The request configuration (method, path, headers, etc.)
+   * @param contentType - The content type of the multipart body (e.g., 'multipart/form-data')
+   * @param file - Path to the file containing the multipart body content
+   * @param mimePartName - The name of the mime part in the multipart body
+   * @param boundary - Optional boundary string for the multipart content. If not provided, will be passed as undefined.
+   * @returns The PactV3 instance for method chaining
+   */
   public withRequestMultipartFileUpload(
     req: V3Request,
     contentType: string,
@@ -174,6 +185,17 @@ export class PactV3 {
     return this;
   }
 
+  /**
+   * Sets up the expected provider response with multipart file upload data.
+   * This is useful for testing APIs that respond with multipart/form-data content.
+   *
+   * @param res - The response configuration (status, headers, etc.)
+   * @param contentType - The content type of the multipart body (e.g., 'multipart/form-data')
+   * @param file - Path to the file containing the multipart body content
+   * @param mimePartName - The name of the mime part in the multipart body
+   * @param boundary - Optional boundary string for the multipart content. If not provided, will be passed as undefined.
+   * @returns The PactV3 instance for method chaining
+   */
   public withResponseMultipartFileUpload(
     res: V3Response,
     contentType: string,
