@@ -54,7 +54,7 @@ describe('Pact Consumer Test', () => {
       // Execute the test against the mock server
       .executeTest(async (mockServer) => {
         // Send the actual request to the mock server with the form data
-        const response = await axios.post(`${mockServer.url}/test`, form, {
+        const response = await axios.post(`${mockServer.url}/test`, formData, {
           headers,
         });
 
