@@ -98,7 +98,6 @@ jobs:
       matrix:
         node-version: [20, 22, 24]
         os:
-          - macos-13
           - macos-latest
           - ubuntu-latest
           - windows-latest
