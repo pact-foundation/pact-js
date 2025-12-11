@@ -58,6 +58,16 @@ export class RequestBuilder implements V4RequestBuilder {
     return this;
   }
 
+  /**
+   * Sets the request body as multipart/form-data content.
+   * This is useful for testing APIs that accept file uploads or multipart form submissions.
+   *
+   * @param contentType - The content type of the multipart body (e.g., 'multipart/form-data')
+   * @param file - Path to the file containing the multipart body content
+   * @param mimePartName - The name of the mime part in the multipart body
+   * @param boundary - Optional boundary string for the multipart content. If not provided, will be passed as undefined.
+   * @returns The V4RequestBuilder instance for method chaining
+   */
   multipartBody(
     contentType: string,
     file: string,
