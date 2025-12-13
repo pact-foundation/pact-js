@@ -91,7 +91,8 @@ export interface V4RequestBuilder {
   multipartBody(
     contentType: string,
     filename: string,
-    mimePartName: string
+    mimePartName: string,
+    boundary?: string
   ): V4RequestBuilder;
   body(contentType: string, body: Buffer): V4RequestBuilder;
 }
@@ -103,7 +104,8 @@ export interface V4ResponseBuilder {
   multipartBody(
     contentType: string,
     filename: string,
-    mimePartName: string
+    mimePartName: string,
+    boundary?: string
   ): V4ResponseBuilder;
   body(contentType: string, body: Buffer): V4ResponseBuilder;
 }
@@ -153,7 +155,8 @@ export interface V4RequestWithPluginBuilder {
   multipartBody(
     contentType: string,
     filename: string,
-    mimePartName: string
+    mimePartName: string,
+    boundary?: string
   ): V4RequestWithPluginBuilder;
   body(contentType: string, body: Buffer): V4RequestWithPluginBuilder;
   pluginContents(
@@ -169,7 +172,8 @@ export interface V4ResponseWithPluginBuilder {
   multipartBody(
     contentType: string,
     filename: string,
-    mimePartName: string
+    mimePartName: string,
+    boundary?: string
   ): V4ResponseBuilder;
   body(contentType: string, body: Buffer): V4ResponseBuilder;
   pluginContents(contentType: string, contents: string): V4ResponseBuilder;

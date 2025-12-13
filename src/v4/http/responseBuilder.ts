@@ -35,12 +35,28 @@ export class ResponseBuilder implements V4ResponseBuilder {
     return this;
   }
 
+  /**
+   * Sets the response body as multipart/form-data content.
+   * This is useful for testing APIs that respond with multipart/form-data.
+   *
+   * @param contentType - The content type of the multipart body (e.g., 'multipart/form-data')
+   * @param file - Path to the file containing the multipart body content
+   * @param mimePartName - The name of the mime part in the multipart body
+   * @param boundary - Optional boundary string for the multipart content. If not provided, will be passed as undefined.
+   * @returns The V4ResponseBuilder instance for method chaining
+   */
   multipartBody(
     contentType: string,
     file: string,
-    mimePartName: string
+    mimePartName: string,
+    boundary?: string
   ): V4ResponseBuilder {
-    this.interaction.withResponseMultipartBody(contentType, file, mimePartName);
+    this.interaction.withResponseMultipartBody(
+      contentType,
+      file,
+      mimePartName,
+      boundary
+    );
 
     return this;
   }
