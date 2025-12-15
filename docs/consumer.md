@@ -31,7 +31,7 @@ const { Pact } = require("@pact-foundation/pact")
 
 ```javascript
 const { PactV2 } = require("@pact-foundation/pact")   // Supports up to and including Pact Specification version 2
-const { PactV3 } = require("@pact-foundation/pact") // Supportsu up to and including Pact Specification version 3
+const { PactV3 } = require("@pact-foundation/pact") // Supports up to and including Pact Specification version 3
 ```
 
 You should use the `Pact` interface unless you can't, and set the specification version via `spec` to the desired serialisation format.
@@ -44,7 +44,7 @@ The `Pact` class provides the following high-level APIs, they are listed in the 
 
 <details><summary>Consumer API</summary>
 
-The Pact SDK uses a fluent builder to create interactions. 
+The Pact SDK uses a fluent builder to create interactions.
 
 | API                              | Options                            | Description                                                                                                                                                            |
 | -------------------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
