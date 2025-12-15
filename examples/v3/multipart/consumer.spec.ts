@@ -1,3 +1,21 @@
+/**
+ * Pact Multipart Form Data Example
+ *
+ * This test suite demonstrates how to use Pact JS with multipart/form-data requests,
+ * a common requirement for file uploads and forms that include both text and binary data.
+ *
+ * Key concepts covered:
+ * 1. Text field submissions in multipart forms
+ * 2. Binary file uploads (images, text files)
+ * 3. Multiple file uploads in a single request
+ * 4. Custom boundary strings for multipart data
+ * 5. Using the withRequestMultipartFileUpload helper method
+ *
+ * Read over the Readme for understanding specific examples added here.
+ *
+ * see https://docs.pact.io for more information on Pact
+ */
+
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {
@@ -7,14 +25,17 @@ import {
 } from '@pact-foundation/pact';
 import FormData from 'form-data';
 import axios from 'axios';
+import fs from 'node:fs';
+import path from 'node:path';
 
 chai.use(chaiAsPromised);
 
 const { expect } = chai;
 
-describe('Pact Consumer Test', () => {
-  // Initialize a new Pact instance with consumer and provider names
-  // Using V3 specification to support multipart form data
+describe('Pact Consumer Test Using Multipart form data', () => {
+  /**
+   * Initialize a new Pact instance with consumer and provider names.
+   */
   const pact = new PactV3({
     consumer: 'myconsumer',
     provider: 'myprovider',
@@ -22,21 +43,26 @@ describe('Pact Consumer Test', () => {
     logLevel: 'trace',
   });
 
-  it('creates a pact to verify with a text field in form', async () => {
+  it('creates a pact to verify with a text field in a multipart form', async () => {
     // Create a multipart form data object with a 'name' field
     const formData = new FormData();
     formData.append('name', 'John Doe');
 
     // Extract the headers that include the Content-Type with the boundary parameter
     // This boundary is crucial for multipart form data parsing
-    const headers = formData.getHeaders();
+    // Example: 'content-type': 'multipart/form-data; boundary=--------------------------123456789'
+    const headers = {
+      Authorization: 'Bearer token123',
+      ...formData.getHeaders(),
+    };
 
     // Convert the form data to a string representation for the request body
+    // This is needed for setting up the Pact expectation
     const form = formData.getBuffer().toString();
 
     await pact
       .addInteraction({
-        uponReceiving: 'a request for a foo',
+        uponReceiving: 'a multipart upload request with a single text field',
         withRequest: {
           method: 'POST',
           path: '/test',
@@ -46,8 +72,10 @@ describe('Pact Consumer Test', () => {
         willRespondWith: {
           status: 201,
           body: {
-            // Use a matcher to flexibly match any string value for 'foo'
-            foo: MatchersV3.like('bar'),
+            // Use a matcher to flexibly match the response fields
+            id: MatchersV3.uuid('12345678-1234-1234-1234-123456789012'),
+            name: MatchersV3.like('John Doe'),
+            status: MatchersV3.like('submitted'),
           },
         },
       })
@@ -58,15 +86,65 @@ describe('Pact Consumer Test', () => {
           headers,
         });
 
-        // Verify the response contains the expected 'foo' field with value 'bar'
-        expect(response.data.foo).to.equal('bar');
+        // Verify the response contains the expected fields
+        expect(response.data.id).to.be.a('string');
+        expect(response.data.name).to.equal('John Doe');
+        expect(response.data.status).to.equal('submitted');
       });
   });
 
-  it('creates a pact to verify with multipart file upload', async () => {
+  it('creates a pact to verify multipart form with JPG image upload', async () => {
+    // This test demonstrates uploading a JPG image file using multipart form data
+    const imageFilePath = path.join(__dirname, 'beaver.jpg');
+
+    await pact
+      .given('a JPG image upload is expected')
+      .uponReceiving('a multipart image upload with JPG file')
+      .withRequestMultipartFileUpload(
+        {
+          method: 'POST',
+          path: '/upload-image',
+        },
+        'image/jpeg', // The content type of the JPG file being uploaded
+        imageFilePath, // Path to the JPG file
+        'photo' // The name of the form field for the file
+      )
+      .willRespondWith({
+        status: 201,
+        body: {
+          success: MatchersV3.boolean(true),
+          filename: MatchersV3.like('beaver.jpg'),
+          message: MatchersV3.like('Image uploaded successfully'),
+        },
+      })
+      .executeTest(async (mockServer) => {
+        // Create the form data with the JPG image
+        const imageContent = fs.readFileSync(imageFilePath);
+        const formData = new FormData();
+        formData.append('photo', imageContent, 'beaver.jpg');
+
+        // Send the request
+        const response = await axios.post(
+          `${mockServer.url}/upload-image`,
+          formData,
+          {
+            headers: {
+              Authorization: 'Bearer token123',
+              ...formData.getHeaders(),
+            },
+          }
+        );
+
+        // Verify the response
+        expect(response.status).to.eq(201);
+        expect(response.data.success).to.be.true;
+        expect(response.data.filename).to.be.a('string');
+        expect(response.data.message).to.be.a('string');
+      });
+  });
+
+  it('creates a pact to verify with multipart form file upload', async () => {
     // Create a temporary file to upload
-    const fs = require('fs');
-    const path = require('path');
     const tmpFile = path.join(__dirname, 'test-file.txt');
     fs.writeFileSync(tmpFile, 'This is test file content');
 
@@ -119,7 +197,6 @@ describe('Pact Consumer Test', () => {
 
   it('creates a pact using withRequestMultipartFileUpload helper method', async () => {
     // Use the pre-existing test file in the multipart directory
-    const path = require('path');
     const testFile = path.join(__dirname, 'test-upload-file.txt');
 
     await pact
@@ -169,7 +246,6 @@ describe('Pact Consumer Test', () => {
 
   it('creates a pact using withRequestMultipartFileUpload with custom boundary', async () => {
     // Use the pre-existing test file in the multipart directory
-    const path = require('path');
     const testFile = path.join(__dirname, 'test-upload-file.txt');
     const customBoundary = 'MyCustomBoundary123456789';
 
@@ -195,8 +271,6 @@ describe('Pact Consumer Test', () => {
       })
       .executeTest(async (mockServer) => {
         // Create form data with the file using the same custom boundary
-        const fs = require('fs');
-        const FormData = require('form-data');
         const formData = new FormData();
         const fileContent = fs.readFileSync(testFile);
         formData.append('file', fileContent, 'test-upload-file.txt');
@@ -226,6 +300,66 @@ describe('Pact Consumer Test', () => {
         // Verify the response
         expect(response.data.uploaded).to.equal(true);
         expect(response.data.boundary).to.equal(customBoundary);
+      });
+  });
+
+  it('creates a pact to verify with a multipart form with multiple fields', async () => {
+    // Files to be added to the multipart form
+    const imageFilePath = path.join(__dirname, 'beaver.jpg');
+    const testFile = path.join(__dirname, 'test-upload-file.txt');
+
+    await pact
+      .given('a JPG image upload is expected')
+      .uponReceiving('a multipart image upload with JPG file')
+      .withRequestMultipartFileUpload(
+        {
+          method: 'POST',
+          path: '/upload',
+        },
+        'image/jpeg', // The content type of the JPG file being uploaded
+        imageFilePath, // Path to the JPG file
+        'photo' // The name of the form field for the file
+      )
+      .withRequestMultipartFileUpload(
+        {
+          method: 'POST',
+          path: '/upload',
+        },
+        'text/plain', // The content type of the file being uploaded
+        testFile, // Path to the txt file
+        'file' // The name of the form field for the file
+      )
+      .willRespondWith({
+        status: 201,
+        body: {
+          success: MatchersV3.boolean(true),
+          message: MatchersV3.like('Files uploaded successfully'),
+        },
+      })
+      .executeTest(async (mockServer) => {
+        // Create the form data with the JPG image
+        const imageContent = fs.readFileSync(imageFilePath);
+        const fileContent = fs.readFileSync(testFile);
+        const formData = new FormData();
+        formData.append('file', fileContent, 'test-upload-file.txt');
+        formData.append('photo', imageContent, 'beaver.jpg');
+
+        // Send the request
+        const response = await axios.post(
+          `${mockServer.url}/upload`,
+          formData,
+          {
+            headers: {
+              Authorization: 'Bearer token123',
+              ...formData.getHeaders(),
+            },
+          }
+        );
+
+        // Verify the response
+        expect(response.status).to.eq(201);
+        expect(response.data.success).to.be.true;
+        expect(response.data.message).to.be.a('string');
       });
   });
 });
