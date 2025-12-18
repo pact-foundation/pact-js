@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [16.0.3](https://github.com/pact-foundation/pact-js/compare/v16.0.2...v16.0.3) (2025-12-18)
+
+
+### Fixes and Improvements
+
+* replace deprecated macos 13 build with macos-15-intel ([#1628](https://github.com/pact-foundation/pact-js/issues/1628)) ([4a96350](https://github.com/pact-foundation/pact-js/commit/4a96350227363a09953d40e203f629c3412cad15))
+
 ## [16.0.2](https://github.com/pact-foundation/pact-js/compare/v16.0.1...v16.0.2) (2025-10-21)
 
 
