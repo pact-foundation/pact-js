@@ -125,7 +125,7 @@ export class Verifier {
         providerStatesSetupUrl: `${this.address}:${port}${this.stateSetupPath}`,
         ...omit(this.config, 'handlers'),
         providerBaseUrl: `${this.address}:${port}`,
-        transports: this.config.transports?.concat([
+        transports: (this.config.transports || []).concat([
           {
             port,
             path: this.messageTransportPath,
