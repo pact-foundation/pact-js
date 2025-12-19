@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [16.0.4](https://github.com/pact-foundation/pact-js/compare/v16.0.3...v16.0.4) (2025-12-19)
+
+
+### Fixes and Improvements
+
+* ability to validate both message and HTTP ([#1634](https://github.com/pact-foundation/pact-js/issues/1634)) ([187684c](https://github.com/pact-foundation/pact-js/commit/187684cab11c06f1206f54479a022ed61c6a0692)), closes [#1633](https://github.com/pact-foundation/pact-js/issues/1633)
+
 ## [16.0.3](https://github.com/pact-foundation/pact-js/compare/v16.0.2...v16.0.3) (2025-12-18)
 
 
