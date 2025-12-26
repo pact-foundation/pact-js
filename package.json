@@ -138,7 +138,7 @@
     "@types/stack-utils": "2.0.3",
     "@typescript-eslint/eslint-plugin": "5.62.0",
     "@typescript-eslint/parser": "5.62.0",
-    "chai": "6.2.1",
+    "chai": "6.2.2",
     "chai-as-promised": "8.0.2",
     "commit-and-tag-version": "12.6.1",
     "copyfiles": "2.4.1",
