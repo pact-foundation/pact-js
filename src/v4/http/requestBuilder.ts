@@ -84,6 +84,24 @@ export class RequestBuilder implements V4RequestBuilder {
     return this;
   }
 
+  /**
+   * Applies matching rules to the consumer request.
+   * Matching rules allow you to define flexible matching criteria for request attributes
+   * beyond exact equality (e.g., regex patterns, type matching, number ranges).
+   *
+   * @param rules - The matching rules as a Map or JSON string. Rules should follow the Pact matching rules format.
+   * @returns The V4RequestBuilder instance for method chaining
+   */
+  matchingRules(rules: Map<string, unknown> | string): V4RequestBuilder {
+    let encodedRules = rules;
+    if (encodedRules instanceof Map) {
+      encodedRules = JSON.stringify(Object.fromEntries(encodedRules));
+    }
+
+    this.interaction.withRequestMatchingRules(encodedRules);
+    return this;
+  }
+
   body(contentType: string, body: Buffer): V4RequestBuilder {
     this.interaction.withRequestBinaryBody(body, contentType);
 

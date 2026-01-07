@@ -94,6 +94,7 @@ export interface V4RequestBuilder {
     mimePartName: string,
     boundary?: string
   ): V4RequestBuilder;
+  matchingRules(rules: Map<string, unknown> | string): V4RequestBuilder;
   body(contentType: string, body: Buffer): V4RequestBuilder;
 }
 
@@ -107,6 +108,7 @@ export interface V4ResponseBuilder {
     mimePartName: string,
     boundary?: string
   ): V4ResponseBuilder;
+  matchingRules(rules: Map<string, unknown> | string): V4ResponseBuilder;
   body(contentType: string, body: Buffer): V4ResponseBuilder;
 }
 
@@ -159,6 +161,9 @@ export interface V4RequestWithPluginBuilder {
     boundary?: string
   ): V4RequestWithPluginBuilder;
   body(contentType: string, body: Buffer): V4RequestWithPluginBuilder;
+  matchingRules(
+    rules: Map<string, unknown> | string
+  ): V4RequestWithPluginBuilder;
   pluginContents(
     contentType: string,
     contents: string
@@ -175,6 +180,7 @@ export interface V4ResponseWithPluginBuilder {
     mimePartName: string,
     boundary?: string
   ): V4ResponseBuilder;
+  matchingRules(rules: Map<string, unknown> | string): V4ResponseBuilder;
   body(contentType: string, body: Buffer): V4ResponseBuilder;
   pluginContents(contentType: string, contents: string): V4ResponseBuilder;
 }

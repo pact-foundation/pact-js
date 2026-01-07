@@ -61,6 +61,24 @@ export class ResponseBuilder implements V4ResponseBuilder {
     return this;
   }
 
+  /**
+   * Applies matching rules to the provider response.
+   * Matching rules allow you to define flexible matching criteria for response attributes
+   * beyond exact equality (e.g., regex patterns, type matching, number ranges).
+   *
+   * @param rules - The matching rules as a Map or JSON string. Rules should follow the Pact matching rules format.
+   * @returns The V4ResponseBuilder instance for method chaining
+   */
+  matchingRules(rules: Map<string, unknown> | string): V4ResponseBuilder {
+    let encodedRules = rules;
+    if (encodedRules instanceof Map) {
+      encodedRules = JSON.stringify(Object.fromEntries(encodedRules));
+    }
+
+    this.interaction.withRequestMatchingRules(encodedRules);
+    return this;
+  }
+
   body(contentType: string, body: Buffer): V4ResponseBuilder {
     this.interaction.withResponseBinaryBody(body, contentType);
 
