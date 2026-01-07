@@ -43,7 +43,6 @@ describe('Pact Multipart with Matching Rules', () => {
   const pact = new PactV3({
     consumer: 'multipart-consumer',
     provider: 'multipart-provider',
-    spec: SpecificationVersion.SPECIFICATION_VERSION_V3,
     logLevel: 'trace',
   });
 
@@ -102,10 +101,9 @@ describe('Pact Multipart with Matching Rules', () => {
     expectedBody += `\r\n`;
 
     // Convert string to buffer and append binary JPEG data
-    let bodyBuffer = Buffer.from(expectedBody);
-    bodyBuffer = Buffer.concat([bodyBuffer, JPEG_BYTES]);
-    bodyBuffer = Buffer.concat([
-      bodyBuffer,
+    let bodyBuffer = Buffer.concat([
+      Buffer.from(expectedBody),
+      JPEG_BYTES,
       Buffer.from(`\r\n--${boundary}--\r\n`),
     ]);
 

@@ -40,7 +40,6 @@ describe('Pact Consumer Test Using Matching Rules', () => {
   const pact = new PactV3({
     consumer: 'matchingrulesconsumer',
     provider: 'matchingrulesprovider',
-    spec: SpecificationVersion.SPECIFICATION_VERSION_V3,
     logLevel: 'trace',
   });
 

@@ -22,7 +22,7 @@
 
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import { PactV4, Matchers } from '@pact-foundation/pact';
+import { Pact, Matchers } from '@pact-foundation/pact';
 import axios from 'axios';
 
 chai.use(chaiAsPromised);
@@ -33,7 +33,7 @@ describe('Pact V4 Consumer Test Using Matching Rules', () => {
   /**
    * Initialize a new Pact V4 instance with consumer and provider names.
    */
-  const pact = new PactV4({
+  const pact = new Pact({
     consumer: 'v4matchingrulesconsumer',
     provider: 'v4matchingrulesprovider',
     logLevel: 'trace',
