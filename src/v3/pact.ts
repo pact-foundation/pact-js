@@ -134,6 +134,52 @@ export class PactV3 {
   }
 
   /**
+   * Applies matching rules to the consumer request.
+   * Matching rules allow you to define flexible matching criteria for request attributes
+   * beyond exact equality (e.g., regex patterns, type matching, number ranges).
+   *
+   * @param req - The request configuration (method, path, headers, etc.)
+   * @param rules - The matching rules as a Map or JSON string. Rules should follow the Pact matching rules format.
+   * @returns The PactV3 instance for method chaining
+   */
+  public withRequestMatchingRules(
+    req: V3Request,
+    rules: Map<string, unknown> | string
+  ): PactV3 {
+    let encodedRules = '';
+    if (rules instanceof Map) {
+      encodedRules = JSON.stringify(Object.fromEntries(rules));
+    }
+
+    this.interaction.withRequestMatchingRules(encodedRules);
+    setRequestDetails(this.interaction, req);
+    return this;
+  }
+
+  /**
+   * Applies matching rules to the provider response.
+   * Matching rules allow you to define flexible matching criteria for response attributes
+   * beyond exact equality (e.g., regex patterns, type matching, number ranges).
+   *
+   * @param req - The request configuration (method, path, headers, etc.)
+   * @param rules - The matching rules as a Map or JSON string. Rules should follow the Pact matching rules format.
+   * @returns The PactV3 instance for method chaining
+   */
+  public withResponseMatchingRules(
+    req: V3Request,
+    rules: Map<string, unknown> | string
+  ): PactV3 {
+    let encodedRules = rules;
+    if (encodedRules instanceof Map) {
+      encodedRules = JSON.stringify(Object.fromEntries(encodedRules));
+    }
+
+    this.interaction.withResponseMatchingRules(encodedRules);
+    setRequestDetails(this.interaction, req);
+    return this;
+  }
+
+  /**
    * Sets up the expected consumer request with multipart file upload data.
    * This is useful for testing APIs that accept multipart/form-data uploads.
    *
