@@ -41,7 +41,7 @@ describe('Pact V4 Consumer Test Using Matching Rules', () => {
 
   it('uses request matching rules with type matching for customer profile updates', async () => {
     // Define matching rules for the request
-    const requestMatchingRules = {
+    const requestMatchingRules = new Map<string, any>(Object.entries({
       body: {
         '$.customerId': {
           matchers: [{ match: 'type' }],
@@ -50,7 +50,7 @@ describe('Pact V4 Consumer Test Using Matching Rules', () => {
           matchers: [{ match: 'type' }],
         },
       },
-    };
+    }));
 
     await pact
       .addInteraction()
@@ -63,7 +63,7 @@ describe('Pact V4 Consumer Test Using Matching Rules', () => {
             customerId: 789456,
             email: 'sarah.johnson@techcorp.com',
           })
-          .matchingRules(JSON.stringify(requestMatchingRules));
+          .matchingRules(requestMatchingRules);
       })
       .willRespondWith(200, (builder) => {
         builder.jsonBody({
@@ -93,7 +93,7 @@ describe('Pact V4 Consumer Test Using Matching Rules', () => {
 
   it('uses request matching rules with regex pattern matching for CRM contacts', async () => {
     // Define matching rules with regex patterns
-    const requestMatchingRules = {
+    const requestMatchingRules = new Map<string, any>(Object.entries({
       body: {
         '$.email': {
           matchers: [
@@ -112,7 +112,7 @@ describe('Pact V4 Consumer Test Using Matching Rules', () => {
           ],
         },
       },
-    };
+    }));
 
     await pact
       .addInteraction()
@@ -127,7 +127,7 @@ describe('Pact V4 Consumer Test Using Matching Rules', () => {
             email: 'jessica.martinez@acmecorp.com',
             phone: '+14155552671',
           })
-          .matchingRules(JSON.stringify(requestMatchingRules));
+          .matchingRules(requestMatchingRules);
       })
       .willRespondWith(201, (builder) => {
         builder.jsonBody({
@@ -158,7 +158,7 @@ describe('Pact V4 Consumer Test Using Matching Rules', () => {
 
   it('uses response matching rules for flexible product catalog validation', async () => {
     // Define matching rules for the response
-    const responseMatchingRules = {
+    const responseMatchingRules = new Map<string, any>(Object.entries({
       body: {
         '$.timestamp': {
           matchers: [{ match: 'type' }],
@@ -173,7 +173,7 @@ describe('Pact V4 Consumer Test Using Matching Rules', () => {
           matchers: [{ match: 'type' }],
         },
       },
-    };
+    }));
 
     await pact
       .addInteraction()
@@ -196,7 +196,7 @@ describe('Pact V4 Consumer Test Using Matching Rules', () => {
               { sku: 'WATCH-AW10-GPS', name: 'Apple Watch Series 10' },
             ],
           })
-          .matchingRules(JSON.stringify(responseMatchingRules));
+          .matchingRules(responseMatchingRules);
       })
       .executeTest(async (mockServer) => {
         const response = await axios.get(
@@ -218,7 +218,7 @@ describe('Pact V4 Consumer Test Using Matching Rules', () => {
 
   it('uses response matching rules with number range validation for e-commerce', async () => {
     // Define matching rules with number ranges
-    const responseMatchingRules = {
+    const responseMatchingRules = new Map<string, any>(Object.entries({
       body: {
         '$.price': {
           matchers: [
@@ -239,7 +239,7 @@ describe('Pact V4 Consumer Test Using Matching Rules', () => {
           ],
         },
       },
-    };
+    }));
 
     await pact
       .addInteraction()
@@ -257,7 +257,7 @@ describe('Pact V4 Consumer Test Using Matching Rules', () => {
             stockLevel: 47,
             available: Matchers.boolean(true),
           })
-          .matchingRules(JSON.stringify(responseMatchingRules));
+          .matchingRules(responseMatchingRules);
       })
       .executeTest(async (mockServer) => {
         const response = await axios.get(
@@ -279,7 +279,7 @@ describe('Pact V4 Consumer Test Using Matching Rules', () => {
 
   it('uses both request and response matching rules for payment processing', async () => {
     // Define matching rules for both request and response
-    const requestMatchingRules = {
+    const requestMatchingRules = new Map<string, any>(Object.entries({
       body: {
         '$.orderId': {
           matchers: [
@@ -298,9 +298,9 @@ describe('Pact V4 Consumer Test Using Matching Rules', () => {
           ],
         },
       },
-    };
+    }));
 
-    const responseMatchingRules = {
+    const responseMatchingRules = new Map<string, any>(Object.entries({
       body: {
         '$.transactionId': {
           matchers: [{ match: 'type' }],
@@ -322,7 +322,7 @@ describe('Pact V4 Consumer Test Using Matching Rules', () => {
           ],
         },
       },
-    };
+    }));
 
     await pact
       .addInteraction()
@@ -340,7 +340,7 @@ describe('Pact V4 Consumer Test Using Matching Rules', () => {
             orderId: 'ORD-458923',
             amount: 1249.99,
           })
-          .matchingRules(JSON.stringify(requestMatchingRules));
+          .matchingRules(requestMatchingRules);
       })
       .willRespondWith(200, (builder) => {
         builder
@@ -350,7 +350,7 @@ describe('Pact V4 Consumer Test Using Matching Rules', () => {
             status: 'approved',
             message: Matchers.like('Payment authorized successfully'),
           })
-          .matchingRules(JSON.stringify(responseMatchingRules));
+          .matchingRules(responseMatchingRules);
       })
       .executeTest(async (mockServer) => {
         const response = await axios.post(

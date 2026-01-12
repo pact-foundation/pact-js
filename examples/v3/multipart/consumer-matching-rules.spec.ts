@@ -119,7 +119,7 @@ describe('Pact Multipart with Matching Rules', () => {
      * These rules allow flexibility in the actual data sent while
      * ensuring the contract structure is maintained.
      */
-    const requestMatchingRules = {
+    const requestMatchingRules = new Map<string, any>(Object.entries({
       body: {
         // Match content type of the image part to allow any valid JPEG
         '$.image': {
@@ -148,7 +148,7 @@ describe('Pact Multipart with Matching Rules', () => {
           matchers: [{ match: 'integer' }],
         },
       },
-    };
+    }));
 
     await pact
       .given('file upload service is available')
@@ -162,7 +162,7 @@ describe('Pact Multipart with Matching Rules', () => {
           },
           body: bodyBuffer.toString('binary'),
         },
-        JSON.stringify(requestMatchingRules)
+        requestMatchingRules
       )
       .willRespondWith({
         status: 201,
@@ -191,9 +191,6 @@ describe('Pact Multipart with Matching Rules', () => {
 
         // Create FormData with a fixed boundary to match the contract
         const formData = new FormData();
-
-        // Override the default boundary with our fixed one
-        formData.getBoundary = () => boundary;
 
         // Add JSON metadata with different values
         formData.append(
@@ -291,7 +288,7 @@ describe('Pact Multipart with Matching Rules', () => {
     /**
      * Define comprehensive matching rules for all parts
      */
-    const requestMatchingRules = {
+    const requestMatchingRules = new Map<string, any>(Object.entries({
       body: {
         // Metadata matching rules
         '$.metadata.userId': {
@@ -331,7 +328,7 @@ describe('Pact Multipart with Matching Rules', () => {
           ],
         },
       },
-    };
+    }));
 
     await pact
       .given('user profile upload service is available')
@@ -346,7 +343,7 @@ describe('Pact Multipart with Matching Rules', () => {
           },
           body: bodyBuffer.toString('binary'),
         },
-        JSON.stringify(requestMatchingRules)
+        requestMatchingRules
       )
       .willRespondWith({
         status: 201,
