@@ -223,7 +223,6 @@ describe('Pact Consumer Test Using Multipart form data', () => {
       })
       .executeTest(async (mockServer) => {
         // Create form data with the file
-        const fs = require('fs');
         const formData = new FormData();
         const fileContent = fs.readFileSync(testFile);
         formData.append('document', fileContent, 'test-upload-file.txt');

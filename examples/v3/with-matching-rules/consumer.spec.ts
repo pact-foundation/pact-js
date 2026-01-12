@@ -23,7 +23,6 @@
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {
-  SpecificationVersion,
   PactV3,
   MatchersV3,
 } from '@pact-foundation/pact';

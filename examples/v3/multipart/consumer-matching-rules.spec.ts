@@ -25,7 +25,6 @@
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {
-  SpecificationVersion,
   PactV3,
   MatchersV3,
 } from '@pact-foundation/pact';
@@ -101,7 +100,7 @@ describe('Pact Multipart with Matching Rules', () => {
     expectedBody += `\r\n`;
 
     // Convert string to buffer and append binary JPEG data
-    let bodyBuffer = Buffer.concat([
+    const bodyBuffer = Buffer.concat([
       Buffer.from(expectedBody),
       JPEG_BYTES,
       Buffer.from(`\r\n--${boundary}--\r\n`),
