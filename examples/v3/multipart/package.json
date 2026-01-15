@@ -7,7 +7,8 @@
     "clean": "rimraf pacts",
     "pretest": "npm run clean",
     "test:consumer": "jest consumer.spec.ts",
-    "test:matching-rules": "jest consumer-matching-rules.spec.ts"
+    "test:matching-rules": "jest consumer-matching-rules.spec.ts",
+    "test": "npm run test:consumer && npm run test:matching-rules"
   },
   "author": "kevin.rohanvaz@smartbear.com",
   "license": "MIT",

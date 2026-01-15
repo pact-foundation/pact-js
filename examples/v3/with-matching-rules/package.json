@@ -6,7 +6,8 @@
   "scripts": {
     "clean": "rimraf pacts",
     "pretest": "npm run clean",
-    "test:consumer": "jest consumer.spec.ts"
+    "test:consumer": "jest consumer.spec.ts",
+    "test": "npm run test:consumer"
   },
   "author": "kevin.rohanvaz@smartbear.com",
   "license": "MIT",

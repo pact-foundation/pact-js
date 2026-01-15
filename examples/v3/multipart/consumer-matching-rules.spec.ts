@@ -26,7 +26,12 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {
   PactV3,
-  MatchersV3,
+  like,
+  integer,
+  boolean,
+  uuid,
+  regex,
+  contentType,
 } from '@pact-foundation/pact';
 import FormData from 'form-data';
 import axios from 'axios';
@@ -121,31 +126,13 @@ describe('Pact Multipart with Matching Rules', () => {
     const requestMatchingRules = new Map<string, any>(Object.entries({
       body: {
         // Match content type of the image part to allow any valid JPEG
-        '$.image': {
-          matchers: [
-            {
-              match: 'contentType',
-              value: 'image/jpeg',
-            },
-          ],
-        },
+        '$.image': contentType('image/jpeg'),
         // Match the metadata part as a type (any object)
-        '$.metadata': {
-          matchers: [{ match: 'type' }],
-        },
+        '$.metadata': like(metadata),
         // Match the name field with a regex pattern (letters only)
-        '$.metadata.name': {
-          matchers: [
-            {
-              match: 'regex',
-              regex: '^[a-zA-Z]+$',
-            },
-          ],
-        },
+        '$.metadata.name': regex('^[a-zA-Z]+$', 'test'),
         // Match the size field as an integer
-        '$.metadata.size': {
-          matchers: [{ match: 'integer' }],
-        },
+        '$.metadata.size': integer(100),
       },
     }));
 
@@ -166,13 +153,13 @@ describe('Pact Multipart with Matching Rules', () => {
       .willRespondWith({
         status: 201,
         body: {
-          id: MatchersV3.like('upload-1'),
-          message: MatchersV3.like('Upload successful'),
+          id: like('upload-1'),
+          message: like('Upload successful'),
           metadata: {
-            name: MatchersV3.like('test'),
-            size: MatchersV3.integer(100),
+            name: like('test'),
+            size: integer(100),
           },
-          image_size: MatchersV3.integer(JPEG_BYTES.length),
+          image_size: integer(JPEG_BYTES.length),
         },
       })
       .executeTest(async (mockServer) => {
@@ -190,6 +177,9 @@ describe('Pact Multipart with Matching Rules', () => {
 
         // Create FormData with a fixed boundary to match the contract
         const formData = new FormData();
+
+        // Override the default boundary with our fixed one
+        formData.getBoundary = () => boundary;
 
         // Add JSON metadata with different values
         formData.append(
@@ -290,42 +280,12 @@ describe('Pact Multipart with Matching Rules', () => {
     const requestMatchingRules = new Map<string, any>(Object.entries({
       body: {
         // Metadata matching rules
-        '$.metadata.userId': {
-          matchers: [
-            {
-              match: 'regex',
-              regex: '^user-[0-9]+$',
-            },
-          ],
-        },
-        '$.metadata.uploadType': {
-          matchers: [
-            {
-              match: 'regex',
-              regex: '^(profile-update|document-upload|bulk-import)$',
-            },
-          ],
-        },
-        '$.metadata.timestamp': {
-          matchers: [{ match: 'integer' }],
-        },
+        '$.metadata.userId': regex('^user-[0-9]+$', 'user-12345'),
+        '$.metadata.uploadType': regex('^(profile-update|document-upload|bulk-import)$', 'profile-update'),
+        '$.metadata.timestamp': integer(1736250000000),
         // File part matching rules
-        '$.profilePicture': {
-          matchers: [
-            {
-              match: 'contentType',
-              value: 'image/jpeg',
-            },
-          ],
-        },
-        '$.document': {
-          matchers: [
-            {
-              match: 'contentType',
-              value: 'text/plain',
-            },
-          ],
-        },
+        '$.profilePicture': contentType('image/jpeg'),
+        '$.document': contentType('text/plain'),
       },
     }));
 
@@ -347,13 +307,13 @@ describe('Pact Multipart with Matching Rules', () => {
       .willRespondWith({
         status: 201,
         body: {
-          success: MatchersV3.boolean(true),
-          uploadId: MatchersV3.uuid('a3f2c8b1-9d4e-4c7a-b2e5-f8a9c1d3e5f7'),
-          filesProcessed: MatchersV3.integer(2),
+          success: boolean(true),
+          uploadId: uuid('a3f2c8b1-9d4e-4c7a-b2e5-f8a9c1d3e5f7'),
+          filesProcessed: integer(2),
           metadata: {
-            userId: MatchersV3.like('user-12345'),
-            uploadType: MatchersV3.like('profile-update'),
-            timestamp: MatchersV3.integer(1736250000000),
+            userId: like('user-12345'),
+            uploadType: like('profile-update'),
+            timestamp: integer(1736250000000),
           },
         },
       })

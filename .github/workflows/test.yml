@@ -261,6 +261,8 @@ jobs:
           - v3/graphql
           - v3/provider-state-injected
           - v3/run-specific-verifications
+          - v3/multipart
+          - v3/with-matching-rules
           - v3/todo-consumer
           - v3/typescript
           - v4/graphql
@@ -269,6 +271,7 @@ jobs:
           - v4/messages
           - v4/multipart
           - v4/typescript
+          - v4/with-matching-rules
 
     steps:
       - name: Checkout

@@ -25,6 +25,10 @@ import chaiAsPromised from 'chai-as-promised';
 import {
   PactV3,
   MatchersV3,
+  like,
+  integer,
+  decimal,
+  regex,
 } from '@pact-foundation/pact';
 import axios from 'axios';
 
@@ -47,12 +51,8 @@ describe('Pact Consumer Test Using Matching Rules', () => {
     // This example uses type matching to ensure the request body fields are of the correct type
     const requestMatchingRules = new Map<string, any>(Object.entries({
       body: {
-        '$.customerId': {
-          matchers: [{ match: 'type' }],
-        },
-        '$.email': {
-          matchers: [{ match: 'type' }],
-        },
+        '$.customerId': like(789456),
+        '$.email': like('sarah.johnson@techcorp.com'),
       },
     }));
 
@@ -106,22 +106,14 @@ describe('Pact Consumer Test Using Matching Rules', () => {
     // Define matching rules with regex patterns for email validation
     const requestMatchingRules = new Map<string, any>(Object.entries({
       body: {
-        '$.email': {
-          matchers: [
-            {
-              match: 'regex',
-              regex: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$',
-            },
-          ],
-        },
-        '$.phone': {
-          matchers: [
-            {
-              match: 'regex',
-              regex: '^\\+?[1-9]\\d{1,14}$', // E.164 phone number format
-            },
-          ],
-        },
+        '$.email': regex(
+          '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$',
+          'jessica.martinez@acmecorp.com'
+        ),
+        '$.phone': regex(
+          '^\\+?[1-9]\\d{1,14}$', // E.164 phone number format
+          '+14155552671'
+        ),
       },
     }));
 
@@ -176,18 +168,10 @@ describe('Pact Consumer Test Using Matching Rules', () => {
     // Define matching rules for the response to allow flexible values
     const responseMatchingRules = new Map<string, any>(Object.entries({
       body: {
-        '$.timestamp': {
-          matchers: [{ match: 'type' }],
-        },
-        '$.count': {
-          matchers: [{ match: 'integer' }],
-        },
-        '$.products[*].sku': {
-          matchers: [{ match: 'type' }],
-        },
-        '$.products[*].name': {
-          matchers: [{ match: 'type' }],
-        },
+        '$.timestamp': like(1736250000000),
+        '$.count': integer(3),
+        '$.products[*].sku': like('LAPTOP-MBP16-2026'),
+        '$.products[*].name': like('MacBook Pro 16-inch M4'),
       },
     }));
 
@@ -247,24 +231,8 @@ describe('Pact Consumer Test Using Matching Rules', () => {
     // Define matching rules with number ranges
     const responseMatchingRules = new Map<string, any>(Object.entries({
       body: {
-        '$.price': {
-          matchers: [
-            {
-              match: 'decimal',
-              min: 0.01,
-              max: 9999.99,
-            },
-          ],
-        },
-        '$.stockLevel': {
-          matchers: [
-            {
-              match: 'integer',
-              min: 0,
-              max: 1000,
-            },
-          ],
-        },
+        '$.price': decimal(399.99, 0.01, 9999.99),
+        '$.stockLevel': integer(47, 0, 1000),
       },
     }));
 
@@ -317,46 +285,19 @@ describe('Pact Consumer Test Using Matching Rules', () => {
     // Define matching rules for both request and response
     const requestMatchingRules = new Map<string, any>(Object.entries({
       body: {
-        '$.orderId': {
-          matchers: [
-            {
-              match: 'regex',
-              regex: '^ORD-[0-9]{6}$',
-            },
-          ],
-        },
-        '$.amount': {
-          matchers: [
-            {
-              match: 'decimal',
-              min: 0.01,
-            },
-          ],
-        },
+        '$.orderId': regex('^ORD-[0-9]{6}$', 'ORD-458923'),
+        '$.amount': decimal(1249.99, 0.01),
       },
     }));
 
     const responseMatchingRules = new Map<string, any>(Object.entries({
       body: {
-        '$.transactionId': {
-          matchers: [{ match: 'type' }],
-        },
-        '$.processedAt': {
-          matchers: [
-            {
-              match: 'regex',
-              regex: '^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}',
-            },
-          ],
-        },
-        '$.status': {
-          matchers: [
-            {
-              match: 'regex',
-              regex: '^(pending|approved|declined)$',
-            },
-          ],
-        },
+        '$.transactionId': like('TXN-pi_3QRtKL2eZvKYlo2C0v8fHw7d'),
+        '$.processedAt': regex(
+          '^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}',
+          '2026-01-07T14:32:18Z'
+        ),
+        '$.status': regex('^(pending|approved|declined)$', 'approved'),
       },
     }));
 
@@ -424,24 +365,13 @@ describe('Pact Consumer Test Using Matching Rules', () => {
     // Create matching rules as a Map object
     const requestMatchingRules = new Map<string, unknown>();
     requestMatchingRules.set('body', {
-      '$.username': {
-        matchers: [
-          {
-            match: 'regex',
-            regex: '^[a-zA-Z0-9_]{3,20}$',
-          },
-        ],
-      },
+      '$.username': regex('^[a-zA-Z0-9_]{3,20}$', 'emily_rodriguez'),
     });
 
     const responseMatchingRules = new Map<string, unknown>();
     responseMatchingRules.set('body', {
-      '$.userId': {
-        matchers: [{ match: 'type' }],
-      },
-      '$.createdAt': {
-        matchers: [{ match: 'type' }],
-      },
+      '$.userId': like(987654),
+      '$.createdAt': like(1736258400000),
     });
 
     await pact

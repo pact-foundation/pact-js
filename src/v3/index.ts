@@ -9,6 +9,11 @@ export * from './types';
 export * as MatchersV3 from './matchers';
 
 /**
+ * Individual matcher function exports for direct use
+ */
+export { like, integer, boolean, uuid, regex, contentType, decimal, string } from './matchers';
+
+/**
  * Exposes {@link xml}
  * @memberof Pact
  * @static
