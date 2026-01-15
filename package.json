@@ -120,9 +120,9 @@
     "stack-utils": "^2.0.6"
   },
   "devDependencies": {
-    "@babel/cli": "7.28.3",
-    "@babel/core": "7.28.5",
-    "@babel/preset-env": "7.28.5",
+    "@babel/cli": "7.28.6",
+    "@babel/core": "7.28.6",
+    "@babel/preset-env": "7.28.6",
     "@pact-foundation/pact-js-prettier-config": "1.0.0",
     "@types/chai": "5.2.3",
     "@types/chai-as-promised": "8.0.2",
