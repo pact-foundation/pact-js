@@ -320,7 +320,9 @@ export function string(str = 'some string'): Matcher<string> {
  * Used for matching binary content or specific content types in multipart requests.
  * @param contentTypeValue The content type to match (e.g., 'image/jpeg', 'text/plain')
  */
-export const contentType = (contentTypeValue: string): {
+export const contentType = (
+  contentTypeValue: string
+): {
   matchers: Array<{ match: string; value: string }>;
 } => ({
   matchers: [

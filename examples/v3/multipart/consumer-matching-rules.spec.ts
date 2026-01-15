@@ -123,18 +123,20 @@ describe('Pact Multipart with Matching Rules', () => {
      * These rules allow flexibility in the actual data sent while
      * ensuring the contract structure is maintained.
      */
-    const requestMatchingRules = new Map<string, any>(Object.entries({
-      body: {
-        // Match content type of the image part to allow any valid JPEG
-        '$.image': contentType('image/jpeg'),
-        // Match the metadata part as a type (any object)
-        '$.metadata': like(metadata),
-        // Match the name field with a regex pattern (letters only)
-        '$.metadata.name': regex('^[a-zA-Z]+$', 'test'),
-        // Match the size field as an integer
-        '$.metadata.size': integer(100),
-      },
-    }));
+    const requestMatchingRules = new Map<string, any>(
+      Object.entries({
+        body: {
+          // Match content type of the image part to allow any valid JPEG
+          '$.image': contentType('image/jpeg'),
+          // Match the metadata part as a type (any object)
+          '$.metadata': like(metadata),
+          // Match the name field with a regex pattern (letters only)
+          '$.metadata.name': regex('^[a-zA-Z]+$', 'test'),
+          // Match the size field as an integer
+          '$.metadata.size': integer(100),
+        },
+      })
+    );
 
     await pact
       .given('file upload service is available')
@@ -277,17 +279,22 @@ describe('Pact Multipart with Matching Rules', () => {
     /**
      * Define comprehensive matching rules for all parts
      */
-    const requestMatchingRules = new Map<string, any>(Object.entries({
-      body: {
-        // Metadata matching rules
-        '$.metadata.userId': regex('^user-[0-9]+$', 'user-12345'),
-        '$.metadata.uploadType': regex('^(profile-update|document-upload|bulk-import)$', 'profile-update'),
-        '$.metadata.timestamp': integer(1736250000000),
-        // File part matching rules
-        '$.profilePicture': contentType('image/jpeg'),
-        '$.document': contentType('text/plain'),
-      },
-    }));
+    const requestMatchingRules = new Map<string, any>(
+      Object.entries({
+        body: {
+          // Metadata matching rules
+          '$.metadata.userId': regex('^user-[0-9]+$', 'user-12345'),
+          '$.metadata.uploadType': regex(
+            '^(profile-update|document-upload|bulk-import)$',
+            'profile-update'
+          ),
+          '$.metadata.timestamp': integer(1736250000000),
+          // File part matching rules
+          '$.profilePicture': contentType('image/jpeg'),
+          '$.document': contentType('text/plain'),
+        },
+      })
+    );
 
     await pact
       .given('user profile upload service is available')

@@ -49,12 +49,14 @@ describe('Pact Consumer Test Using Matching Rules', () => {
   it('uses withRequestMatchingRules to validate request with type matching', async () => {
     // Define matching rules for the request
     // This example uses type matching to ensure the request body fields are of the correct type
-    const requestMatchingRules = new Map<string, any>(Object.entries({
-      body: {
-        '$.customerId': like(789456),
-        '$.email': like('sarah.johnson@techcorp.com'),
-      },
-    }));
+    const requestMatchingRules = new Map<string, any>(
+      Object.entries({
+        body: {
+          '$.customerId': like(789456),
+          '$.email': like('sarah.johnson@techcorp.com'),
+        },
+      })
+    );
 
     await pact
       .given('a customer profile exists')
@@ -104,18 +106,20 @@ describe('Pact Consumer Test Using Matching Rules', () => {
 
   it('uses withRequestMatchingRules with regex pattern matching', async () => {
     // Define matching rules with regex patterns for email validation
-    const requestMatchingRules = new Map<string, any>(Object.entries({
-      body: {
-        '$.email': regex(
-          '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$',
-          'jessica.martinez@acmecorp.com'
-        ),
-        '$.phone': regex(
-          '^\\+?[1-9]\\d{1,14}$', // E.164 phone number format
-          '+14155552671'
-        ),
-      },
-    }));
+    const requestMatchingRules = new Map<string, any>(
+      Object.entries({
+        body: {
+          '$.email': regex(
+            '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$',
+            'jessica.martinez@acmecorp.com'
+          ),
+          '$.phone': regex(
+            '^\\+?[1-9]\\d{1,14}$', // E.164 phone number format
+            '+14155552671'
+          ),
+        },
+      })
+    );
 
     await pact
       .given('CRM system accepts new contacts')
@@ -166,14 +170,16 @@ describe('Pact Consumer Test Using Matching Rules', () => {
 
   it('uses withResponseMatchingRules for flexible response validation', async () => {
     // Define matching rules for the response to allow flexible values
-    const responseMatchingRules = new Map<string, any>(Object.entries({
-      body: {
-        '$.timestamp': like(1736250000000),
-        '$.count': integer(3),
-        '$.products[*].sku': like('LAPTOP-MBP16-2026'),
-        '$.products[*].name': like('MacBook Pro 16-inch M4'),
-      },
-    }));
+    const responseMatchingRules = new Map<string, any>(
+      Object.entries({
+        body: {
+          '$.timestamp': like(1736250000000),
+          '$.count': integer(3),
+          '$.products[*].sku': like('LAPTOP-MBP16-2026'),
+          '$.products[*].name': like('MacBook Pro 16-inch M4'),
+        },
+      })
+    );
 
     await pact
       .given('electronics products are in stock')
@@ -229,12 +235,14 @@ describe('Pact Consumer Test Using Matching Rules', () => {
 
   it('uses withResponseMatchingRules with number range validation', async () => {
     // Define matching rules with number ranges
-    const responseMatchingRules = new Map<string, any>(Object.entries({
-      body: {
-        '$.price': decimal(399.99, 0.01, 9999.99),
-        '$.stockLevel': integer(47, 0, 1000),
-      },
-    }));
+    const responseMatchingRules = new Map<string, any>(
+      Object.entries({
+        body: {
+          '$.price': decimal(399.99, 0.01, 9999.99),
+          '$.stockLevel': integer(47, 0, 1000),
+        },
+      })
+    );
 
     await pact
       .given('wireless headphones are in inventory')
@@ -283,23 +291,27 @@ describe('Pact Consumer Test Using Matching Rules', () => {
 
   it('uses both request and response matching rules together', async () => {
     // Define matching rules for both request and response
-    const requestMatchingRules = new Map<string, any>(Object.entries({
-      body: {
-        '$.orderId': regex('^ORD-[0-9]{6}$', 'ORD-458923'),
-        '$.amount': decimal(1249.99, 0.01),
-      },
-    }));
+    const requestMatchingRules = new Map<string, any>(
+      Object.entries({
+        body: {
+          '$.orderId': regex('^ORD-[0-9]{6}$', 'ORD-458923'),
+          '$.amount': decimal(1249.99, 0.01),
+        },
+      })
+    );
 
-    const responseMatchingRules = new Map<string, any>(Object.entries({
-      body: {
-        '$.transactionId': like('TXN-pi_3QRtKL2eZvKYlo2C0v8fHw7d'),
-        '$.processedAt': regex(
-          '^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}',
-          '2026-01-07T14:32:18Z'
-        ),
-        '$.status': regex('^(pending|approved|declined)$', 'approved'),
-      },
-    }));
+    const responseMatchingRules = new Map<string, any>(
+      Object.entries({
+        body: {
+          '$.transactionId': like('TXN-pi_3QRtKL2eZvKYlo2C0v8fHw7d'),
+          '$.processedAt': regex(
+            '^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}',
+            '2026-01-07T14:32:18Z'
+          ),
+          '$.status': regex('^(pending|approved|declined)$', 'approved'),
+        },
+      })
+    );
 
     await pact
       .given('Stripe payment gateway is operational')

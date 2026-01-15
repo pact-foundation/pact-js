@@ -41,16 +41,18 @@ describe('Pact V4 Consumer Test Using Matching Rules', () => {
 
   it('uses request matching rules with type matching for customer profile updates', async () => {
     // Define matching rules for the request
-    const requestMatchingRules = new Map<string, any>(Object.entries({
-      body: {
-        '$.customerId': {
-          matchers: [{ match: 'type' }],
+    const requestMatchingRules = new Map<string, any>(
+      Object.entries({
+        body: {
+          '$.customerId': {
+            matchers: [{ match: 'type' }],
+          },
+          '$.email': {
+            matchers: [{ match: 'type' }],
+          },
         },
-        '$.email': {
-          matchers: [{ match: 'type' }],
-        },
-      },
-    }));
+      })
+    );
 
     await pact
       .addInteraction()
@@ -93,26 +95,28 @@ describe('Pact V4 Consumer Test Using Matching Rules', () => {
 
   it('uses request matching rules with regex pattern matching for CRM contacts', async () => {
     // Define matching rules with regex patterns
-    const requestMatchingRules = new Map<string, any>(Object.entries({
-      body: {
-        '$.email': {
-          matchers: [
-            {
-              match: 'regex',
-              regex: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$',
-            },
-          ],
+    const requestMatchingRules = new Map<string, any>(
+      Object.entries({
+        body: {
+          '$.email': {
+            matchers: [
+              {
+                match: 'regex',
+                regex: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$',
+              },
+            ],
+          },
+          '$.phone': {
+            matchers: [
+              {
+                match: 'regex',
+                regex: '^\\+?[1-9]\\d{1,14}$', // E.164 phone number format
+              },
+            ],
+          },
         },
-        '$.phone': {
-          matchers: [
-            {
-              match: 'regex',
-              regex: '^\\+?[1-9]\\d{1,14}$', // E.164 phone number format
-            },
-          ],
-        },
-      },
-    }));
+      })
+    );
 
     await pact
       .addInteraction()
@@ -158,22 +162,24 @@ describe('Pact V4 Consumer Test Using Matching Rules', () => {
 
   it('uses response matching rules for flexible product catalog validation', async () => {
     // Define matching rules for the response
-    const responseMatchingRules = new Map<string, any>(Object.entries({
-      body: {
-        '$.timestamp': {
-          matchers: [{ match: 'type' }],
+    const responseMatchingRules = new Map<string, any>(
+      Object.entries({
+        body: {
+          '$.timestamp': {
+            matchers: [{ match: 'type' }],
+          },
+          '$.count': {
+            matchers: [{ match: 'integer' }],
+          },
+          '$.products[*].sku': {
+            matchers: [{ match: 'type' }],
+          },
+          '$.products[*].name': {
+            matchers: [{ match: 'type' }],
+          },
         },
-        '$.count': {
-          matchers: [{ match: 'integer' }],
-        },
-        '$.products[*].sku': {
-          matchers: [{ match: 'type' }],
-        },
-        '$.products[*].name': {
-          matchers: [{ match: 'type' }],
-        },
-      },
-    }));
+      })
+    );
 
     await pact
       .addInteraction()
@@ -218,28 +224,30 @@ describe('Pact V4 Consumer Test Using Matching Rules', () => {
 
   it('uses response matching rules with number range validation for e-commerce', async () => {
     // Define matching rules with number ranges
-    const responseMatchingRules = new Map<string, any>(Object.entries({
-      body: {
-        '$.price': {
-          matchers: [
-            {
-              match: 'decimal',
-              min: 0.01,
-              max: 9999.99,
-            },
-          ],
+    const responseMatchingRules = new Map<string, any>(
+      Object.entries({
+        body: {
+          '$.price': {
+            matchers: [
+              {
+                match: 'decimal',
+                min: 0.01,
+                max: 9999.99,
+              },
+            ],
+          },
+          '$.stockLevel': {
+            matchers: [
+              {
+                match: 'integer',
+                min: 0,
+                max: 1000,
+              },
+            ],
+          },
         },
-        '$.stockLevel': {
-          matchers: [
-            {
-              match: 'integer',
-              min: 0,
-              max: 1000,
-            },
-          ],
-        },
-      },
-    }));
+      })
+    );
 
     await pact
       .addInteraction()
@@ -279,50 +287,54 @@ describe('Pact V4 Consumer Test Using Matching Rules', () => {
 
   it('uses both request and response matching rules for payment processing', async () => {
     // Define matching rules for both request and response
-    const requestMatchingRules = new Map<string, any>(Object.entries({
-      body: {
-        '$.orderId': {
-          matchers: [
-            {
-              match: 'regex',
-              regex: '^ORD-[0-9]{6}$',
-            },
-          ],
+    const requestMatchingRules = new Map<string, any>(
+      Object.entries({
+        body: {
+          '$.orderId': {
+            matchers: [
+              {
+                match: 'regex',
+                regex: '^ORD-[0-9]{6}$',
+              },
+            ],
+          },
+          '$.amount': {
+            matchers: [
+              {
+                match: 'decimal',
+                min: 0.01,
+              },
+            ],
+          },
         },
-        '$.amount': {
-          matchers: [
-            {
-              match: 'decimal',
-              min: 0.01,
-            },
-          ],
-        },
-      },
-    }));
+      })
+    );
 
-    const responseMatchingRules = new Map<string, any>(Object.entries({
-      body: {
-        '$.transactionId': {
-          matchers: [{ match: 'type' }],
+    const responseMatchingRules = new Map<string, any>(
+      Object.entries({
+        body: {
+          '$.transactionId': {
+            matchers: [{ match: 'type' }],
+          },
+          '$.processedAt': {
+            matchers: [
+              {
+                match: 'regex',
+                regex: '^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}',
+              },
+            ],
+          },
+          '$.status': {
+            matchers: [
+              {
+                match: 'regex',
+                regex: '^(pending|approved|declined)$',
+              },
+            ],
+          },
         },
-        '$.processedAt': {
-          matchers: [
-            {
-              match: 'regex',
-              regex: '^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}',
-            },
-          ],
-        },
-        '$.status': {
-          matchers: [
-            {
-              match: 'regex',
-              regex: '^(pending|approved|declined)$',
-            },
-          ],
-        },
-      },
-    }));
+      })
+    );
 
     await pact
       .addInteraction()
