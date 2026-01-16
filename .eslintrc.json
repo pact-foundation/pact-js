@@ -36,6 +36,60 @@
   },
   "overrides": [
     {
+      "files": ["examples/v3/multipart/**/*.ts", "examples/v3/multipart/**/*.js"],
+      "parserOptions": {
+        "project": "./examples/v3/multipart/tsconfig.json"
+      }
+    },
+    {
+      "files": ["examples/v3/graphql/**/*.ts", "examples/v3/graphql/**/*.js"],
+      "parserOptions": {
+        "project": "./examples/v3/graphql/tsconfig.json"
+      }
+    },
+    {
+      "files": ["examples/v3/typescript/**/*.ts", "examples/v3/typescript/**/*.js"],
+      "parserOptions": {
+        "project": "./examples/v3/typescript/tsconfig.json"
+      }
+    },
+    {
+      "files": ["examples/v3/with-matching-rules/**/*.ts", "examples/v3/with-matching-rules/**/*.js"],
+      "parserOptions": {
+        "project": "./examples/v3/with-matching-rules/tsconfig.json"
+      }
+    },
+    {
+      "files": ["examples/v4/graphql/**/*.ts", "examples/v4/graphql/**/*.js"],
+      "parserOptions": {
+        "project": "./examples/v4/graphql/tsconfig.json"
+      }
+    },
+    {
+      "files": ["examples/v4/messages/**/*.ts", "examples/v4/messages/**/*.js"],
+      "parserOptions": {
+        "project": "./examples/v4/messages/tsconfig.json"
+      }
+    },
+    {
+      "files": ["examples/v4/plugins/**/*.ts", "examples/v4/plugins/**/*.js"],
+      "parserOptions": {
+        "project": "./examples/v4/plugins/tsconfig.json"
+      }
+    },
+    {
+      "files": ["examples/v4/typescript/**/*.ts", "examples/v4/typescript/**/*.js"],
+      "parserOptions": {
+        "project": "./examples/v4/typescript/tsconfig.json"
+      }
+    },
+    {
+      "files": ["examples/v4/with-matching-rules/**/*.ts", "examples/v4/with-matching-rules/**/*.js"],
+      "parserOptions": {
+        "project": "./examples/v4/with-matching-rules/tsconfig.json"
+      }
+    },
+    {
       "files": ["**/*.spec.ts"],
       "extends": ["plugin:mocha/recommended"],
       "env": {

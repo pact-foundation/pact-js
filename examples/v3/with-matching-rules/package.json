@@ -1,14 +1,13 @@
 {
-  "name": "v3-multipart",
+  "name": "v3-with-matching-rules",
   "version": "1.0.0",
-  "description": "Pact JS V3 Multipart example",
+  "description": "Pact JS V3 Matching rules example",
   "keywords": [],
   "scripts": {
     "clean": "rimraf pacts",
     "pretest": "npm run clean",
     "test:consumer": "jest consumer.spec.ts",
-    "test:matching-rules": "jest consumer-matching-rules.spec.ts",
-    "test": "npm run test:consumer && npm run test:matching-rules"
+    "test": "npm run test:consumer"
   },
   "author": "kevin.rohanvaz@smartbear.com",
   "license": "MIT",
@@ -28,8 +27,5 @@
   },
   "config": {
     "pact_do_not_track": true
-  },
-  "dependencies": {
-    "form-data": "^4.0.5"
   }
 }
