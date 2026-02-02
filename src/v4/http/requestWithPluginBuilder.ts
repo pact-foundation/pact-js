@@ -1,4 +1,4 @@
-import { TemplateHeaders, TemplateQuery } from '../../v3';
+import { Rules, TemplateHeaders, TemplateQuery } from '../../v3';
 import { RequestBuilder } from './requestBuilder';
 import { V4RequestWithPluginBuilder } from './types';
 
@@ -68,12 +68,10 @@ export class RequestWithPluginBuilder
    * Matching rules allow you to define flexible matching criteria for request attributes
    * beyond exact equality (e.g., regex patterns, type matching, number ranges).
    *
-   * @param rules - The matching rules as a Map or JSON string. Rules should follow the Pact matching rules format.
+   * @param rules - The matching rules as a strongly typed Rules object. Rules should follow the Pact matching rules format.
    * @returns The V4RequestWithPluginBuilder instance for method chaining
    */
-  matchingRules(
-    rules: Map<string, unknown> | string
-  ): V4RequestWithPluginBuilder {
+  matchingRules(rules: Rules): V4RequestWithPluginBuilder {
     super.matchingRules(rules);
     return this;
   }

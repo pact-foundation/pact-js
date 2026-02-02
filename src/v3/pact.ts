@@ -7,12 +7,15 @@ import {
 import fs = require('fs');
 import { version as pactPackageVersion } from '../../package.json';
 import { JsonMap } from '../common/jsonTypes';
+import { validateRules, convertRulesToFFI } from '../common/matchingRules';
 import {
   PactV3Options,
+  Rules,
   SpecificationVersion,
   V3Interaction,
   V3MockServer,
   V3ProviderState,
+  V3RegexMatcher,
   V3Request,
   V3Response,
 } from './types';
@@ -133,25 +136,38 @@ export class PactV3 {
     return this;
   }
 
+  public withRequestHeader(
+    req: V3Request,
+    name: string,
+    index: number,
+    value: string | Map<string, unknown> | V3RegexMatcher
+  ): PactV3 {
+    let encodedValue = value;
+    if (encodedValue instanceof Map) {
+      encodedValue = JSON.stringify(Object.fromEntries(encodedValue));
+    }
+    this.interaction.withRequestHeader(
+      name.toLocaleLowerCase(),
+      index,
+      matcherValueOrString(encodedValue)
+    );
+    setRequestDetails(this.interaction, req);
+    return this;
+  }
+
   /**
    * Applies matching rules to the consumer request.
    * Matching rules allow you to define flexible matching criteria for request attributes
    * beyond exact equality (e.g., regex patterns, type matching, number ranges).
    *
    * @param req - The request configuration (method, path, headers, etc.)
-   * @param rules - The matching rules as a Map or JSON string. Rules should follow the Pact matching rules format.
+   * @param rules - The matching rules.
    * @returns The PactV3 instance for method chaining
    */
-  public withRequestMatchingRules(
-    req: V3Request,
-    rules: Map<string, unknown> | string
-  ): PactV3 {
-    let encodedRules = '';
-    if (rules instanceof Map) {
-      encodedRules = JSON.stringify(Object.fromEntries(rules));
-    }
-
-    this.interaction.withRequestMatchingRules(encodedRules);
+  public withRequestMatchingRules(req: V3Request, rules: Rules): PactV3 {
+    validateRules(rules);
+    const ffiRules = convertRulesToFFI(rules);
+    this.interaction.withRequestMatchingRules(JSON.stringify(ffiRules));
     setRequestDetails(this.interaction, req);
     return this;
   }
@@ -162,19 +178,13 @@ export class PactV3 {
    * beyond exact equality (e.g., regex patterns, type matching, number ranges).
    *
    * @param req - The request configuration (method, path, headers, etc.)
-   * @param rules - The matching rules as a Map or JSON string. Rules should follow the Pact matching rules format.
+   * @param rules - The matching rules.
    * @returns The PactV3 instance for method chaining
    */
-  public withResponseMatchingRules(
-    req: V3Request,
-    rules: Map<string, unknown> | string
-  ): PactV3 {
-    let encodedRules = rules;
-    if (encodedRules instanceof Map) {
-      encodedRules = JSON.stringify(Object.fromEntries(encodedRules));
-    }
-
-    this.interaction.withResponseMatchingRules(encodedRules);
+  public withResponseMatchingRules(req: V3Request, rules: Rules): PactV3 {
+    validateRules(rules);
+    const ffiRules = convertRulesToFFI(rules);
+    this.interaction.withResponseMatchingRules(JSON.stringify(ffiRules));
     setRequestDetails(this.interaction, req);
     return this;
   }

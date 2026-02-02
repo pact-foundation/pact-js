@@ -1,21 +1,7 @@
 /**
  * Pact Matching Rules Example
  *
- * This test suite demonstrates how to use Pact JS with matching rules,
- * which allow you to define flexible matching criteria for request and response attributes
- * beyond exact equality.
- *
- * Key concepts covered:
- * 1. Using withRequestMatchingRules to apply rules to consumer requests
- * 2. Using withResponseMatchingRules to apply rules to provider responses
- * 3. Type matching for flexible data validation
- * 4. Regex matching for pattern-based validation
- * 5. Number range matching for numerical constraints
- * 6. Combining multiple matching rules
- *
- * Matching rules follow the Pact specification format and allow testing
- * contracts without requiring exact string/number matches, making tests
- * more maintainable and resilient to changes.
+ * This test suite demonstrates how to use Pact JS with withRequestMatchingRules method using the builder pattern.
  *
  * see https://docs.pact.io for more information on Pact
  */
@@ -24,11 +10,12 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {
   PactV3,
-  MatchersV3,
   like,
   integer,
-  decimal,
   regex,
+  boolean,
+  uuid,
+  Rules,
 } from '@pact-foundation/pact';
 import axios from 'axios';
 
@@ -37,9 +24,6 @@ chai.use(chaiAsPromised);
 const { expect } = chai;
 
 describe('Pact Consumer Test Using Matching Rules', () => {
-  /**
-   * Initialize a new Pact instance with consumer and provider names.
-   */
   const pact = new PactV3({
     consumer: 'matchingrulesconsumer',
     provider: 'matchingrulesprovider',
@@ -47,16 +31,18 @@ describe('Pact Consumer Test Using Matching Rules', () => {
   });
 
   it('uses withRequestMatchingRules to validate request with type matching', async () => {
-    // Define matching rules for the request
-    // This example uses type matching to ensure the request body fields are of the correct type
-    const requestMatchingRules = new Map<string, any>(
-      Object.entries({
-        body: {
-          '$.customerId': like(789456),
-          '$.email': like('sarah.johnson@techcorp.com'),
+    const requestMatchingRules: Rules = {
+      body: [
+        {
+          path: '$.customerId',
+          rule: [like(789456)],
         },
-      })
-    );
+        {
+          path: '$.email',
+          rule: [like('sarah.johnson@techcorp.com')],
+        },
+      ],
+    };
 
     await pact
       .given('a customer profile exists')
@@ -80,17 +66,16 @@ describe('Pact Consumer Test Using Matching Rules', () => {
       .willRespondWith({
         status: 200,
         body: {
-          success: MatchersV3.boolean(true),
-          message: MatchersV3.like('Customer profile updated successfully'),
+          success: boolean(true),
+          message: like('Customer profile updated successfully'),
         },
       })
       .executeTest(async (mockServer) => {
-        // Send request with different values but same types
         const response = await axios.put(
           `${mockServer.url}/customers/c789456`,
           {
-            customerId: 892341, // Different customer ID, but still a number
-            email: 'michael.chen@innovate.io', // Different email, but still a string
+            customerId: 892341,
+            email: 'michael.chen@innovate.io',
           },
           {
             headers: {
@@ -105,21 +90,23 @@ describe('Pact Consumer Test Using Matching Rules', () => {
   });
 
   it('uses withRequestMatchingRules with regex pattern matching', async () => {
-    // Define matching rules with regex patterns for email validation
-    const requestMatchingRules = new Map<string, any>(
-      Object.entries({
-        body: {
-          '$.email': regex(
-            '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$',
-            'jessica.martinez@acmecorp.com'
-          ),
-          '$.phone': regex(
-            '^\\+?[1-9]\\d{1,14}$', // E.164 phone number format
-            '+14155552671'
-          ),
+    const requestMatchingRules: Rules = {
+      body: [
+        {
+          path: '$.email',
+          rule: [
+            regex(
+              '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$',
+              'jessica.martinez@acmecorp.com'
+            ),
+          ],
         },
-      })
-    );
+        {
+          path: '$.phone',
+          rule: [regex('^\\+?[1-9]\\d{1,14}$', '+14155552671')],
+        },
+      ],
+    };
 
     await pact
       .given('CRM system accepts new contacts')
@@ -143,12 +130,11 @@ describe('Pact Consumer Test Using Matching Rules', () => {
       .willRespondWith({
         status: 201,
         body: {
-          id: MatchersV3.uuid('a3f2c8b1-9d4e-4c7a-b2e5-f8a9c1d3e5f7'),
-          created: MatchersV3.boolean(true),
+          id: uuid('a3f2c8b1-9d4e-4c7a-b2e5-f8a9c1d3e5f7'),
+          created: boolean(true),
         },
       })
       .executeTest(async (mockServer) => {
-        // Send request with different but valid email and phone
         const response = await axios.post(
           `${mockServer.url}/contacts`,
           {
@@ -169,17 +155,26 @@ describe('Pact Consumer Test Using Matching Rules', () => {
   });
 
   it('uses withResponseMatchingRules for flexible response validation', async () => {
-    // Define matching rules for the response to allow flexible values
-    const responseMatchingRules = new Map<string, any>(
-      Object.entries({
-        body: {
-          '$.timestamp': like(1736250000000),
-          '$.count': integer(3),
-          '$.products[*].sku': like('LAPTOP-MBP16-2026'),
-          '$.products[*].name': like('MacBook Pro 16-inch M4'),
+    const responseMatchingRules: Rules = {
+      body: [
+        {
+          path: '$.timestamp',
+          rule: [like(1736250000000)],
         },
-      })
-    );
+        {
+          path: '$.count',
+          rule: [integer(3)],
+        },
+        {
+          path: '$.products[*].sku',
+          rule: [like('LAPTOP-MBP16-2026')],
+        },
+        {
+          path: '$.products[*].name',
+          rule: [like('MacBook Pro 16-inch M4')],
+        },
+      ],
+    };
 
     await pact
       .given('electronics products are in stock')
@@ -233,158 +228,28 @@ describe('Pact Consumer Test Using Matching Rules', () => {
       });
   });
 
-  it('uses withResponseMatchingRules with number range validation', async () => {
-    // Define matching rules with number ranges
-    const responseMatchingRules = new Map<string, any>(
-      Object.entries({
-        body: {
-          '$.price': decimal(399.99, 0.01, 9999.99),
-          '$.stockLevel': integer(47, 0, 1000),
-        },
-      })
-    );
-
-    await pact
-      .given('wireless headphones are in inventory')
-      .uponReceiving('a request for product details with numeric range rules')
-      .withRequest({
-        method: 'GET',
-        path: '/products/HEADPHONE-WH1000XM5',
-        headers: {
-          Accept: 'application/json',
-        },
-      })
-      .withResponseMatchingRules(
-        {
-          method: 'GET',
-          path: '/products/HEADPHONE-WH1000XM5',
-        },
-        responseMatchingRules
-      )
-      .willRespondWith({
-        status: 200,
-        body: {
-          sku: MatchersV3.like('HEADPHONE-WH1000XM5'),
-          name: MatchersV3.like('Sony WH-1000XM5 Wireless Headphones'),
-          price: 399.99,
-          stockLevel: 47,
-          available: MatchersV3.boolean(true),
-        },
-      })
-      .executeTest(async (mockServer) => {
-        const response = await axios.get(
-          `${mockServer.url}/products/HEADPHONE-WH1000XM5`,
-          {
-            headers: {
-              Accept: 'application/json',
-            },
-          }
-        );
-
-        expect(response.status).to.eq(200);
-        expect(response.data.price).to.be.a('number');
-        expect(response.data.price).to.be.within(0.01, 9999.99);
-        expect(response.data.stockLevel).to.be.a('number');
-        expect(response.data.stockLevel).to.be.within(0, 1000);
-      });
-  });
-
-  it('uses both request and response matching rules together', async () => {
-    // Define matching rules for both request and response
-    const requestMatchingRules = new Map<string, any>(
-      Object.entries({
-        body: {
-          '$.orderId': regex('^ORD-[0-9]{6}$', 'ORD-458923'),
-          '$.amount': decimal(1249.99, 0.01),
-        },
-      })
-    );
-
-    const responseMatchingRules = new Map<string, any>(
-      Object.entries({
-        body: {
-          '$.transactionId': like('TXN-pi_3QRtKL2eZvKYlo2C0v8fHw7d'),
-          '$.processedAt': regex(
-            '^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}',
-            '2026-01-07T14:32:18Z'
-          ),
-          '$.status': regex('^(pending|approved|declined)$', 'approved'),
-        },
-      })
-    );
-
-    await pact
-      .given('Stripe payment gateway is operational')
-      .uponReceiving(
-        'a credit card payment request with combined matching rules'
-      )
-      .withRequestMatchingRules(
-        {
-          method: 'POST',
-          path: '/payments',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: 'Bearer dummy_sk_test_4eC39HqLyjWDarjtT1zdp7dc',
-          },
-          body: {
-            orderId: 'ORD-458923',
-            amount: 1249.99,
-          },
-        },
-        requestMatchingRules
-      )
-      .withResponseMatchingRules(
-        {
-          method: 'POST',
-          path: '/payments',
-        },
-        responseMatchingRules
-      )
-      .willRespondWith({
-        status: 200,
-        body: {
-          transactionId: 'TXN-pi_3QRtKL2eZvKYlo2C0v8fHw7d',
-          processedAt: '2026-01-07T14:32:18Z',
-          status: 'approved',
-          message: MatchersV3.like('Payment authorized successfully'),
-        },
-      })
-      .executeTest(async (mockServer) => {
-        const response = await axios.post(
-          `${mockServer.url}/payments`,
-          {
-            orderId: 'ORD-892347', // Different but valid format
-            amount: 2799.5,
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: 'Bearer dummy_sk_test_4eC39HqLyjWDarjtT1zdp7dc',
-            },
-          }
-        );
-
-        expect(response.status).to.eq(200);
-        expect(response.data.transactionId).to.be.a('string');
-        expect(response.data.processedAt).to.match(
-          /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/
-        );
-        expect(response.data.status).to.match(/^(pending|approved|rejected)$/);
-      });
-  });
-
   it('uses matching rules with Map object instead of JSON string', async () => {
-    // Create matching rules as a Map object
-    const requestMatchingRules = new Map<string, unknown>();
-    requestMatchingRules.set('body', {
-      '$.username': regex('^[a-zA-Z0-9_]{3,20}$', 'emily_rodriguez'),
-    });
+    const requestMatchingRules: Rules = {
+      body: [
+        {
+          path: '$.username',
+          rule: [regex('^[a-zA-Z0-9_]{3,20}$', 'emily_rodriguez')],
+        },
+      ],
+    };
 
-    const responseMatchingRules = new Map<string, unknown>();
-    responseMatchingRules.set('body', {
-      '$.userId': like(987654),
-      '$.createdAt': like(1736258400000),
-    });
+    const responseMatchingRules: Rules = {
+      body: [
+        {
+          path: '$.userId',
+          rule: [like(987654)],
+        },
+        {
+          path: '$.createdAt',
+          rule: [like(1736258400000)],
+        },
+      ],
+    };
 
     await pact
       .given('SaaS platform user registration is enabled')
@@ -414,7 +279,7 @@ describe('Pact Consumer Test Using Matching Rules', () => {
         status: 201,
         body: {
           userId: 987654,
-          username: MatchersV3.like('emily_rodriguez'),
+          username: like('emily_rodriguez'),
           createdAt: 1736258400000,
         },
       })
@@ -422,7 +287,7 @@ describe('Pact Consumer Test Using Matching Rules', () => {
         const response = await axios.post(
           `${mockServer.url}/api/v1/register`,
           {
-            username: 'alex_thompson', // Diffvops.cloud// Different but valid username
+            username: 'alex_thompson',
             email: 'jane@example.com',
           },
           {

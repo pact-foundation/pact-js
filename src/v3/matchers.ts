@@ -216,69 +216,48 @@ export const boolean = (b = true): Matcher<boolean> => ({
 /**
  * Value must be an integer (must be a number and have no decimal places)
  * @param int Example value. If omitted a random value will be generated.
- * @param min Minimum value (optional)
- * @param max Maximum value (optional)
  */
-export const integer = (
-  int?: number,
-  min?: number,
-  max?: number
-): Matcher<number> | (Matcher<number> & { min?: number; max?: number }) => {
-  const matcher: Matcher<number> & { min?: number; max?: number } = {
-    'pact:matcher:type': 'integer',
-    value: int ?? 101,
-  };
-
-  if (int === undefined) {
-    matcher['pact:generator:type'] = 'RandomInt';
-  } else if (!Number.isInteger(int)) {
+export const integer = (int?: number): Matcher<number> => {
+  if (Number.isInteger(int)) {
+    return {
+      'pact:matcher:type': 'integer',
+      value: int,
+    };
+  }
+  if (int) {
     throw new Error(
       `The integer matcher was passed '${int}' which is not an integer.`
     );
   }
 
-  if (min !== undefined) {
-    matcher.min = min;
-  }
-  if (max !== undefined) {
-    matcher.max = max;
-  }
-
-  return matcher;
+  return {
+    'pact:generator:type': 'RandomInt',
+    'pact:matcher:type': 'integer',
+    value: 101,
+  };
 };
 
 /**
  * Value must be a decimal number (must be a number and have decimal places)
  * @param num Example value. If omitted a random value will be generated.
- * @param min Minimum value (optional)
- * @param max Maximum value (optional)
  */
-export const decimal = (
-  num?: number,
-  min?: number,
-  max?: number
-): Matcher<number> | (Matcher<number> & { min?: number; max?: number }) => {
-  const matcher: Matcher<number> & { min?: number; max?: number } = {
-    'pact:matcher:type': 'decimal',
-    value: num ?? 12.34,
-  };
-
-  if (num === undefined) {
-    matcher['pact:generator:type'] = 'RandomDecimal';
-  } else if (!Number.isFinite(num)) {
+export const decimal = (num?: number): Matcher<number> => {
+  if (Number.isFinite(num)) {
+    return {
+      'pact:matcher:type': 'decimal',
+      value: num,
+    };
+  }
+  if (num) {
     throw new Error(
       `The decimal matcher was passed '${num}' which is not a number.`
     );
   }
-
-  if (min !== undefined) {
-    matcher.min = min;
-  }
-  if (max !== undefined) {
-    matcher.max = max;
-  }
-
-  return matcher;
+  return {
+    'pact:generator:type': 'RandomDecimal',
+    'pact:matcher:type': 'decimal',
+    value: 12.34,
+  };
 };
 
 /**
@@ -316,24 +295,6 @@ export function string(str = 'some string'): Matcher<string> {
 }
 
 /**
- * Matches the content type of a multipart field.
- * Used for matching binary content or specific content types in multipart requests.
- * @param contentTypeValue The content type to match (e.g., 'image/jpeg', 'text/plain')
- */
-export const contentType = (
-  contentTypeValue: string
-): {
-  matchers: Array<{ match: string; value: string }>;
-} => ({
-  matchers: [
-    {
-      match: 'contentType',
-      value: contentTypeValue,
-    },
-  ],
-});
-
-/**
  * Value that must match the given regular expression
  * @param pattern Regular Expression to match
  * @param str Example value
@@ -352,6 +313,16 @@ export function regex(pattern: RegExp | string, str: string): V3RegexMatcher {
     value: str,
   };
 }
+
+/**
+ * Matches the content type of a multipart field.
+ * Used for matching binary content or specific content types in multipart requests.
+ * @param contentTypeValue The content type to match (e.g., 'image/jpeg', 'text/plain')
+ */
+export const contentType = (contentTypeValue: string): Matcher<string> => ({
+  'pact:matcher:type': 'contentType',
+  value: contentTypeValue,
+});
 
 /**
  * Value that must be equal to the example. This is mainly used to reset the matching rules which cascade.

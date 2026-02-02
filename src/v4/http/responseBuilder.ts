@@ -1,9 +1,10 @@
 import { ConsumerInteraction } from '@pact-foundation/pact-core';
 import { forEachObjIndexed } from 'ramda';
 import { readBinaryData } from '.';
-import { TemplateHeaders } from '../../v3';
+import { TemplateHeaders, Rules } from '../../v3';
 import { matcherValueOrString } from '../../v3/matchers';
 import { V4ResponseBuilder } from './types';
+import { convertRulesToFFI, validateRules } from '../../common/matchingRules';
 
 export class ResponseBuilder implements V4ResponseBuilder {
   protected interaction: ConsumerInteraction;
@@ -66,16 +67,13 @@ export class ResponseBuilder implements V4ResponseBuilder {
    * Matching rules allow you to define flexible matching criteria for response attributes
    * beyond exact equality (e.g., regex patterns, type matching, number ranges).
    *
-   * @param rules - The matching rules as a Map or JSON string. Rules should follow the Pact matching rules format.
+   * @param rules - The matching rules as a strongly typed Rules object. Rules should follow the Pact matching rules format.
    * @returns The V4ResponseBuilder instance for method chaining
    */
-  matchingRules(rules: Map<string, unknown> | string): V4ResponseBuilder {
-    let encodedRules = rules;
-    if (encodedRules instanceof Map) {
-      encodedRules = JSON.stringify(Object.fromEntries(encodedRules));
-    }
-
-    this.interaction.withRequestMatchingRules(encodedRules);
+  matchingRules(rules: Rules): V4ResponseBuilder {
+    validateRules(rules);
+    const ffiRules = convertRulesToFFI(rules);
+    this.interaction.withResponseMatchingRules(JSON.stringify(ffiRules));
     return this;
   }
 

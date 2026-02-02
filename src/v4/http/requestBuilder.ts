@@ -1,9 +1,10 @@
 import { ConsumerInteraction } from '@pact-foundation/pact-core';
 import { forEachObjIndexed } from 'ramda';
-import { TemplateQuery, TemplateHeaders, Matcher } from '../../v3';
+import { TemplateQuery, TemplateHeaders, Matcher, Rules } from '../../v3';
 import { matcherValueOrString } from '../../v3/matchers';
 import { TemplateHeaderArrayValue, V4RequestBuilder } from './types';
 import { readBinaryData } from '.';
+import { convertRulesToFFI, validateRules } from '../../common/matchingRules';
 
 export class RequestBuilder implements V4RequestBuilder {
   // tslint:disable:no-empty-function
@@ -89,16 +90,13 @@ export class RequestBuilder implements V4RequestBuilder {
    * Matching rules allow you to define flexible matching criteria for request attributes
    * beyond exact equality (e.g., regex patterns, type matching, number ranges).
    *
-   * @param rules - The matching rules as a Map or JSON string. Rules should follow the Pact matching rules format.
+   * @param rules - The matching rules as a strongly typed Rules object. Rules should follow the Pact matching rules format.
    * @returns The V4RequestBuilder instance for method chaining
    */
-  matchingRules(rules: Map<string, unknown> | string): V4RequestBuilder {
-    let encodedRules = rules;
-    if (encodedRules instanceof Map) {
-      encodedRules = JSON.stringify(Object.fromEntries(encodedRules));
-    }
-
-    this.interaction.withRequestMatchingRules(encodedRules);
+  matchingRules(rules: Rules): V4RequestBuilder {
+    validateRules(rules);
+    const ffiRules = convertRulesToFFI(rules);
+    this.interaction.withRequestMatchingRules(JSON.stringify(ffiRules));
     return this;
   }
 
