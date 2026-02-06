@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [16.1.0](https://github.com/pact-foundation/pact-js/compare/v16.0.4...v16.1.0) (2026-02-06)
+
+
+### Features
+
+* add support for with_matching_rules and add example usage ([#1640](https://github.com/pact-foundation/pact-js/issues/1640)) ([31a277b](https://github.com/pact-foundation/pact-js/commit/31a277bdf8590bae80dc6c38f7e6e48449eb3fa7))
+
+
+### Fixes and Improvements
+
+* **deps:** update dependency @pact-foundation/pact-core to v18 ([#1635](https://github.com/pact-foundation/pact-js/issues/1635)) ([1700f6f](https://github.com/pact-foundation/pact-js/commit/1700f6f0ba3dfd7eccf6ca651e668df5b6cab21e))
+
 ## [16.0.4](https://github.com/pact-foundation/pact-js/compare/v16.0.3...v16.0.4) (2025-12-19)
 
 
