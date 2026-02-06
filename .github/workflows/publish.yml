@@ -13,6 +13,11 @@ env:
   PACT_BROKER_BASE_URL: ${{ secrets.PACT_BROKER_BASE_URL }}
   PACT_BROKER_TOKEN: ${{ secrets.PACT_BROKER_TOKEN }}
 
+# Setup npm trusted publishing
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -26,11 +31,10 @@ jobs:
       - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6
         with:
           node-version: 24
-          registry-url: 'https://registry.npmjs.org'
+          registry-url: "https://registry.npmjs.org"
       - id: publish
         run: scripts/ci/release.sh
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTOMATION_TOKEN}}
           SKIP_EXAMPLES: true
         # examples are skipped, due to jest-pact requiring updating to support pact-js-v16
         # will be reinstated, post release of https://github.com/pact-foundation/jest-pact/pull/423
