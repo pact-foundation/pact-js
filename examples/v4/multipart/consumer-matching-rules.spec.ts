@@ -6,14 +6,7 @@
 
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import {
-  Pact,
-  like,
-  integer,
-  regex,
-  contentType,
-  Rules,
-} from '@pact-foundation/pact';
+import { Pact, Matchers, Rules } from '@pact-foundation/pact';
 import FormData from 'form-data';
 import axios from 'axios';
 import fs from 'node:fs';
@@ -79,14 +72,14 @@ describe('Pact V4 Multipart with Matching Rules', () => {
       body: [
         {
           path: '$.image',
-          rules: [contentType('image/jpeg')],
+          rules: [Matchers.contentType('image/jpeg')],
         },
       ],
       header: [
         {
           path: 'Content-Type',
           rules: [
-            regex(
+            Matchers.regex(
               'multipart/form-data;\\s*boundary=.*',
               `multipart/form-data; boundary=${boundary}`
             ),
@@ -113,13 +106,13 @@ describe('Pact V4 Multipart with Matching Rules', () => {
         })
         .willRespondWith(201, (builder) => {
           builder.jsonBody({
-            id: like('upload-1'),
-            message: like('Upload successful'),
+            id: Matchers.like('upload-1'),
+            message: Matchers.like('Upload successful'),
             metadata: {
-              name: like('test'),
-              size: integer(100),
+              name: Matchers.like('test'),
+              size: Matchers.integer(100),
             },
-            image_size: integer(JPEG_BYTES.length),
+            image_size: Matchers.integer(JPEG_BYTES.length),
           });
         })
         .executeTest(async (mockServer) => {

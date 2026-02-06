@@ -15,10 +15,7 @@ export const convertMatcherToFFI = (
   }
 
   Object.keys(matcher).forEach((key) => {
-    if (
-      key !== 'pact:matcher:type' &&
-      key !== 'pact:generator:type'
-    ) {
+    if (key !== 'pact:matcher:type' && key !== 'pact:generator:type') {
       result[key] = matcher[key as keyof Matcher<unknown>];
     }
   });

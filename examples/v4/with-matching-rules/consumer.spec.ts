@@ -9,12 +9,7 @@
 
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import {
-  Pact,
-  Matchers,
-  like,
-  Rules,
-} from '@pact-foundation/pact';
+import { Pact, Matchers, Rules } from '@pact-foundation/pact';
 import axios from 'axios';
 
 chai.use(chaiAsPromised);
@@ -36,11 +31,11 @@ describe('Pact V4 Consumer Test Using Matching Rules', () => {
       body: [
         {
           path: '$.customerId',
-          rule: [like(789456)],
+          rules: [Matchers.like(789456)],
         },
         {
           path: '$.email',
-          rule: [like('sarah.johnson@techcorp.com')],
+          rules: [Matchers.like('sarah.johnson@techcorp.com')],
         },
       ],
     };

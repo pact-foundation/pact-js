@@ -8,12 +8,7 @@
 
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import {
-  PactV3,
-  like,
-  boolean,
-  Rules,
-} from '@pact-foundation/pact';
+import { PactV3, MatchersV3, Rules } from '@pact-foundation/pact';
 import axios from 'axios';
 
 chai.use(chaiAsPromised);
@@ -32,11 +27,11 @@ describe('Pact Consumer Test Using Matching Rules', () => {
       body: [
         {
           path: '$.customerId',
-          rules: [like(789456)],
+          rules: [MatchersV3.like(789456)],
         },
         {
           path: '$.email',
-          rules: [like('sarah.johnson@techcorp.com')],
+          rules: [MatchersV3.like('sarah.johnson@techcorp.com')],
         },
       ],
     };
@@ -63,8 +58,8 @@ describe('Pact Consumer Test Using Matching Rules', () => {
       .willRespondWith({
         status: 200,
         body: {
-          success: boolean(true),
-          message: like('Customer profile updated successfully'),
+          success: MatchersV3.boolean(true),
+          message: MatchersV3.like('Customer profile updated successfully'),
         },
       })
       .executeTest(async (mockServer) => {
