@@ -17,8 +17,7 @@ export const convertMatcherToFFI = (
   Object.keys(matcher).forEach((key) => {
     if (
       key !== 'pact:matcher:type' &&
-      key !== 'pact:generator:type' &&
-      key !== 'value'
+      key !== 'pact:generator:type'
     ) {
       result[key] = matcher[key as keyof Matcher<unknown>];
     }
@@ -57,7 +56,7 @@ export const validateRules = (rules: Rules): void => {
       }
 
       const ruleObj = rule as Record<string, unknown>;
-      if (!('rule' in ruleObj) || !Array.isArray(ruleObj.rule)) {
+      if (!('rules' in ruleObj) || !Array.isArray(ruleObj.rules)) {
         throw new Error(
           `Rule at ${key}[${index}] must have a "rule" property that is an array`
         );
@@ -93,7 +92,7 @@ export const convertRulesToFFI = (rules: Rules): Record<string, unknown> => {
     rulesArray.forEach((rule: Rule) => {
       if (rule.path) {
         ffiRules[part][rule.path] = {
-          matchers: rule.rule.map(convertMatcherToFFI),
+          matchers: rule.rules.map(convertMatcherToFFI),
         };
       }
     });

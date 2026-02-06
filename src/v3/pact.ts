@@ -136,25 +136,6 @@ export class PactV3 {
     return this;
   }
 
-  public withRequestHeader(
-    req: V3Request,
-    name: string,
-    index: number,
-    value: string | Map<string, unknown> | V3RegexMatcher
-  ): PactV3 {
-    let encodedValue = value;
-    if (encodedValue instanceof Map) {
-      encodedValue = JSON.stringify(Object.fromEntries(encodedValue));
-    }
-    this.interaction.withRequestHeader(
-      name.toLocaleLowerCase(),
-      index,
-      matcherValueOrString(encodedValue)
-    );
-    setRequestDetails(this.interaction, req);
-    return this;
-  }
-
   /**
    * Applies matching rules to the consumer request.
    * Matching rules allow you to define flexible matching criteria for request attributes

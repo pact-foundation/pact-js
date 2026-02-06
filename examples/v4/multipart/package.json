@@ -5,8 +5,9 @@
   "scripts": {
     "clean": "rimraf pacts",
     "pretest": "npm run clean",
-    "test": "npm run test:consumer && npm run test:provider",
+    "test": "npm run test:consumer && npm run test:provider && npm run test:consumer:matching-rules",
     "test:consumer": "mocha consumer.spec.ts",
+    "test:consumer:matching-rules": "mocha consumer-matching-rules.spec.ts",
     "test:provider": "mocha provider.spec.ts"
   },
   "author": "matt.fellows@onegeek.com.au",

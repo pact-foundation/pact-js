@@ -62,7 +62,7 @@ export type JSONPath = string;
  */
 export type Rule = {
   path?: JSONPath;
-  rule: Matcher<unknown>[];
+  rules: Matcher<unknown>[];
 };
 
 /**
