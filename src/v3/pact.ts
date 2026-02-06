@@ -15,7 +15,6 @@ import {
   V3Interaction,
   V3MockServer,
   V3ProviderState,
-  V3RegexMatcher,
   V3Request,
   V3Response,
 } from './types';
