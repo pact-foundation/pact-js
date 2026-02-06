@@ -2,6 +2,7 @@ import { JsonMap } from '../../common/jsonTypes';
 import {
   Matcher,
   Path,
+  Rules,
   SpecificationVersion,
   TemplateHeaders,
   TemplateQuery,
@@ -94,6 +95,7 @@ export interface V4RequestBuilder {
     mimePartName: string,
     boundary?: string
   ): V4RequestBuilder;
+  matchingRules(rules: Rules): V4RequestBuilder;
   body(contentType: string, body: Buffer): V4RequestBuilder;
 }
 
@@ -107,6 +109,7 @@ export interface V4ResponseBuilder {
     mimePartName: string,
     boundary?: string
   ): V4ResponseBuilder;
+  matchingRules(rules: Rules): V4ResponseBuilder;
   body(contentType: string, body: Buffer): V4ResponseBuilder;
 }
 
@@ -159,6 +162,7 @@ export interface V4RequestWithPluginBuilder {
     boundary?: string
   ): V4RequestWithPluginBuilder;
   body(contentType: string, body: Buffer): V4RequestWithPluginBuilder;
+  matchingRules(rules: Rules): V4RequestWithPluginBuilder;
   pluginContents(
     contentType: string,
     contents: string
@@ -175,6 +179,7 @@ export interface V4ResponseWithPluginBuilder {
     mimePartName: string,
     boundary?: string
   ): V4ResponseBuilder;
+  matchingRules(rules: Rules): V4ResponseBuilder;
   body(contentType: string, body: Buffer): V4ResponseBuilder;
   pluginContents(contentType: string, contents: string): V4ResponseBuilder;
 }

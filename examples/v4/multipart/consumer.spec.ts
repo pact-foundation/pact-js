@@ -9,8 +9,6 @@ import FormData from 'form-data';
 
 chai.use(chaiAsPromised);
 
-const { expect } = chai;
-
 describe('Multipart Request', () => {
   describe('POST /upload', () => {
     const pact = new Pact({

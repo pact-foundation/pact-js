@@ -315,6 +315,16 @@ export function regex(pattern: RegExp | string, str: string): V3RegexMatcher {
 }
 
 /**
+ * Matches the content type of a multipart field.
+ * Used for matching binary content or specific content types in multipart requests.
+ * @param contentTypeValue The content type to match (e.g., 'image/jpeg', 'text/plain')
+ */
+export const contentType = (contentTypeValue: string): Matcher<string> => ({
+  'pact:matcher:type': 'contentType',
+  value: contentTypeValue,
+});
+
+/**
  * Value that must be equal to the example. This is mainly used to reset the matching rules which cascade.
  * @param value Example value
  */

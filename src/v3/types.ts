@@ -51,6 +51,29 @@ export interface RulesMatcher<T> extends Matcher<T> {
 }
 
 /**
+ * Part of a request or response where matching rules can be applied
+ */
+export type Part = 'path' | 'body' | 'header' | 'query' | 'status';
+
+export type JSONPath = string;
+
+/**
+ * A matching rule with optional JSONPath and array of matchers
+ */
+export type Rule = {
+  path?: JSONPath;
+  rules: Matcher<unknown>[];
+};
+
+/**
+ * Matching rules organized by part (path, body, header, query, status)
+ * Each part can have its own set of matching rules
+ */
+export type Rules = Partial<{
+  [part in Part]: Rule | Rule[];
+}>;
+
+/**
  * Options for the mock server
  */
 export interface PactV3Options {
