@@ -170,6 +170,31 @@ describe('Pact V4 Multipart with Matching Rules', () => {
       ],
     };
 
+    const responseMatchingRules: Rules = {
+      body: [
+        {
+          path: '$.id',
+          rules: [Matchers.like('upload-1')],
+        },
+        {
+          path: '$.message',
+          rules: [Matchers.like('Upload successful')],
+        },
+        {
+          path: '$.metadata.name',
+          rules: [Matchers.like('test')],
+        },
+        {
+          path: '$.metadata.size',
+          rules: [Matchers.integer(100)],
+        },
+        {
+          path: '$.image_size',
+          rules: [Matchers.integer(JPEG_BYTES.length)],
+        },
+      ],
+    };
+
     await pact
       .addSynchronousInteraction('multipart upload request')
       .given('file upload service is available')
@@ -182,15 +207,17 @@ describe('Pact V4 Multipart with Matching Rules', () => {
           .withMatchingRules(requestMatchingRules);
       })
       .withResponse((builder) => {
-        builder.withJSONContent({
-          id: Matchers.like('upload-1'),
-          message: Matchers.like('Upload successful'),
-          metadata: {
-            name: Matchers.like('test'),
-            size: Matchers.integer(100),
-          },
-          image_size: Matchers.integer(JPEG_BYTES.length),
-        });
+        builder
+          .withJSONContent({
+            id: 'upload-1',
+            message: 'Upload successful',
+            metadata: {
+              name: 'test',
+              size: 100,
+            },
+            image_size: JPEG_BYTES.length,
+          })
+          .withMatchingRules(responseMatchingRules);
       })
       .executeTest(async (message) => {
         expect(message.Request).to.not.be.undefined;
