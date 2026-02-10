@@ -89,6 +89,7 @@ export interface V4SynchronousMessageWithResponseBuilder {
     body: Buffer
   ): V4SynchronousMessageWithResponseBuilder;
   withJSONContent(content: unknown): V4SynchronousMessageWithResponseBuilder;
+  withMatchingRules(rules: Rules): V4SynchronousMessageWithResponseBuilder;
 }
 
 export interface V4SynchronousMessageWithPluginContents {

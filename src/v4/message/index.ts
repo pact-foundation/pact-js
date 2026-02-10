@@ -235,6 +235,13 @@ export class SynchronousMessageWithResponseBuilder
 
     return this;
   }
+
+  withMatchingRules(rules: Rules): V4SynchronousMessageWithResponseBuilder {
+    validateRules(rules);
+    const ffiRules = convertRulesToFFI(rules);
+    this.interaction.withResponseMatchingRules(JSON.stringify(ffiRules));
+    return this;
+  }
 }
 
 export class SynchronousMessageWithPluginContents
