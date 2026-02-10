@@ -146,4 +146,114 @@ describe('Pact V4 Multipart with Matching Rules', () => {
       }
     }
   });
+
+  it('uploads multipart form with JSON metadata and image using synchronous message interaction', async () => {
+    const boundary = 'test-boundary-12345';
+    let requestBody = '';
+    requestBody += `--${boundary}\r\n`;
+    requestBody += `Content-Disposition: form-data; name="image"; filename="test.jpg"\r\n`;
+    requestBody += `Content-Type: image/jpeg\r\n`;
+    requestBody += `\r\n`;
+
+    const requestBuffer = Buffer.concat([
+      Buffer.from(requestBody),
+      JPEG_BYTES,
+      Buffer.from(`\r\n--${boundary}--\r\n`),
+    ]);
+
+    const requestMatchingRules: Rules = {
+      body: [
+        {
+          path: '$.image',
+          rules: [Matchers.contentType('image/jpeg')],
+        },
+      ],
+    };
+
+    await pact
+      .addSynchronousInteraction('multipart upload request')
+      .given('file upload service is available')
+      .withRequest((builder) => {
+        builder
+          .withContent(
+            `multipart/form-data; boundary=${boundary}`,
+            requestBuffer
+          )
+          .matchingRules(requestMatchingRules);
+      })
+      .withResponse((builder) => {
+        builder.withJSONContent({
+          id: Matchers.like('upload-1'),
+          message: Matchers.like('Upload successful'),
+          metadata: {
+            name: Matchers.like('test'),
+            size: Matchers.integer(100),
+          },
+          image_size: Matchers.integer(JPEG_BYTES.length),
+        });
+      })
+      .executeTest(async (message) => {
+        expect(message.Request).to.not.be.undefined;
+        expect(message.Response).to.be.an('array');
+        expect(message.Response.length).to.be.greaterThan(0);
+
+        const response = message.Response[0];
+        const responseData = JSON.parse(response.content.toString());
+
+        expect(responseData.message).to.equal('Upload successful');
+        expect(responseData.id).to.equal('upload-1');
+        expect(responseData.metadata).to.deep.equal({
+          name: 'test',
+          size: 100,
+        });
+        expect(responseData.image_size).to.equal(JPEG_BYTES.length);
+      });
+  });
+
+  it('uploads multipart form with JSON metadata and image using asynchronous interaction', async () => {
+    const boundary = 'test-boundary-12345';
+    let messageBody = '';
+    messageBody += `--${boundary}\r\n`;
+    messageBody += `Content-Disposition: form-data; name="image"; filename="test.jpg"\r\n`;
+    messageBody += `Content-Type: image/jpeg\r\n`;
+    messageBody += `\r\n`;
+
+    const messageBuffer = Buffer.concat([
+      Buffer.from(messageBody),
+      JPEG_BYTES,
+      Buffer.from(`\r\n--${boundary}--\r\n`),
+    ]);
+
+    const messageMatchingRules: Rules = {
+      body: [
+        {
+          path: '$.image',
+          rules: [Matchers.contentType('image/jpeg')],
+        },
+      ],
+    };
+
+    await pact
+      .addAsynchronousInteraction()
+      .given('file upload service is available')
+      .expectsToReceive('multipart upload notification', (builder) => {
+        builder
+          .withContent(
+            `multipart/form-data; boundary=${boundary}`,
+            messageBuffer
+          )
+          .matchingRules(messageMatchingRules)
+          .withMetadata({
+            eventType: 'file.uploaded',
+            timestamp: new Date().toISOString(),
+          });
+      })
+      .executeTest(async (message) => {
+        expect(message.contents).to.not.be.undefined;
+        expect(message.metadata).to.not.be.undefined;
+        expect(message.metadata.eventType).to.equal('file.uploaded');
+        const content = message.contents.content;
+        expect(Buffer.isBuffer(content)).to.be.true;
+      });
+  });
 });

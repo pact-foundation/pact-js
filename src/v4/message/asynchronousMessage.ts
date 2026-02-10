@@ -24,6 +24,8 @@ import {
   filterMissingFeatureFlag,
   generateMockServerError,
 } from '../../v3/display';
+import { convertRulesToFFI, validateRules } from '../../common/matchingRules';
+import { Rules } from '../../v3/types';
 import logger from '../../common/logger';
 
 const defaultPactDir = './pacts';
@@ -193,6 +195,14 @@ export class AsynchronousMessageBuilder
       JSON.stringify(content),
       'application/json'
     );
+
+    return this;
+  }
+
+  matchingRules(rules: Rules): V4AsynchronousMessageBuilder {
+    validateRules(rules);
+    const ffiRules = convertRulesToFFI(rules);
+    this.message.interaction.withMatchingRules(JSON.stringify(ffiRules));
 
     return this;
   }
