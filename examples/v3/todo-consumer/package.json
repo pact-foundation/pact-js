@@ -18,7 +18,7 @@
     "axios": "^1.12.2",
     "express": "^5.1.0",
     "eyes": "^0.1.8",
-    "fast-xml-parser": "^4.4.1",
+    "fast-xml-parser": "^5.3.4",
     "ramda": "^0.28.0"
   },
   "devDependencies": {
