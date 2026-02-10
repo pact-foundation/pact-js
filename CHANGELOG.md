@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [16.2.0](https://github.com/pact-foundation/pact-js/compare/v16.1.0...v16.2.0) (2026-02-10)
+
+
+### Features
+
+* add matching rules support to async and sync interactions ([#1663](https://github.com/pact-foundation/pact-js/issues/1663)) ([ee4dc99](https://github.com/pact-foundation/pact-js/commit/ee4dc9900dfa706f9a18529212c9fd179e4a2b37))
+
 ## [16.1.0](https://github.com/pact-foundation/pact-js/compare/v16.0.4...v16.1.0) (2026-02-06)
 
 
