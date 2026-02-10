@@ -179,7 +179,7 @@ describe('Pact V4 Multipart with Matching Rules', () => {
             `multipart/form-data; boundary=${boundary}`,
             requestBuffer
           )
-          .matchingRules(requestMatchingRules);
+          .withMatchingRules(requestMatchingRules);
       })
       .withResponse((builder) => {
         builder.withJSONContent({
@@ -242,7 +242,7 @@ describe('Pact V4 Multipart with Matching Rules', () => {
             `multipart/form-data; boundary=${boundary}`,
             messageBuffer
           )
-          .matchingRules(messageMatchingRules)
+          .withMatchingRules(messageMatchingRules)
           .withMetadata({
             eventType: 'file.uploaded',
             timestamp: new Date().toISOString(),

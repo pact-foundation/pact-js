@@ -199,7 +199,7 @@ export class AsynchronousMessageBuilder
     return this;
   }
 
-  matchingRules(rules: Rules): V4AsynchronousMessageBuilder {
+  withMatchingRules(rules: Rules): V4AsynchronousMessageBuilder {
     validateRules(rules);
     const ffiRules = convertRulesToFFI(rules);
     this.message.interaction.withMatchingRules(JSON.stringify(ffiRules));

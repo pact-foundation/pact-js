@@ -73,7 +73,7 @@ export interface V4SynchronousMessageWithRequestBuilder {
     body: Buffer
   ): V4SynchronousMessageWithRequestBuilder;
   withJSONContent(content: unknown): V4SynchronousMessageWithRequestBuilder;
-  matchingRules(rules: Rules): V4SynchronousMessageWithRequestBuilder;
+  withMatchingRules(rules: Rules): V4SynchronousMessageWithRequestBuilder;
 }
 
 export interface V4SynchronousMessageWithRequest {
@@ -159,5 +159,5 @@ export interface V4AsynchronousMessageBuilder {
   withMetadata(metadata: Metadata): V4AsynchronousMessageBuilder;
   withContent(contentType: string, body: Buffer): V4AsynchronousMessageBuilder;
   withJSONContent(content: unknown): V4AsynchronousMessageBuilder;
-  matchingRules(rules: Rules): V4AsynchronousMessageBuilder;
+  withMatchingRules(rules: Rules): V4AsynchronousMessageBuilder;
 }

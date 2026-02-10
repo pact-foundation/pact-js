@@ -152,7 +152,7 @@ export class SynchronousMessageWithRequestBuilder
     return this;
   }
 
-  matchingRules(rules: Rules): V4SynchronousMessageWithRequestBuilder {
+  withMatchingRules(rules: Rules): V4SynchronousMessageWithRequestBuilder {
     validateRules(rules);
     const ffiRules = convertRulesToFFI(rules);
     this.interaction.withRequestMatchingRules(JSON.stringify(ffiRules));
