@@ -1,5 +1,6 @@
 import { AnyJson, JsonMap } from '../../common/jsonTypes';
 import { Metadata } from '../../dsl/message';
+import { Rules } from '../../v3/types';
 
 export type MessageContents = {
   content: AnyJson | Buffer;
@@ -72,6 +73,7 @@ export interface V4SynchronousMessageWithRequestBuilder {
     body: Buffer
   ): V4SynchronousMessageWithRequestBuilder;
   withJSONContent(content: unknown): V4SynchronousMessageWithRequestBuilder;
+  withMatchingRules(rules: Rules): V4SynchronousMessageWithRequestBuilder;
 }
 
 export interface V4SynchronousMessageWithRequest {
@@ -87,6 +89,7 @@ export interface V4SynchronousMessageWithResponseBuilder {
     body: Buffer
   ): V4SynchronousMessageWithResponseBuilder;
   withJSONContent(content: unknown): V4SynchronousMessageWithResponseBuilder;
+  withMatchingRules(rules: Rules): V4SynchronousMessageWithResponseBuilder;
 }
 
 export interface V4SynchronousMessageWithPluginContents {
@@ -157,4 +160,5 @@ export interface V4AsynchronousMessageBuilder {
   withMetadata(metadata: Metadata): V4AsynchronousMessageBuilder;
   withContent(contentType: string, body: Buffer): V4AsynchronousMessageBuilder;
   withJSONContent(content: unknown): V4AsynchronousMessageBuilder;
+  withMatchingRules(rules: Rules): V4AsynchronousMessageBuilder;
 }

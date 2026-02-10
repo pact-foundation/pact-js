@@ -28,6 +28,8 @@ import {
   filterMissingFeatureFlag,
   generateMockServerError,
 } from '../../v3/display';
+import { convertRulesToFFI, validateRules } from '../../common/matchingRules';
+import { Rules } from '../../v3/types';
 import logger from '../../common/logger';
 
 const defaultPactDir = './pacts';
@@ -149,6 +151,13 @@ export class SynchronousMessageWithRequestBuilder
 
     return this;
   }
+
+  withMatchingRules(rules: Rules): V4SynchronousMessageWithRequestBuilder {
+    validateRules(rules);
+    const ffiRules = convertRulesToFFI(rules);
+    this.interaction.withRequestMatchingRules(JSON.stringify(ffiRules));
+    return this;
+  }
 }
 
 export class SynchronousMessageWithRequest
@@ -224,6 +233,13 @@ export class SynchronousMessageWithResponseBuilder
       'application/json'
     );
 
+    return this;
+  }
+
+  withMatchingRules(rules: Rules): V4SynchronousMessageWithResponseBuilder {
+    validateRules(rules);
+    const ffiRules = convertRulesToFFI(rules);
+    this.interaction.withResponseMatchingRules(JSON.stringify(ffiRules));
     return this;
   }
 }
