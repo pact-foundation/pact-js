@@ -69,7 +69,7 @@ export interface MessageProviderOptions {
   messageProviders: MessageProviders;
 
   // Prepare any provider states
-  stateHandlers?: MessageStateHandlers;
+  stateHandlers?: MessageStateHandlers<unknown>;
 }
 
 type ExcludedPactNodeVerifierKeys = Exclude<
