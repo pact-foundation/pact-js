@@ -20,10 +20,9 @@ Like regular Pact tests, plugins can support [expressions](https://github.com/pa
 
 ### Consumer
 
-When using a plugin, each plugin is responsible for defining its inputs/outputs. It is usually a JSON structure that represents the interaction. You will need to consult each plugin to understand what data structure should be supplied to your plugins and on which part of the interaction to supply them (e.g. the request or the response).
+When using a plugin, each plugin is responsible for defining its inputs/outputs. It is usually a JSON structure that represents the interaction. You will need to consult each plugin to understand what data structure should be supplied to your plugins and on which part of the interaction to supply them (for example, the request or the response).
 
 For example, this uses the [Matt Plugin](https://github.com/mefellows/pact-matt-plugin), a fictional protocol.
-
 ```javascript
 const mattRequest = `{"request": {"body": "hello"}}`;
 const mattResponse = `{"response":{"body":"world"}}`;
@@ -66,7 +65,18 @@ In this case, we want to use a new content type: `application/matt`.
 
 ### Provider
 
-The verification side of this test is no different to a usual verification, as it's just an HTTP test. Any required plugins will automatically be loaded by the framework if not present, or an error will be shown should the plugin installation fail.
+The verification side of this test is no different to a usual verification, as it is just an HTTP test. Any required plugins will automatically be loaded by the framework if not present, or an error will be shown should the plugin installation fail.
+
+```js
+const { Verifier } = require('@pact-foundation/pact');
+
+const v = new Verifier({
+  providerBaseUrl: `http://localhost:${httpPort}`,
+  pactUrls: ['./pacts/myconsumer-myprovider.json'],
+});
+
+return v.verifyProvider();
+```
 
 ## Asynchronous Messages
 
@@ -148,20 +158,34 @@ As per the HTTP interaction, calling `usingPlugin` early in the builder allows t
 
 ### Provider
 
-The verification side of this interaction needs you to specify additional transports on the verifier. In this case, where to send the TCP traffic in additional to the HTTP traffic. The rest of the verifier is the same as a normal verification: 
+The verification side of this interaction requires you to specify additional transports on the verifier. In this case, where to send the TCP traffic in addition to the HTTP traffic. You also need to map each message interaction to a handler function using `messageProviders`, just as you would for standard message verification.
+
+The rest of the verifier is the same as a normal verification:
 
 ```js
-        const v = new Verifier({
-          providerBaseUrl: `http://${HOST}:${httpPort}`,
-          transports: [
-            {
-              port: tcpPort,
-              protocol: 'matt',
-              scheme: 'tcp',
-            },
-          ],
-          ...
-        });
+const { Verifier, providerWithMetadata } = require('@pact-foundation/pact');
 
-        return v.verifyProvider();
+const v = new Verifier({
+  providerBaseUrl: `http://${HOST}:${httpPort}`,
+  transports: [
+    {
+      port: tcpPort,
+      protocol: 'matt',
+      scheme: 'tcp',
+    },
+  ],
+  pactUrls: ['./pacts/myconsumer-myprovider.json'],
+  messageProviders: {
+    'an asynchronous MATT message': providerWithMetadata(
+      () => {
+        return Buffer.from('tcpworld');
+      },
+      { contentType: 'application/matt' }
+    ),
+  },
+});
+
+return v.verifyProvider();
 ```
+
+For a full working example with HTTP, TCP, and message verification combined, see the [v4 plugins example](https://github.com/pact-foundation/pact-js/tree/master/examples/v4/plugins/).

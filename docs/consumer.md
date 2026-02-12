@@ -48,7 +48,7 @@ The Pact SDK uses a fluent builder to create interactions.
 
 | API                              | Options                            | Description                                                                                                                                                            |
 | -------------------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `new Pact(options)`            | See constructor options below      | Creates a Mock Server test double of your Provider API. The class is **not** thread safe, but you can run tests in parallel by creating as many instances as you need. |
+| `new Pact(options)`              | See constructor options below      | Creates a Mock Server test double of your Provider API. The class is **not** thread safe, but you can run tests in parallel by creating as many instances as you need. |
 | `addInteraction(...)`            | `V4UnconfiguredInteraction`        | Start a builder for an HTTP interaction                                                                                                                                |
 | `addSynchronousInteraction(...)` | `V4UnconfiguredSynchronousMessage` | Start a builder for an asynchronous message                                                                                                                            |
 
@@ -192,3 +192,137 @@ them in scripts, you can provide it via the environment variables
 `PACT_BROKER_USERNAME` and `PACT_BROKER_PASSWORD`. If your broker supports an
 access token instead of a password, use the environment variable
 `PACT_BROKER_TOKEN`.
+
+## Multipart Form Data
+
+The V4 `Pact` interface supports multipart form data requests. This is useful for testing file upload endpoints.
+
+### Basic Multipart Request
+
+Use the `multipartBody` method on the request builder to attach a file:
+
+```js
+import { Pact, SpecificationVersion, LogLevel } from '@pact-foundation/pact';
+import FormData from 'form-data';
+import axios from 'axios';
+import fs from 'fs';
+import path from 'path';
+
+const pact = new Pact({
+  consumer: 'MultipartConsumer',
+  provider: 'MultipartProvider',
+  spec: SpecificationVersion.SPECIFICATION_VERSION_V4,
+  logLevel: 'info' as LogLevel,
+});
+
+describe('POST /upload', () => {
+  it('uploads a file', async () => {
+    const filePath = path.resolve(__dirname, './testfile.txt');
+
+    await pact
+      .addInteraction()
+      .uponReceiving('a multipart request')
+      .withRequest('POST', '/upload', (builder) => {
+        builder.multipartBody('text/plain', filePath, 'file.txt');
+      })
+      .willRespondWith(200)
+      .executeTest((mockserver) => {
+        const form = new FormData();
+        form.append('file.txt', fs.createReadStream(filePath));
+
+        return axios.request({
+          baseURL: mockserver.url,
+          headers: form.getHeaders(),
+          data: form,
+          method: 'POST',
+          url: '/upload',
+        });
+      });
+  });
+});
+```
+
+The `multipartBody(contentType, filePath, mimePartName, boundary?)` method accepts:
+
+- `contentType` — the MIME type of the file content (for example, `text/plain`, `image/jpeg`)
+- `filePath` — absolute path to the file to include
+- `mimePartName` — the form field name
+- `boundary` — (optional) a custom multipart boundary string
+
+### Multipart with Matching Rules (Advanced)
+
+For cases where the standard DSL does not support a specific matcher or you need to combine multiple matching rules on different parts of a multipart request, you can use `withMatchingRules` alongside `binaryFile` on the request builder:
+
+```js
+import { Pact, Matchers, Rules } from '@pact-foundation/pact';
+
+const requestMatchingRules: Rules = {
+  body: [
+    {
+      path: '$.image',
+      rules: [Matchers.contentType('image/jpeg')],
+    },
+  ],
+  header: [
+    {
+      path: 'Content-Type',
+      rules: [
+        Matchers.regex(
+          'multipart/form-data;\\s*boundary=.*',
+          `multipart/form-data; boundary=${boundary}`
+        ),
+      ],
+    },
+  ],
+};
+
+await pact
+  .addInteraction()
+  .given('file upload service is available')
+  .uponReceiving('a multipart upload with metadata and image')
+  .withRequest('POST', '/upload', (builder) => {
+    builder
+      .headers({
+        'Content-Type': `multipart/form-data; boundary=${boundary}`,
+      })
+      .binaryFile(
+        `multipart/form-data; boundary=${boundary}`,
+        tempFilePath
+      )
+      .matchingRules(requestMatchingRules);
+  })
+  .willRespondWith(201, (builder) => {
+    builder.jsonBody({
+      id: Matchers.like('upload-1'),
+      message: Matchers.like('Upload successful'),
+    });
+  })
+  .executeTest(async (mockServer) => {
+    const formData = new FormData();
+    formData.append('image', imageBuffer, {
+      filename: 'test.jpg',
+      contentType: 'image/jpeg',
+    });
+
+    const response = await axios.post(`${mockServer.url}/upload`, formData, {
+      headers: formData.getHeaders(),
+    });
+
+    expect(response.status).to.equal(201);
+  });
+```
+
+The `Rules` type allows you to specify matching rules on different parts of the request or response:
+
+```js
+const rules: Rules = {
+  body: [{ path: '$.fieldName', rules: [Matchers.like('value')] }],
+  header: [{ path: 'Header-Name', rules: [Matchers.regex('pattern', 'example')] }],
+  path: [{ rules: [Matchers.regex('/api/.*', '/api/upload')] }],
+  query: [{ path: 'param', rules: [Matchers.like('value')] }],
+};
+```
+
+_NOTE:_ `withMatchingRules` / `matchingRules` is an advanced feature intended for edge cases where the fluent DSL does not cover your needs. For most multipart tests, `multipartBody` is sufficient.
+
+For working examples, see the [v4 multipart example](https://github.com/pact-foundation/pact-js/tree/master/examples/v4/multipart/).
