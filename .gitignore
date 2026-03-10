@@ -57,3 +57,6 @@ pact-foundation-pact-*.tgz
 /native/target/
 build/
 native/artifacts.json
+
+# Worktrees
+.worktrees
