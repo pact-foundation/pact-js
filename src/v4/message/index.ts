@@ -56,7 +56,7 @@ export class UnconfiguredSynchronousMessage
     return this;
   }
 
-  pending(pending: boolean = true): V4UnconfiguredSynchronousMessage {
+  pending(pending = true): V4UnconfiguredSynchronousMessage {
     this.interaction.setPending(pending);
 
     return this;

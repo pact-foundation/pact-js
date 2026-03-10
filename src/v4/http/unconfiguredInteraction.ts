@@ -43,7 +43,7 @@ export class UnconfiguredInteraction implements V4UnconfiguredInteraction {
     return this;
   }
 
-  pending(pending: boolean = true): V4UnconfiguredInteraction {
+  pending(pending = true): V4UnconfiguredInteraction {
     this.interaction.setPending(pending);
 
     return this;
