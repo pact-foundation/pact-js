@@ -12,6 +12,8 @@ import {
   V4AsynchronousMessageWithContent,
   V4AsynchronousMessageBuilderFunc,
   V4AsynchronousMessageBuilder,
+  Comment,
+  CustomComment,
 } from './types';
 import {
   AsynchronousMessage as PactCoreAsynchronousMessage,
@@ -33,6 +35,13 @@ const defaultPactDir = './pacts';
 type Message = {
   requestIsBinary: boolean;
   interaction: PactCoreAsynchronousMessage;
+};
+
+type AsynchronousMessageInteractionWithMetadata = PactCoreAsynchronousMessage & {
+  setPending: (pending: boolean) => void;
+  setComment: (key: string, value: string) => boolean;
+  addTextComment: (comment: string) => boolean;
+  setInteractionTestName: (name: string) => number;
 };
 
 type InteractionType =
@@ -99,6 +108,37 @@ export class UnconfiguredAsynchronousMessage
     } else {
       this.message.interaction.given(state);
     }
+
+    return this;
+  }
+
+  pending(pending: boolean = true): V4UnconfiguredAsynchronousMessage {
+    (
+      this.message.interaction as AsynchronousMessageInteractionWithMetadata
+    ).setPending(pending);
+
+    return this;
+  }
+
+  comment(comment: Comment | CustomComment): V4UnconfiguredAsynchronousMessage {
+    if (typeof comment === 'string') {
+      (
+        this.message.interaction as AsynchronousMessageInteractionWithMetadata
+      ).addTextComment(comment);
+      return this;
+    }
+
+    (
+      this.message.interaction as AsynchronousMessageInteractionWithMetadata
+    ).setComment(comment.key, comment.value);
+
+    return this;
+  }
+
+  testName(name: string): V4UnconfiguredAsynchronousMessage {
+    (
+      this.message.interaction as AsynchronousMessageInteractionWithMetadata
+    ).setInteractionTestName(name);
 
     return this;
   }

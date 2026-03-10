@@ -14,7 +14,16 @@ import {
   V4InteractionWithRequest,
   PluginConfig,
   V4InteractionWithPlugin,
+  Comment,
+  CustomComment,
 } from './types';
+
+type ConsumerInteractionWithMetadata = ConsumerInteraction & {
+  setPending: (pending: boolean) => boolean;
+  setComment: (key: string, value: string) => boolean;
+  addTextComment: (comment: string) => boolean;
+  setInteractionTestName: (name: string) => number;
+};
 
 export class UnconfiguredInteraction implements V4UnconfiguredInteraction {
   // tslint:disable:no-empty-function
@@ -37,6 +46,36 @@ export class UnconfiguredInteraction implements V4UnconfiguredInteraction {
     } else {
       this.interaction.given(state);
     }
+
+    return this;
+  }
+
+  pending(pending: boolean = true): V4UnconfiguredInteraction {
+    (this.interaction as ConsumerInteractionWithMetadata).setPending(pending);
+
+    return this;
+  }
+
+  comment(comment: Comment | CustomComment): V4UnconfiguredInteraction {
+    if (typeof comment === 'string') {
+      (this.interaction as ConsumerInteractionWithMetadata).addTextComment(
+        comment
+      );
+      return this;
+    }
+
+    (this.interaction as ConsumerInteractionWithMetadata).setComment(
+      comment.key,
+      comment.value
+    );
+
+    return this;
+  }
+
+  testName(name: string): V4UnconfiguredInteraction {
+    (this.interaction as ConsumerInteractionWithMetadata).setInteractionTestName(
+      name
+    );
 
     return this;
   }

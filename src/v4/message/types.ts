@@ -6,6 +6,12 @@ export type MessageContents = {
   content: AnyJson | Buffer;
 };
 
+export type Comment = string;
+export type CustomComment = {
+  key: string;
+  value: string;
+};
+
 // TODO: this is currently an empty object,
 //       it will eventually be populated with a Buffer
 //       for the request and response body
@@ -49,6 +55,9 @@ export interface V4SynchronousPact {
 
 export interface V4UnconfiguredSynchronousMessage {
   given(state: string, parameters?: JsonMap): V4UnconfiguredSynchronousMessage;
+  pending(pending?: boolean): V4UnconfiguredSynchronousMessage;
+  comment(comment: Comment | CustomComment): V4UnconfiguredSynchronousMessage;
+  testName(name: string): V4UnconfiguredSynchronousMessage;
   usingPlugin(config: PluginConfig): V4SynchronousMessageWithPlugin;
   withRequest(r: V4MessageRequestBuilderFunc): V4SynchronousMessageWithRequest;
 }
@@ -117,6 +126,9 @@ export interface V4SynchronousMessageWithResponse {
 
 export interface V4UnconfiguredAsynchronousMessage {
   given(state: string, parameters?: JsonMap): V4UnconfiguredAsynchronousMessage;
+  pending(pending?: boolean): V4UnconfiguredAsynchronousMessage;
+  comment(comment: Comment | CustomComment): V4UnconfiguredAsynchronousMessage;
+  testName(name: string): V4UnconfiguredAsynchronousMessage;
   usingPlugin(config: PluginConfig): V4AsynchronousMessageWithPlugin;
   expectsToReceive(
     description: string,
