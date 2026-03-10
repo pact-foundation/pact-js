@@ -36,13 +36,6 @@ import logger from '../../common/logger';
 
 const defaultPactDir = './pacts';
 
-type SynchronousMessageInteractionWithMetadata = PactCoreSynchronousMessage & {
-  setPending: (pending: boolean) => void;
-  setComment: (key: string, value: string) => boolean;
-  addTextComment: (comment: string) => boolean;
-  setInteractionTestName: (name: string) => number;
-};
-
 export class UnconfiguredSynchronousMessage
   implements V4UnconfiguredSynchronousMessage
 {
@@ -64,33 +57,24 @@ export class UnconfiguredSynchronousMessage
   }
 
   pending(pending: boolean = true): V4UnconfiguredSynchronousMessage {
-    (this.interaction as SynchronousMessageInteractionWithMetadata).setPending(
-      pending
-    );
+    this.interaction.setPending(pending);
 
     return this;
   }
 
   comment(comment: Comment | CustomComment): V4UnconfiguredSynchronousMessage {
     if (typeof comment === 'string') {
-      (
-        this.interaction as SynchronousMessageInteractionWithMetadata
-      ).addTextComment(comment);
+      this.interaction.addTextComment(comment);
       return this;
     }
 
-    (this.interaction as SynchronousMessageInteractionWithMetadata).setComment(
-      comment.key,
-      comment.value
-    );
+    this.interaction.setComment(comment.key, comment.value);
 
     return this;
   }
 
   testName(name: string): V4UnconfiguredSynchronousMessage {
-    (
-      this.interaction as SynchronousMessageInteractionWithMetadata
-    ).setInteractionTestName(name);
+    this.interaction.setInteractionTestName(name);
 
     return this;
   }

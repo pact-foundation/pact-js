@@ -37,13 +37,6 @@ type Message = {
   interaction: PactCoreAsynchronousMessage;
 };
 
-type AsynchronousMessageInteractionWithMetadata = PactCoreAsynchronousMessage & {
-  setPending: (pending: boolean) => void;
-  setComment: (key: string, value: string) => boolean;
-  addTextComment: (comment: string) => boolean;
-  setInteractionTestName: (name: string) => number;
-};
-
 type InteractionType =
   | 'Asynchronous/Messages'
   | 'Synchronous/Messages'
@@ -113,32 +106,24 @@ export class UnconfiguredAsynchronousMessage
   }
 
   pending(pending: boolean = true): V4UnconfiguredAsynchronousMessage {
-    (
-      this.message.interaction as AsynchronousMessageInteractionWithMetadata
-    ).setPending(pending);
+    this.message.interaction.setPending(pending);
 
     return this;
   }
 
   comment(comment: Comment | CustomComment): V4UnconfiguredAsynchronousMessage {
     if (typeof comment === 'string') {
-      (
-        this.message.interaction as AsynchronousMessageInteractionWithMetadata
-      ).addTextComment(comment);
+      this.message.interaction.addTextComment(comment);
       return this;
     }
 
-    (
-      this.message.interaction as AsynchronousMessageInteractionWithMetadata
-    ).setComment(comment.key, comment.value);
+    this.message.interaction.setComment(comment.key, comment.value);
 
     return this;
   }
 
   testName(name: string): V4UnconfiguredAsynchronousMessage {
-    (
-      this.message.interaction as AsynchronousMessageInteractionWithMetadata
-    ).setInteractionTestName(name);
+    this.message.interaction.setInteractionTestName(name);
 
     return this;
   }
