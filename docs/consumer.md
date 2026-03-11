@@ -52,6 +52,8 @@ The Pact SDK uses a fluent builder to create interactions.
 | `addInteraction(...)`            | `V4UnconfiguredInteraction`        | Start a builder for an HTTP interaction                                                                                                                                |
 | `addSynchronousInteraction(...)` | `V4UnconfiguredSynchronousMessage` | Start a builder for an asynchronous message                                                                                                                            |
 
+_NOTE:_ V4 also supports interaction metadata for advanced workflows using `pending(...)`, `comment(...)`, and `testName(...)`. See [Interaction metadata (V4, advanced)](#interaction-metadata-v4-advanced).
+
 #### Common methods to builders
 
 
@@ -155,6 +157,39 @@ describe('GET /dogs', () => {
 ```
 
 Read on about [matching](/docs/matching.md)
+
+## Interaction metadata (V4, advanced)
+
+Use interaction metadata when you need extra lifecycle or traceability information in the pact file.
+
+- Mark an interaction as pending while it is being adopted.
+- Add comments to capture context for verification and reporting.
+- Set a test name to make interaction provenance clearer.
+
+| Interaction type | Entry point                      | Metadata methods supported                      |
+| ---------------- | -------------------------------- | ----------------------------------------------- |
+| HTTP             | `addInteraction()`               | `pending(...)`, `comment(...)`, `testName(...)` |
+| Async message    | `addAsynchronousInteraction()`   | `pending(...)`, `comment(...)`, `testName(...)` |
+| Sync message     | `addSynchronousInteraction(...)` | `pending(...)`, `comment(...)`, `testName(...)` |
+
+### HTTP example
+
+```js
+await pact
+  .addInteraction()
+  .uponReceiving('v4 metadata http req/res interaction')
+  .pending()
+  .comment({ key: 'reason', value: 'covered by HTTP metadata test' })
+  .comment('second note from HTTP metadata test')
+  .testName('http metadata test name')
+  .withRequest('POST', '/', (builder) => {
+    builder.jsonBody({ foo: 'bar' });
+  })
+  .willRespondWith(200)
+  .executeTest(async () => Promise.resolve());
+```
+
+For a full end-to-end usage example, see `src/pact.integration.spec.ts`.
 
 ## Publishing Pacts to a Broker
 
