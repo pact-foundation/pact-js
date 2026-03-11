@@ -56,10 +56,18 @@ export interface PactV4Options {
 }
 
 export type TemplateHeaderArrayValue = string[] | Matcher<string>[];
+export type Comment = string;
+export type CustomComment = {
+  key: string;
+  value: string;
+};
 
 export interface V4UnconfiguredInteraction {
   given(state: string, parameters?: JsonMap): V4UnconfiguredInteraction;
   uponReceiving(description: string): V4UnconfiguredInteraction;
+  pending(pending?: boolean): V4UnconfiguredInteraction;
+  comment(comment: Comment | CustomComment): V4UnconfiguredInteraction;
+  testName(name: string): V4UnconfiguredInteraction;
   withCompleteRequest(request: V4Request): V4InteractionWithCompleteRequest;
   withRequest(
     method: string,

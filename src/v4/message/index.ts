@@ -16,6 +16,8 @@ import {
   V4SynchronousMessageWithResponseBuilder,
   V4SynchronousMessageWithTransport,
   V4UnconfiguredSynchronousMessage,
+  Comment,
+  CustomComment,
 } from './types';
 import {
   SynchronousMessage as PactCoreSynchronousMessage,
@@ -50,6 +52,29 @@ export class UnconfiguredSynchronousMessage
     } else {
       this.interaction.given(state);
     }
+
+    return this;
+  }
+
+  pending(pending = true): V4UnconfiguredSynchronousMessage {
+    this.interaction.setPending(pending);
+
+    return this;
+  }
+
+  comment(comment: Comment | CustomComment): V4UnconfiguredSynchronousMessage {
+    if (typeof comment === 'string') {
+      this.interaction.addTextComment(comment);
+      return this;
+    }
+
+    this.interaction.setComment(comment.key, comment.value);
+
+    return this;
+  }
+
+  testName(name: string): V4UnconfiguredSynchronousMessage {
+    this.interaction.setInteractionTestName(name);
 
     return this;
   }

@@ -22,6 +22,7 @@ import {
   SpecificationVersion,
   PactV3,
   MatchersV3,
+  LogLevel,
 } from '@pact-foundation/pact';
 import FormData from 'form-data';
 import axios from 'axios';
@@ -31,6 +32,7 @@ import path from 'node:path';
 chai.use(chaiAsPromised);
 
 const { expect } = chai;
+const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 describe('Pact Consumer Test Using Multipart form data', () => {
   /**
@@ -40,7 +42,7 @@ describe('Pact Consumer Test Using Multipart form data', () => {
     consumer: 'myconsumer',
     provider: 'myprovider',
     spec: SpecificationVersion.SPECIFICATION_VERSION_V3,
-    logLevel: 'trace',
+    logLevel: LOG_LEVEL as LogLevel,
   });
 
   it('creates a pact to verify with a text field in a multipart form', async () => {

@@ -14,6 +14,8 @@ import {
   V4InteractionWithRequest,
   PluginConfig,
   V4InteractionWithPlugin,
+  Comment,
+  CustomComment,
 } from './types';
 
 export class UnconfiguredInteraction implements V4UnconfiguredInteraction {
@@ -37,6 +39,29 @@ export class UnconfiguredInteraction implements V4UnconfiguredInteraction {
     } else {
       this.interaction.given(state);
     }
+
+    return this;
+  }
+
+  pending(pending = true): V4UnconfiguredInteraction {
+    this.interaction.setPending(pending);
+
+    return this;
+  }
+
+  comment(comment: Comment | CustomComment): V4UnconfiguredInteraction {
+    if (typeof comment === 'string') {
+      this.interaction.addTextComment(comment);
+      return this;
+    }
+
+    this.interaction.setComment(comment.key, comment.value);
+
+    return this;
+  }
+
+  testName(name: string): V4UnconfiguredInteraction {
+    this.interaction.setInteractionTestName(name);
 
     return this;
   }

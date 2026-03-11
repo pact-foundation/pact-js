@@ -12,6 +12,8 @@ import {
   V4AsynchronousMessageWithContent,
   V4AsynchronousMessageBuilderFunc,
   V4AsynchronousMessageBuilder,
+  Comment,
+  CustomComment,
 } from './types';
 import {
   AsynchronousMessage as PactCoreAsynchronousMessage,
@@ -99,6 +101,29 @@ export class UnconfiguredAsynchronousMessage
     } else {
       this.message.interaction.given(state);
     }
+
+    return this;
+  }
+
+  pending(pending = true): V4UnconfiguredAsynchronousMessage {
+    this.message.interaction.setPending(pending);
+
+    return this;
+  }
+
+  comment(comment: Comment | CustomComment): V4UnconfiguredAsynchronousMessage {
+    if (typeof comment === 'string') {
+      this.message.interaction.addTextComment(comment);
+      return this;
+    }
+
+    this.message.interaction.setComment(comment.key, comment.value);
+
+    return this;
+  }
+
+  testName(name: string): V4UnconfiguredAsynchronousMessage {
+    this.message.interaction.setInteractionTestName(name);
 
     return this;
   }
