@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [16.3.0](https://github.com/pact-foundation/pact-js/compare/v16.2.0...v16.3.0) (2026-03-11)
+
+
+### Features
+
+* support pending, comments and test names on interactions ([4746539](https://github.com/pact-foundation/pact-js/commit/474653942f6a72b3036d7b51a33b141b2b833def))
+
 ## [16.2.0](https://github.com/pact-foundation/pact-js/compare/v16.1.0...v16.2.0) (2026-02-10)
 
 
