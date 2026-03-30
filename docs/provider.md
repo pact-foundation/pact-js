@@ -24,7 +24,9 @@ The provider interface is: `Verifier`.
 
 ### Provider API Testing
 
-<details><summary>Provider API</summary>
+<details>
+
+<summary>Provider API</summary>
 
 Once you have created Pacts for your Consumer, you need to validate those Pacts against your Provider. The Verifier object provides the following API for you to do so:
 
@@ -51,7 +53,9 @@ new Verifier(opts).verifyProvider().then(function () {
 
 #### Verification Options
 
-<details><summary>Verification Options</summary>
+<details>
+
+<summary>Verification Options</summary>
 
 | Parameter                   | Required? | Type                                                                                  | Description                                                                                                                                                                                        |
 | --------------------------- | --------- | ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
