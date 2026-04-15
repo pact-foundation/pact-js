@@ -111,7 +111,7 @@
     "graphql": "^16.11.0",
     "graphql-tag": "^2.12.6",
     "http-proxy": "^1.18.1",
-    "https-proxy-agent": "^7.0.6",
+    "https-proxy-agent": "^9.0.0",
     "js-base64": "^3.7.8",
     "lodash": "^4.17.21",
     "ramda": "^0.32.0",
