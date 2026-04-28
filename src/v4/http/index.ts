@@ -15,7 +15,10 @@ export const readBinaryData = (file: string): Buffer => {
 
     return body;
   } catch (e) {
-    throw new Error(`unable to read file for binary payload : ${e.message}`);
+    const error = e instanceof Error ? e : new Error(String(e));
+    throw new Error(
+      `unable to read file for binary payload : ${error.message}`
+    );
   }
 };
 
@@ -51,7 +54,7 @@ export const executeTest = async <T>(
   try {
     val = await testFn(server);
   } catch (e) {
-    error = e;
+    error = e instanceof Error ? e : new Error(String(e));
   }
 
   const matchingResults = pact.mockServerMismatches(port);

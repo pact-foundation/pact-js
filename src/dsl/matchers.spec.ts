@@ -169,7 +169,7 @@ describe('Matcher', () => {
 
       describe('when no term is provided', () => {
         it('throws an Error', () => {
-          expect(createTheTerm.call({})).to.throw(Error);
+          expect(createTheTerm.call({}, undefined)).to.throw(Error);
         });
       });
 
@@ -215,7 +215,7 @@ describe('Matcher', () => {
 
       describe('when no value is provided', () => {
         it('`throws an Error', () => {
-          expect(createTheValue.call({})).to.throw(Error);
+          expect(createTheValue.call({}, undefined)).to.throw(Error);
         });
       });
 

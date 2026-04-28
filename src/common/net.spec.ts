@@ -15,7 +15,7 @@ describe('Net', () => {
 
   // Utility function to create a server on a given port and return a Promise
   const createServer = (p: number, host = defaultHost) =>
-    new Promise((resolve, reject) => {
+    new Promise<nodeNet.Server>((resolve, reject) => {
       const server = nodeNet.createServer();
 
       server.on('error', (err: any) => reject(err));
@@ -39,11 +39,13 @@ describe('Net', () => {
     });
 
     context('when the port is unavailable', () => {
-      let closeFn = (cb: any) => cb();
+      let closeFn: (cb: () => void) => void = (cb) => cb();
 
       it('returns a rejected promise', () =>
-        createServer(port).then((server: { close(): any }) => {
-          closeFn = server.close.bind(server);
+        createServer(port).then((server) => {
+          closeFn = (cb) => {
+            server.close(cb);
+          };
           return expect(isPortAvailable(port, defaultHost)).to.eventually.be
             .rejected;
         }));
@@ -55,12 +57,14 @@ describe('Net', () => {
     });
 
     context('when a single host is unavailable', () => {
-      let closeFn = (cb: any) => cb();
+      let closeFn: (cb: () => void) => void = (cb) => cb();
 
       it('returns a fulfilled promise', () =>
         // simulate ::1 being unavailable
-        createServer(port, '::1').then((server: { close(): any }) => {
-          closeFn = server.close.bind(server);
+        createServer(port, '::1').then((server) => {
+          closeFn = (cb) => {
+            server.close(cb);
+          };
           // this should work as the `127.0.0.1` is NOT `::1`
           return expect(isPortAvailable(port, '127.0.0.1')).to.eventually.be
             .fulfilled;

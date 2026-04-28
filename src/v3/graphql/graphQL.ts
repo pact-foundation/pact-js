@@ -25,7 +25,7 @@ export class GraphQLPactV3 extends PactV3 {
 
   private variables?: GraphQLVariables = undefined;
 
-  private query: string;
+  private query!: string;
 
   private req?: V3Request = undefined;
 
