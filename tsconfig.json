@@ -1,4 +1,6 @@
 {
+  "$schema": "https://www.schemastore.org/tsconfig",
+  "extends": "@tsconfig/node20/tsconfig.json",
   "compileOnSave": false,
   "compilerOptions": {
     "outDir": "./dist",
@@ -9,14 +11,11 @@
     "noImplicitThis": true,
     "resolveJsonModule": true,
     "strictNullChecks": true,
-    "moduleResolution": "node",
     "esModuleInterop": true,
     "noEmitOnError": true,
     "emitDecoratorMetadata": true,
     "declaration": true,
-    "experimentalDecorators": true,
-    "target": "es5",
-    "lib": ["es2016", "es2017", "dom", "esnext.asynciterable", "esnext"]
+    "experimentalDecorators": true
   },
   "include": ["src", "test", "native/index.node.d.ts", "v3"],
   "exclude": ["./node_modules/**", "dist", "examples"]
