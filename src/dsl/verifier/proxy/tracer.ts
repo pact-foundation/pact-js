@@ -37,15 +37,36 @@ const removeEmptyRequestProperties = (req: express.Request) =>
 
 export const createResponseTracer =
   (): express.RequestHandler => (_, res, next) => {
-    const [oldWrite, oldEnd] = [res.write, res.end];
+    const oldWrite = res.write.bind(res) as (
+      chunk: string | Buffer,
+      encodingOrCb?: BufferEncoding | ((error?: Error | null) => void),
+      callback?: (error?: Error | null) => void
+    ) => boolean;
+    const oldEnd = res.end.bind(res) as (
+      chunkOrCb?: string | Buffer | (() => void),
+      encodingOrCb?: BufferEncoding | (() => void),
+      cb?: () => void
+    ) => express.Response;
     const chunks: Buffer[] = [];
 
-    res.write = (chunk: Parameters<typeof res.write>[0]) => {
+    res.write = ((
+      chunk: string | Buffer,
+      encodingOrCb?: BufferEncoding | ((error?: Error | null) => void),
+      callback?: (error?: Error | null) => void
+    ) => {
       chunks.push(Buffer.from(chunk));
-      return oldWrite.apply(res, [chunk]);
-    };
+      if (typeof encodingOrCb === 'function') {
+        return oldWrite(chunk, encodingOrCb);
+      }
+      return oldWrite(chunk, encodingOrCb, callback);
+    }) as typeof res.write;
 
-    res.end = (chunk: Parameters<typeof res.write>[0]) => {
+    res.end = ((
+      chunkOrCb?: string | Buffer | (() => void),
+      encodingOrCb?: BufferEncoding | (() => void),
+      cb?: () => void
+    ) => {
+      const chunk = typeof chunkOrCb === 'function' ? undefined : chunkOrCb;
       if (chunk) {
         chunks.push(Buffer.from(chunk));
       }
@@ -55,8 +76,14 @@ export const createResponseTracer =
           removeEmptyResponseProperties(body, res)
         )}`
       );
-      return oldEnd.apply(res, [chunk]);
-    };
+      if (typeof chunkOrCb === 'function') {
+        return oldEnd(chunkOrCb);
+      }
+      if (typeof encodingOrCb === 'function') {
+        return oldEnd(chunkOrCb, encodingOrCb);
+      }
+      return oldEnd(chunkOrCb, encodingOrCb, cb);
+    }) as typeof res.end;
     if (typeof next === 'function') {
       next();
     }

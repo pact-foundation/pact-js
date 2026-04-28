@@ -564,13 +564,11 @@ export function reify(input: unknown): AnyJson {
     if (input === null) {
       return input;
     }
-    return Object.keys(input).reduce(
-      (acc: JsonMap, propName: keyof typeof input) => ({
-        ...acc,
-        [propName]: reify(input[propName]),
-      }),
-      {}
-    );
+    const objectInput = input as JsonMap;
+    return Object.keys(objectInput).reduce<JsonMap>((acc, propName) => {
+      acc[propName] = reify(objectInput[propName]);
+      return acc;
+    }, {});
   }
 
   if (

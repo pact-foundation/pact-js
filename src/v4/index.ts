@@ -14,11 +14,10 @@ import { UnconfiguredGraphQLInteraction } from './graphql';
 import { UnconfiguredAsynchronousMessage } from './message/asynchronousMessage';
 
 export class PactV4 implements V4ConsumerPact {
-  private pact: ConsumerPact;
+  private pact!: ConsumerPact;
 
   constructor(private opts: PactV4Options) {
     this.setup();
-    this.pact.addMetadata('pact-js', 'version', pactPackageVersion);
   }
 
   setup(): void {
@@ -28,6 +27,7 @@ export class PactV4 implements V4ConsumerPact {
       this.opts.spec ?? SpecificationVersion.SPECIFICATION_VERSION_V4,
       this.opts.logLevel ?? 'info'
     );
+    this.pact.addMetadata('pact-js', 'version', pactPackageVersion);
   }
 
   addInteraction(): V4UnconfiguredInteraction {

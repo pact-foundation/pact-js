@@ -33,7 +33,8 @@ const readBinaryData = (file: string): Buffer => {
 
     return body;
   } catch (e) {
-    throw new Error(`unable to read file for binary request: ${e.message}`);
+    const error = e instanceof Error ? e : new Error(String(e));
+    throw new Error(`unable to read file for binary request: ${error.message}`);
   }
 };
 
@@ -42,9 +43,9 @@ export class PactV3 {
 
   private states: V3ProviderState[] = [];
 
-  private pact: ConsumerPact;
+  private pact!: ConsumerPact;
 
-  private interaction: ConsumerInteraction;
+  private interaction!: ConsumerInteraction;
 
   constructor(opts: PactV3Options) {
     this.opts = opts;
@@ -267,7 +268,7 @@ export class PactV3 {
     try {
       val = await testFn(server);
     } catch (e) {
-      error = e;
+      error = e instanceof Error ? e : new Error(String(e));
     }
 
     const matchingResults = this.pact.mockServerMismatches(port);

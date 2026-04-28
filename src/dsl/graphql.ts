@@ -24,7 +24,7 @@ export class GraphQLInteraction extends Interaction {
 
   protected variables?: GraphQLVariables = undefined;
 
-  protected query: string;
+  protected query!: string;
 
   /**
    * The type of GraphQL operation. Generally not required.
@@ -129,7 +129,10 @@ export class GraphQLInteraction extends Interaction {
         type === 'query' ? OperationType.Query : OperationType.Mutation
       );
     } catch (e) {
-      throw new GraphQLQueryError(`GraphQL ${type} is invalid: ${e.message}`);
+      const error = e instanceof Error ? e : new Error(String(e));
+      throw new GraphQLQueryError(
+        `GraphQL ${type} is invalid: ${error.message}`
+      );
     }
 
     this.query = query;

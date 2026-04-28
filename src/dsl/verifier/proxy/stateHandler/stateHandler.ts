@@ -29,9 +29,10 @@ export const createProxyStateHandler =
       const data = await setupStates(state, config);
       return res.json(data);
     } catch (e) {
+      const caughtError = e instanceof Error ? e : new Error(String(e));
       const error = `\nError executing state handler for state '${state.state}' on '${state.action}'.`;
-      const errorDetails = `↳ Error details: ${e.message}`;
-      const errorSource = `↳ Error source: ${cleanStack(e)}\n`;
+      const errorDetails = `↳ Error details: ${caughtError.message}`;
+      const errorSource = `↳ Error source: ${cleanStack(caughtError)}\n`;
       /* eslint-disable no-console */
       console.log(chalk.red(error));
       console.log(chalk.red(errorDetails));

@@ -157,7 +157,7 @@ export class Interaction {
       body: responseOpts.body,
       headers: responseOpts.headers || undefined,
       status: responseOpts.status,
-    }) as ResponseOptions;
+    }) as unknown as ResponseOptions;
     return this;
   }
 

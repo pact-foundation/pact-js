@@ -1,7 +1,12 @@
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import { HTTPMethods } from '../common/request';
-import { Interaction, InteractionState } from './interaction';
+import {
+  Interaction,
+  InteractionState,
+  RequestOptions,
+  ResponseOptions,
+} from './interaction';
 import { eachLike, term } from './matchers';
 
 chai.use(chaiAsPromised);
@@ -55,15 +60,19 @@ describe('Interaction', () => {
     const interaction = new Interaction();
 
     it('throws error when method is not provided', () => {
-      expect(interaction.withRequest.bind(interaction, {})).to.throw(
-        Error,
-        'You must provide an HTTP method.'
-      );
+      expect(
+        interaction.withRequest.bind(
+          interaction,
+          {} as unknown as RequestOptions
+        )
+      ).to.throw(Error, 'You must provide an HTTP method.');
     });
 
     it('throws error when an invalid method is provided', () => {
       expect(
-        interaction.withRequest.bind(interaction, { method: 'FOO' })
+        interaction.withRequest.bind(interaction, {
+          method: 'FOO',
+        } as unknown as RequestOptions)
       ).to.throw(
         Error,
         'You must provide a valid HTTP method: GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS, COPY, LOCK, MKCOL, MOVE, PROPFIND, PROPPATCH, UNLOCK, REPORT.'
@@ -71,15 +80,18 @@ describe('Interaction', () => {
     });
 
     it('throws error when method is not provided but path is provided', () => {
-      expect(interaction.withRequest.bind(interaction, { path: '/' })).to.throw(
-        Error,
-        'You must provide an HTTP method.'
-      );
+      expect(
+        interaction.withRequest.bind(interaction, {
+          path: '/',
+        } as unknown as RequestOptions)
+      ).to.throw(Error, 'You must provide an HTTP method.');
     });
 
     it('throws error when path is not provided', () => {
       expect(
-        interaction.withRequest.bind(interaction, { method: HTTPMethods.GET })
+        interaction.withRequest.bind(interaction, {
+          method: HTTPMethods.GET,
+        } as unknown as RequestOptions)
       ).to.throw(Error, 'You must provide a path.');
     });
 
@@ -89,7 +101,7 @@ describe('Interaction', () => {
           method: HTTPMethods.GET,
           path: '/',
           query: { string: false, query: 'false' },
-        })
+        } as unknown as RequestOptions)
       ).to.throw(Error, 'Query must only contain strings.');
     });
 
@@ -196,7 +208,7 @@ describe('Interaction', () => {
           body: undefined,
           method: HTTPMethods.GET,
           path: '/path',
-        }).state;
+        } as unknown as RequestOptions).state;
 
         expect(actual.request).not.to.have.any.keys('body');
       });
@@ -211,15 +223,19 @@ describe('Interaction', () => {
     });
 
     it('throws error when status is not provided', () => {
-      expect(interaction.willRespondWith.bind(interaction, {})).to.throw(
-        Error,
-        'You must provide a status code.'
-      );
+      expect(
+        interaction.willRespondWith.bind(
+          interaction,
+          {} as unknown as ResponseOptions
+        )
+      ).to.throw(Error, 'You must provide a status code.');
     });
 
     it('throws error when status is blank', () => {
       expect(
-        interaction.willRespondWith.bind(interaction, { status: '' })
+        interaction.willRespondWith.bind(interaction, {
+          status: '',
+        } as unknown as ResponseOptions)
       ).to.throw(Error, 'You must provide a status code.');
     });
 
@@ -276,7 +292,7 @@ describe('Interaction', () => {
         interaction.uponReceiving('request').willRespondWith({
           body: undefined,
           status: 204,
-        });
+        } as unknown as ResponseOptions);
 
         const actual = interaction.state;
         expect(actual.response).not.to.have.any.keys('body');

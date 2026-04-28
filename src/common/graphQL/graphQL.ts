@@ -35,7 +35,10 @@ export function validateQuery(
     try {
       gql(query);
     } catch (e) {
-      throw new GraphQLQueryError(`GraphQL ${type} is invalid: ${e.message}`);
+      const error = e instanceof Error ? e : new Error(String(e));
+      throw new GraphQLQueryError(
+        `GraphQL ${type} is invalid: ${error.message}`
+      );
     }
 
     return query;

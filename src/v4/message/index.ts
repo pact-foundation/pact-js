@@ -345,7 +345,7 @@ export class SynchronousMessageWithTransport
         })),
       } as SynchronousMessage);
     } catch (e) {
-      error = e;
+      error = e instanceof Error ? e : new Error(String(e));
     }
 
     const matchingResults = this.pact.mockServerMismatches(this.port);
@@ -455,7 +455,7 @@ const executeNonTransportTest = async <T>(
       })),
     } as SynchronousMessage);
   } catch (e) {
-    error = e;
+    error = e instanceof Error ? e : new Error(String(e));
   }
 
   // Scenario: test threw an error, but Pact validation was OK (error in client or test)

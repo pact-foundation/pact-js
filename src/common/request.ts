@@ -66,8 +66,15 @@ export class Request {
       }
       return await Promise.reject(res.data);
     } catch (e) {
-      logger.error(`error making http request: ${e.message}`);
-      return Promise.reject(pathOr(e.message, ['response', 'data'], e));
+      const error = e instanceof Error ? e : new Error(String(e));
+      logger.error(`error making http request: ${error.message}`);
+      return Promise.reject(
+        pathOr(
+          error.message,
+          ['response', 'data'],
+          e as Record<string, unknown>
+        )
+      );
     }
   }
 }

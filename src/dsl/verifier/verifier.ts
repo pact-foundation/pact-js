@@ -26,7 +26,9 @@ export class Verifier {
 
   private config: VerifierOptions;
 
-  private deprecatedFields: string[] = ['providerStatesSetupUrl'];
+  private deprecatedFields: Array<keyof VerifierOptions> = [
+    'providerStatesSetupUrl',
+  ];
 
   constructor(config: VerifierOptions) {
     this.config = config;
@@ -36,7 +38,7 @@ export class Verifier {
       setLogLevel(this.config.logLevel);
     }
 
-    this.deprecatedFields.forEach((f: keyof VerifierOptions) => {
+    this.deprecatedFields.forEach((f) => {
       if (this.config[f]) {
         logger.warn(
           `${f} is deprecated, and will be removed in future versions`

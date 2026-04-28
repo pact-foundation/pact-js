@@ -64,17 +64,17 @@ export class Pact {
     return { ...Pact.defaults, ...opts } as PactV2OptionsComplete;
   }
 
-  public mockService: MockService;
+  public mockService!: MockService;
 
   public opts: PactV2OptionsComplete;
 
   private mockServerStartedPort?: number;
 
-  private pact: ConsumerPact;
+  private pact!: ConsumerPact;
 
-  private interaction: ConsumerInteraction;
+  private interaction!: ConsumerInteraction;
 
-  private finalized: boolean;
+  private finalized = false;
 
   constructor(config: PactV2Options) {
     this.opts = Pact.createOptionsWithDefaults(config);
