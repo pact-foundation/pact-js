@@ -161,5 +161,10 @@
     "source-map-support": "0.5.21",
     "tsx": "4.21.0",
     "typescript": "5.9.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@pact-foundation/pact-core"
+    ]
   }
 }
