@@ -9,6 +9,7 @@ import path = require('path');
 
 // eslint-disable-next-line import/first
 import { PactV4 } from './v4';
+import { MatchersV3 } from './v3';
 
 const { expect } = chai;
 
@@ -157,6 +158,55 @@ describe('V4 Pact', () => {
         'http metadata test name'
       );
     });
+
+    it('supports regex matcher for response content-type with optional charset', () =>
+      pact
+        .addInteraction()
+        .uponReceiving('a response with regex content-type header matcher')
+        .withRequest('GET', '/')
+        .willRespondWith(200, (builder) => {
+          builder
+            .headers({
+              'Content-Type': MatchersV3.regex(
+                /^application\/json(;\s?charset=[\w-]+)?$/i,
+                'application/json'
+              ),
+            })
+            .jsonBody({
+              foo: 'bar',
+            });
+        })
+        .executeTest(async (server) => {
+          const response = await axios.get(server.url);
+          expect(response.data).to.deep.equal({ foo: 'bar' });
+        }));
+
+    it('supports regex matcher for request content-type with optional charset', () =>
+      pact
+        .addInteraction()
+        .uponReceiving('a request with regex content-type header matcher')
+        .withRequest('POST', '/', (builder) => {
+          builder
+            .headers({
+              'Content-Type': MatchersV3.regex(
+                /^application\/json(;\s?charset=[\w-]+)?$/i,
+                'application/json'
+              ),
+            })
+            .jsonBody({
+              foo: 'bar',
+            });
+        })
+        .willRespondWith(200, (builder) => {
+          builder.jsonBody({
+            ok: true,
+          });
+        })
+        .executeTest((server) =>
+          axios.post(server.url, {
+            foo: 'bar',
+          })
+        ));
   });
 
   describe('Asynchronous message contract', () => {
