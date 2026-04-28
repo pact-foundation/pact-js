@@ -124,6 +124,7 @@
     "@babel/core": "7.29.0",
     "@babel/preset-env": "7.29.2",
     "@pact-foundation/pact-js-prettier-config": "1.0.0",
+    "@tsconfig/node20": "^20.1.9",
     "@types/chai": "5.2.3",
     "@types/chai-as-promised": "8.0.2",
     "@types/express": "4.17.25",
