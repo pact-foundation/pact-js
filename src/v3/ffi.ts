@@ -1,6 +1,6 @@
 import { forEachObjIndexed } from 'ramda';
-import { ConsumerInteraction } from '@pact-foundation/pact-core';
-import { Matcher, TemplateHeaders, V3Request, V3Response } from './types';
+import type { ConsumerInteraction } from '@pact-foundation/pact-core';
+import type { Matcher, TemplateHeaders, V3Request, V3Response } from './types';
 import * as MatchersV3 from './matchers';
 
 type TemplateHeaderArrayValue = string[] | Matcher<string>[];
@@ -59,7 +59,6 @@ export const setResponseDetails = (
   }, res.headers);
 };
 
-// TODO: this might need to consider an array of values
 export const contentTypeFromHeaders = (
   headers: TemplateHeaders | undefined,
   defaultContentType: string
@@ -67,7 +66,10 @@ export const contentTypeFromHeaders = (
   let contentType: string | Matcher<string> = defaultContentType;
   forEachObjIndexed((v, k) => {
     if (`${k}`.toLowerCase() === 'content-type') {
-      contentType = MatchersV3.matcherValueOrString(v);
+      const headerValue = Array.isArray(v) ? v[0] : v;
+      contentType = MatchersV3.isMatcher(headerValue)
+        ? MatchersV3.matcherValueOrString(headerValue.value)
+        : MatchersV3.matcherValueOrString(headerValue);
     }
   }, headers || {});
 
