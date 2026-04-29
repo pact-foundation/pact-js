@@ -20,7 +20,7 @@ describe('Pact Verification', () => {
       pactUrls: [
         path.resolve(
           process.cwd(),
-          './pacts/GraphQLConsumerV4-GraphQLProviderV4.json'
+          './pacts/GraphQLConsumerV4-GraphQLProviderV4.json',
         ),
       ],
       providerBaseUrl: 'http://localhost:4000/graphql',

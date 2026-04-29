@@ -24,7 +24,7 @@ export class UnconfiguredInteraction implements V4UnconfiguredInteraction {
     protected pact: ConsumerPact,
     protected interaction: ConsumerInteraction,
     protected opts: PactV4Options,
-    protected cleanupFn: () => void
+    protected cleanupFn: () => void,
   ) {}
 
   uponReceiving(description: string): V4UnconfiguredInteraction {
@@ -74,7 +74,7 @@ export class UnconfiguredInteraction implements V4UnconfiguredInteraction {
   withRequest(
     method: string,
     path: Path,
-    builder?: V4RequestBuilderFunc
+    builder?: V4RequestBuilderFunc,
   ): V4InteractionWithRequest {
     this.interaction.withRequest(method, matcherValueOrString(path));
 
@@ -85,7 +85,7 @@ export class UnconfiguredInteraction implements V4UnconfiguredInteraction {
       this.pact,
       this.interaction,
       this.opts,
-      this.cleanupFn
+      this.cleanupFn,
     );
   }
 
@@ -96,7 +96,7 @@ export class UnconfiguredInteraction implements V4UnconfiguredInteraction {
       this.pact,
       this.interaction,
       this.opts,
-      this.cleanupFn
+      this.cleanupFn,
     );
   }
 }

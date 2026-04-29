@@ -32,7 +32,7 @@ const logErrorNoMockServer = () => {
       '  - Please check the logs above to ensure that there are no pact service startup failures\n' +
       '  - Please check that pact lifecycle methods are called in the correct order (setup() needs to be called before this method)\n' +
       '  - Please check that your test code waits for the promises returned from lifecycle methods to complete before calling the next one\n' +
-      "  - To learn more about what is happening during your pact run, try setting logLevel: 'DEBUG'"
+      "  - To learn more about what is happening during your pact run, try setting logLevel: 'DEBUG'",
   );
 };
 
@@ -59,7 +59,7 @@ export class Pact {
   } as PactV2Options;
 
   public static createOptionsWithDefaults(
-    opts: PactV2Options
+    opts: PactV2Options,
   ): PactV2OptionsComplete {
     return { ...Pact.defaults, ...opts } as PactV2OptionsComplete;
   }
@@ -81,19 +81,19 @@ export class Pact {
 
     if (this.opts.pactfileWriteMode === 'overwrite') {
       logger.warn(
-        "WARNING: the behaviour of pactfileWriteMode 'overwrite' has changed since version 9.x.x. See the type definition or the MIGRATION.md guide for details."
+        "WARNING: the behaviour of pactfileWriteMode 'overwrite' has changed since version 9.x.x. See the type definition or the MIGRATION.md guide for details.",
       );
     }
 
     if (isEmpty(this.opts.consumer)) {
       throw new ConfigurationError(
-        'You must specify a Consumer for this pact.'
+        'You must specify a Consumer for this pact.',
       );
     }
 
     if (isEmpty(this.opts.provider)) {
       throw new ConfigurationError(
-        'You must specify a Provider for this pact.'
+        'You must specify a Provider for this pact.',
       );
     }
 
@@ -149,14 +149,14 @@ export class Pact {
    * @returns {Promise}
    */
   public addInteraction(
-    interactionObj: InteractionObject | Interaction
+    interactionObj: InteractionObject | Interaction,
   ): Promise<string> {
     if (!this.mockService) {
       logErrorNoMockServer();
       return Promise.reject(
         new Error(
-          "The pact mock service wasn't configured when addInteraction was called"
-        )
+          "The pact mock service wasn't configured when addInteraction was called",
+        ),
       );
     }
     let interaction: InteractionObject;
@@ -193,7 +193,9 @@ export class Pact {
     if (!this.mockService) {
       logErrorNoMockServer();
       return Promise.reject(
-        new Error("The pact mock service wasn't running when verify was called")
+        new Error(
+          "The pact mock service wasn't running when verify was called",
+        ),
       );
     }
 
@@ -213,7 +215,7 @@ export class Pact {
 
       this.reset();
       throw new VerificationError(
-        'Pact verification failed - expected interactions did not match actual.'
+        'Pact verification failed - expected interactions did not match actual.',
       );
     }
 
@@ -233,7 +235,7 @@ export class Pact {
     if (this.finalized) {
       logger.warn(
         'finalize() has already been called, this is probably a logic error in your test setup. ' +
-          'In the future this will be an error.'
+          'In the future this will be an error.',
       );
     }
     this.finalized = true;
@@ -254,13 +256,13 @@ export class Pact {
       logErrorNoMockServer();
       return Promise.reject(
         new Error(
-          "The pact mock service wasn't running when writePact was called"
-        )
+          "The pact mock service wasn't running when writePact was called",
+        ),
       );
     }
     this.pact.writePactFile(
       this.opts.dir || './pacts',
-      this.opts.pactfileWriteMode !== 'overwrite'
+      this.opts.pactfileWriteMode !== 'overwrite',
     );
 
     return Promise.resolve('');
@@ -274,7 +276,7 @@ export class Pact {
    */
   public removeInteractions(): Promise<string> {
     logger.info(
-      'removeInteractions() is no longer required to be called, but has been kept for compatibility with upgrade from 9.x.x. You should remove any use of this method.'
+      'removeInteractions() is no longer required to be called, but has been kept for compatibility with upgrade from 9.x.x. You should remove any use of this method.',
     );
     return Promise.resolve('');
   }
@@ -286,7 +288,7 @@ export class Pact {
     const port = this.pact.createMockServer(
       this.opts.host,
       this.opts.port,
-      this.opts.ssl
+      this.opts.ssl,
     );
     this.mockServerStartedPort = port;
 
@@ -301,9 +303,9 @@ export class Pact {
       this.opts.provider,
       numberToSpec(
         this.opts.spec,
-        SpecificationVersion.SPECIFICATION_VERSION_V2
+        SpecificationVersion.SPECIFICATION_VERSION_V2,
       ),
-      this.opts.logLevel ?? 'info'
+      this.opts.logLevel ?? 'info',
     );
     this.interaction = this.pact.newInteraction('');
 

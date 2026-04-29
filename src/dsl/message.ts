@@ -77,7 +77,7 @@ export type MessageFromProviderWithMetadata = {
  * @module Message
  */
 export type MessageProvider = (
-  m: MessageDescriptor
+  m: MessageDescriptor,
 ) =>
   | Promise<MessageFromProvider | MessageFromProviderWithMetadata>
   | MessageFromProvider
@@ -90,6 +90,6 @@ export interface MessageProviders {
 export interface MessageStateHandlers {
   [name: string]: (
     state: string,
-    params?: { [name: string]: string }
+    params?: { [name: string]: string },
   ) => Promise<unknown>;
 }

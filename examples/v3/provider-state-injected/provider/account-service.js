@@ -49,7 +49,7 @@ server.post('/accounts/search/findOneByAccountNumberIdInBody', (req, res) => {
   // To check and demonstrate typed responses. See https://github.com/pact-foundation/pact-reference/issues/116
   if (typeof req.body.accountNumber !== 'number') {
     console.log(
-      `accountNumber should be a number, got a ${typeof req.body.accountNumber}`
+      `accountNumber should be a number, got a ${typeof req.body.accountNumber}`,
     );
     return res.status(400);
   }

@@ -65,7 +65,7 @@ export class UnconfiguredAsynchronousMessage
     protected pact: ConsumerPact,
     protected interaction: PactCoreAsynchronousMessage,
     protected opts: PactV4Options,
-    protected cleanupFn: () => void
+    protected cleanupFn: () => void,
   ) {
     this.message = {
       requestIsBinary: false,
@@ -75,7 +75,7 @@ export class UnconfiguredAsynchronousMessage
 
   expectsToReceive(
     description: string,
-    builder: V4AsynchronousMessageBuilderFunc
+    builder: V4AsynchronousMessageBuilderFunc,
   ): AsynchronousMessageWithContent {
     this.interaction.expectsToReceive(description);
 
@@ -85,18 +85,18 @@ export class UnconfiguredAsynchronousMessage
       this.pact,
       this.message,
       this.opts,
-      this.cleanupFn
+      this.cleanupFn,
     );
   }
 
   given(
     state: string,
-    parameters?: JsonMap
+    parameters?: JsonMap,
   ): V4UnconfiguredAsynchronousMessage {
     if (parameters) {
       this.message.interaction.givenWithParams(
         state,
-        JSON.stringify(parameters)
+        JSON.stringify(parameters),
       );
     } else {
       this.message.interaction.given(state);
@@ -135,7 +135,7 @@ export class UnconfiguredAsynchronousMessage
       this.pact,
       this.message,
       this.opts,
-      this.cleanupFn
+      this.cleanupFn,
     );
   }
 }
@@ -147,7 +147,7 @@ export class AsynchronousMessageWithPlugin
     protected pact: ConsumerPact,
     protected message: Message,
     protected opts: PactV4Options,
-    protected cleanupFn: () => void
+    protected cleanupFn: () => void,
   ) {}
 
   expectsToReceive(description: string): V4AsynchronousMessageWithPlugin {
@@ -164,18 +164,18 @@ export class AsynchronousMessageWithPlugin
 
   withPluginContents(
     contents: string,
-    contentType: string
+    contentType: string,
   ): V4AsynchronousMessageWithPluginContents {
     this.message.interaction.withPluginRequestInteractionContents(
       contentType,
-      contents
+      contents,
     );
 
     return new AsynchronousMessageWithPluginContents(
       this.pact,
       this.message,
       this.opts,
-      this.cleanupFn
+      this.cleanupFn,
     );
   }
 }
@@ -186,13 +186,13 @@ export class AsynchronousMessageBuilder
   constructor(
     protected pact: ConsumerPact,
     protected message: Message,
-    protected opts: PactV4Options
+    protected opts: PactV4Options,
   ) {}
 
   withMetadata(metadata: Metadata): V4AsynchronousMessageBuilder {
     if (isEmpty(metadata)) {
       throw new ConfigurationError(
-        'You must provide valid metadata for the Message, or none at all'
+        'You must provide valid metadata for the Message, or none at all',
       );
     }
 
@@ -213,12 +213,12 @@ export class AsynchronousMessageBuilder
   withJSONContent(content: unknown): V4AsynchronousMessageBuilder {
     if (isEmpty(content)) {
       throw new ConfigurationError(
-        'You must provide a valid JSON document or primitive for the Message.'
+        'You must provide a valid JSON document or primitive for the Message.',
       );
     }
     this.message.interaction.withContents(
       JSON.stringify(content),
-      'application/json'
+      'application/json',
     );
 
     return this;
@@ -240,18 +240,18 @@ export class AsynchronousMessageWithContent
     protected pact: ConsumerPact,
     protected message: Message,
     protected opts: PactV4Options,
-    protected cleanupFn: () => void
+    protected cleanupFn: () => void,
   ) {}
 
   executeTest<T>(
-    integrationTest: (m: AsynchronousMessage) => Promise<T>
+    integrationTest: (m: AsynchronousMessage) => Promise<T>,
   ): Promise<T | undefined> {
     return executeNonTransportTest(
       this.pact,
       this.opts,
       this.message,
       integrationTest,
-      this.cleanupFn
+      this.cleanupFn,
     );
   }
 }
@@ -263,30 +263,30 @@ export class AsynchronousMessageWithPluginContents
     protected pact: ConsumerPact,
     protected message: Message,
     protected opts: PactV4Options,
-    protected cleanupFn: () => void
+    protected cleanupFn: () => void,
   ) {}
 
   executeTest<T>(
-    integrationTest: (m: AsynchronousMessage) => Promise<T>
+    integrationTest: (m: AsynchronousMessage) => Promise<T>,
   ): Promise<T | undefined> {
     return executeNonTransportTest(
       this.pact,
       this.opts,
       this.message,
       integrationTest,
-      this.cleanupFn
+      this.cleanupFn,
     );
   }
 
   startTransport(
     transport: string,
     address: string, // IP Address or hostname
-    config?: AnyJson
+    config?: AnyJson,
   ): V4AsynchronousMessageWithTransport {
     const port = this.pact.pactffiCreateMockServerForTransport(
       address,
       transport,
-      config ? JSON.stringify(config) : ''
+      config ? JSON.stringify(config) : '',
     );
 
     return new AsynchronousMessageWithTransport(
@@ -295,7 +295,7 @@ export class AsynchronousMessageWithPluginContents
       this.opts,
       port,
       address,
-      this.cleanupFn
+      this.cleanupFn,
     );
   }
 }
@@ -309,13 +309,16 @@ export class AsynchronousMessageWithTransport
     protected opts: PactV4Options,
     protected port: number,
     protected address: string,
-    protected cleanupFn: () => void
+    protected cleanupFn: () => void,
   ) {}
 
   // TODO: this is basically the same as the HTTP variant, except only with a different test function wrapper
   //       extract these into smaller, testable chunks and re-use them
   async executeTest<T>(
-    integrationTest: (tc: TransportConfig, m: AsynchronousMessage) => Promise<T>
+    integrationTest: (
+      tc: TransportConfig,
+      m: AsynchronousMessage,
+    ) => Promise<T>,
   ): Promise<T | undefined> {
     let val: T | undefined;
     let error: Error | undefined;
@@ -324,7 +327,7 @@ export class AsynchronousMessageWithTransport
       // TODO: need to pull this body from the plugin interaction
       val = await integrationTest(
         { port: this.port, address: this.address },
-        {} as AsynchronousMessage
+        {} as AsynchronousMessage,
       );
     } catch (e) {
       error = e instanceof Error ? e : new Error(String(e));
@@ -373,7 +376,7 @@ const cleanup = (
   opts: PactV4Options,
   cleanupFn: () => void,
   port?: number,
-  transport = false
+  transport = false,
 ) => {
   if (success) {
     if (transport && port) {
@@ -394,14 +397,14 @@ const executeNonTransportTest = async <T>(
   opts: PactV4Options,
   message: Message,
   integrationTest: (m: AsynchronousMessage) => Promise<T>,
-  cleanupFn: () => void
+  cleanupFn: () => void,
 ): Promise<T | undefined> => {
   let val: T | undefined;
   let error: Error | undefined;
 
   try {
     const rawInteraction: ReifiedMessage = JSON.parse(
-      message.interaction.reifyMessage()
+      message.interaction.reifyMessage(),
     );
 
     const { content, contentType, encoded } = rawInteraction.contents;

@@ -20,7 +20,7 @@ export class UserService {
         headers: { Accept: 'application/json' },
         method: 'GET',
         url: `/users/${id}/profile`,
-      })
+      }),
     );
   };
 }

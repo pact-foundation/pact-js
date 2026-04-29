@@ -8,6 +8,6 @@ export const getMsg = () => {
         projectPath: 'C:/xampp/htdocs/render-service/538481.aep',
       },
       identifier: {},
-    })
+    }),
   );
 };

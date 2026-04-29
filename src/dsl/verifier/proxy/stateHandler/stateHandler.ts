@@ -22,7 +22,7 @@ export const createProxyStateHandler =
   (config: ProxyOptions) =>
   async (
     req: express.Request,
-    res: express.Response
+    res: express.Response,
   ): Promise<express.Response> => {
     const state: ProviderState = req.body;
     try {

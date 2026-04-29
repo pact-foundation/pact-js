@@ -1,4 +1,5 @@
-[{
+[
+  {
     "first_name": "Billy",
     "last_name": "Goat",
     "animal": "goat",
@@ -46,10 +47,7 @@
       "available": true,
       "previously_married": true
     },
-    "interests": [
-      "walks in the garden/meadow",
-      "parkour"
-    ],
+    "interests": ["walks in the garden/meadow", "parkour"],
     "identifiers": {
       "003": {
         "id": "003",
@@ -73,10 +71,7 @@
       "available": true,
       "previously_married": true
     },
-    "interests": [
-      "walks in the garden/meadow",
-      "parkour"
-    ],
+    "interests": ["walks in the garden/meadow", "parkour"],
     "identifiers": {
       "004": {
         "id": "004",

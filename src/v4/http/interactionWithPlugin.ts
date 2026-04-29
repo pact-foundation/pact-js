@@ -17,7 +17,7 @@ export class InteractionWithPlugin implements V4InteractionWithPlugin {
     private pact: ConsumerPact,
     private interaction: ConsumerInteraction,
     private opts: PactV4Options,
-    protected cleanupFn: () => void
+    protected cleanupFn: () => void,
   ) {}
 
   // Multiple plugins are allowed
@@ -30,7 +30,7 @@ export class InteractionWithPlugin implements V4InteractionWithPlugin {
   withRequest(
     method: string,
     path: Path,
-    builder?: V4PluginRequestBuilderFunc
+    builder?: V4PluginRequestBuilderFunc,
   ): V4InteractionWithPluginRequest {
     this.interaction.withRequest(method, matcherValueOrString(path));
 
@@ -41,7 +41,7 @@ export class InteractionWithPlugin implements V4InteractionWithPlugin {
       this.pact,
       this.interaction,
       this.opts,
-      this.cleanupFn
+      this.cleanupFn,
     );
   }
 }

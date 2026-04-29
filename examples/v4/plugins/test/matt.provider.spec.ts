@@ -45,7 +45,7 @@ describe('Plugins', () => {
               },
               {
                 contentType: 'application/matt',
-              }
+              },
             ),
             'a MATT message (text/plain)': providerWithMetadata(
               (message: MessageDescriptor) => {
@@ -57,10 +57,10 @@ describe('Plugins', () => {
               },
               {
                 contentType: 'text/plain',
-              }
+              },
             ),
             'a MATT message (application/json)': (
-              message: MessageDescriptor
+              message: MessageDescriptor,
             ) => {
               const request = message.content as any;
 
@@ -87,7 +87,7 @@ describe('Plugins', () => {
               },
               {
                 contentType: 'application/matt',
-              }
+              },
             ),
           },
         });

@@ -20,7 +20,7 @@ app.use(
   createHandler({
     rootValue: root,
     schema,
-  })
+  }),
 );
 
 export function start(): any {

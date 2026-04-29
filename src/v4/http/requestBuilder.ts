@@ -32,9 +32,9 @@ export class RequestBuilder implements V4RequestBuilder {
             this.interaction.withRequestHeader(
               `${k}`,
               index,
-              matcherValueOrString(header)
+              matcherValueOrString(header),
             );
-          }
+          },
         );
       } else {
         this.interaction.withRequestHeader(`${k}`, 0, matcherValueOrString(v));
@@ -47,7 +47,7 @@ export class RequestBuilder implements V4RequestBuilder {
   jsonBody(body: unknown): V4RequestBuilder {
     this.interaction.withRequestBody(
       matcherValueOrString(body),
-      'application/json'
+      'application/json',
     );
     return this;
   }
@@ -73,13 +73,13 @@ export class RequestBuilder implements V4RequestBuilder {
     contentType: string,
     file: string,
     mimePartName: string,
-    boundary?: string
+    boundary?: string,
   ): V4RequestBuilder {
     this.interaction.withRequestMultipartBody(
       contentType,
       file,
       mimePartName,
-      boundary
+      boundary,
     );
 
     return this;

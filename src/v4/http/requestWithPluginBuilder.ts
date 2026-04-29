@@ -8,11 +8,11 @@ export class RequestWithPluginBuilder
 {
   pluginContents(
     contentType: string,
-    contents: string
+    contents: string,
   ): V4RequestWithPluginBuilder {
     this.interaction.withPluginRequestInteractionContents(
       contentType,
-      contents
+      contents,
     );
 
     return this;
@@ -56,7 +56,7 @@ export class RequestWithPluginBuilder
     contentType: string,
     file: string,
     mimePartName: string,
-    boundary?: string
+    boundary?: string,
   ): V4RequestWithPluginBuilder {
     super.multipartBody(contentType, file, mimePartName, boundary);
 

@@ -15,7 +15,7 @@ import {
 const doRequest = async (
   action: string,
   hooksState: HooksState,
-  hookHandler?: RequestHandler
+  hookHandler?: RequestHandler,
 ) => {
   const hooksStateHandler = registerHookStateTracking(hooksState);
   const hookRequestHandler = hookHandler || ((req, res, next) => next());

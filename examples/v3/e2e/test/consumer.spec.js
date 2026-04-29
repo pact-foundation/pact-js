@@ -59,7 +59,7 @@ describe('Pact V3', () => {
     id: integer(1),
     available_from: datetime(
       "yyyy-MM-dd'T'HH:mm:ss.SSSX",
-      '2016-02-11T09:46:56.023Z'
+      '2016-02-11T09:46:56.023Z',
     ),
     first_name: string('Billy'),
     last_name: string('Goat'),
@@ -123,13 +123,13 @@ describe('Pact V3', () => {
           })
           .willRespondWith({
             status: 401,
-          })
+          }),
       );
 
       it('returns a 401 unauthorized', () => {
         return provider.executeTest((mockserver) => {
           return expect(
-            suggestion(suitor, () => mockserver.url)
+            suggestion(suitor, () => mockserver.url),
           ).to.eventually.be.rejectedWith('Unauthorized');
         });
       });
@@ -161,7 +161,7 @@ describe('Pact V3', () => {
             return Promise.all([
               expect(suggestedMates).to.eventually.have.deep.property(
                 'suggestions[0].score',
-                94
+                94,
               ),
               expect(suggestedMates)
                 .to.eventually.have.property('suggestions')
@@ -194,7 +194,7 @@ describe('Pact V3', () => {
                 id: integer(1),
                 available_from: datetime(
                   "yyyy-MM-dd'T'HH:mm:ss.SSSX",
-                  '2016-02-11T09:46:56.023Z'
+                  '2016-02-11T09:46:56.023Z',
                 ),
                 first_name: string('Billy'),
                 last_name: string('Goat'),
@@ -227,7 +227,7 @@ describe('Pact V3', () => {
             .given('is authenticated')
             .given('Has some animals')
             .uponReceiving(
-              'a request for all animals filtered by a query containing chinese characters'
+              'a request for all animals filtered by a query containing chinese characters',
             )
             .withRequest({
               method: 'GET',
@@ -248,7 +248,7 @@ describe('Pact V3', () => {
                 id: integer(1),
                 available_from: datetime(
                   "yyyy-MM-dd'T'HH:mm:ss.SSSX",
-                  '2016-02-11T09:46:56.023Z'
+                  '2016-02-11T09:46:56.023Z',
                 ),
                 first_name: string('比利'),
                 last_name: string('Goat'),
@@ -281,7 +281,7 @@ describe('Pact V3', () => {
             .given('is authenticated')
             .given('Has some animals')
             .uponReceiving(
-              'a request for all animals filtered by a query containing devanagari characters'
+              'a request for all animals filtered by a query containing devanagari characters',
             )
             .withRequest({
               method: 'GET',
@@ -302,7 +302,7 @@ describe('Pact V3', () => {
                 id: integer(1),
                 available_from: datetime(
                   "yyyy-MM-dd'T'HH:mm:ss.SSSX",
-                  '2016-02-11T09:46:56.023Z'
+                  '2016-02-11T09:46:56.023Z',
                 ),
                 first_name: string('बिल्ली'),
                 last_name: string('Goat'),
@@ -359,7 +359,7 @@ describe('Pact V3', () => {
               'Content-Type': 'application/json; charset=utf-8',
             },
             body: responseBody,
-          })
+          }),
       );
 
       it('returns the animal', () => {
@@ -386,7 +386,7 @@ describe('Pact V3', () => {
           })
           .willRespondWith({
             status: 404,
-          })
+          }),
       );
 
       it('returns a 404', () => {
@@ -423,7 +423,7 @@ describe('Pact V3', () => {
               'Content-Type': 'text/plain; charset=utf-8',
             },
             body: 'id=100;first_name=Nanny;last_name=Doe;animal=goat',
-          })
+          }),
       );
 
       it('returns the animal', async () => {
@@ -431,10 +431,10 @@ describe('Pact V3', () => {
           const animal = await getAnimalById(
             100,
             () => mockserver.url,
-            'text/plain'
+            'text/plain',
           );
           return expect(animal).to.equal(
-            'id=100;first_name=Nanny;last_name=Doe;animal=goat'
+            'id=100;first_name=Nanny;last_name=Doe;animal=goat',
           );
         });
       });
@@ -460,7 +460,7 @@ describe('Pact V3', () => {
             'Content-Type': 'application/json; charset=utf-8',
           },
           body: like(suitor),
-        })
+        }),
     );
 
     it('creates a new mate with JSON data', () => {
@@ -476,7 +476,7 @@ describe('Pact V3', () => {
       provider
         .given('is authenticated')
         .uponReceiving(
-          'a request to create a new mate with x-www-form-urlencoded data'
+          'a request to create a new mate with x-www-form-urlencoded data',
         )
         .withRequest({
           method: 'POST',
@@ -497,7 +497,7 @@ describe('Pact V3', () => {
             first_name: 'Nanny',
             last_name: 'Doe',
           }),
-        })
+        }),
     );
 
     it('creates a new mate with application/x-www-form-urlencoded data', () => {
@@ -506,8 +506,8 @@ describe('Pact V3', () => {
           createMateForDates(
             'first_name=Nanny&last_name=Doe',
             () => mockserver.url,
-            'application/x-www-form-urlencoded'
-          )
+            'application/x-www-form-urlencoded',
+          ),
         ).to.eventually.be.fulfilled;
       });
     });
@@ -536,7 +536,7 @@ describe('Pact V3', () => {
               id: integer(1),
               available_from: datetime(
                 "yyyy-MM-dd'T'HH:mm:ss.SSSX",
-                '2016-02-11T09:46:56.023Z'
+                '2016-02-11T09:46:56.023Z',
               ),
               first_name: string('Slinky'),
               last_name: string('Malinky'),
@@ -547,7 +547,7 @@ describe('Pact V3', () => {
               id: integer(3),
               available_from: datetime(
                 "yyyy-MM-dd'T'HH:mm:ss.SSSX",
-                '2016-02-11T09:46:56.023Z'
+                '2016-02-11T09:46:56.023Z',
               ),
               first_name: string('Head'),
               last_name: string('Butts'),
@@ -555,7 +555,7 @@ describe('Pact V3', () => {
               gender: regex('M|F', 'F'),
             });
           }),
-        })
+        }),
     );
 
     it('gets animals in XML format', () => {

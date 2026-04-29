@@ -9,7 +9,7 @@ export class XmlBuilder {
   constructor(
     private version: string,
     private charset: string,
-    rootElement: string
+    rootElement: string,
   ) {
     this.root = new XmlElement(rootElement);
   }

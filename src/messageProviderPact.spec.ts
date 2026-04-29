@@ -110,7 +110,7 @@ describe('MessageProvider', () => {
       it('returns a Handler object', () => {
         const findHandler = (provider as any).findHandler.bind(provider);
         return expect(findHandler(successfulMessage)).to.eventually.be.a(
-          'function'
+          'function',
         );
       });
     });
@@ -139,7 +139,7 @@ describe('MessageProvider', () => {
             providerStates: [
               { name: 'some state with params', params: { foo: 'bar' } },
             ],
-          })
+          }),
         ).to.eventually.deep.equal([
           'name: some state with params, params: {"foo":"bar"}',
         ]);
@@ -154,7 +154,7 @@ describe('MessageProvider', () => {
         });
         const findStateHandler = (provider as any).setupStates.bind(provider);
         return expect(
-          findStateHandler(unsuccessfulMessage)
+          findStateHandler(unsuccessfulMessage),
         ).to.eventually.deep.equal([]);
       });
     });

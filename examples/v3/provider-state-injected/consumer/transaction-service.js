@@ -46,7 +46,7 @@ module.exports = {
           headers: {
             Accept: 'application/hal+json',
           },
-        }
+        },
       )
       .then(({ data }) => {
         // This is the point where a real transaction service would create the transaction, but for the purpose

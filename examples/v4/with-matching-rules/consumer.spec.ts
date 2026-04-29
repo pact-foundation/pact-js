@@ -70,7 +70,7 @@ describe('Pact V4 Consumer Test Using Matching Rules', () => {
             headers: {
               'Content-Type': 'application/json',
             },
-          }
+          },
         );
 
         expect(response.status).to.eq(200);

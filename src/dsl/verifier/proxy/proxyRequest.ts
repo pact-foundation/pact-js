@@ -12,7 +12,7 @@ const defaultBaseURL = () => 'http://127.0.0.1/';
 
 export const toServerOptions = (
   config: ProxyOptions,
-  req: IncomingMessage
+  req: IncomingMessage,
 ): ServerOptions => {
   // Provide direct support for standard proxy configuration
   const systemProxy = process.env.HTTPS_PROXY || process.env.HTTP_PROXY;

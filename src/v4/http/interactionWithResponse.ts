@@ -11,7 +11,7 @@ export class InteractionWithResponse implements V4InteractionWithResponse {
   constructor(
     private pact: ConsumerPact,
     private opts: PactV4Options,
-    protected cleanupFn: () => void
+    protected cleanupFn: () => void,
   ) {}
 
   async executeTest<T>(testFn: TestFunction<T>): Promise<T | undefined> {

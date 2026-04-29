@@ -56,7 +56,7 @@ export class PactV3 {
   public addInteraction(interaction: V3Interaction): PactV3 {
     if (interaction.uponReceiving === '') {
       throw new Error(
-        "must provide a valid interaction description via 'uponReceiving'"
+        "must provide a valid interaction description via 'uponReceiving'",
       );
     }
 
@@ -78,7 +78,7 @@ export class PactV3 {
       // undefined arguments not supported (invalid JSON)
       if (json === undefined) {
         throw new Error(
-          `Invalid provider state parameter received. Parameters must not be undefined. Received: ${parameters}`
+          `Invalid provider state parameter received. Parameters must not be undefined. Received: ${parameters}`,
         );
       }
 
@@ -87,7 +87,7 @@ export class PactV3 {
 
       if (!equals(parameters, jsonParsed)) {
         throw new Error(
-          `Invalid provider state parameter received. Parameters must not contain undefined values. Received: ${parameters}`
+          `Invalid provider state parameter received. Parameters must not contain undefined values. Received: ${parameters}`,
         );
       }
     }
@@ -102,7 +102,7 @@ export class PactV3 {
       if (s.parameters) {
         this.interaction.givenWithParams(
           s.description,
-          JSON.stringify(s.parameters)
+          JSON.stringify(s.parameters),
         );
       } else {
         this.interaction.given(s.description);
@@ -116,7 +116,7 @@ export class PactV3 {
       this.interaction.withRequestBody(
         matcherValueOrString(req.body),
         req.contentType ||
-          contentTypeFromHeaders(req.headers, 'application/json')
+          contentTypeFromHeaders(req.headers, 'application/json'),
       );
     }
 
@@ -127,7 +127,7 @@ export class PactV3 {
   public withRequestBinaryFile(
     req: V3Request,
     contentType: string,
-    file: string
+    file: string,
   ): PactV3 {
     const body = readBinaryData(file);
     this.interaction.withRequestBinaryBody(body, contentType);
@@ -186,13 +186,13 @@ export class PactV3 {
     contentType: string,
     file: string,
     mimePartName: string,
-    boundary?: string
+    boundary?: string,
   ): PactV3 {
     this.interaction.withRequestMultipartBody(
       contentType,
       file,
       mimePartName,
-      boundary
+      boundary,
     );
     setRequestDetails(this.interaction, req);
     return this;
@@ -204,7 +204,7 @@ export class PactV3 {
       this.interaction.withResponseBody(
         matcherValueOrString(res.body),
         res.contentType ||
-          contentTypeFromHeaders(res.headers, 'application/json')
+          contentTypeFromHeaders(res.headers, 'application/json'),
       );
     }
     this.states = [];
@@ -214,7 +214,7 @@ export class PactV3 {
   public withResponseBinaryFile(
     res: V3Response,
     contentType: string,
-    file: string
+    file: string,
   ): PactV3 {
     const body = readBinaryData(file);
     this.interaction.withResponseBinaryBody(body, contentType);
@@ -238,20 +238,20 @@ export class PactV3 {
     contentType: string,
     file: string,
     mimePartName: string,
-    boundary?: string
+    boundary?: string,
   ): PactV3 {
     this.interaction.withResponseMultipartBody(
       contentType,
       file,
       mimePartName,
-      boundary
+      boundary,
     );
     setResponseDetails(this.interaction, res);
     return this;
   }
 
   public async executeTest<T>(
-    testFn: (mockServer: V3MockServer) => Promise<T>
+    testFn: (mockServer: V3MockServer) => Promise<T>,
   ): Promise<T | undefined> {
     const scheme = this.opts.tls ? 'https' : 'http';
     const host = this.opts.host || '127.0.0.1';
@@ -259,7 +259,7 @@ export class PactV3 {
     const port = this.pact.createMockServer(
       host,
       this.opts.port,
-      this.opts.tls
+      this.opts.tls,
     );
     const server = { port, url: `${scheme}://${host}:${port}`, id: 'unknown' };
     let val: T | undefined;
@@ -322,7 +322,7 @@ export class PactV3 {
       this.opts.consumer,
       this.opts.provider,
       this.opts.spec ?? SpecificationVersion.SPECIFICATION_VERSION_V3,
-      this.opts.logLevel ?? 'info'
+      this.opts.logLevel ?? 'info',
     );
     this.pact.addMetadata('pact-js', 'version', pactPackageVersion);
   }

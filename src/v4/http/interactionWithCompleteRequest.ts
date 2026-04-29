@@ -13,7 +13,7 @@ export class InteractionWithCompleteRequest
     private pact: ConsumerPact,
     private interaction: ConsumerInteraction,
     private opts: PactV4Options,
-    protected cleanupFn: () => void
+    protected cleanupFn: () => void,
   ) {
     throw Error('V4InteractionWithCompleteRequest is unimplemented');
   }

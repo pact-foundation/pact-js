@@ -17,7 +17,7 @@ describe('Pact FFI', () => {
         it('detects the content type from the header', () => {
           const headers = { [t]: 'some-mime-type' };
           expect(contentTypeFromHeaders(headers, 'application/json')).to.eq(
-            'some-mime-type'
+            'some-mime-type',
           );
         });
       });
@@ -26,7 +26,7 @@ describe('Pact FFI', () => {
     describe(`when the no content-type header is set`, () => {
       it('uses a default', () => {
         expect(contentTypeFromHeaders({}, 'application/json')).to.eq(
-          'application/json'
+          'application/json',
         );
       });
     });

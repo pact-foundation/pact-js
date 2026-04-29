@@ -6,7 +6,7 @@ import { generateMattMessage, parseMattMessage } from './protocol';
 
 export const startTCPServer = (
   host: string,
-  port?: number
+  port?: number,
 ): Promise<number> => {
   const server = net.createServer();
 
@@ -44,7 +44,7 @@ export const startTCPServer = (
 
 export const startHTTPServer = (
   host: string,
-  port?: number
+  port?: number,
 ): Promise<http.Server> => {
   const server: express.Express = express();
 

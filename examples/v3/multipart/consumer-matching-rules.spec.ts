@@ -97,7 +97,7 @@ describe('Pact Multipart with Matching Rules', () => {
           rules: [
             MatchersV3.regex(
               'multipart/form-data;\\s*boundary=.*',
-              `multipart/form-data; boundary=${boundary}`
+              `multipart/form-data; boundary=${boundary}`,
             ),
           ],
         },
@@ -118,7 +118,7 @@ describe('Pact Multipart with Matching Rules', () => {
         .withRequestBinaryFile(
           req,
           `multipart/form-data; boundary=${boundary}`,
-          tempFilePath
+          tempFilePath,
         )
         .withRequestMatchingRules(req, requestMatchingRules)
         .willRespondWith({
@@ -146,7 +146,7 @@ describe('Pact Multipart with Matching Rules', () => {
             formData,
             {
               headers: formData.getHeaders(),
-            }
+            },
           );
 
           expect(response.status).to.equal(201);

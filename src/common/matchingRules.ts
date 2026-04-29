@@ -6,7 +6,7 @@ import { Rules, Rule, Matcher } from '../v3/types';
  * @returns The matcher in FFI format
  */
 export const convertMatcherToFFI = (
-  matcher: Matcher<unknown>
+  matcher: Matcher<unknown>,
 ): Record<string, unknown> => {
   const result: Record<string, unknown> = {};
 
@@ -39,7 +39,7 @@ export const validateRules = (rules: Rules): void => {
   ruleKeys.forEach((key) => {
     if (!validParts.includes(key)) {
       throw new Error(
-        `Invalid part "${key}" in rules. Valid parts are: ${validParts.join(', ')}`
+        `Invalid part "${key}" in rules. Valid parts are: ${validParts.join(', ')}`,
       );
     }
 
@@ -55,13 +55,13 @@ export const validateRules = (rules: Rules): void => {
       const ruleObj = rule as Record<string, unknown>;
       if (!('rules' in ruleObj) || !Array.isArray(ruleObj.rules)) {
         throw new Error(
-          `Rule at ${key}[${index}] must have a "rule" property that is an array`
+          `Rule at ${key}[${index}] must have a "rule" property that is an array`,
         );
       }
 
       if ('path' in ruleObj && typeof ruleObj.path !== 'string') {
         throw new Error(
-          `Rule at ${key}[${index}] has a "path" property that is not a string`
+          `Rule at ${key}[${index}] has a "path" property that is not a string`,
         );
       }
     });

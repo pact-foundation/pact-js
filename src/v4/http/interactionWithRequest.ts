@@ -14,12 +14,12 @@ export class InteractionWithRequest implements V4InteractionWithRequest {
     private pact: ConsumerPact,
     private interaction: ConsumerInteraction,
     private opts: PactV4Options,
-    protected cleanupFn: () => void
+    protected cleanupFn: () => void,
   ) {}
 
   willRespondWith(
     status: number,
-    builder?: V4ResponseBuilderFunc
+    builder?: V4ResponseBuilderFunc,
   ): V4InteractionWithResponse {
     this.interaction.withStatus(status);
 

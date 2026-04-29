@@ -38,15 +38,15 @@ export interface TransportConfig {
 }
 
 export type V4AsynchronousMessageBuilderFunc = (
-  builder: V4AsynchronousMessageBuilder
+  builder: V4AsynchronousMessageBuilder,
 ) => void;
 
 export type V4MessageRequestBuilderFunc = (
-  builder: V4SynchronousMessageWithRequestBuilder
+  builder: V4SynchronousMessageWithRequestBuilder,
 ) => void;
 
 export type V4MessageResponseBuilderFunc = (
-  builder: V4SynchronousMessageWithResponseBuilder
+  builder: V4SynchronousMessageWithResponseBuilder,
 ) => void;
 
 export interface V4SynchronousPact {
@@ -68,7 +68,7 @@ export interface V4SynchronousMessageWithPlugin {
   usingPlugin(config: PluginConfig): V4SynchronousMessageWithPlugin;
   withPluginContents(
     contents: string,
-    contentType: string
+    contentType: string,
   ): V4SynchronousMessageWithPluginContents;
 }
 
@@ -79,7 +79,7 @@ export interface V4Message {
 export interface V4SynchronousMessageWithRequestBuilder {
   withContent(
     contentType: string,
-    body: Buffer
+    body: Buffer,
   ): V4SynchronousMessageWithRequestBuilder;
   withJSONContent(content: unknown): V4SynchronousMessageWithRequestBuilder;
   withMatchingRules(rules: Rules): V4SynchronousMessageWithRequestBuilder;
@@ -87,7 +87,7 @@ export interface V4SynchronousMessageWithRequestBuilder {
 
 export interface V4SynchronousMessageWithRequest {
   withResponse(
-    builder: V4MessageResponseBuilderFunc
+    builder: V4MessageResponseBuilderFunc,
   ): V4SynchronousMessageWithResponse;
 }
 
@@ -95,7 +95,7 @@ export interface V4SynchronousMessageWithResponseBuilder {
   withMetadata(metadata: Metadata): V4SynchronousMessageWithResponseBuilder;
   withContent(
     contentType: string,
-    body: Buffer
+    body: Buffer,
   ): V4SynchronousMessageWithResponseBuilder;
   withJSONContent(content: unknown): V4SynchronousMessageWithResponseBuilder;
   withMatchingRules(rules: Rules): V4SynchronousMessageWithResponseBuilder;
@@ -103,24 +103,24 @@ export interface V4SynchronousMessageWithResponseBuilder {
 
 export interface V4SynchronousMessageWithPluginContents {
   executeTest<T>(
-    integrationTest: (m: SynchronousMessage) => Promise<T>
+    integrationTest: (m: SynchronousMessage) => Promise<T>,
   ): Promise<T | undefined>;
   startTransport(
     transport: string,
     address: string,
-    config?: AnyJson
+    config?: AnyJson,
   ): V4SynchronousMessageWithTransport;
 }
 
 export interface V4SynchronousMessageWithTransport {
   executeTest<T>(
-    integrationTest: (tc: TransportConfig, m: SynchronousMessage) => Promise<T>
+    integrationTest: (tc: TransportConfig, m: SynchronousMessage) => Promise<T>,
   ): Promise<T | undefined>;
 }
 
 export interface V4SynchronousMessageWithResponse {
   executeTest<T>(
-    integrationTest: (m: SynchronousMessage) => Promise<T>
+    integrationTest: (m: SynchronousMessage) => Promise<T>,
   ): Promise<T | undefined>;
 }
 
@@ -132,7 +132,7 @@ export interface V4UnconfiguredAsynchronousMessage {
   usingPlugin(config: PluginConfig): V4AsynchronousMessageWithPlugin;
   expectsToReceive(
     description: string,
-    contents: V4AsynchronousMessageBuilderFunc
+    contents: V4AsynchronousMessageBuilderFunc,
   ): V4AsynchronousMessageWithContent;
 }
 
@@ -141,30 +141,33 @@ export interface V4AsynchronousMessageWithPlugin {
   expectsToReceive(description: string): V4AsynchronousMessageWithPlugin;
   withPluginContents(
     contents: string,
-    contentType: string
+    contentType: string,
   ): V4AsynchronousMessageWithPluginContents;
 }
 
 export interface V4AsynchronousMessageWithPluginContents {
   executeTest<T>(
-    integrationTest: (m: AsynchronousMessage) => Promise<T>
+    integrationTest: (m: AsynchronousMessage) => Promise<T>,
   ): Promise<T | undefined>;
   startTransport(
     transport: string,
     address: string,
-    config?: AnyJson
+    config?: AnyJson,
   ): V4AsynchronousMessageWithTransport;
 }
 
 export interface V4AsynchronousMessageWithTransport {
   executeTest<T>(
-    integrationTest: (tc: TransportConfig, m: AsynchronousMessage) => Promise<T>
+    integrationTest: (
+      tc: TransportConfig,
+      m: AsynchronousMessage,
+    ) => Promise<T>,
   ): Promise<T | undefined>;
 }
 
 export interface V4AsynchronousMessageWithContent {
   executeTest<T>(
-    integrationTest: (m: AsynchronousMessage) => Promise<T>
+    integrationTest: (m: AsynchronousMessage) => Promise<T>,
   ): Promise<T | undefined>;
 }
 

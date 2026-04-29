@@ -8,7 +8,7 @@ import { V4UnconfiguredGraphQLInteraction } from './graphql/types';
 export interface V4ConsumerPact {
   addInteraction(): V4UnconfiguredInteraction;
   addSynchronousInteraction(
-    description: string
+    description: string,
   ): V4UnconfiguredSynchronousMessage;
   addAsynchronousInteraction(): V4UnconfiguredAsynchronousMessage;
   addGraphQLInteraction(): V4UnconfiguredGraphQLInteraction;

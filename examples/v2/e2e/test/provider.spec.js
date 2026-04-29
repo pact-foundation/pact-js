@@ -24,7 +24,7 @@ describe('Pact Verification', () => {
 
       requestFilter: (req, res, next) => {
         console.log(
-          'Middleware invoked before provider API - injecting Authorization token'
+          'Middleware invoked before provider API - injecting Authorization token',
         );
         req.headers['MY_SPECIAL_HEADER'] = 'my special value';
 

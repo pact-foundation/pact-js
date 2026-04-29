@@ -42,7 +42,7 @@ export const like = <T>(template: T): Matcher<T> => ({
  */
 export const eachKeyLike = <T>(
   keyTemplate: string,
-  template: T
+  template: T,
 ): Matcher<T> => ({
   'pact:matcher:type': 'values',
   value: {
@@ -60,7 +60,7 @@ export const eachKeyLike = <T>(
  */
 export const eachKeyMatches = (
   example: Record<string, unknown>,
-  matchers: Matcher<string> | Matcher<string>[] = like('key')
+  matchers: Matcher<string> | Matcher<string>[] = like('key'),
 ): RulesMatcher<unknown> => ({
   'pact:matcher:type': 'eachKey',
   rules: Array.isArray(matchers) ? matchers : [matchers],
@@ -77,7 +77,7 @@ export const eachKeyMatches = (
  */
 export const eachValueMatches = <T>(
   example: Record<string, T>,
-  matchers: Matcher<T> | Matcher<T>[]
+  matchers: Matcher<T> | Matcher<T>[],
 ): RulesMatcher<T> => ({
   'pact:matcher:type': 'eachValue',
   rules: Array.isArray(matchers) ? matchers : [matchers],
@@ -109,7 +109,7 @@ export const eachLike = <T>(template: T, min = 1): MinLikeMatcher<T[]> => {
  */
 export const atLeastOneLike = <T>(
   template: T,
-  count = 1
+  count = 1,
 ): MinLikeMatcher<T[]> => ({
   min: 1,
   'pact:matcher:type': 'type',
@@ -125,13 +125,13 @@ export const atLeastOneLike = <T>(
 export const atLeastLike = <T>(
   template: T,
   min: number,
-  count?: number
+  count?: number,
 ): MinLikeMatcher<T[]> => {
   const elements = count || min;
   if (count && count < min) {
     throw new Error(
       `atLeastLike has a minimum of ${min} but ${count} elements were requested.` +
-        ` Make sure the count is greater than or equal to the min.`
+        ` Make sure the count is greater than or equal to the min.`,
     );
   }
 
@@ -151,13 +151,13 @@ export const atLeastLike = <T>(
 export const atMostLike = <T>(
   template: T,
   max: number,
-  count?: number
+  count?: number,
 ): MaxLikeMatcher<T[]> => {
   const elements = count || 1;
   if (count && count > max) {
     throw new Error(
       `atMostLike has a maximum of ${max} but ${count} elements where requested.` +
-        ` Make sure the count is less than or equal to the max.`
+        ` Make sure the count is less than or equal to the max.`,
     );
   }
 
@@ -179,19 +179,19 @@ export const constrainedArrayLike = <T>(
   template: T,
   min: number,
   max: number,
-  count?: number
+  count?: number,
 ): MinLikeMatcher<T[]> & MaxLikeMatcher<T[]> => {
   const elements = count || min;
   if (count) {
     if (count < min) {
       throw new Error(
         `constrainedArrayLike has a minimum of ${min} but ${count} elements where requested.` +
-          ` Make sure the count is greater than or equal to the min.`
+          ` Make sure the count is greater than or equal to the min.`,
       );
     } else if (count > max) {
       throw new Error(
         `constrainedArrayLike has a maximum of ${max} but ${count} elements where requested.` +
-          ` Make sure the count is less than or equal to the max.`
+          ` Make sure the count is less than or equal to the max.`,
       );
     }
   }
@@ -226,7 +226,7 @@ export const integer = (int?: number): Matcher<number> => {
   }
   if (int) {
     throw new Error(
-      `The integer matcher was passed '${int}' which is not an integer.`
+      `The integer matcher was passed '${int}' which is not an integer.`,
     );
   }
 
@@ -250,7 +250,7 @@ export const decimal = (num?: number): Matcher<number> => {
   }
   if (num) {
     throw new Error(
-      `The decimal matcher was passed '${num}' which is not a number.`
+      `The decimal matcher was passed '${num}' which is not a number.`,
     );
   }
   return {
@@ -273,7 +273,7 @@ export function number(num?: number): Matcher<number> {
   }
   if (num) {
     throw new Error(
-      `The number matcher was passed '${num}' which is not a number.`
+      `The number matcher was passed '${num}' which is not a number.`,
     );
   }
   return {
@@ -430,7 +430,7 @@ function stringFromRegex(r: RegExp): string {
  */
 export function url2(
   basePath: string | null,
-  pathFragments: Array<string | V3RegexMatcher | RegExp>
+  pathFragments: Array<string | V3RegexMatcher | RegExp>,
 ): V3RegexMatcher {
   const regexpr = [
     '.*(',
@@ -481,7 +481,7 @@ export function url2(
  * @param pathFragments list of path fragments, can be regular expressions
  */
 export function url(
-  pathFragments: Array<string | V3RegexMatcher | RegExp>
+  pathFragments: Array<string | V3RegexMatcher | RegExp>,
 ): V3RegexMatcher {
   return url2(null, pathFragments);
 }
@@ -504,7 +504,7 @@ export function arrayContaining(...variants: unknown[]): ArrayContainsMatcher {
  */
 export function fromProviderState<V>(
   expression: string,
-  exampleValue: V
+  exampleValue: V,
 ): ProviderStateInjectedValue<V> {
   return {
     'pact:matcher:type': 'type',
@@ -524,7 +524,7 @@ export function uuid(example?: string): V3RegexMatcher {
     const regexpr = new RegExp(`^${regexStr}$`);
     if (!example.match(regexpr)) {
       throw new Error(
-        `regex: Example value '${example}' does not match the UUID regular expression '${regexStr}'`
+        `regex: Example value '${example}' does not match the UUID regular expression '${regexStr}'`,
       );
     }
     return {
@@ -579,7 +579,7 @@ export function reify(input: unknown): AnyJson {
     return input;
   }
   throw new Error(
-    `Unable to strip matcher from a '${typeof input}', as it is not valid in a Pact description`
+    `Unable to strip matcher from a '${typeof input}', as it is not valid in a Pact description`,
   );
 }
 

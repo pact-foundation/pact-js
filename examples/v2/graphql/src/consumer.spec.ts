@@ -38,7 +38,7 @@ describe('GraphQL example', () => {
           query HelloQuery {
             hello
           }
-        `
+        `,
         )
         .withOperation('HelloQuery')
         .withRequest({

@@ -111,8 +111,8 @@ describe('Plugins - Matt Protocol', () => {
             const response = parseMattMessage(
               Buffer.from(
                 String(message?.contents?.content || ''),
-                'base64'
-              ).toString()
+                'base64',
+              ).toString(),
             );
             expect(response).to.deep.eq('tcpworld');
           });
@@ -124,7 +124,7 @@ describe('Plugins - Matt Protocol', () => {
 const sendMattMessageTCP = (
   message: string,
   host: string,
-  port: number
+  port: number,
 ): Promise<string> => {
   const socket = net.connect({
     port: port,

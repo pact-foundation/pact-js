@@ -38,7 +38,7 @@ describe('The Dog API', () => {
   before(() =>
     provider.setup().then((opts) => {
       dogService = new DogService({ url, port: opts.port });
-    })
+    }),
   );
 
   after(() => provider.finalize());

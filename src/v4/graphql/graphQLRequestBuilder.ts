@@ -31,9 +31,9 @@ export class GraphQLRequestBuilder implements V4GraphQLRequestBuilder {
             this.interaction.withRequestHeader(
               `${k}`,
               index,
-              matcherValueOrString(header)
+              matcherValueOrString(header),
             );
-          }
+          },
         );
       } else {
         this.interaction.withRequestHeader(`${k}`, 0, matcherValueOrString(v));

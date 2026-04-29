@@ -8,7 +8,7 @@ export class ResponseWithPluginBuilder
   pluginContents(contentType: string, contents: string): V4ResponseBuilder {
     this.interaction.withPluginResponseInteractionContents(
       contentType,
-      contents
+      contents,
     );
     return this;
   }

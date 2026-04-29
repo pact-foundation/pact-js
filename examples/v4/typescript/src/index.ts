@@ -26,7 +26,7 @@ export class DogService {
         headers: { Accept: 'application/json' },
         method: 'GET',
         url: `/dogs/${id}/profile`,
-      })
+      }),
     );
   };
 }

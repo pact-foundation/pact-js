@@ -6,16 +6,16 @@ export const traceHttpInteractions = (): void => {
   const originalRequest = http.request;
   http.request = (
     options: RequestOptions | string | URL,
-    cb: RequestOptions | ((res: IncomingMessage) => void) | undefined
+    cb: RequestOptions | ((res: IncomingMessage) => void) | undefined,
   ): ClientRequest => {
     if (typeof options === 'string' || options instanceof URL) {
       throw new Error(
-        'invoking traced requests with a string or a URL first argument is not supported'
+        'invoking traced requests with a string or a URL first argument is not supported',
       );
     }
     if (typeof cb !== 'function') {
       throw new Error(
-        'invoking traced requests with a non-function second argument is not supported'
+        'invoking traced requests with a non-function second argument is not supported',
       );
     }
     const requestBodyChunks: Buffer[] = [];
@@ -25,7 +25,7 @@ export const traceHttpInteractions = (): void => {
         `outgoing request: ${JSON.stringify({
           ...options,
           body: Buffer.concat(requestBodyChunks).toString('utf8'),
-        })}`
+        })}`,
       );
       if (cb) {
         cb(res);
@@ -33,7 +33,7 @@ export const traceHttpInteractions = (): void => {
     };
     const clientRequest: ClientRequest = originalRequest(
       options,
-      hijackedCallback
+      hijackedCallback,
     );
     const oldWrite = clientRequest.end.bind(clientRequest);
     clientRequest.end = (chunk: Parameters<typeof clientRequest.write>[0]) => {
@@ -51,7 +51,7 @@ export const traceHttpInteractions = (): void => {
             body: Buffer.concat(responseBodyChunks).toString('utf8'),
             headers: incoming.headers,
             statusCode: incoming.statusCode,
-          })}`
+          })}`,
         );
       });
     });

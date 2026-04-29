@@ -37,7 +37,7 @@ describe('Account Service', () => {
               params.accountRef,
               new AccountNumber(0),
               Date.now(),
-              Date.now()
+              Date.now(),
             );
             let persistedAccount = accountRepository.save(account);
             return Promise.resolve({
@@ -57,7 +57,7 @@ describe('Account Service', () => {
       pactUrls: [
         path.resolve(
           process.cwd(),
-          './pacts/TransactionService-AccountService.json'
+          './pacts/TransactionService-AccountService.json',
         ),
       ],
     };

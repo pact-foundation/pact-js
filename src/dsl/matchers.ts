@@ -77,17 +77,17 @@ export function validateExample(example: string, matcher: string): boolean {
  */
 export function eachLike<T>(
   template: T,
-  opts?: { min: number }
+  opts?: { min: number },
 ): ArrayMatcher<T[]> {
   if (isUndefined(template)) {
     throw new MatcherError(
-      'Error creating a Pact eachLike. Please provide a content argument'
+      'Error creating a Pact eachLike. Please provide a content argument',
     );
   }
 
   if (opts && (isNil(opts.min) || opts.min < 1)) {
     throw new MatcherError(
-      'Error creating a Pact eachLike. Please provide opts.min that is > 0'
+      'Error creating a Pact eachLike. Please provide opts.min that is > 0',
     );
   }
 
@@ -108,7 +108,7 @@ export function eachLike<T>(
 export function somethingLike<T>(value: T): MatcherV2<T> {
   if (isNil(value) || isFunction(value)) {
     throw new MatcherError(
-      'Error creating a Pact somethingLike Match. Value cannot be a function or undefined'
+      'Error creating a Pact somethingLike Match. Value cannot be a function or undefined',
     );
   }
 
@@ -142,7 +142,7 @@ export function term(opts: {
 
   if (!validateExample(generate, matcher)) {
     throw new MatcherError(
-      `Example '${generate}' does not match provided regular expression '${matcher}'`
+      `Example '${generate}' does not match provided regular expression '${matcher}'`,
     );
   }
 
@@ -316,10 +316,10 @@ export function extractPayload(value: AnyTemplate): AnyJson {
       (acc: JsonMap, propName: string) => ({
         ...acc,
         [propName]: extractPayload(
-          (value as Record<string, AnyTemplate>)[propName]
+          (value as Record<string, AnyTemplate>)[propName],
         ),
       }),
-      {}
+      {},
     );
   }
   return value;

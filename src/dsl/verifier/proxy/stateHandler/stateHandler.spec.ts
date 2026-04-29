@@ -42,8 +42,8 @@ describe('#createProxyStateHandler', () => {
           {
             body: state,
           } as express.Request,
-          mockResponse as express.Response
-        )
+          mockResponse as express.Response,
+        ),
       ).to.eventually.be.fulfilled;
     });
   });
@@ -64,13 +64,13 @@ describe('#createProxyStateHandler', () => {
         {
           body: state,
         } as express.Request,
-        mockResponse as express.Response
+        mockResponse as express.Response,
       );
 
       expect(res).to.eql(200);
       expect(spy.callCount).to.eql(3);
       expect(spy.getCall(0).args[0]).to.include(
-        "Error executing state handler for state 'thing exists' on 'setup'."
+        "Error executing state handler for state 'thing exists' on 'setup'.",
       );
     });
   });

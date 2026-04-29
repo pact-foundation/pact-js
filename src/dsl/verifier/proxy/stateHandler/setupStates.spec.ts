@@ -101,7 +101,7 @@ describe('#setupStates', () => {
               ...state2,
               action: 'teardown',
             },
-            opts
+            opts,
           );
 
           expect(res2).to.eq(state2.params);

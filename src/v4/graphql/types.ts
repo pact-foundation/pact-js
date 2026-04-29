@@ -17,7 +17,7 @@ export interface V4UnconfiguredGraphQLInteraction {
   withRequest(
     method: string,
     path: Path,
-    builder?: V4GraphQLRequestBuilderFunc
+    builder?: V4GraphQLRequestBuilderFunc,
   ): V4GraphQLInteractionWithRequest;
 }
 export interface V4GraphQLInteractionWithRequest {
@@ -26,7 +26,7 @@ export interface V4GraphQLInteractionWithRequest {
 }
 
 export type V4GraphQLRequestBuilderFunc = (
-  builder: V4GraphQLRequestBuilder
+  builder: V4GraphQLRequestBuilder,
 ) => void;
 
 // TOOD: not sure if the Builder pattern is better or worse from a readibility

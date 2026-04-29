@@ -24,7 +24,7 @@ export class UnconfiguredGraphQLInteraction
     protected pact: ConsumerPact,
     protected interaction: ConsumerInteraction,
     protected opts: PactV4Options,
-    protected cleanupFn: () => void
+    protected cleanupFn: () => void,
   ) {
     this.graphQLRequest = {};
   }
@@ -60,7 +60,7 @@ export class UnconfiguredGraphQLInteraction
   withRequest(
     method: string,
     path: Path,
-    builder?: V4GraphQLRequestBuilderFunc
+    builder?: V4GraphQLRequestBuilderFunc,
   ): V4GraphQLInteractionWithRequest {
     this.interaction.withRequest(method, matcherValueOrString(path));
 
@@ -72,7 +72,7 @@ export class UnconfiguredGraphQLInteraction
       this.interaction,
       this.opts,
       this.cleanupFn,
-      this.graphQLRequest
+      this.graphQLRequest,
     );
   }
 }

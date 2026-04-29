@@ -149,7 +149,7 @@ describe('GraphQLInteraction', () => {
     describe('when given an invalid query', () => {
       it('fails with an error', () => {
         expect(() =>
-          interaction.withQuery('{ not properly terminated')
+          interaction.withQuery('{ not properly terminated'),
         ).to.throw(Error);
       });
     });

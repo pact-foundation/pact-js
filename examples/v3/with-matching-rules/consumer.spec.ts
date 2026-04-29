@@ -39,7 +39,7 @@ describe('Pact Consumer Test Using Matching Rules', () => {
     await pact
       .given('a customer profile exists')
       .uponReceiving(
-        'a request to update customer profile with type matching rules'
+        'a request to update customer profile with type matching rules',
       )
       .withRequestMatchingRules(
         {
@@ -53,7 +53,7 @@ describe('Pact Consumer Test Using Matching Rules', () => {
             email: 'sarah.johnson@techcorp.com',
           },
         },
-        requestMatchingRules
+        requestMatchingRules,
       )
       .willRespondWith({
         status: 200,
@@ -73,7 +73,7 @@ describe('Pact Consumer Test Using Matching Rules', () => {
             headers: {
               'Content-Type': 'application/json',
             },
-          }
+          },
         );
 
         expect(response.status).to.eq(200);

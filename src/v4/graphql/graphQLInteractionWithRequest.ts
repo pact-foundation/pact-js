@@ -25,7 +25,7 @@ export class GraphQLInteractionWithRequest
     protected interaction: ConsumerInteraction,
     protected opts: PactV4Options,
     protected cleanupFn: () => void,
-    protected graphQLRequest: GraphqlRequest
+    protected graphQLRequest: GraphqlRequest,
   ) {}
 
   /**
@@ -58,7 +58,7 @@ export class GraphQLInteractionWithRequest
 
   private setQueryDetails(
     query: string | ASTNode,
-    type: OperationType
+    type: OperationType,
   ): V4InteractionWithRequest {
     const validatedQuery = validateQuery(query, type);
 
@@ -68,16 +68,16 @@ export class GraphQLInteractionWithRequest
           operationName: this.graphQLRequest.operation,
           query: regex(escapeGraphQlQuery(validatedQuery), validatedQuery),
           variables: this.graphQLRequest.variables,
-        })
+        }),
       ),
-      'application/json'
+      'application/json',
     );
 
     return new InteractionWithRequest(
       this.pact,
       this.interaction,
       this.opts,
-      this.cleanupFn
+      this.cleanupFn,
     );
   }
 }

@@ -9,7 +9,7 @@ import {
 import { JsonMap } from '../../../../common/jsonTypes';
 
 const isStateFuncWithSetup = (
-  fn: StateFuncWithSetup | StateFunc
+  fn: StateFuncWithSetup | StateFunc,
 ): fn is StateFuncWithSetup =>
   (fn as StateFuncWithSetup).setup !== undefined ||
   (fn as StateFuncWithSetup).teardown !== undefined;
@@ -21,7 +21,7 @@ const transformStateFunc = (fn: StateHandler): StateFuncWithSetup =>
 // Lookup the handler based on the description
 export const setupStates = (
   state: ProviderState,
-  config: ProxyOptions
+  config: ProxyOptions,
 ): Promise<JsonMap | void> => {
   logger.debug(`setting up state '${JSON.stringify(state)}'`);
 

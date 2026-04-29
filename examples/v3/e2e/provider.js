@@ -10,7 +10,7 @@ server.use(bodyParser.json());
 server.use(
   bodyParser.urlencoded({
     extended: true,
-  })
+  }),
 );
 server.use((req, res, next) => {
   res.header('Content-Type', 'application/json; charset=utf-8');
@@ -76,7 +76,7 @@ server.get('/animals/:id', (req, res) => {
     if (req.header('accept') === 'text/plain') {
       res.contentType('text/plain; charset=utf-8');
       res.end(
-        `id=${response.id};first_name=${response.first_name};last_name=${response.last_name};animal=${response.animal}`
+        `id=${response.id};first_name=${response.first_name};last_name=${response.last_name};animal=${response.animal}`,
       );
     } else {
       res.end(JSON.stringify(response));

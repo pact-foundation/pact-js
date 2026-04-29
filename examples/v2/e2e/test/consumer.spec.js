@@ -88,7 +88,7 @@ describe('Pact', () => {
     provider.setup().then((opts) => {
       // Get a dynamic port from the runtime
       process.env.API_HOST = `http://127.0.0.1:${opts.port}`;
-    })
+    }),
   );
 
   // After each individual test (one or more interactions)
@@ -123,12 +123,12 @@ describe('Pact', () => {
           willRespondWith: {
             status: 401,
           },
-        })
+        }),
       );
 
       it('returns a 401 unauthorized', () => {
         return expect(suggestion(suitor)).to.eventually.be.rejectedWith(
-          'Unauthorized'
+          'Unauthorized',
         );
       });
     });
@@ -152,7 +152,7 @@ describe('Pact', () => {
               },
               body: animalListExpectation,
             },
-          })
+          }),
         );
 
         it('returns a list of animals', (done) => {
@@ -160,7 +160,7 @@ describe('Pact', () => {
 
           expect(suggestedMates).to.eventually.have.deep.property(
             'suggestions[0].score',
-            94
+            94,
           );
           expect(suggestedMates)
             .to.eventually.have.property('suggestions')
@@ -191,7 +191,7 @@ describe('Pact', () => {
             },
             body: animalBodyExpectation,
           },
-        })
+        }),
       );
 
       it('returns the animal', (done) => {
@@ -218,7 +218,7 @@ describe('Pact', () => {
           willRespondWith: {
             status: 404,
           },
-        })
+        }),
       );
 
       it('returns a 404', (done) => {
@@ -252,12 +252,12 @@ describe('Pact', () => {
           },
           body: like(suitor),
         },
-      })
+      }),
     );
 
     it('creates a new mate', (done) => {
       expect(createMateForDates(suitor)).to.eventually.be.fulfilled.notify(
-        done
+        done,
       );
     });
   });

@@ -1,4 +1,5 @@
-[{
+[
+  {
     "first_name": "Billy",
     "last_name": "Goat",
     "animal": "goat",
@@ -36,10 +37,7 @@
       "available": true,
       "previously_married": true
     },
-    "interests": [
-      "walks in the garden/meadow",
-      "parkour"
-    ]
+    "interests": ["walks in the garden/meadow", "parkour"]
   },
   {
     "first_name": "Simba",
@@ -57,9 +55,6 @@
       "available": true,
       "previously_married": true
     },
-    "interests": [
-      "walks in the garden/meadow",
-      "parkour"
-    ]
+    "interests": ["walks in the garden/meadow", "parkour"]
   }
 ]

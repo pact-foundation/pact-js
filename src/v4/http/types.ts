@@ -72,7 +72,7 @@ export interface V4UnconfiguredInteraction {
   withRequest(
     method: string,
     path: Path,
-    builder?: V4RequestBuilderFunc
+    builder?: V4RequestBuilderFunc,
   ): V4InteractionWithRequest;
   usingPlugin(config: PluginConfig): V4InteractionWithPlugin;
 }
@@ -84,7 +84,7 @@ export interface V4InteractionWithCompleteRequest {
 export interface V4InteractionWithRequest {
   willRespondWith(
     status: number,
-    builder?: V4ResponseBuilderFunc
+    builder?: V4ResponseBuilderFunc,
   ): V4InteractionWithResponse;
 }
 
@@ -101,7 +101,7 @@ export interface V4RequestBuilder {
     contentType: string,
     filename: string,
     mimePartName: string,
-    boundary?: string
+    boundary?: string,
   ): V4RequestBuilder;
   matchingRules(rules: Rules): V4RequestBuilder;
   body(contentType: string, body: Buffer): V4RequestBuilder;
@@ -115,7 +115,7 @@ export interface V4ResponseBuilder {
     contentType: string,
     filename: string,
     mimePartName: string,
-    boundary?: string
+    boundary?: string,
   ): V4ResponseBuilder;
   matchingRules(rules: Rules): V4ResponseBuilder;
   body(contentType: string, body: Buffer): V4ResponseBuilder;
@@ -125,15 +125,15 @@ export type V4ResponseBuilderFunc = (builder: V4ResponseBuilder) => void;
 
 export interface V4InteractionWithResponse {
   executeTest<T>(
-    testFn: (mockServer: V4MockServer) => Promise<T>
+    testFn: (mockServer: V4MockServer) => Promise<T>,
   ): Promise<T | undefined>;
 }
 
 export type V4PluginRequestBuilderFunc = (
-  builder: V4RequestWithPluginBuilder
+  builder: V4RequestWithPluginBuilder,
 ) => void;
 export type V4PluginResponseBuilderFunc = (
-  builder: V4ResponseWithPluginBuilder
+  builder: V4ResponseWithPluginBuilder,
 ) => void;
 
 export interface PluginConfig {
@@ -147,14 +147,14 @@ export interface V4InteractionWithPlugin {
   withRequest(
     method: string,
     path: Path,
-    builder?: V4PluginRequestBuilderFunc
+    builder?: V4PluginRequestBuilderFunc,
   ): V4InteractionWithPluginRequest;
 }
 
 export interface V4InteractionWithPluginRequest {
   willRespondWith(
     status: number,
-    builder?: V4PluginResponseBuilderFunc
+    builder?: V4PluginResponseBuilderFunc,
   ): V4InteractionWithPluginResponse;
 }
 
@@ -167,13 +167,13 @@ export interface V4RequestWithPluginBuilder {
     contentType: string,
     filename: string,
     mimePartName: string,
-    boundary?: string
+    boundary?: string,
   ): V4RequestWithPluginBuilder;
   body(contentType: string, body: Buffer): V4RequestWithPluginBuilder;
   matchingRules(rules: Rules): V4RequestWithPluginBuilder;
   pluginContents(
     contentType: string,
-    contents: string
+    contents: string,
   ): V4RequestWithPluginBuilder;
 }
 
@@ -185,7 +185,7 @@ export interface V4ResponseWithPluginBuilder {
     contentType: string,
     filename: string,
     mimePartName: string,
-    boundary?: string
+    boundary?: string,
   ): V4ResponseBuilder;
   matchingRules(rules: Rules): V4ResponseBuilder;
   body(contentType: string, body: Buffer): V4ResponseBuilder;
@@ -194,7 +194,7 @@ export interface V4ResponseWithPluginBuilder {
 
 export interface V4InteractionWithPluginResponse {
   executeTest<T>(
-    testFn: (mockServer: V4MockServer) => Promise<T>
+    testFn: (mockServer: V4MockServer) => Promise<T>,
   ): Promise<T | undefined>;
 }
 

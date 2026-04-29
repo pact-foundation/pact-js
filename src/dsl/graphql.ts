@@ -95,7 +95,7 @@ export class GraphQLInteraction extends Interaction {
     }
     if (isNil(this.state.description)) {
       throw new GraphQLQueryError(
-        'You must provide a description for the query.'
+        'You must provide a description for the query.',
       );
     }
 
@@ -112,7 +112,7 @@ export class GraphQLInteraction extends Interaction {
         headers: { 'Content-Type': 'application/json' },
         method: 'POST',
       },
-      this.state.request
+      this.state.request,
     );
 
     return this.state as InteractionStateComplete;
@@ -126,12 +126,12 @@ export class GraphQLInteraction extends Interaction {
     try {
       validateQuery(
         query,
-        type === 'query' ? OperationType.Query : OperationType.Mutation
+        type === 'query' ? OperationType.Query : OperationType.Mutation,
       );
     } catch (e) {
       const error = e instanceof Error ? e : new Error(String(e));
       throw new GraphQLQueryError(
-        `GraphQL ${type} is invalid: ${error.message}`
+        `GraphQL ${type} is invalid: ${error.message}`,
       );
     }
 

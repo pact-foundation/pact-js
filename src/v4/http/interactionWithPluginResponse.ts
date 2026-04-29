@@ -13,11 +13,11 @@ export class InteractionWithPluginResponse
   constructor(
     private pact: ConsumerPact,
     private opts: PactV4Options,
-    protected cleanupFn: () => void
+    protected cleanupFn: () => void,
   ) {}
 
   async executeTest<T>(
-    testFn: (mockServer: V4MockServer) => Promise<T>
+    testFn: (mockServer: V4MockServer) => Promise<T>,
   ): Promise<T | undefined> {
     return executeTest(this.pact, this.opts, testFn, this.cleanupFn);
   }

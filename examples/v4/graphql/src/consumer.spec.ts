@@ -39,7 +39,7 @@ describe('GraphQL example', () => {
           query HelloQuery {
             hello
           }
-        `
+        `,
         )
         .willRespondWith(200, (builder) => {
           builder.headers({

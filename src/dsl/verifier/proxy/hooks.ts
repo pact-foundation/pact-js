@@ -21,7 +21,7 @@ export const registerHookStateTracking =
     if (body?.action === 'teardown') hooksState.setupCounter -= 1;
 
     logger.debug(
-      `hooks state counter is ${hooksState.setupCounter} after receiving "${body?.action}" action`
+      `hooks state counter is ${hooksState.setupCounter} after receiving "${body?.action}" action`,
     );
 
     next();

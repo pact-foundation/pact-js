@@ -16,12 +16,12 @@ export class InteractionWithPluginRequest
     private pact: ConsumerPact,
     private interaction: ConsumerInteraction,
     private opts: PactV4Options,
-    protected cleanupFn: () => void
+    protected cleanupFn: () => void,
   ) {}
 
   willRespondWith(
     status: number,
-    builder?: V4PluginResponseBuilderFunc
+    builder?: V4PluginResponseBuilderFunc,
   ): V4InteractionWithPluginResponse {
     this.interaction.withStatus(status);
 
@@ -32,7 +32,7 @@ export class InteractionWithPluginRequest
     return new InteractionWithPluginResponse(
       this.pact,
       this.opts,
-      this.cleanupFn
+      this.cleanupFn,
     );
   }
 }
