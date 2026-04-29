@@ -83,7 +83,7 @@ jobs:
         run: npm ci
 
       - name: Format
-        run: npm run format:check
+        run: npm run format
 
   test-x86:
     name: >-
