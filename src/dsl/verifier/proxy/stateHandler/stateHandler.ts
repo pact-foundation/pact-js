@@ -1,8 +1,8 @@
-import express from 'express';
+import type express from 'express';
 
 import StackUtils from 'stack-utils';
 import chalk from 'chalk';
-import { ProxyOptions, ProviderState } from '../types';
+import type { ProxyOptions, ProviderState } from '../types';
 import { setupStates } from './setupStates';
 
 const cleanStack = (e: Error) => {

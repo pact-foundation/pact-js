@@ -1,6 +1,6 @@
-import { AnyJson, JsonMap } from '../../common/jsonTypes';
-import { Metadata } from '../../dsl/message';
-import { Rules } from '../../v3/types';
+import type { AnyJson, JsonMap } from '../../common/jsonTypes';
+import type { Metadata } from '../../dsl/message';
+import type { Rules } from '../../v3/types';
 
 export type MessageContents = {
   content: AnyJson | Buffer;

@@ -3,14 +3,14 @@ import HttpProxy from 'http-proxy';
 import bodyParser from 'body-parser';
 import http from 'http';
 
-import { ProxyOptions } from './types';
+import type { ProxyOptions } from './types';
 import logger from '../../../common/logger';
 import { createProxyStateHandler } from './stateHandler/stateHandler';
 import {
   registerHookStateTracking,
   registerAfterHook,
   registerBeforeHook,
-  HooksState,
+  type HooksState,
 } from './hooks';
 import { createRequestTracer, createResponseTracer } from './tracer';
 import { createProxyMessageHandler } from './messages';

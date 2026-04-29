@@ -1,9 +1,9 @@
-import { ConsumerInteraction } from '@pact-foundation/pact-core';
+import type { ConsumerInteraction } from '@pact-foundation/pact-core';
 import { forEachObjIndexed } from 'ramda';
-import { TemplateQuery, TemplateHeaders, Matcher } from '../../v3';
+import type { TemplateQuery, TemplateHeaders, Matcher } from '../../v3';
 import { matcherValueOrString } from '../../v3/matchers';
-import { TemplateHeaderArrayValue } from '../http/types';
-import { V4GraphQLRequestBuilder } from './types';
+import type { TemplateHeaderArrayValue } from '../http/types';
+import type { V4GraphQLRequestBuilder } from './types';
 
 export class GraphQLRequestBuilder implements V4GraphQLRequestBuilder {
   // tslint:disable:no-empty-function

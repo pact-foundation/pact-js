@@ -2,12 +2,12 @@ import proxyquire from 'proxyquire';
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
-import { Server } from 'http';
-import serviceFactory, { LogLevel } from '@pact-foundation/pact-core';
+import type { Server } from 'http';
+import serviceFactory, { type LogLevel } from '@pact-foundation/pact-core';
 
 import logger from '../../common/logger';
 
-import { VerifierOptions } from './types';
+import type { VerifierOptions } from './types';
 
 chai.use(chaiAsPromised);
 

@@ -1,5 +1,3 @@
-'use strict';
-
 const expect = require('chai').expect;
 const path = require('path');
 const { PactV2: Pact } = require('@pact-foundation/pact');
@@ -7,7 +5,7 @@ const { getMeDogs, getMeDog } = require('../index');
 const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 describe('The Dog API', () => {
-  let url = 'http://127.0.0.1';
+  const url = 'http://127.0.0.1';
   const port = 8992;
 
   const provider = new Pact({

@@ -1,5 +1,8 @@
-import { ConsumerPact, ConsumerInteraction } from '@pact-foundation/pact-core';
-import {
+import type {
+  ConsumerPact,
+  ConsumerInteraction,
+} from '@pact-foundation/pact-core';
+import type {
   V4InteractionWithCompleteRequest,
   PactV4Options,
   V4Response,

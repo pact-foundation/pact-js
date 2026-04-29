@@ -1,4 +1,4 @@
-import axios, { AxiosPromise } from 'axios';
+import axios, { type AxiosPromise } from 'axios';
 export class DogService {
   private url: string;
   private port: number;

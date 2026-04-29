@@ -1,5 +1,8 @@
-import { ConsumerPact, ConsumerInteraction } from '@pact-foundation/pact-core';
-import { ASTNode } from 'graphql';
+import type {
+  ConsumerPact,
+  ConsumerInteraction,
+} from '@pact-foundation/pact-core';
+import type { ASTNode } from 'graphql';
 import { isUndefined } from 'lodash';
 import { reject } from 'ramda';
 
@@ -8,11 +11,11 @@ import {
   validateQuery,
 } from '../../common/graphQL/graphQL';
 import { InteractionWithRequest } from '../http/interactionWithRequest';
-import { PactV4Options, V4InteractionWithRequest } from '../http/types';
+import type { PactV4Options, V4InteractionWithRequest } from '../http/types';
 import {
-  V4GraphQLInteractionWithRequest,
+  type V4GraphQLInteractionWithRequest,
   OperationType,
-  GraphqlRequest,
+  type GraphqlRequest,
 } from './types';
 import { regex } from '../../v3/matchers';
 

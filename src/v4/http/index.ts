@@ -1,8 +1,8 @@
 import fs = require('fs');
 
-import { ConsumerPact } from '@pact-foundation/pact-core';
-import { V3MockServer } from '../../v3';
-import { PactV4Options, TestFunction } from './types';
+import type { ConsumerPact } from '@pact-foundation/pact-core';
+import type { V3MockServer } from '../../v3';
+import type { PactV4Options, TestFunction } from './types';
 import {
   filterMissingFeatureFlag,
   generateMockServerError,

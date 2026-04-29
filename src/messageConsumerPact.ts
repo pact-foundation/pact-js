@@ -4,13 +4,13 @@
 
 import { isEmpty } from 'lodash';
 import serviceFactory, {
-  AsynchronousMessage,
+  type AsynchronousMessage,
   makeConsumerAsyncMessagePact,
-  ConsumerMessagePact,
+  type ConsumerMessagePact,
 } from '@pact-foundation/pact-core';
 import { forEachObjIndexed } from 'ramda';
-import { AnyJson } from './common/jsonTypes';
-import {
+import type { AnyJson } from './common/jsonTypes';
+import type {
   Metadata,
   Message,
   MessageConsumer,
@@ -18,7 +18,7 @@ import {
   ProviderState,
 } from './dsl/message';
 import logger, { setLogLevel } from './common/logger';
-import { MessageConsumerOptions } from './dsl/options';
+import type { MessageConsumerOptions } from './dsl/options';
 import ConfigurationError from './errors/configurationError';
 import { version as pactPackageVersion } from '../package.json';
 import { numberToSpec } from './common/spec';

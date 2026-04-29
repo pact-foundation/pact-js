@@ -3,19 +3,19 @@
  * @module ProviderVerifier
  */
 import serviceFactory, {
-  VerifierOptions as PactCoreVerifierOptions,
+  type VerifierOptions as PactCoreVerifierOptions,
 } from '@pact-foundation/pact-core';
 import { omit, isEmpty } from 'lodash';
-import http from 'http';
+import type http from 'http';
 import url from 'url';
 
-import { AddressInfo } from 'net';
+import type { AddressInfo } from 'net';
 import logger, { setLogLevel } from '../../common/logger';
 
 import ConfigurationError from '../../errors/configurationError';
 import { localAddresses } from '../../common/net';
 import { createProxy, waitForServerReady } from './proxy';
-import { VerifierOptions } from './types';
+import type { VerifierOptions } from './types';
 
 export class Verifier {
   private address = 'http://127.0.0.1';

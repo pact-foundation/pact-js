@@ -1,6 +1,6 @@
 import serviceFactory, {
-  ConsumerPact,
-  ConsumerInteraction,
+  type ConsumerPact,
+  type ConsumerInteraction,
   makeConsumerPact,
 } from '@pact-foundation/pact-core';
 
@@ -11,19 +11,23 @@ import { isEmpty } from 'lodash';
 
 import {
   Interaction,
-  InteractionObject,
+  type InteractionObject,
   interactionToInteractionObject,
 } from '../dsl/interaction';
 import { freePort, isPortAvailable } from '../common/net';
 import logger, { setLogLevel } from '../common/logger';
-import { LogLevel, PactV2Options, PactV2OptionsComplete } from '../dsl/options';
+import type {
+  LogLevel,
+  PactV2Options,
+  PactV2OptionsComplete,
+} from '../dsl/options';
 import VerificationError from '../errors/verificationError';
 import ConfigurationError from '../errors/configurationError';
 import { SpecificationVersion } from '../v3';
 import { version as pactPackageVersion } from '../../package.json';
 import { generateMockServerError } from '../v3/display';
 import { numberToSpec } from '../common/spec';
-import { MockService } from '../dsl/mockService';
+import type { MockService } from '../dsl/mockService';
 import { setRequestDetails, setResponseDetails } from './ffi';
 
 const logErrorNoMockServer = () => {

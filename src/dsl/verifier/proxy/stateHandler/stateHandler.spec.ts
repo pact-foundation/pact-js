@@ -1,11 +1,11 @@
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 
-import express from 'express';
+import type express from 'express';
 
 import sinon from 'sinon';
 import { createProxyStateHandler } from './stateHandler';
-import { ProxyOptions, StateHandlers } from '../types';
+import type { ProxyOptions, StateHandlers } from '../types';
 
 chai.use(chaiAsPromised);
 

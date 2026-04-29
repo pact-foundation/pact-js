@@ -8,7 +8,7 @@
 
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import { PactV3, MatchersV3, Rules } from '@pact-foundation/pact';
+import { PactV3, MatchersV3, type Rules } from '@pact-foundation/pact';
 import axios from 'axios';
 
 chai.use(chaiAsPromised);

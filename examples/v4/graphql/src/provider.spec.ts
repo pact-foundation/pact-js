@@ -1,4 +1,4 @@
-import { Verifier, LogLevel } from '@pact-foundation/pact';
+import { Verifier, type LogLevel } from '@pact-foundation/pact';
 
 import app from './provider';
 import * as path from 'path';

@@ -1,5 +1,5 @@
-import { JsonMap } from '../../common/jsonTypes';
-import {
+import type { JsonMap } from '../../common/jsonTypes';
+import type {
   Matcher,
   Path,
   Rules,

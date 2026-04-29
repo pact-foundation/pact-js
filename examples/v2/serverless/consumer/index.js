@@ -1,5 +1,3 @@
-'use strict';
-
 // Consumer handler, responsible for extracting message from SNS
 // and dealing with lambda-related things.
 const handler = (event, context, callback) => {

@@ -1,7 +1,7 @@
 /* eslint-disable */
-import { Metadata } from '../../dsl/message';
-import { AnyJson, JsonMap } from '../../common/jsonTypes';
-import {
+import type { Metadata } from '../../dsl/message';
+import type { AnyJson, JsonMap } from '../../common/jsonTypes';
+import type {
   PluginConfig,
   SynchronousMessage,
   AsynchronousMessage as ConcreteMessage,
@@ -19,11 +19,11 @@ import {
   Comment,
   CustomComment,
 } from './types';
-import {
+import type {
   SynchronousMessage as PactCoreSynchronousMessage,
   ConsumerPact,
 } from '@pact-foundation/pact-core';
-import { PactV4Options } from '../http/types';
+import type { PactV4Options } from '../http/types';
 import { forEachObjIndexed, isEmpty } from 'ramda';
 import ConfigurationError from '../../errors/configurationError';
 import {
@@ -31,7 +31,7 @@ import {
   generateMockServerError,
 } from '../../v3/display';
 import { convertRulesToFFI, validateRules } from '../../common/matchingRules';
-import { Rules } from '../../v3/types';
+import type { Rules } from '../../v3/types';
 import logger from '../../common/logger';
 
 const defaultPactDir = './pacts';

@@ -5,10 +5,10 @@
  * are received prior to an interaction being executed, then 3 "teardown"
  * actions will be received after that interaction has ended.
  */
-import { RequestHandler } from 'express';
+import type { RequestHandler } from 'express';
 
 import logger from '../../../common/logger';
-import { Hook } from './types';
+import type { Hook } from './types';
 
 export type HooksState = {
   setupCounter: number;

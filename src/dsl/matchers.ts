@@ -6,7 +6,7 @@
 
 import { isFunction, isNil, isEmpty, isUndefined } from 'lodash';
 import { times } from 'ramda';
-import { AnyJson, JsonMap } from '../common/jsonTypes';
+import type { AnyJson, JsonMap } from '../common/jsonTypes';
 import MatcherError from '../errors/matcherError';
 
 // Note: The following regexes are Ruby formatted,

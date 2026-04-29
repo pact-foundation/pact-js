@@ -1,7 +1,11 @@
 /* tslint:disable:no-unused-expression no-empty */
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import { SpecificationVersion, Pact, LogLevel } from '@pact-foundation/pact';
+import {
+  SpecificationVersion,
+  Pact,
+  type LogLevel,
+} from '@pact-foundation/pact';
 import axios from 'axios';
 import path from 'path';
 import fs from 'fs';

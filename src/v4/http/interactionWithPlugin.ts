@@ -1,9 +1,12 @@
-import { ConsumerPact, ConsumerInteraction } from '@pact-foundation/pact-core';
+import type {
+  ConsumerPact,
+  ConsumerInteraction,
+} from '@pact-foundation/pact-core';
 import { RequestWithPluginBuilder } from './requestWithPluginBuilder';
 import { InteractionWithPluginRequest } from './interactionWithPluginRequest';
-import { Path } from '../../v3';
+import type { Path } from '../../v3';
 import { matcherValueOrString } from '../../v3/matchers';
-import {
+import type {
   V4InteractionWithPlugin,
   PactV4Options,
   PluginConfig,

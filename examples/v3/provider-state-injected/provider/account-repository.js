@@ -21,9 +21,9 @@ const accounts = [];
 const accountRepository = {
   save: (account) => {
     // This simulates a save to the DB where the IDs get allocated
-    let id = Math.floor(Math.random() * Math.floor(100000));
-    let accountNumber = Math.floor(Math.random() * Math.floor(100000));
-    let version = Math.floor(Math.random() * Math.floor(10));
+    const id = Math.floor(Math.random() * Math.floor(100000));
+    const accountNumber = Math.floor(Math.random() * Math.floor(100000));
+    const version = Math.floor(Math.random() * Math.floor(10));
     account.id = id;
     account.version = version;
     account.accountNumber.id = accountNumber;

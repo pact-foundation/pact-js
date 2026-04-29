@@ -7,7 +7,7 @@ import {
   Pact,
   Matchers,
   SpecificationVersion,
-  LogLevel,
+  type LogLevel,
 } from '@pact-foundation/pact';
 
 const expect = chai.expect;

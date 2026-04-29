@@ -3,8 +3,8 @@ import * as chai from 'chai';
 import * as path from 'path';
 import * as chaiAsPromised from 'chai-as-promised';
 import { query } from './consumer';
-import { Matchers, LogLevel, Pact } from '@pact-foundation/pact';
-import { V4InteractionWithResponse } from '@pact-foundation/pact/src/v4/http/types';
+import { Matchers, type LogLevel, Pact } from '@pact-foundation/pact';
+import type { V4InteractionWithResponse } from '@pact-foundation/pact/src/v4/http/types';
 const { like } = Matchers;
 const LOG_LEVEL = process.env.LOG_LEVEL || 'INFO';
 

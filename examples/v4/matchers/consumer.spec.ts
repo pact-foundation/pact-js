@@ -4,7 +4,7 @@ import chaiAsPromised from 'chai-as-promised';
 import {
   SpecificationVersion,
   Pact,
-  LogLevel,
+  type LogLevel,
   Matchers,
 } from '@pact-foundation/pact';
 import axios from 'axios';

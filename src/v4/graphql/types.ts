@@ -1,8 +1,8 @@
-import { ASTNode } from 'graphql';
-import { JsonMap } from '../../common/jsonTypes';
-import { Path, TemplateHeaders, TemplateQuery } from '../../v3';
-import { V4InteractionWithRequest } from '../http/types';
-import { GraphQLVariables } from '../../common/graphQL/graphQL';
+import type { ASTNode } from 'graphql';
+import type { JsonMap } from '../../common/jsonTypes';
+import type { Path, TemplateHeaders, TemplateQuery } from '../../v3';
+import type { V4InteractionWithRequest } from '../http/types';
+import type { GraphQLVariables } from '../../common/graphQL/graphQL';
 
 export enum OperationType {
   Mutation = 'Mutation',

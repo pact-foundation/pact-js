@@ -1,11 +1,14 @@
-import { ConsumerPact, ConsumerInteraction } from '@pact-foundation/pact-core';
+import type {
+  ConsumerPact,
+  ConsumerInteraction,
+} from '@pact-foundation/pact-core';
 import { InteractionWithPlugin } from './interactionWithPlugin';
 import { RequestBuilder } from './requestBuilder';
 import { InteractionWithRequest } from './interactionWithRequest';
-import { JsonMap } from '../../common/jsonTypes';
-import { Path } from '../../v3';
+import type { JsonMap } from '../../common/jsonTypes';
+import type { Path } from '../../v3';
 import { matcherValueOrString } from '../../v3/matchers';
-import {
+import type {
   V4UnconfiguredInteraction,
   PactV4Options,
   V4Request,

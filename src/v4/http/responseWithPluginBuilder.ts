@@ -1,5 +1,5 @@
 import { ResponseBuilder } from './responseBuilder';
-import { V4ResponseWithPluginBuilder, V4ResponseBuilder } from './types';
+import type { V4ResponseWithPluginBuilder, V4ResponseBuilder } from './types';
 
 export class ResponseWithPluginBuilder
   extends ResponseBuilder

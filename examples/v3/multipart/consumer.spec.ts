@@ -22,7 +22,7 @@ import {
   SpecificationVersion,
   PactV3,
   MatchersV3,
-  LogLevel,
+  type LogLevel,
 } from '@pact-foundation/pact';
 import FormData from 'form-data';
 import axios from 'axios';

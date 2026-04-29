@@ -1,10 +1,10 @@
 /* tslint:disable:no-unused-expression no-empty */
 import {
-  MessageDescriptor,
+  type MessageDescriptor,
   providerWithMetadata,
   Verifier,
 } from '@pact-foundation/pact';
-import { AddressInfo } from 'net';
+import type { AddressInfo } from 'net';
 import * as path from 'path';
 import { startHTTPServer, startTCPServer } from '../provider';
 import { parseMattMessage } from '../protocol';

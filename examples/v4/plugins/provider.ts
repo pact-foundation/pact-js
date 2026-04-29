@@ -1,7 +1,7 @@
 /* tslint:disable:no-unused-expression no-empty */
 import net = require('net');
 import express = require('express');
-import * as http from 'http';
+import type * as http from 'http';
 import { generateMattMessage, parseMattMessage } from './protocol';
 
 export const startTCPServer = (

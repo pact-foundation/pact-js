@@ -1,22 +1,22 @@
 import { equals } from 'ramda';
 import {
   makeConsumerPact,
-  ConsumerPact,
-  ConsumerInteraction,
+  type ConsumerPact,
+  type ConsumerInteraction,
 } from '@pact-foundation/pact-core';
 import fs = require('fs');
 import { version as pactPackageVersion } from '../../package.json';
-import { JsonMap } from '../common/jsonTypes';
+import type { JsonMap } from '../common/jsonTypes';
 import { validateRules, convertRulesToFFI } from '../common/matchingRules';
 import {
-  PactV3Options,
-  Rules,
+  type PactV3Options,
+  type Rules,
   SpecificationVersion,
-  V3Interaction,
-  V3MockServer,
-  V3ProviderState,
-  V3Request,
-  V3Response,
+  type V3Interaction,
+  type V3MockServer,
+  type V3ProviderState,
+  type V3Request,
+  type V3Response,
 } from './types';
 import { matcherValueOrString } from './matchers';
 import { filterMissingFeatureFlag, generateMockServerError } from './display';

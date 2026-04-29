@@ -17,7 +17,7 @@ describe('Account Service', () => {
   });
 
   it('validates the expectations of Transaction Service', () => {
-    let opts = {
+    const opts = {
       // if the provider name is set, and we have PACT_BROKER_BASE_URL plus env var creds set
       // it will automatically attempt to retrieve from a pact broker via the default consumer version selectors.
       // if we are verifying a pact directory source, we do not need to add the provider name
@@ -30,7 +30,7 @@ describe('Account Service', () => {
       stateHandlers: {
         'Account Test001 exists': {
           setup: (params) => {
-            let account = new Account(
+            const account = new Account(
               0,
               0,
               'Test001',
@@ -39,7 +39,7 @@ describe('Account Service', () => {
               Date.now(),
               Date.now(),
             );
-            let persistedAccount = accountRepository.save(account);
+            const persistedAccount = accountRepository.save(account);
             return Promise.resolve({
               accountNumber: persistedAccount.accountNumber.id,
             });

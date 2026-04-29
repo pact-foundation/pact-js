@@ -17,9 +17,9 @@ server.get('/accounts/search/findOneByAccountNumberId', (req, res) => {
     .then((account) => {
       if (account) {
         res.header('Content-Type', 'application/hal+json; charset=utf-8');
-        let baseUrl =
+        const baseUrl =
           req.protocol + '://' + req.hostname + ':' + req.socket.localPort;
-        let body = {
+        const body = {
           _links: {
             account: {
               href: baseUrl + '/accounts/' + account.accountNumber.id,
@@ -59,9 +59,9 @@ server.post('/accounts/search/findOneByAccountNumberIdInBody', (req, res) => {
     .then((account) => {
       if (account) {
         res.header('Content-Type', 'application/hal+json; charset=utf-8');
-        let baseUrl =
+        const baseUrl =
           req.protocol + '://' + req.hostname + ':' + req.socket.localPort;
-        let body = {
+        const body = {
           _links: {
             account: {
               href: baseUrl + '/accounts/' + account.accountNumber.id,

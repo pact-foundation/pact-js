@@ -6,7 +6,7 @@
 
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import { Pact, Matchers, Rules } from '@pact-foundation/pact';
+import { Pact, Matchers, type Rules } from '@pact-foundation/pact';
 import FormData from 'form-data';
 import axios from 'axios';
 import fs from 'node:fs';

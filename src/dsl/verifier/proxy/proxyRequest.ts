@@ -1,8 +1,8 @@
 import { HttpsProxyAgent } from 'https-proxy-agent';
-import { ServerOptions } from 'http-proxy';
+import type { ServerOptions } from 'http-proxy';
 import { Readable } from 'stream';
-import { IncomingMessage } from 'http';
-import { ProxyOptions } from './types';
+import type { IncomingMessage } from 'http';
+import type { ProxyOptions } from './types';
 import { parseBody } from './parseBody';
 
 // A base URL is always needed for the proxy, even

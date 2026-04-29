@@ -158,7 +158,7 @@ describe('Pact V3', () => {
       });
 
       it('stores the image against the project', async () => {
-        let result = await provider.executeTest((mockserver) => {
+        const result = await provider.executeTest((mockserver) => {
           console.log('In Test Function', mockserver);
           return TodoApp.setUrl(mockserver.url).postImage(
             1001,

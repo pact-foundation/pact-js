@@ -1,5 +1,3 @@
-'use strict';
-
 const AWS = require('aws-sdk');
 
 const TOPIC_ARN = process.env.TOPIC_ARN;

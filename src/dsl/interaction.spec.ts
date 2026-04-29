@@ -3,9 +3,9 @@ import chaiAsPromised from 'chai-as-promised';
 import { HTTPMethods } from '../common/request';
 import {
   Interaction,
-  InteractionState,
-  RequestOptions,
-  ResponseOptions,
+  type InteractionState,
+  type RequestOptions,
+  type ResponseOptions,
 } from './interaction';
 import { eachLike, term } from './matchers';
 

@@ -7,7 +7,7 @@ import {
   PactV2 as Pact,
   Interaction,
   MatchersV2 as Matchers,
-  LogLevel,
+  type LogLevel,
 } from '@pact-foundation/pact';
 
 const expect = chai.expect;

@@ -1,4 +1,4 @@
-import { ConsumerInteraction } from '@pact-foundation/pact-core';
+import type { ConsumerInteraction } from '@pact-foundation/pact-core';
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';

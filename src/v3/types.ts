@@ -1,4 +1,4 @@
-import { JsonMap } from '../common/jsonTypes';
+import type { JsonMap } from '../common/jsonTypes';
 
 export enum SpecificationVersion {
   SPECIFICATION_VERSION_V2 = 3,

@@ -1,7 +1,7 @@
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinonChai from 'sinon-chai';
-import { PactV3, Matchers, LogLevel } from '@pact-foundation/pact';
+import { PactV3, Matchers, type LogLevel } from '@pact-foundation/pact';
 import { UserService } from '../index';
 const { like } = Matchers;
 const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';

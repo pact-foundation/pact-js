@@ -1,16 +1,19 @@
-import { ConsumerInteraction, ConsumerPact } from '@pact-foundation/pact-core';
+import type {
+  ConsumerInteraction,
+  ConsumerPact,
+} from '@pact-foundation/pact-core';
 
-import {
+import type {
   GraphqlRequest,
   V4GraphQLInteractionWithRequest,
   V4GraphQLRequestBuilderFunc,
   V4UnconfiguredGraphQLInteraction,
 } from './types';
-import { PactV4Options } from '../http/types';
-import { JsonMap } from '../../common/jsonTypes';
-import { Path } from '../../v3';
+import type { PactV4Options } from '../http/types';
+import type { JsonMap } from '../../common/jsonTypes';
+import type { Path } from '../../v3';
 import { matcherValueOrString } from '../../v3/matchers';
-import { GraphQLVariables } from '../../common/graphQL/graphQL';
+import type { GraphQLVariables } from '../../common/graphQL/graphQL';
 import { GraphQLRequestBuilder } from './graphQLRequestBuilder';
 import { GraphQLInteractionWithRequest } from './graphQLInteractionWithRequest';
 

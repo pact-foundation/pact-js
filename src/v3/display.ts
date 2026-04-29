@@ -1,5 +1,5 @@
 import { join, toPairs, map, flatten } from 'ramda';
-import {
+import type {
   Mismatch,
   MatchingResult,
   RequestMismatch,

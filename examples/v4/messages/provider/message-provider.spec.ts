@@ -1,6 +1,6 @@
 /*  tslint:disable: no-console*/
 import {
-  LogLevel,
+  type LogLevel,
   MessageProviderPact,
   providerWithMetadata,
 } from '@pact-foundation/pact';

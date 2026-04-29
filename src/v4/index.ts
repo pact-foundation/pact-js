@@ -1,15 +1,18 @@
-import { ConsumerPact, makeConsumerPact } from '@pact-foundation/pact-core';
-import { UnconfiguredInteraction } from './http/unconfiguredInteraction';
-import { PactV4Options, V4UnconfiguredInteraction } from './http/types';
-import { V4ConsumerPact } from './types';
-import { version as pactPackageVersion } from '../../package.json';
 import {
+  type ConsumerPact,
+  makeConsumerPact,
+} from '@pact-foundation/pact-core';
+import { UnconfiguredInteraction } from './http/unconfiguredInteraction';
+import { PactV4Options, type V4UnconfiguredInteraction } from './http/types';
+import type { V4ConsumerPact } from './types';
+import { version as pactPackageVersion } from '../../package.json';
+import type {
   V4UnconfiguredAsynchronousMessage,
   V4UnconfiguredSynchronousMessage,
 } from './message/types';
 import { UnconfiguredSynchronousMessage } from './message';
 import { SpecificationVersion } from '../v3';
-import { V4UnconfiguredGraphQLInteraction } from './graphql/types';
+import type { V4UnconfiguredGraphQLInteraction } from './graphql/types';
 import { UnconfiguredGraphQLInteraction } from './graphql';
 import { UnconfiguredAsynchronousMessage } from './message/asynchronousMessage';
 

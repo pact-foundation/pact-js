@@ -5,13 +5,13 @@
  */
 import { isNil, extend, isUndefined } from 'lodash';
 import { reject } from 'ramda';
-import { Interaction, InteractionStateComplete } from './interaction';
+import { Interaction, type InteractionStateComplete } from './interaction';
 import { regex } from './matchers';
 import GraphQLQueryError from '../errors/graphQLQueryError';
 import ConfigurationError from '../errors/configurationError';
 import {
   escapeGraphQlQuery,
-  GraphQLVariables,
+  type GraphQLVariables,
   validateQuery,
 } from '../common/graphQL/graphQL';
 import { OperationType } from '../common/graphQL/types';

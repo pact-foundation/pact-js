@@ -1,4 +1,4 @@
-import http from 'http';
+import type http from 'http';
 
 interface ReqBodyExtended extends http.IncomingMessage {
   body?: Buffer | Record<string, unknown>;

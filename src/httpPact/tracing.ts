@@ -1,4 +1,8 @@
-import http, { RequestOptions, ClientRequest, IncomingMessage } from 'http';
+import http, {
+  type RequestOptions,
+  type ClientRequest,
+  type IncomingMessage,
+} from 'http';
 
 import logger from '../common/logger';
 

@@ -1,5 +1,5 @@
 import { isMatcher } from '../matchers';
-import { Matcher } from '../types';
+import type { Matcher } from '../types';
 import { XmlNode } from './xmlNode';
 import { XmlText } from './xmlText';
 

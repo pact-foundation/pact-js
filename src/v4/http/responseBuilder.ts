@@ -1,9 +1,9 @@
-import { ConsumerInteraction } from '@pact-foundation/pact-core';
+import type { ConsumerInteraction } from '@pact-foundation/pact-core';
 import { forEachObjIndexed } from 'ramda';
 import { readBinaryData } from '.';
-import { TemplateHeaders, Rules } from '../../v3';
+import type { TemplateHeaders, Rules } from '../../v3';
 import { matcherValueOrString } from '../../v3/matchers';
-import { V4ResponseBuilder } from './types';
+import type { V4ResponseBuilder } from './types';
 import { convertRulesToFFI, validateRules } from '../../common/matchingRules';
 
 export class ResponseBuilder implements V4ResponseBuilder {

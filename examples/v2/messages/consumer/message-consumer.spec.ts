@@ -4,7 +4,7 @@ import {
   MatchersV2 as Matchers,
   MessageConsumerPact,
   synchronousBodyHandler,
-  LogLevel,
+  type LogLevel,
 } from '@pact-foundation/pact';
 const { like, term } = Matchers;
 import { dogApiHandler } from './dog-handler';

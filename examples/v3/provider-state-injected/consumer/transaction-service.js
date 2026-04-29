@@ -20,7 +20,7 @@ module.exports = {
       .then(({ data }) => {
         // This is the point where a real transaction service would create the transaction, but for the purpose
         // of this example we'll assume this has happened here
-        let id = Math.floor(Math.random() * Math.floor(100000));
+        const id = Math.floor(Math.random() * Math.floor(100000));
         return {
           account: {
             accountNumber: data.accountNumber.id,
@@ -51,7 +51,7 @@ module.exports = {
       .then(({ data }) => {
         // This is the point where a real transaction service would create the transaction, but for the purpose
         // of this example we'll assume this has happened here
-        let id = Math.floor(Math.random() * Math.floor(100000));
+        const id = Math.floor(Math.random() * Math.floor(100000));
         return {
           account: {
             accountNumber: data.accountNumber.id,

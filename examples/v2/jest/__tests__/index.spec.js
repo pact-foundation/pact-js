@@ -1,5 +1,3 @@
-'use strict';
-
 const { pactWith } = require('jest-pact');
 const { Matchers } = require('@pact-foundation/pact');
 

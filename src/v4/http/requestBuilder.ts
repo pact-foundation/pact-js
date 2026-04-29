@@ -1,8 +1,8 @@
-import { ConsumerInteraction } from '@pact-foundation/pact-core';
+import type { ConsumerInteraction } from '@pact-foundation/pact-core';
 import { forEachObjIndexed } from 'ramda';
-import { TemplateQuery, TemplateHeaders, Matcher, Rules } from '../../v3';
+import type { TemplateQuery, TemplateHeaders, Matcher, Rules } from '../../v3';
 import { matcherValueOrString } from '../../v3/matchers';
-import { TemplateHeaderArrayValue, V4RequestBuilder } from './types';
+import type { TemplateHeaderArrayValue, V4RequestBuilder } from './types';
 import { readBinaryData } from '.';
 import { convertRulesToFFI, validateRules } from '../../common/matchingRules';
 

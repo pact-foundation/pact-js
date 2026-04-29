@@ -4,20 +4,22 @@
 
 import { omit, isEmpty } from 'lodash';
 
-import serviceFactory, { VerifierOptions } from '@pact-foundation/pact-core';
+import serviceFactory, {
+  type VerifierOptions,
+} from '@pact-foundation/pact-core';
 import express from 'express';
 import http from 'http';
 import bodyParser from 'body-parser';
 import { encode as encodeBase64 } from 'js-base64';
 
-import { AddressInfo } from 'net';
-import {
+import type { AddressInfo } from 'net';
+import type {
   MessageDescriptor,
   MessageFromProviderWithMetadata,
   MessageProvider,
 } from './dsl/message';
 import logger, { setLogLevel } from './common/logger';
-import { PactMessageProviderOptions } from './dsl/options';
+import type { PactMessageProviderOptions } from './dsl/options';
 
 // Listens for the server start event
 // Converts event Emitter to a Promise

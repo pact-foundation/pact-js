@@ -1,6 +1,6 @@
-import { ConsumerPact } from '@pact-foundation/pact-core';
+import type { ConsumerPact } from '@pact-foundation/pact-core';
 import { executeTest } from '.';
-import {
+import type {
   V4InteractionWithPluginResponse,
   PactV4Options,
   V4MockServer,

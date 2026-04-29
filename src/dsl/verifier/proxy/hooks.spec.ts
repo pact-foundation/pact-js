@@ -1,12 +1,12 @@
 import { expect } from 'chai';
 import { stub } from 'sinon';
-import { RequestHandler } from 'express';
+import type { RequestHandler } from 'express';
 
 import {
   registerHookStateTracking,
   registerBeforeHook,
   registerAfterHook,
-  HooksState,
+  type HooksState,
 } from './hooks';
 
 // This mimics the proxy setup (src/dsl/verifier/proxy/proxy.ts), whereby the

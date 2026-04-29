@@ -1,6 +1,6 @@
 import * as chai from 'chai';
 import { Readable } from 'stream';
-import { ProxyOptions } from './types';
+import type { ProxyOptions } from './types';
 import { toServerOptions as toServerOptionsAct } from './proxyRequest';
 
 const { expect } = chai;

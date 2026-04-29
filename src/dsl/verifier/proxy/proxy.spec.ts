@@ -1,7 +1,7 @@
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 
-import http from 'http';
+import type http from 'http';
 
 import { waitForServerReady } from './proxy';
 

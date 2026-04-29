@@ -3,7 +3,7 @@ import chaiAsPromised from 'chai-as-promised';
 import sinonChai from 'sinon-chai';
 import express from 'express';
 import http from 'http';
-import { Message } from './dsl/message';
+import type { Message } from './dsl/message';
 import {
   MessageProviderPact,
   setupProxyServer,

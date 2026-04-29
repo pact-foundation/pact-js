@@ -1,7 +1,10 @@
-import { ConsumerPact, ConsumerInteraction } from '@pact-foundation/pact-core';
+import type {
+  ConsumerPact,
+  ConsumerInteraction,
+} from '@pact-foundation/pact-core';
 import { InteractionWithResponse } from './interactionWithResponse';
 import { ResponseBuilder } from './responseBuilder';
-import {
+import type {
   V4InteractionWithRequest,
   PactV4Options,
   V4ResponseBuilderFunc,

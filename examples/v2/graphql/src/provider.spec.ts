@@ -1,4 +1,4 @@
-import { Verifier, LogLevel } from '@pact-foundation/pact';
+import { Verifier, type LogLevel } from '@pact-foundation/pact';
 import { versionFromGitTag } from 'absolute-version';
 import app from './provider';
 const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';

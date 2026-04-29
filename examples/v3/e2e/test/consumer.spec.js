@@ -336,7 +336,7 @@ describe('Pact V3', () => {
 
   describe('when a call to the Animal Service is made to retrieve a single animal by ID', () => {
     describe('and there is an animal in the DB with ID 100', () => {
-      let responseBody = animalBodyExpectation;
+      const responseBody = animalBodyExpectation;
       responseBody.id = 100;
 
       before(() =>

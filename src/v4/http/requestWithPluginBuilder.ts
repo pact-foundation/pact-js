@@ -1,6 +1,6 @@
-import { Rules, TemplateHeaders, TemplateQuery } from '../../v3';
+import type { Rules, TemplateHeaders, TemplateQuery } from '../../v3';
 import { RequestBuilder } from './requestBuilder';
-import { V4RequestWithPluginBuilder } from './types';
+import type { V4RequestWithPluginBuilder } from './types';
 
 export class RequestWithPluginBuilder
   extends RequestBuilder

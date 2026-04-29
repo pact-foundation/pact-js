@@ -22,8 +22,8 @@ import {
   extractPayload,
   isMatcher,
   like,
-  AnyTemplate,
-  InterfaceToTemplate,
+  type AnyTemplate,
+  type InterfaceToTemplate,
 } from './matchers';
 
 interface ExampleInterface {

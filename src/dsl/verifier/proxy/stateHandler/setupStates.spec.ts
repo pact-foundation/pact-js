@@ -3,10 +3,10 @@ import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
 
 import logger from '../../../../common/logger';
-import { ProxyOptions, ProviderState } from '../types';
+import type { ProxyOptions, ProviderState } from '../types';
 
 import { setupStates } from './setupStates';
-import { JsonMap } from '../../../../common/jsonTypes';
+import type { JsonMap } from '../../../../common/jsonTypes';
 
 chai.use(chaiAsPromised);
 

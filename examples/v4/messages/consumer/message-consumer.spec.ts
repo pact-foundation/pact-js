@@ -3,7 +3,7 @@
 import {
   Matchers,
   v4SynchronousBodyHandler,
-  LogLevel,
+  type LogLevel,
   Pact,
 } from '@pact-foundation/pact';
 const { like, regex } = Matchers;
