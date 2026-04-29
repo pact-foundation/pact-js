@@ -49,7 +49,7 @@ describe('Plugins', () => {
             ),
             'a MATT message (text/plain)': providerWithMetadata(
               (message: MessageDescriptor) => {
-                const request = message.content as any;
+                const request = message.content as Buffer;
                 if (Buffer.from(request).toString() === 'hellotcp') {
                   return Buffer.from('MATTtcpworldMATT');
                 }
@@ -62,7 +62,7 @@ describe('Plugins', () => {
             'a MATT message (application/json)': (
               message: MessageDescriptor,
             ) => {
-              const request = message.content as any;
+              const request = message.content as Record<string, unknown>;
 
               if (request.matt === 'hellotcp') {
                 return {
@@ -76,7 +76,7 @@ describe('Plugins', () => {
             },
             'a MATT message (application/matt)': providerWithMetadata(
               (message: MessageDescriptor) => {
-                const request = message.content as any;
+                const request = message.content as Buffer;
                 if (
                   parseMattMessage(Buffer.from(request).toString()) ===
                   'hellotcp'

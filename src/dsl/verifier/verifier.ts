@@ -6,7 +6,7 @@ import serviceFactory, {
   type VerifierOptions as PactCoreVerifierOptions,
 } from '@pact-foundation/pact-core';
 import { omit, isEmpty } from 'lodash';
-import type http from 'node:http';
+import type * as http from 'node:http';
 import url from 'node:url';
 
 import type { AddressInfo } from 'node:net';

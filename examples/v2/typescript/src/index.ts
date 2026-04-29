@@ -3,7 +3,7 @@ export class DogService {
   private url: string;
   private port: number;
 
-  constructor(endpoint: any) {
+  constructor(endpoint: { url: string; port: number }) {
     this.url = endpoint.url;
     this.port = endpoint.port;
   }

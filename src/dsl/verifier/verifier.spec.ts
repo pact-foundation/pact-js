@@ -126,6 +126,7 @@ describe('Verifier', () => {
       context('and the verification runs successfully', () => {
         it('closes the server and returns the result', () => {
           sinon
+            // biome-ignore lint/suspicious/noExplicitAny: stubbing private method for test isolation
             .stub(v, 'runProviderVerification' as any)
             .returns(Promise.resolve('done'));
 
@@ -140,6 +141,7 @@ describe('Verifier', () => {
       context('and the verification fails', () => {
         it('closes the server and returns the result', () => {
           sinon
+            // biome-ignore lint/suspicious/noExplicitAny: stubbing private method for test isolation
             .stub(v, 'runProviderVerification' as any)
             .returns(() => Promise.reject(new Error('error')));
 

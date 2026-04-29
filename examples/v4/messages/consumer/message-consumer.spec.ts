@@ -27,7 +27,7 @@ describe('Message consumer tests', () => {
         messagePact
           .addAsynchronousInteraction()
           .given('a dog named drover')
-          .expectsToReceive('a request for a dog', (builder: any) => {
+          .expectsToReceive('a request for a dog', (builder) => {
             builder
               .withJSONContent({
                 id: like(1),
@@ -50,7 +50,7 @@ describe('Message consumer tests', () => {
     return messagePact
       .addAsynchronousInteraction()
       .given('some state')
-      .expectsToReceive('a request for a dog', (builder: any) => {
+      .expectsToReceive('a request for a dog', (builder) => {
         builder
           .withJSONContent({
             name: like('fido'),

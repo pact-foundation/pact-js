@@ -33,7 +33,7 @@ export const setupStates = (
     if (state.action === 'setup') {
       logger.warn(`no state handler found for state: "${state.state}"`);
     }
-    return Promise.resolve();
+    return Promise.resolve(undefined);
   }
 
   const stateFn = transformStateFunc(handler);
@@ -54,5 +54,5 @@ export const setupStates = (
       logger.debug(`unknown state action '${state.action}' received, ignoring`);
   }
 
-  return Promise.resolve();
+  return Promise.resolve(undefined);
 };

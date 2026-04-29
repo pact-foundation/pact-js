@@ -1,7 +1,7 @@
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 
-import type http from 'node:http';
+import type * as http from 'node:http';
 
 import { waitForServerReady } from './proxy';
 
@@ -11,7 +11,7 @@ const { expect } = chai;
 
 // Little function to mock out an Event Emitter
 const fakeServer = (event: string) => ({
-  on: (registeredEvent: string, cb: any) => {
+  on: (registeredEvent: string, cb: () => void) => {
     if (registeredEvent === event) {
       cb();
     }

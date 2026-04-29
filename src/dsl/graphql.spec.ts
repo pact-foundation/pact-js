@@ -28,6 +28,7 @@ describe('GraphQLInteraction', () => {
           body: { data: {} },
         });
 
+        // biome-ignore lint/suspicious/noExplicitAny: body sub-properties (query/variables/operationName) are typed as AnyTemplate and need runtime assertions
         const json: any = interaction.json();
         expect(json.request.body.operationName).to.eq('query');
       });
@@ -53,6 +54,7 @@ describe('GraphQLInteraction', () => {
           body: { data: {} },
         });
 
+        // biome-ignore lint/suspicious/noExplicitAny: body sub-properties (query/variables/operationName) are typed as AnyTemplate and need runtime assertions
         const json: any = interaction.json();
         expect(json.request.body.operationName).to.eq(null);
       });
@@ -77,6 +79,7 @@ describe('GraphQLInteraction', () => {
           body: { data: {} },
         });
 
+        // biome-ignore lint/suspicious/noExplicitAny: body sub-properties (query/variables/operationName) are typed as AnyTemplate and need runtime assertions
         const json: any = interaction.json();
         expect(json.request.body.variables).to.deep.eq({ foo: 'bar' });
       });
@@ -96,6 +99,7 @@ describe('GraphQLInteraction', () => {
           body: { data: {} },
         });
 
+        // biome-ignore lint/suspicious/noExplicitAny: body sub-properties (query/variables/operationName) are typed as AnyTemplate and need runtime assertions
         const json: any = interaction.json();
         expect(json.request.body).to.not.have.property('variables');
       });
@@ -116,6 +120,7 @@ describe('GraphQLInteraction', () => {
           body: { data: {} },
         });
 
+        // biome-ignore lint/suspicious/noExplicitAny: body sub-properties (query/variables/operationName) are typed as AnyTemplate and need runtime assertions
         const json: any = interaction.json();
         expect(json.request.body).to.have.property('variables');
       });
@@ -142,6 +147,7 @@ describe('GraphQLInteraction', () => {
 
     describe('when given an empty query', () => {
       it('fails with an error', () => {
+        // biome-ignore lint/suspicious/noExplicitAny: deliberately passing null to test error handling on invalid input
         expect(() => interaction.withQuery(null as any)).to.throw();
       });
     });
@@ -169,6 +175,7 @@ describe('GraphQLInteraction', () => {
             body: { data: {} },
           });
 
+          // biome-ignore lint/suspicious/noExplicitAny: body sub-properties (query/variables/operationName) are typed as AnyTemplate and need runtime assertions
           const json: any = interaction.json();
 
           expect(isMatcher(json.request.body.query)).to.eq(true);
@@ -190,6 +197,7 @@ describe('GraphQLInteraction', () => {
           interaction.withVariables({
             name: 'bar',
           });
+          // biome-ignore lint/suspicious/noExplicitAny: body sub-properties (query/variables/operationName) are typed as AnyTemplate and need runtime assertions
           const json: any = interaction.json();
 
           expect(isMatcher(json.request.body.query)).to.eq(true);
@@ -229,6 +237,7 @@ describe('GraphQLInteraction', () => {
           body: { data: {} },
         });
 
+        // biome-ignore lint/suspicious/noExplicitAny: body sub-properties (query/variables/operationName) are typed as AnyTemplate and need runtime assertions
         const json: any = interaction.json();
         expect(json.request.body).to.not.have.property('operationName');
       });
@@ -249,6 +258,7 @@ describe('GraphQLInteraction', () => {
         body: { data: {} },
       });
 
+      // biome-ignore lint/suspicious/noExplicitAny: body sub-properties (query/variables/operationName) are typed as AnyTemplate and need runtime assertions
       const json: any = interaction.json();
       expect(isMatcher(json.request.body.query)).to.eq(true);
       expect(json.request.body.query.getValue()).to.eq('{ hello }');
@@ -270,6 +280,7 @@ describe('GraphQLInteraction', () => {
           body: { data: {} },
         });
 
+        // biome-ignore lint/suspicious/noExplicitAny: body sub-properties (query/variables/operationName) are typed as AnyTemplate and need runtime assertions
         const json: any = interaction.json();
         expect(json.request.headers).to.deep.eq({
           'Content-Type': 'application/json',

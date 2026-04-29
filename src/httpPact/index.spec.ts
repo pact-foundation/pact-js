@@ -88,6 +88,7 @@ describe('Pact', () => {
       });
 
       it('returns the current configuration', () => {
+        // biome-ignore lint/suspicious/noExplicitAny: accessing internal setup() method not in public type
         const p: any = new Pact(fullOpts);
 
         return expect(p.setup()).to.eventually.include({
@@ -106,6 +107,7 @@ describe('Pact', () => {
 
     describe('when a port is given', () => {
       it('checks if the port is available', () => {
+        // biome-ignore lint/suspicious/noExplicitAny: accessing internal setup() method not in public type
         const p: any = new Pact(fullOpts);
 
         return expect(p.setup())
@@ -120,6 +122,7 @@ describe('Pact', () => {
           ...fullOpts,
           port: undefined,
         };
+        // biome-ignore lint/suspicious/noExplicitAny: accessing internal setup() method not in public type
         const p: any = new Pact(opts);
 
         return expect(p.setup()).to.eventually.have.property('port').not

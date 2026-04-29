@@ -30,6 +30,7 @@ describe('ApolloGraphQLInteraction', () => {
           body: { data: {} },
         });
 
+        // biome-ignore lint/suspicious/noExplicitAny: body sub-properties (query/variables/operationName) are typed as AnyTemplate and need runtime assertions
         const json: any = interaction.json();
         expect(json.request.body.variables).to.deep.eq({ foo: 'bar' });
       });
@@ -49,6 +50,7 @@ describe('ApolloGraphQLInteraction', () => {
           body: { data: {} },
         });
 
+        // biome-ignore lint/suspicious/noExplicitAny: body sub-properties (query/variables/operationName) are typed as AnyTemplate and need runtime assertions
         const json: any = interaction.json();
         expect(json.request.body).to.have.property('variables');
       });
@@ -69,6 +71,7 @@ describe('ApolloGraphQLInteraction', () => {
           body: { data: {} },
         });
 
+        // biome-ignore lint/suspicious/noExplicitAny: body sub-properties (query/variables/operationName) are typed as AnyTemplate and need runtime assertions
         const json: any = interaction.json();
         expect(json.request.body).to.have.property('operationName');
       });

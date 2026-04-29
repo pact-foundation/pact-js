@@ -18,7 +18,7 @@ describe('Net', () => {
     new Promise<nodeNet.Server>((resolve, reject) => {
       const server = nodeNet.createServer();
 
-      server.on('error', (err: any) => reject(err));
+      server.on('error', (err: Error) => reject(err));
       server.on('listening', () => resolve(server));
 
       server.listen({ port: p, host, exclusive: true }, () => {

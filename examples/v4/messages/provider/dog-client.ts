@@ -1,5 +1,11 @@
 // API integration client
-export function createDog(id: number): any {
+interface Dog {
+  id: number;
+  name: string;
+  type: string;
+}
+
+export function createDog(id: number): Promise<Dog> {
   return new Promise((resolve, _reject) => {
     resolve({
       id,

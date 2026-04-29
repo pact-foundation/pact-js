@@ -1,9 +1,10 @@
 import { Verifier, type LogLevel } from '@pact-foundation/pact';
 import { versionFromGitTag } from 'absolute-version';
+import type * as http from 'node:http';
 import app from './provider';
 const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
-let server: any;
+let server: http.Server;
 
 // Verify that the provider meets all consumer expectations
 describe('Pact Verification', () => {

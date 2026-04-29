@@ -17,7 +17,7 @@ describe('#createProxyStateHandler', () => {
     action: 'setup',
   };
 
-  let res: any;
+  let res: number;
   const mockResponse = {
     status: (status: number) => {
       res = status;
@@ -25,7 +25,7 @@ describe('#createProxyStateHandler', () => {
         send: () => {},
       };
     },
-    json: (data: any) => data,
+    json: (data: unknown) => data,
   };
 
   context('when valid state handlers are provided', () => {

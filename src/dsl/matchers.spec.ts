@@ -163,6 +163,7 @@ describe('Matcher', () => {
     });
 
     describe('when not provided with a valid expression', () => {
+      // biome-ignore lint/suspicious/noExplicitAny: intentionally passing invalid argument types to test error handling
       const createTheTerm = (badArg: any) => () => {
         term(badArg);
       };
@@ -209,6 +210,7 @@ describe('Matcher', () => {
     });
 
     describe('when not provided with a valid value', () => {
+      // biome-ignore lint/suspicious/noExplicitAny: intentionally passing invalid argument types to test error handling
       const createTheValue = (badArg: any) => () => {
         somethingLike(badArg);
       };

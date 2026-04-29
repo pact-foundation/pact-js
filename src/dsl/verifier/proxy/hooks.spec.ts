@@ -20,6 +20,7 @@ const doRequest = async (
   const hooksStateHandler = registerHookStateTracking(hooksState);
   const hookRequestHandler = hookHandler || ((_req, _res, next) => next());
 
+  // biome-ignore lint/suspicious/noExplicitAny: partial mock object — only body is needed to exercise the hook logic
   const request: any = {
     body: {
       action,
@@ -27,7 +28,9 @@ const doRequest = async (
   };
 
   return new Promise((resolve) => {
+    // biome-ignore lint/suspicious/noExplicitAny: null passed as res/next mocks; only body is exercised
     hooksStateHandler(request, null as any, () => {
+      // biome-ignore lint/suspicious/noExplicitAny: null passed as res mock; only body is exercised
       hookRequestHandler(request, null as any, resolve);
     });
   });
