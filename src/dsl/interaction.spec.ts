@@ -3,9 +3,9 @@ import chaiAsPromised from 'chai-as-promised';
 import { HTTPMethods } from '../common/request';
 import {
   Interaction,
-  InteractionState,
-  RequestOptions,
-  ResponseOptions,
+  type InteractionState,
+  type RequestOptions,
+  type ResponseOptions,
 } from './interaction';
 import { eachLike, term } from './matchers';
 
@@ -44,7 +44,7 @@ describe('Interaction', () => {
     it('throws error when no description provided', () => {
       expect(interaction.uponReceiving).to.throw(
         Error,
-        'You must provide a description for the interaction.'
+        'You must provide a description for the interaction.',
       );
     });
 
@@ -63,8 +63,8 @@ describe('Interaction', () => {
       expect(
         interaction.withRequest.bind(
           interaction,
-          {} as unknown as RequestOptions
-        )
+          {} as unknown as RequestOptions,
+        ),
       ).to.throw(Error, 'You must provide an HTTP method.');
     });
 
@@ -72,10 +72,10 @@ describe('Interaction', () => {
       expect(
         interaction.withRequest.bind(interaction, {
           method: 'FOO',
-        } as unknown as RequestOptions)
+        } as unknown as RequestOptions),
       ).to.throw(
         Error,
-        'You must provide a valid HTTP method: GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS, COPY, LOCK, MKCOL, MOVE, PROPFIND, PROPPATCH, UNLOCK, REPORT.'
+        'You must provide a valid HTTP method: GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS, COPY, LOCK, MKCOL, MOVE, PROPFIND, PROPPATCH, UNLOCK, REPORT.',
       );
     });
 
@@ -83,7 +83,7 @@ describe('Interaction', () => {
       expect(
         interaction.withRequest.bind(interaction, {
           path: '/',
-        } as unknown as RequestOptions)
+        } as unknown as RequestOptions),
       ).to.throw(Error, 'You must provide an HTTP method.');
     });
 
@@ -91,7 +91,7 @@ describe('Interaction', () => {
       expect(
         interaction.withRequest.bind(interaction, {
           method: HTTPMethods.GET,
-        } as unknown as RequestOptions)
+        } as unknown as RequestOptions),
       ).to.throw(Error, 'You must provide a path.');
     });
 
@@ -101,7 +101,7 @@ describe('Interaction', () => {
           method: HTTPMethods.GET,
           path: '/',
           query: { string: false, query: 'false' },
-        } as unknown as RequestOptions)
+        } as unknown as RequestOptions),
       ).to.throw(Error, 'Query must only contain strings.');
     });
 
@@ -136,7 +136,7 @@ describe('Interaction', () => {
           'path',
           'query',
           'headers',
-          'body'
+          'body',
         );
       });
     });
@@ -157,7 +157,7 @@ describe('Interaction', () => {
         });
         expect(
           new Interaction().uponReceiving('request').withRequest(request).state
-            .request
+            .request,
         ).to.have.any.keys('query');
       });
 
@@ -167,7 +167,7 @@ describe('Interaction', () => {
         };
         expect(
           new Interaction().uponReceiving('request').withRequest(request).state
-            .request
+            .request,
         ).to.have.any.keys('query');
       });
 
@@ -177,7 +177,7 @@ describe('Interaction', () => {
         };
         expect(
           new Interaction().uponReceiving('request').withRequest(request).state
-            .request
+            .request,
         ).to.have.any.keys('query');
       });
 
@@ -187,7 +187,7 @@ describe('Interaction', () => {
         };
         expect(
           new Interaction().uponReceiving('request').withRequest(request).state
-            .request?.query
+            .request?.query,
         ).to.deep.eq({ id: ['1', '2'] });
       });
     });
@@ -226,8 +226,8 @@ describe('Interaction', () => {
       expect(
         interaction.willRespondWith.bind(
           interaction,
-          {} as unknown as ResponseOptions
-        )
+          {} as unknown as ResponseOptions,
+        ),
       ).to.throw(Error, 'You must provide a status code.');
     });
 
@@ -235,7 +235,7 @@ describe('Interaction', () => {
       expect(
         interaction.willRespondWith.bind(interaction, {
           status: '',
-        } as unknown as ResponseOptions)
+        } as unknown as ResponseOptions),
       ).to.throw(Error, 'You must provide a status code.');
     });
 

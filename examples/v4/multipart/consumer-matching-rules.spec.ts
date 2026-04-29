@@ -6,7 +6,7 @@
 
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import { Pact, Matchers, Rules } from '@pact-foundation/pact';
+import { Pact, Matchers, type Rules } from '@pact-foundation/pact';
 import FormData from 'form-data';
 import axios from 'axios';
 import fs from 'node:fs';
@@ -81,7 +81,7 @@ describe('Pact V4 Multipart with Matching Rules', () => {
           rules: [
             Matchers.regex(
               'multipart/form-data;\\s*boundary=.*',
-              `multipart/form-data; boundary=${boundary}`
+              `multipart/form-data; boundary=${boundary}`,
             ),
           ],
         },
@@ -100,7 +100,7 @@ describe('Pact V4 Multipart with Matching Rules', () => {
             })
             .binaryFile(
               `multipart/form-data; boundary=${boundary}`,
-              tempFilePath
+              tempFilePath,
             )
             .matchingRules(requestMatchingRules);
         })
@@ -128,7 +128,7 @@ describe('Pact V4 Multipart with Matching Rules', () => {
             formData,
             {
               headers: formData.getHeaders(),
-            }
+            },
           );
 
           expect(response.status).to.equal(201);
@@ -202,7 +202,7 @@ describe('Pact V4 Multipart with Matching Rules', () => {
         builder
           .withContent(
             `multipart/form-data; boundary=${boundary}`,
-            requestBuffer
+            requestBuffer,
           )
           .withMatchingRules(requestMatchingRules);
       })
@@ -267,7 +267,7 @@ describe('Pact V4 Multipart with Matching Rules', () => {
         builder
           .withContent(
             `multipart/form-data; boundary=${boundary}`,
-            messageBuffer
+            messageBuffer,
           )
           .withMatchingRules(messageMatchingRules)
           .withMetadata({

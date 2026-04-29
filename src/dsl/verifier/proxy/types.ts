@@ -1,7 +1,7 @@
-import express from 'express';
-import { LogLevel } from '../../options';
-import { JsonMap, AnyJson } from '../../../common/jsonTypes';
-import { MessageProviders } from '../../message';
+import type express from 'express';
+import type { LogLevel } from '../../options';
+import type { JsonMap, AnyJson } from '../../../common/jsonTypes';
+import type { MessageProviders } from '../../message';
 
 export type Hook = () => Promise<unknown>;
 
@@ -30,7 +30,7 @@ export type StateAction = 'setup' | 'teardown';
  * Respond to the state setup event, optionally returning a map of provider
  * values to dynamically inject into the incoming request to test
  */
-export type StateFunc = (parameters?: AnyJson) => Promise<JsonMap | void>;
+export type StateFunc = (parameters?: AnyJson) => Promise<JsonMap | undefined>;
 
 /**
  * Respond to the state setup event, with the ability to hook into the setup/teardown

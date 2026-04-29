@@ -1,11 +1,14 @@
-import { ConsumerPact, ConsumerInteraction } from '@pact-foundation/pact-core';
+import type {
+  ConsumerPact,
+  ConsumerInteraction,
+} from '@pact-foundation/pact-core';
 import { InteractionWithPlugin } from './interactionWithPlugin';
 import { RequestBuilder } from './requestBuilder';
 import { InteractionWithRequest } from './interactionWithRequest';
-import { JsonMap } from '../../common/jsonTypes';
-import { Path } from '../../v3';
+import type { JsonMap } from '../../common/jsonTypes';
+import type { Path } from '../../v3';
 import { matcherValueOrString } from '../../v3/matchers';
-import {
+import type {
   V4UnconfiguredInteraction,
   PactV4Options,
   V4Request,
@@ -24,7 +27,7 @@ export class UnconfiguredInteraction implements V4UnconfiguredInteraction {
     protected pact: ConsumerPact,
     protected interaction: ConsumerInteraction,
     protected opts: PactV4Options,
-    protected cleanupFn: () => void
+    protected cleanupFn: () => void,
   ) {}
 
   uponReceiving(description: string): V4UnconfiguredInteraction {
@@ -66,15 +69,14 @@ export class UnconfiguredInteraction implements V4UnconfiguredInteraction {
     return this;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  withCompleteRequest(request: V4Request): V4InteractionWithCompleteRequest {
+  withCompleteRequest(_request: V4Request): V4InteractionWithCompleteRequest {
     throw new Error('withCompleteRequest is not implemented');
   }
 
   withRequest(
     method: string,
     path: Path,
-    builder?: V4RequestBuilderFunc
+    builder?: V4RequestBuilderFunc,
   ): V4InteractionWithRequest {
     this.interaction.withRequest(method, matcherValueOrString(path));
 
@@ -85,7 +87,7 @@ export class UnconfiguredInteraction implements V4UnconfiguredInteraction {
       this.pact,
       this.interaction,
       this.opts,
-      this.cleanupFn
+      this.cleanupFn,
     );
   }
 
@@ -96,7 +98,7 @@ export class UnconfiguredInteraction implements V4UnconfiguredInteraction {
       this.pact,
       this.interaction,
       this.opts,
-      this.cleanupFn
+      this.cleanupFn,
     );
   }
 }

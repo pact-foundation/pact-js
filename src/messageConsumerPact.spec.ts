@@ -6,7 +6,7 @@ import {
   synchronousBodyHandler,
   asynchronousBodyHandler,
 } from './messageConsumerPact';
-import { ConcreteMessage } from './dsl/message';
+import type { ConcreteMessage } from './dsl/message';
 
 chai.use(sinonChai);
 chai.use(chaiAsPromised);
@@ -69,6 +69,7 @@ describe('MessageConsumer', () => {
           consumer: 'myconsumer',
           provider: 'myprovider',
         });
+        // biome-ignore lint/suspicious/noExplicitAny: accessing private getServiceFactory method for test stubbing
         const stub = stubbedConsumer as any;
 
         // Stub out service factory

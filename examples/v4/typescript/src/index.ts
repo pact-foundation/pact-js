@@ -1,8 +1,8 @@
-import axios, { AxiosPromise } from 'axios';
+import axios, { type AxiosPromise } from 'axios';
 export class DogService {
   private url: string;
 
-  constructor(endpoint: any) {
+  constructor(endpoint: { url: string }) {
     this.url = endpoint.url;
   }
 
@@ -26,7 +26,7 @@ export class DogService {
         headers: { Accept: 'application/json' },
         method: 'GET',
         url: `/dogs/${id}/profile`,
-      })
+      }),
     );
   };
 }

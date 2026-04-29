@@ -1,13 +1,11 @@
-/* tslint:disable:no-unused-expression no-empty */
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinonChai from 'sinon-chai';
 import axios from 'axios';
-import fs = require('fs');
-import net = require('net');
-import path = require('path');
+import fs = require('node:fs');
+import net = require('node:net');
+import path = require('node:path');
 
-// eslint-disable-next-line import/first
 import { PactV4 } from './v4';
 import { MatchersV3 } from './v3';
 
@@ -21,23 +19,23 @@ describe('V4 Pact', () => {
   const pactFilePath = path.resolve(
     process.cwd(),
     'pacts',
-    'v4consumer-v4provider.json'
+    'v4consumer-v4provider.json',
   );
 
   const interactionByDescription = (
-    description: string
+    description: string,
   ): Record<string, unknown> => {
     const pactJson = JSON.parse(fs.readFileSync(pactFilePath, 'utf8')) as {
       interactions: Array<Record<string, unknown>>;
     };
 
     const matches = pactJson.interactions.filter(
-      (item) => item.description === description
+      (item) => item.description === description,
     );
 
     expect(
       matches,
-      `expected exactly one interaction for "${description}"`
+      `expected exactly one interaction for "${description}"`,
     ).to.have.lengthOf(1);
 
     const [interaction] = matches;
@@ -49,7 +47,7 @@ describe('V4 Pact', () => {
     interaction: Record<string, unknown>,
     reason: string,
     textComment: string,
-    testName: string
+    testName: string,
   ): void => {
     const comments = interaction.comments as Record<string, unknown>;
 
@@ -100,8 +98,8 @@ describe('V4 Pact', () => {
               headers: {
                 'x-foo': 'x-bar',
               },
-            }
-          )
+            },
+          ),
         ));
 
     it('generates a pact with interaction metadata', async () => {
@@ -144,8 +142,8 @@ describe('V4 Pact', () => {
               headers: {
                 'x-foo': 'x-bar',
               },
-            }
-          )
+            },
+          ),
         );
 
       const interaction = interactionByDescription(description);
@@ -155,7 +153,7 @@ describe('V4 Pact', () => {
         interaction,
         'covered by HTTP metadata test',
         'second note from HTTP metadata test',
-        'http metadata test name'
+        'http metadata test name',
       );
     });
 
@@ -169,7 +167,7 @@ describe('V4 Pact', () => {
             .headers({
               'Content-Type': MatchersV3.regex(
                 /^application\/json(;\s?charset=[\w-]+)?$/i,
-                'application/json'
+                'application/json',
               ),
             })
             .jsonBody({
@@ -190,7 +188,7 @@ describe('V4 Pact', () => {
             .headers({
               'Content-Type': MatchersV3.regex(
                 /^application\/json(;\s?charset=[\w-]+)?$/i,
-                'application/json'
+                'application/json',
               ),
             })
             .jsonBody({
@@ -205,7 +203,7 @@ describe('V4 Pact', () => {
         .executeTest((server) =>
           axios.post(server.url, {
             foo: 'bar',
-          })
+          }),
         ));
   });
 
@@ -234,7 +232,7 @@ describe('V4 Pact', () => {
         interaction,
         'covered by async metadata test',
         'second note from async metadata test',
-        'async metadata test name'
+        'async metadata test name',
       );
     });
   });
@@ -269,7 +267,7 @@ describe('V4 Pact', () => {
         interaction,
         'covered by sync metadata test',
         'second note from sync metadata test',
-        'sync metadata test name'
+        'sync metadata test name',
       );
     });
   });
@@ -314,7 +312,7 @@ describe('V4 Pact', () => {
                 })
                 .then((res) => {
                   expect(parseMattMessage(res.data)).to.eq('world');
-                })
+                }),
             );
         });
       });
@@ -326,7 +324,7 @@ describe('V4 Pact', () => {
           const sendMattMessageTCP = (
             message: string,
             host: string,
-            port: number
+            port: number,
           ): Promise<string> => {
             const socket = net.connect({
               port,
@@ -362,7 +360,7 @@ describe('V4 Pact', () => {
                 const message = await sendMattMessageTCP(
                   'hellotcp',
                   HOST,
-                  tc.port
+                  tc.port,
                 );
                 expect(message).to.eq('tcpworld');
               });

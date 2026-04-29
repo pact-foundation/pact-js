@@ -1,12 +1,12 @@
 import { expect } from 'chai';
 import { stub } from 'sinon';
-import { RequestHandler } from 'express';
+import type { RequestHandler } from 'express';
 
 import {
   registerHookStateTracking,
   registerBeforeHook,
   registerAfterHook,
-  HooksState,
+  type HooksState,
 } from './hooks';
 
 // This mimics the proxy setup (src/dsl/verifier/proxy/proxy.ts), whereby the
@@ -15,11 +15,12 @@ import {
 const doRequest = async (
   action: string,
   hooksState: HooksState,
-  hookHandler?: RequestHandler
+  hookHandler?: RequestHandler,
 ) => {
   const hooksStateHandler = registerHookStateTracking(hooksState);
-  const hookRequestHandler = hookHandler || ((req, res, next) => next());
+  const hookRequestHandler = hookHandler || ((_req, _res, next) => next());
 
+  // biome-ignore lint/suspicious/noExplicitAny: partial mock object — only body is needed to exercise the hook logic
   const request: any = {
     body: {
       action,
@@ -27,7 +28,9 @@ const doRequest = async (
   };
 
   return new Promise((resolve) => {
+    // biome-ignore lint/suspicious/noExplicitAny: null passed as res/next mocks; only body is exercised
     hooksStateHandler(request, null as any, () => {
+      // biome-ignore lint/suspicious/noExplicitAny: null passed as res mock; only body is exercised
       hookRequestHandler(request, null as any, resolve);
     });
   });

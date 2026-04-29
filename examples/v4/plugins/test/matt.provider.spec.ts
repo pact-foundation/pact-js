@@ -1,11 +1,11 @@
 /* tslint:disable:no-unused-expression no-empty */
 import {
-  MessageDescriptor,
+  type MessageDescriptor,
   providerWithMetadata,
   Verifier,
 } from '@pact-foundation/pact';
-import { AddressInfo } from 'net';
-import * as path from 'path';
+import type { AddressInfo } from 'node:net';
+import * as path from 'node:path';
 import { startHTTPServer, startTCPServer } from '../provider';
 import { parseMattMessage } from '../protocol';
 
@@ -45,11 +45,11 @@ describe('Plugins', () => {
               },
               {
                 contentType: 'application/matt',
-              }
+              },
             ),
             'a MATT message (text/plain)': providerWithMetadata(
               (message: MessageDescriptor) => {
-                const request = message.content as any;
+                const request = message.content as Buffer;
                 if (Buffer.from(request).toString() === 'hellotcp') {
                   return Buffer.from('MATTtcpworldMATT');
                 }
@@ -57,12 +57,12 @@ describe('Plugins', () => {
               },
               {
                 contentType: 'text/plain',
-              }
+              },
             ),
             'a MATT message (application/json)': (
-              message: MessageDescriptor
+              message: MessageDescriptor,
             ) => {
-              const request = message.content as any;
+              const request = message.content as Record<string, unknown>;
 
               if (request.matt === 'hellotcp') {
                 return {
@@ -76,7 +76,7 @@ describe('Plugins', () => {
             },
             'a MATT message (application/matt)': providerWithMetadata(
               (message: MessageDescriptor) => {
-                const request = message.content as any;
+                const request = message.content as Buffer;
                 if (
                   parseMattMessage(Buffer.from(request).toString()) ===
                   'hellotcp'
@@ -87,7 +87,7 @@ describe('Plugins', () => {
               },
               {
                 contentType: 'application/matt',
-              }
+              },
             ),
           },
         });

@@ -73,9 +73,9 @@ modified or new examples, refactorings, new tests, etc. We usually use one of `c
 
 ## Code style and formatting
 
-We use [Prettier](https://prettier.io/) for formatting, and for linting we use [ESLint](https://eslint.org/) (for TypeScript).
+We use [Biome](https://biomejs.dev/) for both formatting and linting.
 
-The recommended approach is to configure Prettier to format on save in your editor 👌. If not, don't worry, our lint step will catch it.
+The recommended approach is to install the [Biome VS Code extension](https://marketplace.visualstudio.com/items?itemName=biomejs.biome) and configure it to format on save 👌. If not, don't worry, our lint step will catch it.
 
 ## Pull requests
 

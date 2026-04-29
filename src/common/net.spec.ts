@@ -1,6 +1,6 @@
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import nodeNet from 'net';
+import nodeNet from 'node:net';
 import { isPortAvailable } from './net';
 import logger from './logger';
 
@@ -18,7 +18,7 @@ describe('Net', () => {
     new Promise<nodeNet.Server>((resolve, reject) => {
       const server = nodeNet.createServer();
 
-      server.on('error', (err: any) => reject(err));
+      server.on('error', (err: Error) => reject(err));
       server.on('listening', () => resolve(server));
 
       server.listen({ port: p, host, exclusive: true }, () => {
@@ -39,40 +39,35 @@ describe('Net', () => {
     });
 
     context('when the port is unavailable', () => {
-      let closeFn: (cb: () => void) => void = (cb) => cb();
-
-      it('returns a rejected promise', () =>
-        createServer(port).then((server) => {
-          closeFn = (cb) => {
-            server.close(cb);
-          };
-          return expect(isPortAvailable(port, defaultHost)).to.eventually.be
-            .rejected;
-        }));
-
-      // close the servers used in this test as to not conflict with other tests
-      afterEach((done) => {
-        closeFn(done);
+      it('returns a rejected promise', () => {
+        let server: nodeNet.Server;
+        return createServer(port)
+          .then((s) => {
+            server = s;
+            return expect(isPortAvailable(port, defaultHost)).to.eventually.be
+              .rejected;
+          })
+          .finally(
+            () =>
+              new Promise<void>((resolve) => server?.close(() => resolve())),
+          );
       });
     });
 
     context('when a single host is unavailable', () => {
-      let closeFn: (cb: () => void) => void = (cb) => cb();
-
-      it('returns a fulfilled promise', () =>
-        // simulate ::1 being unavailable
-        createServer(port, '::1').then((server) => {
-          closeFn = (cb) => {
-            server.close(cb);
-          };
-          // this should work as the `127.0.0.1` is NOT `::1`
-          return expect(isPortAvailable(port, '127.0.0.1')).to.eventually.be
-            .fulfilled;
-        }));
-
-      // close the servers used in this test as to not conflict with other tests
-      afterEach((done) => {
-        closeFn(done);
+      it('returns a fulfilled promise', () => {
+        let server: nodeNet.Server;
+        return createServer(port, '::1')
+          .then((s) => {
+            server = s;
+            // this should work as the `127.0.0.1` is NOT `::1`
+            return expect(isPortAvailable(port, '127.0.0.1')).to.eventually.be
+              .fulfilled;
+          })
+          .finally(
+            () =>
+              new Promise<void>((resolve) => server?.close(() => resolve())),
+          );
       });
     });
   });

@@ -82,7 +82,7 @@ describe('V3 Matchers', () => {
           {
             a: 'b',
           },
-          3
+          3,
         );
         expect(result).to.deep.equal({
           min: 3,
@@ -127,7 +127,7 @@ describe('V3 Matchers', () => {
           {
             a: 'b',
           },
-          4
+          4,
         );
         expect(result).to.deep.equal({
           'pact:matcher:type': 'type',
@@ -145,7 +145,7 @@ describe('V3 Matchers', () => {
           {
             a: 'b',
           },
-          2
+          2,
         );
         expect(result).to.deep.equal({
           'pact:matcher:type': 'type',
@@ -162,7 +162,7 @@ describe('V3 Matchers', () => {
             a: 'b',
           },
           2,
-          4
+          4,
         );
         expect(result).to.deep.equal({
           'pact:matcher:type': 'type',
@@ -174,7 +174,7 @@ describe('V3 Matchers', () => {
 
     it('throws an error if the number of examples is less than the minimum', () => {
       expect(() => MatchersV3.atLeastLike({ a: 'b' }, 4, 2)).to.throw(
-        'atLeastLike has a minimum of 4 but 2 elements were requested. Make sure the count is greater than or equal to the min.'
+        'atLeastLike has a minimum of 4 but 2 elements were requested. Make sure the count is greater than or equal to the min.',
       );
     });
   });
@@ -186,7 +186,7 @@ describe('V3 Matchers', () => {
           {
             a: 'b',
           },
-          2
+          2,
         );
         expect(result).to.deep.equal({
           'pact:matcher:type': 'type',
@@ -203,7 +203,7 @@ describe('V3 Matchers', () => {
             a: 'b',
           },
           4,
-          4
+          4,
         );
         expect(result).to.deep.equal({
           'pact:matcher:type': 'type',
@@ -215,7 +215,7 @@ describe('V3 Matchers', () => {
 
     it('throws an error if the number of examples is more than the maximum', () => {
       expect(() => MatchersV3.atMostLike({ a: 'b' }, 2, 4)).to.throw(
-        'atMostLike has a maximum of 2 but 4 elements where requested. Make sure the count is less than or equal to the max.'
+        'atMostLike has a maximum of 2 but 4 elements where requested. Make sure the count is less than or equal to the max.',
       );
     });
   });
@@ -228,7 +228,7 @@ describe('V3 Matchers', () => {
             a: 'b',
           },
           2,
-          4
+          4,
         );
         expect(result).to.deep.equal({
           'pact:matcher:type': 'type',
@@ -247,7 +247,7 @@ describe('V3 Matchers', () => {
           },
           2,
           4,
-          3
+          3,
         );
         expect(result).to.deep.equal({
           'pact:matcher:type': 'type',
@@ -260,17 +260,17 @@ describe('V3 Matchers', () => {
 
     it('throws an error if the number of examples is less than the minimum', () => {
       expect(() =>
-        MatchersV3.constrainedArrayLike({ a: 'b' }, 4, 6, 2)
+        MatchersV3.constrainedArrayLike({ a: 'b' }, 4, 6, 2),
       ).to.throw(
-        'constrainedArrayLike has a minimum of 4 but 2 elements where requested. Make sure the count is greater than or equal to the min.'
+        'constrainedArrayLike has a minimum of 4 but 2 elements where requested. Make sure the count is greater than or equal to the min.',
       );
     });
 
     it('throws an error if the number of examples is more than the maximum', () => {
       expect(() =>
-        MatchersV3.constrainedArrayLike({ a: 'b' }, 4, 6, 8)
+        MatchersV3.constrainedArrayLike({ a: 'b' }, 4, 6, 8),
       ).to.throw(
-        'constrainedArrayLike has a maximum of 6 but 8 elements where requested. Make sure the count is less than or equal to the max.'
+        'constrainedArrayLike has a maximum of 6 but 8 elements where requested. Make sure the count is less than or equal to the max.',
       );
     });
   });
@@ -415,7 +415,7 @@ describe('V3 Matchers', () => {
       it('returns a JSON representation of a datetime matcher', () => {
         const result = MatchersV3.datetime(
           "yyyy-MM-dd'T'HH:mm:ss.SSSX",
-          '2016-02-11T09:46:56.023Z'
+          '2016-02-11T09:46:56.023Z',
         );
         expect(result).to.deep.equal({
           'pact:matcher:type': 'timestamp',
@@ -428,7 +428,7 @@ describe('V3 Matchers', () => {
     describe('when example is an empty string', () => {
       it('throws an error', () => {
         expect(() =>
-          MatchersV3.datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX", '')
+          MatchersV3.datetime("yyyy-MM-dd'T'HH:mm:ss.SSSX", ''),
         ).to.throw('you must provide an example datetime');
       });
     });
@@ -449,7 +449,7 @@ describe('V3 Matchers', () => {
     describe('when example is an empty string', () => {
       it('throws an error', () => {
         expect(() => MatchersV3.time('HH:mm:ss', '')).to.throw(
-          'you must provide an example time'
+          'you must provide an example time',
         );
       });
     });
@@ -470,7 +470,7 @@ describe('V3 Matchers', () => {
     describe('when example is an empty string', () => {
       it('throws an error', () => {
         expect(() => MatchersV3.date('yyyy-MM-dd', '')).to.throw(
-          'you must provide an example date'
+          'you must provide an example date',
         );
       });
     });
@@ -576,7 +576,7 @@ describe('V3 Matchers', () => {
       expect(() => MatchersV3.uuid('not a uuid')).to.throw();
       expect(() => MatchersV3.uuid('ba4bd1bc-5556-11eb-9286')).to.throw();
       expect(() =>
-        MatchersV3.uuid('ba4bd1bc-5556-11eb-9286-d71bc5b507be-1234')
+        MatchersV3.uuid('ba4bd1bc-5556-11eb-9286-d71bc5b507be-1234'),
       ).to.throw();
     });
 
@@ -691,7 +691,7 @@ describe('V3 Matchers', () => {
                 foo: 'bar',
                 baz: MatchersV3.like('bat'),
               },
-              3
+              3,
             ),
           },
         });

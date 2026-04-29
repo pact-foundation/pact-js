@@ -5,8 +5,8 @@
 
 import { isNil, keys } from 'lodash';
 import { reject } from 'ramda';
-import { HTTPMethods, HTTPMethod } from '../common/request';
-import { MatcherV2, isMatcher, AnyTemplate } from './matchers';
+import { HTTPMethods, type HTTPMethod } from '../common/request';
+import { type MatcherV2, isMatcher, type AnyTemplate } from './matchers';
 import ConfigurationError from '../errors/configurationError';
 
 interface QueryObject {
@@ -95,7 +95,7 @@ export class Interaction {
   public uponReceiving(description: string): this {
     if (isNil(description)) {
       throw new ConfigurationError(
-        'You must provide a description for the interaction.'
+        'You must provide a description for the interaction.',
       );
     }
     this.state.description = description;
@@ -120,7 +120,7 @@ export class Interaction {
 
     if (keys(HTTPMethods).indexOf(requestOpts.method.toString()) < 0) {
       throw new ConfigurationError(
-        `You must provide a valid HTTP method: ${keys(HTTPMethods).join(', ')}.`
+        `You must provide a valid HTTP method: ${keys(HTTPMethods).join(', ')}.`,
       );
     }
 
@@ -168,7 +168,7 @@ export class Interaction {
   public json(): InteractionStateComplete {
     if (isNil(this.state.description)) {
       throw new ConfigurationError(
-        'You must provide a description for the Interaction'
+        'You must provide a description for the Interaction',
       );
     }
     if (
@@ -177,12 +177,12 @@ export class Interaction {
       isNil(this.state?.request?.path)
     ) {
       throw new ConfigurationError(
-        'You must provide a request with at least a method and path for the Interaction'
+        'You must provide a request with at least a method and path for the Interaction',
       );
     }
     if (isNil(this.state.response) || isNil(this.state?.response?.status)) {
       throw new ConfigurationError(
-        'You must provide a response with a status for the Interaction'
+        'You must provide a response with a status for the Interaction',
       );
     }
 
@@ -191,7 +191,7 @@ export class Interaction {
 }
 
 export const interactionToInteractionObject = (
-  interaction: InteractionStateComplete
+  interaction: InteractionStateComplete,
 ): InteractionObject => ({
   state: interaction.providerState,
   uponReceiving: interaction.description,

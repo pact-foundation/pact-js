@@ -23,7 +23,7 @@ const getAnimalById = (id) => {
     .set(authHeader)
     .then(
       (res) => res.body,
-      () => null
+      () => null,
     );
 };
 
@@ -41,7 +41,7 @@ const suggestion = (mate) => {
 
   return availableAnimals().then((available) => {
     const eligible = available.filter(
-      (a) => !predicates.map((p) => p(a, mate)).includes(false)
+      (a) => !predicates.map((p) => p(a, mate)).includes(false),
     );
 
     return {

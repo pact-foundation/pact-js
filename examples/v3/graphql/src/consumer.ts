@@ -14,7 +14,7 @@ const client = new ApolloClient({
   }),
 });
 
-export function query(): any {
+export function query(): Promise<unknown> {
   return client
     .query({
       query: gql`
@@ -26,5 +26,5 @@ export function query(): any {
         foo: 'bar',
       },
     })
-    .then((result: any) => result.data);
+    .then((result) => result.data);
 }

@@ -4,8 +4,8 @@ import sinonChai from 'sinon-chai';
 import {
   PactV3,
   Matchers,
-  LogLevel,
-  V3Interaction,
+  type LogLevel,
+  type V3Interaction,
 } from '@pact-foundation/pact';
 import { UserService } from '../index';
 const { like } = Matchers;

@@ -1,15 +1,18 @@
-import { ConsumerPact, makeConsumerPact } from '@pact-foundation/pact-core';
-import { UnconfiguredInteraction } from './http/unconfiguredInteraction';
-import { PactV4Options, V4UnconfiguredInteraction } from './http/types';
-import { V4ConsumerPact } from './types';
-import { version as pactPackageVersion } from '../../package.json';
 import {
+  type ConsumerPact,
+  makeConsumerPact,
+} from '@pact-foundation/pact-core';
+import { UnconfiguredInteraction } from './http/unconfiguredInteraction';
+import { PactV4Options, type V4UnconfiguredInteraction } from './http/types';
+import type { V4ConsumerPact } from './types';
+import { version as pactPackageVersion } from '../../package.json';
+import type {
   V4UnconfiguredAsynchronousMessage,
   V4UnconfiguredSynchronousMessage,
 } from './message/types';
 import { UnconfiguredSynchronousMessage } from './message';
 import { SpecificationVersion } from '../v3';
-import { V4UnconfiguredGraphQLInteraction } from './graphql/types';
+import type { V4UnconfiguredGraphQLInteraction } from './graphql/types';
 import { UnconfiguredGraphQLInteraction } from './graphql';
 import { UnconfiguredAsynchronousMessage } from './message/asynchronousMessage';
 
@@ -25,7 +28,7 @@ export class PactV4 implements V4ConsumerPact {
       this.opts.consumer,
       this.opts.provider,
       this.opts.spec ?? SpecificationVersion.SPECIFICATION_VERSION_V4,
-      this.opts.logLevel ?? 'info'
+      this.opts.logLevel ?? 'info',
     );
     this.pact.addMetadata('pact-js', 'version', pactPackageVersion);
   }
@@ -40,12 +43,12 @@ export class PactV4 implements V4ConsumerPact {
         // Because of the type-state model used here, it's a bit awkward as we need to thread this through
         // to children, ultimately to be called on the "executeTest" stage.
         this.setup();
-      }
+      },
     );
   }
 
   addSynchronousInteraction(
-    description: string
+    description: string,
   ): V4UnconfiguredSynchronousMessage {
     return new UnconfiguredSynchronousMessage(
       this.pact,
@@ -56,7 +59,7 @@ export class PactV4 implements V4ConsumerPact {
         // Because of the type-state model used here, it's a bit awkward as we need to thread this through
         // to children, ultimately to be called on the "executeTest" stage.
         this.setup();
-      }
+      },
     );
   }
 
@@ -70,7 +73,7 @@ export class PactV4 implements V4ConsumerPact {
         // Because of the type-state model used here, it's a bit awkward as we need to thread this through
         // to children, ultimately to be called on the "executeTest" stage.
         this.setup();
-      }
+      },
     );
   }
 
@@ -84,7 +87,7 @@ export class PactV4 implements V4ConsumerPact {
         // Because of the type-state model used here, it's a bit awkward as we need to thread this through
         // to children, ultimately to be called on the "executeTest" stage.
         this.setup();
-      }
+      },
     );
   }
 }

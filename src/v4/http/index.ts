@@ -1,8 +1,8 @@
-import fs = require('fs');
+import fs = require('node:fs');
 
-import { ConsumerPact } from '@pact-foundation/pact-core';
-import { V3MockServer } from '../../v3';
-import { PactV4Options, TestFunction } from './types';
+import type { ConsumerPact } from '@pact-foundation/pact-core';
+import type { V3MockServer } from '../../v3';
+import type { PactV4Options, TestFunction } from './types';
 import {
   filterMissingFeatureFlag,
   generateMockServerError,
@@ -17,7 +17,7 @@ export const readBinaryData = (file: string): Buffer => {
   } catch (e) {
     const error = e instanceof Error ? e : new Error(String(e));
     throw new Error(
-      `unable to read file for binary payload : ${error.message}`
+      `unable to read file for binary payload : ${error.message}`,
     );
   }
 };
@@ -27,7 +27,7 @@ const cleanup = (
   pact: ConsumerPact,
   opts: PactV4Options,
   server: V3MockServer,
-  cleanupFn: () => void
+  cleanupFn: () => void,
 ) => {
   if (success) {
     pact.writePactFile(opts.dir || './pacts');
@@ -41,7 +41,7 @@ export const executeTest = async <T>(
   pact: ConsumerPact,
   opts: PactV4Options,
   testFn: TestFunction<T>,
-  cleanupFn: () => void
+  cleanupFn: () => void,
 ): Promise<T | undefined> => {
   const scheme = opts.tls ? 'https' : 'http';
   const host = opts.host || '127.0.0.1';

@@ -14,8 +14,7 @@
         }
       ],
       "request": {
-        "body": {
-        },
+        "body": {},
         "headers": {
           "Content-Type": "application/json"
         },
@@ -43,8 +42,7 @@
         }
       ],
       "request": {
-        "body": {
-        },
+        "body": {},
         "headers": {
           "Content-Type": "application/json"
         },
@@ -63,11 +61,9 @@
     },
     {
       "description": "a request to be skipped because there are no states",
-      "providerStates": [
-      ],
+      "providerStates": [],
       "request": {
-        "body": {
-        },
+        "body": {},
         "headers": {
           "Content-Type": "application/json"
         },
@@ -95,8 +91,7 @@
         }
       ],
       "request": {
-        "body": {
-        },
+        "body": {},
         "headers": {
           "Content-Type": "application/json"
         },

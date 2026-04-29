@@ -1,8 +1,8 @@
-import { ASTNode, print } from 'graphql';
+import { type ASTNode, print } from 'graphql';
 import gql from 'graphql-tag';
 import { GraphQLQueryError } from './graphQLQueryError';
 import { ConfigurationError } from './configurationError';
-import { OperationType } from './types';
+import type { OperationType } from './types';
 
 export interface GraphQLVariables {
   [name: string]: unknown;
@@ -16,7 +16,7 @@ export interface GraphQLVariables {
  */
 export function validateQuery(
   query: string | ASTNode,
-  type: OperationType
+  type: OperationType,
 ): string {
   if (!query) {
     throw new ConfigurationError(`You must provide a GraphQL ${type}.`);
@@ -28,7 +28,7 @@ export function validateQuery(
       return print(query);
     }
     throw new ConfigurationError(
-      'You must provide a either a string or parsed GraphQL.'
+      'You must provide a either a string or parsed GraphQL.',
     );
   } else {
     // String, so validate it
@@ -37,7 +37,7 @@ export function validateQuery(
     } catch (e) {
       const error = e instanceof Error ? e : new Error(String(e));
       throw new GraphQLQueryError(
-        `GraphQL ${type} is invalid: ${error.message}`
+        `GraphQL ${type} is invalid: ${error.message}`,
       );
     }
 

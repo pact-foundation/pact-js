@@ -1,7 +1,7 @@
-import { VerifierOptions as PactCoreVerifierOptions } from '@pact-foundation/pact-core';
-import { MessageProviderOptions } from '../options';
+import type { VerifierOptions as PactCoreVerifierOptions } from '@pact-foundation/pact-core';
+import type { MessageProviderOptions } from '../options';
 
-import { ProxyOptions } from './proxy/types';
+import type { ProxyOptions } from './proxy/types';
 
 type ExcludedPactNodeVerifierKeys = Exclude<
   keyof PactCoreVerifierOptions,

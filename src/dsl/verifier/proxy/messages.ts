@@ -1,18 +1,18 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import { encode as encodeBase64 } from 'js-base64';
-import {
+import type {
   MessageDescriptor,
   MessageFromProviderWithMetadata,
   MessageProvider,
 } from '../../message';
 import logger from '../../../common/logger';
-import { ProxyOptions } from './types';
+import type { ProxyOptions } from './types';
 
 // Find a provider message handler, and invoke it
 export const findMessageHandler = (
   message: MessageDescriptor,
-  config: ProxyOptions
+  config: ProxyOptions,
 ): Promise<MessageProvider> => {
   const handler = config.messageProviders
     ? config.messageProviders[message.description]
@@ -24,8 +24,8 @@ export const findMessageHandler = (
     return Promise.reject(
       new Error(
         `No handler found for message "${message.description}".
-             Check your "handlers" configuration`
-      )
+             Check your "handlers" configuration`,
+      ),
     );
   }
 
@@ -33,14 +33,14 @@ export const findMessageHandler = (
 };
 
 const hasMetadata = (
-  o: unknown | MessageFromProviderWithMetadata
+  o: unknown | MessageFromProviderWithMetadata,
 ): o is MessageFromProviderWithMetadata =>
   Boolean((o as MessageFromProviderWithMetadata).__pactMessageMetadata);
 
 export const providerWithMetadata =
   (
     provider: MessageProvider,
-    metadata: Record<string, string>
+    metadata: Record<string, string>,
   ): MessageProvider =>
   (descriptor: MessageDescriptor) =>
     Promise.resolve(provider(descriptor)).then((message) =>
@@ -52,13 +52,13 @@ export const providerWithMetadata =
             },
             message,
           }
-        : { __pactMessageMetadata: metadata, message }
+        : { __pactMessageMetadata: metadata, message },
     );
 
 // Get the API handler for the verification CLI process to invoke on POST /*
 export const createProxyMessageHandler =
   (
-    config: ProxyOptions
+    config: ProxyOptions,
   ): ((req: express.Request, res: express.Response) => void) =>
   (req, res) => {
     // req.body = {
@@ -102,7 +102,7 @@ export const createProxyMessageHandler =
       if (encodedMessage) {
         message.content = Buffer.from(
           req.body.request?.contents?.content as string,
-          'base64'
+          'base64',
         );
       } else {
         message.content = req.body.request?.contents?.content;
@@ -116,7 +116,7 @@ export const createProxyMessageHandler =
       .then((messageFromHandler) => {
         if (hasMetadata(messageFromHandler)) {
           const metadata = encodeBase64(
-            JSON.stringify(messageFromHandler.__pactMessageMetadata)
+            JSON.stringify(messageFromHandler.__pactMessageMetadata),
           );
           res.header('Pact-Message-Metadata', metadata);
           res.header('PACT_MESSAGE_METADATA', metadata);
@@ -131,7 +131,7 @@ export const createProxyMessageHandler =
             res.type(
               messageFromHandler.__pactMessageMetadata['content-type'] ||
                 messageFromHandler.__pactMessageMetadata['Content-Type'] ||
-                messageFromHandler.__pactMessageMetadata.contentType
+                messageFromHandler.__pactMessageMetadata.contentType,
             );
 
             return res.send(messageFromHandler.message);
@@ -146,7 +146,7 @@ export const createProxyMessageHandler =
 
 // Get the Express app that will run on the HTTP Proxy
 export const setupMessageProxyApplication = (
-  config: ProxyOptions
+  config: ProxyOptions,
 ): express.Express => {
   const app = express();
 

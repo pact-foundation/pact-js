@@ -2,12 +2,12 @@ import proxyquire from 'proxyquire';
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
-import { Server } from 'http';
-import serviceFactory, { LogLevel } from '@pact-foundation/pact-core';
+import type { Server } from 'node:http';
+import serviceFactory, { type LogLevel } from '@pact-foundation/pact-core';
 
 import logger from '../../common/logger';
 
-import { VerifierOptions } from './types';
+import type { VerifierOptions } from './types';
 
 chai.use(chaiAsPromised);
 
@@ -23,7 +23,7 @@ describe('Verifier', () => {
   const providerBaseUrl = 'http://not.exists';
   const opts: VerifierOptions = {
     providerBaseUrl,
-    requestFilter: (req, res, next) => {
+    requestFilter: (_req, _res, next) => {
       next();
     },
     stateHandlers: {
@@ -115,7 +115,7 @@ describe('Verifier', () => {
     describe('when no configuration has been given', () => {
       it('fails with an error', () =>
         expect(
-          () => new Verifier(undefined as unknown as VerifierOptions)
+          () => new Verifier(undefined as unknown as VerifierOptions),
         ).to.throw());
     });
 
@@ -126,6 +126,7 @@ describe('Verifier', () => {
       context('and the verification runs successfully', () => {
         it('closes the server and returns the result', () => {
           sinon
+            // biome-ignore lint/suspicious/noExplicitAny: stubbing private method for test isolation
             .stub(v, 'runProviderVerification' as any)
             .returns(Promise.resolve('done'));
 
@@ -140,6 +141,7 @@ describe('Verifier', () => {
       context('and the verification fails', () => {
         it('closes the server and returns the result', () => {
           sinon
+            // biome-ignore lint/suspicious/noExplicitAny: stubbing private method for test isolation
             .stub(v, 'runProviderVerification' as any)
             .returns(() => Promise.reject(new Error('error')));
 

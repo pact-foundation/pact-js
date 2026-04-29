@@ -1,4 +1,4 @@
-import axios, { AxiosPromise } from 'axios';
+import axios, { type AxiosPromise } from 'axios';
 
 export class UserService {
   constructor(private url: string) {}
@@ -20,7 +20,7 @@ export class UserService {
         headers: { Accept: 'application/json' },
         method: 'GET',
         url: `/users/${id}/profile`,
-      })
+      }),
     );
   };
 }

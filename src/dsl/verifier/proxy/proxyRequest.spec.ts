@@ -1,12 +1,13 @@
 import * as chai from 'chai';
-import { Readable } from 'stream';
-import { ProxyOptions } from './types';
+import { Readable } from 'node:stream';
+import type { ProxyOptions } from './types';
 import { toServerOptions as toServerOptionsAct } from './proxyRequest';
 
 const { expect } = chai;
 
 describe('#toServerOptions', () => {
-  const toServerOptions = (opts: ProxyOptions = {}, req?: { body: any }) =>
+  const toServerOptions = (opts: ProxyOptions = {}, req?: { body: unknown }) =>
+    // biome-ignore lint/suspicious/noExplicitAny: minimal request mock object to satisfy the type parameter
     toServerOptionsAct(opts, req ?? ({} as any));
 
   context('changeOrigin', () => {

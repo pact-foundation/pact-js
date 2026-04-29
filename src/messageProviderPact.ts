@@ -4,20 +4,22 @@
 
 import { omit, isEmpty } from 'lodash';
 
-import serviceFactory, { VerifierOptions } from '@pact-foundation/pact-core';
+import serviceFactory, {
+  type VerifierOptions,
+} from '@pact-foundation/pact-core';
 import express from 'express';
-import http from 'http';
+import http from 'node:http';
 import bodyParser from 'body-parser';
 import { encode as encodeBase64 } from 'js-base64';
 
-import { AddressInfo } from 'net';
-import {
+import type { AddressInfo } from 'node:net';
+import type {
   MessageDescriptor,
   MessageFromProviderWithMetadata,
   MessageProvider,
 } from './dsl/message';
 import logger, { setLogLevel } from './common/logger';
-import { PactMessageProviderOptions } from './dsl/options';
+import type { PactMessageProviderOptions } from './dsl/options';
 
 // Listens for the server start event
 // Converts event Emitter to a Promise
@@ -29,18 +31,18 @@ export const waitForServerReady = (server: http.Server): Promise<http.Server> =>
 
 // Get the Proxy we'll pass to the CLI for verification
 export const setupProxyServer = (
-  app: (request: http.IncomingMessage, response: http.ServerResponse) => void
+  app: (request: http.IncomingMessage, response: http.ServerResponse) => void,
 ): http.Server => http.createServer(app).listen();
 
 const hasMetadata = (
-  o: unknown | MessageFromProviderWithMetadata
+  o: unknown | MessageFromProviderWithMetadata,
 ): o is MessageFromProviderWithMetadata =>
   Boolean((o as MessageFromProviderWithMetadata).__pactMessageMetadata);
 
 export const providerWithMetadata =
   (
     provider: MessageProvider,
-    metadata: Record<string, string>
+    metadata: Record<string, string>,
   ): MessageProvider =>
   (descriptor: MessageDescriptor) =>
     Promise.resolve(provider(descriptor)).then((message) =>
@@ -52,7 +54,7 @@ export const providerWithMetadata =
             },
             message,
           }
-        : { __pactMessageMetadata: metadata, message }
+        : { __pactMessageMetadata: metadata, message },
     );
 
 /**
@@ -92,7 +94,7 @@ export class MessageProviderPact {
         (err) => {
           server.close();
           throw err;
-        }
+        },
       );
   }
 
@@ -115,7 +117,7 @@ export class MessageProviderPact {
   // Get the API handler for the verification CLI process to invoke on POST /*
   private setupVerificationHandler(): (
     req: express.Request,
-    res: express.Response
+    res: express.Response,
   ) => void {
     return (req, res) => {
       const message: MessageDescriptor = req.body;
@@ -129,7 +131,7 @@ export class MessageProviderPact {
         .then((messageFromHandler) => {
           if (hasMetadata(messageFromHandler)) {
             const metadata = encodeBase64(
-              JSON.stringify(messageFromHandler.__pactMessageMetadata)
+              JSON.stringify(messageFromHandler.__pactMessageMetadata),
             );
             res.header('Pact-Message-Metadata', metadata);
             res.header('PACT_MESSAGE_METADATA', metadata);
@@ -148,7 +150,7 @@ export class MessageProviderPact {
 
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
-    app.use((req, res, next) => {
+    app.use((_req, res, next) => {
       // TODO: this seems to override the metadata for content-type
       res.header('Content-Type', 'application/json; charset=utf-8');
       next();
@@ -193,8 +195,8 @@ export class MessageProviderPact {
       return Promise.reject(
         new Error(
           `No handler found for message "${message.description}".
-             Check your "handlers" configuration`
-        )
+             Check your "handlers" configuration`,
+        ),
       );
     }
 

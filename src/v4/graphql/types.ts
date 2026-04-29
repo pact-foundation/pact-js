@@ -1,8 +1,8 @@
-import { ASTNode } from 'graphql';
-import { JsonMap } from '../../common/jsonTypes';
-import { Path, TemplateHeaders, TemplateQuery } from '../../v3';
-import { V4InteractionWithRequest } from '../http/types';
-import { GraphQLVariables } from '../../common/graphQL/graphQL';
+import type { ASTNode } from 'graphql';
+import type { JsonMap } from '../../common/jsonTypes';
+import type { Path, TemplateHeaders, TemplateQuery } from '../../v3';
+import type { V4InteractionWithRequest } from '../http/types';
+import type { GraphQLVariables } from '../../common/graphQL/graphQL';
 
 export enum OperationType {
   Mutation = 'Mutation',
@@ -17,7 +17,7 @@ export interface V4UnconfiguredGraphQLInteraction {
   withRequest(
     method: string,
     path: Path,
-    builder?: V4GraphQLRequestBuilderFunc
+    builder?: V4GraphQLRequestBuilderFunc,
   ): V4GraphQLInteractionWithRequest;
 }
 export interface V4GraphQLInteractionWithRequest {
@@ -26,7 +26,7 @@ export interface V4GraphQLInteractionWithRequest {
 }
 
 export type V4GraphQLRequestBuilderFunc = (
-  builder: V4GraphQLRequestBuilder
+  builder: V4GraphQLRequestBuilder,
 ) => void;
 
 // TOOD: not sure if the Builder pattern is better or worse from a readibility

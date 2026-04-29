@@ -1,16 +1,16 @@
 import express from 'express';
 import HttpProxy from 'http-proxy';
 import bodyParser from 'body-parser';
-import http from 'http';
+import http from 'node:http';
 
-import { ProxyOptions } from './types';
+import type { ProxyOptions } from './types';
 import logger from '../../../common/logger';
 import { createProxyStateHandler } from './stateHandler/stateHandler';
 import {
   registerHookStateTracking,
   registerAfterHook,
   registerBeforeHook,
-  HooksState,
+  type HooksState,
 } from './hooks';
 import { createRequestTracer, createResponseTracer } from './tracer';
 import { createProxyMessageHandler } from './messages';
@@ -21,7 +21,7 @@ export const waitForServerReady = (server: http.Server): Promise<http.Server> =>
   new Promise((resolve, reject) => {
     server.on('listening', () => resolve(server));
     server.on('error', () =>
-      reject(new Error('Unable to start verification proxy server'))
+      reject(new Error('Unable to start verification proxy server')),
     );
   });
 
@@ -29,7 +29,7 @@ export const waitForServerReady = (server: http.Server): Promise<http.Server> =>
 export const createProxy = (
   config: ProxyOptions,
   stateSetupPath: string,
-  messageTransportPath: string
+  messageTransportPath: string,
 ): http.Server => {
   const app = express();
   const proxy = new HttpProxy();
@@ -44,7 +44,7 @@ export const createProxy = (
         'application/json; charset=utf-8',
         'application/json; charset=utf8',
       ],
-    })
+    }),
   );
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use('/{*splat}', bodyParser.raw({ type: '*/*' }));

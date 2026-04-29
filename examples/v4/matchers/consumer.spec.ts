@@ -4,7 +4,7 @@ import chaiAsPromised from 'chai-as-promised';
 import {
   SpecificationVersion,
   Pact,
-  LogLevel,
+  type LogLevel,
   Matchers,
 } from '@pact-foundation/pact';
 import axios from 'axios';
@@ -36,8 +36,8 @@ describe('V4 Matchers', () => {
                 key1: "a string we don't care about",
                 key2: 1,
               },
-              [Matchers.regex(/[a-z]{3,}[0-9]/, 'key1')]
-            )
+              [Matchers.regex(/[a-z]{3,}[0-9]/, 'key1')],
+            ),
           );
         })
         .executeTest((mockserver) => {
@@ -63,7 +63,7 @@ describe('V4 Matchers', () => {
       await pact
         .addInteraction()
         .uponReceiving(
-          'a request that ignores the keys and only checks the values'
+          'a request that ignores the keys and only checks the values',
         )
         .withRequest('GET', '/eachValueMatches')
         .willRespondWith(200, (builder) => {
@@ -74,8 +74,8 @@ describe('V4 Matchers', () => {
                 key2: 'this is another string',
                 key3: 'this, unbelievably, is YET ANOTHER, string',
               },
-              [Matchers.regex(/[a-z\s]+/, 'a string')]
-            )
+              [Matchers.regex(/[a-z\s]+/, 'a string')],
+            ),
           );
         })
         .executeTest((mockserver) => {
@@ -89,7 +89,7 @@ describe('V4 Matchers', () => {
               expect(res.data.key1).to.equal('a string');
               expect(res.data.key2).to.equal('this is another string');
               expect(res.data.key3).to.equal(
-                'this, unbelievably, is YET ANOTHER, string'
+                'this, unbelievably, is YET ANOTHER, string',
               );
             });
         });

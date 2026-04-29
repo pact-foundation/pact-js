@@ -1,15 +1,15 @@
 import logger from '../../../../common/logger';
-import {
+import type {
   ProxyOptions,
   StateFunc,
   StateFuncWithSetup,
   ProviderState,
   StateHandler,
 } from '../types';
-import { JsonMap } from '../../../../common/jsonTypes';
+import type { JsonMap } from '../../../../common/jsonTypes';
 
 const isStateFuncWithSetup = (
-  fn: StateFuncWithSetup | StateFunc
+  fn: StateFuncWithSetup | StateFunc,
 ): fn is StateFuncWithSetup =>
   (fn as StateFuncWithSetup).setup !== undefined ||
   (fn as StateFuncWithSetup).teardown !== undefined;
@@ -21,8 +21,8 @@ const transformStateFunc = (fn: StateHandler): StateFuncWithSetup =>
 // Lookup the handler based on the description
 export const setupStates = (
   state: ProviderState,
-  config: ProxyOptions
-): Promise<JsonMap | void> => {
+  config: ProxyOptions,
+): Promise<JsonMap | undefined> => {
   logger.debug(`setting up state '${JSON.stringify(state)}'`);
 
   const handler = config.stateHandlers
@@ -33,7 +33,7 @@ export const setupStates = (
     if (state.action === 'setup') {
       logger.warn(`no state handler found for state: "${state.state}"`);
     }
-    return Promise.resolve();
+    return Promise.resolve(undefined);
   }
 
   const stateFn = transformStateFunc(handler);
@@ -54,5 +54,5 @@ export const setupStates = (
       logger.debug(`unknown state action '${state.action}' received, ignoring`);
   }
 
-  return Promise.resolve();
+  return Promise.resolve(undefined);
 };

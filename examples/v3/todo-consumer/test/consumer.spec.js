@@ -1,8 +1,8 @@
-const path = require('path');
+const path = require('node:path');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const { PactV3, Matchers, XmlBuilder } = require('@pact-foundation/pact');
-const { string, eachLike, integer, boolean, atLeastOneLike, timestamp, regex } =
+const { string, eachLike, integer, boolean, atLeastOneLike, timestamp } =
   Matchers;
 const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
@@ -39,7 +39,7 @@ describe('Pact V3', () => {
                 name: string('Project 1'),
                 due: timestamp(
                   "yyyy-MM-dd'T'HH:mm:ss.SSSX",
-                  '2016-02-11T09:46:56.023Z'
+                  '2016-02-11T09:46:56.023Z',
                 ),
                 tasks: atLeastOneLike(
                   {
@@ -47,7 +47,7 @@ describe('Pact V3', () => {
                     name: string('Do the laundry'),
                     done: boolean(true),
                   },
-                  4
+                  4,
                 ),
               }),
             });
@@ -118,11 +118,11 @@ describe('Pact V3', () => {
                         done: boolean(true),
                       },
                       null,
-                      { examples: 5 }
+                      { examples: 5 },
                     );
                   });
                 },
-                { examples: 2 }
+                { examples: 2 },
               );
             }),
           });
@@ -152,17 +152,17 @@ describe('Pact V3', () => {
           .withRequestBinaryFile(
             { method: 'POST', path: '/projects/1001/images' },
             'image/jpeg',
-            path.resolve(__dirname, 'example.jpg')
+            path.resolve(__dirname, 'example.jpg'),
           )
           .willRespondWith({ status: 201 });
       });
 
       it('stores the image against the project', async () => {
-        let result = await provider.executeTest((mockserver) => {
+        const result = await provider.executeTest((mockserver) => {
           console.log('In Test Function', mockserver);
           return TodoApp.setUrl(mockserver.url).postImage(
             1001,
-            path.resolve(__dirname, 'example.jpg')
+            path.resolve(__dirname, 'example.jpg'),
           );
         });
         console.log('result from runTest', result.status);

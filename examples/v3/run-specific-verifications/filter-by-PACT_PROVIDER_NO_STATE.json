@@ -5,11 +5,9 @@
   "interactions": [
     {
       "description": "a request to be used",
-      "providerStates": [
-      ],
+      "providerStates": [],
       "request": {
-        "body": {
-        },
+        "body": {},
         "headers": {
           "Content-Type": "application/json"
         },
@@ -37,8 +35,7 @@
         }
       ],
       "request": {
-        "body": {
-        },
+        "body": {},
         "headers": {
           "Content-Type": "application/json"
         },
@@ -72,8 +69,7 @@
         }
       ],
       "request": {
-        "body": {
-        },
+        "body": {},
         "headers": {
           "Content-Type": "application/json"
         },
@@ -92,11 +88,9 @@
     },
     {
       "description": "an other request to be used",
-      "providerStates": [
-      ],
+      "providerStates": [],
       "request": {
-        "body": {
-        },
+        "body": {},
         "headers": {
           "Content-Type": "application/json"
         },

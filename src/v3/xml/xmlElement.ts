@@ -1,5 +1,5 @@
 import { isMatcher } from '../matchers';
-import { Matcher } from '../types';
+import type { Matcher } from '../types';
 import { XmlNode } from './xmlNode';
 import { XmlText } from './xmlText';
 
@@ -12,9 +12,8 @@ const modifyElementWithCallback = (el: XmlElement, cb?: XmlCallback) => {
   }
 };
 export class XmlElement extends XmlNode {
-  private attributes: XmlAttributes = new Map();
-
   children: XmlNode[] = [];
+  attributes?: XmlAttributes;
 
   constructor(public name: string) {
     super();
@@ -41,7 +40,7 @@ export class XmlElement extends XmlNode {
   public appendElement(
     name: string,
     attributes: XmlAttributes,
-    arg?: string | XmlCallback | Matcher<string>
+    arg?: string | XmlCallback | Matcher<string>,
   ): XmlElement {
     const el = new XmlElement(name).setAttributes(attributes);
     if (arg) {
@@ -61,13 +60,13 @@ export class XmlElement extends XmlNode {
       this.children.push(
         new XmlText(
           isMatcher(content) &&
-          'value' in content &&
-          content.value !== undefined &&
-          typeof content.value === 'string'
+            'value' in content &&
+            content.value !== undefined &&
+            typeof content.value === 'string'
             ? content.value
             : '',
-          content
-        )
+          content,
+        ),
       );
     } else {
       this.children.push(new XmlText(content.toString()));
@@ -79,7 +78,7 @@ export class XmlElement extends XmlNode {
     name: string,
     attributes: XmlAttributes,
     cb?: XmlCallback,
-    options: EachLikeOptions = { examples: 1 }
+    options: EachLikeOptions = { examples: 1 },
   ): XmlElement {
     const el = new XmlElement(name).setAttributes(attributes);
     modifyElementWithCallback(el, cb);

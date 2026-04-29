@@ -1,9 +1,12 @@
-import { ConsumerPact, ConsumerInteraction } from '@pact-foundation/pact-core';
+import type {
+  ConsumerPact,
+  ConsumerInteraction,
+} from '@pact-foundation/pact-core';
 import { RequestWithPluginBuilder } from './requestWithPluginBuilder';
 import { InteractionWithPluginRequest } from './interactionWithPluginRequest';
-import { Path } from '../../v3';
+import type { Path } from '../../v3';
 import { matcherValueOrString } from '../../v3/matchers';
-import {
+import type {
   V4InteractionWithPlugin,
   PactV4Options,
   PluginConfig,
@@ -17,7 +20,7 @@ export class InteractionWithPlugin implements V4InteractionWithPlugin {
     private pact: ConsumerPact,
     private interaction: ConsumerInteraction,
     private opts: PactV4Options,
-    protected cleanupFn: () => void
+    protected cleanupFn: () => void,
   ) {}
 
   // Multiple plugins are allowed
@@ -30,7 +33,7 @@ export class InteractionWithPlugin implements V4InteractionWithPlugin {
   withRequest(
     method: string,
     path: Path,
-    builder?: V4PluginRequestBuilderFunc
+    builder?: V4PluginRequestBuilderFunc,
   ): V4InteractionWithPluginRequest {
     this.interaction.withRequest(method, matcherValueOrString(path));
 
@@ -41,7 +44,7 @@ export class InteractionWithPlugin implements V4InteractionWithPlugin {
       this.pact,
       this.interaction,
       this.opts,
-      this.cleanupFn
+      this.cleanupFn,
     );
   }
 }

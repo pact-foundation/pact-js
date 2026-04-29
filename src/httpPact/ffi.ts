@@ -1,13 +1,13 @@
-import { ConsumerInteraction } from '@pact-foundation/pact-core';
+import type { ConsumerInteraction } from '@pact-foundation/pact-core';
 
 import { forEachObjIndexed } from 'ramda';
-import {
+import type {
   RequestOptions,
   ResponseOptions,
   Headers,
   Query,
 } from '../dsl/interaction';
-import { MatcherV2, matcherValueOrString } from '../dsl/matchers';
+import { type MatcherV2, matcherValueOrString } from '../dsl/matchers';
 import logger from '../common/logger';
 
 enum InteractionPart {
@@ -20,7 +20,7 @@ const CONTENT_TYPE_JSON = 'application/json';
 
 export const contentTypeFromHeaders = (
   headers: Headers | undefined,
-  defaultContentType: string
+  defaultContentType: string,
 ): string => {
   let contentType: string | MatcherV2<string> = defaultContentType;
   forEachObjIndexed((v, k) => {
@@ -34,7 +34,7 @@ export const contentTypeFromHeaders = (
 
 export const setRequestMethodAndPath = (
   interaction: ConsumerInteraction,
-  req: RequestOptions
+  req: RequestOptions,
 ): void => {
   if (req?.method && req?.path) {
     const method = req?.method;
@@ -45,7 +45,7 @@ export const setRequestMethodAndPath = (
 
 export const setQuery = (
   interaction: ConsumerInteraction,
-  query?: Query
+  query?: Query,
 ): void => {
   forEachObjIndexed((v, k) => {
     if (Array.isArray(v)) {
@@ -62,7 +62,7 @@ export const setBody = (
   part: InteractionPart,
   interaction: ConsumerInteraction,
   headers?: Headers,
-  body?: unknown
+  body?: unknown,
 ): void => {
   if (body) {
     const matcher = matcherValueOrString(body);
@@ -86,7 +86,7 @@ type TemplateHeaderArrayValue = (string | MatcherV2<string>)[];
 export const setHeaders = (
   part: InteractionPart,
   interaction: ConsumerInteraction,
-  headers?: Headers
+  headers?: Headers,
 ): void => {
   Object.entries(headers || {}).forEach(([k, v]) => {
     let values: TemplateHeaderArrayValue = [];
@@ -102,8 +102,8 @@ export const setHeaders = (
         values.forEach((h, i) => {
           logger.debug(
             `setting header request value for ${k} at index ${i} to ${JSON.stringify(
-              matcherValueOrString(h)
-            )}`
+              matcherValueOrString(h),
+            )}`,
           );
           interaction.withRequestHeader(k, i, matcherValueOrString(h));
         });
@@ -113,8 +113,8 @@ export const setHeaders = (
         values.forEach((h, i) => {
           logger.debug(
             `setting header response value for ${h} at index ${i} to ${JSON.stringify(
-              matcherValueOrString(h)
-            )}`
+              matcherValueOrString(h),
+            )}`,
           );
           interaction.withResponseHeader(k, i, matcherValueOrString(h));
         });
@@ -129,7 +129,7 @@ export const setHeaders = (
 
 export const setRequestDetails = (
   interaction: ConsumerInteraction,
-  req: RequestOptions
+  req: RequestOptions,
 ): void => {
   setRequestMethodAndPath(interaction, req);
   setBody(InteractionPart.REQUEST, interaction, req.headers, req.body);
@@ -139,7 +139,7 @@ export const setRequestDetails = (
 
 export const setResponseDetails = (
   interaction: ConsumerInteraction,
-  res: ResponseOptions
+  res: ResponseOptions,
 ): void => {
   interaction.withStatus(res.status);
 

@@ -1,8 +1,4 @@
-const {
-  Account,
-  AccountNumber,
-  accountRepository,
-} = require('./account-repository');
+const { accountRepository } = require('./account-repository');
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -17,15 +13,14 @@ server.get('/accounts/search/findOneByAccountNumberId', (req, res) => {
     .then((account) => {
       if (account) {
         res.header('Content-Type', 'application/hal+json; charset=utf-8');
-        let baseUrl =
-          req.protocol + '://' + req.hostname + ':' + req.socket.localPort;
-        let body = {
+        const baseUrl = `${req.protocol}://${req.hostname}:${req.socket.localPort}`;
+        const body = {
           _links: {
             account: {
-              href: baseUrl + '/accounts/' + account.accountNumber.id,
+              href: `${baseUrl}/accounts/${account.accountNumber.id}`,
             },
             self: {
-              href: baseUrl + '/accounts/' + account.accountNumber.id,
+              href: `${baseUrl}/accounts/${account.accountNumber.id}`,
             },
           },
           accountNumber: {
@@ -49,7 +44,7 @@ server.post('/accounts/search/findOneByAccountNumberIdInBody', (req, res) => {
   // To check and demonstrate typed responses. See https://github.com/pact-foundation/pact-reference/issues/116
   if (typeof req.body.accountNumber !== 'number') {
     console.log(
-      `accountNumber should be a number, got a ${typeof req.body.accountNumber}`
+      `accountNumber should be a number, got a ${typeof req.body.accountNumber}`,
     );
     return res.status(400);
   }
@@ -59,15 +54,14 @@ server.post('/accounts/search/findOneByAccountNumberIdInBody', (req, res) => {
     .then((account) => {
       if (account) {
         res.header('Content-Type', 'application/hal+json; charset=utf-8');
-        let baseUrl =
-          req.protocol + '://' + req.hostname + ':' + req.socket.localPort;
-        let body = {
+        const baseUrl = `${req.protocol}://${req.hostname}:${req.socket.localPort}`;
+        const body = {
           _links: {
             account: {
-              href: baseUrl + '/accounts/' + account.accountNumber.id,
+              href: `${baseUrl}/accounts/${account.accountNumber.id}`,
             },
             self: {
-              href: baseUrl + '/accounts/' + account.accountNumber.id,
+              href: `${baseUrl}/accounts/${account.accountNumber.id}`,
             },
           },
           accountNumber: {
@@ -100,7 +94,7 @@ server.get('/data/xml/:id', (req, res) => {
 
 server.get('/data/:id', (req, res) => {
   res.header('Content-Type', 'text/plain; charset=utf-8');
-  res.send('data: testData, id: ' + req.params.id);
+  res.send(`data: testData, id: ${req.params.id}`);
 });
 
 module.exports = {

@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('node:path');
 const { Verifier } = require('@pact-foundation/pact');
 const { accountService } = require('./account-service');
 const {
@@ -17,7 +17,7 @@ describe('Account Service', () => {
   });
 
   it('validates the expectations of Transaction Service', () => {
-    let opts = {
+    const opts = {
       // if the provider name is set, and we have PACT_BROKER_BASE_URL plus env var creds set
       // it will automatically attempt to retrieve from a pact broker via the default consumer version selectors.
       // if we are verifying a pact directory source, we do not need to add the provider name
@@ -30,16 +30,16 @@ describe('Account Service', () => {
       stateHandlers: {
         'Account Test001 exists': {
           setup: (params) => {
-            let account = new Account(
+            const account = new Account(
               0,
               0,
               'Test001',
               params.accountRef,
               new AccountNumber(0),
               Date.now(),
-              Date.now()
+              Date.now(),
             );
-            let persistedAccount = accountRepository.save(account);
+            const persistedAccount = accountRepository.save(account);
             return Promise.resolve({
               accountNumber: persistedAccount.accountNumber.id,
             });
@@ -57,7 +57,7 @@ describe('Account Service', () => {
       pactUrls: [
         path.resolve(
           process.cwd(),
-          './pacts/TransactionService-AccountService.json'
+          './pacts/TransactionService-AccountService.json',
         ),
       ],
     };

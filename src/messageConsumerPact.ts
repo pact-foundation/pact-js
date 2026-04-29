@@ -4,13 +4,13 @@
 
 import { isEmpty } from 'lodash';
 import serviceFactory, {
-  AsynchronousMessage,
+  type AsynchronousMessage,
   makeConsumerAsyncMessagePact,
-  ConsumerMessagePact,
+  type ConsumerMessagePact,
 } from '@pact-foundation/pact-core';
 import { forEachObjIndexed } from 'ramda';
-import { AnyJson } from './common/jsonTypes';
-import {
+import type { AnyJson } from './common/jsonTypes';
+import type {
   Metadata,
   Message,
   MessageConsumer,
@@ -18,7 +18,7 @@ import {
   ProviderState,
 } from './dsl/message';
 import logger, { setLogLevel } from './common/logger';
-import { MessageConsumerOptions } from './dsl/options';
+import type { MessageConsumerOptions } from './dsl/options';
 import ConfigurationError from './errors/configurationError';
 import { version as pactPackageVersion } from '../package.json';
 import { numberToSpec } from './common/spec';
@@ -53,7 +53,7 @@ export class MessageConsumerPact {
       config.consumer,
       config.provider,
       numberToSpec(config.spec, SpecificationVersion.SPECIFICATION_VERSION_V3),
-      config.logLevel
+      config.logLevel,
     );
     this.pact.addMetadata('pact-js', 'version', pactPackageVersion);
     this.message = this.pact.newMessage('');
@@ -89,7 +89,7 @@ export class MessageConsumerPact {
   public expectsToReceive(description: string): MessageConsumerPact {
     if (isEmpty(description)) {
       throw new ConfigurationError(
-        'You must provide a description for the Message.'
+        'You must provide a description for the Message.',
       );
     }
     this.message.expectsToReceive(description);
@@ -109,7 +109,7 @@ export class MessageConsumerPact {
   public withContent(content: unknown): MessageConsumerPact {
     if (isEmpty(content)) {
       throw new ConfigurationError(
-        'You must provide a valid JSON document or primitive for the Message.'
+        'You must provide a valid JSON document or primitive for the Message.',
       );
     }
     this.message.withContents(JSON.stringify(content), 'application/json');
@@ -128,7 +128,7 @@ export class MessageConsumerPact {
    */
   public withTextContent(
     content: string,
-    contentType: string
+    contentType: string,
   ): MessageConsumerPact {
     this.message.withContents(content, contentType);
     this.state.contentType = ContentType.STRING;
@@ -147,7 +147,7 @@ export class MessageConsumerPact {
    */
   public withBinaryContent(
     content: Buffer,
-    contentType: string
+    contentType: string,
   ): MessageConsumerPact {
     this.message.withBinaryContents(content, contentType);
     this.state.contentType = ContentType.BINARY;
@@ -164,7 +164,7 @@ export class MessageConsumerPact {
   public withMetadata(metadata: Metadata): MessageConsumerPact {
     if (isEmpty(metadata)) {
       throw new ConfigurationError(
-        'You must provide valid metadata for the Message, or none at all'
+        'You must provide valid metadata for the Message, or none at all',
       );
     }
 
@@ -188,7 +188,7 @@ export class MessageConsumerPact {
       .then(() => {
         this.pact.writePactFile(
           this.config.dir ?? DEFAULT_PACT_DIR,
-          this.config.pactfileWriteMode !== 'overwrite'
+          this.config.pactfileWriteMode !== 'overwrite',
         );
       })
       .finally(() => {
@@ -208,7 +208,7 @@ export class MessageConsumerPact {
     }
 
     logger.debug(
-      `rehydrated message body into correct type: ${reified.contents}`
+      `rehydrated message body into correct type: ${reified.contents}`,
     );
 
     return reified;
@@ -229,7 +229,7 @@ export class MessageConsumerPact {
 // bodyHandler takes a synchronous function and returns
 // a wrapped function that accepts a Message and returns a Promise
 export function synchronousBodyHandler<R>(
-  handler: (body: AnyJson | Buffer) => R
+  handler: (body: AnyJson | Buffer) => R,
 ): MessageConsumer {
   return (m: ConcreteMessage): Promise<R> => {
     const body = m.contents;
@@ -249,7 +249,7 @@ export function synchronousBodyHandler<R>(
 // a wrapped function that accepts a Message and returns a Promise
 // TODO: move this into its own package and re-export?
 export function asynchronousBodyHandler<R>(
-  handler: (body: AnyJson | Buffer) => Promise<R>
+  handler: (body: AnyJson | Buffer) => Promise<R>,
 ): MessageConsumer {
   return (m: ConcreteMessage) => handler(m.contents);
 }

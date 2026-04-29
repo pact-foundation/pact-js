@@ -1,5 +1,8 @@
-import { ConsumerPact, ConsumerInteraction } from '@pact-foundation/pact-core';
-import { ASTNode } from 'graphql';
+import type {
+  ConsumerPact,
+  ConsumerInteraction,
+} from '@pact-foundation/pact-core';
+import type { ASTNode } from 'graphql';
 import { isUndefined } from 'lodash';
 import { reject } from 'ramda';
 
@@ -8,11 +11,11 @@ import {
   validateQuery,
 } from '../../common/graphQL/graphQL';
 import { InteractionWithRequest } from '../http/interactionWithRequest';
-import { PactV4Options, V4InteractionWithRequest } from '../http/types';
+import type { PactV4Options, V4InteractionWithRequest } from '../http/types';
 import {
-  V4GraphQLInteractionWithRequest,
+  type V4GraphQLInteractionWithRequest,
   OperationType,
-  GraphqlRequest,
+  type GraphqlRequest,
 } from './types';
 import { regex } from '../../v3/matchers';
 
@@ -25,7 +28,7 @@ export class GraphQLInteractionWithRequest
     protected interaction: ConsumerInteraction,
     protected opts: PactV4Options,
     protected cleanupFn: () => void,
-    protected graphQLRequest: GraphqlRequest
+    protected graphQLRequest: GraphqlRequest,
   ) {}
 
   /**
@@ -58,7 +61,7 @@ export class GraphQLInteractionWithRequest
 
   private setQueryDetails(
     query: string | ASTNode,
-    type: OperationType
+    type: OperationType,
   ): V4InteractionWithRequest {
     const validatedQuery = validateQuery(query, type);
 
@@ -68,16 +71,16 @@ export class GraphQLInteractionWithRequest
           operationName: this.graphQLRequest.operation,
           query: regex(escapeGraphQlQuery(validatedQuery), validatedQuery),
           variables: this.graphQLRequest.variables,
-        })
+        }),
       ),
-      'application/json'
+      'application/json',
     );
 
     return new InteractionWithRequest(
       this.pact,
       this.interaction,
       this.opts,
-      this.cleanupFn
+      this.cleanupFn,
     );
   }
 }

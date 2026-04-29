@@ -5,8 +5,7 @@
   "interactions": [
     {
       "description": "a request to be used",
-      "providerStates": [
-      ],
+      "providerStates": [],
       "request": {
         "method": "GET",
         "path": "/pass"
@@ -23,8 +22,7 @@
     },
     {
       "description": "a request to be skipped",
-      "providerStates": [
-      ],
+      "providerStates": [],
       "request": {
         "method": "GET",
         "path": "/fail"
@@ -41,8 +39,7 @@
     },
     {
       "description": "a request to be used because it's description is part of what is given in `PACT_DESCRIPTION`",
-      "providerStates": [
-      ],
+      "providerStates": [],
       "request": {
         "method": "GET",
         "path": "/pass"

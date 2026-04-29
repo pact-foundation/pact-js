@@ -20,10 +20,10 @@ app.use(
   createHandler({
     rootValue: root,
     schema,
-  })
+  }),
 );
 
-export function start(): any {
+export function start(): void {
   // tslint:disable:no-console
   app.listen(4000, () => console.log('Now browse to localhost:4000/graphql'));
 }

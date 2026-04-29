@@ -1,17 +1,17 @@
-import { ASTNode } from 'graphql';
+import type { ASTNode } from 'graphql';
 import { isUndefined } from 'lodash';
 import { reject } from 'ramda';
 
 import { ConfigurationError } from '../../common/graphQL/configurationError';
 import { PactV3 } from '../pact';
-import { V3Request, V3Response } from '../types';
+import type { V3Request, V3Response } from '../types';
 import { OperationType } from '../../common/graphQL/types';
-import { JsonMap } from '../../common/jsonTypes';
+import type { JsonMap } from '../../common/jsonTypes';
 
 import { regex } from '../matchers';
 import {
   escapeGraphQlQuery,
-  GraphQLVariables,
+  type GraphQLVariables,
   validateQuery,
 } from '../../common/graphQL/graphQL';
 
@@ -142,6 +142,8 @@ export class GraphQLPactV3 extends PactV3 {
       throw new ConfigurationError('You must provide a GraphQL request.');
     }
 
+    this.req.contentType ||= 'application/json';
+    this.req.method ||= 'POST';
     this.req = {
       ...this.req,
       body: reject(isUndefined, {
@@ -150,9 +152,9 @@ export class GraphQLPactV3 extends PactV3 {
         variables: this.variables,
       }),
       headers: {
-        'Content-Type': (this.req.contentType ||= 'application/json'),
+        'Content-Type': this.req.contentType,
       },
-      method: (this.req.method ||= 'POST'),
+      method: this.req.method,
     };
 
     super.withRequest(this.req);

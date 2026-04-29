@@ -2,8 +2,8 @@ import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinonChai from 'sinon-chai';
 import express from 'express';
-import http from 'http';
-import { Message } from './dsl/message';
+import http from 'node:http';
+import type { Message } from './dsl/message';
 import {
   MessageProviderPact,
   setupProxyServer,
@@ -72,9 +72,9 @@ describe('MessageProvider', () => {
   describe('#setupVerificationHandler', () => {
     describe('when their is a valid setup', () => {
       it('creates a valid express handler', (done) => {
-        const setupVerificationHandler = (
-          provider as any
-        ).setupVerificationHandler.bind(provider)();
+        const setupVerificationHandler =
+          // biome-ignore lint/suspicious/noExplicitAny: accessing private method for test coverage
+          (provider as any).setupVerificationHandler.bind(provider)();
         const req = { body: successfulMessage };
         const res = {
           json: () => done(), // Expect a response
@@ -86,9 +86,9 @@ describe('MessageProvider', () => {
 
     describe('when their is an invalid setup', () => {
       it('creates a valid express handler that rejects the message', (done) => {
-        const setupVerificationHandler = (
-          provider as any
-        ).setupVerificationHandler.bind(provider)();
+        const setupVerificationHandler =
+          // biome-ignore lint/suspicious/noExplicitAny: accessing private method for test coverage
+          (provider as any).setupVerificationHandler.bind(provider)();
         const req = { body: nonExistentMessage };
         const res = {
           status: (status: number) => {
@@ -108,15 +108,17 @@ describe('MessageProvider', () => {
   describe('#findHandler', () => {
     describe('when given a handler that exists', () => {
       it('returns a Handler object', () => {
+        // biome-ignore lint/suspicious/noExplicitAny: accessing private method for test coverage
         const findHandler = (provider as any).findHandler.bind(provider);
         return expect(findHandler(successfulMessage)).to.eventually.be.a(
-          'function'
+          'function',
         );
       });
     });
 
     describe('when given a handler that does not exist', () => {
       it('returns a failed promise', () => {
+        // biome-ignore lint/suspicious/noExplicitAny: accessing private method for test coverage
         const findHandler = (provider as any).findHandler.bind(provider);
         return expect(findHandler('doesnotexist')).to.eventually.be.rejected;
       });
@@ -126,6 +128,7 @@ describe('MessageProvider', () => {
   describe('#setupStates', () => {
     describe('when given a handler that exists', () => {
       it('returns values of all resolved handlers', () => {
+        // biome-ignore lint/suspicious/noExplicitAny: accessing private method for test coverage
         const setupStates = (provider as any).setupStates.bind(provider);
         return expect(setupStates(successfulMessage)).to.eventually.deep.equal([
           'yay',
@@ -133,13 +136,14 @@ describe('MessageProvider', () => {
       });
 
       it('passes params to the handler', () => {
+        // biome-ignore lint/suspicious/noExplicitAny: accessing private method for test coverage
         const setupStates = (provider as any).setupStates.bind(provider);
         return expect(
           setupStates({
             providerStates: [
               { name: 'some state with params', params: { foo: 'bar' } },
             ],
-          })
+          }),
         ).to.eventually.deep.equal([
           'name: some state with params, params: {"foo":"bar"}',
         ]);
@@ -152,9 +156,10 @@ describe('MessageProvider', () => {
           messageProviders: {},
           provider: 'myprovider',
         });
+        // biome-ignore lint/suspicious/noExplicitAny: accessing private method for test coverage
         const findStateHandler = (provider as any).setupStates.bind(provider);
         return expect(
-          findStateHandler(unsuccessfulMessage)
+          findStateHandler(unsuccessfulMessage),
         ).to.eventually.deep.equal([]);
       });
     });
@@ -182,9 +187,9 @@ describe('MessageProvider', () => {
 
   describe('#setupProxyApplication', () => {
     it('returns a valid express app', () => {
-      const setupProxyApplication = (
-        provider as any
-      ).setupProxyApplication.bind(provider);
+      const setupProxyApplication =
+        // biome-ignore lint/suspicious/noExplicitAny: accessing private method for test coverage
+        (provider as any).setupProxyApplication.bind(provider);
       expect(setupProxyApplication().listen).to.be.a('function');
     });
   });

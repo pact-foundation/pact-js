@@ -1,7 +1,10 @@
-import { ConsumerPact, ConsumerInteraction } from '@pact-foundation/pact-core';
+import type {
+  ConsumerPact,
+  ConsumerInteraction,
+} from '@pact-foundation/pact-core';
 import { InteractionWithResponse } from './interactionWithResponse';
 import { ResponseBuilder } from './responseBuilder';
-import {
+import type {
   V4InteractionWithRequest,
   PactV4Options,
   V4ResponseBuilderFunc,
@@ -14,12 +17,12 @@ export class InteractionWithRequest implements V4InteractionWithRequest {
     private pact: ConsumerPact,
     private interaction: ConsumerInteraction,
     private opts: PactV4Options,
-    protected cleanupFn: () => void
+    protected cleanupFn: () => void,
   ) {}
 
   willRespondWith(
     status: number,
-    builder?: V4ResponseBuilderFunc
+    builder?: V4ResponseBuilderFunc,
   ): V4InteractionWithResponse {
     this.interaction.withStatus(status);
 

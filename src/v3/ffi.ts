@@ -7,11 +7,11 @@ type TemplateHeaderArrayValue = string[] | Matcher<string>[];
 
 export const setRequestDetails = (
   interaction: ConsumerInteraction,
-  req: V3Request
+  req: V3Request,
 ): void => {
   interaction.withRequest(
     req.method,
-    MatchersV3.matcherValueOrString(req.path)
+    MatchersV3.matcherValueOrString(req.path),
   );
   forEachObjIndexed((v, k) => {
     if (Array.isArray(v)) {
@@ -19,7 +19,7 @@ export const setRequestDetails = (
         interaction.withRequestHeader(
           k,
           index,
-          MatchersV3.matcherValueOrString(header)
+          MatchersV3.matcherValueOrString(header),
         );
       });
     } else {
@@ -40,7 +40,7 @@ export const setRequestDetails = (
 
 export const setResponseDetails = (
   interaction: ConsumerInteraction,
-  res: V3Response
+  res: V3Response,
 ): void => {
   interaction.withStatus(res.status);
 
@@ -50,7 +50,7 @@ export const setResponseDetails = (
         interaction.withResponseHeader(
           k,
           index,
-          MatchersV3.matcherValueOrString(header)
+          MatchersV3.matcherValueOrString(header),
         );
       });
     } else {
@@ -61,7 +61,7 @@ export const setResponseDetails = (
 
 export const contentTypeFromHeaders = (
   headers: TemplateHeaders | undefined,
-  defaultContentType: string
+  defaultContentType: string,
 ): string => {
   let contentType: string | Matcher<string> = defaultContentType;
   forEachObjIndexed((v, k) => {

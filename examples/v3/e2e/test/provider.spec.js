@@ -3,7 +3,6 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const { server, importData, animalRepository } = require('../provider.js');
-const path = require('path');
 const LOG_LEVEL = process.env.LOG_LEVEL || 'INFO';
 
 const app = server.listen(8081, () => {
@@ -21,14 +20,14 @@ describe('Pact Verification', () => {
       logLevel: LOG_LEVEL,
       provider: 'Animal Profile Service V3',
       providerBaseUrl: 'http://localhost:8081',
-      requestFilter: (req, res, next) => {
+      requestFilter: (req, _res, next) => {
         console.log(
-          'Middleware invoked before provider API - injecting Authorization token'
+          'Middleware invoked before provider API - injecting Authorization token',
         );
-        req.headers['MY_SPECIAL_HEADER'] = 'my special value';
+        req.headers.MY_SPECIAL_HEADER = 'my special value';
 
         // e.g. ADD Bearer token
-        req.headers['authorization'] = `Bearer ${token}`;
+        req.headers.authorization = `Bearer ${token}`;
         next();
       },
 

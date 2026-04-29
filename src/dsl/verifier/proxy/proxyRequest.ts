@@ -1,8 +1,8 @@
 import { HttpsProxyAgent } from 'https-proxy-agent';
-import { ServerOptions } from 'http-proxy';
-import { Readable } from 'stream';
-import { IncomingMessage } from 'http';
-import { ProxyOptions } from './types';
+import type { ServerOptions } from 'http-proxy';
+import { Readable } from 'node:stream';
+import type { IncomingMessage } from 'node:http';
+import type { ProxyOptions } from './types';
 import { parseBody } from './parseBody';
 
 // A base URL is always needed for the proxy, even
@@ -12,7 +12,7 @@ const defaultBaseURL = () => 'http://127.0.0.1/';
 
 export const toServerOptions = (
   config: ProxyOptions,
-  req: IncomingMessage
+  req: IncomingMessage,
 ): ServerOptions => {
   // Provide direct support for standard proxy configuration
   const systemProxy = process.env.HTTPS_PROXY || process.env.HTTP_PROXY;

@@ -2,7 +2,7 @@ import { SpecificationVersion } from '../v3';
 
 export const numberToSpec = (
   spec?: number,
-  defaultSpec: SpecificationVersion = SpecificationVersion.SPECIFICATION_VERSION_V2
+  defaultSpec: SpecificationVersion = SpecificationVersion.SPECIFICATION_VERSION_V2,
 ): SpecificationVersion => {
   if (!spec) {
     return defaultSpec;

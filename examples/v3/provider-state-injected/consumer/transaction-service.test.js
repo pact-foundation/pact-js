@@ -1,4 +1,6 @@
-const path = require('path');
+/** biome-ignore-all lint/suspicious/noTemplateCurlyInString: The syntax ${...}
+ * is used by Pact, and should not be handled within JS. */
+const path = require('node:path');
 const transactionService = require('./transaction-service');
 const { PactV3, Matchers, XmlBuilder } = require('@pact-foundation/pact');
 const { expect } = require('chai');
@@ -33,11 +35,11 @@ describe('Transaction service - create a new transaction for an account', () => 
           accountRef: string('Test001'),
           createdDate: datetime(
             "yyyy-MM-dd'T'HH:mm:ss.SSSX",
-            '2017-12-04T14:47:18.582Z'
+            '2017-12-04T14:47:18.582Z',
           ),
           lastModifiedDate: datetime(
             "yyyy-MM-dd'T'HH:mm:ss.SSSX",
-            '2017-12-04T14:47:18.582Z'
+            '2017-12-04T14:47:18.582Z',
           ),
           accountNumber: {
             id: fromProviderState('${accountNumber}', 100),
@@ -94,11 +96,11 @@ describe('Transaction service - create a new transaction for an account', () => 
           accountRef: string('Test001'),
           createdDate: datetime(
             "yyyy-MM-dd'T'HH:mm:ss.SSSX",
-            '2017-12-04T14:47:18.582Z'
+            '2017-12-04T14:47:18.582Z',
           ),
           lastModifiedDate: datetime(
             "yyyy-MM-dd'T'HH:mm:ss.SSSX",
-            '2017-12-04T14:47:18.582Z'
+            '2017-12-04T14:47:18.582Z',
           ),
           accountNumber: {
             id: fromProviderState('${accountNumber}', 100),
@@ -201,7 +203,7 @@ describe('Transaction service - create a new transaction for an account', () => 
       transactionService.setAccountServiceUrl(mockserver.url);
       return transactionService.getXml(42).then((result) => {
         expect(result.data).to.equal(
-          `<?xml version='1.0'?><root xmlns:h='http://www.w3.org/TR/html4/'><data><h:data>random</h:data><id>42</id></data></root>`
+          `<?xml version='1.0'?><root xmlns:h='http://www.w3.org/TR/html4/'><data><h:data>random</h:data><id>42</id></data></root>`,
         );
       });
     });

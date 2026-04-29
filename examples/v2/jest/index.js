@@ -1,5 +1,3 @@
-'use strict';
-
 const axios = require('axios');
 
 exports.getMeDogs = (endpoint) => {

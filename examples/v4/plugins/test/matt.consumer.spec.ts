@@ -1,8 +1,12 @@
 /* tslint:disable:no-unused-expression no-empty */
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import { SpecificationVersion, Pact, LogLevel } from '@pact-foundation/pact';
-import net = require('net');
+import {
+  SpecificationVersion,
+  Pact,
+  type LogLevel,
+} from '@pact-foundation/pact';
+import net = require('node:net');
 import { generateMattMessage, parseMattMessage } from '../protocol';
 import axios from 'axios';
 
@@ -111,8 +115,8 @@ describe('Plugins - Matt Protocol', () => {
             const response = parseMattMessage(
               Buffer.from(
                 String(message?.contents?.content || ''),
-                'base64'
-              ).toString()
+                'base64',
+              ).toString(),
             );
             expect(response).to.deep.eq('tcpworld');
           });
@@ -124,14 +128,14 @@ describe('Plugins - Matt Protocol', () => {
 const sendMattMessageTCP = (
   message: string,
   host: string,
-  port: number
+  port: number,
 ): Promise<string> => {
   const socket = net.connect({
     port: port,
     host: host,
   });
 
-  const res = socket.write(generateMattMessage(message) + '\n');
+  const res = socket.write(`${generateMattMessage(message)}\n`);
 
   if (!res) {
     throw Error('unable to connect to host');

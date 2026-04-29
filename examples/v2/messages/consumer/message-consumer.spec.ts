@@ -4,12 +4,12 @@ import {
   MatchersV2 as Matchers,
   MessageConsumerPact,
   synchronousBodyHandler,
-  LogLevel,
+  type LogLevel,
 } from '@pact-foundation/pact';
 const { like, term } = Matchers;
 import { dogApiHandler } from './dog-handler';
 
-const path = require('path');
+const path = require('node:path');
 const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 describe('Message consumer tests', () => {

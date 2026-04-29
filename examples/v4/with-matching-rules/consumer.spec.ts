@@ -9,7 +9,7 @@
 
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import { Pact, Matchers, Rules } from '@pact-foundation/pact';
+import { Pact, Matchers, type Rules } from '@pact-foundation/pact';
 import axios from 'axios';
 
 chai.use(chaiAsPromised);
@@ -70,7 +70,7 @@ describe('Pact V4 Consumer Test Using Matching Rules', () => {
             headers: {
               'Content-Type': 'application/json',
             },
-          }
+          },
         );
 
         expect(response.status).to.eq(200);

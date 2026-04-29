@@ -1,5 +1,5 @@
 import { ResponseBuilder } from './responseBuilder';
-import { V4ResponseWithPluginBuilder, V4ResponseBuilder } from './types';
+import type { V4ResponseWithPluginBuilder, V4ResponseBuilder } from './types';
 
 export class ResponseWithPluginBuilder
   extends ResponseBuilder
@@ -8,7 +8,7 @@ export class ResponseWithPluginBuilder
   pluginContents(contentType: string, contents: string): V4ResponseBuilder {
     this.interaction.withPluginResponseInteractionContents(
       contentType,
-      contents
+      contents,
     );
     return this;
   }

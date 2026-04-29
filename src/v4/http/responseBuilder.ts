@@ -1,9 +1,9 @@
-import { ConsumerInteraction } from '@pact-foundation/pact-core';
+import type { ConsumerInteraction } from '@pact-foundation/pact-core';
 import { forEachObjIndexed } from 'ramda';
 import { readBinaryData } from '.';
-import { TemplateHeaders, Rules } from '../../v3';
+import type { TemplateHeaders, Rules } from '../../v3';
 import { matcherValueOrString } from '../../v3/matchers';
-import { V4ResponseBuilder } from './types';
+import type { V4ResponseBuilder } from './types';
 import { convertRulesToFFI, validateRules } from '../../common/matchingRules';
 
 export class ResponseBuilder implements V4ResponseBuilder {
@@ -24,7 +24,7 @@ export class ResponseBuilder implements V4ResponseBuilder {
   jsonBody(body: unknown): V4ResponseBuilder {
     this.interaction.withResponseBody(
       matcherValueOrString(body),
-      'application/json'
+      'application/json',
     );
     return this;
   }
@@ -50,13 +50,13 @@ export class ResponseBuilder implements V4ResponseBuilder {
     contentType: string,
     file: string,
     mimePartName: string,
-    boundary?: string
+    boundary?: string,
   ): V4ResponseBuilder {
     this.interaction.withResponseMultipartBody(
       contentType,
       file,
       mimePartName,
-      boundary
+      boundary,
     );
 
     return this;

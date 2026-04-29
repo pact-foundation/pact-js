@@ -3,19 +3,19 @@
  * @module ProviderVerifier
  */
 import serviceFactory, {
-  VerifierOptions as PactCoreVerifierOptions,
+  type VerifierOptions as PactCoreVerifierOptions,
 } from '@pact-foundation/pact-core';
 import { omit, isEmpty } from 'lodash';
-import http from 'http';
-import url from 'url';
+import type * as http from 'node:http';
+import url from 'node:url';
 
-import { AddressInfo } from 'net';
+import type { AddressInfo } from 'node:net';
 import logger, { setLogLevel } from '../../common/logger';
 
 import ConfigurationError from '../../errors/configurationError';
 import { localAddresses } from '../../common/net';
 import { createProxy, waitForServerReady } from './proxy';
-import { VerifierOptions } from './types';
+import type { VerifierOptions } from './types';
 
 export class Verifier {
   private address = 'http://127.0.0.1';
@@ -41,7 +41,7 @@ export class Verifier {
     this.deprecatedFields.forEach((f) => {
       if (this.config[f]) {
         logger.warn(
-          `${f} is deprecated, and will be removed in future versions`
+          `${f} is deprecated, and will be removed in future versions`,
         );
       }
     });
@@ -60,7 +60,7 @@ export class Verifier {
       if (!this.isLocalVerification()) {
         this.config.changeOrigin = true;
         logger.debug(
-          `non-local provider address ${this.config.providerBaseUrl} detected, setting 'changeOrigin' to 'true'. This property can be overridden.`
+          `non-local provider address ${this.config.providerBaseUrl} detected, setting 'changeOrigin' to 'true'. This property can be overridden.`,
         );
       }
     }
@@ -71,7 +71,7 @@ export class Verifier {
       !this?.config?.transports
     ) {
       throw new ConfigurationError(
-        "'providerBaseUrl' is mandatory if no 'messageProviders' or 'transports' given"
+        "'providerBaseUrl' is mandatory if no 'messageProviders' or 'transports' given",
       );
     }
   }
@@ -86,7 +86,7 @@ export class Verifier {
 
     if (isEmpty(this.config)) {
       return Promise.reject(
-        new ConfigurationError('No configuration provided to verifier')
+        new ConfigurationError('No configuration provided to verifier'),
       );
     }
 
@@ -94,7 +94,7 @@ export class Verifier {
     const server = createProxy(
       this.config,
       this.stateSetupPath,
-      this.messageTransportPath
+      this.messageTransportPath,
     );
     logger.trace(`proxy created, waiting for startup`);
 
@@ -102,7 +102,7 @@ export class Verifier {
     return waitForServerReady(server)
       .then((passOn) => {
         logger.trace(
-          `Proxy is ready at ${(server.address() as AddressInfo).address}`
+          `Proxy is ready at ${(server.address() as AddressInfo).address}`,
         );
         return passOn;
       })

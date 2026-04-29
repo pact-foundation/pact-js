@@ -8,18 +8,18 @@ server.use(bodyParser.json());
 server.use(
   bodyParser.urlencoded({
     extended: true,
-  })
+  }),
 );
-server.use((req, res, next) => {
+server.use((_req, res, next) => {
   res.header('Content-Type', 'application/json; charset=utf-8');
   next();
 });
 
-server.get('/pass', (req, res) => {
+server.get('/pass', (_req, res) => {
   res.json({ result: 'OK' });
   res.end();
 });
-server.get('/fail', (req, res) => {
+server.get('/fail', (_req, res) => {
   res.json({ result: 'FAIL' });
   res.end();
 });

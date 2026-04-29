@@ -4,7 +4,7 @@
  * @private
  */
 
-import net from 'net';
+import net from 'node:net';
 
 export const localAddresses = ['127.0.0.1', 'localhost', '0.0.0.0', '::1'];
 
@@ -27,7 +27,7 @@ export const portCheck = (port: number, host: string): Promise<void> =>
 
 export const isPortAvailable = (port: number, host: string): Promise<void> =>
   Promise.allSettled(
-    localAddresses.map((localHost) => portCheck(port, localHost))
+    localAddresses.map((localHost) => portCheck(port, localHost)),
   ).then((settledPortChecks) => {
     // if every port check failed, then fail the `isPortAvailable` check
     if (settledPortChecks.every((result) => result.status === 'rejected')) {

@@ -1,5 +1,5 @@
-import express from 'express';
-import { pickBy, identity, reduce, Dictionary } from 'lodash';
+import type express from 'express';
+import { pickBy, identity, reduce, type Dictionary } from 'lodash';
 
 import logger from '../../../common/logger';
 
@@ -12,16 +12,16 @@ const removeEmptyResponseProperties = (body: string, res: express.Response) =>
         (
           acc: Dictionary<string | number | string[] | undefined>,
           val,
-          index
+          index,
         ) => {
           acc[index] = val;
           return acc;
         },
-        {}
+        {},
       ),
       status: res.statusCode,
     },
-    identity
+    identity,
   );
 
 const removeEmptyRequestProperties = (req: express.Request) =>
@@ -32,7 +32,7 @@ const removeEmptyRequestProperties = (req: express.Request) =>
       method: req.method,
       path: req.path,
     },
-    identity
+    identity,
   );
 
 export const createResponseTracer =
@@ -40,19 +40,19 @@ export const createResponseTracer =
     const oldWrite = res.write.bind(res) as (
       chunk: string | Buffer,
       encodingOrCb?: BufferEncoding | ((error?: Error | null) => void),
-      callback?: (error?: Error | null) => void
+      callback?: (error?: Error | null) => void,
     ) => boolean;
     const oldEnd = res.end.bind(res) as (
       chunkOrCb?: string | Buffer | (() => void),
       encodingOrCb?: BufferEncoding | (() => void),
-      cb?: () => void
+      cb?: () => void,
     ) => express.Response;
     const chunks: Buffer[] = [];
 
     res.write = ((
       chunk: string | Buffer,
       encodingOrCb?: BufferEncoding | ((error?: Error | null) => void),
-      callback?: (error?: Error | null) => void
+      callback?: (error?: Error | null) => void,
     ) => {
       chunks.push(Buffer.from(chunk));
       if (typeof encodingOrCb === 'function') {
@@ -64,7 +64,7 @@ export const createResponseTracer =
     res.end = ((
       chunkOrCb?: string | Buffer | (() => void),
       encodingOrCb?: BufferEncoding | (() => void),
-      cb?: () => void
+      cb?: () => void,
     ) => {
       const chunk = typeof chunkOrCb === 'function' ? undefined : chunkOrCb;
       if (chunk) {
@@ -73,8 +73,8 @@ export const createResponseTracer =
       const body = Buffer.concat(chunks).toString('utf8');
       logger.debug(
         `outgoing response: ${JSON.stringify(
-          removeEmptyResponseProperties(body, res)
-        )}`
+          removeEmptyResponseProperties(body, res),
+        )}`,
       );
       if (typeof chunkOrCb === 'function') {
         return oldEnd(chunkOrCb);
@@ -92,7 +92,7 @@ export const createResponseTracer =
 export const createRequestTracer =
   (): express.RequestHandler => (req, _, next) => {
     logger.debug(
-      `incoming request: ${JSON.stringify(removeEmptyRequestProperties(req))}`
+      `incoming request: ${JSON.stringify(removeEmptyRequestProperties(req))}`,
     );
     next();
   };

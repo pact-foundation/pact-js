@@ -1,7 +1,10 @@
-import { ConsumerPact, ConsumerInteraction } from '@pact-foundation/pact-core';
+import type {
+  ConsumerPact,
+  ConsumerInteraction,
+} from '@pact-foundation/pact-core';
 import { InteractionWithPluginResponse } from './interactionWithPluginResponse';
 import { ResponseWithPluginBuilder } from './responseWithPluginBuilder';
-import {
+import type {
   V4InteractionWithPluginRequest,
   PactV4Options,
   V4PluginResponseBuilderFunc,
@@ -16,12 +19,12 @@ export class InteractionWithPluginRequest
     private pact: ConsumerPact,
     private interaction: ConsumerInteraction,
     private opts: PactV4Options,
-    protected cleanupFn: () => void
+    protected cleanupFn: () => void,
   ) {}
 
   willRespondWith(
     status: number,
-    builder?: V4PluginResponseBuilderFunc
+    builder?: V4PluginResponseBuilderFunc,
   ): V4InteractionWithPluginResponse {
     this.interaction.withStatus(status);
 
@@ -32,7 +35,7 @@ export class InteractionWithPluginRequest
     return new InteractionWithPluginResponse(
       this.pact,
       this.opts,
-      this.cleanupFn
+      this.cleanupFn,
     );
   }
 }

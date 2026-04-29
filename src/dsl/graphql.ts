@@ -5,13 +5,13 @@
  */
 import { isNil, extend, isUndefined } from 'lodash';
 import { reject } from 'ramda';
-import { Interaction, InteractionStateComplete } from './interaction';
+import { Interaction, type InteractionStateComplete } from './interaction';
 import { regex } from './matchers';
 import GraphQLQueryError from '../errors/graphQLQueryError';
 import ConfigurationError from '../errors/configurationError';
 import {
   escapeGraphQlQuery,
-  GraphQLVariables,
+  type GraphQLVariables,
   validateQuery,
 } from '../common/graphQL/graphQL';
 import { OperationType } from '../common/graphQL/types';
@@ -95,7 +95,7 @@ export class GraphQLInteraction extends Interaction {
     }
     if (isNil(this.state.description)) {
       throw new GraphQLQueryError(
-        'You must provide a description for the query.'
+        'You must provide a description for the query.',
       );
     }
 
@@ -112,7 +112,7 @@ export class GraphQLInteraction extends Interaction {
         headers: { 'Content-Type': 'application/json' },
         method: 'POST',
       },
-      this.state.request
+      this.state.request,
     );
 
     return this.state as InteractionStateComplete;
@@ -126,12 +126,12 @@ export class GraphQLInteraction extends Interaction {
     try {
       validateQuery(
         query,
-        type === 'query' ? OperationType.Query : OperationType.Mutation
+        type === 'query' ? OperationType.Query : OperationType.Mutation,
       );
     } catch (e) {
       const error = e instanceof Error ? e : new Error(String(e));
       throw new GraphQLQueryError(
-        `GraphQL ${type} is invalid: ${error.message}`
+        `GraphQL ${type} is invalid: ${error.message}`,
       );
     }
 

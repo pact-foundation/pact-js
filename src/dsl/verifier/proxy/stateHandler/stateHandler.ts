@@ -1,8 +1,8 @@
-import express from 'express';
+import type express from 'express';
 
 import StackUtils from 'stack-utils';
 import chalk from 'chalk';
-import { ProxyOptions, ProviderState } from '../types';
+import type { ProxyOptions, ProviderState } from '../types';
 import { setupStates } from './setupStates';
 
 const cleanStack = (e: Error) => {
@@ -22,7 +22,7 @@ export const createProxyStateHandler =
   (config: ProxyOptions) =>
   async (
     req: express.Request,
-    res: express.Response
+    res: express.Response,
   ): Promise<express.Response> => {
     const state: ProviderState = req.body;
     try {
@@ -33,11 +33,9 @@ export const createProxyStateHandler =
       const error = `\nError executing state handler for state '${state.state}' on '${state.action}'.`;
       const errorDetails = `↳ Error details: ${caughtError.message}`;
       const errorSource = `↳ Error source: ${cleanStack(caughtError)}\n`;
-      /* eslint-disable no-console */
       console.log(chalk.red(error));
       console.log(chalk.red(errorDetails));
       console.log(chalk.red(errorSource));
-      /* eslint-enable */
 
       return res.status(200).send();
     }

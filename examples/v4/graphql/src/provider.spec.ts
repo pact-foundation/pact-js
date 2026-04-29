@@ -1,11 +1,12 @@
-import { Verifier, LogLevel } from '@pact-foundation/pact';
+import { Verifier, type LogLevel } from '@pact-foundation/pact';
 
 import app from './provider';
-import * as path from 'path';
+import type * as http from 'node:http';
+import * as path from 'node:path';
 
 const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
-let server: any;
+let server: http.Server;
 
 // Verify that the provider meets all consumer expectations
 describe('Pact Verification', () => {
@@ -20,7 +21,7 @@ describe('Pact Verification', () => {
       pactUrls: [
         path.resolve(
           process.cwd(),
-          './pacts/GraphQLConsumerV4-GraphQLProviderV4.json'
+          './pacts/GraphQLConsumerV4-GraphQLProviderV4.json',
         ),
       ],
       providerBaseUrl: 'http://localhost:4000/graphql',

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import https from 'https';
+import https from 'node:https';
 import { pathOr } from 'ramda';
 import logger from './logger';
 
@@ -42,7 +42,7 @@ export class Request {
   public async send(
     method: HTTPMethod,
     url: string,
-    body?: string
+    body?: string,
   ): Promise<string> {
     try {
       const res = await axios(url, {
@@ -72,8 +72,8 @@ export class Request {
         pathOr(
           error.message,
           ['response', 'data'],
-          e as Record<string, unknown>
-        )
+          e as Record<string, unknown>,
+        ),
       );
     }
   }

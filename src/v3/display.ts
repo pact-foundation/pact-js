@@ -1,5 +1,5 @@
 import { join, toPairs, map, flatten } from 'ramda';
-import {
+import type {
   Mismatch,
   MatchingResult,
   RequestMismatch,
@@ -13,7 +13,7 @@ import {
 //       to avoid having to do this check!
 
 const isMismatchingResultPlugin = (
-  obj: MatchingResult
+  obj: MatchingResult,
 ): obj is MatchingResultPlugin => {
   if (
     (obj as MatchingResultPlugin).error !== undefined &&
@@ -24,7 +24,7 @@ const isMismatchingResultPlugin = (
 };
 
 const isPluginContentMismatch = (
-  obj: Mismatch
+  obj: Mismatch,
 ): obj is PluginContentMismatch => {
   const cast = obj as PluginContentMismatch;
 
@@ -43,18 +43,18 @@ const isPluginContentMismatch = (
 export function displayQuery(query: Record<string, string[]>): string {
   const pairs = toPairs(query);
   const mapped = flatten(
-    map(([key, values]) => map((val) => `${key}=${val}`, values), pairs)
+    map(([key, values]) => map((val) => `${key}=${val}`, values), pairs),
   );
   return join('&', mapped);
 }
 
 function displayHeaders(
   headers: Record<string, string[]>,
-  indent: string
+  indent: string,
 ): string {
   return join(
     `\n${indent}`,
-    map(([k, v]) => `${k}: ${v}`, toPairs(headers))
+    map(([k, v]) => `${k}: ${v}`, toPairs(headers)),
   );
 }
 
@@ -62,7 +62,7 @@ export function displayRequest(request: RequestMismatch, indent = ''): string {
   const output: string[] = [''];
 
   output.push(
-    `${indent}Method: ${request.method}\n${indent}Path: ${request.path}`
+    `${indent}Method: ${request.method}\n${indent}Path: ${request.path}`,
   );
 
   if (request.query) {
@@ -73,15 +73,15 @@ export function displayRequest(request: RequestMismatch, indent = ''): string {
     output.push(
       `${indent}Headers:\n${indent}  ${displayHeaders(
         request.headers,
-        `${indent}  `
-      )}`
+        `${indent}  `,
+      )}`,
     );
   }
 
   if (request.body) {
     const body = JSON.stringify(request.body);
     output.push(
-      `${indent}Body: ${body.substr(0, 20)}... (${body.length} length)`
+      `${indent}Body: ${body.substr(0, 20)}... (${body.length} length)`,
     );
   }
 
@@ -89,11 +89,11 @@ export function displayRequest(request: RequestMismatch, indent = ''): string {
 }
 
 export function filterMissingFeatureFlag(
-  mismatches: MatchingResult[]
+  mismatches: MatchingResult[],
 ): MatchingResult[] {
   if (process.env.PACT_EXPERIMENTAL_FEATURE_ALLOW_MISSING_REQUESTS) {
     return mismatches.filter(
-      (m) => !isMismatchingResultPlugin(m) && m.type !== 'request-mismatch'
+      (m) => !isMismatchingResultPlugin(m) && m.type !== 'request-mismatch',
     );
   }
   return mismatches;
@@ -130,7 +130,7 @@ export function printMismatches(mismatches: Mismatch[]): string {
 
 export function generateMockServerError(
   mismatches: MatchingResult[],
-  indent: string
+  indent: string,
 ): string {
   return [
     'Mock server failed with the following mismatches:',
@@ -144,20 +144,20 @@ export function generateMockServerError(
             ${mismatch.mismatches
               ?.map(
                 (d, j) =>
-                  `\n${indent}${indent}${indent} 1.${j} ${printMismatch(d)}`
+                  `\n${indent}${indent}${indent} 1.${j} ${printMismatch(d)}`,
               )
               .join('')}`;
       }
       if (mismatch.type === 'request-not-found') {
         return `\n${indent}${i}) The following request was not expected: ${displayRequest(
           (mismatch as MatchingResultRequestNotFound).request,
-          `${indent}    `
+          `${indent}    `,
         )}`;
       }
       if (mismatch.type === 'missing-request') {
         return `\n${indent}${i}) The following request was expected but not received: ${displayRequest(
           (mismatch as MatchingResultMissingRequest).request,
-          `${indent}    `
+          `${indent}    `,
         )}`;
       }
       return `Unknown mismatch: ${mismatch}`;

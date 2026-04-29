@@ -1,6 +1,6 @@
-import { ConsumerPact } from '@pact-foundation/pact-core';
+import type { ConsumerPact } from '@pact-foundation/pact-core';
 import { executeTest } from '.';
-import {
+import type {
   V4InteractionWithResponse,
   PactV4Options,
   TestFunction,
@@ -11,7 +11,7 @@ export class InteractionWithResponse implements V4InteractionWithResponse {
   constructor(
     private pact: ConsumerPact,
     private opts: PactV4Options,
-    protected cleanupFn: () => void
+    protected cleanupFn: () => void,
   ) {}
 
   async executeTest<T>(testFn: TestFunction<T>): Promise<T | undefined> {

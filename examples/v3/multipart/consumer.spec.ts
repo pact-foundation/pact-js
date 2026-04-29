@@ -22,7 +22,7 @@ import {
   SpecificationVersion,
   PactV3,
   MatchersV3,
-  LogLevel,
+  type LogLevel,
 } from '@pact-foundation/pact';
 import FormData from 'form-data';
 import axios from 'axios';
@@ -109,7 +109,7 @@ describe('Pact Consumer Test Using Multipart form data', () => {
         },
         'image/jpeg', // The content type of the JPG file being uploaded
         imageFilePath, // Path to the JPG file
-        'photo' // The name of the form field for the file
+        'photo', // The name of the form field for the file
       )
       .willRespondWith({
         status: 201,
@@ -134,7 +134,7 @@ describe('Pact Consumer Test Using Multipart form data', () => {
               Authorization: 'Bearer token123',
               ...formData.getHeaders(),
             },
-          }
+          },
         );
 
         // Verify the response
@@ -204,7 +204,7 @@ describe('Pact Consumer Test Using Multipart form data', () => {
     await pact
       .given('a file upload is expected')
       .uponReceiving(
-        'a multipart file upload using withRequestMultipartFileUpload'
+        'a multipart file upload using withRequestMultipartFileUpload',
       )
       .withRequestMultipartFileUpload(
         {
@@ -213,7 +213,7 @@ describe('Pact Consumer Test Using Multipart form data', () => {
         },
         'text/plain', // The content type of the file being uploaded
         testFile,
-        'document' // The name of the form field for the file
+        'document', // The name of the form field for the file
       )
       .willRespondWith({
         status: 200,
@@ -235,7 +235,7 @@ describe('Pact Consumer Test Using Multipart form data', () => {
           formData,
           {
             headers: formData.getHeaders(),
-          }
+          },
         );
 
         // Verify the response
@@ -261,7 +261,7 @@ describe('Pact Consumer Test Using Multipart form data', () => {
         'text/plain', // The content type of the file being uploaded
         testFile,
         'file', // The name of the form field for the file
-        customBoundary // Custom boundary string
+        customBoundary, // Custom boundary string
       )
       .willRespondWith({
         status: 201,
@@ -286,7 +286,7 @@ describe('Pact Consumer Test Using Multipart form data', () => {
         const originalBoundary = formData.getBoundary();
         formBuffer = formBuffer.replace(
           new RegExp(originalBoundary, 'g'),
-          customBoundary
+          customBoundary,
         );
 
         // Send the request
@@ -295,7 +295,7 @@ describe('Pact Consumer Test Using Multipart form data', () => {
           formBuffer,
           {
             headers,
-          }
+          },
         );
 
         // Verify the response
@@ -319,7 +319,7 @@ describe('Pact Consumer Test Using Multipart form data', () => {
         },
         'image/jpeg', // The content type of the JPG file being uploaded
         imageFilePath, // Path to the JPG file
-        'photo' // The name of the form field for the file
+        'photo', // The name of the form field for the file
       )
       .withRequestMultipartFileUpload(
         {
@@ -328,7 +328,7 @@ describe('Pact Consumer Test Using Multipart form data', () => {
         },
         'text/plain', // The content type of the file being uploaded
         testFile, // Path to the txt file
-        'file' // The name of the form field for the file
+        'file', // The name of the form field for the file
       )
       .willRespondWith({
         status: 201,
@@ -354,7 +354,7 @@ describe('Pact Consumer Test Using Multipart form data', () => {
               Authorization: 'Bearer token123',
               ...formData.getHeaders(),
             },
-          }
+          },
         );
 
         // Verify the response

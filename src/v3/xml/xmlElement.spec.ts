@@ -3,7 +3,7 @@ import { describe } from 'mocha';
 import { XmlText } from './xmlText';
 import { XmlElement } from './xmlElement';
 import * as MatchersV3 from '../matchers';
-import { Matcher } from '../types';
+import type { Matcher } from '../types';
 
 const { expect } = chai;
 
@@ -20,17 +20,17 @@ describe('xml element', () => {
       expect(xml.children, 'children of XML element').to.be.lengthOf(2);
       expect(
         xml.children[0],
-        'type of first child of XML element'
+        'type of first child of XML element',
       ).to.be.instanceOf(XmlText);
       expect(xml.children[0], 'first child of XML element').to.have.property(
-        'content'
+        'content',
       );
       expect(
         (xml.children[0] as XmlText).content,
-        'content of first child'
+        'content of first child',
       ).to.equal('some string');
       expect(xml.children[0], 'first child of XML element').to.have.property(
-        'matcher'
+        'matcher',
       );
       expect((xml.children[0] as XmlText).matcher, 'matcher of the first child')
         .to.be.undefined;
@@ -43,26 +43,26 @@ describe('xml element', () => {
         .appendText(
           MatchersV3.date(
             'yyyy-MM-dd HH:mm:ss.SSSX',
-            '2016-02-11T09:46:56.023Z'
-          )
+            '2016-02-11T09:46:56.023Z',
+          ),
         )
         .appendText(
           MatchersV3.datetime(
             'yyyy-MM-dd HH:mm:ss.SSSX',
-            '2016-02-11T09:46:56.023Z'
-          )
+            '2016-02-11T09:46:56.023Z',
+          ),
         )
         .appendText(
           MatchersV3.timestamp(
             'yyyy-MM-dd HH:mm:ss.SSSX',
-            '2016-02-11T09:46:56.023Z'
-          )
+            '2016-02-11T09:46:56.023Z',
+          ),
         )
         .appendText(
           MatchersV3.time(
             'yyyy-MM-dd HH:mm:ss.SSSX',
-            '2016-02-11T09:46:56.023Z'
-          )
+            '2016-02-11T09:46:56.023Z',
+          ),
         )
         .appendText(MatchersV3.uuid('adc214d3-1c9f-460d-b6c8-8f2bc8911860'));
       expect(xml, 'XML element').to.have.property('name');

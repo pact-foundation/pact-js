@@ -1,6 +1,6 @@
-import { AnyJson } from '../common/jsonTypes';
-import { MatcherV2 } from './matchers';
-import { Matcher } from '../v3/matchers';
+import type { AnyJson } from '../common/jsonTypes';
+import type { MatcherV2 } from './matchers';
+import type { Matcher } from '../v3/matchers';
 
 /**
  * Metadata is a map containing message context,
@@ -77,7 +77,7 @@ export type MessageFromProviderWithMetadata = {
  * @module Message
  */
 export type MessageProvider = (
-  m: MessageDescriptor
+  m: MessageDescriptor,
 ) =>
   | Promise<MessageFromProvider | MessageFromProviderWithMetadata>
   | MessageFromProvider
@@ -90,6 +90,6 @@ export interface MessageProviders {
 export interface MessageStateHandlers {
   [name: string]: (
     state: string,
-    params?: { [name: string]: string }
+    params?: { [name: string]: string },
   ) => Promise<unknown>;
 }

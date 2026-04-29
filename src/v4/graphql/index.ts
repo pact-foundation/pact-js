@@ -1,16 +1,19 @@
-import { ConsumerInteraction, ConsumerPact } from '@pact-foundation/pact-core';
+import type {
+  ConsumerInteraction,
+  ConsumerPact,
+} from '@pact-foundation/pact-core';
 
-import {
+import type {
   GraphqlRequest,
   V4GraphQLInteractionWithRequest,
   V4GraphQLRequestBuilderFunc,
   V4UnconfiguredGraphQLInteraction,
 } from './types';
-import { PactV4Options } from '../http/types';
-import { JsonMap } from '../../common/jsonTypes';
-import { Path } from '../../v3';
+import type { PactV4Options } from '../http/types';
+import type { JsonMap } from '../../common/jsonTypes';
+import type { Path } from '../../v3';
 import { matcherValueOrString } from '../../v3/matchers';
-import { GraphQLVariables } from '../../common/graphQL/graphQL';
+import type { GraphQLVariables } from '../../common/graphQL/graphQL';
 import { GraphQLRequestBuilder } from './graphQLRequestBuilder';
 import { GraphQLInteractionWithRequest } from './graphQLInteractionWithRequest';
 
@@ -24,7 +27,7 @@ export class UnconfiguredGraphQLInteraction
     protected pact: ConsumerPact,
     protected interaction: ConsumerInteraction,
     protected opts: PactV4Options,
-    protected cleanupFn: () => void
+    protected cleanupFn: () => void,
   ) {
     this.graphQLRequest = {};
   }
@@ -60,7 +63,7 @@ export class UnconfiguredGraphQLInteraction
   withRequest(
     method: string,
     path: Path,
-    builder?: V4GraphQLRequestBuilderFunc
+    builder?: V4GraphQLRequestBuilderFunc,
   ): V4GraphQLInteractionWithRequest {
     this.interaction.withRequest(method, matcherValueOrString(path));
 
@@ -72,7 +75,7 @@ export class UnconfiguredGraphQLInteraction
       this.interaction,
       this.opts,
       this.cleanupFn,
-      this.graphQLRequest
+      this.graphQLRequest,
     );
   }
 }

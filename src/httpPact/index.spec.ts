@@ -2,10 +2,13 @@ import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
-import { ConsumerInteraction, ConsumerPact } from '@pact-foundation/pact-core';
-import { PactV2Options, PactV2OptionsComplete } from '../dsl/options';
+import type {
+  ConsumerInteraction,
+  ConsumerPact,
+} from '@pact-foundation/pact-core';
+import type { PactV2Options, PactV2OptionsComplete } from '../dsl/options';
 import { Pact } from '.';
-import { MockService } from '../dsl/mockService';
+import type { MockService } from '../dsl/mockService';
 
 chai.use(sinonChai);
 chai.use(chaiAsPromised);
@@ -85,6 +88,7 @@ describe('Pact', () => {
       });
 
       it('returns the current configuration', () => {
+        // biome-ignore lint/suspicious/noExplicitAny: accessing internal setup() method not in public type
         const p: any = new Pact(fullOpts);
 
         return expect(p.setup()).to.eventually.include({
@@ -103,6 +107,7 @@ describe('Pact', () => {
 
     describe('when a port is given', () => {
       it('checks if the port is available', () => {
+        // biome-ignore lint/suspicious/noExplicitAny: accessing internal setup() method not in public type
         const p: any = new Pact(fullOpts);
 
         return expect(p.setup())
@@ -117,6 +122,7 @@ describe('Pact', () => {
           ...fullOpts,
           port: undefined,
         };
+        // biome-ignore lint/suspicious/noExplicitAny: accessing internal setup() method not in public type
         const p: any = new Pact(opts);
 
         return expect(p.setup()).to.eventually.have.property('port').not
@@ -155,9 +161,9 @@ describe('Pact', () => {
         withResponseHeader,
         withStatus,
       } as unknown as ConsumerInteraction; // TODO replace with proper mock
-      // @ts-ignore TODO refactor the class to remove the need for this
+      // @ts-expect-error TODO refactor the class to remove the need for this
       p.pact = pactMock;
-      // @ts-ignore: TODO refactor the class to remove the need for this
+      // @ts-expect-error: TODO refactor the class to remove the need for this
       p.interaction = interactionMock;
       p.mockService = {} as MockService;
 

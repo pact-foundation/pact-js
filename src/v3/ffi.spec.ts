@@ -10,12 +10,12 @@ describe('V3 Pact FFI', () => {
       const headers = {
         'Content-Type': regex(
           /^application\/json(;\s?charset=[\w-]+)?$/i,
-          'application/json'
+          'application/json',
         ),
       };
 
       expect(contentTypeFromHeaders(headers, 'application/json')).to.eq(
-        'application/json'
+        'application/json',
       );
     });
   });

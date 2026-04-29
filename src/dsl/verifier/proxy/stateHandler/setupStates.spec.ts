@@ -3,10 +3,10 @@ import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
 
 import logger from '../../../../common/logger';
-import { ProxyOptions, ProviderState } from '../types';
+import type { ProxyOptions, ProviderState } from '../types';
 
 import { setupStates } from './setupStates';
-import { JsonMap } from '../../../../common/jsonTypes';
+import type { JsonMap } from '../../../../common/jsonTypes';
 
 chai.use(chaiAsPromised);
 
@@ -32,7 +32,7 @@ describe('#setupStates', () => {
 
   const DEFAULT_OPTIONS = (): ProxyOptions => ({
     providerBaseUrl,
-    requestFilter: (req, res, next) => {
+    requestFilter: (_req, _res, next) => {
       next();
     },
     stateHandlers: {
@@ -101,7 +101,7 @@ describe('#setupStates', () => {
               ...state2,
               action: 'teardown',
             },
-            opts
+            opts,
           );
 
           expect(res2).to.eq(state2.params);

@@ -1,13 +1,13 @@
 /* tslint:disable:no-unused-expression object-literal-sort-keys max-classes-per-file no-empty */
 import * as chai from 'chai';
-import * as path from 'path';
+import * as path from 'node:path';
 import chaiAsPromised from 'chai-as-promised';
 import { query } from './consumer';
 import {
   PactV2 as Pact,
   GraphQLInteraction,
   MatchersV2 as Matchers,
-  LogLevel,
+  type LogLevel,
 } from '@pact-foundation/pact';
 const { like } = Matchers;
 const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
@@ -38,7 +38,7 @@ describe('GraphQL example', () => {
           query HelloQuery {
             hello
           }
-        `
+        `,
         )
         .withOperation('HelloQuery')
         .withRequest({

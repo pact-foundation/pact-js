@@ -10,15 +10,15 @@ server.use(bodyParser.json());
 server.use(
   bodyParser.urlencoded({
     extended: true,
-  })
+  }),
 );
-server.use((req, res, next) => {
+server.use((_req, res, next) => {
   res.header('Content-Type', 'application/json; charset=utf-8');
   next();
 });
 
 server.use((req, res, next) => {
-  const token = req.headers['authorization'] || '';
+  const token = req.headers.authorization || '';
 
   if (token !== 'Bearer token') {
     res.sendStatus(401).send();
@@ -47,21 +47,21 @@ const availableAnimals = () => {
 };
 
 // Get all animals
-server.get('/animals', (req, res) => {
+server.get('/animals', (_req, res) => {
   res.json(animalRepository.fetchAll());
 });
 
 // Get all available animals
-server.get('/animals/available', (req, res) => {
+server.get('/animals/available', (_req, res) => {
   res.json(availableAnimals());
 });
 
 // Get all available animals as XML
-server.get('/animals/available/xml', (req, res) => {
+server.get('/animals/available/xml', (_req, res) => {
   res.header('Content-Type', 'application/xml; charset=utf-8');
-  let xml_body = xml({
+  const xml_body = xml({
     animals: animalRepository.fetchAll().map((animal) => {
-      let result = {};
+      const result = {};
       result[animal.animal] = { _attr: animal };
       return result;
     }),
@@ -76,7 +76,7 @@ server.get('/animals/:id', (req, res) => {
     if (req.header('accept') === 'text/plain') {
       res.contentType('text/plain; charset=utf-8');
       res.end(
-        `id=${response.id};first_name=${response.first_name};last_name=${response.last_name};animal=${response.animal}`
+        `id=${response.id};first_name=${response.first_name};last_name=${response.last_name};animal=${response.animal}`,
       );
     } else {
       res.end(JSON.stringify(response));
@@ -95,7 +95,7 @@ server.post('/animals', (req, res) => {
   console.log(req.headers);
 
   // Really basic validation
-  if (!animal || !animal.first_name) {
+  if (!animal?.first_name) {
     try {
       // Workaround/Recreation for https://github.com/pact-foundation/pact-js/issues/884
       // Issue with x-www-form-urlencoded data
@@ -126,7 +126,7 @@ server.post('/animals', (req, res) => {
       animal.id = animalRepository.fetchAll().length;
       animalRepository.insert(animal);
       return res.json(animal);
-    } catch (e) {
+    } catch (_e) {
       //
     }
     res.writeHead(400);

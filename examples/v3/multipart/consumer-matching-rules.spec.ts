@@ -22,7 +22,7 @@
 
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import { PactV3, MatchersV3, Rules } from '@pact-foundation/pact';
+import { PactV3, MatchersV3, type Rules } from '@pact-foundation/pact';
 import FormData from 'form-data';
 import axios from 'axios';
 import fs from 'node:fs';
@@ -97,7 +97,7 @@ describe('Pact Multipart with Matching Rules', () => {
           rules: [
             MatchersV3.regex(
               'multipart/form-data;\\s*boundary=.*',
-              `multipart/form-data; boundary=${boundary}`
+              `multipart/form-data; boundary=${boundary}`,
             ),
           ],
         },
@@ -118,7 +118,7 @@ describe('Pact Multipart with Matching Rules', () => {
         .withRequestBinaryFile(
           req,
           `multipart/form-data; boundary=${boundary}`,
-          tempFilePath
+          tempFilePath,
         )
         .withRequestMatchingRules(req, requestMatchingRules)
         .willRespondWith({
@@ -146,7 +146,7 @@ describe('Pact Multipart with Matching Rules', () => {
             formData,
             {
               headers: formData.getHeaders(),
-            }
+            },
           );
 
           expect(response.status).to.equal(201);

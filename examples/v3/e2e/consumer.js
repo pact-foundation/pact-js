@@ -20,7 +20,7 @@ const availableAnimals = (api = getApiEndpoint, filter = {}) =>
 const getAnimalById = (
   id,
   api = getApiEndpoint,
-  format = 'application/json'
+  format = 'application/json',
 ) => {
   const r = request
     .get(`${api()}/animals/${id}`)
@@ -33,7 +33,7 @@ const getAnimalById = (
 
   return r.then(
     (res) => res.body,
-    () => null
+    () => null,
   );
 };
 
@@ -51,7 +51,7 @@ const suggestion = (mate, api, filter = {}) => {
 
   return availableAnimals(api, filter).then((available) => {
     const eligible = available.filter(
-      (a) => !predicates.map((p) => p(a, mate)).includes(false)
+      (a) => !predicates.map((p) => p(a, mate)).includes(false),
     );
 
     return {
@@ -73,13 +73,13 @@ const suggestion = (mate, api, filter = {}) => {
 const createMateForDates = (
   mate,
   api = getApiEndpoint,
-  contentType = 'application/json'
+  contentType = 'application/json',
 ) => {
   return request
     .post(`${api()}/animals`)
     .set(authHeader)
     .send(mate)
-    .set('Content-Type', contentType + '; charset=utf-8');
+    .set('Content-Type', `${contentType}; charset=utf-8`);
 };
 
 // Suggestions API
@@ -117,7 +117,7 @@ const getAnimalsAsXML = (api = getApiEndpoint) => {
     .set(authHeader)
     .then(
       (res) => res.body,
-      () => null
+      () => null,
     );
 };
 

@@ -1,13 +1,13 @@
 /* tslint:disable:no-unused-expression object-literal-sort-keys max-classes-per-file no-empty */
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import * as path from 'path';
+import * as path from 'node:path';
 import sinonChai from 'sinon-chai';
 import {
   PactV2 as Pact,
   Interaction,
   MatchersV2 as Matchers,
-  LogLevel,
+  type LogLevel,
 } from '@pact-foundation/pact';
 
 const expect = chai.expect;
@@ -38,7 +38,7 @@ describe('The Dog API', () => {
   before(() =>
     provider.setup().then((opts) => {
       dogService = new DogService({ url, port: opts.port });
-    })
+    }),
   );
 
   after(() => provider.finalize());
