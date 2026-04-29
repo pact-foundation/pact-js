@@ -1,4 +1,3 @@
-/* tslint:disable:no-unused-expression no-empty */
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinonChai from 'sinon-chai';
@@ -7,7 +6,6 @@ import fs = require('node:fs');
 import net = require('node:net');
 import path = require('node:path');
 
-// eslint-disable-next-line import/first
 import { PactV4 } from './v4';
 import { MatchersV3 } from './v3';
 

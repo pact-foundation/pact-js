@@ -33,11 +33,9 @@ export const createProxyStateHandler =
       const error = `\nError executing state handler for state '${state.state}' on '${state.action}'.`;
       const errorDetails = `↳ Error details: ${caughtError.message}`;
       const errorSource = `↳ Error source: ${cleanStack(caughtError)}\n`;
-      /* eslint-disable no-console */
       console.log(chalk.red(error));
       console.log(chalk.red(errorDetails));
       console.log(chalk.red(errorSource));
-      /* eslint-enable */
 
       return res.status(200).send();
     }

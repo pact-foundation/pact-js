@@ -21,7 +21,6 @@ export class InteractionWithCompleteRequest
     throw Error('V4InteractionWithCompleteRequest is unimplemented');
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   withCompleteResponse(_response: V4Response): V4InteractionWithResponse {
     throw new Error('withCompleteResponse is not implemented');
   }

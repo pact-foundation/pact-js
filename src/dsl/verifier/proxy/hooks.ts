@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 /**
  * These handlers assume that the number of "setup" and "teardown" requests to
  * `/_pactSetup` are always sequential and balanced, i.e. if 3 "setup" actions

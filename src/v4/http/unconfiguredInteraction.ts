@@ -69,7 +69,6 @@ export class UnconfiguredInteraction implements V4UnconfiguredInteraction {
     return this;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   withCompleteRequest(_request: V4Request): V4InteractionWithCompleteRequest {
     throw new Error('withCompleteRequest is not implemented');
   }

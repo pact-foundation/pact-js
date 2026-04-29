@@ -211,11 +211,9 @@ export class Pact {
       let error = 'Test failed for the following reasons:';
       error += `\n\n  ${generateMockServerError(matchingResults, '\t')}`;
 
-      /* eslint-disable no-console */
       console.error('');
       console.error(chalk.red('Pact verification failed!'));
       console.error(chalk.red(error));
-      /* eslint-enable */
 
       this.reset();
       throw new VerificationError(

@@ -1,4 +1,3 @@
-/* eslint-disable */
 import type { Metadata } from '../../dsl/message';
 import type { AnyJson, JsonMap } from '../../common/jsonTypes';
 import type {
