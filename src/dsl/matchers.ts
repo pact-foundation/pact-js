@@ -312,15 +312,12 @@ export function extractPayload(value: AnyTemplate): AnyJson {
   }
 
   if (value !== null && typeof value === 'object') {
-    return Object.keys(value).reduce(
-      (acc: JsonMap, propName: string) => ({
-        ...acc,
-        [propName]: extractPayload(
-          (value as Record<string, AnyTemplate>)[propName],
-        ),
-      }),
-      {},
-    );
+    return Object.keys(value).reduce((acc: JsonMap, propName: string) => {
+      acc[propName] = extractPayload(
+        (value as Record<string, AnyTemplate>)[propName],
+      );
+      return acc;
+    }, {});
   }
   return value;
 }

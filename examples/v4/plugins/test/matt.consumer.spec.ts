@@ -6,7 +6,7 @@ import {
   Pact,
   type LogLevel,
 } from '@pact-foundation/pact';
-import net = require('net');
+import net = require('node:net');
 import { generateMattMessage, parseMattMessage } from '../protocol';
 import axios from 'axios';
 
@@ -135,7 +135,7 @@ const sendMattMessageTCP = (
     host: host,
   });
 
-  const res = socket.write(generateMattMessage(message) + '\n');
+  const res = socket.write(`${generateMattMessage(message)}\n`);
 
   if (!res) {
     throw Error('unable to connect to host');

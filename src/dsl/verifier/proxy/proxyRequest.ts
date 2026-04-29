@@ -1,7 +1,7 @@
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import type { ServerOptions } from 'http-proxy';
-import { Readable } from 'stream';
-import type { IncomingMessage } from 'http';
+import { Readable } from 'node:stream';
+import type { IncomingMessage } from 'node:http';
 import type { ProxyOptions } from './types';
 import { parseBody } from './parseBody';
 

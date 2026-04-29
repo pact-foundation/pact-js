@@ -1,5 +1,5 @@
 import * as chai from 'chai';
-import { Readable } from 'stream';
+import { Readable } from 'node:stream';
 import type { ProxyOptions } from './types';
 import { toServerOptions as toServerOptionsAct } from './proxyRequest';
 

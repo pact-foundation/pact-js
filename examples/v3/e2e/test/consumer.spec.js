@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('node:path');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const expect = chai.expect;

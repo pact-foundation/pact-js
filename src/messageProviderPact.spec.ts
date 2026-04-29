@@ -2,7 +2,7 @@ import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinonChai from 'sinon-chai';
 import express from 'express';
-import http from 'http';
+import http from 'node:http';
 import type { Message } from './dsl/message';
 import {
   MessageProviderPact,

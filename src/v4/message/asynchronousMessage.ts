@@ -407,7 +407,7 @@ const executeNonTransportTest = async <T>(
       message.interaction.reifyMessage(),
     );
 
-    const { content, contentType, encoded } = rawInteraction.contents;
+    const { content } = rawInteraction.contents;
     const m: AsynchronousMessage = {
       contents: {
         content: !message.requestIsBinary

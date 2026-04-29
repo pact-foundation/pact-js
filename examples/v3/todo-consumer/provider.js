@@ -42,7 +42,7 @@ server.get('/projects', (req, res) => {
   }
 });
 
-server.post('/projects/:id/images', (req, res) => {
+server.post('/projects/:id/images', (_req, res) => {
   res.status(201).end();
 });
 

@@ -9,11 +9,11 @@ server.use((_, res, next) => {
   next();
 });
 
-server.get('/status', (req, res) => {
+server.get('/status', (_req, res) => {
   res.send(202);
 });
 
-server.get('/eachKeyMatches', (req, res) => {
+server.get('/eachKeyMatches', (_req, res) => {
   res.json({
     // '1': 'foo', // <- fails, is a number
     // 'not valid': '1', // <- fails, is a string but does not match regex (has space)
@@ -23,7 +23,7 @@ server.get('/eachKeyMatches', (req, res) => {
   });
 });
 
-server.get('/eachValueMatches', (req, res) => {
+server.get('/eachValueMatches', (_req, res) => {
   res.json({
     // foo: 1,   // <- fails, is a number
     // foo: '1', // <- fails, is a string but does not match regex

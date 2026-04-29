@@ -6,7 +6,7 @@ const {
   synchronousBodyHandler,
 } = require('@pact-foundation/pact');
 const { like, term } = Matchers;
-const path = require('path');
+const path = require('node:path');
 const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 describe('Serverless consumer tests', () => {

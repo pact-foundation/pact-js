@@ -4,7 +4,7 @@ import {
   type ConsumerPact,
   type ConsumerInteraction,
 } from '@pact-foundation/pact-core';
-import fs = require('fs');
+import fs = require('node:fs');
 import { version as pactPackageVersion } from '../../package.json';
 import type { JsonMap } from '../common/jsonTypes';
 import { validateRules, convertRulesToFFI } from '../common/matchingRules';

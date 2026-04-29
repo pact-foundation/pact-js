@@ -3,9 +3,9 @@ import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinonChai from 'sinon-chai';
 import axios from 'axios';
-import fs = require('fs');
-import net = require('net');
-import path = require('path');
+import fs = require('node:fs');
+import net = require('node:net');
+import path = require('node:path');
 
 // eslint-disable-next-line import/first
 import { PactV4 } from './v4';

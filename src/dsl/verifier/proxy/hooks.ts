@@ -16,7 +16,7 @@ export type HooksState = {
 
 export const registerHookStateTracking =
   (hooksState: HooksState): RequestHandler =>
-  async ({ body }, res, next) => {
+  async ({ body }, _res, next) => {
     if (body?.action === 'setup') hooksState.setupCounter += 1;
     if (body?.action === 'teardown') hooksState.setupCounter -= 1;
 
@@ -29,7 +29,7 @@ export const registerHookStateTracking =
 
 export const registerBeforeHook =
   (beforeEach: Hook, hooksState: HooksState): RequestHandler =>
-  async ({ body }, res, next) => {
+  async ({ body }, _res, next) => {
     if (body?.action === 'setup' && hooksState.setupCounter === 1) {
       logger.debug("executing 'beforeEach' hook");
       try {
@@ -48,7 +48,7 @@ export const registerBeforeHook =
 
 export const registerAfterHook =
   (afterEach: Hook, hooksState: HooksState): RequestHandler =>
-  async ({ body }, res, next) => {
+  async ({ body }, _res, next) => {
     if (body?.action === 'teardown' && hooksState.setupCounter === 0) {
       logger.debug("executing 'afterEach' hook");
       try {

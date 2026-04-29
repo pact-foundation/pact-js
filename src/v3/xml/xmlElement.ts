@@ -12,8 +12,6 @@ const modifyElementWithCallback = (el: XmlElement, cb?: XmlCallback) => {
   }
 };
 export class XmlElement extends XmlNode {
-  private attributes: XmlAttributes = new Map();
-
   children: XmlNode[] = [];
 
   constructor(public name: string) {

@@ -32,7 +32,7 @@ describe('#setupStates', () => {
 
   const DEFAULT_OPTIONS = (): ProxyOptions => ({
     providerBaseUrl,
-    requestFilter: (req, res, next) => {
+    requestFilter: (_req, _res, next) => {
       next();
     },
     stateHandlers: {

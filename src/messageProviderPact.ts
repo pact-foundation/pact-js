@@ -8,11 +8,11 @@ import serviceFactory, {
   type VerifierOptions,
 } from '@pact-foundation/pact-core';
 import express from 'express';
-import http from 'http';
+import http from 'node:http';
 import bodyParser from 'body-parser';
 import { encode as encodeBase64 } from 'js-base64';
 
-import type { AddressInfo } from 'net';
+import type { AddressInfo } from 'node:net';
 import type {
   MessageDescriptor,
   MessageFromProviderWithMetadata,
@@ -150,7 +150,7 @@ export class MessageProviderPact {
 
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
-    app.use((req, res, next) => {
+    app.use((_req, res, next) => {
       // TODO: this seems to override the metadata for content-type
       res.header('Content-Type', 'application/json; charset=utf-8');
       next();

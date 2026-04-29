@@ -10,7 +10,6 @@ const { like, regex } = Matchers;
 // 1 Dog API Handler
 import { dogApiHandler } from './dog-handler';
 
-const path = require('path');
 const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 
 describe('Message consumer tests', () => {

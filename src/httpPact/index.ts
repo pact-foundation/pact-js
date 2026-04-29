@@ -5,8 +5,8 @@ import serviceFactory, {
 } from '@pact-foundation/pact-core';
 
 import chalk from 'chalk';
-import path from 'path';
-import process from 'process';
+import path from 'node:path';
+import process from 'node:process';
 import { isEmpty } from 'lodash';
 
 import {

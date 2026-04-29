@@ -2,7 +2,7 @@ const axios = require('axios');
 const { XMLParser } = require('fast-xml-parser');
 const eyes = require('eyes');
 const R = require('ramda');
-const fs = require('fs');
+const fs = require('node:fs');
 const parser = new XMLParser({
   ignoreAttributes: false,
 });
@@ -11,9 +11,9 @@ let serverUrl = 'http://127.0.0.1:2203';
 module.exports = {
   getProjects: async (format = 'json') => {
     return axios
-      .get(serverUrl + '/projects?from=today', {
+      .get(`${serverUrl}/projects?from=today`, {
         headers: {
-          Accept: 'application/' + format,
+          Accept: `application/${format}`,
         },
       })
       .then((response) => {
@@ -38,7 +38,7 @@ module.exports = {
   },
   postImage: (id, image) => {
     const data = fs.readFileSync(image);
-    return axios.post(serverUrl + '/projects/' + id + '/images', data, {
+    return axios.post(`${serverUrl}/projects/${id}/images`, data, {
       headers: {
         'Content-Type': 'image/jpeg',
       },

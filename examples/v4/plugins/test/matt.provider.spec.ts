@@ -4,8 +4,8 @@ import {
   providerWithMetadata,
   Verifier,
 } from '@pact-foundation/pact';
-import type { AddressInfo } from 'net';
-import * as path from 'path';
+import type { AddressInfo } from 'node:net';
+import * as path from 'node:path';
 import { startHTTPServer, startTCPServer } from '../provider';
 import { parseMattMessage } from '../protocol';
 

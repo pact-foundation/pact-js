@@ -1,4 +1,6 @@
-const path = require('path');
+/** biome-ignore-all lint/suspicious/noTemplateCurlyInString: The syntax ${...}
+ * is used by Pact, and should not be handled within JS. */
+const path = require('node:path');
 const transactionService = require('./transaction-service');
 const { PactV3, Matchers, XmlBuilder } = require('@pact-foundation/pact');
 const { expect } = require('chai');

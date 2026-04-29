@@ -22,7 +22,7 @@ const transformStateFunc = (fn: StateHandler): StateFuncWithSetup =>
 export const setupStates = (
   state: ProviderState,
   config: ProxyOptions,
-): Promise<JsonMap | void> => {
+): Promise<JsonMap | undefined> => {
   logger.debug(`setting up state '${JSON.stringify(state)}'`);
 
   const handler = config.stateHandlers

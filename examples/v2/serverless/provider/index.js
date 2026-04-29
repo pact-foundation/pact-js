@@ -5,7 +5,7 @@ const TOPIC_ARN = process.env.TOPIC_ARN;
 // Handler is the Lambda and SNS specific code
 // The message generation logic is separated from the handler itself
 // in the
-const handler = (event, context, callback) => {
+const handler = (event, _context, callback) => {
   const message = createEvent();
 
   const sns = new AWS.SNS();
@@ -15,7 +15,7 @@ const handler = (event, context, callback) => {
     TopicArn: TOPIC_ARN,
   };
 
-  sns.publish(params, (error, data) => {
+  sns.publish(params, (error, _data) => {
     if (error) {
       callback(error);
     }
@@ -31,10 +31,10 @@ const handler = (event, context, callback) => {
 
 // Separate your producer code, from the lambda handler.
 // No Lambda/AWS/Protocol specific stuff in here..
-const createEvent = (obj) => {
+const createEvent = (_obj) => {
   // Change 'type' to something else to test a pact failure
   return {
-    id: parseInt(Math.random() * 100),
+    id: parseInt(Math.random() * 100, 10),
     event: 'an update to something useful',
     type: 'update',
   };

@@ -7,8 +7,8 @@ import {
   type LogLevel,
 } from '@pact-foundation/pact';
 import axios from 'axios';
-import path from 'path';
-import fs from 'fs';
+import path from 'node:path';
+import fs from 'node:fs';
 import FormData from 'form-data';
 
 chai.use(chaiAsPromised);

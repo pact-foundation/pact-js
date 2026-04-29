@@ -83,7 +83,7 @@ describe('Matcher', () => {
           },
         };
 
-        const unused: AnyTemplate = like(template);
+        const _unused: AnyTemplate = like(template);
       });
     });
 
@@ -99,12 +99,12 @@ describe('Matcher', () => {
           },
         };
 
-        const unused: AnyTemplate = like(template);
+        const _unused: AnyTemplate = like(template);
       });
     });
 
     it('compiles nested likes', () => {
-      const unused: AnyTemplate = like({
+      const _unused: AnyTemplate = like({
         someArray: ['one', 'two'],
         someNumber: like(1),
         someString: "it's a string",

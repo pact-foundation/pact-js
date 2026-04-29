@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('node:path');
 const { Verifier } = require('@pact-foundation/pact');
 const { accountService } = require('./account-service');
 const {

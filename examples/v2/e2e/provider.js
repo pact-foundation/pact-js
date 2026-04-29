@@ -11,13 +11,13 @@ server.use(
     extended: true,
   }),
 );
-server.use((req, res, next) => {
+server.use((_req, res, next) => {
   res.header('Content-Type', 'application/json; charset=utf-8');
   next();
 });
 
 server.use((req, res, next) => {
-  const token = req.headers['authorization'] || '';
+  const token = req.headers.authorization || '';
 
   // TODO: revert back to 1234
   if (token !== 'Bearer token') {
@@ -47,12 +47,12 @@ const availableAnimals = () => {
 };
 
 // Get all animals
-server.get('/animals', (req, res) => {
+server.get('/animals', (_req, res) => {
   res.json(animalRepository.fetchAll());
 });
 
 // Get all available animals
-server.get('/animals/available', (req, res) => {
+server.get('/animals/available', (_req, res) => {
   res.json(availableAnimals());
 });
 
@@ -72,7 +72,7 @@ server.post('/animals', (req, res) => {
   const animal = req.body;
 
   // Really basic validation
-  if (!animal || !animal.first_name) {
+  if (!animal?.first_name) {
     res.writeHead(400);
     res.end();
 

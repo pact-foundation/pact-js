@@ -12,13 +12,13 @@ server.use(
     extended: true,
   }),
 );
-server.use((req, res, next) => {
+server.use((_req, res, next) => {
   res.header('Content-Type', 'application/json; charset=utf-8');
   next();
 });
 
 server.use((req, res, next) => {
-  const token = req.headers['authorization'] || '';
+  const token = req.headers.authorization || '';
 
   if (token !== 'Bearer token') {
     res.sendStatus(401).send();
@@ -47,17 +47,17 @@ const availableAnimals = () => {
 };
 
 // Get all animals
-server.get('/animals', (req, res) => {
+server.get('/animals', (_req, res) => {
   res.json(animalRepository.fetchAll());
 });
 
 // Get all available animals
-server.get('/animals/available', (req, res) => {
+server.get('/animals/available', (_req, res) => {
   res.json(availableAnimals());
 });
 
 // Get all available animals as XML
-server.get('/animals/available/xml', (req, res) => {
+server.get('/animals/available/xml', (_req, res) => {
   res.header('Content-Type', 'application/xml; charset=utf-8');
   const xml_body = xml({
     animals: animalRepository.fetchAll().map((animal) => {
@@ -95,7 +95,7 @@ server.post('/animals', (req, res) => {
   console.log(req.headers);
 
   // Really basic validation
-  if (!animal || !animal.first_name) {
+  if (!animal?.first_name) {
     try {
       // Workaround/Recreation for https://github.com/pact-foundation/pact-js/issues/884
       // Issue with x-www-form-urlencoded data
@@ -126,7 +126,7 @@ server.post('/animals', (req, res) => {
       animal.id = animalRepository.fetchAll().length;
       animalRepository.insert(animal);
       return res.json(animal);
-    } catch (e) {
+    } catch (_e) {
       //
     }
     res.writeHead(400);

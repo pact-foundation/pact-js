@@ -33,7 +33,7 @@ const accountRepository = {
 
   findByAccountNumber: async (accountNumber) => {
     return accounts.find(
-      (account) => account.accountNumber.id == accountNumber,
+      (account) => Number(account.accountNumber.id) === Number(accountNumber),
     );
   },
 };

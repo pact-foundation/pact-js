@@ -30,7 +30,7 @@ export type StateAction = 'setup' | 'teardown';
  * Respond to the state setup event, optionally returning a map of provider
  * values to dynamically inject into the incoming request to test
  */
-export type StateFunc = (parameters?: AnyJson) => Promise<JsonMap | void>;
+export type StateFunc = (parameters?: AnyJson) => Promise<JsonMap | undefined>;
 
 /**
  * Respond to the state setup event, with the ability to hook into the setup/teardown

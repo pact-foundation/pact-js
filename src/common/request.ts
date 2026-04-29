@@ -1,5 +1,5 @@
 import axios from 'axios';
-import https from 'https';
+import https from 'node:https';
 import { pathOr } from 'ramda';
 import logger from './logger';
 

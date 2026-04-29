@@ -1,4 +1,4 @@
-import fs = require('fs');
+import fs = require('node:fs');
 
 import type { ConsumerPact } from '@pact-foundation/pact-core';
 import type { V3MockServer } from '../../v3';

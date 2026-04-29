@@ -3,7 +3,6 @@ const {
   providerWithMetadata,
 } = require('@pact-foundation/pact');
 const { versionFromGitTag } = require('absolute-version');
-const path = require('path');
 const { createEvent } = require('./index');
 const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
 

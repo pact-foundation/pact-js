@@ -50,7 +50,7 @@ describe('Pact Verification', () => {
       logLevel: LOG_LEVEL as LogLevel,
     };
 
-    return new Verifier(opts).verifyProvider().then((output) => {
+    return new Verifier(opts).verifyProvider().then((_output) => {
       server.close();
     });
   });

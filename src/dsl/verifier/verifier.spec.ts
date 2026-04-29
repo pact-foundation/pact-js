@@ -2,7 +2,7 @@ import proxyquire from 'proxyquire';
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
-import type { Server } from 'http';
+import type { Server } from 'node:http';
 import serviceFactory, { type LogLevel } from '@pact-foundation/pact-core';
 
 import logger from '../../common/logger';
@@ -23,7 +23,7 @@ describe('Verifier', () => {
   const providerBaseUrl = 'http://not.exists';
   const opts: VerifierOptions = {
     providerBaseUrl,
-    requestFilter: (req, res, next) => {
+    requestFilter: (_req, _res, next) => {
       next();
     },
     stateHandlers: {

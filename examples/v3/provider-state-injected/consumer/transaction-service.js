@@ -9,7 +9,7 @@ module.exports = {
 
   createTransaction: (accountId, amountInCents) => {
     return axios
-      .get(accountServiceUrl + '/accounts/search/findOneByAccountNumberId', {
+      .get(`${accountServiceUrl}/accounts/search/findOneByAccountNumberId`, {
         params: {
           accountNumber: accountId,
         },
@@ -38,7 +38,7 @@ module.exports = {
   createTransactionWithPostBody: (accountId, amountInCents) => {
     return axios
       .post(
-        accountServiceUrl + '/accounts/search/findOneByAccountNumberIdInBody',
+        `${accountServiceUrl}/accounts/search/findOneByAccountNumberIdInBody`,
         {
           accountNumber: accountId,
         },
@@ -66,12 +66,12 @@ module.exports = {
   },
 
   getText: (id) => {
-    return axios.get(accountServiceUrl + '/data/' + id).then((data) => {
+    return axios.get(`${accountServiceUrl}/data/${id}`).then((data) => {
       return data;
     });
   },
   getXml: (id) => {
-    return axios.get(accountServiceUrl + '/data/xml/' + id).then((data) => {
+    return axios.get(`${accountServiceUrl}/data/xml/${id}`).then((data) => {
       return data;
     });
   },

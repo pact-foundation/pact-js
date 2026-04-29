@@ -1,6 +1,6 @@
 // Consumer handler, responsible for extracting message from SNS
 // and dealing with lambda-related things.
-const handler = (event, context, callback) => {
+const handler = (event, _context, callback) => {
   console.log('Received event from SNS');
 
   event.Records.forEach((e) => {
@@ -20,7 +20,7 @@ let eventCount = 0;
 const consumeEvent = (event) => {
   console.log('consuming event', event);
 
-  if (!event || !event.id) {
+  if (!event?.id) {
     throw new Error('Invalid event, missing fields');
   }
 

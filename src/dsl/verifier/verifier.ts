@@ -6,10 +6,10 @@ import serviceFactory, {
   type VerifierOptions as PactCoreVerifierOptions,
 } from '@pact-foundation/pact-core';
 import { omit, isEmpty } from 'lodash';
-import type http from 'http';
-import url from 'url';
+import type http from 'node:http';
+import url from 'node:url';
 
-import type { AddressInfo } from 'net';
+import type { AddressInfo } from 'node:net';
 import logger, { setLogLevel } from '../../common/logger';
 
 import ConfigurationError from '../../errors/configurationError';

@@ -18,7 +18,7 @@ const doRequest = async (
   hookHandler?: RequestHandler,
 ) => {
   const hooksStateHandler = registerHookStateTracking(hooksState);
-  const hookRequestHandler = hookHandler || ((req, res, next) => next());
+  const hookRequestHandler = hookHandler || ((_req, _res, next) => next());
 
   const request: any = {
     body: {
