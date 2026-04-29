@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [16.3.1](https://github.com/pact-foundation/pact-js/compare/v16.3.0...v16.3.1) (2026-04-29)
+
+
+### Fixes and Improvements
+
+* extract content type from matchers ([5913a8e](https://github.com/pact-foundation/pact-js/commit/5913a8eb2a0c1520bd4e2f46be7a738d14782ab0))
+
 ## [16.3.0](https://github.com/pact-foundation/pact-js/compare/v16.2.0...v16.3.0) (2026-03-11)
 
 
