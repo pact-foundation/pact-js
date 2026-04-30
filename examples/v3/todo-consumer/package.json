@@ -7,7 +7,9 @@
     "start": "node src/index.js",
     "test": "npm run test:consumer && npm run test:provider",
     "test:consumer": "mocha test/consumer.spec.js",
-    "test:provider": "mocha test/provider.spec.js"
+    "test:provider": "mocha test/provider.spec.js",
+    "lint": "npm run lint:tsc",
+    "lint:tsc": "echo 'Note: This example has not been migrated to TypeScript yet'"
   },
   "author": "",
   "license": "ISC",

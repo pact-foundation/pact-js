@@ -8,7 +8,9 @@
     "test": "npm run test:consumer && npm run test:provider && npm run test:consumer:matching-rules",
     "test:consumer": "mocha consumer.spec.ts",
     "test:consumer:matching-rules": "mocha consumer-matching-rules.spec.ts",
-    "test:provider": "mocha provider.spec.ts"
+    "test:provider": "mocha provider.spec.ts",
+    "lint": "npm run lint:tsc",
+    "lint:tsc": "tsc --noEmit"
   },
   "author": "matt.fellows@onegeek.com.au",
   "license": "MIT",
@@ -25,7 +27,7 @@
     "multer": "^2.0.2",
     "rimraf": "^3.0.2",
     "tsx": "^4.19.2",
-    "typescript": "^4.7.4"
+    "typescript": "^6.0.0"
   },
   "config": {
     "pact_do_not_track": true

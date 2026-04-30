@@ -10,7 +10,9 @@
     "test:no:publish": "npm run test:consumer && npm run test:provider",
     "test:consumer": "mocha src/consumer.spec.ts",
     "test:publish": "pact-broker publish ./pacts --consumer-app-version=\"$(npx absolute-version)\" --auto-detect-version-properties --broker-base-url=https://testdemo.pactflow.io",
-    "test:provider": "mocha src/provider.spec.ts"
+    "test:provider": "mocha src/provider.spec.ts",
+    "lint": "npm run lint:tsc",
+    "lint:tsc": "tsc --noEmit"
   },
   "keywords": [
     "graphql",
@@ -35,7 +37,7 @@
     "tslint": "^5.20.1",
     "tslint-config-prettier": "^1.18.0",
     "tsx": "^4.19.2",
-    "typescript": "^4.9.5"
+    "typescript": "^6.0.0"
   },
   "dependencies": {
     "apollo-boost": "0.4.9",

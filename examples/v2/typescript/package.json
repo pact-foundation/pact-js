@@ -4,7 +4,9 @@
   "description": "TypeScript Pact Example",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/*.spec.ts"
+    "test": "mocha test/*.spec.ts",
+    "lint": "npm run lint:tsc",
+    "lint:tsc": "tsc --noEmit"
   },
   "author": "",
   "license": "MIT",
@@ -23,7 +25,7 @@
     "tslint": "^5.20.1",
     "tslint-config-prettier": "^1.18.0",
     "tsx": "^4.19.2",
-    "typescript": "^4.7.4"
+    "typescript": "^6.0.0"
   },
   "dependencies": {
     "axios": "^1.12.2"

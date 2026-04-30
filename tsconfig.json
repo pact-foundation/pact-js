@@ -17,6 +17,5 @@
     "declaration": true,
     "experimentalDecorators": true
   },
-  "include": ["src", "test", "native/index.node.d.ts", "v3"],
-  "exclude": ["./node_modules/**", "dist", "examples"]
+  "include": ["src", "test"]
 }
