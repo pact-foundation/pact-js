@@ -178,11 +178,7 @@ describe('V4 Pact', () => {
       await pact
         .addInteraction()
         .uponReceiving(description)
-        .reference(
-          'Jira',
-          'TICKET-123',
-          'https://jira.example.com/TICKET-123',
-        )
+        .reference('Jira', 'TICKET-123', 'https://jira.example.com/TICKET-123')
         .withRequest('GET', '/')
         .willRespondWith(200)
         .executeTest(async (server) => axios.get(server.url));
@@ -341,11 +337,7 @@ describe('V4 Pact', () => {
 
       await pact
         .addSynchronousInteraction(description)
-        .reference(
-          'Jira',
-          'TICKET-789',
-          'https://jira.example.com/TICKET-789',
-        )
+        .reference('Jira', 'TICKET-789', 'https://jira.example.com/TICKET-789')
         .withRequest((builder) => {
           builder.withJSONContent({ request: 'ping' });
         })
