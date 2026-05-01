@@ -102,7 +102,7 @@
     ]
   },
   "dependencies": {
-    "@pact-foundation/pact-core": "^19.1.0",
+    "@pact-foundation/pact-core": "^19.2.0",
     "axios": "^1.12.2",
     "body-parser": "^2.2.0",
     "chalk": "4.1.2",
