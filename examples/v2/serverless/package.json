@@ -16,7 +16,9 @@
     "create-stack": "serverless deploy --verbose",
     "deploy": "npm run deploy:consumer && npm run deploy:provider",
     "deploy:consumer": "npm run can-i-deploy && serverless deploy -f consumer",
-    "deploy:provider": "npm run can-i-deploy && serverless deploy -f provider"
+    "deploy:provider": "npm run can-i-deploy && serverless deploy -f provider",
+    "lint": "npm run lint:tsc",
+    "lint:tsc": "echo 'Note: This example has not been migrated to TypeScript yet'"
   },
   "devDependencies": {
     "@pact-foundation/pact": "file:../../../dist",

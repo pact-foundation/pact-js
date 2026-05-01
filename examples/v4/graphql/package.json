@@ -8,7 +8,9 @@
     "clean": "rimraf pacts",
     "test": "npm run clean && npm run test:consumer && npm run test:provider",
     "test:consumer": "nyc --reporter=text-summary mocha src/consumer.spec.ts",
-    "test:provider": "nyc --reporter=text-summary mocha -t 30000 src/provider.spec.ts"
+    "test:provider": "nyc --reporter=text-summary mocha -t 30000 src/provider.spec.ts",
+    "lint": "npm run lint:tsc",
+    "lint:tsc": "tsc --noEmit"
   },
   "keywords": [
     "graphql",
@@ -22,7 +24,7 @@
     "@pact-foundation/pact-cli": "^18.0.0",
     "@types/chai": "^4.3.8",
     "@types/chai-as-promised": "7.1.6",
-    "@types/mocha": "^10.0.2",
+    "@types/mocha": "^10.0.10",
     "@types/node": "^18.7.11",
     "absolute-version": "1.0.2",
     "apollo-boost": "0.4.9",
@@ -40,6 +42,6 @@
     "nyc": "^15.1.0",
     "rimraf": "^5.0.5",
     "ts-node": "^10.9.1",
-    "typescript": "^4.9.5"
+    "typescript": "^6.0.0"
   }
 }

@@ -8,7 +8,9 @@
     "pretest": "npm run clean",
     "test:consumer": "jest consumer.spec.ts",
     "test:matching-rules": "jest consumer-matching-rules.spec.ts",
-    "test": "npm run test:consumer && npm run test:matching-rules"
+    "test": "npm run test:consumer && npm run test:matching-rules",
+    "lint": "npm run lint:tsc",
+    "lint:tsc": "tsc --noEmit"
   },
   "author": "kevin.rohanvaz@smartbear.com",
   "license": "MIT",
@@ -16,7 +18,7 @@
     "@pact-foundation/pact": "file:../../../dist",
     "@types/chai": "^4.3.3",
     "@types/chai-as-promised": "7.1.5",
-    "@types/jest": "^29.5.3",
+    "@types/jest": "^29.5.14",
     "axios": "^1.2.0",
     "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",
@@ -24,7 +26,7 @@
     "jest": "^29.6.1",
     "rimraf": "^3.0.2",
     "ts-jest": "^29.1.1",
-    "typescript": "^4.7.4"
+    "typescript": "^6.0.0"
   },
   "config": {
     "pact_do_not_track": true

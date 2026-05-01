@@ -7,7 +7,9 @@
     "pretest": "npm run clean",
     "test": "npm run test:consumer && npm run test:provider",
     "test:consumer": "mocha consumer.spec.ts",
-    "test:provider": "mocha provider.spec.ts"
+    "test:provider": "mocha provider.spec.ts",
+    "lint": "npm run lint:tsc",
+    "lint:tsc": "tsc --noEmit"
   },
   "author": "matt.fellows@onegeek.com.au",
   "license": "MIT",
@@ -23,7 +25,7 @@
     "mocha": "^10.0.0",
     "rimraf": "^3.0.2",
     "tsx": "^4.19.2",
-    "typescript": "^4.7.4"
+    "typescript": "^6.0.0"
   },
   "config": {
     "pact_do_not_track": true

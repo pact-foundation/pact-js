@@ -32,7 +32,7 @@ import path from 'node:path';
 chai.use(chaiAsPromised);
 
 const { expect } = chai;
-const LOG_LEVEL = process.env.LOG_LEVEL || 'TRACE';
+const LOG_LEVEL = process.env.LOG_LEVEL || 'INFO';
 
 describe('Pact Consumer Test Using Multipart form data', () => {
   /**

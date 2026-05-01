@@ -4,7 +4,9 @@
   "description": "Pact JS E2E Example",
   "scripts": {
     "test": "npm run test:provider",
-    "test:provider": "mocha test/provider.spec.js"
+    "test:provider": "mocha test/provider.spec.js",
+    "lint": "npm run lint:tsc",
+    "lint:tsc": "echo 'Note: This example has not been migrated to TypeScript yet'"
   },
   "author": "artur@jankaritech.com",
   "license": "MIT",

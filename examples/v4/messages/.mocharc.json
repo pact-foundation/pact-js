@@ -4,5 +4,5 @@
   "colors": true,
   "timeout": 30000,
   "exit": true,
-  "require": ["ts-node/register"]
+  "require": ["tsx"]
 }
