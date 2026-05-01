@@ -127,6 +127,16 @@ export class UnconfiguredAsynchronousMessage
     return this;
   }
 
+  addInteractionReference(
+    group: string,
+    name: string,
+    value: string,
+  ): V4UnconfiguredAsynchronousMessage {
+    this.message.interaction.addInteractionReference(group, name, value);
+
+    return this;
+  }
+
   usingPlugin(config: PluginConfig): V4AsynchronousMessageWithPlugin {
     this.pact.addPlugin(config.plugin, config.version);
 

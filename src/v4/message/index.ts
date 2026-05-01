@@ -78,6 +78,16 @@ export class UnconfiguredSynchronousMessage
     return this;
   }
 
+  addInteractionReference(
+    group: string,
+    name: string,
+    value: string,
+  ): V4UnconfiguredSynchronousMessage {
+    this.interaction.addInteractionReference(group, name, value);
+
+    return this;
+  }
+
   usingPlugin(config: PluginConfig): V4SynchronousMessageWithPlugin {
     this.pact.addPlugin(config.plugin, config.version);
 

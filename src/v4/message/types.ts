@@ -58,6 +58,11 @@ export interface V4UnconfiguredSynchronousMessage {
   pending(pending?: boolean): V4UnconfiguredSynchronousMessage;
   comment(comment: Comment | CustomComment): V4UnconfiguredSynchronousMessage;
   testName(name: string): V4UnconfiguredSynchronousMessage;
+  addInteractionReference(
+    group: string,
+    name: string,
+    value: string,
+  ): V4UnconfiguredSynchronousMessage;
   usingPlugin(config: PluginConfig): V4SynchronousMessageWithPlugin;
   withRequest(r: V4MessageRequestBuilderFunc): V4SynchronousMessageWithRequest;
 }
@@ -129,6 +134,11 @@ export interface V4UnconfiguredAsynchronousMessage {
   pending(pending?: boolean): V4UnconfiguredAsynchronousMessage;
   comment(comment: Comment | CustomComment): V4UnconfiguredAsynchronousMessage;
   testName(name: string): V4UnconfiguredAsynchronousMessage;
+  addInteractionReference(
+    group: string,
+    name: string,
+    value: string,
+  ): V4UnconfiguredAsynchronousMessage;
   usingPlugin(config: PluginConfig): V4AsynchronousMessageWithPlugin;
   expectsToReceive(
     description: string,
