@@ -69,6 +69,16 @@ export class UnconfiguredInteraction implements V4UnconfiguredInteraction {
     return this;
   }
 
+  reference(
+    group: string,
+    name: string,
+    value: string,
+  ): V4UnconfiguredInteraction {
+    this.interaction.addInteractionReference(group, name, value);
+
+    return this;
+  }
+
   withCompleteRequest(_request: V4Request): V4InteractionWithCompleteRequest {
     throw new Error('withCompleteRequest is not implemented');
   }

@@ -68,6 +68,11 @@ export interface V4UnconfiguredInteraction {
   pending(pending?: boolean): V4UnconfiguredInteraction;
   comment(comment: Comment | CustomComment): V4UnconfiguredInteraction;
   testName(name: string): V4UnconfiguredInteraction;
+  reference(
+    group: string,
+    name: string,
+    value: string,
+  ): V4UnconfiguredInteraction;
   withCompleteRequest(request: V4Request): V4InteractionWithCompleteRequest;
   withRequest(
     method: string,
