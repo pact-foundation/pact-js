@@ -69,7 +69,7 @@ export class UnconfiguredInteraction implements V4UnconfiguredInteraction {
     return this;
   }
 
-  addInteractionReference(
+  reference(
     group: string,
     name: string,
     value: string,

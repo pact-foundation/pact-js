@@ -68,7 +68,7 @@ export interface V4UnconfiguredInteraction {
   pending(pending?: boolean): V4UnconfiguredInteraction;
   comment(comment: Comment | CustomComment): V4UnconfiguredInteraction;
   testName(name: string): V4UnconfiguredInteraction;
-  addInteractionReference(
+  reference(
     group: string,
     name: string,
     value: string,

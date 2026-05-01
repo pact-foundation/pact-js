@@ -127,7 +127,7 @@ export class UnconfiguredAsynchronousMessage
     return this;
   }
 
-  addInteractionReference(
+  reference(
     group: string,
     name: string,
     value: string,

@@ -58,7 +58,7 @@ export interface V4UnconfiguredSynchronousMessage {
   pending(pending?: boolean): V4UnconfiguredSynchronousMessage;
   comment(comment: Comment | CustomComment): V4UnconfiguredSynchronousMessage;
   testName(name: string): V4UnconfiguredSynchronousMessage;
-  addInteractionReference(
+  reference(
     group: string,
     name: string,
     value: string,
@@ -134,7 +134,7 @@ export interface V4UnconfiguredAsynchronousMessage {
   pending(pending?: boolean): V4UnconfiguredAsynchronousMessage;
   comment(comment: Comment | CustomComment): V4UnconfiguredAsynchronousMessage;
   testName(name: string): V4UnconfiguredAsynchronousMessage;
-  addInteractionReference(
+  reference(
     group: string,
     name: string,
     value: string,

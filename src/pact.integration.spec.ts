@@ -178,7 +178,7 @@ describe('V4 Pact', () => {
       await pact
         .addInteraction()
         .uponReceiving(description)
-        .addInteractionReference(
+        .reference(
           'Jira',
           'TICKET-123',
           'https://jira.example.com/TICKET-123',
@@ -281,7 +281,7 @@ describe('V4 Pact', () => {
 
       await pact
         .addAsynchronousInteraction()
-        .addInteractionReference(
+        .reference(
           'GitHub',
           'PR-456',
           'https://github.com/example/repo/pull/456',
@@ -341,7 +341,7 @@ describe('V4 Pact', () => {
 
       await pact
         .addSynchronousInteraction(description)
-        .addInteractionReference(
+        .reference(
           'Jira',
           'TICKET-789',
           'https://jira.example.com/TICKET-789',
