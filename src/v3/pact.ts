@@ -255,7 +255,7 @@ export class PactV3 {
   ): Promise<T | undefined> {
     const scheme = this.opts.tls ? 'https' : 'http';
     const host = this.opts.host || '127.0.0.1';
-    const cors = this.opts.cors !== false;
+    const cors = this.opts.cors ?? true;
     const config = JSON.stringify({ corsPreflight: cors });
 
     const port = this.pact.pactffiCreateMockServerForTransport(
