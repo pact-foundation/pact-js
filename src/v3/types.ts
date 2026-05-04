@@ -90,7 +90,7 @@ export interface PactV3Options {
    */
   provider: string;
   /**
-   * If the mock server should handle CORS pre-flight requests. Defaults to false
+   * If the mock server should handle CORS pre-flight requests. Defaults to true
    */
   cors?: boolean;
   /**

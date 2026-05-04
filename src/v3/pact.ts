@@ -255,12 +255,21 @@ export class PactV3 {
   ): Promise<T | undefined> {
     const scheme = this.opts.tls ? 'https' : 'http';
     const host = this.opts.host || '127.0.0.1';
+    const cors = this.opts.cors !== false;
+    const config = JSON.stringify({ corsPreflight: cors });
 
-    const port = this.pact.createMockServer(
+    const port = this.pact.pactffiCreateMockServerForTransport(
       host,
+      scheme,
+      config,
       this.opts.port,
-      this.opts.tls,
     );
+
+    if (port <= 0) {
+      throw new Error(
+        `Failed to start mock server: received error code ${port}`,
+      );
+    }
     const server = { port, url: `${scheme}://${host}:${port}`, id: 'unknown' };
     let val: T | undefined;
     let error: Error | undefined;
