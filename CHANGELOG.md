@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [16.4.0](https://github.com/pact-foundation/pact-js/compare/v16.3.1...v16.4.0) (2026-05-04)
+
+
+### Features
+
+* add the addInteractionReference function to V4 DSL classes to support external references ([#1762](https://github.com/pact-foundation/pact-js/issues/1762)) ([a65fe91](https://github.com/pact-foundation/pact-js/commit/a65fe918ec7224adbfe5b336e8864774a42cefe6))
+
 ## [16.3.1](https://github.com/pact-foundation/pact-js/compare/v16.3.0...v16.3.1) (2026-04-29)
 
 
