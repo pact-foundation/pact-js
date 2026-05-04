@@ -125,7 +125,7 @@
     "@babel/cli": "7.28.6",
     "@babel/core": "7.29.0",
     "@babel/preset-env": "7.29.3",
-    "@biomejs/biome": "2.4.13",
+    "@biomejs/biome": "2.4.14",
     "@tsconfig/node20": "20.1.9",
     "@types/chai": "5.2.3",
     "@types/chai-as-promised": "8.0.2",
