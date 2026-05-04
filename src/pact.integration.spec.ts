@@ -56,6 +56,21 @@ describe('V4 Pact', () => {
     expect(comments.testname).to.equal(testName);
   };
 
+  const expectReferenceToEqual = (
+    interaction: Record<string, unknown>,
+    group: string,
+    name: string,
+    value: string,
+  ): void => {
+    const comments = interaction.comments as Record<string, unknown>;
+    const references = comments.references as Record<
+      string,
+      Record<string, string>
+    >;
+
+    expect(references[group][name]).to.equal(value);
+  };
+
   beforeEach(() => {
     pact = new PactV4({
       consumer: 'v4consumer',
@@ -157,6 +172,27 @@ describe('V4 Pact', () => {
       );
     });
 
+    it('records interaction references in the pact file', async () => {
+      const description = 'v4 http interaction with references';
+
+      await pact
+        .addInteraction()
+        .uponReceiving(description)
+        .reference('Jira', 'TICKET-123', 'https://jira.example.com/TICKET-123')
+        .withRequest('GET', '/')
+        .willRespondWith(200)
+        .executeTest(async (server) => axios.get(server.url));
+
+      const interaction = interactionByDescription(description);
+
+      expectReferenceToEqual(
+        interaction,
+        'Jira',
+        'TICKET-123',
+        'https://jira.example.com/TICKET-123',
+      );
+    });
+
     it('supports regex matcher for response content-type with optional charset', () =>
       pact
         .addInteraction()
@@ -235,6 +271,31 @@ describe('V4 Pact', () => {
         'async metadata test name',
       );
     });
+
+    it('records interaction references in the pact file', async () => {
+      const description = 'v4 async interaction with references';
+
+      await pact
+        .addAsynchronousInteraction()
+        .reference(
+          'GitHub',
+          'PR-456',
+          'https://github.com/example/repo/pull/456',
+        )
+        .expectsToReceive(description, (builder) => {
+          builder.withJSONContent({ event: 'user.created' });
+        })
+        .executeTest(async () => Promise.resolve());
+
+      const interaction = interactionByDescription(description);
+
+      expectReferenceToEqual(
+        interaction,
+        'GitHub',
+        'PR-456',
+        'https://github.com/example/repo/pull/456',
+      );
+    });
   });
 
   describe('Synchronous message contract', () => {
@@ -268,6 +329,30 @@ describe('V4 Pact', () => {
         'covered by sync metadata test',
         'second note from sync metadata test',
         'sync metadata test name',
+      );
+    });
+
+    it('records interaction references in the pact file', async () => {
+      const description = 'v4 sync interaction with references';
+
+      await pact
+        .addSynchronousInteraction(description)
+        .reference('Jira', 'TICKET-789', 'https://jira.example.com/TICKET-789')
+        .withRequest((builder) => {
+          builder.withJSONContent({ request: 'ping' });
+        })
+        .withResponse((builder) => {
+          builder.withJSONContent({ response: 'pong' });
+        })
+        .executeTest(async () => Promise.resolve());
+
+      const interaction = interactionByDescription(description);
+
+      expectReferenceToEqual(
+        interaction,
+        'Jira',
+        'TICKET-789',
+        'https://jira.example.com/TICKET-789',
       );
     });
   });
