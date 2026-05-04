@@ -45,7 +45,18 @@ export const executeTest = async <T>(
 ): Promise<T | undefined> => {
   const scheme = opts.tls ? 'https' : 'http';
   const host = opts.host || '127.0.0.1';
-  const port = pact.createMockServer(host, opts.port || 0, false);
+  const cors = opts.cors ?? true;
+  const config = JSON.stringify({ corsPreflight: cors });
+  const port = pact.pactffiCreateMockServerForTransport(
+    host,
+    scheme,
+    config,
+    opts.port,
+  );
+
+  if (port <= 0) {
+    throw new Error(`Failed to start mock server: received error code ${port}`);
+  }
 
   const server = { port, url: `${scheme}://${host}:${port}`, id: 'unknown' };
   let val: T | undefined;

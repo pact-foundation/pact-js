@@ -53,6 +53,10 @@ export interface PactV4Options {
    * The host to run the mock service, defaults to 127.0.0.1
    */
   host?: string;
+  /**
+   * If the mock server should handle CORS pre-flight requests. Defaults to true
+   */
+  cors?: boolean;
 }
 
 export type TemplateHeaderArrayValue = string[] | Matcher<string>[];
