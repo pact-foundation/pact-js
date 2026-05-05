@@ -30,6 +30,16 @@ describe('Verifier', () => {
         expect(body).to.be.instanceOf(Buffer);
         expect(body.toString()).to.eq(JSON.stringify(req.body));
       });
+
+      it('it returns a buffer for an empty JSON object body', async () => {
+        // biome-ignore lint/suspicious/noExplicitAny: partial mock — only body is needed to exercise parseBody
+        const req: any = { body: {} };
+
+        const body = parseBody(req);
+
+        expect(body).to.be.instanceOf(Buffer);
+        expect(body.toString()).to.eq('{}');
+      });
     });
 
     describe('when request body does not exist', () => {
