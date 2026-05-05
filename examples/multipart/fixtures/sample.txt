@@ -1,0 +1,2 @@
+Sample file for multipart upload testing.
+This file is a test fixture.

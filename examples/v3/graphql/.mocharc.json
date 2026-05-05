@@ -1,6 +1,0 @@
-{
-  "timeout": 60000,
-  "recursive": true,
-  "require": ["tsx"],
-  "exit": true
-}
