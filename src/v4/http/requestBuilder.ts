@@ -52,6 +52,14 @@ export class RequestBuilder implements V4RequestBuilder {
     return this;
   }
 
+  xmlBody(body: unknown): V4RequestBuilder {
+    this.interaction.withRequestBody(
+      matcherValueOrString(body),
+      'application/xml',
+    );
+    return this;
+  }
+
   binaryFile(contentType: string, file: string): V4RequestBuilder {
     const body = readBinaryData(file);
     this.interaction.withRequestBinaryBody(body, contentType);

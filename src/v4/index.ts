@@ -95,3 +95,4 @@ export class PactV4 implements V4ConsumerPact {
 export { PactV4 as Pact, PactV4Options as PactOptions };
 export * from './graphql';
 export * from './message/index';
+export * from '../xml';

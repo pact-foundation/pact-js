@@ -36,6 +36,12 @@ export class RequestWithPluginBuilder
     return this;
   }
 
+  xmlBody(body: unknown): V4RequestWithPluginBuilder {
+    super.xmlBody(body);
+
+    return this;
+  }
+
   binaryFile(contentType: string, file: string): V4RequestWithPluginBuilder {
     super.binaryFile(contentType, file);
 

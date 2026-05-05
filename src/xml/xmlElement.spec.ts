@@ -2,8 +2,8 @@ import * as chai from 'chai';
 import { describe } from 'mocha';
 import { XmlText } from './xmlText';
 import { XmlElement } from './xmlElement';
-import * as MatchersV3 from '../matchers';
-import type { Matcher } from '../types';
+import * as MatchersV3 from '../v3/matchers';
+import type { Matcher } from '../v3/types';
 
 const { expect } = chai;
 
