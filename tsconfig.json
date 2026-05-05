@@ -1,6 +1,6 @@
 {
   "$schema": "https://www.schemastore.org/tsconfig",
-  "extends": "@tsconfig/node20/tsconfig.json",
+  "extends": "@tsconfig/node20",
   "compileOnSave": false,
   "compilerOptions": {
     "outDir": "./dist",

@@ -7,7 +7,7 @@ interface ReqBodyExtended extends http.IncomingMessage {
 export const parseBody = (req: ReqBodyExtended): Buffer => {
   let bodyData = Buffer.alloc(0);
 
-  if (!req.body || !Object.keys(req.body).length) {
+  if (!req.body) {
     return bodyData;
   }
 
