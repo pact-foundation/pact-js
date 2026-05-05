@@ -1,15 +1,8 @@
 # Event Driven Systems
 
-## Introduction to Message Based API Testing
+This guide shows how to write consumer and provider tests for async message-based contracts.
 
-Modern distributed architectures are increasingly integrated in a decoupled, asynchronous fashion. Message queues such as ActiveMQ, RabbitMQ, SQS, Kafka and Kinesis are common, often integrated via small and frequent numbers of microservices (for example, Lambda).
-
-Furthermore, the web has things like WebSockets and gRPC which involve bidirectional messaging (synchronous).
-
-Pact has support for these use cases, by abstracting away the protocol and focussing on the messages passing between them.
-
-[Read the docs](https://docs.pact.io/getting_started/how_pact_works#non-http-testing-message-pact) for more on how Pact deals with this.
-
+> **Background:** Modern distributed architectures commonly use message queues (ActiveMQ, RabbitMQ, SQS, Kafka, Kinesis) and bidirectional protocols (WebSockets, gRPC) to integrate services in a decoupled, asynchronous fashion. Pact abstracts away the transport protocol and focuses on the messages passing between services. [Read more](https://docs.pact.io/getting_started/how_pact_works#non-http-testing-message-pact) on how Pact handles non-HTTP testing.
 
 Pact is a consumer-driven contract testing tool, which is a fancy way of saying that the API `Consumer` writes a test to set out its assumptions and needs of its API `Provider`(s). By unit testing our API client with Pact, it will produce a `contract` that we can share to our `Provider` to confirm these assumptions and prevent breaking changes.
 

@@ -44,46 +44,7 @@ The `Pact` class provides the following high-level APIs, they are listed in the 
 
 ### API
 
-<details>
-
-<summary>Consumer API</summary>
-
-The Pact SDK uses a fluent builder to create interactions.
-
-| API                              | Options                            | Description                                                                                                                                                            |
-| -------------------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `new Pact(options)`              | See constructor options below      | Creates a Mock Server test double of your Provider API. The class is **not** thread safe, but you can run tests in parallel by creating as many instances as you need. |
-| `addInteraction(...)`            | `V4UnconfiguredInteraction`        | Start a builder for an HTTP interaction                                                                                                                                |
-| `addSynchronousInteraction(...)` | `V4UnconfiguredSynchronousMessage` | Start a builder for an asynchronous message                                                                                                                            |
-
-_NOTE:_ V4 also supports interaction metadata for advanced workflows using `pending(...)`, `comment(...)`, and `testName(...)`. See [Interaction metadata (V4, advanced)](#interaction-metadata-v4-advanced).
-
-#### Common methods to builders
-
-
-| `given(...)`                           | Object             | Set one or more provider states for the interaction                                                                                                                                                                                                                                                                                                                                 |
-| `uponReceiving(...)`                   | string                        | The scenario name. The combination of `given` and `uponReceiving` must be unique in the pact file                                                                                                                                                                                                                                                                      |
-| `executeTest(...)`                     | -                             | Executes a user defined function, passing in details of the dynamic mock service for use in the test. If successful, the pact file is updated. The function signature changes depending on the setup and context of the interaction.                                                                                                                                                                                                                          |
-
-</details>
-
-<details>
-
-<summary>Constructor</summary>
-
-| Parameter  | Required? | Type    | Description                                                                               |
-| ---------- | --------- | ------- | ----------------------------------------------------------------------------------------- |
-| `consumer` | yes       | string  | The name of the consumer                                                                  |
-| `provider` | yes       | string  | The name of the provider                                                                  |
-| `port`     | no        | number  | The port to run the mock service on, defaults to a random machine assigned available port |
-| `host`     | no        | string  | The host to run the mock service, defaults to 127.0.0.1                                   |
-| `tls`      | no        | boolean | flag to identify which protocol to be used (default false, HTTP)                          |
-| `dir`      | no        | string  | Directory to output pact files                                                            |
-| `log`      | no        | string  | File to log to                                                                            |
-| `logLevel` | no        | string  | Log level: one of 'trace', 'debug', 'info', 'error', 'fatal' or 'warn'                    |
-| `spec`     | no        | number  | Pact specification version (defaults to 2)                                                |
-
-</details>
+See the [Consumer API Reference](/docs/reference/consumer-api.md) for the full `Pact` constructor options and interaction builder methods.
 
 ### Example
 

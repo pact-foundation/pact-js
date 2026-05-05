@@ -14,6 +14,8 @@ Matching rules
 
 ## V2 Matching rules
 
+> **Note:** The V2 API is still supported but new code should use V3/V4 matchers. See the [V3/V4 Matching rules](#v3--v4-matching-rules) section below.
+
 V2 only matching rules are found in the export `MatchersV2` of the `@pact-foundation/pact` package, and can be used with the `PactV2` dsl.
 
 ### Match common formats
@@ -141,7 +143,7 @@ provider.addInteraction({
 
 If none of the above matchers or formats work, you can write your own regex matcher.
 
-The underlying mock service is written in Ruby, so the regular expression must be in a Ruby format, not a Javascript format.
+> **Note:** The underlying mock service is written in Ruby, so the regular expression must be in a Ruby format, not a Javascript format.
 
 ```javascript
 const { term } = pact;
@@ -293,42 +295,8 @@ stateHandlers: {
 },
 ```
 
-## A note about typescript
+## TypeScript: matchers not assignable to expected type
 
-Because of the way interfaces work in typescript, if you are
-passing a typed object to a matcher, and that type is an interface (say `Foo`):
-
-```javascript
-interface Foo {
-  a: string;
-}
-
-const f: Foo = { a: "broken example" };
-
-
-provider.addInteraction({
-  uponReceiving: "a post with foo",
-  withRequest: {
-    method: "POST",
-    path: "/",
-    body: like(f) // Type 'Matcher<Foo>' is not assignable to type 'AnyTemplate'.
-  },
-  ...
-})
-```
-
-then you may run into the following message:
-
-```
-Type 'Matcher<Foo>' is not assignable to type 'AnyTemplate'.
-```
-
-This is one of the rare places where `type` differs from `interface`. You have two options:
-
-1. Use `type Foo = {` instead of `interface Foo {`
-2. If this is not possible, Pact exports a workaround wrapper type called `InterfaceToTemplate<YourTypeHere>`. Use it like this:
-   ```
-   const f: InterfaceToTemplate<Foo> = { a: "working example" };
-   ```
+See [TypeScript: matchers not assignable to expected type](/docs/troubleshooting.md#typescript-matchers-not-assignable-to-expected-type) in the troubleshooting guide.
 
 [specification]: https://github.com/pact-foundation/pact-specification

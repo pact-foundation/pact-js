@@ -329,3 +329,39 @@ Affected frameworks
 ## Why are there duplicate / extraneous interactions in my pact file?
 
 You must clear out the pacts directory prior to running your tests. Pact tests may be run in parallel, which makes it difficult for Pact to know when the file is safe to clear. This is usually not a problem unless you upload from your development environment, as in CI / automation contexts, it's less likely that you have previous test runs lying around.
+
+## TypeScript: matchers not assignable to expected type
+
+Because of the way interfaces work in TypeScript, if you are passing a typed object to a matcher and that type is an `interface` (say `Foo`):
+
+```javascript
+interface Foo {
+  a: string;
+}
+
+const f: Foo = { a: "broken example" };
+
+provider.addInteraction({
+  uponReceiving: "a post with foo",
+  withRequest: {
+    method: "POST",
+    path: "/",
+    body: like(f) // Type 'Matcher<Foo>' is not assignable to type 'AnyTemplate'.
+  },
+  ...
+})
+```
+
+you may see:
+
+```
+Type 'Matcher<Foo>' is not assignable to type 'AnyTemplate'.
+```
+
+This is one of the rare places where `type` differs from `interface`. You have two options:
+
+1. Use `type Foo = {` instead of `interface Foo {`
+2. If this is not possible, Pact exports a workaround wrapper type called `InterfaceToTemplate<YourTypeHere>`. Use it like this:
+   ```
+   const f: InterfaceToTemplate<Foo> = { a: "working example" };
+   ```

@@ -1,6 +1,6 @@
 ## GraphQL API
 
-GraphQL is simply an abstraction over HTTP and may be tested via Pact.
+GraphQL is simply an abstraction over HTTP and may be tested via Pact. Use `addGraphQLInteraction()` (or the `GraphQLInteraction` wrapper for PactV3/PactV2) when your consumer sends GraphQL queries or mutations — these helpers normalise query whitespace and field ordering so that minor formatting differences between your test and the real client do not break the contract. If your consumer uses a plain HTTP endpoint that happens to return JSON, use `addInteraction()` instead. Query normalisation means that `query { hello }` and `query {   hello }` are treated as equivalent, so you can write readable queries in your tests without worrying about exact whitespace matching.
 
 ## Support
 
