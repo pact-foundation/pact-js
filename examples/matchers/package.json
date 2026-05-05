@@ -1,0 +1,23 @@
+{
+  "name": "pact-matchers-example",
+  "version": "1.0.0",
+  "description": "Deep-dive on Pact matchers",
+  "private": true,
+  "scripts": {
+    "test": "npm run test:consumer && npm run test:provider",
+    "test:consumer": "vitest run consumer.test.ts",
+    "test:provider": "vitest run provider.test.ts"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@pact-foundation/pact": "file:../..",
+    "@types/express": "^5.0.0",
+    "@types/node": "^20.0.0",
+    "axios": "^1.12.0",
+    "express": "^5.1.0",
+    "typescript": "^6.0.0",
+    "vitest": "^3.0.0"
+  }
+}

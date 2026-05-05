@@ -1,0 +1,20 @@
+{
+  "name": "pact-messages-example",
+  "version": "1.0.0",
+  "description": "Async/event-driven messaging with Pact",
+  "private": true,
+  "scripts": {
+    "test": "npm run test:consumer && npm run test:provider",
+    "test:consumer": "vitest run consumer.test.ts",
+    "test:provider": "vitest run provider.test.ts"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@pact-foundation/pact": "file:../..",
+    "@types/node": "^20.0.0",
+    "typescript": "^6.0.0",
+    "vitest": "^3.0.0"
+  }
+}
