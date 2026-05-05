@@ -1,4 +1,4 @@
-import type { Matcher } from '../types';
+import type { Matcher } from '../v3/types';
 import { XmlNode } from './xmlNode';
 
 export class XmlText extends XmlNode {

@@ -29,6 +29,14 @@ export class ResponseBuilder implements V4ResponseBuilder {
     return this;
   }
 
+  xmlBody(body: unknown): V4ResponseBuilder {
+    this.interaction.withResponseBody(
+      matcherValueOrString(body),
+      'application/xml',
+    );
+    return this;
+  }
+
   binaryFile(contentType: string, file: string): V4ResponseBuilder {
     const body = readBinaryData(file);
     this.interaction.withResponseBinaryBody(body, contentType);
