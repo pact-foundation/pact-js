@@ -34,9 +34,15 @@ describe('V4 HTTP executeTest', () => {
     it('passes corsPreflight: true by default when cors is not specified', async () => {
       const pactMock = buildPactMock(1234);
 
-      await executeTest(pactMock, baseOpts, async () => Promise.resolve(), () => {});
+      await executeTest(
+        pactMock,
+        baseOpts,
+        async () => Promise.resolve(),
+        () => {},
+      );
 
-      const stub = pactMock.pactffiCreateMockServerForTransport as sinon.SinonStub;
+      const stub =
+        pactMock.pactffiCreateMockServerForTransport as sinon.SinonStub;
       expect(stub.calledOnce).to.be.true;
       const [, , config] = stub.firstCall.args;
       expect(JSON.parse(config)).to.deep.equal({ corsPreflight: true });
@@ -52,7 +58,8 @@ describe('V4 HTTP executeTest', () => {
         () => {},
       );
 
-      const stub = pactMock.pactffiCreateMockServerForTransport as sinon.SinonStub;
+      const stub =
+        pactMock.pactffiCreateMockServerForTransport as sinon.SinonStub;
       const [, , config] = stub.firstCall.args;
       expect(JSON.parse(config)).to.deep.equal({ corsPreflight: true });
     });
@@ -67,7 +74,8 @@ describe('V4 HTTP executeTest', () => {
         () => {},
       );
 
-      const stub = pactMock.pactffiCreateMockServerForTransport as sinon.SinonStub;
+      const stub =
+        pactMock.pactffiCreateMockServerForTransport as sinon.SinonStub;
       const [, , config] = stub.firstCall.args;
       expect(JSON.parse(config)).to.deep.equal({ corsPreflight: false });
     });
@@ -77,9 +85,15 @@ describe('V4 HTTP executeTest', () => {
     it('uses http scheme by default', async () => {
       const pactMock = buildPactMock(1234);
 
-      await executeTest(pactMock, baseOpts, async () => Promise.resolve(), () => {});
+      await executeTest(
+        pactMock,
+        baseOpts,
+        async () => Promise.resolve(),
+        () => {},
+      );
 
-      const stub = pactMock.pactffiCreateMockServerForTransport as sinon.SinonStub;
+      const stub =
+        pactMock.pactffiCreateMockServerForTransport as sinon.SinonStub;
       const [, transport] = stub.firstCall.args;
       expect(transport).to.eq('http');
     });
@@ -94,7 +108,8 @@ describe('V4 HTTP executeTest', () => {
         () => {},
       );
 
-      const stub = pactMock.pactffiCreateMockServerForTransport as sinon.SinonStub;
+      const stub =
+        pactMock.pactffiCreateMockServerForTransport as sinon.SinonStub;
       const [, transport] = stub.firstCall.args;
       expect(transport).to.eq('https');
     });
@@ -105,7 +120,12 @@ describe('V4 HTTP executeTest', () => {
       const pactMock = buildPactMock(-3);
 
       await expect(
-        executeTest(pactMock, baseOpts, async () => Promise.resolve(), () => {}),
+        executeTest(
+          pactMock,
+          baseOpts,
+          async () => Promise.resolve(),
+          () => {},
+        ),
       ).to.be.rejectedWith('Failed to start mock server');
     });
   });
