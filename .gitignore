@@ -3,6 +3,7 @@ logs/
 *.log
 npm-debug.log*
 .nyc_output
+junit.xml
 
 # Runtime data
 pids
