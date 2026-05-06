@@ -113,9 +113,10 @@ describe('Verifier', () => {
       });
       describe('and the verification runs successfully', () => {
         it('closes the server and returns the result', async () => {
-          vi.spyOn(v as any, 'runProviderVerification').mockReturnValue(
-            Promise.resolve('done'),
-          );
+          vi.spyOn(
+            v as unknown as { runProviderVerification: () => unknown },
+            'runProviderVerification',
+          ).mockReturnValue(Promise.resolve('done'));
 
           const res = v.verifyProvider();
 
@@ -126,9 +127,10 @@ describe('Verifier', () => {
 
       describe('and the verification fails', () => {
         it('closes the server and returns the result', async () => {
-          vi.spyOn(v as any, 'runProviderVerification').mockReturnValue(() =>
-            Promise.reject(new Error('error')),
-          );
+          vi.spyOn(
+            v as unknown as { runProviderVerification: () => unknown },
+            'runProviderVerification',
+          ).mockReturnValue(() => Promise.reject(new Error('error')));
 
           const res = v.verifyProvider();
 

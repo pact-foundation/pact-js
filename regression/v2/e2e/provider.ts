@@ -39,10 +39,14 @@ export const importData = () => {
   }, 0);
 };
 
+interface Animal {
+  eligibility: { available: boolean };
+}
+
 // List all animals with 'available' eligibility
 const availableAnimals = () => {
-  return animalRepository.fetchAll().filter((a: any) => {
-    return a.eligibility.available;
+  return animalRepository.fetchAll().filter((a) => {
+    return (a as Animal).eligibility.available;
   });
 };
 

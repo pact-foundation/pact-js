@@ -8,7 +8,7 @@ export default class Repository {
 
   getById(id) {
     return this.entities.find(
-      (entity: any) => Number(id) === Number(entity.id),
+      (entity: { id: unknown }) => Number(id) === Number(entity.id),
     );
   }
 
