@@ -4,11 +4,13 @@ import RandExp from 'randexp';
 import type {
   ArrayContainsMatcher,
   DateTimeMatcher,
+  HTTPResponseStatusClass,
   Matcher,
   MaxLikeMatcher,
   MinLikeMatcher,
   ProviderStateInjectedValue,
   RulesMatcher,
+  StatusCodeMatcher,
   V3RegexMatcher,
 } from './types';
 
@@ -86,6 +88,22 @@ export const eachValueMatches = <T>(
   // value: {
   //   [keyTemplate]: template,
   // },
+});
+
+/**
+ * Matches HTTP status codes either by a class (e.g. 2XX) or a list of specific codes.
+ *
+ * @param example Example status code to use in consumer tests
+ * @param status Allowed status codes - either an HTTPResponseStatusClass (e.g. Success for 2XX)
+ *               or an array of specific status codes (e.g. [200, 201])
+ */
+export const matchStatus = (
+  example: number,
+  status: HTTPResponseStatusClass | number[],
+): StatusCodeMatcher<number> => ({
+  'pact:matcher:type': 'statusCode',
+  status,
+  value: example,
 });
 
 /**
@@ -551,24 +569,24 @@ export const matcherValueOrString = (obj: unknown): string => {
  * Recurse the object removing any underlying matching guff, returning the raw
  * example content.
  */
-export function reify(input: unknown): AnyJson {
+export function reify<T = AnyJson>(input: unknown): T {
   if (isMatcher(input)) {
-    return reify(input.value);
+    return reify<T>(input.value);
   }
 
   if (Array.isArray(input)) {
-    return input.map(reify);
+    return input.map(reify) as unknown as T;
   }
 
   if (typeof input === 'object') {
     if (input === null) {
-      return input;
+      return input as unknown as T;
     }
     const objectInput = input as JsonMap;
     return Object.keys(objectInput).reduce<JsonMap>((acc, propName) => {
       acc[propName] = reify(objectInput[propName]);
       return acc;
-    }, {});
+    }, {}) as unknown as T;
   }
 
   if (
@@ -576,7 +594,7 @@ export function reify(input: unknown): AnyJson {
     typeof input === 'string' ||
     typeof input === 'boolean'
   ) {
-    return input;
+    return input as unknown as T;
   }
   throw new Error(
     `Unable to strip matcher from a '${typeof input}', as it is not valid in a Pact description`,

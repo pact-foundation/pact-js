@@ -10,6 +10,15 @@ import type {
   V4PluginResponseBuilderFunc,
   V4InteractionWithPluginResponse,
 } from './types';
+import type { StatusCodeMatcher } from '../../v3';
+import { reify } from '../../v3/matchers';
+import { convertStatusMatcherToFFI } from '../../common/matchingRules';
+
+const isStatusCodeMatcher = (
+  status: number | StatusCodeMatcher<number>,
+): status is StatusCodeMatcher<number> =>
+  typeof status === 'object' &&
+  status['pact:matcher:type'] === 'statusCode';
 
 export class InteractionWithPluginRequest
   implements V4InteractionWithPluginRequest
@@ -23,10 +32,16 @@ export class InteractionWithPluginRequest
   ) {}
 
   willRespondWith(
-    status: number,
+    status: number | StatusCodeMatcher<number>,
     builder?: V4PluginResponseBuilderFunc,
   ): V4InteractionWithPluginResponse {
-    this.interaction.withStatus(status);
+    this.interaction.withStatus(reify<number>(status));
+
+    if (isStatusCodeMatcher(status)) {
+      this.interaction.withResponseMatchingRules(
+        JSON.stringify(convertStatusMatcherToFFI(status)),
+      );
+    }
 
     if (typeof builder === 'function') {
       builder(new ResponseWithPluginBuilder(this.interaction));
