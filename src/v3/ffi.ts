@@ -1,21 +1,10 @@
 import type { ConsumerInteraction } from '@pact-foundation/pact-core';
 import { forEachObjIndexed } from 'ramda';
-import type {
-  Matcher,
-  StatusCodeMatcher,
-  TemplateHeaders,
-  V3Request,
-  V3Response,
-} from './types';
+import type { Matcher, TemplateHeaders, V3Request, V3Response } from './types';
 import * as MatchersV3 from './matchers';
 import { convertStatusMatcherToFFI } from '../common/matchingRules';
 
 type TemplateHeaderArrayValue = string[] | Matcher<string>[];
-
-const isStatusCodeMatcher = (
-  status: number | StatusCodeMatcher<number>,
-): status is StatusCodeMatcher<number> =>
-  MatchersV3.isMatcher(status) && status['pact:matcher:type'] === 'statusCode';
 
 export const setRequestDetails = (
   interaction: ConsumerInteraction,
@@ -56,7 +45,7 @@ export const setResponseDetails = (
 ): void => {
   interaction.withStatus(MatchersV3.reify<number>(res.status));
 
-  if (isStatusCodeMatcher(res.status)) {
+  if (MatchersV3.isStatusCodeMatcher(res.status)) {
     interaction.withResponseMatchingRules(
       JSON.stringify(convertStatusMatcherToFFI(res.status)),
     );

@@ -11,14 +11,8 @@ import type {
   V4PluginResponseBuilderFunc,
 } from './types';
 import type { StatusCodeMatcher } from '../../v3';
-import { reify } from '../../v3/matchers';
+import { reify, isStatusCodeMatcher } from '../../v3/matchers';
 import { convertStatusMatcherToFFI } from '../../common/matchingRules';
-
-const isStatusCodeMatcher = (
-  status: number | StatusCodeMatcher<number>,
-): status is StatusCodeMatcher<number> =>
-  typeof status === 'object' &&
-  status['pact:matcher:type'] === 'statusCode';
 
 export class InteractionWithPluginRequest
   implements V4InteractionWithPluginRequest

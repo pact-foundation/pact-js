@@ -564,10 +564,18 @@ export const matcherValueOrString = (obj: unknown): string => {
 };
 
 /**
+ * Type guard to check if a value is a StatusCodeMatcher.
+ */
+export const isStatusCodeMatcher = (
+  status: number | StatusCodeMatcher<number>,
+): status is StatusCodeMatcher<number> =>
+  isMatcher(status) && status['pact:matcher:type'] === 'statusCode';
+
+/**
  * Recurse the object removing any underlying matching guff, returning the raw
  * example content.
  */
-export function reify<T = AnyJson>(input: unknown): T {
+export function reify<T extends AnyJson = AnyJson>(input: unknown): T {
   if (isMatcher(input)) {
     return reify<T>(input.value);
   }
