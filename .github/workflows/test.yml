@@ -20,7 +20,8 @@ env:
   LOG_LEVEL: info
   PACT_BROKER_BASE_URL: ${{ secrets.PACT_BROKER_BASE_URL }}
   PACT_BROKER_TOKEN: ${{ secrets.PACT_BROKER_TOKEN }}
-  STABLE_NODE_VERSION: 22
+  # The oldest supported LTS version
+  STABLE_NODE_VERSION: 20
 
 jobs:
   complete:
@@ -32,9 +33,8 @@ jobs:
 
     runs-on: ubuntu-latest
     needs:
-      - test-x86
+      - test
       - test-alpine
-      - test-arm64
       - lint
       - format
       - examples
@@ -54,10 +54,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Setup Node.JS
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           cache: npm
 
@@ -73,39 +73,43 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Setup Node.JS
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           cache: npm
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Format
-        run: npm run format
+      - run: npm ci
+      - run: npm run format
 
   regression:
     name: Run regression suite
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Setup Node.JS
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version: ${{ env.STABLE_NODE_VERSION }}
           cache: npm
-      - run: npm ci
-      - run: npm ci
+
+      - name: Install root dependencies
+        run: npm ci
+      - name: Install regression dependencies
+        run: npm ci
         working-directory: regression
+
       - run: npm run test
         working-directory: regression
 
-  test-x86:
+  test:
     name: >-
-      Test x86_64
-      on ${{ startsWith(matrix.os, 'macos-') && 'macOS' || startsWith(matrix.os, 'windows-') && 'Windows' || 'Linux' }}
+      Test
+      on ${{ matrix.os }}
       with Node ${{ matrix.node-version }}
 
     runs-on: ${{ matrix.os }}
@@ -115,44 +119,45 @@ jobs:
       matrix:
         node-version: [20, 22, 24]
         os:
-          - macos-15-intel
+          - macos-26-intel
           - macos-latest
+          - ubuntu-24.04-arm
           - ubuntu-latest
           - windows-latest
+          # - windows-11-arm  # Disable until pact-js-core supports it
 
     steps:
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
 
-      - name: Set NodeJS scripts shell
-        if: startsWith(matrix.os, 'windows')
-        run: npm config set script-shell "C:\\Program Files\\git\\bin\\bash.exe"
+      - run: npm ci
+      - run: npm test
+        shell: bash
 
-      - name: Install dependencies
-        run: |
-          npm ci
+      - uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
+        if: matrix.node-version == env.STABLE_NODE_VERSION
+        with:
+          report_type: coverage
+          token: ${{ secrets.CODECOV_TOKEN }}
+      - uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
+        if: always() && matrix.node-version == env.STABLE_NODE_VERSION
+        with:
+          report_type: test_results
+          token: ${{ secrets.CODECOV_TOKEN }}
 
-      - name: Run tests
-        run: npm test
 
-      - name: Coverage
-        if: startsWith(matrix.os, 'ubuntu-')
-        run: npm run coverage
 
-      - name: Codecov
-        if: startsWith(matrix.os, 'ubuntu-')
-        uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6
+
 
   test-alpine:
     name: >-
       Test Alpine
-      on ${{ startsWith(matrix.os, 'macos-') && 'macOS' || startsWith(matrix.os, 'windows-') && 'Windows' || 'Linux' }}
       with Node ${{ matrix.node-version }}
 
     runs-on: ubuntu-latest
@@ -162,84 +167,33 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
         node-version: [20, 22, 24]
 
     steps:
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - name: Install dependencies
-        run: |
-          npm ci
-
-      - name: Run tests
-        run: npm test
-
-  test-arm64:
-    name: >-
-      Test ARM64
-      on ${{ startsWith(matrix.os, 'macos-') && 'macOS' || startsWith(matrix.os, 'windows-') && 'Windows' || 'Linux' }}
-      with Node ${{ matrix.node-version }}
-
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      fail-fast: false
-      matrix:
-        node-version: [20, 22, 24]
-        os:
-          - ubuntu-24.04-arm
-          - macos-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-
-      - name: Setup Node.js ${{ matrix.node-version }}
-        if: startsWith(matrix.os, 'macos-')
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: npm
-
-      - name: Install dependencies
-        if: startsWith(matrix.os, 'macos-')
-        run: |
-          npm ci
-
-      - name: Test
-        if: startsWith(matrix.os, 'macos-')
-        run: |
-          npm test
-
-      - name: Install dependencies and test ubuntu (linux glibc)
-        if: startsWith(matrix.os, 'ubuntu-')
-        run: npm ci && npm test
-
-      - name: Install dependencies and test alpine (linux musl)
-        if: startsWith(matrix.os, 'ubuntu-')
-        run: |
-          docker run \
-            --rm \
-            -v $(pwd):/${{ github.workspace }} \
-            -w /${{ github.workspace }} \
-            --platform linux/arm64 \
-            node:${{ matrix.node-version }}-alpine \
-            sh -c "npm ci && npm test"
+      - run: npm ci
+      - run: npm test
 
   examples:
     name: Test Examples
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Setup Node.JS
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version: ${{ env.STABLE_NODE_VERSION }}
           cache: npm
-      - run: npm ci
+
       - run: npm run install-plugins
+      - name: Install root dependencies
+        run: npm ci
+
       - name: Install and test examples
         run: |
           error_file=$(mktemp)

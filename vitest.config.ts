@@ -7,6 +7,8 @@ export default defineConfig({
     pool: 'forks',
     sequence: { concurrent: false },
     include: ['src/**/*.spec.ts'],
+    reporters: ['default', 'junit'],
+    outputFile: { junit: 'junit.xml' },
     coverage: {
       enabled: true,
       provider: 'v8',
