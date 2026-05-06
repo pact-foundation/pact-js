@@ -1,10 +1,11 @@
 import axios from 'axios';
+
 import fs = require('node:fs');
 import net = require('node:net');
 import path = require('node:path');
 
-import { PactV4 } from './v4';
 import { MatchersV3 } from './v3';
+import { PactV4 } from './v4';
 
 describe('V4 Pact', () => {
   let pact: PactV4;

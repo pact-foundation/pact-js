@@ -1,14 +1,14 @@
 import type { ConsumerInteraction } from '@pact-foundation/pact-core';
 
 import { forEachObjIndexed } from 'ramda';
+import logger from '../common/logger';
 import type {
-  RequestOptions,
-  ResponseOptions,
   Headers,
   Query,
+  RequestOptions,
+  ResponseOptions,
 } from '../dsl/interaction';
 import { type MatcherV2, matcherValueOrString } from '../dsl/matchers';
-import logger from '../common/logger';
 
 enum InteractionPart {
   REQUEST = 1,

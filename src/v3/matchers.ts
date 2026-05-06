@@ -1,6 +1,6 @@
 import { isNil, pickBy, times } from 'ramda';
 import RandExp from 'randexp';
-
+import type { AnyJson, JsonMap } from '../common/jsonTypes';
 import type {
   ArrayContainsMatcher,
   DateTimeMatcher,
@@ -11,8 +11,6 @@ import type {
   RulesMatcher,
   V3RegexMatcher,
 } from './types';
-
-import type { AnyJson, JsonMap } from '../common/jsonTypes';
 
 export * from './types';
 

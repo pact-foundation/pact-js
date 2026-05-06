@@ -1,9 +1,9 @@
-import { HttpsProxyAgent } from 'https-proxy-agent';
-import type { ServerOptions } from 'http-proxy';
-import { Readable } from 'node:stream';
 import type { IncomingMessage } from 'node:http';
-import type { ProxyOptions } from './types';
+import { Readable } from 'node:stream';
+import type { ServerOptions } from 'http-proxy';
+import { HttpsProxyAgent } from 'https-proxy-agent';
 import { parseBody } from './parseBody';
+import type { ProxyOptions } from './types';
 
 // A base URL is always needed for the proxy, even
 // if there are no targets to proxy (e.g. in the case

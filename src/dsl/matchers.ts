@@ -4,7 +4,7 @@
  * but are fixed, to prevent contract invalidation after each run of the consumer test.
  */
 
-import { isFunction, isNil, isEmpty, isUndefined } from 'lodash';
+import { isEmpty, isFunction, isNil, isUndefined } from 'lodash';
 import { times } from 'ramda';
 import type { AnyJson, JsonMap } from '../common/jsonTypes';
 import MatcherError from '../errors/matcherError';
@@ -297,8 +297,7 @@ export function string(value = 'iloveorange'): MatcherV2<string> {
 }
 
 // Convenience alias'
-export { somethingLike as like };
-export { term as regex };
+export { somethingLike as like, term as regex };
 
 // Recurse the object removing any underlying matching guff, returning
 // the raw example content

@@ -1,9 +1,25 @@
-import type { Metadata } from '../../dsl/message';
-import type { AnyJson, JsonMap } from '../../common/jsonTypes';
 import type {
+  ConsumerPact,
+  SynchronousMessage as PactCoreSynchronousMessage,
+} from '@pact-foundation/pact-core';
+import { forEachObjIndexed, isEmpty } from 'ramda';
+import type { AnyJson, JsonMap } from '../../common/jsonTypes';
+import logger from '../../common/logger';
+import { convertRulesToFFI, validateRules } from '../../common/matchingRules';
+import type { Metadata } from '../../dsl/message';
+import ConfigurationError from '../../errors/configurationError';
+import {
+  filterMissingFeatureFlag,
+  generateMockServerError,
+} from '../../v3/display';
+import type { Rules } from '../../v3/types';
+import type { PactV4Options } from '../http/types';
+import type {
+  Comment,
+  AsynchronousMessage as ConcreteMessage,
+  CustomComment,
   PluginConfig,
   SynchronousMessage,
-  AsynchronousMessage as ConcreteMessage,
   TransportConfig,
   V4MessageRequestBuilderFunc,
   V4MessageResponseBuilderFunc,
@@ -15,23 +31,7 @@ import type {
   V4SynchronousMessageWithResponseBuilder,
   V4SynchronousMessageWithTransport,
   V4UnconfiguredSynchronousMessage,
-  Comment,
-  CustomComment,
 } from './types';
-import type {
-  SynchronousMessage as PactCoreSynchronousMessage,
-  ConsumerPact,
-} from '@pact-foundation/pact-core';
-import type { PactV4Options } from '../http/types';
-import { forEachObjIndexed, isEmpty } from 'ramda';
-import ConfigurationError from '../../errors/configurationError';
-import {
-  filterMissingFeatureFlag,
-  generateMockServerError,
-} from '../../v3/display';
-import { convertRulesToFFI, validateRules } from '../../common/matchingRules';
-import type { Rules } from '../../v3/types';
-import logger from '../../common/logger';
 
 const defaultPactDir = './pacts';
 

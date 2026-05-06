@@ -1,8 +1,8 @@
 /** biome-ignore-all lint/suspicious/noTemplateCurlyInString: The syntax ${...}
  * is used by Pact, and should not be handled within JS. */
 import path from 'node:path';
-import { describe, expect, it } from 'vitest';
 import { Matchers, PactV3, XmlBuilder } from '@pact-foundation/pact';
+import { describe, expect, it } from 'vitest';
 import transactionService from './transaction-service';
 
 const { string, integer, url2, regex, datetime, fromProviderState } = Matchers;

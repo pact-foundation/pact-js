@@ -1,17 +1,17 @@
 import type {
-  ConsumerPact,
   ConsumerInteraction,
+  ConsumerPact,
 } from '@pact-foundation/pact-core';
-import { RequestWithPluginBuilder } from './requestWithPluginBuilder';
-import { InteractionWithPluginRequest } from './interactionWithPluginRequest';
 import type { Path } from '../../v3';
 import { matcherValueOrString } from '../../v3/matchers';
+import { InteractionWithPluginRequest } from './interactionWithPluginRequest';
+import { RequestWithPluginBuilder } from './requestWithPluginBuilder';
 import type {
-  V4InteractionWithPlugin,
   PactV4Options,
   PluginConfig,
-  V4PluginRequestBuilderFunc,
+  V4InteractionWithPlugin,
   V4InteractionWithPluginRequest,
+  V4PluginRequestBuilderFunc,
 } from './types';
 
 export class InteractionWithPlugin implements V4InteractionWithPlugin {

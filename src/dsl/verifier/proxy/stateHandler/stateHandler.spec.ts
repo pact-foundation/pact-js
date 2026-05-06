@@ -1,9 +1,7 @@
-import { vi } from 'vitest';
-
 import type express from 'express';
-
-import { createProxyStateHandler } from './stateHandler';
+import { vi } from 'vitest';
 import type { ProxyOptions, StateHandlers } from '../types';
+import { createProxyStateHandler } from './stateHandler';
 
 describe('#createProxyStateHandler', () => {
   const state = {

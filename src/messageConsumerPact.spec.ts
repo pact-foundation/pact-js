@@ -1,9 +1,9 @@
+import type { ConcreteMessage } from './dsl/message';
 import {
+  asynchronousBodyHandler,
   MessageConsumerPact,
   synchronousBodyHandler,
-  asynchronousBodyHandler,
 } from './messageConsumerPact';
-import type { ConcreteMessage } from './dsl/message';
 
 describe('MessageConsumer', () => {
   let consumer: MessageConsumerPact;

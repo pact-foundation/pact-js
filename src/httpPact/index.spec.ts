@@ -1,11 +1,11 @@
-import { vi } from 'vitest';
 import type {
   ConsumerInteraction,
   ConsumerPact,
 } from '@pact-foundation/pact-core';
+import { vi } from 'vitest';
+import type { MockService } from '../dsl/mockService';
 import type { PactV2Options, PactV2OptionsComplete } from '../dsl/options';
 import { Pact } from '.';
-import type { MockService } from '../dsl/mockService';
 
 describe('Pact', () => {
   const fullOpts = {

@@ -2,23 +2,21 @@
  * @module Message
  */
 
-import { omit, isEmpty } from 'lodash';
-
+import http from 'node:http';
+import type { AddressInfo } from 'node:net';
 import serviceFactory, {
   type VerifierOptions,
 } from '@pact-foundation/pact-core';
-import express from 'express';
-import http from 'node:http';
 import bodyParser from 'body-parser';
+import express from 'express';
 import { encode as encodeBase64 } from 'js-base64';
-
-import type { AddressInfo } from 'node:net';
+import { isEmpty, omit } from 'lodash';
+import logger, { setLogLevel } from './common/logger';
 import type {
   MessageDescriptor,
   MessageFromProviderWithMetadata,
   MessageProvider,
 } from './dsl/message';
-import logger, { setLogLevel } from './common/logger';
 import type { PactMessageProviderOptions } from './dsl/options';
 
 // Listens for the server start event

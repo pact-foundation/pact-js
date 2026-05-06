@@ -1,14 +1,14 @@
 import type {
-  ConsumerPact,
   ConsumerInteraction,
+  ConsumerPact,
 } from '@pact-foundation/pact-core';
 import { InteractionWithResponse } from './interactionWithResponse';
 import { ResponseBuilder } from './responseBuilder';
 import type {
-  V4InteractionWithRequest,
   PactV4Options,
-  V4ResponseBuilderFunc,
+  V4InteractionWithRequest,
   V4InteractionWithResponse,
+  V4ResponseBuilderFunc,
 } from './types';
 
 export class InteractionWithRequest implements V4InteractionWithRequest {

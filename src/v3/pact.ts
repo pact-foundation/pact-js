@@ -1,13 +1,23 @@
-import { equals } from 'ramda';
 import {
-  makeConsumerPact,
-  type ConsumerPact,
   type ConsumerInteraction,
+  type ConsumerPact,
+  makeConsumerPact,
 } from '@pact-foundation/pact-core';
+import { equals } from 'ramda';
+
 import fs = require('node:fs');
+
 import { version as pactPackageVersion } from '../../package.json';
 import type { JsonMap } from '../common/jsonTypes';
-import { validateRules, convertRulesToFFI } from '../common/matchingRules';
+import logger from '../common/logger';
+import { convertRulesToFFI, validateRules } from '../common/matchingRules';
+import { filterMissingFeatureFlag, generateMockServerError } from './display';
+import {
+  contentTypeFromHeaders,
+  setRequestDetails,
+  setResponseDetails,
+} from './ffi';
+import { matcherValueOrString } from './matchers';
 import {
   type PactV3Options,
   type Rules,
@@ -18,14 +28,6 @@ import {
   type V3Request,
   type V3Response,
 } from './types';
-import { matcherValueOrString } from './matchers';
-import { filterMissingFeatureFlag, generateMockServerError } from './display';
-import logger from '../common/logger';
-import {
-  contentTypeFromHeaders,
-  setRequestDetails,
-  setResponseDetails,
-} from './ffi';
 
 const readBinaryData = (file: string): Buffer => {
   try {

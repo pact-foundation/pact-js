@@ -1,5 +1,5 @@
 import type express from 'express';
-import { pickBy, identity, reduce, type Dictionary } from 'lodash';
+import { type Dictionary, identity, pickBy, reduce } from 'lodash';
 
 import logger from '../../../common/logger';
 

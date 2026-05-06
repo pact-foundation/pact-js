@@ -1,7 +1,7 @@
-import { XmlText } from './xmlText';
-import { XmlElement } from './xmlElement';
 import * as MatchersV3 from '../v3/matchers';
 import type { Matcher } from '../v3/types';
+import { XmlElement } from './xmlElement';
+import { XmlText } from './xmlText';
 
 describe('xml element', () => {
   describe('appendText', () => {

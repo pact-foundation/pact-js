@@ -3,17 +3,16 @@ import { isUndefined } from 'lodash';
 import { reject } from 'ramda';
 
 import { ConfigurationError } from '../../common/graphQL/configurationError';
-import { PactV3 } from '../pact';
-import type { V3Request, V3Response } from '../types';
-import { OperationType } from '../../common/graphQL/types';
-import type { JsonMap } from '../../common/jsonTypes';
-
-import { regex } from '../matchers';
 import {
   escapeGraphQlQuery,
   type GraphQLVariables,
   validateQuery,
 } from '../../common/graphQL/graphQL';
+import { OperationType } from '../../common/graphQL/types';
+import type { JsonMap } from '../../common/jsonTypes';
+import { regex } from '../matchers';
+import { PactV3 } from '../pact';
+import type { V3Request, V3Response } from '../types';
 
 /**
  * Expose a V3 compatible GraphQL interface

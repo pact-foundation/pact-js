@@ -2,19 +2,19 @@ import {
   type ConsumerPact,
   makeConsumerPact,
 } from '@pact-foundation/pact-core';
-import { UnconfiguredInteraction } from './http/unconfiguredInteraction';
-import { PactV4Options, type V4UnconfiguredInteraction } from './http/types';
-import type { V4ConsumerPact } from './types';
 import { version as pactPackageVersion } from '../../package.json';
+import { SpecificationVersion } from '../v3';
+import { UnconfiguredGraphQLInteraction } from './graphql';
+import type { V4UnconfiguredGraphQLInteraction } from './graphql/types';
+import { PactV4Options, type V4UnconfiguredInteraction } from './http/types';
+import { UnconfiguredInteraction } from './http/unconfiguredInteraction';
+import { UnconfiguredSynchronousMessage } from './message';
+import { UnconfiguredAsynchronousMessage } from './message/asynchronousMessage';
 import type {
   V4UnconfiguredAsynchronousMessage,
   V4UnconfiguredSynchronousMessage,
 } from './message/types';
-import { UnconfiguredSynchronousMessage } from './message';
-import { SpecificationVersion } from '../v3';
-import type { V4UnconfiguredGraphQLInteraction } from './graphql/types';
-import { UnconfiguredGraphQLInteraction } from './graphql';
-import { UnconfiguredAsynchronousMessage } from './message/asynchronousMessage';
+import type { V4ConsumerPact } from './types';
 
 export class PactV4 implements V4ConsumerPact {
   private pact!: ConsumerPact;
@@ -92,7 +92,7 @@ export class PactV4 implements V4ConsumerPact {
   }
 }
 
-export { PactV4 as Pact, PactV4Options as PactOptions };
+export * from '../xml';
 export * from './graphql';
 export * from './message/index';
-export * from '../xml';
+export { PactV4 as Pact, PactV4Options as PactOptions };

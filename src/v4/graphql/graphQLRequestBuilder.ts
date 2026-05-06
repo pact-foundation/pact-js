@@ -1,6 +1,6 @@
 import type { ConsumerInteraction } from '@pact-foundation/pact-core';
 import { forEachObjIndexed } from 'ramda';
-import type { TemplateQuery, TemplateHeaders, Matcher } from '../../v3';
+import type { Matcher, TemplateHeaders, TemplateQuery } from '../../v3';
 import { matcherValueOrString } from '../../v3/matchers';
 import type { TemplateHeaderArrayValue } from '../http/types';
 import type { V4GraphQLRequestBuilder } from './types';

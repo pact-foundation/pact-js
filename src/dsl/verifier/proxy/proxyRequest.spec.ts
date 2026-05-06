@@ -1,6 +1,6 @@
 import { Readable } from 'node:stream';
-import type { ProxyOptions } from './types';
 import { toServerOptions as toServerOptionsAct } from './proxyRequest';
+import type { ProxyOptions } from './types';
 
 describe('#toServerOptions', () => {
   const toServerOptions = (opts: ProxyOptions = {}, req?: { body: unknown }) =>

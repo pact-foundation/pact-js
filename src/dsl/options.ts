@@ -3,8 +3,8 @@
  * @module PactV2Options
  */
 import type { VerifierOptions as PactCoreVerifierOptions } from '@pact-foundation/pact-core';
-import type { PactfileWriteMode } from './mockService';
 import type { MessageProviders, MessageStateHandlers } from './message';
+import type { PactfileWriteMode } from './mockService';
 
 export type LogLevel = 'trace' | 'debug' | 'info' | 'warn' | 'error';
 

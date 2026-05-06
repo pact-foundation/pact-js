@@ -1,11 +1,11 @@
-import { vi } from 'vitest';
 import type { RequestHandler } from 'express';
+import { vi } from 'vitest';
 
 import {
-  registerHookStateTracking,
-  registerBeforeHook,
-  registerAfterHook,
   type HooksState,
+  registerAfterHook,
+  registerBeforeHook,
+  registerHookStateTracking,
 } from './hooks';
 
 // This mimics the proxy setup (src/dsl/verifier/proxy/proxy.ts), whereby the

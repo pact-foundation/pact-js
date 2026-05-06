@@ -1,4 +1,4 @@
-import type { Rules, Rule, Matcher } from '../v3/types';
+import type { Matcher, Rule, Rules } from '../v3/types';
 
 /**
  * Converts a matcher to the FFI format expected by pact-core

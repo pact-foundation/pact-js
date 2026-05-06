@@ -1,10 +1,10 @@
 import type { ConsumerInteraction } from '@pact-foundation/pact-core';
 import { forEachObjIndexed } from 'ramda';
-import type { TemplateQuery, TemplateHeaders, Matcher, Rules } from '../../v3';
-import { matcherValueOrString } from '../../v3/matchers';
-import type { TemplateHeaderArrayValue, V4RequestBuilder } from './types';
-import { readBinaryData } from '.';
 import { convertRulesToFFI, validateRules } from '../../common/matchingRules';
+import type { Matcher, Rules, TemplateHeaders, TemplateQuery } from '../../v3';
+import { matcherValueOrString } from '../../v3/matchers';
+import { readBinaryData } from '.';
+import type { TemplateHeaderArrayValue, V4RequestBuilder } from './types';
 
 export class RequestBuilder implements V4RequestBuilder {
   // tslint:disable:no-empty-function

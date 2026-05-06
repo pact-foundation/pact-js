@@ -1,10 +1,8 @@
 import { vi } from 'vitest';
-
-import logger from '../../../../common/logger';
-import type { ProxyOptions, ProviderState } from '../types';
-
-import { setupStates } from './setupStates';
 import type { JsonMap } from '../../../../common/jsonTypes';
+import logger from '../../../../common/logger';
+import type { ProviderState, ProxyOptions } from '../types';
+import { setupStates } from './setupStates';
 
 describe('#setupStates', () => {
   const state: ProviderState = {

@@ -1,6 +1,6 @@
 import path from 'node:path';
-import { beforeAll, describe, expect, it } from 'vitest';
 import { Matchers, PactV3, XmlBuilder } from '@pact-foundation/pact';
+import { beforeAll, describe, expect, it } from 'vitest';
 import TodoApp from '../src/todo';
 
 const { string, eachLike, integer, boolean, atLeastOneLike, timestamp } =

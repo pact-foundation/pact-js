@@ -2,18 +2,17 @@
  * Provider Verifier service
  * @module ProviderVerifier
  */
+
+import type * as http from 'node:http';
+import type { AddressInfo } from 'node:net';
+import url from 'node:url';
 import serviceFactory, {
   type VerifierOptions as PactCoreVerifierOptions,
 } from '@pact-foundation/pact-core';
-import { omit, isEmpty } from 'lodash';
-import type * as http from 'node:http';
-import url from 'node:url';
-
-import type { AddressInfo } from 'node:net';
+import { isEmpty, omit } from 'lodash';
 import logger, { setLogLevel } from '../../common/logger';
-
-import ConfigurationError from '../../errors/configurationError';
 import { localAddresses } from '../../common/net';
+import ConfigurationError from '../../errors/configurationError';
 import { createProxy, waitForServerReady } from './proxy';
 import type { VerifierOptions } from './types';
 

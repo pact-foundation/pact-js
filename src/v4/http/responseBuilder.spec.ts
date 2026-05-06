@@ -1,5 +1,5 @@
-import { vi } from 'vitest';
 import type { ConsumerInteraction } from '@pact-foundation/pact-core';
+import { vi } from 'vitest';
 import { XmlBuilder } from '../../v4';
 import { ResponseBuilder } from './responseBuilder';
 

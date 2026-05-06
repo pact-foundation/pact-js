@@ -1,24 +1,24 @@
 import type {
-  ConsumerPact,
   ConsumerInteraction,
+  ConsumerPact,
 } from '@pact-foundation/pact-core';
-import { InteractionWithPlugin } from './interactionWithPlugin';
-import { RequestBuilder } from './requestBuilder';
-import { InteractionWithRequest } from './interactionWithRequest';
 import type { JsonMap } from '../../common/jsonTypes';
 import type { Path } from '../../v3';
 import { matcherValueOrString } from '../../v3/matchers';
+import { InteractionWithPlugin } from './interactionWithPlugin';
+import { InteractionWithRequest } from './interactionWithRequest';
+import { RequestBuilder } from './requestBuilder';
 import type {
-  V4UnconfiguredInteraction,
-  PactV4Options,
-  V4Request,
-  V4InteractionWithCompleteRequest,
-  V4RequestBuilderFunc,
-  V4InteractionWithRequest,
-  PluginConfig,
-  V4InteractionWithPlugin,
   Comment,
   CustomComment,
+  PactV4Options,
+  PluginConfig,
+  V4InteractionWithCompleteRequest,
+  V4InteractionWithPlugin,
+  V4InteractionWithRequest,
+  V4Request,
+  V4RequestBuilderFunc,
+  V4UnconfiguredInteraction,
 } from './types';
 
 export class UnconfiguredInteraction implements V4UnconfiguredInteraction {

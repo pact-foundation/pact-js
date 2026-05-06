@@ -1,10 +1,10 @@
 import path from 'node:path';
-import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import {
   type LogLevel,
   MatchersV2 as Matchers,
   PactV2 as Pact,
 } from '@pact-foundation/pact';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { createMateForDates, getAnimalById, suggestion } from '../consumer';
 
 const LOG_LEVEL = process.env.LOG_LEVEL || 'WARN';

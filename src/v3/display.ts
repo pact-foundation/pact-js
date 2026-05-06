@@ -1,13 +1,13 @@
-import { join, toPairs, map, flatten } from 'ramda';
 import type {
-  Mismatch,
   MatchingResult,
-  RequestMismatch,
-  MatchingResultRequestNotFound,
   MatchingResultMissingRequest,
   MatchingResultPlugin,
+  MatchingResultRequestNotFound,
+  Mismatch,
   PluginContentMismatch,
+  RequestMismatch,
 } from '@pact-foundation/pact-core';
+import { flatten, join, map, toPairs } from 'ramda';
 
 // TODO: update Matching in the rust core to have a `type` property
 //       to avoid having to do this check!
