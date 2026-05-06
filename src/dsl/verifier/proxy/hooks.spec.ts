@@ -1,5 +1,4 @@
-import { expect } from 'chai';
-import { stub } from 'sinon';
+import { vi } from 'vitest';
 import type { RequestHandler } from 'express';
 
 import {
@@ -37,11 +36,15 @@ const doRequest = async (
 };
 
 describe('Verifier', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   describe('#registerBeforeHook', () => {
     describe('when the state setup routine is called multiple times before the next teardown', () => {
       it('it executes the beforeEach hook only once', async () => {
         const hooksState: HooksState = { setupCounter: 0 };
-        const hook = stub().resolves();
+        const hook = vi.fn().mockResolvedValue(undefined);
         const hookHandler = registerBeforeHook(hook, hooksState);
 
         await doRequest('setup', hooksState, hookHandler);
@@ -49,7 +52,7 @@ describe('Verifier', () => {
         await doRequest('teardown', hooksState);
         await doRequest('teardown', hooksState);
 
-        expect(hook).to.be.calledOnce;
+        expect(hook).toHaveBeenCalledOnce();
       });
     });
   });
@@ -58,7 +61,7 @@ describe('Verifier', () => {
     describe('when the state teardown routine is called multiple times before the next setup', () => {
       it('it executes the afterEach hook only once', async () => {
         const hooksState: HooksState = { setupCounter: 0 };
-        const hook = stub().resolves();
+        const hook = vi.fn().mockResolvedValue(undefined);
         const hookHandler = registerAfterHook(hook, hooksState);
 
         await doRequest('setup', hooksState);
@@ -66,7 +69,7 @@ describe('Verifier', () => {
         await doRequest('teardown', hooksState, hookHandler);
         await doRequest('teardown', hooksState, hookHandler);
 
-        expect(hook).to.be.calledOnce;
+        expect(hook).toHaveBeenCalledOnce();
       });
     });
   });
@@ -75,8 +78,8 @@ describe('Verifier', () => {
     describe('when the state teardown routine is called multiple times before the next setup', () => {
       it('it executes the beforeEach and afterEach hooks only once', async () => {
         const hooksState: HooksState = { setupCounter: 0 };
-        const beforeHook = stub().resolves();
-        const afterHook = stub().resolves();
+        const beforeHook = vi.fn().mockResolvedValue(undefined);
+        const afterHook = vi.fn().mockResolvedValue(undefined);
         const beforeHookHandler = registerBeforeHook(beforeHook, hooksState);
         const afterHookHandler = registerAfterHook(afterHook, hooksState);
 
@@ -85,16 +88,16 @@ describe('Verifier', () => {
         await doRequest('teardown', hooksState, afterHookHandler);
         await doRequest('teardown', hooksState, afterHookHandler);
 
-        expect(beforeHook).to.be.calledOnce;
-        expect(afterHook).to.be.calledOnce;
+        expect(beforeHook).toHaveBeenCalledOnce();
+        expect(afterHook).toHaveBeenCalledOnce();
       });
     });
 
     describe('when multiple interactions are executed', () => {
       it('it executes the beforeEach and afterEach hooks once for each interaction', async () => {
         const hooksState: HooksState = { setupCounter: 0 };
-        const beforeHook = stub().resolves();
-        const afterHook = stub().resolves();
+        const beforeHook = vi.fn().mockResolvedValue(undefined);
+        const afterHook = vi.fn().mockResolvedValue(undefined);
         const beforeHookHandler = registerBeforeHook(beforeHook, hooksState);
         const afterHookHandler = registerAfterHook(afterHook, hooksState);
 
@@ -116,8 +119,8 @@ describe('Verifier', () => {
         await doRequest('teardown', hooksState, afterHookHandler);
         await doRequest('teardown', hooksState, afterHookHandler);
 
-        expect(beforeHook).to.be.calledThrice;
-        expect(afterHook).to.be.calledThrice;
+        expect(beforeHook).toHaveBeenCalledTimes(3);
+        expect(afterHook).toHaveBeenCalledTimes(3);
       });
     });
   });

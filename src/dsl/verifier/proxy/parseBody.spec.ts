@@ -1,11 +1,4 @@
-import * as chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
-
 import { parseBody } from './parseBody';
-
-chai.use(chaiAsPromised);
-
-const { expect } = chai;
 
 describe('Verifier', () => {
   describe('#parseBody', () => {
@@ -17,8 +10,8 @@ describe('Verifier', () => {
 
         const body = parseBody(req);
 
-        expect(body).to.be.instanceOf(Buffer);
-        expect(body.toString()).to.eq('foo');
+        expect(body).toBeInstanceOf(Buffer);
+        expect(body.toString()).toBe('foo');
       });
 
       it('it returns a buffer of the request body object', async () => {
@@ -27,8 +20,8 @@ describe('Verifier', () => {
 
         const body = parseBody(req);
 
-        expect(body).to.be.instanceOf(Buffer);
-        expect(body.toString()).to.eq(JSON.stringify(req.body));
+        expect(body).toBeInstanceOf(Buffer);
+        expect(body.toString()).toBe(JSON.stringify(req.body));
       });
 
       it('it returns a buffer for an empty JSON object body', async () => {
@@ -37,8 +30,8 @@ describe('Verifier', () => {
 
         const body = parseBody(req);
 
-        expect(body).to.be.instanceOf(Buffer);
-        expect(body.toString()).to.eq('{}');
+        expect(body).toBeInstanceOf(Buffer);
+        expect(body.toString()).toBe('{}');
       });
     });
 
@@ -49,9 +42,9 @@ describe('Verifier', () => {
 
         const body = parseBody(req);
 
-        expect(body).to.be.instanceOf(Buffer);
-        expect(body).to.not.have.length;
-        expect(body.toString()).to.be.empty;
+        expect(body).toBeInstanceOf(Buffer);
+        expect(body).toHaveLength(0);
+        expect(body.toString()).toBe('');
       });
     });
   });

@@ -1,30 +1,22 @@
-import * as chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
-import sinon from 'sinon';
-import sinonChai from 'sinon-chai';
+import { vi } from 'vitest';
 import type { ConsumerPact } from '@pact-foundation/pact-core';
 import { executeTest } from '.';
 import type { PactV4Options } from './types';
 
-chai.use(sinonChai);
-chai.use(chaiAsPromised);
-
-const { expect } = chai;
-
 describe('V4 HTTP executeTest', () => {
   afterEach(() => {
-    sinon.restore();
+    vi.restoreAllMocks();
   });
 
   const buildPactMock = (port: number): ConsumerPact => {
     return {
-      pactffiCreateMockServerForTransport: sinon.stub().returns(port),
-      mockServerMatchedSuccessfully: sinon.stub().returns(true),
-      mockServerMismatches: sinon.stub().returns([]),
-      cleanupMockServer: sinon.stub().returns(true),
-      writePactFile: sinon.stub(),
-      cleanupPlugins: sinon.stub(),
-      addPlugin: sinon.stub(),
+      pactffiCreateMockServerForTransport: vi.fn().mockReturnValue(port),
+      mockServerMatchedSuccessfully: vi.fn().mockReturnValue(true),
+      mockServerMismatches: vi.fn().mockReturnValue([]),
+      cleanupMockServer: vi.fn().mockReturnValue(true),
+      writePactFile: vi.fn(),
+      cleanupPlugins: vi.fn(),
+      addPlugin: vi.fn(),
     } as unknown as ConsumerPact;
   };
 
@@ -41,11 +33,11 @@ describe('V4 HTTP executeTest', () => {
         () => {},
       );
 
-      const stub =
-        pactMock.pactffiCreateMockServerForTransport as sinon.SinonStub;
-      expect(stub.calledOnce).to.be.true;
-      const [, , config] = stub.firstCall.args;
-      expect(JSON.parse(config)).to.deep.equal({ corsPreflight: true });
+      // biome-ignore lint/suspicious/noExplicitAny: accessing vitest mock internals after ConsumerPact cast
+      const stub = pactMock.pactffiCreateMockServerForTransport as any;
+      expect(stub).toHaveBeenCalledOnce();
+      const [, , config] = stub.mock.calls[0];
+      expect(JSON.parse(config)).toEqual({ corsPreflight: true });
     });
 
     it('passes corsPreflight: true when cors is explicitly true', async () => {
@@ -58,10 +50,10 @@ describe('V4 HTTP executeTest', () => {
         () => {},
       );
 
-      const stub =
-        pactMock.pactffiCreateMockServerForTransport as sinon.SinonStub;
-      const [, , config] = stub.firstCall.args;
-      expect(JSON.parse(config)).to.deep.equal({ corsPreflight: true });
+      // biome-ignore lint/suspicious/noExplicitAny: accessing vitest mock internals after ConsumerPact cast
+      const stub = pactMock.pactffiCreateMockServerForTransport as any;
+      const [, , config] = stub.mock.calls[0];
+      expect(JSON.parse(config)).toEqual({ corsPreflight: true });
     });
 
     it('passes corsPreflight: false when cors is explicitly false', async () => {
@@ -74,10 +66,10 @@ describe('V4 HTTP executeTest', () => {
         () => {},
       );
 
-      const stub =
-        pactMock.pactffiCreateMockServerForTransport as sinon.SinonStub;
-      const [, , config] = stub.firstCall.args;
-      expect(JSON.parse(config)).to.deep.equal({ corsPreflight: false });
+      // biome-ignore lint/suspicious/noExplicitAny: accessing vitest mock internals after ConsumerPact cast
+      const stub = pactMock.pactffiCreateMockServerForTransport as any;
+      const [, , config] = stub.mock.calls[0];
+      expect(JSON.parse(config)).toEqual({ corsPreflight: false });
     });
   });
 
@@ -92,10 +84,10 @@ describe('V4 HTTP executeTest', () => {
         () => {},
       );
 
-      const stub =
-        pactMock.pactffiCreateMockServerForTransport as sinon.SinonStub;
-      const [, transport] = stub.firstCall.args;
-      expect(transport).to.eq('http');
+      // biome-ignore lint/suspicious/noExplicitAny: accessing vitest mock internals after ConsumerPact cast
+      const stub = pactMock.pactffiCreateMockServerForTransport as any;
+      const [, transport] = stub.mock.calls[0];
+      expect(transport).toBe('http');
     });
 
     it('uses https scheme when tls is true', async () => {
@@ -108,10 +100,10 @@ describe('V4 HTTP executeTest', () => {
         () => {},
       );
 
-      const stub =
-        pactMock.pactffiCreateMockServerForTransport as sinon.SinonStub;
-      const [, transport] = stub.firstCall.args;
-      expect(transport).to.eq('https');
+      // biome-ignore lint/suspicious/noExplicitAny: accessing vitest mock internals after ConsumerPact cast
+      const stub = pactMock.pactffiCreateMockServerForTransport as any;
+      const [, transport] = stub.mock.calls[0];
+      expect(transport).toBe('https');
     });
   });
 
@@ -126,7 +118,7 @@ describe('V4 HTTP executeTest', () => {
           async () => Promise.resolve(),
           () => {},
         ),
-      ).to.be.rejectedWith('Failed to start mock server');
+      ).rejects.toThrow('Failed to start mock server');
     });
   });
 });

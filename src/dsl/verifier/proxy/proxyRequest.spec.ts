@@ -1,60 +1,57 @@
-import * as chai from 'chai';
 import { Readable } from 'node:stream';
 import type { ProxyOptions } from './types';
 import { toServerOptions as toServerOptionsAct } from './proxyRequest';
-
-const { expect } = chai;
 
 describe('#toServerOptions', () => {
   const toServerOptions = (opts: ProxyOptions = {}, req?: { body: unknown }) =>
     // biome-ignore lint/suspicious/noExplicitAny: minimal request mock object to satisfy the type parameter
     toServerOptionsAct(opts, req ?? ({} as any));
 
-  context('changeOrigin', () => {
+  describe('changeOrigin', () => {
     it('forwards option', () => {
       const res = toServerOptions({ changeOrigin: true });
 
-      expect(res.changeOrigin).to.be.true;
+      expect(res.changeOrigin).toBe(true);
     });
 
     it('is false by default', () => {
       const res = toServerOptions();
 
-      expect(res.changeOrigin).to.be.false;
+      expect(res.changeOrigin).toBe(false);
     });
   });
 
-  context('secure', () => {
+  describe('secure', () => {
     it('is true when validating ssl', () => {
       const res = toServerOptions({ validateSSL: true });
 
-      expect(res.secure).to.be.true;
+      expect(res.secure).toBe(true);
     });
 
     it('is false by default', () => {
       const res = toServerOptions();
 
-      expect(res.secure).to.be.false;
+      expect(res.secure).toBe(false);
     });
   });
 
-  context('target', () => {
+  describe('target', () => {
     it('uses providerBaseUrl', () => {
       const expectedTarget = 'http://test.com';
 
       const res = toServerOptions({ providerBaseUrl: expectedTarget });
 
-      expect(res.target).to.eq(expectedTarget);
+      expect(res.target).toBe(expectedTarget);
     });
 
     it('uses loopback address by default', () => {
       const res = toServerOptions();
 
-      expect(res.target).to.eq('http://127.0.0.1/');
+      expect(res.target).toBe('http://127.0.0.1/');
     });
   });
 
-  context('agent', () => {
+  describe('agent', () => {
     const initialEnv = { ...process.env };
 
     afterEach(() => {
@@ -64,7 +61,7 @@ describe('#toServerOptions', () => {
     it('uses no agent by default', () => {
       const res = toServerOptions();
 
-      expect(res.agent).to.be.undefined;
+      expect(res.agent).toBeUndefined();
     });
 
     it('uses HTTPS_PROXY', () => {
@@ -73,7 +70,7 @@ describe('#toServerOptions', () => {
 
       const res = toServerOptions();
 
-      expect(res.agent?.proxy?.toString()).to.eq(expectedProxy);
+      expect(res.agent?.proxy?.toString()).toBe(expectedProxy);
     });
 
     it('uses HTTP_PROXY', () => {
@@ -82,7 +79,7 @@ describe('#toServerOptions', () => {
 
       const res = toServerOptions();
 
-      expect(res.agent?.proxy?.toString()).to.eq(expectedProxy);
+      expect(res.agent?.proxy?.toString()).toBe(expectedProxy);
     });
 
     it('prefers HTTPS_PROXY to HTTP_PROXY', () => {
@@ -92,21 +89,21 @@ describe('#toServerOptions', () => {
 
       const res = toServerOptions();
 
-      expect(res.agent?.proxy?.toString()).to.eq(expectedProxy);
+      expect(res.agent?.proxy?.toString()).toBe(expectedProxy);
     });
   });
 
-  context('buffer', () => {
+  describe('buffer', () => {
     it('provides readable of body', () => {
       const res = toServerOptions({}, { body: 'a' });
 
-      expect(res.buffer).to.be.instanceOf(Readable);
+      expect(res.buffer).toBeInstanceOf(Readable);
     });
 
     it('provides readable when body is undefined', () => {
       const res = toServerOptions();
 
-      expect(res.buffer).to.be.instanceOf(Readable);
+      expect(res.buffer).toBeInstanceOf(Readable);
     });
   });
 });

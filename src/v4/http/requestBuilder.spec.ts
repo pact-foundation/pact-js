@@ -1,27 +1,21 @@
+import { vi } from 'vitest';
 import type { ConsumerInteraction } from '@pact-foundation/pact-core';
-import * as chai from 'chai';
-import sinon from 'sinon';
-import sinonChai from 'sinon-chai';
 import { XmlBuilder } from '../../v4';
 import { RequestBuilder } from './requestBuilder';
 
-chai.use(sinonChai);
-
-const { expect } = chai;
-
 describe('V4 RequestBuilder', () => {
-  let withRequestBody: sinon.SinonStub;
+  let withRequestBody: ReturnType<typeof vi.fn>;
   let interaction: ConsumerInteraction;
   let builder: RequestBuilder;
 
   beforeEach(() => {
-    withRequestBody = sinon.stub();
+    withRequestBody = vi.fn();
     interaction = { withRequestBody } as unknown as ConsumerInteraction;
     builder = new RequestBuilder(interaction);
   });
 
   afterEach(() => {
-    sinon.restore();
+    vi.restoreAllMocks();
   });
 
   describe('#xmlBody', () => {
@@ -32,10 +26,8 @@ describe('V4 RequestBuilder', () => {
 
       builder.xmlBody(body);
 
-      expect(withRequestBody).to.have.been.calledOnceWith(
-        body,
-        'application/xml',
-      );
+      expect(withRequestBody).toHaveBeenCalledOnce();
+      expect(withRequestBody).toHaveBeenCalledWith(body, 'application/xml');
     });
 
     it('supports XmlBuilder with matchers', () => {
@@ -45,10 +37,8 @@ describe('V4 RequestBuilder', () => {
 
       builder.xmlBody(body);
 
-      expect(withRequestBody).to.have.been.calledOnceWith(
-        body,
-        'application/xml',
-      );
+      expect(withRequestBody).toHaveBeenCalledOnce();
+      expect(withRequestBody).toHaveBeenCalledWith(body, 'application/xml');
     });
 
     it('returns the builder for chaining', () => {
@@ -56,7 +46,7 @@ describe('V4 RequestBuilder', () => {
 
       const result = builder.xmlBody(body);
 
-      expect(result).to.equal(builder);
+      expect(result).toBe(builder);
     });
   });
 });

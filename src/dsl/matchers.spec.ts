@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import {
   boolean,
   decimal,
@@ -120,15 +119,13 @@ describe('Matcher', () => {
     describe('when given a valid regex', () => {
       describe('and a matching example', () => {
         it('returns true', () => {
-          expect(validateExample('2010-01-01', ISO8601_DATE_FORMAT)).to.eql(
-            true,
-          );
+          expect(validateExample('2010-01-01', ISO8601_DATE_FORMAT)).toBe(true);
         });
       });
 
       describe('and a failing example', () => {
         it('returns false', () => {
-          expect(validateExample('not a date', ISO8601_DATE_FORMAT)).to.eql(
+          expect(validateExample('not a date', ISO8601_DATE_FORMAT)).toBe(
             false,
           );
         });
@@ -139,7 +136,7 @@ describe('Matcher', () => {
       it('returns an error', () => {
         expect(() => {
           validateExample('', 'abc(');
-        }).to.throw(Error);
+        }).toThrow(Error);
       });
     });
   });
@@ -158,7 +155,7 @@ describe('Matcher', () => {
           matcher: '\\w+',
         });
 
-        expect(JSON.stringify(match)).to.deep.include(JSON.stringify(expected));
+        expect(JSON.stringify(match)).toContain(JSON.stringify(expected));
       });
     });
 
@@ -170,16 +167,16 @@ describe('Matcher', () => {
 
       describe('when no term is provided', () => {
         it('throws an Error', () => {
-          expect(createTheTerm.call({}, undefined)).to.throw(Error);
+          expect(createTheTerm.call({}, undefined)).toThrow(Error);
         });
       });
 
       describe('when an invalid term is provided', () => {
         it('throws an Error', () => {
-          expect(createTheTerm({})).to.throw(Error);
-          expect(createTheTerm('')).to.throw(Error);
-          expect(createTheTerm({ value: 'foo' })).to.throw(Error);
-          expect(createTheTerm({ matcher: '\\w+' })).to.throw(Error);
+          expect(createTheTerm({})).toThrow(Error);
+          expect(createTheTerm('')).toThrow(Error);
+          expect(createTheTerm({ value: 'foo' })).toThrow(Error);
+          expect(createTheTerm({ matcher: '\\w+' })).toThrow(Error);
         });
       });
     });
@@ -191,7 +188,7 @@ describe('Matcher', () => {
             generate: 'abc',
             matcher: ISO8601_DATE_FORMAT,
           });
-        }).to.throw(Error);
+        }).toThrow(Error);
       });
     });
   });
@@ -205,7 +202,7 @@ describe('Matcher', () => {
         };
 
         const match = somethingLike('myspecialvalue');
-        expect(JSON.stringify(match)).to.deep.include(JSON.stringify(expected));
+        expect(JSON.stringify(match)).toContain(JSON.stringify(expected));
       });
     });
 
@@ -217,14 +214,14 @@ describe('Matcher', () => {
 
       describe('when no value is provided', () => {
         it('`throws an Error', () => {
-          expect(createTheValue.call({}, undefined)).to.throw(Error);
+          expect(createTheValue.call({}, undefined)).toThrow(Error);
         });
       });
 
       describe('when an invalid value is provided', () => {
         it('throws an Error', () => {
-          expect(createTheValue(undefined)).to.throw(Error);
-          expect(createTheValue(() => {})).to.throw(Error);
+          expect(createTheValue(undefined)).toThrow(Error);
+          expect(createTheValue(() => {})).toThrow(Error);
         });
       });
     });
@@ -240,7 +237,7 @@ describe('Matcher', () => {
         };
 
         const match = eachLike(null, { min: 1 });
-        expect(JSON.stringify(match)).to.deep.include(JSON.stringify(expected));
+        expect(JSON.stringify(match)).toContain(JSON.stringify(expected));
       });
     });
 
@@ -253,7 +250,7 @@ describe('Matcher', () => {
         };
 
         const match = eachLike({ a: 1 }, { min: 1 });
-        expect(JSON.stringify(match)).to.deep.include(JSON.stringify(expected));
+        expect(JSON.stringify(match)).toContain(JSON.stringify(expected));
       });
     });
 
@@ -261,7 +258,7 @@ describe('Matcher', () => {
       it('throws an Error message', () => {
         expect(() => {
           eachLike({ a: 1 }, { min: 0 });
-        }).to.throw(Error);
+        }).toThrow(Error);
       });
     });
 
@@ -274,7 +271,7 @@ describe('Matcher', () => {
         };
 
         const match = eachLike([1, 2, 3], { min: 1 });
-        expect(JSON.stringify(match)).to.deep.include(JSON.stringify(expected));
+        expect(JSON.stringify(match)).toContain(JSON.stringify(expected));
       });
     });
 
@@ -287,7 +284,7 @@ describe('Matcher', () => {
         };
 
         const match = eachLike('test', { min: 1 });
-        expect(JSON.stringify(match)).to.deep.include(JSON.stringify(expected));
+        expect(JSON.stringify(match)).toContain(JSON.stringify(expected));
       });
     });
 
@@ -308,9 +305,7 @@ describe('Matcher', () => {
           };
 
           const match = eachLike({ id: somethingLike(10) }, { min: 1 });
-          expect(JSON.stringify(match)).to.deep.include(
-            JSON.stringify(expected),
-          );
+          expect(JSON.stringify(match)).toContain(JSON.stringify(expected));
         });
       });
 
@@ -342,9 +337,7 @@ describe('Matcher', () => {
 
           //
 
-          expect(JSON.stringify(match)).to.deep.include(
-            JSON.stringify(expected),
-          );
+          expect(JSON.stringify(match)).toContain(JSON.stringify(expected));
         });
       });
 
@@ -363,9 +356,7 @@ describe('Matcher', () => {
           };
 
           const match = eachLike(eachLike('blue', { min: 1 }), { min: 1 });
-          expect(JSON.stringify(match)).to.deep.include(
-            JSON.stringify(expected),
-          );
+          expect(JSON.stringify(match)).toContain(JSON.stringify(expected));
         });
       });
 
@@ -436,7 +427,7 @@ describe('Matcher', () => {
             { min: 1 },
           );
 
-          expect(JSON.parse(JSON.stringify(match))).to.deep.include(
+          expect(JSON.parse(JSON.stringify(match))).toMatchObject(
             JSON.parse(JSON.stringify(expected)),
           );
         });
@@ -452,7 +443,7 @@ describe('Matcher', () => {
         };
 
         const match = eachLike({ a: 1 });
-        expect(JSON.stringify(match)).to.deep.include(JSON.stringify(expected));
+        expect(JSON.stringify(match)).toContain(JSON.stringify(expected));
       });
     });
 
@@ -465,7 +456,7 @@ describe('Matcher', () => {
         };
 
         const match = eachLike({ a: 1 }, { min: 3 });
-        expect(JSON.stringify(match)).to.deep.include(JSON.stringify(expected));
+        expect(JSON.stringify(match)).toContain(JSON.stringify(expected));
       });
     });
   });
@@ -473,10 +464,10 @@ describe('Matcher', () => {
   describe('#email', () => {
     describe('when given a valid Email address', () => {
       it('creates a valid matcher', () => {
-        expect(email('hello@world.com')).to.be.an('object');
-        expect(email('hello@world.com.au')).to.be.an('object');
-        expect(email('hello@a.co')).to.be.an('object');
-        expect(email()).to.be.an('object');
+        expect(email('hello@world.com')).toBeTypeOf('object');
+        expect(email('hello@world.com.au')).toBeTypeOf('object');
+        expect(email('hello@a.co')).toBeTypeOf('object');
+        expect(email()).toBeTypeOf('object');
       });
     });
 
@@ -484,7 +475,7 @@ describe('Matcher', () => {
       it('returns an error', () => {
         expect(() => {
           email('hello.world.c');
-        }).to.throw(Error);
+        }).toThrow(Error);
       });
     });
   });
@@ -492,8 +483,10 @@ describe('Matcher', () => {
   describe('#uuid', () => {
     describe('when given a valid UUID', () => {
       it('creates a valid matcher', () => {
-        expect(uuid('ce118b6e-d8e1-11e7-9296-cec278b6b50a')).to.be.an('object');
-        expect(uuid()).to.be.an('object');
+        expect(uuid('ce118b6e-d8e1-11e7-9296-cec278b6b50a')).toBeTypeOf(
+          'object',
+        );
+        expect(uuid()).toBeTypeOf('object');
       });
     });
 
@@ -501,7 +494,7 @@ describe('Matcher', () => {
       it('returns an error', () => {
         expect(() => {
           uuid('abc');
-        }).to.throw(Error);
+        }).toThrow(Error);
       });
     });
   });
@@ -509,8 +502,8 @@ describe('Matcher', () => {
   describe('#ipv4Address', () => {
     describe('when given a valid ipv4Address', () => {
       it('creates a valid matcher', () => {
-        expect(ipv4Address('127.0.0.1')).to.be.an('object');
-        expect(ipv4Address()).to.be.an('object');
+        expect(ipv4Address('127.0.0.1')).toBeTypeOf('object');
+        expect(ipv4Address()).toBeTypeOf('object');
       });
     });
 
@@ -518,7 +511,7 @@ describe('Matcher', () => {
       it('returns an error', () => {
         expect(() => {
           ipv4Address('abc');
-        }).to.throw(Error);
+        }).toThrow(Error);
       });
     });
   });
@@ -526,11 +519,11 @@ describe('Matcher', () => {
   describe('#ipv6Address', () => {
     describe('when given a valid ipv6Address', () => {
       it('creates a valid matcher', () => {
-        expect(ipv6Address('::1')).to.be.an('object');
-        expect(ipv6Address('2001:0db8:85a3:0000:0000:8a2e:0370:7334')).to.be.an(
-          'object',
-        );
-        expect(ipv6Address()).to.be.an('object');
+        expect(ipv6Address('::1')).toBeTypeOf('object');
+        expect(
+          ipv6Address('2001:0db8:85a3:0000:0000:8a2e:0370:7334'),
+        ).toBeTypeOf('object');
+        expect(ipv6Address()).toBeTypeOf('object');
       });
     });
 
@@ -538,7 +531,7 @@ describe('Matcher', () => {
       it('returns an error', () => {
         expect(() => {
           ipv6Address('abc');
-        }).to.throw(Error);
+        }).toThrow(Error);
       });
     });
   });
@@ -546,8 +539,8 @@ describe('Matcher', () => {
   describe('#hexadecimal', () => {
     describe('when given a valid hexadecimal', () => {
       it('creates a valid matcher', () => {
-        expect(hexadecimal('6F')).to.be.an('object');
-        expect(hexadecimal()).to.be.an('object');
+        expect(hexadecimal('6F')).toBeTypeOf('object');
+        expect(hexadecimal()).toBeTypeOf('object');
       });
     });
 
@@ -555,7 +548,7 @@ describe('Matcher', () => {
       it('returns an error', () => {
         expect(() => {
           hexadecimal('x1');
-        }).to.throw(Error);
+        }).toThrow(Error);
       });
     });
   });
@@ -563,18 +556,18 @@ describe('Matcher', () => {
   describe('#boolean', () => {
     describe('when used it should create a JSON object', () => {
       it('creates a valid matcher', () => {
-        expect(boolean()).to.be.an('object');
-        expect(boolean().value).to.equal(true);
+        expect(boolean()).toBeTypeOf('object');
+        expect(boolean().value).toBe(true);
       });
 
       it('sets value=false', () => {
-        expect(boolean(false)).to.be.an('object');
-        expect(boolean(false).value).to.equal(false);
+        expect(boolean(false)).toBeTypeOf('object');
+        expect(boolean(false).value).toBe(false);
       });
 
       it('sets value=true', () => {
-        expect(boolean(true)).to.be.an('object');
-        expect(boolean(true).value).to.equal(true);
+        expect(boolean(true)).toBeTypeOf('object');
+        expect(boolean(true).value).toBe(true);
       });
     });
   });
@@ -582,9 +575,9 @@ describe('Matcher', () => {
   describe('#string', () => {
     describe('when given a valid string', () => {
       it('creates a valid matcher', () => {
-        expect(string('test')).to.be.an('object');
-        expect(string()).to.be.an('object');
-        expect(string('test').value).to.equal('test');
+        expect(string('test')).toBeTypeOf('object');
+        expect(string()).toBeTypeOf('object');
+        expect(string('test').value).toBe('test');
       });
     });
   });
@@ -592,9 +585,9 @@ describe('Matcher', () => {
   describe('#decimal', () => {
     describe('when given a valid decimal', () => {
       it('creates a valid matcher', () => {
-        expect(decimal(10.1)).to.be.an('object');
-        expect(decimal()).to.be.an('object');
-        expect(decimal(0.0).value).to.equal(0.0);
+        expect(decimal(10.1)).toBeTypeOf('object');
+        expect(decimal()).toBeTypeOf('object');
+        expect(decimal(0.0).value).toBe(0.0);
       });
     });
   });
@@ -602,9 +595,9 @@ describe('Matcher', () => {
   describe('#integer', () => {
     describe('when given a valid integer', () => {
       it('creates a valid matcher', () => {
-        expect(integer(10)).to.be.an('object');
-        expect(integer()).to.be.an('object');
-        expect(integer(0).value).to.equal(0);
+        expect(integer(10)).toBeTypeOf('object');
+        expect(integer()).toBeTypeOf('object');
+        expect(integer(0).value).toBe(0);
       });
     });
   });
@@ -613,10 +606,10 @@ describe('Matcher', () => {
     describe('#rfc1123Timestamp', () => {
       describe('when given a valid rfc1123Timestamp', () => {
         it('creates a valid matcher', () => {
-          expect(rfc1123Timestamp('Mon, 31 Oct 2016 15:21:41 -0400')).to.be.an(
-            'object',
-          );
-          expect(rfc1123Timestamp()).to.be.an('object');
+          expect(
+            rfc1123Timestamp('Mon, 31 Oct 2016 15:21:41 -0400'),
+          ).toBeTypeOf('object');
+          expect(rfc1123Timestamp()).toBeTypeOf('object');
         });
       });
 
@@ -624,7 +617,7 @@ describe('Matcher', () => {
         it('returns an error', () => {
           expect(() => {
             rfc1123Timestamp('abc');
-          }).to.throw(Error);
+          }).toThrow(Error);
         });
       });
     });
@@ -632,8 +625,8 @@ describe('Matcher', () => {
     describe('#iso8601Time', () => {
       describe('when given a valid iso8601Time', () => {
         it('creates a valid matcher', () => {
-          expect(iso8601Time('T22:44:30.652Z')).to.be.an('object');
-          expect(iso8601Time()).to.be.an('object');
+          expect(iso8601Time('T22:44:30.652Z')).toBeTypeOf('object');
+          expect(iso8601Time()).toBeTypeOf('object');
         });
       });
 
@@ -641,7 +634,7 @@ describe('Matcher', () => {
         it('returns an error', () => {
           expect(() => {
             iso8601Time('abc');
-          }).to.throw(Error);
+          }).toThrow(Error);
         });
       });
     });
@@ -649,8 +642,8 @@ describe('Matcher', () => {
     describe('#iso8601Date', () => {
       describe('when given a valid iso8601Date', () => {
         it('creates a valid matcher', () => {
-          expect(iso8601Date('2017-12-05')).to.be.an('object');
-          expect(iso8601Date()).to.be.an('object');
+          expect(iso8601Date('2017-12-05')).toBeTypeOf('object');
+          expect(iso8601Date()).toBeTypeOf('object');
         });
       });
 
@@ -658,7 +651,7 @@ describe('Matcher', () => {
         it('returns an error', () => {
           expect(() => {
             iso8601Date('abc');
-          }).to.throw(Error);
+          }).toThrow(Error);
         });
       });
     });
@@ -666,10 +659,10 @@ describe('Matcher', () => {
     describe('#iso8601DateTime', () => {
       describe('when given a valid iso8601DateTime', () => {
         it('creates a valid matcher', () => {
-          expect(iso8601DateTime('2015-08-06T16:53:10+01:00')).to.be.an(
+          expect(iso8601DateTime('2015-08-06T16:53:10+01:00')).toBeTypeOf(
             'object',
           );
-          expect(iso8601DateTime()).to.be.an('object');
+          expect(iso8601DateTime()).toBeTypeOf('object');
         });
       });
 
@@ -677,7 +670,7 @@ describe('Matcher', () => {
         it('returns an error', () => {
           expect(() => {
             iso8601DateTime('abc');
-          }).to.throw(Error);
+          }).toThrow(Error);
         });
       });
     });
@@ -687,17 +680,17 @@ describe('Matcher', () => {
         it('creates a valid matcher', () => {
           expect(
             iso8601DateTimeWithMillis('2015-08-06T16:53:10.123+01:00'),
-          ).to.be.an('object');
+          ).toBeTypeOf('object');
           expect(
             iso8601DateTimeWithMillis('2015-08-06T16:53:10.537357Z'),
-          ).to.be.an('object');
-          expect(iso8601DateTimeWithMillis('2020-12-10T09:01:29.06Z')).to.be.an(
-            'object',
-          );
-          expect(iso8601DateTimeWithMillis('2020-12-10T09:01:29.1Z')).to.be.an(
-            'object',
-          );
-          expect(iso8601DateTimeWithMillis()).to.be.an('object');
+          ).toBeTypeOf('object');
+          expect(
+            iso8601DateTimeWithMillis('2020-12-10T09:01:29.06Z'),
+          ).toBeTypeOf('object');
+          expect(
+            iso8601DateTimeWithMillis('2020-12-10T09:01:29.1Z'),
+          ).toBeTypeOf('object');
+          expect(iso8601DateTimeWithMillis()).toBeTypeOf('object');
         });
       });
 
@@ -705,7 +698,7 @@ describe('Matcher', () => {
         it('returns an error', () => {
           expect(() => {
             iso8601DateTimeWithMillis('abc');
-          }).to.throw(Error);
+          }).toThrow(Error);
         });
       });
     });
@@ -723,7 +716,7 @@ describe('Matcher', () => {
         };
 
         it('returns just that object', () => {
-          expect(extractPayload(object)).to.deep.equal(object);
+          expect(extractPayload(object)).toEqual(object);
         });
       });
 
@@ -740,7 +733,7 @@ describe('Matcher', () => {
         };
 
         it('returns just that object', () => {
-          expect(extractPayload(object)).to.deep.equal(object);
+          expect(extractPayload(object)).toEqual(object);
         });
       });
 
@@ -772,7 +765,7 @@ describe('Matcher', () => {
         };
 
         it('returns without matching guff', () => {
-          expect(extractPayload(someMatchers)).to.deep.equal(expected);
+          expect(extractPayload(someMatchers)).toEqual(expected);
         });
       });
 
@@ -785,8 +778,8 @@ describe('Matcher', () => {
             matcher: '\\w+',
           });
 
-          expect(isMatcher(matcher)).to.eq(true);
-          expect(extractPayload(matcher)).to.eql(expected);
+          expect(isMatcher(matcher)).toBe(true);
+          expect(extractPayload(matcher)).toEqual(expected);
         });
       });
 
@@ -847,7 +840,7 @@ describe('Matcher', () => {
             },
           };
 
-          expect(extractPayload(o)).to.deep.equal(expected);
+          expect(extractPayload(o)).toEqual(expected);
         });
       });
     });

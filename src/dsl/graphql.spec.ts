@@ -1,10 +1,5 @@
-import * as chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
 import { GraphQLInteraction } from './graphql';
 import { isMatcher } from './matchers';
-
-chai.use(chaiAsPromised);
-const { expect } = chai;
 
 describe('GraphQLInteraction', () => {
   let interaction: GraphQLInteraction;
@@ -30,13 +25,13 @@ describe('GraphQLInteraction', () => {
 
         // biome-ignore lint/suspicious/noExplicitAny: body sub-properties (query/variables/operationName) are typed as AnyTemplate and need runtime assertions
         const json: any = interaction.json();
-        expect(json.request.body.operationName).to.eq('query');
+        expect(json.request.body.operationName).toBe('query');
       });
     });
 
     describe('when given an invalid operation', () => {
       it('fails with an error', () => {
-        expect(interaction.withOperation.bind('aoeu')).to.throw(Error);
+        expect(interaction.withOperation.bind('aoeu')).toThrow(Error);
       });
     });
 
@@ -56,7 +51,7 @@ describe('GraphQLInteraction', () => {
 
         // biome-ignore lint/suspicious/noExplicitAny: body sub-properties (query/variables/operationName) are typed as AnyTemplate and need runtime assertions
         const json: any = interaction.json();
-        expect(json.request.body.operationName).to.eq(null);
+        expect(json.request.body.operationName).toBeNull();
       });
     });
   });
@@ -81,7 +76,7 @@ describe('GraphQLInteraction', () => {
 
         // biome-ignore lint/suspicious/noExplicitAny: body sub-properties (query/variables/operationName) are typed as AnyTemplate and need runtime assertions
         const json: any = interaction.json();
-        expect(json.request.body.variables).to.deep.eq({ foo: 'bar' });
+        expect(json.request.body.variables).toEqual({ foo: 'bar' });
       });
     });
 
@@ -101,7 +96,7 @@ describe('GraphQLInteraction', () => {
 
         // biome-ignore lint/suspicious/noExplicitAny: body sub-properties (query/variables/operationName) are typed as AnyTemplate and need runtime assertions
         const json: any = interaction.json();
-        expect(json.request.body).to.not.have.property('variables');
+        expect(json.request.body).not.toHaveProperty('variables');
       });
     });
 
@@ -122,7 +117,7 @@ describe('GraphQLInteraction', () => {
 
         // biome-ignore lint/suspicious/noExplicitAny: body sub-properties (query/variables/operationName) are typed as AnyTemplate and need runtime assertions
         const json: any = interaction.json();
-        expect(json.request.body).to.have.property('variables');
+        expect(json.request.body).toHaveProperty('variables');
       });
     });
   });
@@ -148,7 +143,7 @@ describe('GraphQLInteraction', () => {
     describe('when given an empty query', () => {
       it('fails with an error', () => {
         // biome-ignore lint/suspicious/noExplicitAny: deliberately passing null to test error handling on invalid input
-        expect(() => interaction.withQuery(null as any)).to.throw();
+        expect(() => interaction.withQuery(null as any)).toThrow();
       });
     });
 
@@ -156,7 +151,7 @@ describe('GraphQLInteraction', () => {
       it('fails with an error', () => {
         expect(() =>
           interaction.withQuery('{ not properly terminated'),
-        ).to.throw(Error);
+        ).toThrow(Error);
       });
     });
 
@@ -178,12 +173,12 @@ describe('GraphQLInteraction', () => {
           // biome-ignore lint/suspicious/noExplicitAny: body sub-properties (query/variables/operationName) are typed as AnyTemplate and need runtime assertions
           const json: any = interaction.json();
 
-          expect(isMatcher(json.request.body.query)).to.eq(true);
+          expect(isMatcher(json.request.body.query)).toBe(true);
           const r = new RegExp(json.request.body.query.regex, 'g');
           const lotsOfWhitespace = `{             hello
 
         }`;
-          expect(r.test(lotsOfWhitespace)).to.eq(true);
+          expect(r.test(lotsOfWhitespace)).toBe(true);
         });
       });
 
@@ -200,27 +195,27 @@ describe('GraphQLInteraction', () => {
           // biome-ignore lint/suspicious/noExplicitAny: body sub-properties (query/variables/operationName) are typed as AnyTemplate and need runtime assertions
           const json: any = interaction.json();
 
-          expect(isMatcher(json.request.body.query)).to.eq(true);
+          expect(isMatcher(json.request.body.query)).toBe(true);
           const r = new RegExp(json.request.body.query.regex, 'g');
           const lotsOfWhitespace = `{             Hello(id: $id) { name    } }`;
-          expect(r.test(lotsOfWhitespace)).to.eq(true);
+          expect(r.test(lotsOfWhitespace)).toBe(true);
         });
       });
     });
   });
 
   describe('#json', () => {
-    context('when query is empty', () => {
+    describe('when query is empty', () => {
       it('fails with an error', () => {
-        expect(() => interaction.json()).to.throw();
+        expect(() => interaction.json()).toThrow();
       });
     });
 
-    context('when description is empty', () => {
+    describe('when description is empty', () => {
       it('fails with an error', () => {
         interaction.withQuery('{ hello }');
 
-        return expect(() => interaction.json()).to.throw();
+        return expect(() => interaction.json()).toThrow();
       });
     });
 
@@ -239,12 +234,12 @@ describe('GraphQLInteraction', () => {
 
         // biome-ignore lint/suspicious/noExplicitAny: body sub-properties (query/variables/operationName) are typed as AnyTemplate and need runtime assertions
         const json: any = interaction.json();
-        expect(json.request.body).to.not.have.property('operationName');
+        expect(json.request.body).not.toHaveProperty('operationName');
       });
     });
   });
 
-  context('when given a valid query', () => {
+  describe('when given a valid query', () => {
     it('marshals the query to JSON', () => {
       interaction.uponReceiving('a request');
       interaction.withRequest({
@@ -260,12 +255,12 @@ describe('GraphQLInteraction', () => {
 
       // biome-ignore lint/suspicious/noExplicitAny: body sub-properties (query/variables/operationName) are typed as AnyTemplate and need runtime assertions
       const json: any = interaction.json();
-      expect(isMatcher(json.request.body.query)).to.eq(true);
-      expect(json.request.body.query.getValue()).to.eq('{ hello }');
+      expect(isMatcher(json.request.body.query)).toBe(true);
+      expect(json.request.body.query.getValue()).toBe('{ hello }');
     });
   });
 
-  context('headers are not duplicated', () => {
+  describe('headers are not duplicated', () => {
     describe('headers are properly cased', () => {
       it('content-type header is properly cased', () => {
         interaction.uponReceiving('a request');
@@ -282,7 +277,7 @@ describe('GraphQLInteraction', () => {
 
         // biome-ignore lint/suspicious/noExplicitAny: body sub-properties (query/variables/operationName) are typed as AnyTemplate and need runtime assertions
         const json: any = interaction.json();
-        expect(json.request.headers).to.deep.eq({
+        expect(json.request.headers).toEqual({
           'Content-Type': 'application/json',
         });
       });

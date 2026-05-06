@@ -15,7 +15,8 @@
     "noEmitOnError": true,
     "emitDecoratorMetadata": true,
     "declaration": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "types": ["vitest/globals"]
   },
   "include": ["src", "test"]
 }

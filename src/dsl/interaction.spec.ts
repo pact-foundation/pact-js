@@ -1,5 +1,3 @@
-import * as chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
 import { HTTPMethods } from '../common/request';
 import {
   Interaction,
@@ -9,9 +7,6 @@ import {
 } from './interaction';
 import { eachLike, term } from './matchers';
 
-chai.use(chaiAsPromised);
-const { expect } = chai;
-
 describe('Interaction', () => {
   describe('#given', () => {
     it('creates Interaction with provider state', () => {
@@ -19,7 +14,7 @@ describe('Interaction', () => {
         .uponReceiving('r')
         .given('provider state');
 
-      expect(actual.state).to.eql({
+      expect(actual.state).toEqual({
         description: 'r',
         providerState: 'provider state',
       });
@@ -28,12 +23,12 @@ describe('Interaction', () => {
     describe('without provider state', () => {
       it('creates Interaction when blank', () => {
         const actual = new Interaction().uponReceiving('r').given('').state;
-        expect(actual).to.eql({ description: 'r' });
+        expect(actual).toEqual({ description: 'r' });
       });
 
       it('creates Interaction when nothing is passed', () => {
         const actual = new Interaction().uponReceiving('r').state;
-        expect(actual).to.eql({ description: 'r' });
+        expect(actual).toEqual({ description: 'r' });
       });
     });
   });
@@ -42,15 +37,14 @@ describe('Interaction', () => {
     const interaction = new Interaction();
 
     it('throws error when no description provided', () => {
-      expect(interaction.uponReceiving).to.throw(
-        Error,
+      expect(interaction.uponReceiving).toThrow(
         'You must provide a description for the interaction.',
       );
     });
 
     it('has a state with description', () => {
       interaction.uponReceiving('an interaction description');
-      expect(interaction.state).to.eql({
+      expect(interaction.state).toEqual({
         description: 'an interaction description',
       });
     });
@@ -65,7 +59,7 @@ describe('Interaction', () => {
           interaction,
           {} as unknown as RequestOptions,
         ),
-      ).to.throw(Error, 'You must provide an HTTP method.');
+      ).toThrow('You must provide an HTTP method.');
     });
 
     it('throws error when an invalid method is provided', () => {
@@ -73,8 +67,7 @@ describe('Interaction', () => {
         interaction.withRequest.bind(interaction, {
           method: 'FOO',
         } as unknown as RequestOptions),
-      ).to.throw(
-        Error,
+      ).toThrow(
         'You must provide a valid HTTP method: GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS, COPY, LOCK, MKCOL, MOVE, PROPFIND, PROPPATCH, UNLOCK, REPORT.',
       );
     });
@@ -84,7 +77,7 @@ describe('Interaction', () => {
         interaction.withRequest.bind(interaction, {
           path: '/',
         } as unknown as RequestOptions),
-      ).to.throw(Error, 'You must provide an HTTP method.');
+      ).toThrow('You must provide an HTTP method.');
     });
 
     it('throws error when path is not provided', () => {
@@ -92,7 +85,7 @@ describe('Interaction', () => {
         interaction.withRequest.bind(interaction, {
           method: HTTPMethods.GET,
         } as unknown as RequestOptions),
-      ).to.throw(Error, 'You must provide a path.');
+      ).toThrow('You must provide a path.');
     });
 
     it('throws error when query object is not a string', () => {
@@ -102,7 +95,7 @@ describe('Interaction', () => {
           path: '/',
           query: { string: false, query: 'false' },
         } as unknown as RequestOptions),
-      ).to.throw(Error, 'Query must only contain strings.');
+      ).toThrow('Query must only contain strings.');
     });
 
     describe('with only mandatory params', () => {
@@ -111,12 +104,15 @@ describe('Interaction', () => {
         .withRequest({ method: HTTPMethods.GET, path: '/search' }).state;
 
       it('has a state containing only the given keys', () => {
-        expect(actual).to.have.property('request');
-        expect(actual.request).to.have.keys('method', 'path');
+        expect(actual).toHaveProperty('request');
+        expect(actual.request).toHaveProperty('method');
+        expect(actual.request).toHaveProperty('path');
       });
 
       it('request has no other keys', () => {
-        expect(actual.request).to.not.have.keys('query', 'headers', 'body');
+        expect(actual.request).not.toHaveProperty('query');
+        expect(actual.request).not.toHaveProperty('headers');
+        expect(actual.request).not.toHaveProperty('body');
       });
     });
 
@@ -130,14 +126,12 @@ describe('Interaction', () => {
       }).state;
 
       it('has a full state all available keys', () => {
-        expect(actual).to.have.property('request');
-        expect(actual.request).to.have.keys(
-          'method',
-          'path',
-          'query',
-          'headers',
-          'body',
-        );
+        expect(actual).toHaveProperty('request');
+        expect(actual.request).toHaveProperty('method');
+        expect(actual.request).toHaveProperty('path');
+        expect(actual.request).toHaveProperty('query');
+        expect(actual.request).toHaveProperty('headers');
+        expect(actual.request).toHaveProperty('body');
       });
     });
 
@@ -158,7 +152,7 @@ describe('Interaction', () => {
         expect(
           new Interaction().uponReceiving('request').withRequest(request).state
             .request,
-        ).to.have.any.keys('query');
+        ).toHaveProperty('query');
       });
 
       it('is passed with matcher as the value', () => {
@@ -168,7 +162,7 @@ describe('Interaction', () => {
         expect(
           new Interaction().uponReceiving('request').withRequest(request).state
             .request,
-        ).to.have.any.keys('query');
+        ).toHaveProperty('query');
       });
 
       it('is passed with object', () => {
@@ -178,7 +172,7 @@ describe('Interaction', () => {
         expect(
           new Interaction().uponReceiving('request').withRequest(request).state
             .request,
-        ).to.have.any.keys('query');
+        ).toHaveProperty('query');
       });
 
       it('is passed with array', () => {
@@ -188,7 +182,7 @@ describe('Interaction', () => {
         expect(
           new Interaction().uponReceiving('request').withRequest(request).state
             .request?.query,
-        ).to.deep.eq({ id: ['1', '2'] });
+        ).toEqual({ id: ['1', '2'] });
       });
     });
 
@@ -200,7 +194,7 @@ describe('Interaction', () => {
           path: '/path',
         }).state;
 
-        expect(actual.request).to.have.any.keys('body');
+        expect(actual.request).toHaveProperty('body');
       });
 
       it('is not included when explicitly set to undefined', () => {
@@ -210,7 +204,7 @@ describe('Interaction', () => {
           path: '/path',
         } as unknown as RequestOptions).state;
 
-        expect(actual.request).not.to.have.any.keys('body');
+        expect(actual.request).not.toHaveProperty('body');
       });
     });
   });
@@ -228,7 +222,7 @@ describe('Interaction', () => {
           interaction,
           {} as unknown as ResponseOptions,
         ),
-      ).to.throw(Error, 'You must provide a status code.');
+      ).toThrow('You must provide a status code.');
     });
 
     it('throws error when status is blank', () => {
@@ -236,7 +230,7 @@ describe('Interaction', () => {
         interaction.willRespondWith.bind(interaction, {
           status: '',
         } as unknown as ResponseOptions),
-      ).to.throw(Error, 'You must provide a status code.');
+      ).toThrow('You must provide a status code.');
     });
 
     describe('with only mandatory params', () => {
@@ -249,12 +243,13 @@ describe('Interaction', () => {
       });
 
       it('has a state compacted with only present keys', () => {
-        expect(actual).to.have.property('response');
-        expect(actual.response).to.have.keys('status');
+        expect(actual).toHaveProperty('response');
+        expect(actual.response).toHaveProperty('status');
       });
 
       it('request has no other keys', () => {
-        expect(actual.response).to.not.have.keys('headers', 'body');
+        expect(actual.response).not.toHaveProperty('headers');
+        expect(actual.response).not.toHaveProperty('body');
       });
     });
 
@@ -272,8 +267,10 @@ describe('Interaction', () => {
       });
 
       it('has a full state all available keys', () => {
-        expect(actual).to.have.property('response');
-        expect(actual.response).to.have.keys('status', 'headers', 'body');
+        expect(actual).toHaveProperty('response');
+        expect(actual.response).toHaveProperty('status');
+        expect(actual.response).toHaveProperty('headers');
+        expect(actual.response).toHaveProperty('body');
       });
     });
 
@@ -285,7 +282,7 @@ describe('Interaction', () => {
         });
 
         const actual = interaction.state;
-        expect(actual.response).to.have.any.keys('body');
+        expect(actual.response).toHaveProperty('body');
       });
 
       it('is not included when explicitly set to undefined', () => {
@@ -295,7 +292,7 @@ describe('Interaction', () => {
         } as unknown as ResponseOptions);
 
         const actual = interaction.state;
-        expect(actual.response).not.to.have.any.keys('body');
+        expect(actual.response).not.toHaveProperty('body');
       });
     });
   });
