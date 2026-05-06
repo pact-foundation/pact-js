@@ -4,6 +4,7 @@ import type {
   Path,
   Rules,
   SpecificationVersion,
+  StatusCodeMatcher,
   TemplateHeaders,
   TemplateQuery,
   V3MockServer,
@@ -92,7 +93,7 @@ export interface V4InteractionWithCompleteRequest {
 
 export interface V4InteractionWithRequest {
   willRespondWith(
-    status: number,
+    status: number | StatusCodeMatcher<number>,
     builder?: V4ResponseBuilderFunc,
   ): V4InteractionWithResponse;
 }
@@ -164,7 +165,7 @@ export interface V4InteractionWithPlugin {
 
 export interface V4InteractionWithPluginRequest {
   willRespondWith(
-    status: number,
+    status: number | StatusCodeMatcher<number>,
     builder?: V4PluginResponseBuilderFunc,
   ): V4InteractionWithPluginResponse;
 }
