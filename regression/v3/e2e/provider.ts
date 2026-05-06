@@ -39,10 +39,18 @@ export const importData = () => {
   }, 0);
 };
 
+interface Animal {
+  id?: number;
+  first_name?: string;
+  last_name?: string;
+  animal?: string;
+  eligibility: { available: boolean };
+}
+
 // List all animals with 'available' eligibility
 const availableAnimals = () => {
-  return animalRepository.fetchAll().filter((a: any) => {
-    return a.eligibility.available;
+  return animalRepository.fetchAll().filter((a) => {
+    return (a as Animal).eligibility.available;
   });
 };
 
@@ -60,18 +68,23 @@ server.get('/animals/available', (_req, res) => {
 server.get('/animals/available/xml', (_req, res) => {
   res.header('Content-Type', 'application/xml; charset=utf-8');
   const xml_body = xml({
-    animals: animalRepository.fetchAll().map((animal: any) => {
-      const result = {};
-      result[animal.animal] = { _attr: animal };
-      return result;
-    }),
+    animals: animalRepository
+      .fetchAll()
+      .filter((a): a is Animal => typeof (a as Animal).animal === 'string')
+      .map((animal) => {
+        const result: Record<string, unknown> = {};
+        result[animal.animal] = { _attr: animal };
+        return result;
+      }),
   });
   res.end(xml_body);
 });
 
 // Find an animal by ID
 server.get('/animals/:id', (req, res) => {
-  const response = animalRepository.getById(req.params.id) as any;
+  const response = animalRepository.getById(req.params.id) as
+    | Animal
+    | undefined;
   if (response) {
     if (req.header('accept') === 'text/plain') {
       res.contentType('text/plain; charset=utf-8');

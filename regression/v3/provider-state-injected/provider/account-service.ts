@@ -13,7 +13,7 @@ server.get('/accounts/search/findOneByAccountNumberId', (req, res) => {
     .then((account) => {
       if (account) {
         res.header('Content-Type', 'application/hal+json; charset=utf-8');
-        const baseUrl = `${req.protocol}://${req.hostname}:${(req.socket as any).localPort}`;
+        const baseUrl = `${req.protocol}://${req.hostname}:${req.socket?.localPort}`;
         const body = {
           _links: {
             account: {
@@ -54,7 +54,7 @@ server.post('/accounts/search/findOneByAccountNumberIdInBody', (req, res) => {
     .then((account) => {
       if (account) {
         res.header('Content-Type', 'application/hal+json; charset=utf-8');
-        const baseUrl = `${req.protocol}://${req.hostname}:${(req.socket as any).localPort}`;
+        const baseUrl = `${req.protocol}://${req.hostname}:${req.socket?.localPort}`;
         const body = {
           _links: {
             account: {
