@@ -17,7 +17,6 @@ export default defineConfig({
       'v2/e2e/test/consumer.spec.ts',
       'v2/graphql/src/consumer.spec.ts',
       'v2/messages/consumer/message-consumer.spec.ts',
-      'v2/mocha/test/get-dogs.spec.ts',
       'v2/serverless/consumer/consumer.spec.ts',
       'v2/typescript/test/get-dog.spec.ts',
       'v3/e2e/test/consumer.spec.ts',
