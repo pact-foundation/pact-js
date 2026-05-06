@@ -40,7 +40,8 @@ describe('PactV3', () => {
         await p.executeTest(async () => Promise.resolve());
 
         expect(
-          (pactMock.pactffiCreateMockServerForTransport as sinon.SinonStub).calledOnce,
+          (pactMock.pactffiCreateMockServerForTransport as sinon.SinonStub)
+            .calledOnce,
         ).to.be.true;
         const [, , config] = (
           pactMock.pactffiCreateMockServerForTransport as sinon.SinonStub
