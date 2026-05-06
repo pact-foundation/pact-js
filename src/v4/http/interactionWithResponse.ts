@@ -1,9 +1,9 @@
 import type { ConsumerPact } from '@pact-foundation/pact-core';
 import { executeTest } from '.';
 import type {
-  V4InteractionWithResponse,
   PactV4Options,
   TestFunction,
+  V4InteractionWithResponse,
 } from './types';
 
 export class InteractionWithResponse implements V4InteractionWithResponse {

@@ -1,8 +1,8 @@
-import axios from 'axios';
-import { XMLParser } from 'fast-xml-parser';
-import eyes from 'eyes';
-import * as R from 'ramda';
 import fs from 'node:fs';
+import axios from 'axios';
+import eyes from 'eyes';
+import { XMLParser } from 'fast-xml-parser';
+import * as R from 'ramda';
 
 const parser = new XMLParser({
   ignoreAttributes: false,

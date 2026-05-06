@@ -1,5 +1,5 @@
-import { vi } from 'vitest';
 import type { ConsumerPact } from '@pact-foundation/pact-core';
+import { vi } from 'vitest';
 import { PactV3 } from './pact';
 
 describe('PactV3', () => {

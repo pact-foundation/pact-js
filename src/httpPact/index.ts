@@ -1,33 +1,31 @@
-import serviceFactory, {
-  type ConsumerPact,
-  type ConsumerInteraction,
-  makeConsumerPact,
-} from '@pact-foundation/pact-core';
-
-import chalk from 'chalk';
 import path from 'node:path';
 import process from 'node:process';
+import serviceFactory, {
+  type ConsumerInteraction,
+  type ConsumerPact,
+  makeConsumerPact,
+} from '@pact-foundation/pact-core';
+import chalk from 'chalk';
 import { isEmpty } from 'lodash';
-
+import { version as pactPackageVersion } from '../../package.json';
+import logger, { setLogLevel } from '../common/logger';
+import { freePort, isPortAvailable } from '../common/net';
+import { numberToSpec } from '../common/spec';
 import {
   Interaction,
   type InteractionObject,
   interactionToInteractionObject,
 } from '../dsl/interaction';
-import { freePort, isPortAvailable } from '../common/net';
-import logger, { setLogLevel } from '../common/logger';
+import type { MockService } from '../dsl/mockService';
 import type {
   LogLevel,
   PactV2Options,
   PactV2OptionsComplete,
 } from '../dsl/options';
-import VerificationError from '../errors/verificationError';
 import ConfigurationError from '../errors/configurationError';
+import VerificationError from '../errors/verificationError';
 import { SpecificationVersion } from '../v3';
-import { version as pactPackageVersion } from '../../package.json';
 import { generateMockServerError } from '../v3/display';
-import { numberToSpec } from '../common/spec';
-import type { MockService } from '../dsl/mockService';
 import { setRequestDetails, setResponseDetails } from './ffi';
 
 const logErrorNoMockServer = () => {

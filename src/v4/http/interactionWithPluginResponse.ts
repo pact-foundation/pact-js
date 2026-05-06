@@ -1,8 +1,8 @@
 import type { ConsumerPact } from '@pact-foundation/pact-core';
 import { executeTest } from '.';
 import type {
-  V4InteractionWithPluginResponse,
   PactV4Options,
+  V4InteractionWithPluginResponse,
   V4MockServer,
 } from './types';
 

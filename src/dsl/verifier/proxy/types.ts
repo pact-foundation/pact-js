@@ -1,7 +1,7 @@
 import type express from 'express';
-import type { LogLevel } from '../../options';
-import type { JsonMap, AnyJson } from '../../../common/jsonTypes';
+import type { AnyJson, JsonMap } from '../../../common/jsonTypes';
 import type { MessageProviders } from '../../message';
+import type { LogLevel } from '../../options';
 
 export type Hook = () => Promise<unknown>;
 

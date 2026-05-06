@@ -1,6 +1,6 @@
 import nodeNet from 'node:net';
-import { isPortAvailable } from './net';
 import logger from './logger';
+import { isPortAvailable } from './net';
 
 describe('Net', () => {
   const port = 4567;

@@ -1,7 +1,7 @@
 import { type ASTNode, print } from 'graphql';
 import gql from 'graphql-tag';
-import { GraphQLQueryError } from './graphQLQueryError';
 import { ConfigurationError } from './configurationError';
+import { GraphQLQueryError } from './graphQLQueryError';
 import type { OperationType } from './types';
 
 export interface GraphQLVariables {

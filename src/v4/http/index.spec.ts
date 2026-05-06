@@ -1,5 +1,5 @@
-import { vi } from 'vitest';
 import type { ConsumerPact } from '@pact-foundation/pact-core';
+import { vi } from 'vitest';
 import { executeTest } from '.';
 import type { PactV4Options } from './types';
 

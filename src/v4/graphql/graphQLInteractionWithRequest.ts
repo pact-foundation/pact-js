@@ -1,6 +1,6 @@
 import type {
-  ConsumerPact,
   ConsumerInteraction,
+  ConsumerPact,
 } from '@pact-foundation/pact-core';
 import type { ASTNode } from 'graphql';
 import { isUndefined } from 'lodash';
@@ -10,14 +10,14 @@ import {
   escapeGraphQlQuery,
   validateQuery,
 } from '../../common/graphQL/graphQL';
+import { regex } from '../../v3/matchers';
 import { InteractionWithRequest } from '../http/interactionWithRequest';
 import type { PactV4Options, V4InteractionWithRequest } from '../http/types';
 import {
-  type V4GraphQLInteractionWithRequest,
-  OperationType,
   type GraphqlRequest,
+  OperationType,
+  type V4GraphQLInteractionWithRequest,
 } from './types';
-import { regex } from '../../v3/matchers';
 
 export class GraphQLInteractionWithRequest
   implements V4GraphQLInteractionWithRequest

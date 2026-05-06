@@ -1,7 +1,7 @@
-import { accountRepository } from './account-repository';
-import express from 'express';
-import cors from 'cors';
 import bodyParser from 'body-parser';
+import cors from 'cors';
+import express from 'express';
+import { accountRepository } from './account-repository';
 
 const server = express();
 server.use(cors());

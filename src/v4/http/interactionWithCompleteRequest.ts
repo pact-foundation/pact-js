@@ -1,12 +1,12 @@
 import type {
-  ConsumerPact,
   ConsumerInteraction,
+  ConsumerPact,
 } from '@pact-foundation/pact-core';
 import type {
-  V4InteractionWithCompleteRequest,
   PactV4Options,
-  V4Response,
+  V4InteractionWithCompleteRequest,
   V4InteractionWithResponse,
+  V4Response,
 } from './types';
 
 export class InteractionWithCompleteRequest

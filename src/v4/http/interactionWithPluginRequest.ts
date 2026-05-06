@@ -1,14 +1,14 @@
 import type {
-  ConsumerPact,
   ConsumerInteraction,
+  ConsumerPact,
 } from '@pact-foundation/pact-core';
 import { InteractionWithPluginResponse } from './interactionWithPluginResponse';
 import { ResponseWithPluginBuilder } from './responseWithPluginBuilder';
 import type {
-  V4InteractionWithPluginRequest,
   PactV4Options,
-  V4PluginResponseBuilderFunc,
+  V4InteractionWithPluginRequest,
   V4InteractionWithPluginResponse,
+  V4PluginResponseBuilderFunc,
 } from './types';
 
 export class InteractionWithPluginRequest

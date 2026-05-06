@@ -1,8 +1,8 @@
 import path from 'node:path';
 import querystring from 'node:querystring';
-import { describe, it } from 'vitest';
 import { Verifier } from '@pact-foundation/pact';
-import { server, importData, animalRepository } from '../provider';
+import { describe, it } from 'vitest';
+import { animalRepository, importData, server } from '../provider';
 
 const LOG_LEVEL = process.env.LOG_LEVEL || 'INFO';
 

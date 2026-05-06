@@ -2,26 +2,26 @@
  * @module Message
  */
 
-import { isEmpty } from 'lodash';
 import serviceFactory, {
   type AsynchronousMessage,
-  makeConsumerAsyncMessagePact,
   type ConsumerMessagePact,
+  makeConsumerAsyncMessagePact,
 } from '@pact-foundation/pact-core';
+import { isEmpty } from 'lodash';
 import { forEachObjIndexed } from 'ramda';
+import { version as pactPackageVersion } from '../package.json';
 import type { AnyJson } from './common/jsonTypes';
+import logger, { setLogLevel } from './common/logger';
+import { numberToSpec } from './common/spec';
 import type {
-  Metadata,
+  ConcreteMessage,
   Message,
   MessageConsumer,
-  ConcreteMessage,
+  Metadata,
   ProviderState,
 } from './dsl/message';
-import logger, { setLogLevel } from './common/logger';
 import type { MessageConsumerOptions } from './dsl/options';
 import ConfigurationError from './errors/configurationError';
-import { version as pactPackageVersion } from '../package.json';
-import { numberToSpec } from './common/spec';
 import { SpecificationVersion } from './v3';
 
 const DEFAULT_PACT_DIR = './pacts';

@@ -1,5 +1,5 @@
-import { vi } from 'vitest';
 import type { ConsumerInteraction } from '@pact-foundation/pact-core';
+import { vi } from 'vitest';
 import { contentTypeFromHeaders, setQuery } from './ffi';
 
 describe('Pact FFI', () => {

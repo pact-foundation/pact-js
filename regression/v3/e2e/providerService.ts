@@ -1,4 +1,4 @@
-import { server, importData } from './provider';
+import { importData, server } from './provider';
 
 importData();
 

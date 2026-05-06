@@ -1,33 +1,33 @@
-import type { Metadata } from '../../dsl/message';
-import type { AnyJson, JsonMap } from '../../common/jsonTypes';
 import type {
-  PluginConfig,
-  AsynchronousMessage,
-  TransportConfig,
-  V4AsynchronousMessageWithPlugin,
-  V4AsynchronousMessageWithPluginContents,
-  V4AsynchronousMessageWithTransport,
-  V4UnconfiguredAsynchronousMessage,
-  V4AsynchronousMessageWithContent,
-  V4AsynchronousMessageBuilderFunc,
-  V4AsynchronousMessageBuilder,
-  Comment,
-  CustomComment,
-} from './types';
-import type {
-  AsynchronousMessage as PactCoreAsynchronousMessage,
   ConsumerPact,
+  AsynchronousMessage as PactCoreAsynchronousMessage,
 } from '@pact-foundation/pact-core';
-import type { PactV4Options } from '../http/types';
 import { forEachObjIndexed, isEmpty } from 'ramda';
+import type { AnyJson, JsonMap } from '../../common/jsonTypes';
+import logger from '../../common/logger';
+import { convertRulesToFFI, validateRules } from '../../common/matchingRules';
+import type { Metadata } from '../../dsl/message';
 import ConfigurationError from '../../errors/configurationError';
 import {
   filterMissingFeatureFlag,
   generateMockServerError,
 } from '../../v3/display';
-import { convertRulesToFFI, validateRules } from '../../common/matchingRules';
 import type { Rules } from '../../v3/types';
-import logger from '../../common/logger';
+import type { PactV4Options } from '../http/types';
+import type {
+  AsynchronousMessage,
+  Comment,
+  CustomComment,
+  PluginConfig,
+  TransportConfig,
+  V4AsynchronousMessageBuilder,
+  V4AsynchronousMessageBuilderFunc,
+  V4AsynchronousMessageWithContent,
+  V4AsynchronousMessageWithPlugin,
+  V4AsynchronousMessageWithPluginContents,
+  V4AsynchronousMessageWithTransport,
+  V4UnconfiguredAsynchronousMessage,
+} from './types';
 
 const defaultPactDir = './pacts';
 

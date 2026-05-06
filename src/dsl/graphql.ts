@@ -3,18 +3,18 @@
  *
  * @module GraphQL
  */
-import { isNil, extend, isUndefined } from 'lodash';
+import { extend, isNil, isUndefined } from 'lodash';
 import { reject } from 'ramda';
-import { Interaction, type InteractionStateComplete } from './interaction';
-import { regex } from './matchers';
-import GraphQLQueryError from '../errors/graphQLQueryError';
-import ConfigurationError from '../errors/configurationError';
 import {
   escapeGraphQlQuery,
   type GraphQLVariables,
   validateQuery,
 } from '../common/graphQL/graphQL';
 import { OperationType } from '../common/graphQL/types';
+import ConfigurationError from '../errors/configurationError';
+import GraphQLQueryError from '../errors/graphQLQueryError';
+import { Interaction, type InteractionStateComplete } from './interaction';
+import { regex } from './matchers';
 
 /**
  * GraphQL interface

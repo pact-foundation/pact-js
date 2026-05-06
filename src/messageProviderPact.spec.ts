@@ -1,5 +1,5 @@
-import express from 'express';
 import http from 'node:http';
+import express from 'express';
 import type { Message } from './dsl/message';
 import {
   MessageProviderPact,

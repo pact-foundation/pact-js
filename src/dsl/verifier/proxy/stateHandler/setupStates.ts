@@ -1,12 +1,12 @@
+import type { JsonMap } from '../../../../common/jsonTypes';
 import logger from '../../../../common/logger';
 import type {
+  ProviderState,
   ProxyOptions,
   StateFunc,
   StateFuncWithSetup,
-  ProviderState,
   StateHandler,
 } from '../types';
-import type { JsonMap } from '../../../../common/jsonTypes';
 
 const isStateFuncWithSetup = (
   fn: StateFuncWithSetup | StateFunc,

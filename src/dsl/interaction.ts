@@ -5,9 +5,9 @@
 
 import { isNil, keys } from 'lodash';
 import { reject } from 'ramda';
-import { HTTPMethods, type HTTPMethod } from '../common/request';
-import { type MatcherV2, isMatcher, type AnyTemplate } from './matchers';
+import { type HTTPMethod, HTTPMethods } from '../common/request';
 import ConfigurationError from '../errors/configurationError';
+import { type AnyTemplate, isMatcher, type MatcherV2 } from './matchers';
 
 interface QueryObject {
   [name: string]: string | MatcherV2<string> | string[];

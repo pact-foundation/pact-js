@@ -1,12 +1,12 @@
 import path from 'node:path';
-import { afterAll, beforeAll, describe, it } from 'vitest';
 import { Verifier } from '@pact-foundation/pact';
-import { accountService } from './account-service';
+import { afterAll, beforeAll, describe, it } from 'vitest';
 import {
   Account,
   AccountNumber,
   accountRepository,
 } from './account-repository';
+import { accountService } from './account-service';
 
 const LOG_LEVEL = process.env.LOG_LEVEL || 'WARN';
 

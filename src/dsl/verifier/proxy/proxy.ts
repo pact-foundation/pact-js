@@ -1,20 +1,19 @@
+import http from 'node:http';
+import bodyParser from 'body-parser';
 import express from 'express';
 import HttpProxy from 'http-proxy';
-import bodyParser from 'body-parser';
-import http from 'node:http';
-
-import type { ProxyOptions } from './types';
 import logger from '../../../common/logger';
-import { createProxyStateHandler } from './stateHandler/stateHandler';
 import {
-  registerHookStateTracking,
+  type HooksState,
   registerAfterHook,
   registerBeforeHook,
-  type HooksState,
+  registerHookStateTracking,
 } from './hooks';
-import { createRequestTracer, createResponseTracer } from './tracer';
 import { createProxyMessageHandler } from './messages';
 import { toServerOptions } from './proxyRequest';
+import { createProxyStateHandler } from './stateHandler/stateHandler';
+import { createRequestTracer, createResponseTracer } from './tracer';
+import type { ProxyOptions } from './types';
 
 // Listens for the server start event
 export const waitForServerReady = (server: http.Server): Promise<http.Server> =>

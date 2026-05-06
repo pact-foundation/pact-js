@@ -1,13 +1,13 @@
 import fs = require('node:fs');
 
 import type { ConsumerPact } from '@pact-foundation/pact-core';
+import logger from '../../common/logger';
 import type { V3MockServer } from '../../v3';
-import type { PactV4Options, TestFunction } from './types';
 import {
   filterMissingFeatureFlag,
   generateMockServerError,
 } from '../../v3/display';
-import logger from '../../common/logger';
+import type { PactV4Options, TestFunction } from './types';
 
 export const readBinaryData = (file: string): Buffer => {
   try {

@@ -1,11 +1,11 @@
 import path from 'node:path';
-import { beforeAll, describe, expect, it } from 'vitest';
 import {
   Matchers,
   PactV3,
   SpecificationVersion,
   XmlBuilder,
 } from '@pact-foundation/pact';
+import { beforeAll, describe, expect, it } from 'vitest';
 import {
   availableAnimals,
   createMateForDates,

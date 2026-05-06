@@ -1,10 +1,10 @@
-import { vi } from 'vitest';
 import type { Server } from 'node:http';
 import serviceFactory, { type LogLevel } from '@pact-foundation/pact-core';
+import { vi } from 'vitest';
 
 import logger from '../../common/logger';
-import { Verifier } from './verifier';
 import type { VerifierOptions } from './types';
+import { Verifier } from './verifier';
 
 const mockState = vi.hoisted(() => ({ executed: false }));
 

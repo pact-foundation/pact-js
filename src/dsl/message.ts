@@ -1,6 +1,6 @@
 import type { AnyJson } from '../common/jsonTypes';
-import type { MatcherV2 } from './matchers';
 import type { Matcher } from '../v3/matchers';
+import type { MatcherV2 } from './matchers';
 
 /**
  * Metadata is a map containing message context,

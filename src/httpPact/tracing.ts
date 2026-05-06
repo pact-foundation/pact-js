@@ -1,7 +1,7 @@
 import http, {
-  type RequestOptions,
   type ClientRequest,
   type IncomingMessage,
+  type RequestOptions,
 } from 'node:http';
 
 import logger from '../common/logger';

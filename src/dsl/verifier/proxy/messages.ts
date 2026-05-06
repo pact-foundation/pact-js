@@ -1,12 +1,12 @@
-import express from 'express';
 import bodyParser from 'body-parser';
+import express from 'express';
 import { encode as encodeBase64 } from 'js-base64';
+import logger from '../../../common/logger';
 import type {
   MessageDescriptor,
   MessageFromProviderWithMetadata,
   MessageProvider,
 } from '../../message';
-import logger from '../../../common/logger';
 import type { ProxyOptions } from './types';
 
 // Find a provider message handler, and invoke it

@@ -1,6 +1,6 @@
 import path from 'node:path';
-import { describe, it } from 'vitest';
 import { Verifier } from '@pact-foundation/pact';
+import { describe, it } from 'vitest';
 import { server } from '../provider';
 
 const LOG_LEVEL = process.env.LOG_LEVEL || 'WARN';
