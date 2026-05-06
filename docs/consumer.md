@@ -78,6 +78,7 @@ _NOTE:_ V4 also supports interaction metadata for advanced workflows using `pend
 | `port`     | no        | number  | The port to run the mock service on, defaults to a random machine assigned available port |
 | `host`     | no        | string  | The host to run the mock service, defaults to 127.0.0.1                                   |
 | `tls`      | no        | boolean | flag to identify which protocol to be used (default false, HTTP)                          |
+| `cors`     | no        | boolean | Allow CORS preflight requests to be handled by the mock server (default true)             |
 | `dir`      | no        | string  | Directory to output pact files                                                            |
 | `log`      | no        | string  | File to log to                                                                            |
 | `logLevel` | no        | string  | Log level: one of 'trace', 'debug', 'info', 'error', 'fatal' or 'warn'                    |
