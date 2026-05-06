@@ -1,8 +1,5 @@
-import * as chai from 'chai';
 import { contentTypeFromHeaders } from './ffi';
 import { regex } from './matchers';
-
-const { expect } = chai;
 
 describe('V3 Pact FFI', () => {
   describe('#contentTypeFromHeaders', () => {
@@ -14,7 +11,7 @@ describe('V3 Pact FFI', () => {
         ),
       };
 
-      expect(contentTypeFromHeaders(headers, 'application/json')).to.eq(
+      expect(contentTypeFromHeaders(headers, 'application/json')).toBe(
         'application/json',
       );
     });

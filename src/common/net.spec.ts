@@ -1,12 +1,6 @@
-import * as chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
 import nodeNet from 'node:net';
 import { isPortAvailable } from './net';
 import logger from './logger';
-
-const { expect } = chai;
-
-chai.use(chaiAsPromised);
 
 describe('Net', () => {
   const port = 4567;
@@ -27,47 +21,42 @@ describe('Net', () => {
     });
 
   describe('#isPortAvailable', () => {
-    context('when the port is not allowed to be bound', () => {
-      it('returns a rejected promise', () =>
-        expect(isPortAvailable(specialPort, defaultHost)).to.eventually.be
-          .rejected);
-    });
-
-    context('when the port is available', () => {
-      it('returns a fulfilled promise', () =>
-        expect(isPortAvailable(port, defaultHost)).to.eventually.be.fulfilled);
-    });
-
-    context('when the port is unavailable', () => {
-      it('returns a rejected promise', () => {
-        let server: nodeNet.Server;
-        return createServer(port)
-          .then((s) => {
-            server = s;
-            return expect(isPortAvailable(port, defaultHost)).to.eventually.be
-              .rejected;
-          })
-          .finally(
-            () =>
-              new Promise<void>((resolve) => server?.close(() => resolve())),
-          );
+    describe('when the port is not allowed to be bound', () => {
+      it('returns a rejected promise', async () => {
+        await expect(
+          isPortAvailable(specialPort, defaultHost),
+        ).rejects.toBeDefined();
       });
     });
 
-    context('when a single host is unavailable', () => {
-      it('returns a fulfilled promise', () => {
-        let server: nodeNet.Server;
-        return createServer(port, '::1')
-          .then((s) => {
-            server = s;
-            // this should work as the `127.0.0.1` is NOT `::1`
-            return expect(isPortAvailable(port, '127.0.0.1')).to.eventually.be
-              .fulfilled;
-          })
-          .finally(
-            () =>
-              new Promise<void>((resolve) => server?.close(() => resolve())),
-          );
+    describe('when the port is available', () => {
+      it('returns a fulfilled promise', async () => {
+        await isPortAvailable(port, defaultHost);
+      });
+    });
+
+    describe('when the port is unavailable', () => {
+      it('returns a rejected promise', async () => {
+        const server = await createServer(port);
+        try {
+          await expect(
+            isPortAvailable(port, defaultHost),
+          ).rejects.toBeDefined();
+        } finally {
+          await new Promise<void>((resolve) => server?.close(() => resolve()));
+        }
+      });
+    });
+
+    describe('when a single host is unavailable', () => {
+      it('returns a fulfilled promise', async () => {
+        const server = await createServer(port, '::1');
+        try {
+          // this should work as the `127.0.0.1` is NOT `::1`
+          await isPortAvailable(port, '127.0.0.1');
+        } finally {
+          await new Promise<void>((resolve) => server?.close(() => resolve()));
+        }
       });
     });
   });

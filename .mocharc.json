@@ -1,7 +1,0 @@
-{
-  "timeout": 60000,
-  "recursive": true,
-  "require": ["tsx", "source-map-support/register"],
-  "spec": ["src/**/*.spec.ts"],
-  "exit": true
-}

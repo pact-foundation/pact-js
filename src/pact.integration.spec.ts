@@ -1,6 +1,3 @@
-import * as chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
-import sinonChai from 'sinon-chai';
 import axios from 'axios';
 import fs = require('node:fs');
 import net = require('node:net');
@@ -8,11 +5,6 @@ import path = require('node:path');
 
 import { PactV4 } from './v4';
 import { MatchersV3 } from './v3';
-
-const { expect } = chai;
-
-chai.use(sinonChai);
-chai.use(chaiAsPromised);
 
 describe('V4 Pact', () => {
   let pact: PactV4;
@@ -36,7 +28,7 @@ describe('V4 Pact', () => {
     expect(
       matches,
       `expected exactly one interaction for "${description}"`,
-    ).to.have.lengthOf(1);
+    ).toHaveLength(1);
 
     const [interaction] = matches;
 
@@ -51,9 +43,9 @@ describe('V4 Pact', () => {
   ): void => {
     const comments = interaction.comments as Record<string, unknown>;
 
-    expect(comments.reason).to.equal(reason);
-    expect(comments.text).to.include(textComment);
-    expect(comments.testname).to.equal(testName);
+    expect(comments.reason).toBe(reason);
+    expect(comments.text).toContain(textComment);
+    expect(comments.testname).toBe(testName);
   };
 
   const expectReferenceToEqual = (
@@ -68,7 +60,7 @@ describe('V4 Pact', () => {
       Record<string, string>
     >;
 
-    expect(references[group][name]).to.equal(value);
+    expect(references[group][name]).toBe(value);
   };
 
   beforeEach(() => {
@@ -163,7 +155,7 @@ describe('V4 Pact', () => {
 
       const interaction = interactionByDescription(description);
 
-      expect(interaction.pending).to.equal(true);
+      expect(interaction.pending).toBe(true);
       expectCommentsToContain(
         interaction,
         'covered by HTTP metadata test',
@@ -212,7 +204,7 @@ describe('V4 Pact', () => {
         })
         .executeTest(async (server) => {
           const response = await axios.get(server.url);
-          expect(response.data).to.deep.equal({ foo: 'bar' });
+          expect(response.data).toEqual({ foo: 'bar' });
         }));
 
     it('supports regex matcher for request content-type with optional charset', () =>
@@ -263,7 +255,7 @@ describe('V4 Pact', () => {
 
       const interaction = interactionByDescription(description);
 
-      expect(interaction.pending).to.equal(true);
+      expect(interaction.pending).toBe(true);
       expectCommentsToContain(
         interaction,
         'covered by async metadata test',
@@ -323,7 +315,7 @@ describe('V4 Pact', () => {
 
       const interaction = interactionByDescription(description);
 
-      expect(interaction.pending).to.equal(true);
+      expect(interaction.pending).toBe(true);
       expectCommentsToContain(
         interaction,
         'covered by sync metadata test',
@@ -396,7 +388,7 @@ describe('V4 Pact', () => {
                   url: '/matt',
                 })
                 .then((res) => {
-                  expect(parseMattMessage(res.data)).to.eq('world');
+                  expect(parseMattMessage(res.data)).toBe('world');
                 }),
             );
         });
@@ -447,7 +439,7 @@ describe('V4 Pact', () => {
                   HOST,
                   tc.port,
                 );
-                expect(message).to.eq('tcpworld');
+                expect(message).toBe('tcpworld');
               });
           });
         });

@@ -1,7 +1,4 @@
-import * as chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
-import sinon from 'sinon';
-import sinonChai from 'sinon-chai';
+import { vi } from 'vitest';
 import type {
   ConsumerInteraction,
   ConsumerPact,
@@ -9,11 +6,6 @@ import type {
 import type { PactV2Options, PactV2OptionsComplete } from '../dsl/options';
 import { Pact } from '.';
 import type { MockService } from '../dsl/mockService';
-
-chai.use(sinonChai);
-chai.use(chaiAsPromised);
-
-const { expect } = chai;
 
 describe('Pact', () => {
   const fullOpts = {
@@ -29,20 +21,20 @@ describe('Pact', () => {
   } as PactV2OptionsComplete;
 
   afterEach(() => {
-    sinon.restore();
+    vi.restoreAllMocks();
   });
 
   describe('#constructor', () => {
     it('throws Error when consumer not provided', () => {
       expect(() => {
         new Pact({ consumer: '', provider: 'provider' });
-      }).to.throw(Error, 'You must specify a Consumer for this pact.');
+      }).toThrow('You must specify a Consumer for this pact.');
     });
 
     it('throws Error when provider not provided', () => {
       expect(() => {
         new Pact({ consumer: 'someconsumer', provider: '' });
-      }).to.throw(Error, 'You must specify a Provider for this pact.');
+      }).toThrow('You must specify a Provider for this pact.');
     });
   });
 
@@ -54,18 +46,18 @@ describe('Pact', () => {
 
     it('merges options with sensible defaults', () => {
       const opts = Pact.createOptionsWithDefaults(constructorOpts);
-      expect(opts.consumer).to.eq('A');
-      expect(opts.provider).to.eq('B');
-      expect(opts.cors).to.eq(false);
-      expect(opts.host).to.eq('127.0.0.1');
-      expect(opts.logLevel).to.eq('info');
-      expect(opts.spec).to.eq(2);
-      expect(opts.dir).not.to.be.empty;
-      expect(opts.log).not.to.be.empty;
-      expect(opts.pactfileWriteMode).to.eq('merge');
-      expect(opts.ssl).to.eq(false);
-      expect(opts.sslcert).to.eq(undefined);
-      expect(opts.sslkey).to.eq(undefined);
+      expect(opts.consumer).toBe('A');
+      expect(opts.provider).toBe('B');
+      expect(opts.cors).toBe(false);
+      expect(opts.host).toBe('127.0.0.1');
+      expect(opts.logLevel).toBe('info');
+      expect(opts.spec).toBe(2);
+      expect(opts.dir).toBeTruthy();
+      expect(opts.log).toBeTruthy();
+      expect(opts.pactfileWriteMode).toBe('merge');
+      expect(opts.ssl).toBe(false);
+      expect(opts.sslcert).toBeUndefined();
+      expect(opts.sslkey).toBeUndefined();
     });
   });
 
@@ -75,7 +67,7 @@ describe('Pact', () => {
         const p: Pact = new Pact(fullOpts);
 
         await p.setup();
-        expect(p.mockService).to.deep.equal({
+        expect(p.mockService).toEqual({
           baseUrl: 'http://127.0.0.1:1234',
           pactDetails: {
             pactfile_write_mode: 'merge',
@@ -87,11 +79,11 @@ describe('Pact', () => {
         });
       });
 
-      it('returns the current configuration', () => {
+      it('returns the current configuration', async () => {
         // biome-ignore lint/suspicious/noExplicitAny: accessing internal setup() method not in public type
         const p: any = new Pact(fullOpts);
 
-        return expect(p.setup()).to.eventually.include({
+        await expect(p.setup()).resolves.toMatchObject({
           consumer: 'A',
           provider: 'B',
           port: 1234,
@@ -106,18 +98,16 @@ describe('Pact', () => {
     });
 
     describe('when a port is given', () => {
-      it('checks if the port is available', () => {
+      it('checks if the port is available', async () => {
         // biome-ignore lint/suspicious/noExplicitAny: accessing internal setup() method not in public type
         const p: any = new Pact(fullOpts);
 
-        return expect(p.setup())
-          .to.eventually.have.property('port')
-          .eq(fullOpts.port);
+        await expect(p.setup()).resolves.toHaveProperty('port', fullOpts.port);
       });
     });
 
     describe('when no port is given', () => {
-      it('finds a free port', () => {
+      it('finds a free port', async () => {
         const opts = {
           ...fullOpts,
           port: undefined,
@@ -125,8 +115,9 @@ describe('Pact', () => {
         // biome-ignore lint/suspicious/noExplicitAny: accessing internal setup() method not in public type
         const p: any = new Pact(opts);
 
-        return expect(p.setup()).to.eventually.have.property('port').not
-          .undefined;
+        await expect(p.setup()).resolves.toMatchObject({
+          port: expect.anything(),
+        });
       });
     });
   });
@@ -137,19 +128,19 @@ describe('Pact', () => {
     // the rust core, to ensure the API remains backwards compatible
     it('sets the correct request and response details on the FFI and starts the mock server', () => {
       const p: Pact = new Pact(fullOpts);
-      const uponReceiving = sinon.stub().returns(true);
-      const given = sinon.stub().returns(true);
-      const withRequest = sinon.stub().returns(true);
-      const withRequestBody = sinon.stub().returns(true);
-      const withRequestHeader = sinon.stub().returns(true);
-      const withQuery = sinon.stub().returns(true);
-      const withResponseBody = sinon.stub().returns(true);
-      const withResponseHeader = sinon.stub().returns(true);
-      const withStatus = sinon.stub().returns(true);
-      const createMockServer = sinon.stub().returns(1234);
+      const uponReceiving = vi.fn().mockReturnValue(true);
+      const given = vi.fn().mockReturnValue(true);
+      const withRequest = vi.fn().mockReturnValue(true);
+      const withRequestBody = vi.fn().mockReturnValue(true);
+      const withRequestHeader = vi.fn().mockReturnValue(true);
+      const withQuery = vi.fn().mockReturnValue(true);
+      const withResponseBody = vi.fn().mockReturnValue(true);
+      const withResponseHeader = vi.fn().mockReturnValue(true);
+      const withStatus = vi.fn().mockReturnValue(true);
+      const createMockServer = vi.fn().mockReturnValue(1234);
       const pactMock: ConsumerPact = {
         createMockServer,
-      } as unknown as ConsumerPact; // TODO replace with proper mock
+      } as unknown as ConsumerPact;
       const interactionMock: ConsumerInteraction = {
         uponReceiving,
         given,
@@ -160,7 +151,7 @@ describe('Pact', () => {
         withResponseBody,
         withResponseHeader,
         withStatus,
-      } as unknown as ConsumerInteraction; // TODO replace with proper mock
+      } as unknown as ConsumerInteraction;
       // @ts-expect-error TODO refactor the class to remove the need for this
       p.pact = pactMock;
       // @ts-expect-error: TODO refactor the class to remove the need for this
@@ -193,17 +184,17 @@ describe('Pact', () => {
         },
       });
 
-      expect(uponReceiving.calledOnce).to.be.true;
-      expect(given.calledOnce).to.be.true;
-      expect(withRequest.calledOnce).to.be.true;
-      expect(withQuery.calledTwice).to.be.true;
-      expect(withRequestHeader.calledTwice).to.be.true;
-      expect(withRequestBody.calledOnce).to.be.true;
-      expect(withResponseBody.calledOnce).to.be.true;
-      expect(withResponseHeader.calledTwice).to.be.true;
+      expect(uponReceiving).toHaveBeenCalledOnce();
+      expect(given).toHaveBeenCalledOnce();
+      expect(withRequest).toHaveBeenCalledOnce();
+      expect(withQuery).toHaveBeenCalledTimes(2);
+      expect(withRequestHeader).toHaveBeenCalledTimes(2);
+      expect(withRequestBody).toHaveBeenCalledOnce();
+      expect(withResponseBody).toHaveBeenCalledOnce();
+      expect(withResponseHeader).toHaveBeenCalledTimes(2);
 
       // Pact mock server started
-      expect(createMockServer.called).to.be.true;
+      expect(createMockServer).toHaveBeenCalled();
     });
   });
 });

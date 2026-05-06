@@ -1,6 +1,3 @@
-import * as chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
-import sinonChai from 'sinon-chai';
 import express from 'express';
 import http from 'node:http';
 import type { Message } from './dsl/message';
@@ -9,11 +6,6 @@ import {
   setupProxyServer,
   waitForServerReady,
 } from './messageProviderPact';
-
-chai.use(sinonChai);
-chai.use(chaiAsPromised);
-
-const { expect } = chai;
 
 describe('MessageProvider', () => {
   let provider: MessageProviderPact;
@@ -55,8 +47,8 @@ describe('MessageProvider', () => {
 
   describe('#constructor', () => {
     it('creates a Provider when all mandatory parameters are provided', () => {
-      expect(provider).to.be.a('object');
-      expect(provider).to.respondTo('verify');
+      expect(provider).toBeTypeOf('object');
+      expect(typeof provider.verify).toBe('function');
     });
 
     it('creates a Provider with default log level if not specified', () => {
@@ -64,113 +56,116 @@ describe('MessageProvider', () => {
         messageProviders: {},
         provider: 'myprovider',
       });
-      expect(provider).to.be.a('object');
-      expect(provider).to.respondTo('verify');
+      expect(provider).toBeTypeOf('object');
+      expect(typeof provider.verify).toBe('function');
     });
   });
 
   describe('#setupVerificationHandler', () => {
     describe('when their is a valid setup', () => {
-      it('creates a valid express handler', (done) => {
-        const setupVerificationHandler =
-          // biome-ignore lint/suspicious/noExplicitAny: accessing private method for test coverage
-          (provider as any).setupVerificationHandler.bind(provider)();
-        const req = { body: successfulMessage };
-        const res = {
-          json: () => done(), // Expect a response
-        };
+      it('creates a valid express handler', () => {
+        return new Promise<void>((resolve) => {
+          const setupVerificationHandler =
+            // biome-ignore lint/suspicious/noExplicitAny: accessing private method for test coverage
+            (provider as any).setupVerificationHandler.bind(provider)();
+          const req = { body: successfulMessage };
+          const res = {
+            json: () => resolve(),
+          };
 
-        setupVerificationHandler(req, res);
+          setupVerificationHandler(req, res);
+        });
       });
     });
 
     describe('when their is an invalid setup', () => {
-      it('creates a valid express handler that rejects the message', (done) => {
-        const setupVerificationHandler =
-          // biome-ignore lint/suspicious/noExplicitAny: accessing private method for test coverage
-          (provider as any).setupVerificationHandler.bind(provider)();
-        const req = { body: nonExistentMessage };
-        const res = {
-          status: (status: number) => {
-            expect(status).to.eq(500);
+      it('creates a valid express handler that rejects the message', () => {
+        return new Promise<void>((resolve) => {
+          const setupVerificationHandler =
+            // biome-ignore lint/suspicious/noExplicitAny: accessing private method for test coverage
+            (provider as any).setupVerificationHandler.bind(provider)();
+          const req = { body: nonExistentMessage };
+          const res = {
+            status: (status: number) => {
+              expect(status).toBe(500);
 
-            return {
-              send: () => done(), // Expect the status to be called with 500
-            };
-          },
-        };
+              return {
+                send: () => resolve(),
+              };
+            },
+          };
 
-        setupVerificationHandler(req, res);
+          setupVerificationHandler(req, res);
+        });
       });
     });
   });
 
   describe('#findHandler', () => {
     describe('when given a handler that exists', () => {
-      it('returns a Handler object', () => {
+      it('returns a Handler object', async () => {
         // biome-ignore lint/suspicious/noExplicitAny: accessing private method for test coverage
         const findHandler = (provider as any).findHandler.bind(provider);
-        return expect(findHandler(successfulMessage)).to.eventually.be.a(
+        await expect(findHandler(successfulMessage)).resolves.toBeTypeOf(
           'function',
         );
       });
     });
 
     describe('when given a handler that does not exist', () => {
-      it('returns a failed promise', () => {
+      it('returns a failed promise', async () => {
         // biome-ignore lint/suspicious/noExplicitAny: accessing private method for test coverage
         const findHandler = (provider as any).findHandler.bind(provider);
-        return expect(findHandler('doesnotexist')).to.eventually.be.rejected;
+        await expect(findHandler('doesnotexist')).rejects.toBeDefined();
       });
     });
   });
 
   describe('#setupStates', () => {
     describe('when given a handler that exists', () => {
-      it('returns values of all resolved handlers', () => {
+      it('returns values of all resolved handlers', async () => {
         // biome-ignore lint/suspicious/noExplicitAny: accessing private method for test coverage
         const setupStates = (provider as any).setupStates.bind(provider);
-        return expect(setupStates(successfulMessage)).to.eventually.deep.equal([
-          'yay',
-        ]);
+        await expect(setupStates(successfulMessage)).resolves.toEqual(['yay']);
       });
 
-      it('passes params to the handler', () => {
+      it('passes params to the handler', async () => {
         // biome-ignore lint/suspicious/noExplicitAny: accessing private method for test coverage
         const setupStates = (provider as any).setupStates.bind(provider);
-        return expect(
+        await expect(
           setupStates({
             providerStates: [
               { name: 'some state with params', params: { foo: 'bar' } },
             ],
           }),
-        ).to.eventually.deep.equal([
+        ).resolves.toEqual([
           'name: some state with params, params: {"foo":"bar"}',
         ]);
       });
     });
 
     describe('when given a state that does not have a handler', () => {
-      it('returns an empty promise', () => {
+      it('returns an empty promise', async () => {
         provider = new MessageProviderPact({
           messageProviders: {},
           provider: 'myprovider',
         });
         // biome-ignore lint/suspicious/noExplicitAny: accessing private method for test coverage
         const findStateHandler = (provider as any).setupStates.bind(provider);
-        return expect(
-          findStateHandler(unsuccessfulMessage),
-        ).to.eventually.deep.equal([]);
+        await expect(findStateHandler(unsuccessfulMessage)).resolves.toEqual(
+          [],
+        );
       });
     });
   });
 
   describe('#waitForServerReady', () => {
     describe('when the http server starts up', () => {
-      it('returns a resolved promise', () => {
+      it('returns a resolved promise', async () => {
         const server = http.createServer(() => {}).listen();
 
-        return expect(waitForServerReady(server)).to.eventually.be.fulfilled;
+        await waitForServerReady(server);
+        server.close();
       });
     });
   });
@@ -180,7 +175,7 @@ describe('MessageProvider', () => {
       it('returns a resolved promise', () => {
         const app = express();
 
-        expect(setupProxyServer(app)).to.be.an.instanceOf(http.Server);
+        expect(setupProxyServer(app)).toBeInstanceOf(http.Server);
       });
     });
   });
@@ -190,7 +185,7 @@ describe('MessageProvider', () => {
       const setupProxyApplication =
         // biome-ignore lint/suspicious/noExplicitAny: accessing private method for test coverage
         (provider as any).setupProxyApplication.bind(provider);
-      expect(setupProxyApplication().listen).to.be.a('function');
+      expect(setupProxyApplication().listen).toBeTypeOf('function');
     });
   });
 });

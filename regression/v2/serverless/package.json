@@ -21,7 +21,7 @@
     "lint:tsc": "echo 'Note: This example has not been migrated to TypeScript yet'"
   },
   "devDependencies": {
-    "@pact-foundation/pact": "file:../../dist",
+    "@pact-foundation/pact": "file:../..",
     "@pact-foundation/pact-cli": "^18.0.0",
     "absolute-version": "2.0.0",
     "mocha": "^10.0.0",

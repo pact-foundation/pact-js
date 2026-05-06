@@ -1,9 +1,4 @@
-import * as chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
 import { ApolloGraphQLInteraction } from './apolloGraphql';
-
-chai.use(chaiAsPromised);
-const { expect } = chai;
 
 describe('ApolloGraphQLInteraction', () => {
   let interaction: ApolloGraphQLInteraction;
@@ -32,7 +27,7 @@ describe('ApolloGraphQLInteraction', () => {
 
         // biome-ignore lint/suspicious/noExplicitAny: body sub-properties (query/variables/operationName) are typed as AnyTemplate and need runtime assertions
         const json: any = interaction.json();
-        expect(json.request.body.variables).to.deep.eq({ foo: 'bar' });
+        expect(json.request.body.variables).toEqual({ foo: 'bar' });
       });
     });
 
@@ -52,7 +47,7 @@ describe('ApolloGraphQLInteraction', () => {
 
         // biome-ignore lint/suspicious/noExplicitAny: body sub-properties (query/variables/operationName) are typed as AnyTemplate and need runtime assertions
         const json: any = interaction.json();
-        expect(json.request.body).to.have.property('variables');
+        expect(json.request.body).toHaveProperty('variables');
       });
     });
   });
@@ -73,7 +68,7 @@ describe('ApolloGraphQLInteraction', () => {
 
         // biome-ignore lint/suspicious/noExplicitAny: body sub-properties (query/variables/operationName) are typed as AnyTemplate and need runtime assertions
         const json: any = interaction.json();
-        expect(json.request.body).to.have.property('operationName');
+        expect(json.request.body).toHaveProperty('operationName');
       });
     });
   });

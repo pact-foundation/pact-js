@@ -1,13 +1,6 @@
-import * as chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
-
 import type * as http from 'node:http';
 
 import { waitForServerReady } from './proxy';
-
-chai.use(chaiAsPromised);
-
-const { expect } = chai;
 
 // Little function to mock out an Event Emitter
 const fakeServer = (event: string) => ({
@@ -19,19 +12,17 @@ const fakeServer = (event: string) => ({
 });
 
 describe('#waitForServerReady', () => {
-  context('when the server starts successfully', () => {
-    it('returns a successful promise', () => {
-      const res = waitForServerReady(fakeServer('listening') as http.Server);
-
-      return expect(res).to.eventually.be.fulfilled;
+  describe('when the server starts successfully', () => {
+    it('returns a successful promise', async () => {
+      await waitForServerReady(fakeServer('listening') as http.Server);
     });
   });
 
-  context('when the server fails to start', () => {
-    it('returns an error', () => {
-      const res = waitForServerReady(fakeServer('error') as http.Server);
-
-      return expect(res).to.eventually.be.rejected;
+  describe('when the server fails to start', () => {
+    it('returns an error', async () => {
+      await expect(
+        waitForServerReady(fakeServer('error') as http.Server),
+      ).rejects.toBeDefined();
     });
   });
 });

@@ -1,16 +1,10 @@
-import * as chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
-import sinon from 'sinon';
+import { vi } from 'vitest';
 
 import logger from '../../../../common/logger';
 import type { ProxyOptions, ProviderState } from '../types';
 
 import { setupStates } from './setupStates';
 import type { JsonMap } from '../../../../common/jsonTypes';
-
-chai.use(chaiAsPromised);
-
-const { expect } = chai;
 
 describe('#setupStates', () => {
   const state: ProviderState = {
@@ -62,6 +56,10 @@ describe('#setupStates', () => {
     teardown = false;
   });
 
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   describe('when there are provider states on the pact', () => {
     describe('and there are handlers associated with those states', () => {
       describe('that return provider state injected values', () => {
@@ -74,8 +72,8 @@ describe('#setupStates', () => {
           };
           const res = await setupStates(state, opts);
 
-          expect(res).to.have.property('data', true);
-          expect(executed).to.be.true;
+          expect(res).toHaveProperty('data', true);
+          expect(executed).toBe(true);
         });
       });
 
@@ -83,7 +81,7 @@ describe('#setupStates', () => {
         it('executes the handler and returns an empty Promise', async () => {
           await setupStates(state, opts);
 
-          expect(executed).to.be.true;
+          expect(executed).toBe(true);
         });
       });
 
@@ -91,9 +89,9 @@ describe('#setupStates', () => {
         it('executes the lifecycle specific handler and returns any provider state injected values', async () => {
           const res = await setupStates(state2, opts);
 
-          expect(res).to.eq(state2.params);
-          expect(setup).to.be.true;
-          expect(teardown).to.be.false;
+          expect(res).toBe(state2.params);
+          expect(setup).toBe(true);
+          expect(teardown).toBe(false);
           setup = false;
 
           const res2 = await setupStates(
@@ -104,21 +102,21 @@ describe('#setupStates', () => {
             opts,
           );
 
-          expect(res2).to.eq(state2.params);
-          expect(teardown).to.be.true;
-          expect(setup).to.be.false;
+          expect(res2).toBe(state2.params);
+          expect(teardown).toBe(true);
+          expect(setup).toBe(false);
         });
       });
     });
 
     describe('and there are no handlers associated with those states', () => {
       it('does not execute the handler and returns an empty Promise', async () => {
-        const spy = sinon.spy(logger, 'warn');
+        const spy = vi.spyOn(logger, 'warn');
         delete opts.stateHandlers;
         await setupStates(state, opts);
 
-        expect(spy.callCount).to.eql(1);
-        expect(executed).to.be.false;
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(executed).toBe(false);
       });
     });
   });

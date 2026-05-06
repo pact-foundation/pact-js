@@ -1,11 +1,5 @@
-import * as chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
 import nock from 'nock';
 import { HTTPMethods, Request } from './request';
-
-chai.use(chaiAsPromised);
-
-const { expect } = chai;
 
 describe('Request', () => {
   let request: Request;
@@ -17,54 +11,47 @@ describe('Request', () => {
     request = new Request();
   });
 
-  context('#send', () => {
+  describe('#send', () => {
     afterEach(() => nock.cleanAll());
 
     describe('Promise', () => {
-      it('returns a promise', () => {
+      it('returns a promise', async () => {
         nock(url).get('/').reply(200);
         const r = request.send(HTTPMethods.GET, url);
-        return Promise.all([
-          expect(r).is.ok,
-          expect(r.then).is.ok,
-          expect(r.then).is.a('function'),
-          expect(r).to.be.fulfilled,
-        ]);
+        expect(r).toBeTruthy();
+        expect(r.then).toBeTruthy();
+        expect(r.then).toBeTypeOf('function');
+        await r;
       });
 
-      it('resolves when request succeeds with response body', () => {
+      it('resolves when request succeeds with response body', async () => {
         const body = 'body';
         nock(url).get('/').reply(200, body);
-        const p = request.send(HTTPMethods.GET, url);
-        return Promise.all([
-          expect(p).to.be.fulfilled,
-          expect(p).to.eventually.be.equal(body),
-        ]);
+        await expect(request.send(HTTPMethods.GET, url)).resolves.toBe(body);
       });
 
-      it('rejects when request fails with error message', () => {
+      it('rejects when request fails with error message', async () => {
         const error = 'error';
         nock(url).get('/').reply(400, error);
-        const p = request.send(HTTPMethods.GET, url);
-        return expect(p).to.be.rejectedWith(error);
+        await expect(request.send(HTTPMethods.GET, url)).rejects.toThrow(error);
       });
     });
     describe('Headers', () => {
-      it('sends Pact headers are sent with every request', () => {
+      it('sends Pact headers are sent with every request', async () => {
         nock(url)
           .matchHeader('X-Pact-Mock-Service', 'true')
           .get('/')
           .reply(200);
-        return expect(request.send(HTTPMethods.GET, url)).to.be.fulfilled;
+        await request.send(HTTPMethods.GET, url);
       });
     });
     describe('SSL', () => {
-      it('ignores self signed certificate errors', () => {
+      it('ignores self signed certificate errors', async () => {
         nock(urlSecure)
           .matchHeader('X-Pact-Mock-Service', 'true')
           .get('/')
           .reply(200);
-        return expect(request.send(HTTPMethods.GET, urlSecure)).to.be.fulfilled;
+        await request.send(HTTPMethods.GET, urlSecure);
       });
     });
   });

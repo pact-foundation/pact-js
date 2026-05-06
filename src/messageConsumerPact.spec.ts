@@ -1,17 +1,9 @@
-import * as chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
-import sinonChai from 'sinon-chai';
 import {
   MessageConsumerPact,
   synchronousBodyHandler,
   asynchronousBodyHandler,
 } from './messageConsumerPact';
 import type { ConcreteMessage } from './dsl/message';
-
-chai.use(sinonChai);
-chai.use(chaiAsPromised);
-
-const { expect } = chai;
 
 describe('MessageConsumer', () => {
   let consumer: MessageConsumerPact;
@@ -31,8 +23,8 @@ describe('MessageConsumer', () => {
 
   describe('#constructor', () => {
     it('creates a Consumer when all mandatory parameters are provided', () => {
-      expect(consumer).to.be.a('object');
-      expect(consumer).to.respondTo('verify');
+      expect(consumer).toBeTypeOf('object');
+      expect(typeof consumer.verify).toBe('function');
     });
   });
 
@@ -41,7 +33,7 @@ describe('MessageConsumer', () => {
       it('it should throw an error', () => {
         expect(() => {
           consumer.expectsToReceive('');
-        }).to.throw(Error);
+        }).toThrow(Error);
       });
     });
 
@@ -49,7 +41,7 @@ describe('MessageConsumer', () => {
       it('it should throw an error', () => {
         expect(() => {
           consumer.withContent({});
-        }).to.throw(Error);
+        }).toThrow(Error);
       });
     });
 
@@ -57,14 +49,14 @@ describe('MessageConsumer', () => {
       it('it should throw an error', () => {
         expect(() => {
           consumer.withMetadata({});
-        }).to.throw(Error);
+        }).toThrow(Error);
       });
     });
   });
 
   describe('#verify', () => {
     describe('when given a valid handler and message', () => {
-      it('verifies the consumer message', () => {
+      it('verifies the consumer message', async () => {
         const stubbedConsumer = new MessageConsumerPact({
           consumer: 'myconsumer',
           provider: 'myprovider',
@@ -83,8 +75,7 @@ describe('MessageConsumer', () => {
           .withContent({ foo: 'bar' })
           .withMetadata({ baz: 'bat' });
 
-        return expect(stubbedConsumer.verify(() => Promise.resolve('yay!'))).to
-          .eventually.be.fulfilled;
+        await stubbedConsumer.verify(() => Promise.resolve('yay!'));
       });
     });
   });
@@ -92,44 +83,44 @@ describe('MessageConsumer', () => {
   describe('handler transformers', () => {
     describe('#asynchronousbodyHandler', () => {
       describe('when given a function that succeeds', () => {
-        it('returns a Handler object that returns a completed promise', () => {
+        it('returns a Handler object that returns a completed promise', async () => {
           const failFn = () => Promise.resolve('yay!');
           const hFn = asynchronousBodyHandler(failFn);
 
-          return expect(hFn(testMessage)).to.eventually.be.fulfilled;
+          await hFn(testMessage);
         });
       });
 
       describe('when given a function that throws an Exception', () => {
-        it('returns a Handler object that returns a rejected promise', () => {
+        it('returns a Handler object that returns a rejected promise', async () => {
           const failFn = () => Promise.reject(new Error('fail'));
           const hFn = asynchronousBodyHandler(failFn);
 
-          return expect(hFn(testMessage)).to.eventually.be.rejected;
+          await expect(hFn(testMessage)).rejects.toThrow();
         });
       });
     });
 
     describe('#synchronousbodyHandler', () => {
       describe('when given a function that succeeds', () => {
-        it('returns a Handler object that returns a completed promise', () => {
+        it('returns a Handler object that returns a completed promise', async () => {
           const failFn = () => {
             /* do nothing! */
           };
           const hFn = synchronousBodyHandler(failFn);
 
-          return expect(hFn(testMessage)).to.eventually.be.fulfilled;
+          await hFn(testMessage);
         });
       });
 
       describe('when given a function that throws an Exception', () => {
-        it('returns a Handler object that returns a rejected promise', () => {
+        it('returns a Handler object that returns a rejected promise', async () => {
           const failFn = () => {
             throw new Error('fail');
           };
           const hFn = synchronousBodyHandler(failFn);
 
-          return expect(hFn(testMessage)).to.eventually.be.rejected;
+          await expect(hFn(testMessage)).rejects.toThrow();
         });
       });
     });
