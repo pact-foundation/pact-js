@@ -8,8 +8,17 @@ import {
 import { describe, expect, it } from 'vitest';
 import { ProductApiClient } from './consumer';
 
-const { integer, decimal, string, regex, datetime, eachLike, eachKeyMatches } =
-  Matchers;
+const {
+  integer,
+  decimal,
+  string,
+  regex,
+  datetime,
+  eachLike,
+  eachKeyMatches,
+  matchStatus,
+  HTTPResponseStatusClass,
+} = Matchers;
 
 /**
  * Consumer tests demonstrating Pact's full matcher library.
@@ -120,6 +129,41 @@ describe('ProductApiClient — matchers showcase', () => {
         const client = new ProductApiClient(mockserver.url);
         const catalog = await client.getCatalog();
         expect(Object.keys(catalog).length).toBeGreaterThan(0);
+      });
+  });
+
+  it('fetches products with flexible status code — matchStatus() for status code matching', async () => {
+    await pact
+      .addInteraction()
+      .given('products exist')
+      .uponReceiving(
+        'a GET request for all products with flexible status matching',
+      )
+      .withRequest('GET', '/products', (builder) => {
+        builder.headers({ Accept: 'application/json' });
+      })
+      // matchStatus(): allows the provider to return any 2XX success status code
+      // (200, 201, 202, etc.) instead of requiring an exact match. The example
+      // value (200) is used in the consumer test, but the provider can return
+      // any status in the Success class (2XX range).
+      .willRespondWith(
+        matchStatus(200, HTTPResponseStatusClass.Success),
+        (builder) => {
+          builder.headers({ 'Content-Type': 'application/json' });
+          builder.jsonBody(
+            eachLike({
+              id: integer(1),
+              name: string('Widget'),
+              price: decimal(9.99),
+            }),
+          );
+        },
+      )
+      .executeTest(async (mockserver) => {
+        const client = new ProductApiClient(mockserver.url);
+        const products = await client.getProducts();
+        expect(products.length).toBeGreaterThan(0);
+        expect(typeof products[0].name).toBe('string');
       });
   });
 });
