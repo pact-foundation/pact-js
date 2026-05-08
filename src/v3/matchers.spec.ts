@@ -743,4 +743,107 @@ describe('V3 Matchers', () => {
       });
     });
   });
+
+  describe('matchStatus', () => {
+    it('creates a StatusCodeMatcher for an HTTPResponseStatusClass', () => {
+      const matcher = MatchersV3.matchStatus(
+        200,
+        MatchersV3.HTTPResponseStatusClass.Success,
+      );
+      expect(matcher).toEqual({
+        'pact:matcher:type': 'statusCode',
+        status: 'success',
+        value: 200,
+      });
+    });
+
+    it('creates a StatusCodeMatcher for a list of status codes', () => {
+      const matcher = MatchersV3.matchStatus(200, [200, 201]);
+      expect(matcher).toEqual({
+        'pact:matcher:type': 'statusCode',
+        status: [200, 201],
+        value: 200,
+      });
+    });
+
+    it('creates a StatusCodeMatcher for ClientError class', () => {
+      const matcher = MatchersV3.matchStatus(
+        400,
+        MatchersV3.HTTPResponseStatusClass.ClientError,
+      );
+      expect(matcher).toEqual({
+        'pact:matcher:type': 'statusCode',
+        status: 'clientError',
+        value: 400,
+      });
+    });
+
+    it('creates a StatusCodeMatcher for ServerError class', () => {
+      const matcher = MatchersV3.matchStatus(
+        500,
+        MatchersV3.HTTPResponseStatusClass.ServerError,
+      );
+      expect(matcher).toEqual({
+        'pact:matcher:type': 'statusCode',
+        status: 'serverError',
+        value: 500,
+      });
+    });
+
+    it('creates a StatusCodeMatcher for Redirect class', () => {
+      const matcher = MatchersV3.matchStatus(
+        301,
+        MatchersV3.HTTPResponseStatusClass.Redirect,
+      );
+      expect(matcher).toEqual({
+        'pact:matcher:type': 'statusCode',
+        status: 'redirect',
+        value: 301,
+      });
+    });
+
+    it('creates a StatusCodeMatcher for Information class', () => {
+      const matcher = MatchersV3.matchStatus(
+        100,
+        MatchersV3.HTTPResponseStatusClass.Information,
+      );
+      expect(matcher).toEqual({
+        'pact:matcher:type': 'statusCode',
+        status: 'information',
+        value: 100,
+      });
+    });
+
+    it('creates a StatusCodeMatcher for NonError class', () => {
+      const matcher = MatchersV3.matchStatus(
+        200,
+        MatchersV3.HTTPResponseStatusClass.NonError,
+      );
+      expect(matcher).toEqual({
+        'pact:matcher:type': 'statusCode',
+        status: 'nonError',
+        value: 200,
+      });
+    });
+
+    it('creates a StatusCodeMatcher for Error class', () => {
+      const matcher = MatchersV3.matchStatus(
+        400,
+        MatchersV3.HTTPResponseStatusClass.Error,
+      );
+      expect(matcher).toEqual({
+        'pact:matcher:type': 'statusCode',
+        status: 'error',
+        value: 400,
+      });
+    });
+
+    it('reify returns the example value from a StatusCodeMatcher', () => {
+      const matcher = MatchersV3.matchStatus(
+        201,
+        MatchersV3.HTTPResponseStatusClass.Success,
+      );
+      expect(MatchersV3.reify(matcher)).toEqual(201);
+    });
+  });
 });

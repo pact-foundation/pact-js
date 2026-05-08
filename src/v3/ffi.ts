@@ -2,6 +2,7 @@ import type { ConsumerInteraction } from '@pact-foundation/pact-core';
 import { forEachObjIndexed } from 'ramda';
 import * as MatchersV3 from './matchers';
 import type { Matcher, TemplateHeaders, V3Request, V3Response } from './types';
+import { convertStatusMatcherToFFI } from '../common/matchingRules';
 
 type TemplateHeaderArrayValue = string[] | Matcher<string>[];
 
@@ -42,7 +43,13 @@ export const setResponseDetails = (
   interaction: ConsumerInteraction,
   res: V3Response,
 ): void => {
-  interaction.withStatus(res.status);
+  interaction.withStatus(MatchersV3.reify<number>(res.status));
+
+  if (MatchersV3.isStatusCodeMatcher(res.status)) {
+    interaction.withResponseMatchingRules(
+      JSON.stringify(convertStatusMatcherToFFI(res.status)),
+    );
+  }
 
   forEachObjIndexed((v, k) => {
     if (Array.isArray(v)) {

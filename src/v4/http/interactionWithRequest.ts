@@ -10,6 +10,9 @@ import type {
   V4InteractionWithResponse,
   V4ResponseBuilderFunc,
 } from './types';
+import type { StatusCodeMatcher } from '../../v3';
+import { isStatusCodeMatcher, reify } from '../../v3/matchers';
+import { convertStatusMatcherToFFI } from '../../common/matchingRules';
 
 export class InteractionWithRequest implements V4InteractionWithRequest {
   // tslint:disable:no-empty-function
@@ -21,10 +24,16 @@ export class InteractionWithRequest implements V4InteractionWithRequest {
   ) {}
 
   willRespondWith(
-    status: number,
+    status: number | StatusCodeMatcher<number>,
     builder?: V4ResponseBuilderFunc,
   ): V4InteractionWithResponse {
-    this.interaction.withStatus(status);
+    this.interaction.withStatus(reify<number>(status));
+
+    if (isStatusCodeMatcher(status)) {
+      this.interaction.withResponseMatchingRules(
+        JSON.stringify(convertStatusMatcherToFFI(status)),
+      );
+    }
 
     if (typeof builder === 'function') {
       builder(new ResponseBuilder(this.interaction));
