@@ -1,5 +1,6 @@
 import type { ConsumerInteraction } from '@pact-foundation/pact-core';
 import { forEachObjIndexed } from 'ramda';
+import * as MatchersV3 from './matchers';
 import type { Matcher, TemplateHeaders, V3Request, V3Response } from './types';
 import { convertStatusMatcherToFFI } from '../common/matchingRules';
 
