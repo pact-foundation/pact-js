@@ -26,7 +26,7 @@
     "absolute-version": "2.0.0",
     "mocha": "10.8.2",
     "rimraf": "3.0.2",
-    "serverless": "4.35.0"
+    "serverless": "4.35.1"
   },
   "dependencies": {
     "aws-sdk": "^2.1354.0"
