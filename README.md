@@ -251,7 +251,7 @@ It's best to run Pact verification tests as part of your unit testing suite, so 
 <summary>Specification Compatibility</summary>
 
 | Version  | Stable | [Spec] Compatibility | Install            |
-| -------  | ------ | -------------------- | ------------------ |
+| -------- | ------ | -------------------- | ------------------ |
 | 11.x.x + | Yes    | 2, 3, 4              | See [installation] |
 | 10.x.x   | Yes    | 2, 3, 4              | See [installation] |
 | 9.x.x    | Yes    | 2, 3\*               | [9xx]              |
@@ -264,19 +264,29 @@ _\*_ v3 support is limited to the subset of functionality required to enable lan
 
 <summary>Supported Platforms</summary>
 
-| OS            | Architecture | Supported  | Pact-JS Version  |
-| ------------- | ------------ | ---------  | ---------------- |
-| MacOS         | x86_64       | ✅         | All              |
-| MacOS         | arm64        | ✅         | 9.x +            |
-| Linux (libc)  | x86_64       | ✅         | All              |
-| Linux (libc)  | arm64        | ✅         | 10.x +           |
-| Linux (musl)  | x86_64       | ✅         | 13.x +           |
-| Linux (musl)  | arm64        | ✅         | 13.x +           |
-| Windows       | x86_64       | ✅         | All              |
-| Windows       | x86          | ❌         | 9.x -            |
-| Windows       | arm64        | ❌         | -                |
+| OS           | Architecture | Supported | Pact-JS Version |
+| ------------ | ------------ | --------- | --------------- |
+| MacOS        | x86_64       | ✅         | All             |
+| MacOS        | arm64        | ✅         | 9.x +           |
+| Linux (libc) | x86_64       | ✅         | All             |
+| Linux (libc) | arm64        | ✅         | 10.x +          |
+| Linux (musl) | x86_64       | ✅         | 13.x +          |
+| Linux (musl) | arm64        | ✅         | 13.x +          |
+| Windows      | x86_64       | ✅         | All             |
+| Windows      | x86          | ❌         | 9.x -           |
+| Windows      | arm64        | ❌         | -               |
 
 </details>
+
+## Community Tools
+
+| Tool | Description | Type | Link |
+|------|-------------|------|------|
+| **pact-js-cli** | Wrapper for Pact CLI tools (broker client, stub server, verifier). Makes Pact binaries available to Node scripts and npm commands. | Official | [pact-foundation/pact-js-cli](https://github.com/pact-foundation/pact-js-cli) |
+| **jest-pact** | Jest adapter for writing Pact tests. Automatically instantiates PactOptions, sets up mock service hooks, and provides sensible defaults. | Official | [pact-foundation/jest-pact](https://github.com/pact-foundation/jest-pact) |
+| **mocha-pact** | Mocha adapter for writing Pact tests. Automatically instantiates PactOptions, sets up mock service hooks, and provides sensible defaults. | Official | [pact-foundation/mocha-pact](https://github.com/pact-foundation/mocha-pact) |
+| **nestjs-pact** | Injectable Pact Consumer/Provider for NestJS. Provides modules for both consumer and provider roles with support for PactV2, V3, and V4. | Official | [pact-foundation/nestjs-pact](https://github.com/pact-foundation/nestjs-pact) |
+| **pactjs-utils** | Utilities to eliminate boilerplate and enforce best practices. Includes helpers for provider states, verifier options, auth filters, and message/Kafka provider verification. | Community | [seontechnologies/pactjs-utils](https://github.com/seontechnologies/pactjs-utils) |
 
 ## Roadmap
 
