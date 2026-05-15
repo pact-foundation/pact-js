@@ -10,7 +10,7 @@
   "devDependencies": {
     "@pact-foundation/pact": "file:..",
     "@tsconfig/node20": "20.1.9",
-    "@types/node": "24.12.3",
+    "@types/node": "24.12.4",
     "apollo-boost": "0.4.9",
     "apollo-cache-inmemory": "1.6.6",
     "apollo-link-http": "1.5.17",
