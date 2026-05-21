@@ -1,4 +1,4 @@
-import type { Matcher, Rule, Rules } from '../v3/types';
+import type { Matcher, Rule, Rules, StatusCodeMatcher } from '../v3/types';
 
 /**
  * Converts a matcher to the FFI format expected by pact-core
@@ -21,6 +21,28 @@ export const convertMatcherToFFI = (
   });
 
   return result;
+};
+
+/**
+ * Converts a StatusCodeMatcher to the FFI matching rules format expected by pact-core
+ * @param matcher The status code matcher
+ * @returns The matching rules in FFI format
+ */
+export const convertStatusMatcherToFFI = (
+  matcher: StatusCodeMatcher<number>,
+): Record<string, unknown> => {
+  return {
+    status: {
+      $: {
+        matchers: [
+          {
+            match: 'statusCode',
+            status: matcher.status,
+          },
+        ],
+      },
+    },
+  };
 };
 
 /**
