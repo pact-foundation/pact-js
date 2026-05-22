@@ -6,7 +6,7 @@ import gql from 'graphql-tag';
 const client = new ApolloClient({
   cache: new InMemoryCache(),
   link: createHttpLink({
-    fetch: require('node-fetch'),
+    fetch: require('node-fetch').default,
     headers: {
       foo: 'bar',
     },
