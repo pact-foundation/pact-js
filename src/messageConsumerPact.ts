@@ -227,12 +227,19 @@ export class MessageConsumerPact {
 // TODO: create more basic adapters for API handlers
 
 // bodyHandler takes a synchronous function and returns
-// a wrapped function that accepts a Message and returns a Promise
-export function synchronousBodyHandler<R>(
-  handler: (body: AnyJson | Buffer) => R,
-): MessageConsumer {
+// a wrapped function that accepts a Message and returns a Promise.
+//
+// The body type defaults to `AnyJson | Buffer` (the runtime type of
+// `m.contents`), but callers may narrow it to a custom shape (e.g. an
+// interface describing the JSON they expect to receive) by supplying the
+// `B` type parameter. The narrowing is a TypeScript-only assertion; the
+// runtime value is still whatever the producer sent.
+export function synchronousBodyHandler<
+  R,
+  B extends AnyJson | Buffer = AnyJson | Buffer,
+>(handler: (body: B) => R): MessageConsumer {
   return (m: ConcreteMessage): Promise<R> => {
-    const body = m.contents;
+    const body = m.contents as B;
 
     return new Promise((resolve, reject) => {
       try {
@@ -246,10 +253,12 @@ export function synchronousBodyHandler<R>(
 }
 
 // bodyHandler takes an asynchronous (promisified) function and returns
-// a wrapped function that accepts a Message and returns a Promise
+// a wrapped function that accepts a Message and returns a Promise.
+// See `synchronousBodyHandler` for the rationale behind the `B` parameter.
 // TODO: move this into its own package and re-export?
-export function asynchronousBodyHandler<R>(
-  handler: (body: AnyJson | Buffer) => Promise<R>,
-): MessageConsumer {
-  return (m: ConcreteMessage) => handler(m.contents);
+export function asynchronousBodyHandler<
+  R,
+  B extends AnyJson | Buffer = AnyJson | Buffer,
+>(handler: (body: B) => Promise<R>): MessageConsumer {
+  return (m: ConcreteMessage) => handler(m.contents as B);
 }
