@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [16.5.0](https://github.com/pact-foundation/pact-js/compare/v16.4.0...v16.5.0) (2026-05-24)
+
+
+### Features
+
+* Add HTTP response status code matching support ([#1790](https://github.com/pact-foundation/pact-js/issues/1790)) ([38a4b9b](https://github.com/pact-foundation/pact-js/commit/38a4b9b46630dc428cbff4d4bd418b498484103f))
+* add xml support to pactv4 ([ae151b7](https://github.com/pact-foundation/pact-js/commit/ae151b7350601d3111ac8a5a2665456556d0b6b3))
+
+
+### Fixes and Improvements
+
+* **deps:** update dependency https-proxy-agent to v9 ([#1731](https://github.com/pact-foundation/pact-js/issues/1731)) ([e0be974](https://github.com/pact-foundation/pact-js/commit/e0be9742bf8dcd93973022948959b238d49ed882))
+* **regression:** fix Apollo/node-fetch v3 compatibility and graphql peer dep conflict ([#1805](https://github.com/pact-foundation/pact-js/issues/1805)) ([ef8c9f9](https://github.com/pact-foundation/pact-js/commit/ef8c9f9a3f7292febe7dd6dc5c6b0e4dee7d9bff))
+* **types:** allow narrow body type in {synchronous,asynchronous}BodyHandler ([#1798](https://github.com/pact-foundation/pact-js/issues/1798)) ([507ce81](https://github.com/pact-foundation/pact-js/commit/507ce8121acf383b6bfe0278605e0305b12aba0b))
+* **v3:** pass cors option to mock server transport, defaulting to true ([#1767](https://github.com/pact-foundation/pact-js/issues/1767)) ([c31ebb2](https://github.com/pact-foundation/pact-js/commit/c31ebb211005eccb1d1de163ec1b8dd3b3ef495f))
+
 ## [16.4.0](https://github.com/pact-foundation/pact-js/compare/v16.3.1...v16.4.0) (2026-05-04)
 
 
