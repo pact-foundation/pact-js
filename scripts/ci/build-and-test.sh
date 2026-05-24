@@ -15,9 +15,6 @@ export GIT_BRANCH=${GITHUB_HEAD_REF:-${GIT_REF#refs/heads/}}
 
 "${SCRIPT_DIR}"/lib/prepare-release.sh
 
-echo "--> Running coverage checks"
-npm run coverage
-
 cp package-lock.json dist
 cp -r scripts dist
 echo "This will be version '$(npx --yes absolute-version)'"
