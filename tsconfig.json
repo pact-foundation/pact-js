@@ -1,6 +1,6 @@
 {
   "$schema": "https://www.schemastore.org/tsconfig",
-  "extends": "@tsconfig/node20",
+  "extends": "@tsconfig/node22",
   "compileOnSave": false,
   "compilerOptions": {
     "outDir": "./dist",
