@@ -21,7 +21,7 @@ env:
   PACT_BROKER_BASE_URL: ${{ secrets.PACT_BROKER_BASE_URL }}
   PACT_BROKER_TOKEN: ${{ secrets.PACT_BROKER_TOKEN }}
   # The oldest supported LTS version
-  STABLE_NODE_VERSION: 20
+  STABLE_NODE_VERSION: 22
 
 jobs:
   complete:
@@ -117,7 +117,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [20, 22, 24]
+        node-version: [22, 24, 26]
         os:
           - macos-26-intel
           - macos-latest
@@ -167,7 +167,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [20, 22, 24]
+        node-version: [22, 24, 26]
 
     steps:
       - name: Checkout
