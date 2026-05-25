@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "@pact-foundation/pact": "file:..",
-    "@tsconfig/node22": "22.0.5",
+    "@tsconfig/node24": "24.0.0",
     "@types/node": "24.12.4",
     "apollo-boost": "0.4.9",
     "apollo-cache-inmemory": "1.6.6",
