@@ -120,9 +120,9 @@
     "stack-utils": "^2.0.6"
   },
   "devDependencies": {
-    "@babel/cli": "7.28.6",
-    "@babel/core": "7.29.0",
-    "@babel/preset-env": "7.29.5",
+    "@babel/cli": "7.29.7",
+    "@babel/core": "7.29.7",
+    "@babel/preset-env": "7.29.7",
     "@biomejs/biome": "2.4.15",
     "@tsconfig/node22": "22.0.5",
     "@types/express": "4.17.25",
