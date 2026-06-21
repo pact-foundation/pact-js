@@ -15,7 +15,7 @@
     "apollo-cache-inmemory": "1.6.6",
     "apollo-link-http": "1.5.17",
     "axios": "1.18.0",
-    "body-parser": "2.2.2",
+    "body-parser": "2.3.0",
     "cors": "2.8.6",
     "express": "5.2.1",
     "fast-xml-parser": "5.9.2",
