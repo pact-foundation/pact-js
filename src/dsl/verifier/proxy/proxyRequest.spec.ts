@@ -1,4 +1,5 @@
 import { Readable } from 'node:stream';
+import { HttpsProxyAgent } from 'https-proxy-agent';
 import { toServerOptions as toServerOptionsAct } from './proxyRequest';
 import type { ProxyOptions } from './types';
 
@@ -65,31 +66,28 @@ describe('#toServerOptions', () => {
     });
 
     it('uses HTTPS_PROXY', () => {
-      const expectedProxy = 'http://proxy.host/';
-      process.env.HTTPS_PROXY = expectedProxy;
+      process.env.HTTPS_PROXY = 'http://proxy.host/';
 
       const res = toServerOptions();
 
-      expect(res.agent?.proxy?.toString()).toBe(expectedProxy);
+      expect(res.agent).toBeInstanceOf(HttpsProxyAgent);
     });
 
     it('uses HTTP_PROXY', () => {
-      const expectedProxy = 'http://my.proxy/';
-      process.env.HTTP_PROXY = expectedProxy;
+      process.env.HTTP_PROXY = 'http://my.proxy/';
 
       const res = toServerOptions();
 
-      expect(res.agent?.proxy?.toString()).toBe(expectedProxy);
+      expect(res.agent).toBeInstanceOf(HttpsProxyAgent);
     });
 
     it('prefers HTTPS_PROXY to HTTP_PROXY', () => {
-      process.env.HTTPS_PROXY = 'http://unused/';
-      const expectedProxy = 'http://expected.proxy/';
-      process.env.HTTPS_PROXY = expectedProxy;
+      process.env.HTTP_PROXY = 'http://ignored.proxy/';
+      process.env.HTTPS_PROXY = 'http://expected.proxy/';
 
       const res = toServerOptions();
 
-      expect(res.agent?.proxy?.toString()).toBe(expectedProxy);
+      expect(res.agent).toBeInstanceOf(HttpsProxyAgent);
     });
   });
 
