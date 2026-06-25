@@ -9,6 +9,7 @@ import { Verifier } from './verifier';
 const mockState = vi.hoisted(() => ({ executed: false }));
 
 vi.mock('./proxy', () => ({
+  createHooksState: () => ({ insideInteraction: false, errors: [] }),
   createProxy: () =>
     ({
       close: () => {

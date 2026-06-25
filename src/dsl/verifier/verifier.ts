@@ -13,7 +13,7 @@ import { isEmpty, omit } from 'lodash';
 import logger, { setLogLevel } from '../../common/logger';
 import { localAddresses } from '../../common/net';
 import ConfigurationError from '../../errors/configurationError';
-import { createProxy, waitForServerReady } from './proxy';
+import { createHooksState, createProxy, waitForServerReady } from './proxy';
 import type { VerifierOptions } from './types';
 
 export class Verifier {
@@ -89,11 +89,15 @@ export class Verifier {
       );
     }
 
-    // Start the verification CLI proxy server
+    // Start the verification CLI proxy server. The hooks state is owned here so
+    // that any beforeEach/afterEach failures recorded during verification can be
+    // surfaced once it completes.
+    const hooksState = createHooksState();
     const server = createProxy(
       this.config,
       this.stateSetupPath,
       this.messageTransportPath,
+      hooksState,
     );
     logger.trace(`proxy created, waiting for startup`);
 
@@ -109,6 +113,13 @@ export class Verifier {
       .then((result) => {
         logger.trace('Verification completed, closing server');
         server.close();
+        if (hooksState.errors.length > 0) {
+          throw new Error(
+            `Provider verification hooks failed:\n${hooksState.errors
+              .map((e) => `  - ${e.message}`)
+              .join('\n')}`,
+          );
+        }
         return result;
       })
       .catch((e) => {
