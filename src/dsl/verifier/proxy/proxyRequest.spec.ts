@@ -1,5 +1,5 @@
 import { Readable } from 'node:stream';
-import { HttpsProxyAgent } from 'https-proxy-agent';
+import type { HttpsProxyAgent } from 'https-proxy-agent';
 import { toServerOptions as toServerOptionsAct } from './proxyRequest';
 import type { ProxyOptions } from './types';
 
@@ -71,7 +71,9 @@ describe('#toServerOptions', () => {
 
       const res = toServerOptions();
 
-      expect((res.agent as HttpsProxyAgent<string>)?.proxy?.toString()).toBe(expectedProxy);
+      expect((res.agent as HttpsProxyAgent<string>)?.proxy?.toString()).toBe(
+        expectedProxy,
+      );
     });
 
     it('uses HTTP_PROXY', () => {
@@ -80,7 +82,9 @@ describe('#toServerOptions', () => {
 
       const res = toServerOptions();
 
-      expect((res.agent as HttpsProxyAgent<string>)?.proxy?.toString()).toBe(expectedProxy);
+      expect((res.agent as HttpsProxyAgent<string>)?.proxy?.toString()).toBe(
+        expectedProxy,
+      );
     });
 
     it('prefers HTTPS_PROXY to HTTP_PROXY', () => {
@@ -90,7 +94,9 @@ describe('#toServerOptions', () => {
 
       const res = toServerOptions();
 
-      expect((res.agent as HttpsProxyAgent<string>)?.proxy?.toString()).toBe(expectedProxy);
+      expect((res.agent as HttpsProxyAgent<string>)?.proxy?.toString()).toBe(
+        expectedProxy,
+      );
     });
   });
 
