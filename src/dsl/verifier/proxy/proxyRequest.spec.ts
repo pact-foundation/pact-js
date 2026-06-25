@@ -66,28 +66,31 @@ describe('#toServerOptions', () => {
     });
 
     it('uses HTTPS_PROXY', () => {
-      process.env.HTTPS_PROXY = 'http://proxy.host/';
+      const expectedProxy = 'http://proxy.host/';
+      process.env.HTTPS_PROXY = expectedProxy;
 
       const res = toServerOptions();
 
-      expect(res.agent).toBeInstanceOf(HttpsProxyAgent);
+      expect((res.agent as HttpsProxyAgent<string>)?.proxy?.toString()).toBe(expectedProxy);
     });
 
     it('uses HTTP_PROXY', () => {
-      process.env.HTTP_PROXY = 'http://my.proxy/';
+      const expectedProxy = 'http://my.proxy/';
+      process.env.HTTP_PROXY = expectedProxy;
 
       const res = toServerOptions();
 
-      expect(res.agent).toBeInstanceOf(HttpsProxyAgent);
+      expect((res.agent as HttpsProxyAgent<string>)?.proxy?.toString()).toBe(expectedProxy);
     });
 
     it('prefers HTTPS_PROXY to HTTP_PROXY', () => {
       process.env.HTTP_PROXY = 'http://ignored.proxy/';
-      process.env.HTTPS_PROXY = 'http://expected.proxy/';
+      const expectedProxy = 'http://expected.proxy/';
+      process.env.HTTPS_PROXY = expectedProxy;
 
       const res = toServerOptions();
 
-      expect(res.agent).toBeInstanceOf(HttpsProxyAgent);
+      expect((res.agent as HttpsProxyAgent<string>)?.proxy?.toString()).toBe(expectedProxy);
     });
   });
 
