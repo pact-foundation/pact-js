@@ -18,7 +18,7 @@
     "body-parser": "2.3.0",
     "cors": "2.8.6",
     "express": "5.2.1",
-    "fast-xml-parser": "5.9.2",
+    "fast-xml-parser": "5.9.3",
     "form-data": "4.0.6",
     "graphql": "15.10.2",
     "graphql-http": "1.22.4",
