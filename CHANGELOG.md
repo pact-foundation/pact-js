@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [17.0.1](https://github.com/pact-foundation/pact-js/compare/v17.0.0...v17.0.1) (2026-07-01)
+
+
+### Fixes and Improvements
+
+* **verifier:** run beforeEach/afterEach once per interaction without desyncing on hook failure ([#1865](https://github.com/pact-foundation/pact-js/issues/1865)) ([fed47e2](https://github.com/pact-foundation/pact-js/commit/fed47e220af427d654f8b192333e6d6425118425)), closes [#1864](https://github.com/pact-foundation/pact-js/issues/1864)
+
 ## [17.0.0](https://github.com/pact-foundation/pact-js/compare/v16.5.0...v17.0.0) (2026-06-25)
 
 
