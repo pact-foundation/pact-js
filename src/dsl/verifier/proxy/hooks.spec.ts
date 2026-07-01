@@ -1,127 +1,118 @@
 import type { RequestHandler } from 'express';
 import { vi } from 'vitest';
 
-import {
-  type HooksState,
-  registerAfterHook,
-  registerBeforeHook,
-  registerHookStateTracking,
-} from './hooks';
+import { createHooksState, registerHooks } from './hooks';
 
-// This mimics the proxy setup (src/dsl/verifier/proxy/proxy.ts), whereby the
-// state handling middleware is run regardless of whether a hook is registered
-// or not.
-const doRequest = async (
-  action: string,
-  hooksState: HooksState,
-  hookHandler?: RequestHandler,
-) => {
-  const hooksStateHandler = registerHookStateTracking(hooksState);
-  const hookRequestHandler = hookHandler || ((_req, _res, next) => next());
+// Mimics the proxy: a single hooks middleware handles every `/_pactSetup`
+// request. `doRequest` drives it with a given action and resolves once the
+// middleware calls next().
+const doRequest = (action: string, handler: RequestHandler) => {
+  // biome-ignore lint/suspicious/noExplicitAny: partial mock — only body is needed
+  const request: any = { body: { action } };
 
-  // biome-ignore lint/suspicious/noExplicitAny: partial mock object — only body is needed to exercise the hook logic
-  const request: any = {
-    body: {
-      action,
-    },
-  };
-
-  return new Promise((resolve) => {
-    // biome-ignore lint/suspicious/noExplicitAny: null passed as res/next mocks; only body is exercised
-    hooksStateHandler(request, null as any, () => {
-      // biome-ignore lint/suspicious/noExplicitAny: null passed as res mock; only body is exercised
-      hookRequestHandler(request, null as any, resolve);
-    });
+  return new Promise<void>((resolve) => {
+    // biome-ignore lint/suspicious/noExplicitAny: null res mock; only body is exercised
+    handler(request, null as any, () => resolve());
   });
 };
 
-describe('Verifier', () => {
+describe('Verifier hooks', () => {
   afterEach(() => {
     vi.restoreAllMocks();
   });
 
-  describe('#registerBeforeHook', () => {
-    describe('when the state setup routine is called multiple times before the next teardown', () => {
-      it('it executes the beforeEach hook only once', async () => {
-        const hooksState: HooksState = { setupCounter: 0 };
-        const hook = vi.fn().mockResolvedValue(undefined);
-        const hookHandler = registerBeforeHook(hook, hooksState);
+  it('runs beforeEach and afterEach once per interaction (multiple "given" states)', async () => {
+    const state = createHooksState();
+    const beforeEach = vi.fn().mockResolvedValue(undefined);
+    const afterEach = vi.fn().mockResolvedValue(undefined);
+    const handler = registerHooks({ beforeEach, afterEach }, state);
 
-        await doRequest('setup', hooksState, hookHandler);
-        await doRequest('setup', hooksState, hookHandler);
-        await doRequest('teardown', hooksState);
-        await doRequest('teardown', hooksState);
+    // Interaction with two "given" states: setup x2, teardown x2
+    await doRequest('setup', handler);
+    await doRequest('setup', handler);
+    await doRequest('teardown', handler);
+    await doRequest('teardown', handler);
 
-        expect(hook).toHaveBeenCalledOnce();
-      });
-    });
+    expect(beforeEach).toHaveBeenCalledOnce();
+    expect(afterEach).toHaveBeenCalledOnce();
   });
 
-  describe('#registerAfterHook', () => {
-    describe('when the state teardown routine is called multiple times before the next setup', () => {
-      it('it executes the afterEach hook only once', async () => {
-        const hooksState: HooksState = { setupCounter: 0 };
-        const hook = vi.fn().mockResolvedValue(undefined);
-        const hookHandler = registerAfterHook(hook, hooksState);
+  it('runs the hooks once for each of several interactions', async () => {
+    const state = createHooksState();
+    const beforeEach = vi.fn().mockResolvedValue(undefined);
+    const afterEach = vi.fn().mockResolvedValue(undefined);
+    const handler = registerHooks({ beforeEach, afterEach }, state);
 
-        await doRequest('setup', hooksState);
-        await doRequest('setup', hooksState);
-        await doRequest('teardown', hooksState, hookHandler);
-        await doRequest('teardown', hooksState, hookHandler);
+    // Interaction 1 (two states)
+    await doRequest('setup', handler);
+    await doRequest('setup', handler);
+    await doRequest('teardown', handler);
+    await doRequest('teardown', handler);
+    // Interaction 2 (one state)
+    await doRequest('setup', handler);
+    await doRequest('teardown', handler);
+    // Interaction 3 (three states)
+    await doRequest('setup', handler);
+    await doRequest('setup', handler);
+    await doRequest('setup', handler);
+    await doRequest('teardown', handler);
+    await doRequest('teardown', handler);
+    await doRequest('teardown', handler);
 
-        expect(hook).toHaveBeenCalledOnce();
-      });
-    });
+    expect(beforeEach).toHaveBeenCalledTimes(3);
+    expect(afterEach).toHaveBeenCalledTimes(3);
   });
 
-  describe('#registerBeforeHook and #registerAfterHook', () => {
-    describe('when the state teardown routine is called multiple times before the next setup', () => {
-      it('it executes the beforeEach and afterEach hooks only once', async () => {
-        const hooksState: HooksState = { setupCounter: 0 };
-        const beforeHook = vi.fn().mockResolvedValue(undefined);
-        const afterHook = vi.fn().mockResolvedValue(undefined);
-        const beforeHookHandler = registerBeforeHook(beforeHook, hooksState);
-        const afterHookHandler = registerAfterHook(afterHook, hooksState);
+  // Regression for #1864: a failing beforeEach used to desync a global counter,
+  // silently disabling the hooks for every subsequent interaction.
+  it('keeps running hooks for later interactions after a hook throws, and records the error', async () => {
+    const state = createHooksState();
+    const beforeEach = vi
+      .fn()
+      .mockRejectedValueOnce(new Error('transient failure'))
+      .mockResolvedValue(undefined);
+    const afterEach = vi.fn().mockResolvedValue(undefined);
+    const handler = registerHooks({ beforeEach, afterEach }, state);
 
-        await doRequest('setup', hooksState, beforeHookHandler);
-        await doRequest('setup', hooksState, beforeHookHandler);
-        await doRequest('teardown', hooksState, afterHookHandler);
-        await doRequest('teardown', hooksState, afterHookHandler);
+    // Three single-state interactions; beforeEach throws on the first.
+    for (let i = 0; i < 3; i++) {
+      await doRequest('setup', handler);
+      await doRequest('teardown', handler);
+    }
 
-        expect(beforeHook).toHaveBeenCalledOnce();
-        expect(afterHook).toHaveBeenCalledOnce();
-      });
-    });
+    expect(beforeEach).toHaveBeenCalledTimes(3);
+    expect(afterEach).toHaveBeenCalledTimes(3);
+    expect(state.errors).toHaveLength(1);
+    expect(state.errors[0].message).toContain('beforeEach');
+  });
 
-    describe('when multiple interactions are executed', () => {
-      it('it executes the beforeEach and afterEach hooks once for each interaction', async () => {
-        const hooksState: HooksState = { setupCounter: 0 };
-        const beforeHook = vi.fn().mockResolvedValue(undefined);
-        const afterHook = vi.fn().mockResolvedValue(undefined);
-        const beforeHookHandler = registerBeforeHook(beforeHook, hooksState);
-        const afterHookHandler = registerAfterHook(afterHook, hooksState);
+  // A throwing hook must never turn into a non-2xx response (the proxy must keep
+  // serving), or the core would retry the request and desync tracking.
+  it('still calls next() when a hook throws', async () => {
+    const state = createHooksState();
+    const beforeEach = vi.fn().mockRejectedValue(new Error('boom'));
+    const handler = registerHooks({ beforeEach }, state);
 
-        // Interaction 1 (two "given" states)
-        await doRequest('setup', hooksState, beforeHookHandler);
-        await doRequest('setup', hooksState, beforeHookHandler);
-        await doRequest('teardown', hooksState, afterHookHandler);
-        await doRequest('teardown', hooksState, afterHookHandler);
+    // doRequest resolves only when next() is called.
+    await expect(doRequest('setup', handler)).resolves.toBeUndefined();
+  });
 
-        // Interaction 2 (one "given" state)
-        await doRequest('setup', hooksState, beforeHookHandler);
-        await doRequest('teardown', hooksState, afterHookHandler);
+  // The core retries a failed state-change request: a duplicate "setup" before
+  // any "teardown" must not re-fire beforeEach nor desync the interaction state.
+  it('is idempotent under a retried setup request', async () => {
+    const state = createHooksState();
+    const beforeEach = vi.fn().mockResolvedValue(undefined);
+    const afterEach = vi.fn().mockResolvedValue(undefined);
+    const handler = registerHooks({ beforeEach, afterEach }, state);
 
-        // Interaction 3 (three "given" states)
-        await doRequest('setup', hooksState, beforeHookHandler);
-        await doRequest('setup', hooksState, beforeHookHandler);
-        await doRequest('setup', hooksState, beforeHookHandler);
-        await doRequest('teardown', hooksState, afterHookHandler);
-        await doRequest('teardown', hooksState, afterHookHandler);
-        await doRequest('teardown', hooksState, afterHookHandler);
+    await doRequest('setup', handler);
+    await doRequest('setup', handler); // retried/duplicate setup
+    await doRequest('teardown', handler);
+    // next interaction
+    await doRequest('setup', handler);
+    await doRequest('teardown', handler);
 
-        expect(beforeHook).toHaveBeenCalledTimes(3);
-        expect(afterHook).toHaveBeenCalledTimes(3);
-      });
-    });
+    expect(beforeEach).toHaveBeenCalledTimes(2);
+    expect(afterEach).toHaveBeenCalledTimes(2);
   });
 });

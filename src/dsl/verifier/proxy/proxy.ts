@@ -3,12 +3,7 @@ import bodyParser from 'body-parser';
 import express from 'express';
 import HttpProxy from 'http-proxy';
 import logger from '../../../common/logger';
-import {
-  type HooksState,
-  registerAfterHook,
-  registerBeforeHook,
-  registerHookStateTracking,
-} from './hooks';
+import { type HooksState, registerHooks } from './hooks';
 import { createProxyMessageHandler } from './messages';
 import { toServerOptions } from './proxyRequest';
 import { createProxyStateHandler } from './stateHandler/stateHandler';
@@ -29,6 +24,7 @@ export const createProxy = (
   config: ProxyOptions,
   stateSetupPath: string,
   messageTransportPath: string,
+  hooksState: HooksState,
 ): http.Server => {
   const app = express();
   const proxy = new HttpProxy();
@@ -48,18 +44,18 @@ export const createProxy = (
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use('/{*splat}', bodyParser.raw({ type: '*/*' }));
 
-  // Hooks
-  const hooksState: HooksState = {
-    setupCounter: 0,
-  };
-  app.use(stateSetupPath, registerHookStateTracking(hooksState));
-  if (config.beforeEach) {
-    logger.trace("registered 'beforeEach' hook");
-    app.use(stateSetupPath, registerBeforeHook(config.beforeEach, hooksState));
-  }
-  if (config.afterEach) {
-    logger.trace("registered 'afterEach' hook");
-    app.use(stateSetupPath, registerAfterHook(config.afterEach, hooksState));
+  // Hooks. Tracking is only needed when a hook is registered; both hooks share
+  // the same interaction-boundary tracking, so they are registered together.
+  if (config.beforeEach || config.afterEach) {
+    if (config.beforeEach) logger.trace("registered 'beforeEach' hook");
+    if (config.afterEach) logger.trace("registered 'afterEach' hook");
+    app.use(
+      stateSetupPath,
+      registerHooks(
+        { beforeEach: config.beforeEach, afterEach: config.afterEach },
+        hooksState,
+      ),
+    );
   }
 
   // Trace req/res logging
