@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@pact-foundation/pact": "file:../..",
-    "@pact-foundation/pact-cli": "18.1.0",
+    "@pact-foundation/pact-cli": "18.1.1",
     "absolute-version": "2.0.0",
     "mocha": "10.8.2",
     "rimraf": "6.1.3",
