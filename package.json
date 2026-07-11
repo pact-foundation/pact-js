@@ -130,7 +130,7 @@
     "@types/http-proxy": "1.17.17",
     "@types/lodash": "4.17.24",
     "@types/nock": "11.1.0",
-    "@types/node": "24.13.2",
+    "@types/node": "24.13.3",
     "@types/ramda": "0.32.0",
     "@types/stack-utils": "2.0.3",
     "@vitest/coverage-v8": "3.2.4",
