@@ -1,4 +1,5 @@
 import type express from 'express';
+import type { SecureContextOptions } from 'node:tls';
 import type { AnyJson, JsonMap } from '../../../common/jsonTypes';
 import type { MessageProviders } from '../../message';
 import type { LogLevel } from '../../options';
@@ -51,6 +52,10 @@ export interface ProxyOptions {
   beforeEach?: Hook;
   afterEach?: Hook;
   validateSSL?: boolean;
+  tlsClientOptions?: Pick<
+    SecureContextOptions,
+    'cert' | 'key' | 'passphrase' | 'pfx'
+  >;
   changeOrigin?: boolean;
   providerBaseUrl?: string;
   proxyHost?: string;

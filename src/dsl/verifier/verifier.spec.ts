@@ -21,7 +21,7 @@ vi.mock('./proxy', () => ({
         address: 'mock.server.example.com',
       }),
     }) as unknown as Server,
-  waitForServerReady: () => Promise.resolve(),
+  waitForServerReady: (server: Server) => Promise.resolve(server),
 }));
 
 describe('Verifier', () => {
@@ -138,6 +138,25 @@ describe('Verifier', () => {
           await expect(res).rejects.toThrow();
           expect(mockState.executed).toBe(true);
         });
+      });
+
+      it('does not pass TLS client credentials to pact-core', async () => {
+        const verifyPacts = vi
+          .spyOn(serviceFactory, 'verifyPacts')
+          .mockResolvedValue('done');
+        v = new Verifier({
+          ...opts,
+          tlsClientOptions: {
+            pfx: Buffer.from('certificate'),
+            passphrase: 'secret',
+          },
+        });
+
+        await v.verifyProvider();
+
+        expect(verifyPacts).toHaveBeenCalledWith(
+          expect.not.objectContaining({ tlsClientOptions: expect.anything() }),
+        );
       });
     });
   });

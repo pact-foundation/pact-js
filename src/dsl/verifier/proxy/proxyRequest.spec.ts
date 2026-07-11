@@ -50,6 +50,37 @@ describe('#toServerOptions', () => {
 
       expect(res.target).toBe('http://127.0.0.1/');
     });
+
+    it('adds PKCS#12 client credentials to the target', () => {
+      const pfx = Buffer.from('certificate');
+
+      const res = toServerOptions({
+        providerBaseUrl: 'https://test.com',
+        tlsClientOptions: { pfx, passphrase: 'secret' },
+      });
+
+      expect(res.target).toMatchObject({
+        protocol: 'https:',
+        host: 'test.com',
+        pfx,
+        passphrase: 'secret',
+      });
+    });
+
+    it('adds PEM client credentials to the target', () => {
+      const res = toServerOptions({
+        providerBaseUrl: 'https://test.com',
+        tlsClientOptions: {
+          cert: 'client certificate',
+          key: 'client key',
+        },
+      });
+
+      expect(res.target).toMatchObject({
+        cert: 'client certificate',
+        key: 'client key',
+      });
+    });
   });
 
   describe('agent', () => {
