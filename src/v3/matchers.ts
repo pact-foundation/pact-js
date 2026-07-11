@@ -1,6 +1,18 @@
 import { isNil, pickBy, times } from 'ramda';
 import RandExp from 'randexp';
 import type { AnyJson, JsonMap } from '../common/jsonTypes';
+import {
+  EMAIL_FORMAT,
+  HEX_FORMAT,
+  IPV4_FORMAT,
+  IPV6_FORMAT,
+  ISO8601_DATE_FORMAT,
+  ISO8601_DATETIME_FORMAT,
+  ISO8601_DATETIME_WITH_MILLIS_FORMAT,
+  ISO8601_TIME_FORMAT,
+  RFC1123_TIMESTAMP_FORMAT,
+  validateExample,
+} from '../common/matcherFormats';
 import type {
   ArrayContainsMatcher,
   DateTimeMatcher,
@@ -15,6 +27,7 @@ import type {
 } from './types';
 
 export * from './types';
+export * from '../common/matcherFormats';
 
 export function isMatcher(x: unknown): x is Matcher<unknown> {
   return (
@@ -329,6 +342,64 @@ export function regex(pattern: RegExp | string, str: string): V3RegexMatcher {
     value: str,
   };
 }
+
+const validatedRegex = (
+  pattern: string,
+  defaultExample: string,
+  example?: string,
+): V3RegexMatcher => {
+  const value = example || defaultExample;
+  if (!validateExample(value, pattern)) {
+    throw new Error(
+      `Example '${value}' does not match regular expression '${pattern}'`,
+    );
+  }
+  return regex(pattern, value);
+};
+
+/** Match an email address using the V2-compatible expression. */
+export const email = (address?: string): V3RegexMatcher =>
+  validatedRegex(EMAIL_FORMAT, 'hello@pact.io', address);
+
+/** Match an IPv4 address using the V2-compatible expression. */
+export const ipv4Address = (ip?: string): V3RegexMatcher =>
+  validatedRegex(IPV4_FORMAT, '127.0.0.13', ip);
+
+/** Match an IPv6 address using the V2-compatible expression. */
+export const ipv6Address = (ip?: string): V3RegexMatcher =>
+  validatedRegex(IPV6_FORMAT, '::ffff:192.0.2.128', ip);
+
+/** Match an ISO 8601 date and time using the V2-compatible expression. */
+export const iso8601DateTime = (value?: string): V3RegexMatcher =>
+  validatedRegex(ISO8601_DATETIME_FORMAT, '2015-08-06T16:53:10+01:00', value);
+
+/** Match an ISO 8601 date and time with fractional-second precision. */
+export const iso8601DateTimeWithMillis = (value?: string): V3RegexMatcher =>
+  validatedRegex(
+    ISO8601_DATETIME_WITH_MILLIS_FORMAT,
+    '2015-08-06T16:53:10.123+01:00',
+    value,
+  );
+
+/** Match an ISO 8601 date using the V2-compatible expression. */
+export const iso8601Date = (value?: string): V3RegexMatcher =>
+  validatedRegex(ISO8601_DATE_FORMAT, '2013-02-01', value);
+
+/** Match an ISO 8601 time using the V2-compatible expression. */
+export const iso8601Time = (value?: string): V3RegexMatcher =>
+  validatedRegex(ISO8601_TIME_FORMAT, 'T22:44:30.652Z', value);
+
+/** Match an RFC 1123 timestamp using the V2-compatible expression. */
+export const rfc1123Timestamp = (value?: string): V3RegexMatcher =>
+  validatedRegex(
+    RFC1123_TIMESTAMP_FORMAT,
+    'Mon, 31 Oct 2016 15:21:41 -0400',
+    value,
+  );
+
+/** Match a hexadecimal string using the V2-compatible expression. */
+export const hexadecimal = (value?: string): V3RegexMatcher =>
+  validatedRegex(HEX_FORMAT, '3F', value);
 
 /**
  * Matches the content type of a multipart field.
