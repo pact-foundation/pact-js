@@ -135,7 +135,7 @@ export class Verifier {
       const { port } = server.address() as AddressInfo;
       const opts: PactCoreVerifierOptions = {
         providerStatesSetupUrl: `${this.address}:${port}${this.stateSetupPath}`,
-        ...omit(this.config, 'handlers'),
+        ...omit(this.config, 'handlers', 'tlsClientOptions'),
         providerBaseUrl: `${this.address}:${port}`,
         transports: (this.config.transports || []).concat([
           {

@@ -71,6 +71,7 @@ new Verifier(opts).verifyProvider().then(function () {
 | `providerStatesSetupUrl`    | false     | string                                                                                | Deprecated (use URL to send PUT requests to setup a given provider state                                                                                                                           |
 | `stateHandlers`             | false     | object                                                                                | Map of "state" to a function that sets up a given provider state. See docs below for more information                                                                                              |
 | `requestFilter`             | false     | function ([Express middleware](https://expressjs.com/en/guide/using-middleware.html)) | Function that may be used to alter the incoming request or outgoing response from the verification process. See below for use.                                                                     |
+| `tlsClientOptions`          | false     | object                                                                                | TLS client credentials sent by the verification proxy to an HTTPS provider. Supports `pfx` and `passphrase`, or `cert` and `key`.                                                                  |
 | `beforeEach`                | false     | function                                                                              | Function to execute prior to each interaction being validated                                                                                                                                      |
 | `afterEach`                 | false     | function                                                                              | Function to execute after each interaction has been validated                                                                                                                                      |
 | `pactBrokerUsername`        | false     | string                                                                                | Username for Pact Broker basic authentication                                                                                                                                                      |
@@ -113,6 +114,24 @@ const opts = {
 ```
 
 If your broker has a self signed certificate, set the environment variable `SSL_CERT_FILE` (or `SSL_CERT_DIR`) pointing to a copy of your certificate.
+
+To verify a provider that requires mutual TLS, pass the client credentials to
+the verification proxy. PKCS#12 and PEM credentials are supported through the
+standard Node.js TLS options:
+
+```js
+const fs = require('node:fs');
+
+const opts = {
+  providerBaseUrl: 'https://provider.example.com',
+  tlsClientOptions: {
+    pfx: fs.readFileSync('./client.p12'),
+    passphrase: process.env.CLIENT_CERTIFICATE_PASSPHRASE,
+  },
+};
+
+return new Verifier(opts).verifyProvider();
+```
 
 Read more about [Verifying Pacts](https://docs.pact.io/getting_started/verifying_pacts).
 
