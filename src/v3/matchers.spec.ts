@@ -1,4 +1,15 @@
 import * as MatchersV3 from './matchers';
+import {
+  EMAIL_FORMAT,
+  HEX_FORMAT,
+  IPV4_FORMAT,
+  IPV6_FORMAT,
+  ISO8601_DATE_FORMAT,
+  ISO8601_DATETIME_FORMAT,
+  ISO8601_DATETIME_WITH_MILLIS_FORMAT,
+  ISO8601_TIME_FORMAT,
+  RFC1123_TIMESTAMP_FORMAT,
+} from '../dsl/matchers';
 
 describe('V3 Matchers', () => {
   it('compiles with nested examples from issue 1054', () => {
@@ -396,6 +407,101 @@ describe('V3 Matchers', () => {
       });
     });
   });
+
+  const v2CompatibilityMatchers = [
+    {
+      name: 'email',
+      matcher: MatchersV3.email,
+      example: 'hello@world.com',
+      defaultExample: 'hello@pact.io',
+      pattern: EMAIL_FORMAT,
+    },
+    {
+      name: 'ipv4Address',
+      matcher: MatchersV3.ipv4Address,
+      example: '127.0.0.1',
+      defaultExample: '127.0.0.13',
+      pattern: IPV4_FORMAT,
+    },
+    {
+      name: 'ipv6Address',
+      matcher: MatchersV3.ipv6Address,
+      example: '::1',
+      defaultExample: '::ffff:192.0.2.128',
+      pattern: IPV6_FORMAT,
+    },
+    {
+      name: 'iso8601DateTime',
+      matcher: MatchersV3.iso8601DateTime,
+      example: '2015-08-06T16:53:10+01:00',
+      defaultExample: '2015-08-06T16:53:10+01:00',
+      pattern: ISO8601_DATETIME_FORMAT,
+    },
+    {
+      name: 'iso8601DateTimeWithMillis',
+      matcher: MatchersV3.iso8601DateTimeWithMillis,
+      example: '2015-08-06T16:53:10.123+01:00',
+      defaultExample: '2015-08-06T16:53:10.123+01:00',
+      pattern: ISO8601_DATETIME_WITH_MILLIS_FORMAT,
+    },
+    {
+      name: 'iso8601Date',
+      matcher: MatchersV3.iso8601Date,
+      example: '2017-12-05',
+      defaultExample: '2013-02-01',
+      pattern: ISO8601_DATE_FORMAT,
+    },
+    {
+      name: 'iso8601Time',
+      matcher: MatchersV3.iso8601Time,
+      example: 'T22:44:30.652Z',
+      defaultExample: 'T22:44:30.652Z',
+      pattern: ISO8601_TIME_FORMAT,
+    },
+    {
+      name: 'rfc1123Timestamp',
+      matcher: MatchersV3.rfc1123Timestamp,
+      example: 'Mon, 31 Oct 2016 15:21:41 -0400',
+      defaultExample: 'Mon, 31 Oct 2016 15:21:41 -0400',
+      pattern: RFC1123_TIMESTAMP_FORMAT,
+    },
+    {
+      name: 'hexadecimal',
+      matcher: MatchersV3.hexadecimal,
+      example: '6F',
+      defaultExample: '3F',
+      pattern: HEX_FORMAT,
+    },
+  ];
+
+  for (const {
+    name,
+    matcher,
+    example,
+    defaultExample,
+    pattern,
+  } of v2CompatibilityMatchers) {
+    describe(`#${name}`, () => {
+      it('returns the V2-compatible regular expression matcher', () => {
+        expect(matcher(example)).toEqual({
+          'pact:matcher:type': 'regex',
+          regex: pattern,
+          value: example,
+        });
+        expect(matcher()).toEqual({
+          'pact:matcher:type': 'regex',
+          regex: pattern,
+          value: defaultExample,
+        });
+      });
+
+      it('rejects an invalid example', () => {
+        expect(() => matcher('not-valid')).toThrow(
+          `Example 'not-valid' does not match regular expression '${pattern}'`,
+        );
+      });
+    });
+  }
 
   describe('#equal', () => {
     it('returns a JSON representation of an equality matcher', () => {
