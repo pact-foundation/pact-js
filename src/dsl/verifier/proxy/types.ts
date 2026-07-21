@@ -31,7 +31,8 @@ export type StateAction = 'setup' | 'teardown';
  * Respond to the state setup event, optionally returning a map of provider
  * values to dynamically inject into the incoming request to test
  */
-export type StateFunc = (parameters?: AnyJson) => Promise<JsonMap | undefined>;
+// biome-ignore lint/suspicious/noConfusingVoidType: state handlers may intentionally resolve without a value.
+export type StateFunc = (parameters?: AnyJson) => Promise<JsonMap | void>;
 
 /**
  * Respond to the state setup event, with the ability to hook into the setup/teardown

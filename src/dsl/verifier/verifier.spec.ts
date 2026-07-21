@@ -55,6 +55,22 @@ describe('Verifier', () => {
         expect(v).toHaveProperty('config.stateHandlers');
         expect(v).toHaveProperty('config.requestFilter');
       });
+
+      it('accepts state handlers with separate setup and teardown functions', () => {
+        const stateHandler = {
+          setup: vi.fn(async () => {}),
+          teardown: vi.fn(async () => {}),
+        };
+
+        v = new Verifier({
+          providerBaseUrl,
+          stateHandlers: {
+            [state]: stateHandler,
+          },
+        });
+
+        expect(v).toHaveProperty(`config.stateHandlers.${state}`, stateHandler);
+      });
     });
   });
 

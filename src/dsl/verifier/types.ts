@@ -1,5 +1,4 @@
 import type { VerifierOptions as PactCoreVerifierOptions } from '@pact-foundation/pact-core';
-import type { MessageProviderOptions } from '../options';
 
 import type { ProxyOptions } from './proxy/types';
 
@@ -14,5 +13,4 @@ export type PactNodeVerificationExcludedOptions = Pick<
 >;
 
 export type VerifierOptions = PactNodeVerificationExcludedOptions &
-  ProxyOptions &
-  Partial<MessageProviderOptions>;
+  ProxyOptions;
