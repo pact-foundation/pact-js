@@ -103,6 +103,4 @@ No special configuration is required on the provider side — GraphQL interactio
 
 ## Working Examples
 
-See the [v4 GraphQL example](https://github.com/pact-foundation/pact-js/tree/master/examples/v4/graphql/) for a complete runnable project, including both consumer and provider tests.
-
-For `PactV3` examples, see the [v3 GraphQL example](https://github.com/pact-foundation/pact-js/tree/master/examples/v3/graphql/).
+See the [v4 GraphQL example](https://github.com/pact-foundation/pact-js/tree/master/examples/graphql/) for a complete runnable project, including both consumer and provider tests.

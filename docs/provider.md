@@ -137,7 +137,7 @@ Read more about [Verifying Pacts](https://docs.pact.io/getting_started/verifying
 
 #### API with Provider States
 
-If you have defined any `state`s in your consumer tests, the `Verifier` can put the provider into the right state prior to sending the request. For example, the provider can use the state to mock away certain database queries. To support this, set up a handler for each `state` using hooks on the `stateHandlers` property. Here is an example from our [e2e suite](https://github.com/pact-foundation/pact-js/blob/master/examples/v3/e2e/test/provider.spec.js):
+If you have defined any `state`s in your consumer tests, the `Verifier` can put the provider into the right state prior to sending the request. For example, the provider can use the state to mock away certain database queries. To support this, set up a handler for each `state` using hooks on the `stateHandlers` property. Here is an example from our [http suite](https://github.com/pact-foundation/pact-js/tree/master/examples/http/provider.test.ts):
 
 Provider state callbacks can also return a map of key-value values. These are used with provider-state injected values.
 
@@ -207,7 +207,7 @@ Provider state callbacks can also return a map of key-value values. These are us
   },
 ```
 
-For a more detailed example, see the [provider state injected project](https://github.com/pact-foundation/pact-js/blob/master/examples/v3/provider-state-injected/provider/account-service.test.js) in the examples folder
+For a more detailed example, see the [provider state project](https://github.com/pact-foundation/pact-js/blob/master/examples/provider-state/provider.test.ts) in the examples folder
 
 You can think of regular provider states as only being the "setup" phase.
 

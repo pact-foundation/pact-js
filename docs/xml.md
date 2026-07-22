@@ -53,4 +53,4 @@ body: new XmlBuilder("1.0", "UTF-8", "ns1:projects").build((el) => {
 })
 ```
 
-For a more detailed example, see the todo-consumer project, specifically [consumer.spec.js](https://github.com/pact-foundation/pact-js/blob/master/examples/v3/todo-consumer/test/consumer.spec.js), [provider.spec.js](https://github.com/pact-foundation/pact-js/blob/master/examples/v3/e2e/todo-consumer/provider.spec.js) in the examples folder.
+For a more detailed example, see the todo-consumer project, specifically [consumer.test.ts](https://github.com/pact-foundation/pact-js/blob/master/examples/xml/consumer.test.ts) in the examples folder.

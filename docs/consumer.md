@@ -367,4 +367,4 @@ const rules: Rules = {
 
 _NOTE:_ `withMatchingRules` / `matchingRules` is an advanced feature intended for edge cases where the fluent DSL does not cover your needs. For most multipart tests, `multipartBody` is sufficient.
 
-For working examples, see the [v4 multipart example](https://github.com/pact-foundation/pact-js/tree/master/examples/v4/multipart/).
+For working examples, see the [v4 multipart example](https://github.com/pact-foundation/pact-js/tree/master/examples/multipart/).

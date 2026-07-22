@@ -186,7 +186,7 @@ describe('GET /dogs', () => {
 });
 ```
 
-You can see (and run) the full version of this in `./examples/v3/typescript`, as well as other examples in the parent folder.
+You can see (and run) the full example in `./examples/http`, as well as other examples in the parent folder.
 
 To run the examples
 

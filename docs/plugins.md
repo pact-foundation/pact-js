@@ -188,4 +188,4 @@ const v = new Verifier({
 return v.verifyProvider();
 ```
 
-For a full working example with HTTP, TCP, and message verification combined, see the [v4 plugins example](https://github.com/pact-foundation/pact-js/tree/master/examples/v4/plugins/).
+For a full working example with HTTP, TCP, and message verification combined, see the [v4 plugins example](https://github.com/pact-foundation/pact-js/tree/master/examples/plugins/).
