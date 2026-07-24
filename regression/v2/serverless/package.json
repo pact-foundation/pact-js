@@ -24,7 +24,7 @@
     "@pact-foundation/pact": "file:../..",
     "@pact-foundation/pact-cli": "18.1.1",
     "absolute-version": "2.0.0",
-    "mocha": "10.8.2",
+    "mocha": "11.7.6",
     "rimraf": "6.1.3",
     "serverless": "4.39.0"
   },
