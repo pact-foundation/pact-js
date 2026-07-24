@@ -134,7 +134,7 @@
     "@types/ramda": "0.32.0",
     "@types/stack-utils": "2.0.3",
     "@vitest/coverage-v8": "3.2.4",
-    "commit-and-tag-version": "13.0.0",
+    "commit-and-tag-version": "13.1.0",
     "copyfiles": "2.4.1",
     "nock": "14.0.16",
     "rimraf": "6.1.3",
