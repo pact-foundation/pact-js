@@ -107,7 +107,7 @@
     "@scarf/scarf": "^1.4.0",
     "axios": "^1.12.2",
     "body-parser": "^2.2.0",
-    "chalk": "4.1.2",
+    "chalk": "6.0.0",
     "express": "^5.1.0",
     "graphql": "^16.11.0",
     "graphql-tag": "^2.12.6",
