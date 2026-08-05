@@ -1,8 +1,8 @@
-import logger from '@pact-foundation/pact-core/dist/logger';
+import logger from '@pact-foundation/pact-core/src/logger';
 
 import { version } from '../../package.json';
 
-export * from '@pact-foundation/pact-core/dist/logger';
+export * from '@pact-foundation/pact-core/src/logger';
 
 const context = `pact@${version}`;
 
