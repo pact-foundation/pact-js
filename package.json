@@ -103,7 +103,7 @@
     ]
   },
   "dependencies": {
-    "@pact-foundation/pact-core": "^20.1.0",
+    "@pact-foundation/pact-core": "^19.2.0",
     "@scarf/scarf": "^1.4.0",
     "axios": "^1.12.2",
     "body-parser": "^2.2.0",
@@ -146,10 +146,5 @@
     "onlyBuiltDependencies": [
       "@pact-foundation/pact-core"
     ]
-  },
-  "allowScripts": {
-    "fsevents@2.3.3": true,
-    "esbuild": true,
-    "@scarf/scarf": true
   }
 }
