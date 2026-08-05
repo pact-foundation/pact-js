@@ -1,4 +1,3 @@
-import type { JsonMap } from '../../../../common/jsonTypes';
 import logger from '../../../../common/logger';
 import type {
   ProviderState,
@@ -22,7 +21,7 @@ const transformStateFunc = (fn: StateHandler): StateFuncWithSetup =>
 export const setupStates = (
   state: ProviderState,
   config: ProxyOptions,
-): Promise<JsonMap | undefined> => {
+): ReturnType<StateFunc> => {
   logger.debug(`setting up state '${JSON.stringify(state)}'`);
 
   const handler = config.stateHandlers
