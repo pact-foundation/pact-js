@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [17.1.0](https://github.com/pact-foundation/pact-js/compare/v17.0.1...v17.1.0) (2026-08-06)
+
+### Features
+
+* **matchers:** add V2 convenience matchers to V3 ([#1875](https://github.com/pact-foundation/pact-js/issues/1875)) ([187e9b9](https://github.com/pact-foundation/pact-js/commit/187e9b9c185b334c07ca383a20c700036096f115))
+* **verifier:** support mTLS client certificates ([#1871](https://github.com/pact-foundation/pact-js/issues/1871)) ([674e5e3](https://github.com/pact-foundation/pact-js/commit/674e5e3cb959d1fbd601c27179fb94e88a5c18af))
+
+### Fixes and Improvements
+
+* **deps:** update dependency chalk to v6 ([#1899](https://github.com/pact-foundation/pact-js/issues/1899)) ([5300d09](https://github.com/pact-foundation/pact-js/commit/5300d09c417086ddb8f8827874fcfea2d47ffc76))
+* **deps:** update dependency https-proxy-agent to v9 ([b615a14](https://github.com/pact-foundation/pact-js/commit/b615a14d4ca71e3b7ccb7c65789ba94dfce8451b))
+* **deps:** update to pact-core 20.1.0 ([8b8888f](https://github.com/pact-foundation/pact-js/commit/8b8888f0b3dda5b90c726060b8694da182d1fc28))
+* **deps:** update to pact-core 20.1.0 ([0b54d29](https://github.com/pact-foundation/pact-js/commit/0b54d29848e9238809f7198ed2d761c04a1082d4))
+* pact-core imports now in dist not src ([bdaeddf](https://github.com/pact-foundation/pact-js/commit/bdaeddf1b35e42bf59bdf8d03b3907434231928a))
+* pact-core imports now in dist not src ([bd9e7a4](https://github.com/pact-foundation/pact-js/commit/bd9e7a4486e00cdd09ebdfcd7dd4f63a1d8d273c))
 ## [17.0.1](https://github.com/pact-foundation/pact-js/compare/v17.0.0...v17.0.1) (2026-07-01)
 
 
