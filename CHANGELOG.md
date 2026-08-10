@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [17.1.1](https://github.com/pact-foundation/pact-js/compare/v17.1.0...v17.1.1) (2026-08-10)
+
+### Fixes and Improvements
+
+* **deps:** bump qs from 6.15.1 to 6.15.3 in /examples/xml ([#1817](https://github.com/pact-foundation/pact-js/issues/1817)) ([8756f55](https://github.com/pact-foundation/pact-js/commit/8756f55e327830f2a03981d3550ce58947324501))
 ## [17.1.0](https://github.com/pact-foundation/pact-js/compare/v17.0.1...v17.1.0) (2026-08-06)
 
 ### Features
