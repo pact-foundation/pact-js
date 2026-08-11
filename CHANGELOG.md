@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [17.1.2](https://github.com/pact-foundation/pact-js/compare/v17.1.1...v17.1.2) (2026-08-11)
+
+### Fixes and Improvements
+
+* revert chalk to v4 due to esm ([#1920](https://github.com/pact-foundation/pact-js/issues/1920)) ([1365c83](https://github.com/pact-foundation/pact-js/commit/1365c83dba61e4708e79d09b394abe645ac2c26e))
 ## [17.1.1](https://github.com/pact-foundation/pact-js/compare/v17.1.0...v17.1.1) (2026-08-10)
 
 ### Fixes and Improvements
