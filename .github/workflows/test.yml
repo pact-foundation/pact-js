@@ -22,6 +22,7 @@ env:
   PACT_BROKER_TOKEN: ${{ secrets.PACT_BROKER_TOKEN }}
   # The oldest supported LTS version
   STABLE_NODE_VERSION: 22
+  PACT_DO_NOT_TRACK: true
 
 jobs:
   complete:
