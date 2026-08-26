@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [17.1.3](https://github.com/pact-foundation/pact-js/compare/v17.1.2...v17.1.3) (2026-08-26)
+
+### Fixes and Improvements
+
+* **verifier:** accept lifecycle state handlers ([#1876](https://github.com/pact-foundation/pact-js/issues/1876)) ([15bea78](https://github.com/pact-foundation/pact-js/commit/15bea78090ba19478369c3374cbc22d22bee7763))
 ## [17.1.2](https://github.com/pact-foundation/pact-js/compare/v17.1.1...v17.1.2) (2026-08-11)
 
 ### Fixes and Improvements
