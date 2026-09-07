@@ -6,9 +6,9 @@
   "scripts": {
     "test": "npm run test:consumer && npm run test:provider",
     "test:consumer": "vitest run consumer.test.ts",
-    "test:provider": "vitest run provider.test.ts provider-baseline.test.ts",
+    "test:provider": "vitest run provider.test.ts provider-async.test.ts provider-baseline.test.ts",
     "capture:fixtures": "npm run test:consumer && vitest run capture-fixtures",
-    "test:provider:failing": "FAILING=1 vitest run provider.test.ts"
+    "test:provider:failing": "FAILING=1 vitest run provider.test.ts provider-async.test.ts"
   },
   "engines": {
     "node": ">=20"

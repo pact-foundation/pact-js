@@ -45,6 +45,12 @@ interactions failed and why:
 `provider-baseline.test.ts` keeps the conventional single-test verification
 with `verifyProvider()` for comparison.
 
+`provider-async.test.ts` shows the variant for a **Pact Broker**: it takes the
+test cases from the verification result instead of from pact files, so nothing
+has to be enumerated up front. Swap `pactUrls` for `pactBrokerUrl` and the
+usual selectors and the pacts the broker returns become the test cases, with
+the broker links and `publishVerificationResult` untouched.
+
 `capture:fixtures` runs the verification twice: once against the healthy
 provider and once against a deliberately broken one (`GET /two` answers 500,
 `GET /three` answers `{ ok: "true" }`). The two JSON documents are stored as
