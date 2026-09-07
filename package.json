@@ -19,7 +19,6 @@
     "format:fix": "biome format --write",
     "check": "npm run format && npm run lint",
     "check:fix": "npm run format:fix && npm run lint:fix",
-    "release": "commit-and-tag-version",
     "pretest": "node ./scripts/install-plugins.js",
     "test": "vitest run",
     "test:regression": "npm --prefix regression run test",
@@ -66,42 +65,6 @@
     "url": "https://github.com/pact-foundation/pact-js/issues"
   },
   "homepage": "https://docs.pact.io/implementation_guides/javascript/",
-  "standard-version": {
-    "types": [
-      {
-        "type": "feat",
-        "section": "Features"
-      },
-      {
-        "type": "fix",
-        "section": "Fixes and Improvements"
-      },
-      {
-        "type": "chore",
-        "hidden": true
-      },
-      {
-        "type": "docs",
-        "hidden": true
-      },
-      {
-        "type": "style",
-        "hidden": true
-      },
-      {
-        "type": "refactor",
-        "hidden": true
-      },
-      {
-        "type": "perf",
-        "hidden": true
-      },
-      {
-        "type": "test",
-        "hidden": true
-      }
-    ]
-  },
   "dependencies": {
     "@pact-foundation/pact-core": "^20.1.1",
     "@scarf/scarf": "^1.4.0",
@@ -134,7 +97,6 @@
     "@types/ramda": "0.32.0",
     "@types/stack-utils": "2.0.3",
     "@vitest/coverage-v8": "3.2.4",
-    "commit-and-tag-version": "13.1.2",
     "copyfiles": "2.4.1",
     "nock": "14.0.17",
     "rimraf": "6.1.3",

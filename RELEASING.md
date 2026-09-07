@@ -1,88 +1,74 @@
 # Releasing
 
-We've moved to GitHub Actions for releases.
+Releases are automated with [Release Please](https://github.com/googleapis/release-please)
+and are driven entirely by pull requests. There is no manual release trigger.
 
 ## How a release works
 
-Releases trigger when the repository receives the custom repository_dispatch event
-`release-triggered`.
+1. Commits land on `master` following the [Conventional Commits](https://www.conventionalcommits.org)
+   guidelines in `CONTRIBUTING.md`.
+2. The `release.yml` workflow runs on every push to `master` and maintains a
+   **release PR** titled something like `chore(master): release 17.2.0`. That PR
+   contains the version bump in `package.json`, the updated `CHANGELOG.md` and
+   the updated `.release-please-manifest.json`. It is kept up to date as more
+   commits land.
+3. **Merging the release PR is the release.** On merge, Release Please creates
+   the `vX.Y.Z` tag and the GitHub release with the generated changelog, and the
+   `publish` job in the same workflow builds, tests and publishes the package to
+   npm via [trusted publishing](https://docs.npmjs.com/trusted-publishers).
 
-This triggers the `publish.yml` workflow, which in turn
-triggers the `release.sh` script in `scripts/ci`.
-The workflow will also create a github release with an appropriate changelog.
+If there are no releasable commits (only `chore`, `docs`, `ci`, etc.) no release
+PR is created, so a release can never be cut with an empty changelog.
 
-Having the release triggered by a custom event is useful for automating
-releases in the future (eg for version bumps in pact dependencies).
+## Cutting a release
 
-### Release.sh
+- Make sure `master` contains the code you want to release, and that CI is green.
+- Find the open release PR (labelled `autorelease: pending`), check the version
+  and changelog look right, and merge it.
 
-This script is not intended to be run locally. Note that it modifies your git
-settings.
+That's it. Watch the `Release` workflow for the publish job.
 
-The script will:
+### Controlling the version
 
-- Modify git authorship settings
-- Confirm that there would be changes in the changelog after release
-- Run Lint
-- Run Build
-- Run Test
-- Commit an appropriate version bump, changelog and tag
-- Package and publish to npm
-- Push the new commit and tag back to the main branch.
+Release Please derives the next version from the commit types since the last
+release (`fix:` → patch, `feat:` → minor, `!`/`BREAKING CHANGE` → major). To
+override it, add a footer to a commit on `master`:
 
-Should you need to modify the script locally, you will find it uses some
-dependencies in `scripts/ci/lib`.
+```
+Release-As: 18.0.0
+```
 
-## Kicking off a release
+## Configuration
 
-You must be able to create a github access token with `repo` scope to the
-pact-js repository.
+| File | Purpose |
+| --- | --- |
+| `.github/workflows/release.yml` | Release PR maintenance + npm publish |
+| `release-please-config.json` | Release Please settings (release type, changelog sections) |
+| `.release-please-manifest.json` | Current released version - do not edit by hand |
+| `scripts/ci/publish.sh` | Build, test and publish `./dist` to npm |
 
-- Set an environment variable `GITHUB_ACCESS_TOKEN_FOR_PF_RELEASES` to this token.
-- Make sure master contains the code you want to release
-- Run `scripts/trigger-release.sh`
+The optional `RELEASE_PLEASE_TOKEN` secret (a PAT with `repo` scope) lets the
+release PR run the normal CI workflows. Without it the workflow falls back to
+`GITHUB_TOKEN`, which cannot trigger other workflows, so the release PR itself
+will not have CI runs.
 
-Then wait for github to do its magic. It will release the current head of master.
+### publish.sh
 
-Note that the release script refuses to publish anything that wouldn't
-produce a changelog. Please make sure your commits follow the guidelines in
-`CONTRIBUTING.md`
+Not intended to be run locally - it requires `CI` to be set and expects the
+version in `package.json` to already be the released version. It runs
+`build-and-test.sh` (lint, build, test, examples) and then publishes `./dist`.
 
 ## If the release fails
 
-The publish is the second to last step, so if the release fails, you don't
-need to do any rollbacks.
+Versioning, tagging and the GitHub release all happen before the publish job
+runs, so a failed publish leaves the repository in a consistent state - the tag
+and GitHub release exist, but npm does not have the version.
 
-However, there is a potential for the push to fail _after_ a publish if there
-are new commits to master since the release started. This is unlikely with
-the current commit frequency, but could still happen. Check the logs to
-determine if npm has a version that doesn't exist in the master branch.
+To retry, re-run the failed `publish` job from the Actions UI. If the failure
+needs a code fix, land the fix on `master` and let the next release PR produce a
+new patch version rather than re-tagging the broken one.
 
-If this has happened, you will need to manually put the release commit in.
+## 9.x.x releases
 
-```
-# First delete the new tag
-#   somehow this ends up in the repository
-#   even though the push fails.
-
-git checkout master
-git pull --tags
-git tag -d <broken-version>
-git push -delete origin <broken-version>
-
-
-# If there are changes that introduce features, then you'll have to branch and probably rebase
-
-# Now create a new commit + tag for the version:
-npm run release
-
-# Push that tag + commit
-git push origin master --follow-tags
-
-```
-
-- Don't forget to create a new release in github.
-
-Depending on the nature of the new commits to master after the release, you
-may need to rebase them on top of the tagged release commit and force push (only do this
-if the released version would be different to the version tagged by `npm run release`)
+The legacy `9.x.x` branch still uses the older dispatch-based process - see
+`.github/workflows/publish-9x.yml` and `scripts/trigger-9x-release.sh`.

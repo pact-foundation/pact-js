@@ -1,0 +1,81 @@
+name: Release
+
+# Release Please based, PR driven release process.
+#
+#   1. Every push to master updates (or creates) a "release PR" that contains
+#      the version bump and the generated CHANGELOG entries.
+#   2. Merging that PR tags the release, creates the GitHub release, and
+#      triggers the publish job below, which publishes to npm.
+#
+# There is no manual trigger required - merging the release PR *is* the release.
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  release-please:
+    name: Create or update release PR
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+      version: ${{ steps.release.outputs.version }}
+
+    steps:
+      - uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+        id: release
+        with:
+          # A PAT (repo + workflow scope) allows the test workflow to run on the
+          # release PR. Falls back to GITHUB_TOKEN, in which case CI will not run
+          # on the release PR itself.
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN || secrets.GITHUB_TOKEN }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+  publish:
+    name: Publish to npm
+    needs: release-please
+    if: needs.release-please.outputs.release_created == 'true'
+    runs-on: ubuntu-latest
+
+    env:
+      GIT_COMMIT: ${{ github.sha }}
+      GIT_REF: ${{ github.ref }}
+      LOG_LEVEL: info
+      PACT_BROKER_BASE_URL: ${{ secrets.PACT_BROKER_BASE_URL }}
+      PACT_BROKER_TOKEN: ${{ secrets.PACT_BROKER_TOKEN }}
+      # examples are skipped, due to jest-pact requiring updating to support pact-js-v16
+      # will be reinstated, post release of https://github.com/pact-foundation/jest-pact/pull/423
+      SKIP_EXAMPLES: true
+
+    permissions:
+      # Required for npm trusted publishing
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.release-please.outputs.tag_name }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          registry-url: "https://registry.npmjs.org"
+
+      - run: scripts/ci/publish.sh
