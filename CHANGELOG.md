@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [17.1.4](https://github.com/pact-foundation/pact-js/compare/v17.1.3...v17.1.4) (2026-09-07)
+
+### Fixes and Improvements
+
+* **deps-dev:** bump fast-xml-parser from 4.5.6 to 5.7.0 in /examples/xml ([1cc3cbc](https://github.com/pact-foundation/pact-js/commit/1cc3cbc684bc83cbf521e3874a8a81837e41f89f))
+* **deps:** update to pact-core 20.1.1 ([#1936](https://github.com/pact-foundation/pact-js/issues/1936)) ([f7dd6de](https://github.com/pact-foundation/pact-js/commit/f7dd6de524a7ae0d01292c0bcb1f715e3eb7e98e))
 ## [17.1.3](https://github.com/pact-foundation/pact-js/compare/v17.1.2...v17.1.3) (2026-08-26)
 
 ### Fixes and Improvements
