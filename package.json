@@ -109,7 +109,7 @@
     "body-parser": "^2.2.0",
     "chalk": "4.1.2",
     "express": "^5.1.0",
-    "graphql": "^16.11.0",
+    "graphql": "^17.0.0",
     "graphql-tag": "^2.12.6",
     "http-proxy": "^1.18.1",
     "https-proxy-agent": "^7.0.6",
