@@ -6,10 +6,18 @@ import logger from '../../common/logger';
 import type { VerifierOptions } from './types';
 import { Verifier } from './verifier';
 
-const mockState = vi.hoisted(() => ({ executed: false }));
+const mockState = vi.hoisted(() => ({
+  executed: false,
+  missingStates: new Set<string>(),
+  reported: [] as string[],
+}));
 
 vi.mock('./proxy', () => ({
   createHooksState: () => ({ insideInteraction: false, errors: [] }),
+  createMissingStates: () => mockState.missingStates,
+  reportMissingStates: (missingStates: Set<string>) => {
+    mockState.reported = [...missingStates];
+  },
   createProxy: () =>
     ({
       close: () => {
@@ -28,6 +36,8 @@ describe('Verifier', () => {
   afterEach(() => {
     vi.restoreAllMocks();
     mockState.executed = false;
+    mockState.missingStates.clear();
+    mockState.reported = [];
   });
 
   const state = 'thing exists';
@@ -139,6 +149,20 @@ describe('Verifier', () => {
 
           await res;
           expect(mockState.executed).toBe(true);
+        });
+      });
+
+      describe('and provider states were missing', () => {
+        it('reports them once verification completes', async () => {
+          vi.spyOn(
+            v as unknown as { runProviderVerification: () => unknown },
+            'runProviderVerification',
+          ).mockReturnValue(Promise.resolve('done'));
+          mockState.missingStates.add(state);
+
+          await v.verifyProvider();
+
+          expect(mockState.reported).toEqual([state]);
         });
       });
 
