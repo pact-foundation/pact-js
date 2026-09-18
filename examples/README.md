@@ -28,6 +28,7 @@ For team workflows, pact files are published to a Pact Broker (such as [PactFlow
 | [`multipart/`](./multipart/)           | File upload and multipart form data                              |
 | [`plugins/`](./plugins/)               | Plugin system for custom protocols (gRPC, MATT, etc.)            |
 | [`provider-state/`](./provider-state/) | Provider states, parameterised states, and `fromProviderState()` |
+| [`verification-results/`](./verification-results/) | Verifying multiple pacts and reading the verifier's structured JSON result |
 | [`xml/`](./xml/)                       | XML response matching with `XmlBuilder`                          |
 
 ## Running an Example
