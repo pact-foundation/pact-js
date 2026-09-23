@@ -6,6 +6,7 @@ import type {
   StateFuncWithSetup,
   StateHandler,
 } from '../types';
+import type { MissingStates } from './missingStates';
 
 const isStateFuncWithSetup = (
   fn: StateFuncWithSetup | StateFunc,
@@ -21,6 +22,7 @@ const transformStateFunc = (fn: StateHandler): StateFuncWithSetup =>
 export const setupStates = (
   state: ProviderState,
   config: ProxyOptions,
+  missingStates: MissingStates,
 ): ReturnType<StateFunc> => {
   logger.debug(`setting up state '${JSON.stringify(state)}'`);
 
@@ -30,6 +32,7 @@ export const setupStates = (
 
   if (!handler) {
     if (state.action === 'setup') {
+      missingStates.add(state.state);
       logger.warn(`no state handler found for state: "${state.state}"`);
     }
     return Promise.resolve(undefined);
