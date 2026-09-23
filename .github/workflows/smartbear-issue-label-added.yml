@@ -7,5 +7,5 @@ on:
 
 jobs:
   call-workflow:
-    uses: pact-foundation/.github/.github/workflows/smartbear-issue-label-added.yml@95185f4fc661406e8817f6ba0bc81ac3e8e94231 # master
+    uses: pact-foundation/.github/.github/workflows/smartbear-issue-label-added.yml@f26f9805d093340cdbcea9adb0c4787c52125d56 # master
     secrets: inherit
