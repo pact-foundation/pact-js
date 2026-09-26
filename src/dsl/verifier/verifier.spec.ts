@@ -3,6 +3,7 @@ import serviceFactory, { type LogLevel } from '@pact-foundation/pact-core';
 import { vi } from 'vitest';
 
 import logger from '../../common/logger';
+import { ProviderVerificationError } from './result';
 import type { VerifierOptions } from './types';
 import { Verifier } from './verifier';
 
@@ -153,6 +154,89 @@ describe('Verifier', () => {
 
           await expect(res).rejects.toThrow();
           expect(mockState.executed).toBe(true);
+        });
+      });
+
+      describe('#verify', () => {
+        const resultJson = (result: boolean) =>
+          JSON.stringify({
+            result,
+            notices: [],
+            output: [],
+            errors: result
+              ? []
+              : [
+                  {
+                    interaction: 'Verifying a pact between C and P - one',
+                    mismatch: {
+                      type: 'error',
+                      message: 'boom',
+                      interactionId: '',
+                    },
+                  },
+                ],
+            pendingErrors: [],
+            interactionResults: [
+              {
+                description: 'one',
+                result: result ? 'OK' : 'Error',
+                duration: '1ms',
+              },
+            ],
+          });
+
+        it('resolves with the structured result of a successful run', async () => {
+          vi.spyOn(serviceFactory, 'verifyPacts').mockResolvedValue(
+            resultJson(true),
+          );
+
+          const result = await v.verify();
+
+          expect(result.success).toBe(true);
+          expect(result.interactions).toEqual([
+            {
+              description: 'one',
+              pending: false,
+              success: true,
+              duration: '1ms',
+            },
+          ]);
+          expect(mockState.executed).toBe(true);
+        });
+
+        it('rejects with a ProviderVerificationError carrying the result of a failed run', async () => {
+          vi.spyOn(serviceFactory, 'verifyPacts').mockRejectedValue(
+            new Error(resultJson(false)),
+          );
+
+          const error = await v.verify().catch((e) => e);
+
+          expect(error).toBeInstanceOf(ProviderVerificationError);
+          expect(error.message).toContain('C -> P: one');
+          expect(error.result.success).toBe(false);
+          expect(error.result.interactions[0]).toMatchObject({
+            consumer: 'C',
+            provider: 'P',
+            success: false,
+            failure: { type: 'error', message: 'boom' },
+          });
+          expect(mockState.executed).toBe(true);
+        });
+
+        it('rethrows errors that are not a verification result', async () => {
+          vi.spyOn(serviceFactory, 'verifyPacts').mockRejectedValue(
+            new Error('Pact core crashed'),
+          );
+
+          await expect(v.verify()).rejects.toThrow('Pact core crashed');
+        });
+
+        it('rejects the output of pact-core versions without JSON results', async () => {
+          vi.spyOn(serviceFactory, 'verifyPacts').mockResolvedValue(
+            'finished: 0',
+          );
+
+          await expect(v.verify()).rejects.toThrow(/pact-core >= 19/);
         });
       });
 
