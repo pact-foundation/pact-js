@@ -2,6 +2,7 @@ import chalk from 'chalk';
 import type express from 'express';
 import StackUtils from 'stack-utils';
 import type { ProviderState, ProxyOptions } from '../types';
+import type { MissingStates } from './missingStates';
 import { setupStates } from './setupStates';
 
 const cleanStack = (e: Error) => {
@@ -18,14 +19,14 @@ const cleanStack = (e: Error) => {
 };
 
 export const createProxyStateHandler =
-  (config: ProxyOptions) =>
+  (config: ProxyOptions, missingStates: MissingStates) =>
   async (
     req: express.Request,
     res: express.Response,
   ): Promise<express.Response> => {
     const state: ProviderState = req.body;
     try {
-      const data = await setupStates(state, config);
+      const data = await setupStates(state, config, missingStates);
       return res.json(data);
     } catch (e) {
       const caughtError = e instanceof Error ? e : new Error(String(e));

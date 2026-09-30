@@ -6,6 +6,7 @@ import logger from '../../../common/logger';
 import { type HooksState, registerHooks } from './hooks';
 import { createProxyMessageHandler } from './messages';
 import { toServerOptions } from './proxyRequest';
+import type { MissingStates } from './stateHandler/missingStates';
 import { createProxyStateHandler } from './stateHandler/stateHandler';
 import { createRequestTracer, createResponseTracer } from './tracer';
 import type { ProxyOptions } from './types';
@@ -25,6 +26,7 @@ export const createProxy = (
   stateSetupPath: string,
   messageTransportPath: string,
   hooksState: HooksState,
+  missingStates: MissingStates,
 ): http.Server => {
   const app = express();
   const proxy = new HttpProxy();
@@ -71,7 +73,7 @@ export const createProxy = (
   }
 
   // Setup provider state handler
-  app.post(stateSetupPath, createProxyStateHandler(config));
+  app.post(stateSetupPath, createProxyStateHandler(config, missingStates));
 
   // Register message handler and transport
   // TODO: ensure proxy does not interfere with this

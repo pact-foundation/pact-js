@@ -13,7 +13,13 @@ import { isEmpty, omit } from 'lodash';
 import logger, { setLogLevel } from '../../common/logger';
 import { localAddresses } from '../../common/net';
 import ConfigurationError from '../../errors/configurationError';
-import { createHooksState, createProxy, waitForServerReady } from './proxy';
+import {
+  createHooksState,
+  createMissingStates,
+  createProxy,
+  reportMissingStates,
+  waitForServerReady,
+} from './proxy';
 import type { VerifierOptions } from './types';
 
 export class Verifier {
@@ -93,11 +99,13 @@ export class Verifier {
     // that any beforeEach/afterEach failures recorded during verification can be
     // surfaced once it completes.
     const hooksState = createHooksState();
+    const missingStates = createMissingStates();
     const server = createProxy(
       this.config,
       this.stateSetupPath,
       this.messageTransportPath,
       hooksState,
+      missingStates,
     );
     logger.trace(`proxy created, waiting for startup`);
 
@@ -113,6 +121,7 @@ export class Verifier {
       .then((result) => {
         logger.trace('Verification completed, closing server');
         server.close();
+        reportMissingStates(missingStates);
         if (hooksState.errors.length > 0) {
           throw new Error(
             `Provider verification hooks failed:\n${hooksState.errors
@@ -125,6 +134,7 @@ export class Verifier {
       .catch((e) => {
         logger.trace(`Verification failed(${e.message}), closing server`);
         server.close();
+        reportMissingStates(missingStates);
         throw e;
       });
   }
