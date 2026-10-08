@@ -1,0 +1,76 @@
+{
+  "errors": [],
+  "interactionResults": [
+    {
+      "description": "interaction 1 - GET /one",
+      "duration": "15ms",
+      "result": "OK"
+    },
+    {
+      "description": "interaction 2 - GET /two",
+      "duration": "3ms",
+      "result": "OK"
+    },
+    {
+      "description": "interaction 3 - GET /three",
+      "duration": "2ms",
+      "result": "OK"
+    },
+    {
+      "description": "a request for one",
+      "duration": "2ms",
+      "result": "OK"
+    },
+    {
+      "description": "a request for two",
+      "duration": "2ms",
+      "result": "OK"
+    }
+  ],
+  "notices": [],
+  "output": [
+    "\nVerifying a pact between \u001b[1mDemoConsumer\u001b[0m and \u001b[1mDemoProvider\u001b[0m",
+    "",
+    "  interaction 1 - GET /one (0s loading, 15ms verification)",
+    "    returns a response which",
+    "      has status code \u001b[1m200\u001b[0m (\u001b[32mOK\u001b[0m)",
+    "      includes headers",
+    "        \"\u001b[1mContent-Type\u001b[0m\" with value \"\u001b[1mapplication/json\u001b[0m\" (\u001b[32mOK\u001b[0m)",
+    "      has a matching body (\u001b[32mOK\u001b[0m)",
+    "",
+    "  interaction 2 - GET /two (0s loading, 3ms verification)",
+    "    returns a response which",
+    "      has status code \u001b[1m200\u001b[0m (\u001b[32mOK\u001b[0m)",
+    "      includes headers",
+    "        \"\u001b[1mContent-Type\u001b[0m\" with value \"\u001b[1mapplication/json\u001b[0m\" (\u001b[32mOK\u001b[0m)",
+    "      has a matching body (\u001b[32mOK\u001b[0m)",
+    "",
+    "  interaction 3 - GET /three (0s loading, 2ms verification)",
+    "     Given resource three is available",
+    "    returns a response which",
+    "      has status code \u001b[1m200\u001b[0m (\u001b[32mOK\u001b[0m)",
+    "      includes headers",
+    "        \"\u001b[1mContent-Type\u001b[0m\" with value \"\u001b[1mapplication/json\u001b[0m\" (\u001b[32mOK\u001b[0m)",
+    "      has a matching body (\u001b[32mOK\u001b[0m)",
+    "",
+    "\nVerifying a pact between \u001b[1mOtherConsumer\u001b[0m and \u001b[1mDemoProvider\u001b[0m",
+    "",
+    "  a request for one (0s loading, 2ms verification)",
+    "    returns a response which",
+    "      has status code \u001b[1m200\u001b[0m (\u001b[32mOK\u001b[0m)",
+    "      includes headers",
+    "        \"\u001b[1mContent-Type\u001b[0m\" with value \"\u001b[1mapplication/json\u001b[0m\" (\u001b[32mOK\u001b[0m)",
+    "      has a matching body (\u001b[32mOK\u001b[0m)",
+    "",
+    "  a request for two (0s loading, 2ms verification)",
+    "    returns a response which",
+    "      has status code \u001b[1m200\u001b[0m (\u001b[32mOK\u001b[0m)",
+    "      includes headers",
+    "        \"\u001b[1mContent-Type\u001b[0m\" with value \"\u001b[1mapplication/json\u001b[0m\" (\u001b[32mOK\u001b[0m)",
+    "      has a matching body (\u001b[32mOK\u001b[0m)",
+    "",
+    ""
+  ],
+  "pendingErrors": [],
+  "result": true
+}
