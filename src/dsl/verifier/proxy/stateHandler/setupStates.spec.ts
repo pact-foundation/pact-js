@@ -2,6 +2,7 @@ import { vi } from 'vitest';
 import type { JsonMap } from '../../../../common/jsonTypes';
 import logger from '../../../../common/logger';
 import type { ProviderState, ProxyOptions } from '../types';
+import { createMissingStates, type MissingStates } from './missingStates';
 import { setupStates } from './setupStates';
 
 describe('#setupStates', () => {
@@ -21,6 +22,7 @@ describe('#setupStates', () => {
   let executed: boolean;
   let setup: boolean;
   let teardown: boolean;
+  let missingStates: MissingStates;
 
   const DEFAULT_OPTIONS = (): ProxyOptions => ({
     providerBaseUrl,
@@ -52,6 +54,7 @@ describe('#setupStates', () => {
     executed = false;
     setup = false;
     teardown = false;
+    missingStates = createMissingStates();
   });
 
   afterEach(() => {
@@ -68,7 +71,7 @@ describe('#setupStates', () => {
               return Promise.resolve({ data: true });
             },
           };
-          const res = await setupStates(state, opts);
+          const res = await setupStates(state, opts, missingStates);
 
           expect(res).toHaveProperty('data', true);
           expect(executed).toBe(true);
@@ -77,7 +80,7 @@ describe('#setupStates', () => {
 
       describe('that do not return a value', () => {
         it('executes the handler and returns an empty Promise', async () => {
-          await setupStates(state, opts);
+          await setupStates(state, opts, missingStates);
 
           expect(executed).toBe(true);
         });
@@ -85,7 +88,7 @@ describe('#setupStates', () => {
 
       describe('that specify a setup and teardown function', () => {
         it('executes the lifecycle specific handler and returns any provider state injected values', async () => {
-          const res = await setupStates(state2, opts);
+          const res = await setupStates(state2, opts, missingStates);
 
           expect(res).toBe(state2.params);
           expect(setup).toBe(true);
@@ -98,6 +101,7 @@ describe('#setupStates', () => {
               action: 'teardown',
             },
             opts,
+            missingStates,
           );
 
           expect(res2).toBe(state2.params);
@@ -108,13 +112,30 @@ describe('#setupStates', () => {
     });
 
     describe('and there are no handlers associated with those states', () => {
-      it('does not execute the handler and returns an empty Promise', async () => {
+      it('does not execute the handler, records the missing state and returns an empty Promise', async () => {
         const spy = vi.spyOn(logger, 'warn');
         delete opts.stateHandlers;
-        await setupStates(state, opts);
+        await setupStates(state, opts, missingStates);
 
         expect(spy).toHaveBeenCalledTimes(1);
         expect(executed).toBe(false);
+        expect([...missingStates]).toEqual([state.state]);
+      });
+
+      describe('and the state is being torn down', () => {
+        it('does not record the state as missing', async () => {
+          delete opts.stateHandlers;
+          await setupStates(
+            {
+              ...state,
+              action: 'teardown',
+            },
+            opts,
+            missingStates,
+          );
+
+          expect(missingStates.size).toBe(0);
+        });
       });
     });
   });

@@ -1,6 +1,7 @@
 import type express from 'express';
 import { vi } from 'vitest';
 import type { ProxyOptions, StateHandlers } from '../types';
+import { createMissingStates } from './missingStates';
 import { createProxyStateHandler } from './stateHandler';
 
 describe('#createProxyStateHandler', () => {
@@ -30,9 +31,12 @@ describe('#createProxyStateHandler', () => {
         'thing exists': () => Promise.resolve(),
       };
 
-      const h = createProxyStateHandler({
-        stateHandlers,
-      } as ProxyOptions);
+      const h = createProxyStateHandler(
+        {
+          stateHandlers,
+        } as ProxyOptions,
+        createMissingStates(),
+      );
       await h(
         {
           body: state,
@@ -51,9 +55,12 @@ describe('#createProxyStateHandler', () => {
 
     it('returns a 200 and logs an error', async () => {
       const spy = vi.spyOn(console, 'log');
-      const h = createProxyStateHandler({
-        stateHandlers: badStateHandlers,
-      } as ProxyOptions);
+      const h = createProxyStateHandler(
+        {
+          stateHandlers: badStateHandlers,
+        } as ProxyOptions,
+        createMissingStates(),
+      );
       await h(
         {
           body: state,
