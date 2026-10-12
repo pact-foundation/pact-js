@@ -126,7 +126,7 @@
     "@babel/preset-env": "8.0.7",
     "@biomejs/biome": "2.4.16",
     "@tsconfig/node22": "22.0.6",
-    "@types/express": "4.17.25",
+    "@types/express": "5.0.6",
     "@types/http-proxy": "1.17.17",
     "@types/lodash": "4.17.25",
     "@types/nock": "11.1.0",
