@@ -1,0 +1,18 @@
+{
+  "consumer": { "name": "V2Consumer" },
+  "provider": { "name": "Provider" },
+  "interactions": [
+    {
+      "description": "a request without state",
+      "request": { "method": "GET", "path": "/one" },
+      "response": { "status": 200 }
+    },
+    {
+      "description": "a request with a state",
+      "providerState": "there is a thing",
+      "request": { "method": "GET", "path": "/two" },
+      "response": { "status": 200 }
+    }
+  ],
+  "metadata": { "pactSpecification": { "version": "2.0.0" } }
+}

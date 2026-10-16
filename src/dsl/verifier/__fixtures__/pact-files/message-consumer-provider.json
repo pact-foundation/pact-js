@@ -1,0 +1,13 @@
+{
+  "consumer": { "name": "MessageConsumer" },
+  "provider": { "name": "Provider" },
+  "messages": [
+    {
+      "description": "an order created event",
+      "providerStates": [{ "name": "an order exists" }],
+      "contents": { "id": 1 },
+      "metadata": { "contentType": "application/json" }
+    }
+  ],
+  "metadata": { "pactSpecification": { "version": "3.0.0" } }
+}
