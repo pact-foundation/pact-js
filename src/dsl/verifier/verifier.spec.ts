@@ -27,6 +27,7 @@ vi.mock('./proxy', () => ({
 describe('Verifier', () => {
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.unstubAllEnvs();
     mockState.executed = false;
   });
 
@@ -34,6 +35,7 @@ describe('Verifier', () => {
   const providerBaseUrl = 'http://not.exists';
   const opts: VerifierOptions = {
     providerBaseUrl,
+    pactUrls: ['pact.json'],
     requestFilter: (_req, _res, next) => {
       next();
     },
@@ -116,6 +118,64 @@ describe('Verifier', () => {
 
   describe('#verifyProvider', () => {
     beforeEach(() => {});
+
+    it.each([
+      { label: 'omitted pactUrls', pactUrls: undefined },
+      { label: 'empty pactUrls', pactUrls: [] },
+    ])('rejects $label without a broker before running verification', async ({
+      pactUrls,
+    }) => {
+      vi.stubEnv('PACT_BROKER_BASE_URL', undefined);
+      const verifyPacts = vi
+        .spyOn(serviceFactory, 'verifyPacts')
+        .mockResolvedValue('done');
+      v = new Verifier({ ...opts, pactUrls });
+
+      await expect(v.verifyProvider()).rejects.toThrow(
+        'pactUrls or pactBrokerUrl',
+      );
+      expect(verifyPacts).not.toHaveBeenCalled();
+    });
+
+    it('accepts a broker source supplied through the environment', async () => {
+      vi.stubEnv('PACT_BROKER_BASE_URL', 'https://broker.example.test');
+      const verifyPacts = vi
+        .spyOn(serviceFactory, 'verifyPacts')
+        .mockResolvedValue('done');
+      v = new Verifier({ ...opts, pactUrls: undefined, provider: 'Provider' });
+
+      await expect(v.verifyProvider()).resolves.toEqual('done');
+      expect(verifyPacts).toHaveBeenCalledTimes(1);
+    });
+
+    it('accepts an explicitly configured broker source', async () => {
+      vi.stubEnv('PACT_BROKER_BASE_URL', undefined);
+      const verifyPacts = vi
+        .spyOn(serviceFactory, 'verifyPacts')
+        .mockResolvedValue('done');
+      v = new Verifier({
+        ...opts,
+        pactUrls: undefined,
+        pactBrokerUrl: 'https://broker.example.test',
+        provider: 'Provider',
+      });
+
+      await expect(v.verifyProvider()).resolves.toEqual('done');
+      expect(verifyPacts).toHaveBeenCalledTimes(1);
+    });
+
+    it('rejects an environment broker source without a provider name', async () => {
+      vi.stubEnv('PACT_BROKER_BASE_URL', 'https://broker.example.test');
+      const verifyPacts = vi
+        .spyOn(serviceFactory, 'verifyPacts')
+        .mockResolvedValue('done');
+      v = new Verifier({ ...opts, pactUrls: undefined });
+
+      await expect(v.verifyProvider()).rejects.toThrow(
+        "'provider' is required",
+      );
+      expect(verifyPacts).not.toHaveBeenCalled();
+    });
 
     describe('when no configuration has been given', () => {
       it('fails with an error', () =>
