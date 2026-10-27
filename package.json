@@ -122,7 +122,7 @@
   },
   "devDependencies": {
     "@babel/cli": "8.0.6",
-    "@babel/core": "8.0.7",
+    "@babel/core": "8.0.9",
     "@babel/preset-env": "8.0.7",
     "@biomejs/biome": "2.4.16",
     "@tsconfig/node22": "22.0.6",
