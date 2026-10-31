@@ -1,0 +1,225 @@
+{
+  "errors": [
+    {
+      "interaction": "Verifying a pact between DemoConsumer and DemoProvider - interaction 2 - GET /two",
+      "mismatch": {
+        "interactionId": "",
+        "mismatches": [
+          {
+            "actual": "[\"error\"]",
+            "expected": "[\"ok\"]",
+            "mismatch": "Actual map is missing the following keys: ok",
+            "path": "$",
+            "type": "BodyMismatch"
+          },
+          {
+            "actual": 500,
+            "expected": 200,
+            "mismatch": "expected 200 but was 500",
+            "type": "StatusMismatch"
+          }
+        ],
+        "type": "mismatches"
+      }
+    },
+    {
+      "interaction": "Verifying a pact between DemoConsumer and DemoProvider Given resource three is available - interaction 3 - GET /three",
+      "mismatch": {
+        "interactionId": "",
+        "mismatches": [
+          {
+            "actual": "\"true\"",
+            "expected": "true",
+            "mismatch": "Expected 'true' (String) to be the same type as true (Boolean)",
+            "path": "$.ok",
+            "type": "BodyMismatch"
+          }
+        ],
+        "type": "mismatches"
+      }
+    },
+    {
+      "interaction": "Verifying a pact between OtherConsumer and DemoProvider - a request for two",
+      "mismatch": {
+        "interactionId": "",
+        "mismatches": [
+          {
+            "actual": "[\"error\"]",
+            "expected": "[\"ok\"]",
+            "mismatch": "Actual map is missing the following keys: ok",
+            "path": "$",
+            "type": "BodyMismatch"
+          },
+          {
+            "actual": 500,
+            "expected": 200,
+            "mismatch": "expected 200 but was 500",
+            "type": "StatusMismatch"
+          }
+        ],
+        "type": "mismatches"
+      }
+    }
+  ],
+  "interactionResults": [
+    {
+      "consumer": "DemoConsumer",
+      "description": "interaction 1 - GET /one",
+      "duration": "8ms",
+      "pending": false,
+      "provider": "DemoProvider",
+      "providerStates": [],
+      "result": "OK"
+    },
+    {
+      "consumer": "DemoConsumer",
+      "description": "interaction 2 - GET /two",
+      "duration": "3ms",
+      "mismatch": {
+        "interactionId": "",
+        "mismatches": [
+          {
+            "actual": "[\"error\"]",
+            "expected": "[\"ok\"]",
+            "mismatch": "Actual map is missing the following keys: ok",
+            "path": "$",
+            "type": "BodyMismatch"
+          },
+          {
+            "actual": 500,
+            "expected": 200,
+            "mismatch": "expected 200 but was 500",
+            "type": "StatusMismatch"
+          }
+        ],
+        "type": "mismatches"
+      },
+      "pending": false,
+      "provider": "DemoProvider",
+      "providerStates": [],
+      "result": "Error"
+    },
+    {
+      "consumer": "DemoConsumer",
+      "description": "interaction 3 - GET /three",
+      "duration": "3ms",
+      "mismatch": {
+        "interactionId": "",
+        "mismatches": [
+          {
+            "actual": "\"true\"",
+            "expected": "true",
+            "mismatch": "Expected 'true' (String) to be the same type as true (Boolean)",
+            "path": "$.ok",
+            "type": "BodyMismatch"
+          }
+        ],
+        "type": "mismatches"
+      },
+      "pending": false,
+      "provider": "DemoProvider",
+      "providerStates": ["resource three is available"],
+      "result": "Error"
+    },
+    {
+      "consumer": "OtherConsumer",
+      "description": "a request for one",
+      "duration": "3ms",
+      "pending": false,
+      "provider": "DemoProvider",
+      "providerStates": [],
+      "result": "OK"
+    },
+    {
+      "consumer": "OtherConsumer",
+      "description": "a request for two",
+      "duration": "3ms",
+      "mismatch": {
+        "interactionId": "",
+        "mismatches": [
+          {
+            "actual": "[\"error\"]",
+            "expected": "[\"ok\"]",
+            "mismatch": "Actual map is missing the following keys: ok",
+            "path": "$",
+            "type": "BodyMismatch"
+          },
+          {
+            "actual": 500,
+            "expected": 200,
+            "mismatch": "expected 200 but was 500",
+            "type": "StatusMismatch"
+          }
+        ],
+        "type": "mismatches"
+      },
+      "pending": false,
+      "provider": "DemoProvider",
+      "providerStates": [],
+      "result": "Error"
+    }
+  ],
+  "notices": [],
+  "output": [
+    "\nVerifying a pact between \u001b[1mDemoConsumer\u001b[0m and \u001b[1mDemoProvider\u001b[0m",
+    "",
+    "  interaction 1 - GET /one (0s loading, 8ms verification)",
+    "    returns a response which",
+    "      has status code \u001b[1m200\u001b[0m (\u001b[32mOK\u001b[0m)",
+    "      includes headers",
+    "        \"\u001b[1mContent-Type\u001b[0m\" with value \"\u001b[1mapplication/json\u001b[0m\" (\u001b[32mOK\u001b[0m)",
+    "      has a matching body (\u001b[32mOK\u001b[0m)",
+    "",
+    "  interaction 2 - GET /two (0s loading, 3ms verification)",
+    "    returns a response which",
+    "      has status code \u001b[1m200\u001b[0m (\u001b[31mFAILED\u001b[0m)",
+    "      includes headers",
+    "        \"\u001b[1mContent-Type\u001b[0m\" with value \"\u001b[1mapplication/json\u001b[0m\" (\u001b[32mOK\u001b[0m)",
+    "      has a matching body (\u001b[31mFAILED\u001b[0m)",
+    "",
+    "  interaction 3 - GET /three (0s loading, 3ms verification)",
+    "     Given resource three is available",
+    "    returns a response which",
+    "      has status code \u001b[1m200\u001b[0m (\u001b[32mOK\u001b[0m)",
+    "      includes headers",
+    "        \"\u001b[1mContent-Type\u001b[0m\" with value \"\u001b[1mapplication/json\u001b[0m\" (\u001b[32mOK\u001b[0m)",
+    "      has a matching body (\u001b[31mFAILED\u001b[0m)",
+    "",
+    "\nVerifying a pact between \u001b[1mOtherConsumer\u001b[0m and \u001b[1mDemoProvider\u001b[0m",
+    "",
+    "  a request for one (0s loading, 3ms verification)",
+    "    returns a response which",
+    "      has status code \u001b[1m200\u001b[0m (\u001b[32mOK\u001b[0m)",
+    "      includes headers",
+    "        \"\u001b[1mContent-Type\u001b[0m\" with value \"\u001b[1mapplication/json\u001b[0m\" (\u001b[32mOK\u001b[0m)",
+    "      has a matching body (\u001b[32mOK\u001b[0m)",
+    "",
+    "  a request for two (0s loading, 3ms verification)",
+    "    returns a response which",
+    "      has status code \u001b[1m200\u001b[0m (\u001b[31mFAILED\u001b[0m)",
+    "      includes headers",
+    "        \"\u001b[1mContent-Type\u001b[0m\" with value \"\u001b[1mapplication/json\u001b[0m\" (\u001b[32mOK\u001b[0m)",
+    "      has a matching body (\u001b[31mFAILED\u001b[0m)",
+    "",
+    "\nFailures:\n",
+    "1) Verifying a pact between DemoConsumer and DemoProvider - interaction 2 - GET /two",
+    "    1.1) has a matching body",
+    "           \u001b[1m$\u001b[0m -> Actual map is missing the following keys: ok",
+    "    {\n\u001b[31m    -  \"ok\": true\n\u001b[0m\u001b[32m    +  \"error\": \"deliberate failure\"\n\u001b[0m    }\n",
+    "    1.2) has status code 200",
+    "           expected \u001b[31m200\u001b[0m but was \u001b[32m500\u001b[0m",
+    "2) Verifying a pact between DemoConsumer and DemoProvider Given resource three is available - interaction 3 - GET /three",
+    "    2.1) has a matching body",
+    "           \u001b[1m$.ok\u001b[0m -> Expected 'true' (String) to be the same type as true (Boolean)",
+    "",
+    "3) Verifying a pact between OtherConsumer and DemoProvider - a request for two",
+    "    3.1) has a matching body",
+    "           \u001b[1m$\u001b[0m -> Actual map is missing the following keys: ok",
+    "    {\n\u001b[31m    -  \"ok\": true\n\u001b[0m\u001b[32m    +  \"error\": \"deliberate failure\"\n\u001b[0m    }\n",
+    "    3.2) has status code 200",
+    "           expected \u001b[31m200\u001b[0m but was \u001b[32m500\u001b[0m",
+    "\nThere were 3 pact failures\n"
+  ],
+  "pendingErrors": [],
+  "result": false
+}
