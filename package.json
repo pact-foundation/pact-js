@@ -121,8 +121,8 @@
     "stack-utils": "^2.0.6"
   },
   "devDependencies": {
-    "@babel/cli": "8.0.6",
-    "@babel/core": "8.0.10",
+    "@babel/cli": "8.1.0",
+    "@babel/core": "8.1.0",
     "@babel/preset-env": "8.0.7",
     "@biomejs/biome": "2.4.16",
     "@tsconfig/node22": "22.0.6",
