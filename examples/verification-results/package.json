@@ -1,0 +1,24 @@
+{
+  "name": "pact-verification-results-example",
+  "version": "1.0.0",
+  "description": "Provider verification of multiple pacts with structured, per-interaction results",
+  "private": true,
+  "scripts": {
+    "test": "npm run test:consumer && npm run test:provider",
+    "test:consumer": "vitest run consumer.test.ts",
+    "test:provider": "vitest run provider.test.ts provider-async.test.ts provider-baseline.test.ts",
+    "capture:fixtures": "npm run test:consumer && vitest run capture-fixtures",
+    "test:provider:failing": "FAILING=1 vitest run provider.test.ts provider-async.test.ts"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@pact-foundation/pact": "file:../..",
+    "@types/express": "^5.0.0",
+    "@types/node": "^20.0.0",
+    "express": "^5.1.0",
+    "typescript": "^6.0.0",
+    "vitest": "^3.0.0"
+  }
+}

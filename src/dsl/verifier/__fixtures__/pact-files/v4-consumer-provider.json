@@ -1,0 +1,31 @@
+{
+  "consumer": { "name": "V4Consumer" },
+  "provider": { "name": "Provider" },
+  "interactions": [
+    {
+      "type": "Synchronous/HTTP",
+      "key": "abc123",
+      "description": "a request with two states",
+      "providerStates": [
+        { "name": "state one" },
+        { "name": "state two", "params": { "id": 1 } }
+      ],
+      "request": { "method": "GET", "path": "/one" },
+      "response": { "status": 200 }
+    },
+    {
+      "type": "Synchronous/HTTP",
+      "description": "a pending request",
+      "pending": true,
+      "request": { "method": "GET", "path": "/two" },
+      "response": { "status": 200 }
+    },
+    {
+      "type": "Synchronous/HTTP",
+      "description": "a pending request",
+      "request": { "method": "GET", "path": "/three" },
+      "response": { "status": 200 }
+    }
+  ],
+  "metadata": { "pactSpecification": { "version": "4.0" } }
+}

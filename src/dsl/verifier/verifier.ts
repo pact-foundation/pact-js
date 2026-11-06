@@ -14,6 +14,11 @@ import logger, { setLogLevel } from '../../common/logger';
 import { localAddresses } from '../../common/net';
 import ConfigurationError from '../../errors/configurationError';
 import { createHooksState, createProxy, waitForServerReady } from './proxy';
+import {
+  ProviderVerificationError,
+  parseVerificationResult,
+  type VerificationResult,
+} from './result';
 import type { VerifierOptions } from './types';
 
 export class Verifier {
@@ -78,7 +83,9 @@ export class Verifier {
   /**
    * Verify a HTTP Provider
    *
-   * @param config
+   * Resolves with the raw output of the core (a JSON document with
+   * @pact-foundation/pact-core >= 19) and rejects when the verification
+   * fails. Use {@link verify} to get a structured result instead.
    */
   public verifyProvider(): Promise<string> {
     logger.info('Verifying provider');
@@ -129,6 +136,36 @@ export class Verifier {
       });
   }
 
+  /**
+   * Verify a HTTP Provider and return the structured result.
+   *
+   * Runs the same verification as {@link verifyProvider}, but resolves with
+   * a {@link VerificationResult} holding one entry per verified interaction.
+   *
+   * @throws {ProviderVerificationError} when at least one interaction failed;
+   *         the error carries the complete result in `error.result`
+   * @throws {Error} when the verification could not be executed at all
+   *         (e.g. configuration errors, hook failures or a core crash)
+   */
+  public async verify(): Promise<VerificationResult> {
+    let output: string;
+    try {
+      output = await this.verifyProvider();
+    } catch (e) {
+      const message = e instanceof Error ? e.message : String(e);
+      const result = tryParseVerificationResult(message);
+      if (result) {
+        throw new ProviderVerificationError(result);
+      }
+      throw e;
+    }
+    const result = parseVerificationResult(output);
+    if (!result.success) {
+      throw new ProviderVerificationError(result);
+    }
+    return result;
+  }
+
   // Run the Verification CLI process
   private runProviderVerification() {
     return (server: http.Server) => {
@@ -161,3 +198,13 @@ export class Verifier {
     );
   }
 }
+
+const tryParseVerificationResult = (
+  raw: string,
+): VerificationResult | undefined => {
+  try {
+    return parseVerificationResult(raw);
+  } catch {
+    return undefined;
+  }
+};
