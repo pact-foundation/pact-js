@@ -3,7 +3,7 @@ import querystring from 'node:querystring';
 import { cloneDeep, isEqual } from 'lodash';
 
 interface ReqBodyExtended extends http.IncomingMessage {
-  body?: Buffer | Record<string, unknown>;
+  body?: Buffer | string | Record<string, unknown>;
 }
 
 interface UrlEncodedBodyRecord {
@@ -92,6 +92,10 @@ export const parseBody = (req: ReqBodyExtended): Buffer => {
 
   if (Buffer.isBuffer(req.body)) {
     bodyData = Buffer.from(req.body);
+  } else if (typeof req.body === 'string') {
+    // A requestFilter may replace the body with a pre-serialised string
+    // (e.g. a re-signed form or JSON payload). Forward it verbatim.
+    bodyData = Buffer.from(req.body, 'utf8');
   } else if (typeof req.body === 'object') {
     if (isUrlEncodedContentType(req.headers?.['content-type'])) {
       const recorded = urlEncodedBodies.get(req);
