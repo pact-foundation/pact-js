@@ -145,4 +145,50 @@ describe('#createProxy', () => {
       providerServer.close();
     }
   });
+  it('forwards a string body set by requestFilter with a matching Content-Length', async () => {
+    const providerApp = express();
+    providerApp.use(bodyParser.urlencoded({ extended: true }));
+    providerApp.post('/token', (req, res) => {
+      res.json({
+        body: req.body,
+        contentLength: req.headers['content-length'],
+      });
+    });
+
+    const providerServer = await waitForServerReady(
+      providerApp.listen(0, '127.0.0.1'),
+    );
+    const providerPort = (providerServer.address() as AddressInfo).port;
+    const replacement = 'grant_type=password&username=caf%C3%A9';
+
+    const proxyServer = await waitForServerReady(
+      createProxy(
+        {
+          providerBaseUrl: `http://127.0.0.1:${providerPort}`,
+          requestFilter: (req, _res, next) => {
+            req.body = replacement;
+            next();
+          },
+        },
+        '/_pactSetup',
+        '/_pactMessage',
+        { insideInteraction: false, errors: [] },
+      ),
+    );
+    const proxyPort = (proxyServer.address() as AddressInfo).port;
+
+    try {
+      const received = await sendFormPost(
+        proxyPort,
+        'grant_type=client_credentials',
+      );
+      expect(received).toEqual({
+        body: { grant_type: 'password', username: 'café' },
+        contentLength: String(Buffer.byteLength(replacement)),
+      });
+    } finally {
+      proxyServer.close();
+      providerServer.close();
+    }
+  });
 });
