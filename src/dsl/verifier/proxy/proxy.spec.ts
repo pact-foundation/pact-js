@@ -48,10 +48,20 @@ describe('#createProxy', () => {
           const chunks: Buffer[] = [];
           res.on('data', (c) => chunks.push(c));
           res.on('end', () => {
-            resolve(JSON.parse(Buffer.concat(chunks).toString('utf8')));
+            const text = Buffer.concat(chunks).toString('utf8');
+            try {
+              resolve(JSON.parse(text));
+            } catch {
+              reject(new Error(`provider returned ${res.statusCode}: ${text}`));
+            }
           });
         },
       );
+      // Fail fast if the proxy forwards a body shorter than its Content-Length,
+      // which otherwise leaves the provider waiting until the test times out.
+      req.setTimeout(5000, () => {
+        req.destroy(new Error('timed out waiting for the proxied response'));
+      });
       req.on('error', reject);
       req.end(payload);
     });
