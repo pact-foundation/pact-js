@@ -27,12 +27,21 @@ export const toServerOptions = (
 ): ServerOptions => {
   // Provide direct support for standard proxy configuration
   const systemProxy = process.env.HTTPS_PROXY || process.env.HTTP_PROXY;
+  const bodyData = parseBody(req);
+
+  if (
+    req.headers?.['content-length'] !== undefined &&
+    (req as IncomingMessage & { body?: unknown }).body !== undefined &&
+    bodyData.length !== Number(req.headers['content-length'])
+  ) {
+    req.headers['content-length'] = String(bodyData.length);
+  }
 
   return {
     changeOrigin: config.changeOrigin === true,
     secure: config.validateSSL === true,
     target: toProxyTarget(config),
     agent: systemProxy && new HttpsProxyAgent(systemProxy),
-    buffer: Readable.from(parseBody(req)),
+    buffer: Readable.from(bodyData),
   };
 };

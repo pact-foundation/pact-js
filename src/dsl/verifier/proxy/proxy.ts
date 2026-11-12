@@ -5,6 +5,10 @@ import HttpProxy from 'http-proxy';
 import logger from '../../../common/logger';
 import { type HooksState, registerHooks } from './hooks';
 import { createProxyMessageHandler } from './messages';
+import {
+  recordUrlEncodedRawBody,
+  snapshotParsedUrlEncodedBody,
+} from './parseBody';
 import { toServerOptions } from './proxyRequest';
 import { createProxyStateHandler } from './stateHandler/stateHandler';
 import { createRequestTracer, createResponseTracer } from './tracer';
@@ -41,7 +45,14 @@ export const createProxy = (
       ],
     }),
   );
-  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(
+    bodyParser.urlencoded({
+      extended: true,
+      verify: (req, _res, buf) => {
+        recordUrlEncodedRawBody(req, buf);
+      },
+    }),
+  );
   app.use('/{*splat}', bodyParser.raw({ type: '*/*' }));
 
   // Hooks. Tracking is only needed when a hook is registered; both hooks share
@@ -67,6 +78,10 @@ export const createProxy = (
 
   // Allow for request filtering
   if (config.requestFilter !== undefined) {
+    app.use((req, _res, next) => {
+      snapshotParsedUrlEncodedBody(req);
+      next();
+    });
     app.use(config.requestFilter);
   }
 

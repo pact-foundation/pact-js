@@ -1,4 +1,8 @@
-import { parseBody } from './parseBody';
+import {
+  parseBody,
+  recordUrlEncodedRawBody,
+  snapshotParsedUrlEncodedBody,
+} from './parseBody';
 
 describe('Verifier', () => {
   describe('#parseBody', () => {
@@ -32,6 +36,50 @@ describe('Verifier', () => {
 
         expect(body).toBeInstanceOf(Buffer);
         expect(body.toString()).toBe('{}');
+      });
+
+      it('serializes application/x-www-form-urlencoded object bodies as form data instead of JSON', () => {
+        // biome-ignore lint/suspicious/noExplicitAny: partial mock — headers and body are needed to exercise urlencoded serialization
+        const req: any = {
+          headers: {
+            'content-type': 'application/x-www-form-urlencoded; charset=utf-8',
+          },
+          body: {
+            grant_type: 'client_credentials',
+            tags: ['a', 'b'],
+            nested: { key: 'val' },
+          },
+        };
+
+        const body = parseBody(req);
+
+        expect(body).toBeInstanceOf(Buffer);
+        expect(body.toString()).toBe(
+          'grant_type=client_credentials&tags=a&tags=b&nested%5Bkey%5D=val',
+        );
+      });
+
+      it('preserves recorded raw form-urlencoded bytes unless request body is mutated', () => {
+        const raw = Buffer.from(
+          'scope=read+write&grant_type=client_credentials',
+        );
+        // biome-ignore lint/suspicious/noExplicitAny: partial mock — headers and body simulate parsed urlencoded middleware state
+        const req: any = {
+          headers: { 'content-type': 'application/x-www-form-urlencoded' },
+          body: { scope: 'read write', grant_type: 'client_credentials' },
+        };
+
+        recordUrlEncodedRawBody(req, raw);
+        snapshotParsedUrlEncodedBody(req);
+
+        expect(parseBody(req).toString()).toBe(
+          'scope=read+write&grant_type=client_credentials',
+        );
+
+        req.body.extra = 'added';
+        expect(parseBody(req).toString()).toBe(
+          'scope=read%20write&grant_type=client_credentials&extra=added',
+        );
       });
     });
 
