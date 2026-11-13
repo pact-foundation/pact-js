@@ -143,6 +143,21 @@ describe('InteractionWithCompleteRequest', () => {
         'application/json',
       );
     });
+
+    it('supports status code matchers and plain status without builder callback', () => {
+      const interactionComplete = new InteractionWithCompleteRequest(
+        pact,
+        interaction,
+        baseOpts,
+        cleanupFn,
+      );
+      const matcher = matchStatus(200, HTTPResponseStatusClass.Success);
+
+      interactionComplete.willRespondWith(matcher);
+
+      expect(withStatus).toHaveBeenCalledWith(200);
+      expect(withResponseMatchingRules).toHaveBeenCalledOnce();
+    });
   });
 
   describe('UnconfiguredInteraction#withCompleteRequest', () => {
@@ -171,6 +186,23 @@ describe('InteractionWithCompleteRequest', () => {
         'application/json',
       );
     });
+
+    it('configures request without body when omitted', () => {
+      const unconfigured = new UnconfiguredInteraction(
+        pact,
+        interaction,
+        baseOpts,
+        cleanupFn,
+      );
+
+      unconfigured.withCompleteRequest({
+        method: 'GET',
+        path: '/items',
+      });
+
+      expect(withRequest).toHaveBeenCalledWith('GET', '/items');
+      expect(withRequestBody).not.toHaveBeenCalled();
+    });
   });
 
   describe('InteractionWithRequest#withCompleteResponse', () => {
@@ -188,6 +220,27 @@ describe('InteractionWithCompleteRequest', () => {
 
       expect(withStatus).toHaveBeenCalledWith(204);
       expect(withResponseBody).not.toHaveBeenCalled();
+    });
+
+    it('handles response body with custom content type', () => {
+      const req = new InteractionWithRequest(
+        pact,
+        interaction,
+        baseOpts,
+        cleanupFn,
+      );
+
+      req.withCompleteResponse({
+        status: 200,
+        contentType: 'application/xml',
+        body: '<xml></xml>',
+      });
+
+      expect(withStatus).toHaveBeenCalledWith(200);
+      expect(withResponseBody).toHaveBeenCalledWith(
+        '<xml></xml>',
+        'application/xml',
+      );
     });
   });
 });
