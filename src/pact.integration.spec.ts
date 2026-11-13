@@ -110,6 +110,40 @@ describe('V4 Pact', () => {
           ),
         ));
 
+    it('generates a pact using withCompleteRequest and withCompleteResponse', () =>
+      pact
+        .addInteraction()
+        .uponReceiving('a complete HTTP req/res contract')
+        .withCompleteRequest({
+          method: 'POST',
+          path: '/complete',
+          headers: {
+            'x-foo': 'x-bar',
+          },
+          body: {
+            requestData: 'test-req',
+          },
+        })
+        .withCompleteResponse({
+          status: 200,
+          headers: {
+            'x-res': 'x-answer',
+          },
+          body: {
+            responseData: 'test-res',
+          },
+        })
+        .executeTest(async (server) => {
+          const response = await axios.post(
+            `${server.url}/complete`,
+            { requestData: 'test-req' },
+            { headers: { 'x-foo': 'x-bar' } },
+          );
+          expect(response.status).toBe(200);
+          expect(response.headers['x-res']).toBe('x-answer');
+          expect(response.data).toEqual({ responseData: 'test-res' });
+        }));
+
     it('generates a pact with interaction metadata', async () => {
       const description = 'v4 metadata http req/res interaction';
 
