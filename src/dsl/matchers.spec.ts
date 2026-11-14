@@ -476,6 +476,9 @@ describe('Matcher', () => {
         expect(() => {
           email('hello.world.c');
         }).toThrow(Error);
+        expect(() => {
+          email('user@examplecom');
+        }).toThrow(Error);
       });
     });
   });
@@ -503,6 +506,8 @@ describe('Matcher', () => {
     describe('when given a valid ipv4Address', () => {
       it('creates a valid matcher', () => {
         expect(ipv4Address('127.0.0.1')).toBeTypeOf('object');
+        expect(ipv4Address('0.0.0.0')).toBeTypeOf('object');
+        expect(ipv4Address('255.255.255.255')).toBeTypeOf('object');
         expect(ipv4Address()).toBeTypeOf('object');
       });
     });
@@ -511,6 +516,15 @@ describe('Matcher', () => {
       it('returns an error', () => {
         expect(() => {
           ipv4Address('abc');
+        }).toThrow(Error);
+        expect(() => {
+          ipv4Address('1.2.3.4.5.6');
+        }).toThrow(Error);
+        expect(() => {
+          ipv4Address('999.1.1.1');
+        }).toThrow(Error);
+        expect(() => {
+          ipv4Address('1.2.3');
         }).toThrow(Error);
       });
     });
@@ -609,6 +623,15 @@ describe('Matcher', () => {
           expect(
             rfc1123Timestamp('Mon, 31 Oct 2016 15:21:41 -0400'),
           ).toBeTypeOf('object');
+          expect(rfc1123Timestamp('Sun, 06 Nov 1994 08:49:37 GMT')).toBeTypeOf(
+            'object',
+          );
+          expect(rfc1123Timestamp('Sun, 6 Nov 1994 08:49:37 +0000')).toBeTypeOf(
+            'object',
+          );
+          expect(rfc1123Timestamp('Sun, 06 Nov 1994 08:49:37 UT')).toBeTypeOf(
+            'object',
+          );
           expect(rfc1123Timestamp()).toBeTypeOf('object');
         });
       });
@@ -617,6 +640,9 @@ describe('Matcher', () => {
         it('returns an error', () => {
           expect(() => {
             rfc1123Timestamp('abc');
+          }).toThrow(Error);
+          expect(() => {
+            rfc1123Timestamp('Sun, 32 Nov 1994 08:49:37 GMT');
           }).toThrow(Error);
         });
       });
@@ -634,6 +660,12 @@ describe('Matcher', () => {
         it('returns an error', () => {
           expect(() => {
             iso8601Time('abc');
+          }).toThrow(Error);
+          expect(() => {
+            iso8601Time('T25:60');
+          }).toThrow(Error);
+          expect(() => {
+            iso8601Time('T12:60:00Z');
           }).toThrow(Error);
         });
       });
@@ -662,6 +694,7 @@ describe('Matcher', () => {
           expect(iso8601DateTime('2015-08-06T16:53:10+01:00')).toBeTypeOf(
             'object',
           );
+          expect(iso8601DateTime('2024-01-15T12:00:00Z')).toBeTypeOf('object');
           expect(iso8601DateTime()).toBeTypeOf('object');
         });
       });
@@ -670,6 +703,18 @@ describe('Matcher', () => {
         it('returns an error', () => {
           expect(() => {
             iso8601DateTime('abc');
+          }).toThrow(Error);
+          expect(() => {
+            iso8601DateTime('2024-19-39T29:00:00Z');
+          }).toThrow(Error);
+          expect(() => {
+            iso8601DateTime('2024-00-10T12:00:00Z');
+          }).toThrow(Error);
+          expect(() => {
+            iso8601DateTime('2024-01-32T12:00:00Z');
+          }).toThrow(Error);
+          expect(() => {
+            iso8601DateTime('2024-01-10T24:00:00Z');
           }).toThrow(Error);
         });
       });
@@ -698,6 +743,12 @@ describe('Matcher', () => {
         it('returns an error', () => {
           expect(() => {
             iso8601DateTimeWithMillis('abc');
+          }).toThrow(Error);
+          expect(() => {
+            iso8601DateTimeWithMillis('2024-19-39T29:00:00.123Z');
+          }).toThrow(Error);
+          expect(() => {
+            iso8601DateTimeWithMillis('2024-01-10T25:00:00.123Z');
           }).toThrow(Error);
         });
       });
