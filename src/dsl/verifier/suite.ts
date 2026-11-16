@@ -399,12 +399,13 @@ type AssignedResults = {
 /**
  * Assigns every interaction result to at most one pact file interaction.
  *
- * An interaction takes the first still unassigned result of its own pact with
- * the same key, or else the same description and provider states. Only when
- * the core did not report the pact of a result (cores < 20.2.0 omit it for
- * successful interactions) is a result without pact information accepted, by
- * key or by description. Nothing else is matched: an interaction without a
- * matching result fails its test case instead of borrowing another result.
+ * An interaction takes the first still unassigned result of its own pact
+ * (consumer and provider as reported by the core) with the same key, or else
+ * the same description and provider states. Nothing else is matched: an
+ * interaction without a matching result fails its test case instead of
+ * borrowing another result, and a result that matches no interaction fails
+ * the run check. Results without pact information (cores < 20.2.0) therefore
+ * match nothing; the dependency on pact-core >= 20.2.0 rules them out.
  */
 function assignResults(
   result: VerificationResult,
@@ -429,8 +430,6 @@ function assignResults(
   for (const pact of pacts) {
     const ofPact = (r: InteractionVerificationResult) =>
       r.consumer === pact.consumer && r.provider === pact.provider;
-    const ofUnknownPact = (r: InteractionVerificationResult) =>
-      r.consumer === undefined || r.provider === undefined;
     for (const interaction of pact.interactions) {
       const byKey = (r: InteractionVerificationResult) =>
         interaction.key !== undefined && r.interactionKey === interaction.key;
@@ -440,23 +439,13 @@ function assignResults(
           sameStates(r.providerStates, interaction.providerStates));
       const match =
         take((r) => ofPact(r) && byKey(r)) ??
-        take((r) => ofPact(r) && byDescription(r)) ??
-        take((r) => ofUnknownPact(r) && byKey(r)) ??
-        take((r) => ofUnknownPact(r) && byDescription(r));
+        take((r) => ofPact(r) && byDescription(r));
       if (match) {
         assigned.set(interaction, match);
       }
     }
   }
-  const unassigned = [...open];
-  if (unassigned.length > 0) {
-    logger.warn(
-      `${unassigned.length} verified interaction(s) belong to none of the pact files of the suite: ${unassigned
-        .map((r) => `'${describeInteraction(r)}'`)
-        .join(', ')}`,
-    );
-  }
-  return { result, assigned, unassigned };
+  return { result, assigned, unassigned: [...open] };
 }
 
 const sameStates = (a: string[], b: string[]): boolean =>
@@ -485,9 +474,11 @@ function assertInteractionPassed(
 }
 
 /**
- * Fails when the run reported failures that no interaction test case reports:
- * errors without an interaction (a pact that could not be loaded), failed
- * interactions without a test case, or a failed run without any of these.
+ * Fails when the run reported something that no interaction test case shows:
+ * errors without an interaction (a pact that could not be loaded), verified
+ * interactions without a test case (the core verified a pact the suite did
+ * not enumerate, or did not report its pact), or a failed run without any of
+ * these.
  */
 function assertRunClean(
   result: VerificationResult,
@@ -497,11 +488,11 @@ function assertRunClean(
     (e) => `${e.interaction}: ${summarizeFailure(e.failure)}`,
   );
   for (const r of unassigned) {
-    if (!r.success && !r.pending) {
-      problems.push(
-        `'${describeInteraction(r)}' failed but has no test case:\n${formatFailure(r.failure)}`,
-      );
-    }
+    problems.push(
+      r.success || r.pending
+        ? `'${describeInteraction(r)}' was verified but has no test case`
+        : `'${describeInteraction(r)}' failed but has no test case:\n${formatFailure(r.failure)}`,
+    );
   }
   const failedInteractions = result.interactions.some(
     (i) => !i.success && !i.pending,

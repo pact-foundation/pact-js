@@ -182,7 +182,7 @@ describe('defineVerificationSuite', () => {
     expect(outcomes[2].message).toContain('BodyMismatch at $.ok');
   });
 
-  it('matches results by description when the core does not report the pact', async () => {
+  it('needs the pact of every result; results without one (cores < 20.2.0) match nothing', async () => {
     vi.spyOn(Verifier.prototype, 'verify').mockRejectedValue(
       new ProviderVerificationError(fixture('verification-failure')),
     );
@@ -191,14 +191,15 @@ describe('defineVerificationSuite', () => {
 
     const outcomes = await runAll(adapter.cases);
 
-    expect(outcomes.map((o) => o.status)).toEqual([
-      'passed',
-      'failed',
-      'failed',
-      'passed',
-      'failed',
-      'passed',
-    ]);
+    // failures carry their pact (recovered from the errors list) and fail
+    // with their mismatches; the passing results carry none, so their cases
+    // report a missing result and the run check lists them
+    expect(outcomes.every((o) => o.status === 'failed')).toBe(true);
+    expect(outcomes[0].message).toMatch(/No verification result for/);
+    expect(outcomes[1].message).toContain('StatusMismatch');
+    expect(outcomes[5].message).toContain(
+      "'interaction 1 - GET /one' was verified but has no test case",
+    );
   });
 
   it('rethrows errors of a verification that could not run', async () => {
@@ -439,9 +440,12 @@ describe('defineVerificationSuite', () => {
       'failed',
       'failed',
       'failed',
-      'passed',
+      'failed',
     ]);
     expect(outcomes[0].message).toMatch(/No verification result for/);
+    expect(outcomes[3].message).toContain(
+      "'RenamedConsumer -> DemoProvider: interaction 1 - GET /one' was verified but has no test case",
+    );
   });
 
   it('does not take the result of another interaction when its own is missing', async () => {
@@ -485,31 +489,27 @@ describe('defineVerificationSuite', () => {
     ]);
   });
 
-  it('assigns duplicate descriptions one-to-one, also when only the failure names its pact', async () => {
-    // Cores < 20.2.0 report the pact of failed interactions only (recovered
-    // from the errors list); the passing duplicate has no pact information.
+  it('assigns duplicate descriptions one-to-one, in verification order', async () => {
     const dir = mkdtempSync(path.join(tmpdir(), 'pact-js-suite-'));
     tmpDirs.push(dir);
     const file = writePact(dir, 'c-p.json', 'C', 'P', [
       { description: 'same' },
       { description: 'same' },
     ]);
+    const entry = (result: string) => ({
+      consumer: 'C',
+      provider: 'P',
+      description: 'same',
+      providerStates: [],
+      pending: false,
+      result,
+      duration: '1ms',
+      ...(result === 'OK'
+        ? {}
+        : { mismatch: { type: 'error', message: 'boom', interactionId: '' } }),
+    });
     vi.spyOn(Verifier.prototype, 'verify').mockResolvedValue(
-      resultOf(
-        [
-          { description: 'same', result: 'OK', duration: '1ms' },
-          { description: 'same', result: 'Error', duration: '1ms' },
-        ],
-        {
-          result: false,
-          errors: [
-            {
-              interaction: 'Verifying a pact between C and P - same',
-              mismatch: { type: 'error', message: 'boom', interactionId: '' },
-            },
-          ],
-        },
-      ),
+      resultOf([entry('OK'), entry('Error')], { result: false }),
     );
     const adapter = recordingAdapter();
 
@@ -523,13 +523,12 @@ describe('defineVerificationSuite', () => {
     );
     const outcomes = await runAll(adapter.cases);
 
-    // one passes and one fails; neither result is used twice
-    expect(outcomes.map((o) => o.status).sort()).toEqual([
-      'failed',
-      'passed',
-      'passed',
+    // neither result is used twice
+    expect(outcomes.map((o) => `${o.case}: ${o.status}`)).toEqual([
+      'C -> P / same: passed',
+      'C -> P / same (2): failed',
+      'Provider verification / reports no failures outside the listed interactions: passed',
     ]);
-    expect(outcomes[2].status).toBe('passed');
   });
 
   it('matches V4 keys within the pact only', async () => {
