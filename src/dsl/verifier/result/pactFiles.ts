@@ -7,8 +7,6 @@ export interface PactFileInteraction {
   description: string;
   /** Provider state names in pact order (empty when there are none) */
   providerStates: string[];
-  /** V4 pending flag */
-  pending: boolean;
   /** V4 interaction key, if present */
   key?: string;
 }
@@ -21,38 +19,68 @@ export interface PactFileSummary {
   interactions: PactFileInteraction[];
 }
 
+/**
+ * Which of the pacts found in the sources the verifier will verify. Mirrors
+ * the rules of the core: a directory only contributes the pacts of the
+ * configured provider, and `consumerFilters` drops every other consumer.
+ */
+export interface PactFileSelection {
+  /** Only pacts of this provider are taken from directories */
+  provider?: string;
+  /** Only pacts of these consumers are kept (`consumerFilters`); empty keeps all */
+  consumers?: string[];
+}
+
 const isLocalPath = (source: string): boolean =>
   !/^[a-z][a-z0-9+.-]*:\/\//i.test(source);
 
 /**
- * Reads the pact files behind the given sources. Sources may be pact files or
- * directories containing pact files. Remote sources (URLs) cannot be read
- * synchronously and are rejected.
+ * Reads the pact files behind the given sources, selecting the same pacts the
+ * core verifies. Sources may be pact files or directories containing pact
+ * files. Remote sources (URLs) cannot be read synchronously and are rejected.
+ *
+ * Like the core, directories are not searched recursively (the core walks
+ * into subdirectories but discards what it finds there), and a pact given as
+ * a file is taken regardless of its provider.
  */
-export function readPactFiles(sources: string[]): PactFileSummary[] {
-  return sources.flatMap((source) => {
-    if (!isLocalPath(source)) {
-      throw new ConfigurationError(
-        `Cannot enumerate the interactions of '${source}': only local pact files or directories are supported, not URLs or broker sources`,
-      );
-    }
-    const resolved = path.resolve(source);
-    let isDirectory: boolean;
-    try {
-      isDirectory = statSync(resolved).isDirectory();
-    } catch (e) {
-      throw new ConfigurationError(
-        `Cannot read the pact source '${source}' (resolved to '${resolved}'): ${reason(e)}`,
-      );
-    }
-    const files = isDirectory
-      ? readdirSync(resolved)
-          .filter((f) => f.endsWith('.json'))
-          .sort()
-          .map((f) => path.join(resolved, f))
-      : [resolved];
-    return files.map(readPactFile);
-  });
+export function readPactFiles(
+  sources: string[],
+  selection: PactFileSelection = {},
+): PactFileSummary[] {
+  const consumers = selection.consumers ?? [];
+  return sources
+    .flatMap((source) => {
+      if (!isLocalPath(source)) {
+        throw new ConfigurationError(
+          `Cannot enumerate the interactions of '${source}': only local pact files or directories are supported, not URLs or broker sources`,
+        );
+      }
+      const resolved = path.resolve(source);
+      let isDirectory: boolean;
+      try {
+        isDirectory = statSync(resolved).isDirectory();
+      } catch (e) {
+        throw new ConfigurationError(
+          `Cannot read the pact source '${source}' (resolved to '${resolved}'): ${reason(e)}`,
+        );
+      }
+      if (!isDirectory) {
+        return [readPactFile(resolved)];
+      }
+      return readdirSync(resolved, { withFileTypes: true })
+        .filter((entry) => entry.isFile() && entry.name.endsWith('.json'))
+        .map((entry) => entry.name)
+        .sort()
+        .map((name) => readPactFile(path.join(resolved, name)))
+        .filter(
+          (pact) =>
+            selection.provider === undefined ||
+            pact.provider === selection.provider,
+        );
+    })
+    .filter(
+      (pact) => consumers.length === 0 || consumers.includes(pact.consumer),
+    );
 }
 
 export function readPactFile(file: string): PactFileSummary {
@@ -83,7 +111,6 @@ export function readPactFile(file: string): PactFileSummary {
     interactions: entries.map((i) => ({
       description: String(i.description ?? ''),
       providerStates: providerStateNames(i),
-      pending: i.pending === true,
       key: typeof i.key === 'string' ? i.key : undefined,
     })),
   };

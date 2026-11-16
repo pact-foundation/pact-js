@@ -1,4 +1,4 @@
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { readPactFile, readPactFiles } from './pactFiles';
@@ -81,6 +81,53 @@ describe('readPactFiles', () => {
   it('returns nothing for a directory without pact files', () => {
     expect(readPactFiles([tmp()])).toEqual([]);
   });
+
+  it('takes only the pacts of the given provider from a directory, like the core', () => {
+    const pacts = readPactFiles([pactDir], { provider: 'Provider' });
+
+    expect(pacts.map((p) => p.consumer)).toEqual([
+      'MessageConsumer',
+      'V2Consumer',
+      'V4Consumer',
+    ]);
+  });
+
+  it('takes a pact given as a file regardless of its provider, like the core', () => {
+    const pacts = readPactFiles(
+      [path.join(pactDir, 'v2-consumer-provider.json')],
+      { provider: 'DemoProvider' },
+    );
+
+    expect(pacts.map((p) => p.consumer)).toEqual(['V2Consumer']);
+  });
+
+  it('applies the consumer filters to every source', () => {
+    const pacts = readPactFiles(
+      [pactDir, path.join(pactDir, 'v2-consumer-provider.json')],
+      { consumers: ['OtherConsumer', 'V4Consumer'] },
+    );
+
+    expect(pacts.map((p) => p.consumer)).toEqual([
+      'OtherConsumer',
+      'V4Consumer',
+    ]);
+  });
+
+  it('does not descend into subdirectories and ignores files that are not .json, like the core', () => {
+    const dir = tmp();
+    mkdirSync(path.join(dir, 'nested'));
+    writeFileSync(
+      path.join(dir, 'nested', 'nested.json'),
+      JSON.stringify({ consumer: { name: 'Nested' }, provider: { name: 'P' } }),
+    );
+    writeFileSync(path.join(dir, 'README.md'), 'not a pact');
+    writeFileSync(
+      path.join(dir, 'top.json'),
+      JSON.stringify({ consumer: { name: 'Top' }, provider: { name: 'P' } }),
+    );
+
+    expect(readPactFiles([dir]).map((p) => p.consumer)).toEqual(['Top']);
+  });
 });
 
 describe('readPactFile', () => {
@@ -141,28 +188,25 @@ describe('readPactFile', () => {
       {
         description: 'a request without state',
         providerStates: [],
-        pending: false,
       },
       {
         description: 'a request with a state',
         providerStates: ['there is a thing'],
-        pending: false,
       },
     ]);
   });
 
-  it('maps V4 provider states, keys and the pending flag', () => {
+  it('maps V4 provider states and keys', () => {
     const pact = readPactFile(path.join(pactDir, 'v4-consumer-provider.json'));
 
     expect(pact.interactions).toEqual([
       {
         description: 'a request with two states',
         providerStates: ['state one', 'state two'],
-        pending: false,
         key: 'abc123',
       },
-      { description: 'a pending request', providerStates: [], pending: true },
-      { description: 'a pending request', providerStates: [], pending: false },
+      { description: 'a pending request', providerStates: [] },
+      { description: 'a pending request', providerStates: [] },
     ]);
   });
 
@@ -175,7 +219,6 @@ describe('readPactFile', () => {
       {
         description: 'an order created event',
         providerStates: ['an order exists'],
-        pending: false,
       },
     ]);
   });

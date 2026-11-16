@@ -1,12 +1,15 @@
 import { ProviderVerificationError } from './error';
 import { parseVerificationResult } from './parse';
 
-const resultWith = (interactions: Record<string, unknown>[]) =>
+const resultWith = (
+  interactions: Record<string, unknown>[],
+  errors: Record<string, unknown>[] = [],
+) =>
   parseVerificationResult({
     result: false,
     notices: [],
     output: [],
-    errors: [],
+    errors,
     pendingErrors: [],
     interactionResults: interactions,
   });
@@ -64,5 +67,57 @@ describe('ProviderVerificationError', () => {
     );
 
     expect(error.message).toContain('failed for 0 of 1 interaction(s)');
+  });
+
+  it('names the errors that belong to no interaction, e.g. a pact that could not be loaded', () => {
+    const error = new ProviderVerificationError(
+      resultWith(
+        [
+          {
+            consumer: 'C',
+            provider: 'P',
+            description: 'one',
+            pending: false,
+            result: 'OK',
+            duration: '1ms',
+          },
+        ],
+        [
+          {
+            interaction: 'Failed to load pact',
+            mismatch: {
+              type: 'error',
+              message:
+                "Failed to load pact from './pacts' - Failed to parse Pact JSON",
+            },
+          },
+        ],
+      ),
+    );
+
+    expect(error.message).toContain('failed for 0 of 1 interaction(s)');
+    expect(error.message).toContain(
+      '1 error(s) not attributed to an interaction',
+    );
+    expect(error.message).toContain(
+      "Failed to load pact: Failed to load pact from './pacts' - Failed to parse Pact JSON",
+    );
+  });
+
+  it('says so when the core reported a failed run without any detail', () => {
+    const error = new ProviderVerificationError(
+      resultWith([
+        {
+          consumer: 'C',
+          provider: 'P',
+          description: 'one',
+          pending: false,
+          result: 'OK',
+          duration: '1ms',
+        },
+      ]),
+    );
+
+    expect(error.message).toContain('failed run without details');
   });
 });

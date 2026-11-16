@@ -126,6 +126,36 @@ describe('parseVerificationResult', () => {
       expect(result.interactions[0].consumer).toBeUndefined();
     });
 
+    it('prefers the failure whose text has the plain shape when one description ends with another', () => {
+      const result = parseVerificationResult({
+        result: false,
+        notices: [],
+        output: [],
+        pendingErrors: [],
+        errors: [
+          {
+            interaction: 'Verifying a pact between C and P - admin - get user',
+            mismatch: { type: 'error', message: 'admin', interactionId: '' },
+          },
+          {
+            interaction: 'Verifying a pact between C and P - get user',
+            mismatch: { type: 'error', message: 'plain', interactionId: '' },
+          },
+        ],
+        interactionResults: [
+          { description: 'get user', result: 'Error', duration: '1ms' },
+          { description: 'admin - get user', result: 'Error', duration: '1ms' },
+        ],
+      });
+
+      expect(
+        result.interactions.map((i) =>
+          i.failure?.type === 'error' ? i.failure.message : undefined,
+        ),
+      ).toEqual(['plain', 'admin']);
+      expect(result.unattributedErrors).toEqual([]);
+    });
+
     it('handles descriptions and states that contain the separators', () => {
       const result = parseVerificationResult({
         result: false,
@@ -246,6 +276,78 @@ describe('parseVerificationResult', () => {
           i.failure?.type === 'error' ? i.failure.message : undefined,
         ),
       ).toEqual(['first', 'second']);
+    });
+  });
+
+  describe('errors without an interaction', () => {
+    it('attributes the listed failures to their interactions and keeps the rest', () => {
+      const failure = fixture('verification-failure.extended');
+      expect(parseVerificationResult(failure).unattributedErrors).toEqual([]);
+      expect(
+        parseVerificationResult(fixture('verification-failure'))
+          .unattributedErrors,
+      ).toEqual([]);
+
+      const json = JSON.parse(failure) as Record<string, unknown>;
+      const loadError = {
+        interaction: 'Failed to load pact',
+        mismatch: {
+          type: 'error',
+          message:
+            "Failed to load pact from './pacts' - Failed to parse Pact JSON",
+        },
+      };
+      const result = parseVerificationResult({
+        ...json,
+        errors: [loadError, ...(json.errors as unknown[])],
+      });
+
+      expect(result.unattributedErrors).toEqual([
+        {
+          interaction: 'Failed to load pact',
+          failure: {
+            type: 'error',
+            message:
+              "Failed to load pact from './pacts' - Failed to parse Pact JSON",
+          },
+        },
+      ]);
+      expect(result.interactions.filter((i) => i.failure)).toHaveLength(3);
+    });
+
+    it('matches the complete failure text when the pact is known, so similar descriptions cannot be confused', () => {
+      const entry = (consumer: string, description: string) => ({
+        consumer,
+        provider: 'P',
+        description,
+        providerStates: [],
+        pending: false,
+        result: 'Error',
+        duration: '1ms',
+        mismatch: { type: 'error', message: `${consumer} failed` },
+      });
+      const result = parseVerificationResult({
+        result: false,
+        notices: [],
+        output: [],
+        pendingErrors: [],
+        errors: [
+          {
+            interaction: 'Verifying a pact between A and P - get user',
+            mismatch: { type: 'error', message: 'A failed' },
+          },
+          {
+            interaction: 'Verifying a pact between B and P - admin - get user',
+            mismatch: { type: 'error', message: 'B failed' },
+          },
+        ],
+        interactionResults: [
+          entry('B', 'admin - get user'),
+          entry('A', 'get user'),
+        ],
+      });
+
+      expect(result.unattributedErrors).toEqual([]);
     });
   });
 

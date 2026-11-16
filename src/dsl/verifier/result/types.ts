@@ -96,6 +96,13 @@ export interface VerificationResult {
   errors: VerificationFailureEntry[];
   /** Failures of pending pacts or interactions (do not fail the run) */
   pendingErrors: VerificationFailureEntry[];
+  /**
+   * The entries of {@link errors} that are not the failure of a listed
+   * interaction, e.g. a pact that could not be loaded or a file in a pact
+   * directory that is not a pact. They make {@link success} `false` even when
+   * every listed interaction passed.
+   */
+  unattributedErrors: VerificationFailureEntry[];
   /** Notices provided by the Pact Broker */
   notices: Record<string, string>[];
   /** Human readable verification output, one entry per line (may contain ANSI colour codes) */

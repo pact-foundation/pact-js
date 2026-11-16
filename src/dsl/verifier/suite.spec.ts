@@ -10,6 +10,42 @@ import {
   type VerificationSuiteAdapter,
   verifyForSuite,
 } from './suite';
+
+/** A pact file with the given interactions, written to a fresh directory. */
+const writePact = (
+  dir: string,
+  name: string,
+  consumer: string,
+  provider: string,
+  interactions: Record<string, unknown>[],
+): string => {
+  const file = path.join(dir, name);
+  writeFileSync(
+    file,
+    JSON.stringify({
+      consumer: { name: consumer },
+      provider: { name: provider },
+      interactions,
+    }),
+  );
+  return file;
+};
+
+/** A parsed result built from interaction entries in the core's JSON shape. */
+const resultOf = (
+  interactionResults: Record<string, unknown>[],
+  extra: Record<string, unknown> = {},
+) =>
+  parseVerificationResult({
+    result: true,
+    notices: [],
+    output: [],
+    errors: [],
+    pendingErrors: [],
+    interactionResults,
+    ...extra,
+  });
+
 import { Verifier } from './verifier';
 
 const fixture = (name: string) =>
@@ -21,6 +57,11 @@ const fixture = (name: string) =>
   );
 
 const pactDir = path.resolve(__dirname, '__fixtures__', 'pact-files');
+
+/** The interaction entries of a fixture, in the core's JSON shape. */
+const rawInteractions = (name: string): Record<string, unknown>[] =>
+  (fixture(name).raw as { interactionResults: Record<string, unknown>[] })
+    .interactionResults;
 
 const tmpDirs: string[] = [];
 afterAll(() => {
@@ -97,6 +138,7 @@ describe('defineVerificationSuite', () => {
       'DemoConsumer -> DemoProvider / interaction 3 - GET /three',
       'OtherConsumer -> DemoProvider / a request for one',
       'OtherConsumer -> DemoProvider / a request for two',
+      'Provider verification / reports no failures outside the listed interactions',
     ]);
     expect(adapter.cases.every((c) => c.timeout === 30_000)).toBe(true);
   });
@@ -129,6 +171,7 @@ describe('defineVerificationSuite', () => {
       'failed',
       'passed',
       'failed',
+      'passed',
     ]);
     expect(outcomes[1].message).toContain(
       "Verification of 'DemoConsumer -> DemoProvider: interaction 2 - GET /two' failed",
@@ -154,6 +197,7 @@ describe('defineVerificationSuite', () => {
       'failed',
       'passed',
       'failed',
+      'passed',
     ]);
   });
 
@@ -189,6 +233,7 @@ describe('defineVerificationSuite', () => {
     for (const i of result.interactions) {
       i.pending = true;
     }
+    result.success = true; // pending failures do not fail the run
     vi.spyOn(Verifier.prototype, 'verify').mockResolvedValue(result);
     const adapter = recordingAdapter();
     defineVerificationSuite(options, adapter);
@@ -198,46 +243,39 @@ describe('defineVerificationSuite', () => {
     expect(outcomes.every((o) => o.status === 'passed')).toBe(true);
   });
 
-  it('numbers duplicate descriptions and matches them by key or position', async () => {
+  it('numbers duplicate descriptions and matches them by key or order', async () => {
     const adapter = recordingAdapter();
-    const result = parseVerificationResult({
-      result: true,
-      notices: [],
-      output: [],
-      errors: [],
-      pendingErrors: [],
-      interactionResults: [
-        {
-          consumer: 'V4Consumer',
-          provider: 'Provider',
-          description: 'a request with two states',
-          providerStates: ['state one', 'state two'],
-          pending: false,
-          result: 'OK',
-          duration: '1ms',
-          interactionKey: 'abc123',
-        },
-        {
-          consumer: 'V4Consumer',
-          provider: 'Provider',
-          description: 'a pending request',
-          providerStates: [],
-          pending: true,
-          result: 'OK',
-          duration: '1ms',
-        },
-        {
-          consumer: 'V4Consumer',
-          provider: 'Provider',
-          description: 'a pending request',
-          providerStates: [],
-          pending: false,
-          result: 'Error',
-          duration: '1ms',
-          mismatch: { type: 'error', message: 'boom', interactionId: '' },
-        },
-      ],
-    });
+    const result = resultOf([
+      {
+        consumer: 'V4Consumer',
+        provider: 'Provider',
+        description: 'a request with two states',
+        providerStates: ['state one', 'state two'],
+        pending: false,
+        result: 'OK',
+        duration: '1ms',
+        interactionKey: 'abc123',
+      },
+      {
+        consumer: 'V4Consumer',
+        provider: 'Provider',
+        description: 'a pending request',
+        providerStates: [],
+        pending: true,
+        result: 'OK',
+        duration: '1ms',
+      },
+      {
+        consumer: 'V4Consumer',
+        provider: 'Provider',
+        description: 'a pending request',
+        providerStates: [],
+        pending: false,
+        result: 'Error',
+        duration: '1ms',
+        mismatch: { type: 'error', message: 'boom', interactionId: '' },
+      },
+    ]);
     vi.spyOn(Verifier.prototype, 'verify').mockResolvedValue(result);
 
     defineVerificationSuite(
@@ -255,11 +293,13 @@ describe('defineVerificationSuite', () => {
       'Pact V4Consumer / verifies a request with two states',
       'Pact V4Consumer / verifies a pending request',
       'Pact V4Consumer / verifies a pending request (2)',
+      'Provider verification / reports no failures outside the listed interactions',
     ]);
     expect(outcomes.map((o) => o.status)).toEqual([
       'passed',
       'passed',
       'failed',
+      'passed',
     ]);
   });
 
@@ -299,7 +339,7 @@ describe('defineVerificationSuite', () => {
         { ...options, pactUrls: [empty] },
         recordingAdapter(),
       ),
-    ).toThrow(/No pact files found/);
+    ).toThrow(/No pact files .*found/);
   });
 
   it('refuses to register nothing when the pact files have no interactions', () => {
@@ -307,7 +347,10 @@ describe('defineVerificationSuite', () => {
     tmpDirs.push(dir);
     writeFileSync(
       path.join(dir, 'empty-pact.json'),
-      JSON.stringify({ consumer: { name: 'C' }, provider: { name: 'P' } }),
+      JSON.stringify({
+        consumer: { name: 'C' },
+        provider: { name: 'DemoProvider' },
+      }),
     );
 
     expect(() =>
@@ -319,24 +362,17 @@ describe('defineVerificationSuite', () => {
   });
 
   it('registers a test case for the messages of a message pact', async () => {
-    const result = parseVerificationResult({
-      result: true,
-      notices: [],
-      output: [],
-      errors: [],
-      pendingErrors: [],
-      interactionResults: [
-        {
-          consumer: 'MessageConsumer',
-          provider: 'Provider',
-          description: 'an order created event',
-          providerStates: ['an order exists'],
-          pending: false,
-          result: 'OK',
-          duration: '1ms',
-        },
-      ],
-    });
+    const result = resultOf([
+      {
+        consumer: 'MessageConsumer',
+        provider: 'Provider',
+        description: 'an order created event',
+        providerStates: ['an order exists'],
+        pending: false,
+        result: 'OK',
+        duration: '1ms',
+      },
+    ]);
     vi.spyOn(Verifier.prototype, 'verify').mockResolvedValue(result);
     const adapter = recordingAdapter();
 
@@ -351,8 +387,9 @@ describe('defineVerificationSuite', () => {
 
     expect(adapter.cases.map((c) => `${c.suite} / ${c.name}`)).toEqual([
       'MessageConsumer -> Provider / an order created event',
+      'Provider verification / reports no failures outside the listed interactions',
     ]);
-    expect(outcomes[0].status).toBe('passed');
+    expect(outcomes.map((o) => o.status)).toEqual(['passed', 'passed']);
   });
 
   it('says so when the core reported a failure without details', async () => {
@@ -369,16 +406,10 @@ describe('defineVerificationSuite', () => {
     expect(outcomes[1].message).toContain('no failure details');
   });
 
-  it('falls back to the verification order when the reported pact does not match the file', async () => {
-    // e.g. after the consumer was renamed: the descriptions still match, the
-    // consumer/provider names no longer do.
-    const result = parseVerificationResult({
-      result: true,
-      notices: [],
-      output: [],
-      errors: [],
-      pendingErrors: [],
-      interactionResults: [
+  it('does not borrow the results of another pact, even when the descriptions match', async () => {
+    // e.g. the core reports a consumer under a different name than the file
+    const result = resultOf(
+      [
         'interaction 1 - GET /one',
         'interaction 2 - GET /two',
         'interaction 3 - GET /three',
@@ -391,7 +422,7 @@ describe('defineVerificationSuite', () => {
         result: 'OK',
         duration: '1ms',
       })),
-    });
+    );
     vi.spyOn(Verifier.prototype, 'verify').mockResolvedValue(result);
     const adapter = recordingAdapter();
 
@@ -405,10 +436,246 @@ describe('defineVerificationSuite', () => {
     const outcomes = await runAll(adapter.cases);
 
     expect(outcomes.map((o) => o.status)).toEqual([
+      'failed',
+      'failed',
+      'failed',
       'passed',
+    ]);
+    expect(outcomes[0].message).toMatch(/No verification result for/);
+  });
+
+  it('does not take the result of another interaction when its own is missing', async () => {
+    // Only `two` was verified (e.g. PACT_DESCRIPTION filter): the test case
+    // of `one` must not pick up the successful result at position 0.
+    const dir = mkdtempSync(path.join(tmpdir(), 'pact-js-suite-'));
+    tmpDirs.push(dir);
+    const file = writePact(dir, 'c-p.json', 'C', 'P', [
+      { description: 'one' },
+      { description: 'two' },
+    ]);
+    vi.spyOn(Verifier.prototype, 'verify').mockResolvedValue(
+      resultOf([
+        {
+          consumer: 'C',
+          provider: 'P',
+          description: 'two',
+          providerStates: [],
+          pending: false,
+          result: 'OK',
+          duration: '1ms',
+        },
+      ]),
+    );
+    const adapter = recordingAdapter();
+
+    defineVerificationSuite(
+      {
+        provider: 'P',
+        providerBaseUrl: 'http://localhost:1',
+        pactFiles: [file],
+      },
+      adapter,
+    );
+    const outcomes = await runAll(adapter.cases);
+
+    expect(outcomes.map((o) => `${o.case}: ${o.status}`)).toEqual([
+      'C -> P / one: failed',
+      'C -> P / two: passed',
+      'Provider verification / reports no failures outside the listed interactions: passed',
+    ]);
+  });
+
+  it('assigns duplicate descriptions one-to-one, also when only the failure names its pact', async () => {
+    // Cores < 20.2.0 report the pact of failed interactions only (recovered
+    // from the errors list); the passing duplicate has no pact information.
+    const dir = mkdtempSync(path.join(tmpdir(), 'pact-js-suite-'));
+    tmpDirs.push(dir);
+    const file = writePact(dir, 'c-p.json', 'C', 'P', [
+      { description: 'same' },
+      { description: 'same' },
+    ]);
+    vi.spyOn(Verifier.prototype, 'verify').mockResolvedValue(
+      resultOf(
+        [
+          { description: 'same', result: 'OK', duration: '1ms' },
+          { description: 'same', result: 'Error', duration: '1ms' },
+        ],
+        {
+          result: false,
+          errors: [
+            {
+              interaction: 'Verifying a pact between C and P - same',
+              mismatch: { type: 'error', message: 'boom', interactionId: '' },
+            },
+          ],
+        },
+      ),
+    );
+    const adapter = recordingAdapter();
+
+    defineVerificationSuite(
+      {
+        provider: 'P',
+        providerBaseUrl: 'http://localhost:1',
+        pactFiles: [file],
+      },
+      adapter,
+    );
+    const outcomes = await runAll(adapter.cases);
+
+    // one passes and one fails; neither result is used twice
+    expect(outcomes.map((o) => o.status).sort()).toEqual([
+      'failed',
       'passed',
       'passed',
     ]);
+    expect(outcomes[2].status).toBe('passed');
+  });
+
+  it('matches V4 keys within the pact only', async () => {
+    // Two consumers may well hold an interaction with the same key (the key
+    // is a hash of the interaction). The passing one must not hide the other.
+    const dir = mkdtempSync(path.join(tmpdir(), 'pact-js-suite-'));
+    tmpDirs.push(dir);
+    writePact(dir, 'a-p.json', 'A', 'P', [{ description: 'get', key: 'k1' }]);
+    writePact(dir, 'b-p.json', 'B', 'P', [{ description: 'get', key: 'k1' }]);
+    const entry = (consumer: string, result: string) => ({
+      consumer,
+      provider: 'P',
+      description: 'get',
+      providerStates: [],
+      pending: false,
+      result,
+      duration: '1ms',
+      interactionKey: 'k1',
+      ...(result === 'OK'
+        ? {}
+        : { mismatch: { type: 'error', message: 'boom', interactionId: '' } }),
+    });
+    vi.spyOn(Verifier.prototype, 'verify').mockResolvedValue(
+      resultOf([entry('A', 'OK'), entry('B', 'Error')], { result: false }),
+    );
+    const adapter = recordingAdapter();
+
+    defineVerificationSuite(
+      { provider: 'P', providerBaseUrl: 'http://localhost:1', pactUrls: [dir] },
+      adapter,
+    );
+    const outcomes = await runAll(adapter.cases);
+
+    expect(outcomes.map((o) => `${o.case}: ${o.status}`)).toEqual([
+      'A -> P / get: passed',
+      'B -> P / get: failed',
+      'Provider verification / reports no failures outside the listed interactions: passed',
+    ]);
+  });
+
+  it('fails the run check when a pact could not be loaded, although every interaction passed', async () => {
+    const result = resultOf(rawInteractions('verification-success.extended'), {
+      result: false,
+      errors: [
+        {
+          interaction: 'Failed to load pact',
+          mismatch: {
+            type: 'error',
+            message:
+              "Failed to load pact from './pacts' - Failed to parse Pact JSON",
+          },
+        },
+      ],
+    });
+    vi.spyOn(Verifier.prototype, 'verify').mockRejectedValue(
+      new ProviderVerificationError(result),
+    );
+    const adapter = recordingAdapter();
+    defineVerificationSuite(options, adapter);
+
+    const outcomes = await runAll(adapter.cases);
+
+    expect(outcomes.slice(0, 5).every((o) => o.status === 'passed')).toBe(true);
+    expect(outcomes[5].status).toBe('failed');
+    expect(outcomes[5].message).toContain(
+      'Failed to load pact: Failed to load pact from',
+    );
+  });
+
+  it('fails the run check for a failed interaction that has no test case', async () => {
+    const result = fixture('verification-failure.extended');
+    vi.spyOn(Verifier.prototype, 'verify').mockRejectedValue(
+      new ProviderVerificationError(result),
+    );
+    const adapter = recordingAdapter();
+    // only the first pact is registered; the failure in the second has no case
+    defineVerificationSuite(
+      { ...options, pactFiles: [demoPactFiles[0]] },
+      adapter,
+    );
+
+    const outcomes = await runAll(adapter.cases);
+
+    expect(outcomes[3].status).toBe('failed');
+    expect(outcomes[3].message).toContain(
+      "'OtherConsumer -> DemoProvider: a request for two' failed but has no test case",
+    );
+  });
+
+  it('only registers the pacts of the configured provider and consumers, like the core', () => {
+    const adapter = recordingAdapter();
+    defineVerificationSuite({ ...options, pactUrls: [pactDir] }, adapter);
+    expect(new Set(adapter.cases.map((c) => c.suite))).toEqual(
+      new Set([
+        'DemoConsumer -> DemoProvider',
+        'OtherConsumer -> DemoProvider',
+        'Provider verification',
+      ]),
+    );
+
+    const filtered = recordingAdapter();
+    defineVerificationSuite(
+      { ...options, pactUrls: [pactDir], consumerFilters: ['OtherConsumer'] },
+      filtered,
+    );
+    expect(filtered.cases.map((c) => c.suite)).toEqual([
+      'OtherConsumer -> DemoProvider',
+      'OtherConsumer -> DemoProvider',
+      'Provider verification',
+    ]);
+
+    expect(() =>
+      defineVerificationSuite(
+        { ...options, pactUrls: [pactDir], provider: 'NoSuchProvider' },
+        recordingAdapter(),
+      ),
+    ).toThrow(/No pact files for provider 'NoSuchProvider'/);
+  });
+
+  it("passes 'timeout' on to the verifier and keeps 'testTimeout' for the test cases", async () => {
+    const verify = vi
+      .spyOn(Verifier.prototype, 'verify')
+      .mockResolvedValue(fixture('verification-success.extended'));
+    const adapter = recordingAdapter();
+    defineVerificationSuite(
+      { ...options, timeout: 5_000, testTimeout: 120_000 },
+      adapter,
+    );
+
+    await runAll(adapter.cases);
+
+    expect(adapter.cases.every((c) => c.timeout === 120_000)).toBe(true);
+    expect(verify.mock.instances[0]).toHaveProperty('config.timeout', 5_000);
+    expect(verify.mock.instances[0]).not.toHaveProperty('config.testTimeout');
+  });
+
+  it('sets the timeout on the returned test for Mocha, which ignores its third argument', () => {
+    const timeouts: number[] = [];
+    const mochaLike: VerificationSuiteAdapter = {
+      describe: (_name, fn) => fn(),
+      it: () => ({ timeout: (ms: number) => timeouts.push(ms) }),
+    };
+
+    defineVerificationSuite(options, mochaLike);
+
+    expect(timeouts).toEqual(Array(6).fill(30_000));
   });
 
   it('requires local pact sources', () => {
@@ -450,6 +717,7 @@ describe('defineVerificationSuiteFromResult', () => {
       'DemoConsumer -> DemoProvider / interaction 3 - GET /three',
       'OtherConsumer -> DemoProvider / a request for one',
       'OtherConsumer -> DemoProvider / a request for two',
+      'Provider verification / reports no failures outside the listed interactions',
     ]);
   });
 
@@ -468,6 +736,7 @@ describe('defineVerificationSuiteFromResult', () => {
       'failed',
       'passed',
       'failed',
+      'passed',
     ]);
     expect(outcomes[1].message).toContain(
       'StatusMismatch: expected 200 but was 500',
@@ -479,8 +748,8 @@ describe('defineVerificationSuiteFromResult', () => {
 
     defineVerificationSuiteFromResult(fixture('verification-success'), adapter);
 
-    expect(adapter.cases).toHaveLength(5);
-    expect(new Set(adapter.cases.map((c) => c.suite))).toEqual(
+    expect(adapter.cases).toHaveLength(6);
+    expect(new Set(adapter.cases.slice(0, 5).map((c) => c.suite))).toEqual(
       new Set(['verified interactions']),
     );
   });
@@ -506,7 +775,10 @@ describe('defineVerificationSuiteFromResult', () => {
 
     defineVerificationSuiteFromResult(result, adapter);
 
-    expect(adapter.cases.map((c) => c.name)).toEqual(['same', 'same (2)']);
+    expect(adapter.cases.slice(0, 2).map((c) => c.name)).toEqual([
+      'same',
+      'same (2)',
+    ]);
   });
 
   it('applies custom names', () => {
@@ -532,6 +804,7 @@ describe('defineVerificationSuiteFromResult', () => {
     for (const interaction of result.interactions) {
       interaction.pending = true;
     }
+    result.success = true; // pending failures do not fail the run
     const adapter = recordingAdapter();
     defineVerificationSuiteFromResult(result, adapter);
 
@@ -553,6 +826,40 @@ describe('defineVerificationSuiteFromResult', () => {
     expect(() =>
       defineVerificationSuiteFromResult(empty, recordingAdapter()),
     ).toThrow(/contains no interaction/);
+  });
+
+  it('fails the run check when the run failed outside the listed interactions', async () => {
+    const loadFailure = resultOf(
+      rawInteractions('verification-success.extended'),
+      {
+        result: false,
+        errors: [
+          {
+            interaction: 'Failed to load pact',
+            mismatch: { type: 'error', message: 'broker returned 401' },
+          },
+        ],
+      },
+    );
+    const adapter = recordingAdapter();
+    defineVerificationSuiteFromResult(loadFailure, adapter);
+
+    const outcomes = await runAll(adapter.cases);
+
+    expect(outcomes.slice(0, 5).every((o) => o.status === 'passed')).toBe(true);
+    expect(outcomes[5].status).toBe('failed');
+    expect(outcomes[5].message).toContain('broker returned 401');
+
+    // a failed run without any listed failure is not green either
+    const unexplained = resultOf(
+      rawInteractions('verification-success.extended'),
+      { result: false },
+    );
+    const other = recordingAdapter();
+    defineVerificationSuiteFromResult(unexplained, other);
+    const last = (await runAll(other.cases))[5];
+    expect(last.status).toBe('failed');
+    expect(last.message).toContain('no listed interaction failed');
   });
 });
 
@@ -616,6 +923,7 @@ describe('defineVerificationSuiteAsync', () => {
       'DemoConsumer -> DemoProvider / interaction 3 - GET /three',
       'OtherConsumer -> DemoProvider / a request for one',
       'OtherConsumer -> DemoProvider / a request for two',
+      'Provider verification / reports no failures outside the listed interactions',
     ]);
     expect(outcomes.every((o) => o.status === 'passed')).toBe(true);
   });

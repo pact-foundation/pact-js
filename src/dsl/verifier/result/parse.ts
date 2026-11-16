@@ -24,10 +24,14 @@ const asStringArray = (v: unknown): string[] | undefined =>
  * Parses the JSON document reported by the core into a {@link VerificationResult}.
  *
  * Supports both the extended format (pact-core >= 20.2.0 / pact_ffi >= 0.5.8,
- * interaction entries
- * carry `consumer`, `provider`, `providerStates`, `pending` and `mismatch`)
- * and the older format, where failures are only listed in `errors` and are
- * joined to their interaction via the failure description.
+ * interaction entries carry `consumer`, `provider`, `providerStates`,
+ * `pending` and `mismatch`) and the older format, where failures are only
+ * listed in `errors` and are joined to their interaction via the failure
+ * description.
+ *
+ * Every entry of `errors` / `pendingErrors` is attributed to the interaction
+ * it belongs to; the entries that belong to no listed interaction (e.g. a pact
+ * that could not be loaded) end up in {@link VerificationResult.unattributedErrors}.
  *
  * @param raw the JSON string as returned by pact-core (resolved value on
  *            success, `Error.message` on failure), or the already parsed object
@@ -49,8 +53,8 @@ export function parseVerificationResult(
 
   const errors = parseFailureEntries(json.errors);
   const pendingErrors = parseFailureEntries(json.pendingErrors);
-  const unmatchedErrors = [...errors];
-  const unmatchedPendingErrors = [...pendingErrors];
+  const openErrors = [...errors];
+  const openPendingErrors = [...pendingErrors];
 
   const interactions = (json.interactionResults as unknown[])
     .filter(isObject)
@@ -70,12 +74,15 @@ export function parseVerificationResult(
       };
       if (isObject(entry.mismatch)) {
         interaction.failure = parseFailure(entry.mismatch);
-      }
-      if (!success && !interaction.failure) {
+        // The core lists the same failure in `errors` / `pendingErrors`. Take
+        // it out so that only the failures without an interaction remain.
+        takeFailureEntry(openErrors, interaction) ??
+          takeFailureEntry(openPendingErrors, interaction);
+      } else if (!success) {
         // Older cores: recover the failure (and the pact) from the errors list.
         const match =
-          takeMatchingFailure(unmatchedErrors, description) ??
-          takeMatchingFailure(unmatchedPendingErrors, description, () => {
+          takeFailureEntry(openErrors, interaction) ??
+          takeFailureEntry(openPendingErrors, interaction, () => {
             interaction.pending = true;
           });
         if (match) {
@@ -93,6 +100,7 @@ export function parseVerificationResult(
     interactions,
     errors,
     pendingErrors,
+    unattributedErrors: openErrors,
     notices: Array.isArray(json.notices)
       ? (json.notices.filter(isObject) as Record<string, string>[])
       : [],
@@ -176,6 +184,22 @@ const parseMismatch = (m: Json): VerificationMismatch =>
 
 const FAILURE_KEY_PREFIX = 'Verifying a pact between ';
 
+/**
+ * The text the core uses for a failure of the given interaction:
+ * `Verifying a pact between <consumer> and <provider>[ Given <state>[ And <state>]*] - <description>`.
+ */
+export const failureKey = (i: {
+  consumer: string;
+  provider: string;
+  providerStates: string[];
+  description: string;
+}): string =>
+  `${FAILURE_KEY_PREFIX}${i.consumer} and ${i.provider}${
+    i.providerStates.length > 0
+      ? ` Given ${i.providerStates.join(' And ')}`
+      : ''
+  } - ${i.description}`;
+
 type FailureMatch = {
   entry: VerificationFailureEntry;
   consumer?: string;
@@ -184,41 +208,79 @@ type FailureMatch = {
 };
 
 /**
- * Finds (and removes) the first failure entry that belongs to the interaction
- * with the given description. The failure description has the form
- * `Verifying a pact between <consumer> and <provider>[ Given <state>[ And <state>]*] - <description>`.
+ * Finds (and removes) the failure entry that belongs to the interaction.
+ *
+ * When the interaction's pact and provider states are known (extended format)
+ * the complete failure text is compared. Otherwise the entry has to end with
+ * ` - <description>`; among several such entries the one whose remaining text
+ * has the plain `Verifying a pact between <consumer> and <provider>[ Given ...]`
+ * shape wins, so that `get user` does not take the entry of `admin - get user`.
  */
-function takeMatchingFailure(
+function takeFailureEntry(
   entries: VerificationFailureEntry[],
-  description: string,
+  interaction: Pick<
+    InteractionVerificationResult,
+    'consumer' | 'provider' | 'providerStates' | 'description'
+  >,
   onMatch?: () => void,
 ): FailureMatch | undefined {
+  const { consumer, provider, providerStates, description } = interaction;
+  if (consumer !== undefined && provider !== undefined) {
+    const expected = failureKey({
+      consumer,
+      provider,
+      providerStates: providerStates ?? [],
+      description,
+    });
+    const index = entries.findIndex((e) => e.interaction === expected);
+    if (index >= 0) {
+      const [entry] = entries.splice(index, 1);
+      onMatch?.();
+      return { entry, consumer, provider, providerStates };
+    }
+  }
+
   const suffix = ` - ${description}`;
-  const index = entries.findIndex((e) => e.interaction.endsWith(suffix));
-  if (index < 0) {
+  const candidates = entries
+    .map((entry, index) => ({ entry, index }))
+    .filter(({ entry }) => entry.interaction.endsWith(suffix));
+  if (candidates.length === 0) {
     return undefined;
   }
-  const [entry] = entries.splice(index, 1);
+  const prefixOf = (text: string) => text.slice(0, -suffix.length);
+  const plain = candidates.find(({ entry }) => {
+    const prefix = prefixOf(entry.interaction);
+    return (
+      prefix.startsWith(FAILURE_KEY_PREFIX) &&
+      !prefix.slice(FAILURE_KEY_PREFIX.length).includes(' - ')
+    );
+  });
+  const { entry, index } = plain ?? candidates[0];
+  entries.splice(index, 1);
   onMatch?.();
-  const prefix = entry.interaction.slice(0, -suffix.length);
+
+  const prefix = prefixOf(entry.interaction);
   if (!prefix.startsWith(FAILURE_KEY_PREFIX)) {
     return { entry };
   }
   const pactAndStates = prefix.slice(FAILURE_KEY_PREFIX.length);
   const [pactPart, ...stateParts] = pactAndStates.split(' Given ');
-  const providerStates =
+  const states =
     stateParts.length > 0
       ? stateParts.join(' Given ').split(' And ')
       : undefined;
+  // The names themselves may contain " and "; without further information the
+  // last occurrence is the best guess. Cores >= 20.2.0 report consumer and
+  // provider explicitly, so this only affects older cores.
   const separator = pactPart.lastIndexOf(' and ');
   if (separator < 0) {
-    return { entry, providerStates };
+    return { entry, providerStates: states };
   }
   return {
     entry,
     consumer: pactPart.slice(0, separator),
     provider: pactPart.slice(separator + ' and '.length),
-    providerStates,
+    providerStates: states,
   };
 }
 

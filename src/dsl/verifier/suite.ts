@@ -8,6 +8,7 @@ import logger from '../../common/logger';
 import ConfigurationError from '../../errors/configurationError';
 import {
   describeInteraction,
+  formatFailure,
   groupByPact,
   type InteractionVerificationResult,
   type PactFileInteraction,
@@ -15,6 +16,7 @@ import {
   type PactVerificationResult,
   ProviderVerificationError,
   readPactFiles,
+  summarizeFailure,
   type VerificationResult,
 } from './result';
 import type { VerifierOptions } from './types';
@@ -26,6 +28,10 @@ import { Verifier } from './verifier';
  */
 export interface VerificationSuiteAdapter {
   describe: (name: string, fn: () => void) => void;
+  /**
+   * Jest and Vitest take the timeout as third argument. Mocha ignores it and
+   * returns the `Test`, whose `timeout()` method is used instead.
+   */
   it: (name: string, fn: () => Promise<void>, timeout?: number) => unknown;
 }
 
@@ -33,15 +39,15 @@ export interface VerificationSuiteOptions extends VerifierOptions {
   /**
    * Local pact files or directories whose interactions become test cases.
    * Defaults to `pactUrls`. Remote sources cannot be enumerated synchronously;
-   * for those, download the pact files first.
+   * use {@link defineVerificationSuiteAsync} for those.
    */
   pactFiles?: string[];
   /**
    * Timeout in milliseconds for each test case. The first test case waits for
    * the complete verification run, so this must cover the whole run.
-   * Defaults to 30000.
+   * Defaults to 30000. (`timeout` keeps its meaning as a verifier option.)
    */
-  timeout?: number;
+  testTimeout?: number;
   /** Builds the `describe` name of a pact. Defaults to `<consumer> -> <provider>`. */
   pactName?: (pact: PactFileSummary) => string;
   /** Builds the `it` name of an interaction. Defaults to the interaction description. */
@@ -51,7 +57,13 @@ export interface VerificationSuiteOptions extends VerifierOptions {
   ) => string;
 }
 
-const DEFAULT_TIMEOUT = 30_000;
+const DEFAULT_TEST_TIMEOUT = 30_000;
+
+/** `describe` name of the test case that checks the run as a whole. */
+export const VERIFICATION_RUN_SUITE = 'Provider verification';
+/** `it` name of the test case that checks the run as a whole. */
+export const VERIFICATION_RUN_TEST =
+  'reports no failures outside the listed interactions';
 
 /**
  * Registers a test suite that reports the provider verification per pact and
@@ -60,7 +72,9 @@ const DEFAULT_TIMEOUT = 30_000;
  * The pact files are read synchronously while the suite is being defined, so
  * that the test framework knows all test cases up front. The verification
  * itself runs exactly once, when the first test case executes; every test
- * case then reports the result of its own interaction.
+ * case then reports the result of its own interaction. One additional test
+ * case ({@link VERIFICATION_RUN_SUITE}) fails when the run reported failures
+ * that belong to no listed interaction, e.g. a pact that could not be loaded.
  *
  * @example
  * ```ts
@@ -79,7 +93,7 @@ export function defineVerificationSuite(
 ): void {
   const {
     pactFiles,
-    timeout = DEFAULT_TIMEOUT,
+    testTimeout = DEFAULT_TEST_TIMEOUT,
     pactName = defaultPactName,
     interactionName = defaultInteractionName,
   } = options;
@@ -89,12 +103,19 @@ export function defineVerificationSuite(
       "defineVerificationSuite needs 'pactFiles' or 'pactUrls' pointing to local pact files",
     );
   }
-  const pacts = readPactFiles(sources);
+  const pacts = readPactFiles(sources, {
+    provider: options.provider,
+    consumers: options.consumerFilters,
+  });
   // Registering no test case at all would make a run that verified nothing
   // look green, so an empty selection is a configuration error.
   if (pacts.length === 0) {
     throw new ConfigurationError(
-      `No pact files found in ${sources.map((s) => `'${s}'`).join(', ')}. defineVerificationSuite would not register any test case.`,
+      `No pact files${options.provider ? ` for provider '${options.provider}'` : ''}${
+        options.consumerFilters?.length
+          ? ` and consumer(s) ${options.consumerFilters.map((c) => `'${c}'`).join(', ')}`
+          : ''
+      } found in ${sources.map((s) => `'${s}'`).join(', ')}. defineVerificationSuite would not register any test case.`,
     );
   }
   if (pacts.every((pact) => pact.interactions.length === 0)) {
@@ -106,40 +127,36 @@ export function defineVerificationSuite(
   // suite is defined, so values that only exist after a beforeAll hook (e.g.
   // the port of a provider started on an ephemeral port) can be supplied via
   // getters.
-  const run = lazy(() => runVerification(verifierOptions(options)));
+  const run = lazy(async () =>
+    assignResults(await runVerification(verifierOptions(options)), pacts),
+  );
 
-  for (const pact of pacts) {
-    adapter.describe(pactName(pact), () => {
-      const seen = new Map<string, number>();
-      pact.interactions.forEach((interaction, index) => {
-        const occurrence = seen.get(interaction.description) ?? 0;
-        seen.set(interaction.description, occurrence + 1);
-        const name = interactionName(interaction, pact);
-        adapter.it(
-          occurrence === 0 ? name : `${name} (${occurrence + 1})`,
-          async () => {
-            const result = await run();
-            const outcome = findInteractionResult(
-              result,
-              pact,
-              interaction,
-              index,
-              occurrence,
-            );
-            assertInteractionPassed(
-              outcome,
-              describeInteraction({
-                consumer: pact.consumer,
-                provider: pact.provider,
-                description: interaction.description,
-              }),
-            );
-          },
-          timeout,
-        );
-      });
-    });
-  }
+  registerPactSuites(
+    adapter,
+    pacts,
+    pactName,
+    interactionName,
+    (pact, interaction) => async () => {
+      const { assigned } = await run();
+      assertInteractionPassed(
+        assigned.get(interaction),
+        describeInteraction({
+          consumer: pact.consumer,
+          provider: pact.provider,
+          description: interaction.description,
+        }),
+      );
+    },
+    testTimeout,
+  );
+  registerRunCheck(
+    adapter,
+    async () => {
+      const { result, unassigned } = await run();
+      assertRunClean(result, unassigned);
+    },
+    testTimeout,
+  );
 }
 
 /** Naming options for a suite built from a verification result. */
@@ -174,7 +191,9 @@ export async function verifyForSuite(
 
 /**
  * Registers one `describe` per pact and one `it` per interaction from a
- * verification result that has already been obtained.
+ * verification result that has already been obtained, plus one test case
+ * ({@link VERIFICATION_RUN_SUITE}) that fails when the run reported failures
+ * that belong to no listed interaction, e.g. a pact that could not be loaded.
  *
  * Unlike {@link defineVerificationSuite} this needs no pact files: the pacts
  * and interactions are taken from the result, so it works with every source
@@ -204,25 +223,18 @@ export function defineVerificationSuiteFromResult(
     );
   }
 
-  for (const pact of groupByPact(result)) {
-    adapter.describe(pactName(pact), () => {
-      const seen = new Map<string, number>();
-      for (const interaction of pact.interactions) {
-        const occurrence = seen.get(interaction.description) ?? 0;
-        seen.set(interaction.description, occurrence + 1);
-        const name = interactionName(interaction, pact);
-        adapter.it(
-          occurrence === 0 ? name : `${name} (${occurrence + 1})`,
-          async () => {
-            assertInteractionPassed(
-              interaction,
-              describeInteraction(interaction),
-            );
-          },
-        );
-      }
-    });
-  }
+  registerPactSuites(
+    adapter,
+    groupByPact(result),
+    pactName,
+    interactionName,
+    (_pact, interaction) => async () => {
+      assertInteractionPassed(interaction, describeInteraction(interaction));
+    },
+  );
+  registerRunCheck(adapter, async () => {
+    assertRunClean(result, []);
+  });
 }
 
 /**
@@ -288,7 +300,8 @@ const defaultResultInteractionName = (
 const verifierOptions = (
   options: VerificationSuiteOptions,
 ): VerifierOptions => {
-  const { pactFiles, timeout, pactName, interactionName, ...rest } = options;
+  const { pactFiles, testTimeout, pactName, interactionName, ...rest } =
+    options;
   return rest;
 };
 
@@ -297,6 +310,69 @@ const defaultPactName = (pact: PactFileSummary): string =>
 
 const defaultInteractionName = (interaction: PactFileInteraction): string =>
   interaction.description;
+
+/**
+ * Registers one `describe` per pact and one `it` per interaction. Repeated
+ * descriptions within a pact are numbered: `name`, `name (2)`, `name (3)`.
+ */
+function registerPactSuites<
+  P extends { interactions: I[] },
+  I extends { description: string },
+>(
+  adapter: VerificationSuiteAdapter,
+  pacts: P[],
+  pactName: (pact: P) => string,
+  interactionName: (interaction: I, pact: P) => string,
+  body: (pact: P, interaction: I) => () => Promise<void>,
+  timeout?: number,
+): void {
+  for (const pact of pacts) {
+    adapter.describe(pactName(pact), () => {
+      const seen = new Map<string, number>();
+      for (const interaction of pact.interactions) {
+        const occurrence = (seen.get(interaction.description) ?? 0) + 1;
+        seen.set(interaction.description, occurrence);
+        const name = interactionName(interaction, pact);
+        registerTest(
+          adapter,
+          occurrence === 1 ? name : `${name} (${occurrence})`,
+          body(pact, interaction),
+          timeout,
+        );
+      }
+    });
+  }
+}
+
+function registerRunCheck(
+  adapter: VerificationSuiteAdapter,
+  check: () => Promise<void>,
+  timeout?: number,
+): void {
+  adapter.describe(VERIFICATION_RUN_SUITE, () => {
+    registerTest(adapter, VERIFICATION_RUN_TEST, check, timeout);
+  });
+}
+
+function registerTest(
+  adapter: VerificationSuiteAdapter,
+  name: string,
+  fn: () => Promise<void>,
+  timeout?: number,
+): void {
+  const test = adapter.it(name, fn, timeout);
+  // Mocha ignores the third argument of `it`; its Test has a timeout() method.
+  if (timeout !== undefined && hasTimeoutMethod(test)) {
+    test.timeout(timeout);
+  }
+}
+
+const hasTimeoutMethod = (
+  v: unknown,
+): v is { timeout: (ms: number) => unknown } =>
+  typeof v === 'object' &&
+  v !== null &&
+  typeof (v as { timeout?: unknown }).timeout === 'function';
 
 /** Runs the verification once; a failed verification still yields its result. */
 async function runVerification(
@@ -312,46 +388,79 @@ async function runVerification(
   }
 }
 
+type AssignedResults = {
+  result: VerificationResult;
+  /** The result of each pact file interaction that has one */
+  assigned: Map<PactFileInteraction, InteractionVerificationResult>;
+  /** Results that belong to no pact file interaction */
+  unassigned: InteractionVerificationResult[];
+};
+
 /**
- * Locates the result of a pact file interaction. With cores that report the
- * pact per interaction the match is exact; older cores only report the
- * description, so the n-th result with that description is taken.
+ * Assigns every interaction result to at most one pact file interaction.
+ *
+ * An interaction takes the first still unassigned result of its own pact with
+ * the same key, or else the same description and provider states. Only when
+ * the core did not report the pact of a result (cores < 20.2.0 omit it for
+ * successful interactions) is a result without pact information accepted, by
+ * key or by description. Nothing else is matched: an interaction without a
+ * matching result fails its test case instead of borrowing another result.
  */
-function findInteractionResult(
+function assignResults(
   result: VerificationResult,
-  pact: PactFileSummary,
-  interaction: PactFileInteraction,
-  index: number,
-  occurrence: number,
-): InteractionVerificationResult | undefined {
-  const byKey =
-    interaction.key !== undefined
-      ? result.interactions.find((r) => r.interactionKey === interaction.key)
-      : undefined;
-  if (byKey) {
-    return byKey;
+  pacts: PactFileSummary[],
+): AssignedResults {
+  const open = new Set(result.interactions);
+  const take = (
+    matches: (r: InteractionVerificationResult) => boolean,
+  ): InteractionVerificationResult | undefined => {
+    for (const candidate of open) {
+      if (matches(candidate)) {
+        open.delete(candidate);
+        return candidate;
+      }
+    }
+    return undefined;
+  };
+  const assigned = new Map<
+    PactFileInteraction,
+    InteractionVerificationResult
+  >();
+  for (const pact of pacts) {
+    const ofPact = (r: InteractionVerificationResult) =>
+      r.consumer === pact.consumer && r.provider === pact.provider;
+    const ofUnknownPact = (r: InteractionVerificationResult) =>
+      r.consumer === undefined || r.provider === undefined;
+    for (const interaction of pact.interactions) {
+      const byKey = (r: InteractionVerificationResult) =>
+        interaction.key !== undefined && r.interactionKey === interaction.key;
+      const byDescription = (r: InteractionVerificationResult) =>
+        r.description === interaction.description &&
+        (r.providerStates === undefined ||
+          sameStates(r.providerStates, interaction.providerStates));
+      const match =
+        take((r) => ofPact(r) && byKey(r)) ??
+        take((r) => ofPact(r) && byDescription(r)) ??
+        take((r) => ofUnknownPact(r) && byKey(r)) ??
+        take((r) => ofUnknownPact(r) && byDescription(r));
+      if (match) {
+        assigned.set(interaction, match);
+      }
+    }
   }
-  const candidates = result.interactions.filter(
-    (r) => r.description === interaction.description,
-  );
-  const exact = candidates.filter(
-    (r) => r.consumer === pact.consumer && r.provider === pact.provider,
-  );
-  if (exact.length > 0) {
-    return exact[Math.min(occurrence, exact.length - 1)];
+  const unassigned = [...open];
+  if (unassigned.length > 0) {
+    logger.warn(
+      `${unassigned.length} verified interaction(s) belong to none of the pact files of the suite: ${unassigned
+        .map((r) => `'${describeInteraction(r)}'`)
+        .join(', ')}`,
+    );
   }
-  const unknownPact = candidates.filter(
-    (r) => r.consumer === undefined || r.provider === undefined,
-  );
-  if (unknownPact.length === 1 && candidates.length === 1) {
-    return unknownPact[0];
-  }
-  // Same description in several pacts and no pact information: fall back to
-  // the position of the interaction across all pact files.
-  return unknownPact.length > 0
-    ? unknownPact[Math.min(occurrence, unknownPact.length - 1)]
-    : result.interactions[index];
+  return { result, assigned, unassigned };
 }
+
+const sameStates = (a: string[], b: string[]): boolean =>
+  a.length === b.length && a.every((s, i) => s === b[i]);
 
 function assertInteractionPassed(
   outcome: InteractionVerificationResult | undefined,
@@ -365,7 +474,7 @@ function assertInteractionPassed(
   if (outcome.success) {
     return;
   }
-  const details = formatFailure(outcome);
+  const details = formatFailure(outcome.failure);
   if (outcome.pending) {
     logger.warn(
       `Pending interaction '${label}' failed (does not fail the build):\n${details}`,
@@ -375,20 +484,40 @@ function assertInteractionPassed(
   throw new Error(`Verification of '${label}' failed:\n${details}`);
 }
 
-export function formatFailure(outcome: InteractionVerificationResult): string {
-  const failure = outcome.failure;
-  if (!failure) {
-    return '  (no failure details reported by the core)';
+/**
+ * Fails when the run reported failures that no interaction test case reports:
+ * errors without an interaction (a pact that could not be loaded), failed
+ * interactions without a test case, or a failed run without any of these.
+ */
+function assertRunClean(
+  result: VerificationResult,
+  unassigned: InteractionVerificationResult[],
+): void {
+  const problems = (result.unattributedErrors ?? []).map(
+    (e) => `${e.interaction}: ${summarizeFailure(e.failure)}`,
+  );
+  for (const r of unassigned) {
+    if (!r.success && !r.pending) {
+      problems.push(
+        `'${describeInteraction(r)}' failed but has no test case:\n${formatFailure(r.failure)}`,
+      );
+    }
   }
-  if (failure.type === 'error') {
-    return `  ${failure.message}`;
+  const failedInteractions = result.interactions.some(
+    (i) => !i.success && !i.pending,
+  );
+  if (!result.success && !failedInteractions && problems.length === 0) {
+    problems.push(
+      'The core reported a failed run, but no listed interaction failed. See the verification output.',
+    );
   }
-  return failure.mismatches
-    .map((m) => {
-      const where = m.path ?? m.key ?? m.parameter;
-      return `  - ${m.type}${where ? ` at ${where}` : ''}: ${m.mismatch}`;
-    })
-    .join('\n');
+  if (problems.length > 0) {
+    throw new Error(
+      `The verification run reported failures outside the listed interactions:\n${problems
+        .map((p) => `  - ${p}`)
+        .join('\n')}`,
+    );
+  }
 }
 
 function lazy<T>(factory: () => Promise<T>): () => Promise<T> {
