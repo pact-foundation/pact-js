@@ -1,6 +1,5 @@
 import bodyParser from 'body-parser';
 import express from 'express';
-import { encode as encodeBase64 } from 'js-base64';
 import logger from '../../../common/logger';
 import type {
   MessageDescriptor,
@@ -115,9 +114,9 @@ export const createProxyMessageHandler =
       .then((handler) => handler(message))
       .then((messageFromHandler) => {
         if (hasMetadata(messageFromHandler)) {
-          const metadata = encodeBase64(
+          const metadata = Buffer.from(
             JSON.stringify(messageFromHandler.__pactMessageMetadata),
-          );
+          ).toString('base64');
           res.header('Pact-Message-Metadata', metadata);
           res.header('PACT_MESSAGE_METADATA', metadata);
 
