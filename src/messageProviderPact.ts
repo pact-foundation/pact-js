@@ -7,7 +7,6 @@ import type { AddressInfo } from 'node:net';
 import serviceFactory, {
   type VerifierOptions,
 } from '@pact-foundation/pact-core';
-import bodyParser from 'body-parser';
 import express from 'express';
 import { encode as encodeBase64 } from 'js-base64';
 import { isEmpty, omit } from 'lodash';
@@ -146,8 +145,8 @@ export class MessageProviderPact {
   private setupProxyApplication(): express.Express {
     const app = express();
 
-    app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(express.json());
+    app.use(express.urlencoded({ extended: true }));
     app.use((_req, res, next) => {
       // TODO: this seems to override the metadata for content-type
       res.header('Content-Type', 'application/json; charset=utf-8');

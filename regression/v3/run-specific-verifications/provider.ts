@@ -1,12 +1,11 @@
-import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
 
 export const server = express();
 server.use(cors());
-server.use(bodyParser.json());
+server.use(express.json());
 server.use(
-  bodyParser.urlencoded({
+  express.urlencoded({
     extended: true,
   }),
 );
