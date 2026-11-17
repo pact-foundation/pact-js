@@ -89,6 +89,26 @@ export class Verifier {
       );
     }
 
+    if (
+      !this.config.pactUrls?.length &&
+      !this.config.pactBrokerUrl &&
+      !process.env.PACT_BROKER_BASE_URL
+    ) {
+      return Promise.reject(
+        new ConfigurationError(
+          'Provide pactUrls or pactBrokerUrl (or set PACT_BROKER_BASE_URL) before verifying a provider',
+        ),
+      );
+    }
+
+    if (!this.config.pactUrls?.length && !this.config.provider) {
+      return Promise.reject(
+        new ConfigurationError(
+          "'provider' is required when fetching pacts from a Pact Broker",
+        ),
+      );
+    }
+
     // Start the verification CLI proxy server. The hooks state is owned here so
     // that any beforeEach/afterEach failures recorded during verification can be
     // surfaced once it completes.
