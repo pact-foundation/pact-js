@@ -1,6 +1,5 @@
 import http from 'node:http';
 import type { AddressInfo } from 'node:net';
-import bodyParser from 'body-parser';
 import express from 'express';
 
 import { createProxy, waitForServerReady } from './proxy';
@@ -68,7 +67,7 @@ describe('#createProxy', () => {
 
   it('forwards application/x-www-form-urlencoded bodies intact without JSON serialization', async () => {
     const providerApp = express();
-    providerApp.use(bodyParser.urlencoded({ extended: true }));
+    providerApp.use(express.urlencoded({ extended: true }));
     providerApp.post('/token', (req, res) => {
       res.json(req.body);
     });
@@ -105,7 +104,7 @@ describe('#createProxy', () => {
 
   it('updates Content-Length when requestFilter modifies a urlencoded body object', async () => {
     const providerApp = express();
-    providerApp.use(bodyParser.urlencoded({ extended: true }));
+    providerApp.use(express.urlencoded({ extended: true }));
     providerApp.post('/token', (req, res) => {
       res.json(req.body);
     });
@@ -147,7 +146,7 @@ describe('#createProxy', () => {
   });
   it('forwards a string body set by requestFilter with a matching Content-Length', async () => {
     const providerApp = express();
-    providerApp.use(bodyParser.urlencoded({ extended: true }));
+    providerApp.use(express.urlencoded({ extended: true }));
     providerApp.post('/token', (req, res) => {
       res.json({
         body: req.body,

@@ -1,5 +1,4 @@
 import http from 'node:http';
-import bodyParser from 'body-parser';
 import express from 'express';
 import HttpProxy from 'http-proxy';
 import logger from '../../../common/logger';
@@ -37,7 +36,7 @@ export const createProxy = (
   // NOTE: if you change any of these global middleware that consumes the body
   //       review the "proxyReq" event reader below
   app.use(
-    bodyParser.json({
+    express.json({
       type: [
         'application/json',
         'application/json; charset=utf-8',
@@ -46,14 +45,14 @@ export const createProxy = (
     }),
   );
   app.use(
-    bodyParser.urlencoded({
+    express.urlencoded({
       extended: true,
       verify: (req, _res, buf) => {
         recordUrlEncodedRawBody(req, buf);
       },
     }),
   );
-  app.use('/{*splat}', bodyParser.raw({ type: '*/*' }));
+  app.use('/{*splat}', express.raw({ type: '*/*' }));
 
   // Hooks. Tracking is only needed when a hook is registered; both hooks share
   // the same interaction-boundary tracking, so they are registered together.

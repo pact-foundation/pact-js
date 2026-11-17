@@ -1,4 +1,3 @@
-import bodyParser from 'body-parser';
 import express from 'express';
 import { encode as encodeBase64 } from 'js-base64';
 import logger from '../../../common/logger';
@@ -150,8 +149,8 @@ export const setupMessageProxyApplication = (
 ): express.Express => {
   const app = express();
 
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
   app.use((_, res, next) => {
     // TODO: this seems to override the metadata for content-type
     res.header('Content-Type', 'application/json; charset=utf-8');
