@@ -30,9 +30,10 @@ The provider interface is: `Verifier`.
 
 Once you have created Pacts for your Consumer, you need to validate those Pacts against your Provider. The Verifier object provides the following API for you to do so:
 
-| API                |  Options  | Returns   | Description           |
-| ------------------ | :-------: | --------- | --------------------- |
-| `verifyProvider()` | See below | `Promise` | Start the Mock Server |
+| API                |  Options  | Returns                         | Description                                                                 |
+| ------------------ | :-------: | ------------------------------- | --------------------------------------------------------------------------- |
+| `verifyProvider()` | See below | `Promise<string>`               | Run the verification, resolve with the raw output of the core               |
+| `verify()`         | See below | `Promise<VerificationResult>`   | Run the verification, resolve with a structured result per interaction      |
 
 </details>
 
@@ -312,6 +313,125 @@ return new Verifier(opts).verifyProvider().then(...)
 As you can see, this is your opportunity to modify\add to headers being sent to the Provider API, for example to create a valid time-bound token.
 
 _Important Note_: You should only use this feature for things that can not be persisted in the pact file. By modifying the request, you are potentially modifying the contract from the consumer tests!
+
+#### Structured Verification Results
+
+`verifyProvider()` resolves with the raw output of the core and only tells you whether the run passed. `verify()` runs the same verification but resolves with a `VerificationResult` that lists every verified interaction:
+
+```js
+const { Verifier, ProviderVerificationError } = require('@pact-foundation/pact');
+
+try {
+  const result = await new Verifier(opts).verify();
+  // result.success === true
+  for (const interaction of result.interactions) {
+    console.log(interaction.consumer, interaction.provider, interaction.description, interaction.duration);
+  }
+} catch (e) {
+  if (e instanceof ProviderVerificationError) {
+    // the run finished, but interactions failed: the full result is attached
+    for (const interaction of e.result.interactions.filter((i) => !i.success)) {
+      console.log(interaction.description, interaction.failure);
+    }
+  } else {
+    throw e; // the verification could not run at all (configuration, hooks, core crash)
+  }
+}
+```
+
+Each `InteractionVerificationResult` has `description`, `success`, `pending`, `duration` and, for failed interactions, `failure` with the mismatches (`StatusMismatch`, `BodyMismatch`, `HeaderMismatch`, ...) or the error message. `consumer`, `provider` and `providerStates` are set when the core reports them (`@pact-foundation/pact-core` >= 20.2.0); with older cores they are only recovered for failed interactions. `groupByPact(result)` groups the interactions by consumer/provider pair.
+
+A run can also fail without a failed interaction, e.g. when a pact could not be loaded or a file in the pact directory is not a pact. Such errors are listed in `result.unattributedErrors` (and named in the `ProviderVerificationError` message), so `result.success === false` always has a visible cause.
+
+`verify()` requires `@pact-foundation/pact-core` >= 19.
+
+#### Reporting each Pact and Interaction as a Test Case
+
+By default a provider verification is a single test case in your test framework, no matter how many pacts and interactions it covers. `defineVerificationSuite()` turns it into one `describe` per pact and one `it` per interaction, so failures show up next to the interaction that caused them and CI reports (e.g. JUnit) list every interaction:
+
+```ts
+import { describe, it } from 'vitest'; // or from '@jest/globals', or the Jest/Mocha globals
+import { defineVerificationSuite } from '@pact-foundation/pact';
+
+defineVerificationSuite(
+  {
+    provider: 'UserProvider',
+    providerBaseUrl: 'http://localhost:3001',
+    pactUrls: [path.resolve(process.cwd(), 'pacts')], // files or directories
+    stateHandlers: { ... },
+  },
+  { describe, it },
+);
+```
+
+How it works:
+
+- The pact files are read while the suite is defined, so the test framework knows all test cases up front. Only local pact files or directories can be used (`pactFiles` overrides `pactUrls`); for a Pact Broker see [Verifying from a Pact Broker](#verifying-from-a-pact-broker). The same pacts are selected that the core verifies: from a directory only the pacts of the configured `provider` (top-level `*.json` files, like the core), and only the consumers in `consumerFilters` if set.
+- The verification runs **once**, when the first test case executes. All test cases share that run and report the result of their own interaction. Set `testTimeout` (default 30 s) high enough for the whole run, and start your provider in a `beforeAll` of the surrounding `describe`. (`timeout` keeps its usual meaning as a verifier option.)
+- A failed interaction fails its test case with the mismatches in the message. Each result is used for exactly one test case, matched by the interaction's pact and V4 key, or else by its description and provider states. An interaction without a result (e.g. filtered out via `PACT_DESCRIPTION`) fails its test case instead of borrowing another result. Pending interactions never fail.
+- One additional test case, `Provider verification > reports no failures outside the listed interactions`, fails when the run reported something that no interaction test case shows: a pact that could not be loaded, a file in the pact directory that is not a pact, or a verified interaction that belongs to none of the registered pacts. A failed run can therefore never be all green, and every verified interaction has a test case.
+- If the sources contain no pact file for the provider, or the pact files contain no interactions, the call throws instead of registering nothing. A run that verified nothing must not look green.
+- `pactName` and `interactionName` customise the `describe` and `it` names.
+
+The adapter only needs `describe(name, fn)` and `it(name, fn, timeout)`, which Jest, Vitest and Mocha all provide (Mocha ignores the third argument; the suite sets the timeout on the returned test instead). Jest runs each test file in its own worker, so keep one suite per provider and test file. Vitest's `test.concurrent` is not supported because the test cases have to share one run.
+
+#### Verifying from a Pact Broker
+
+`defineVerificationSuite()` reads pact files, so it cannot enumerate pacts that live in a broker. For those, take the test cases from the verification result instead of from pact files:
+
+```ts
+import { describe, it } from 'vitest';
+import { defineVerificationSuiteAsync } from '@pact-foundation/pact';
+
+const server = createApp().listen(3001);
+
+await defineVerificationSuiteAsync(
+  {
+    provider: 'UserProvider',
+    providerBaseUrl: 'http://localhost:3001',
+    pactBrokerUrl: process.env.PACT_BROKER_BASE_URL,
+    consumerVersionSelectors: [{ mainBranch: true }, { deployedOrReleased: true }],
+    publishVerificationResult: true,
+    providerVersion: process.env.GIT_COMMIT,
+  },
+  { describe, it },
+);
+```
+
+The verification runs as an ordinary broker verification, so the broker links stay intact and `publishVerificationResult` keeps working. Every pact the broker returned becomes a `describe` and every interaction an `it`, including pending and WIP pacts, without a second broker round trip and without local copies that could drift. The same `Provider verification` test case as above reports failures that belong to no interaction, e.g. when the broker could not be reached.
+
+The trade-off is timing: the verification has to finish before the test cases can be registered, so the provider must already be reachable when the call is awaited, and the call has to happen before the framework starts running tests.
+
+- **Vitest** and **Mocha**: `await` at the top level of the test file (Mocha needs `--delay` and a `run()` call afterwards). Start the provider at the top level too, not in `beforeAll`.
+- **Jest** cannot await at the top level of a CommonJS test file. Run the verification in a [`globalSetup`](https://jestjs.io/docs/configuration#globalsetup-string) and hand the result to the test file:
+
+```js
+// global-setup.js
+const { verifyForSuite } = require('@pact-foundation/pact');
+
+module.exports = async () => {
+  const server = createApp().listen(3001);
+  const result = await verifyForSuite({ providerBaseUrl: 'http://localhost:3001', pactBrokerUrl: ... });
+  server.close();
+  require('node:fs').writeFileSync('verification-result.json', JSON.stringify(result));
+};
+```
+
+```js
+// provider.test.js
+const { defineVerificationSuiteFromResult } = require('@pact-foundation/pact');
+
+defineVerificationSuiteFromResult(
+  JSON.parse(require('node:fs').readFileSync('verification-result.json', 'utf8')),
+  { describe, it },
+);
+```
+
+`verifyForSuite()` resolves with the result whether the verification passed or failed; only errors that prevented it from running at all are thrown.
+
+Grouping the test cases by pact needs `@pact-foundation/pact-core` >= 20.2.0, which reports the consumer and provider of every interaction. With older versions the interactions whose pact is unknown end up in one shared group and a warning is logged.
+
+See [`examples/verification-results`](../examples/verification-results) for a complete example with two consumers.
 
 #### Lifecycle of a provider verification
 
