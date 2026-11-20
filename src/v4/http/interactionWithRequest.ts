@@ -8,11 +8,17 @@ import type {
   PactV4Options,
   V4InteractionWithRequest,
   V4InteractionWithResponse,
+  V4Response,
   V4ResponseBuilderFunc,
 } from './types';
 import type { StatusCodeMatcher } from '../../v3';
-import { isStatusCodeMatcher, reify } from '../../v3/matchers';
+import {
+  isStatusCodeMatcher,
+  matcherValueOrString,
+  reify,
+} from '../../v3/matchers';
 import { convertStatusMatcherToFFI } from '../../common/matchingRules';
+import { contentTypeFromHeaders, setResponseDetails } from '../../v3/ffi';
 
 export class InteractionWithRequest implements V4InteractionWithRequest {
   // tslint:disable:no-empty-function
@@ -37,6 +43,20 @@ export class InteractionWithRequest implements V4InteractionWithRequest {
 
     if (typeof builder === 'function') {
       builder(new ResponseBuilder(this.interaction));
+    }
+
+    return new InteractionWithResponse(this.pact, this.opts, this.cleanupFn);
+  }
+
+  withCompleteResponse(response: V4Response): V4InteractionWithResponse {
+    setResponseDetails(this.interaction, response);
+
+    if (response.body !== undefined) {
+      this.interaction.withResponseBody(
+        matcherValueOrString(response.body),
+        response.contentType ||
+          contentTypeFromHeaders(response.headers, 'application/json'),
+      );
     }
 
     return new InteractionWithResponse(this.pact, this.opts, this.cleanupFn);

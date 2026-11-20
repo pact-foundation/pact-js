@@ -5,6 +5,8 @@ import type {
 import type { JsonMap } from '../../common/jsonTypes';
 import type { Path } from '../../v3';
 import { matcherValueOrString } from '../../v3/matchers';
+import { contentTypeFromHeaders, setRequestDetails } from '../../v3/ffi';
+import { InteractionWithCompleteRequest } from './interactionWithCompleteRequest';
 import { InteractionWithPlugin } from './interactionWithPlugin';
 import { InteractionWithRequest } from './interactionWithRequest';
 import { RequestBuilder } from './requestBuilder';
@@ -79,8 +81,23 @@ export class UnconfiguredInteraction implements V4UnconfiguredInteraction {
     return this;
   }
 
-  withCompleteRequest(_request: V4Request): V4InteractionWithCompleteRequest {
-    throw new Error('withCompleteRequest is not implemented');
+  withCompleteRequest(request: V4Request): V4InteractionWithCompleteRequest {
+    setRequestDetails(this.interaction, request);
+
+    if (request.body !== undefined) {
+      this.interaction.withRequestBody(
+        matcherValueOrString(request.body),
+        request.contentType ||
+          contentTypeFromHeaders(request.headers, 'application/json'),
+      );
+    }
+
+    return new InteractionWithCompleteRequest(
+      this.pact,
+      this.interaction,
+      this.opts,
+      this.cleanupFn,
+    );
   }
 
   withRequest(
