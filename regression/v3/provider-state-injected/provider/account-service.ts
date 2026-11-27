@@ -1,11 +1,10 @@
-import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
 import { accountRepository } from './account-repository';
 
 const server = express();
 server.use(cors());
-server.use(bodyParser.json());
+server.use(express.json());
 
 server.get('/accounts/search/findOneByAccountNumberId', (req, res) => {
   return accountRepository
