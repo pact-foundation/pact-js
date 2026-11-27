@@ -3,6 +3,7 @@ import express from 'express';
 import type { Message } from './dsl/message';
 import {
   MessageProviderPact,
+  providerWithMetadata,
   setupProxyServer,
   waitForServerReady,
 } from './messageProviderPact';
@@ -71,6 +72,61 @@ describe('MessageProvider', () => {
           const req = { body: successfulMessage };
           const res = {
             json: () => resolve(),
+          };
+
+          setupVerificationHandler(req, res);
+        });
+      });
+
+      it('base64-encodes message metadata headers when metadata is present', () => {
+        return new Promise<void>((resolve, reject) => {
+          const providerWithMeta = new MessageProviderPact({
+            logLevel: 'error',
+            messageProviders: {
+              withMetadata: providerWithMetadata(
+                () => Promise.resolve({ hello: 'world' }),
+                { contentType: 'application/json', custom: 'café' },
+              ),
+            },
+            provider: 'myprovider',
+          });
+          const setupVerificationHandler =
+            // biome-ignore lint/suspicious/noExplicitAny: accessing private method for test coverage
+            (providerWithMeta as any).setupVerificationHandler.bind(
+              providerWithMeta,
+            )();
+          const headers: Record<string, string> = {};
+          const req = {
+            body: {
+              contents: { foo: 'bar' },
+              description: 'withMetadata',
+              providerStates: [],
+            },
+          };
+          const res = {
+            header: (name: string, value: string) => {
+              headers[name] = value;
+            },
+            json: (body: unknown) => {
+              try {
+                const expected = Buffer.from(
+                  JSON.stringify({
+                    contentType: 'application/json',
+                    custom: 'café',
+                  }),
+                ).toString('base64');
+                expect(headers['Pact-Message-Metadata']).toBe(expected);
+                expect(headers.PACT_MESSAGE_METADATA).toBe(expected);
+                expect(body).toEqual({ hello: 'world' });
+                resolve();
+              } catch (err) {
+                reject(err);
+              }
+            },
+            status: (code: number) => ({
+              send: (err: unknown) =>
+                reject(new Error(`Unexpected status ${code}: ${String(err)}`)),
+            }),
           };
 
           setupVerificationHandler(req, res);
