@@ -110,6 +110,92 @@ describe('V4 Pact', () => {
           ),
         ));
 
+    it('generates a pact using withCompleteRequest and withCompleteResponse', () =>
+      pact
+        .addInteraction()
+        .uponReceiving('a complete HTTP req/res contract')
+        .withCompleteRequest({
+          method: 'POST',
+          path: '/complete',
+          headers: {
+            'x-foo': 'x-bar',
+          },
+          body: {
+            requestData: 'test-req',
+          },
+        })
+        .withCompleteResponse({
+          status: 200,
+          headers: {
+            'x-res': 'x-answer',
+          },
+          body: {
+            responseData: 'test-res',
+          },
+        })
+        .executeTest(async (server) => {
+          const response = await axios.post(
+            `${server.url}/complete`,
+            { requestData: 'test-req' },
+            { headers: { 'x-foo': 'x-bar' } },
+          );
+          expect(response.status).toBe(200);
+          expect(response.headers['x-res']).toBe('x-answer');
+          expect(response.data).toEqual({ responseData: 'test-res' });
+        }));
+
+    it('generates a pact using withCompleteRequest with matcher-valued headers and body', async () => {
+      const description =
+        'a complete HTTP req/res contract with matcher-valued headers and body';
+
+      await pact
+        .addInteraction()
+        .uponReceiving(description)
+        .withCompleteRequest({
+          method: 'POST',
+          path: '/complete-matchers',
+          headers: {
+            'Content-Type': MatchersV3.regex(
+              'application/json(;\\s*charset=[^;]+)?',
+              'application/json; charset=utf-8',
+            ),
+            'x-foo': MatchersV3.like('x-bar'),
+          },
+          body: {
+            requestData: MatchersV3.like('example-data'),
+          },
+        })
+        .withCompleteResponse({
+          status: 200,
+          headers: {
+            'x-res': MatchersV3.like('x-answer'),
+          },
+          body: {
+            responseData: MatchersV3.like('example-response'),
+          },
+        })
+        .executeTest(async (server) => {
+          // Send values that satisfy the matchers but differ from example values
+          const response = await axios.post(
+            `${server.url}/complete-matchers`,
+            { requestData: 'differing-req-value' },
+            {
+              headers: {
+                'x-foo': 'differing-bar-value',
+                'Content-Type': 'application/json',
+              },
+            },
+          );
+          expect(response.status).toBe(200);
+          expect(response.headers['x-res']).toBe('x-answer');
+          expect(response.data).toEqual({ responseData: 'example-response' });
+        });
+
+      const interaction = interactionByDescription(description);
+      const req = interaction.request as Record<string, unknown>;
+      expect(req.matchingRules).toBeDefined();
+    });
+
     it('generates a pact with interaction metadata', async () => {
       const description = 'v4 metadata http req/res interaction';
 

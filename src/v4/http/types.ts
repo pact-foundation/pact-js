@@ -89,6 +89,10 @@ export interface V4UnconfiguredInteraction {
 
 export interface V4InteractionWithCompleteRequest {
   withCompleteResponse(response: V4Response): V4InteractionWithResponse;
+  willRespondWith(
+    status: number | StatusCodeMatcher<number>,
+    builder?: V4ResponseBuilderFunc,
+  ): V4InteractionWithResponse;
 }
 
 export interface V4InteractionWithRequest {
@@ -96,6 +100,7 @@ export interface V4InteractionWithRequest {
     status: number | StatusCodeMatcher<number>,
     builder?: V4ResponseBuilderFunc,
   ): V4InteractionWithResponse;
+  withCompleteResponse(response: V4Response): V4InteractionWithResponse;
 }
 
 export type V4RequestBuilderFunc = (builder: V4RequestBuilder) => void;
