@@ -18,6 +18,6 @@
     "axios": "^1.12.0",
     "express": "^5.1.0",
     "typescript": "^6.0.0",
-    "vitest": "^3.0.0"
+    "vitest": "^5.1.2"
   }
 }
