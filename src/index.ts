@@ -57,6 +57,18 @@ export * from './dsl/mockService';
  * @static
  */
 export * from './dsl/options';
+/**
+ * Exposes the structured {@link VerificationResult} and its helpers
+ * @memberof Pact
+ * @static
+ */
+export * from './dsl/verifier/result';
+/**
+ * Exposes {@link defineVerificationSuite} for test framework integration
+ * @memberof Pact
+ * @static
+ */
+export * from './dsl/verifier/suite';
 export { VerifierOptions } from './dsl/verifier/types';
 /**
  * Exposes {@link Verifier}

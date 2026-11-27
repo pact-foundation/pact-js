@@ -1,0 +1,138 @@
+{
+  "consumer": {
+    "name": "DemoConsumer"
+  },
+  "interactions": [
+    {
+      "description": "interaction 1 - GET /one",
+      "pending": false,
+      "request": {
+        "headers": {
+          "Accept": ["application/json"]
+        },
+        "method": "GET",
+        "path": "/one"
+      },
+      "response": {
+        "body": {
+          "content": {
+            "ok": true
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": ["application/json"]
+        },
+        "matchingRules": {
+          "body": {
+            "$.ok": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      },
+      "type": "Synchronous/HTTP"
+    },
+    {
+      "description": "interaction 2 - GET /two",
+      "pending": false,
+      "request": {
+        "headers": {
+          "Accept": ["application/json"]
+        },
+        "method": "GET",
+        "path": "/two"
+      },
+      "response": {
+        "body": {
+          "content": {
+            "ok": true
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": ["application/json"]
+        },
+        "matchingRules": {
+          "body": {
+            "$.ok": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      },
+      "type": "Synchronous/HTTP"
+    },
+    {
+      "description": "interaction 3 - GET /three",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "resource three is available"
+        }
+      ],
+      "request": {
+        "headers": {
+          "Accept": ["application/json"]
+        },
+        "method": "GET",
+        "path": "/three"
+      },
+      "response": {
+        "body": {
+          "content": {
+            "ok": true
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": ["application/json"]
+        },
+        "matchingRules": {
+          "body": {
+            "$.ok": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      },
+      "type": "Synchronous/HTTP"
+    }
+  ],
+  "metadata": {
+    "pact-js": {
+      "version": "17.1.4"
+    },
+    "pactRust": {
+      "ffi": "0.5.8",
+      "models": "1.3.16"
+    },
+    "pactSpecification": {
+      "version": "4.0"
+    }
+  },
+  "provider": {
+    "name": "DemoProvider"
+  }
+}
